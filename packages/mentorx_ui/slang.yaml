@@ -1,0 +1,5 @@
+output_directory: lib/localization/generated
+input_file_pattern: .json
+input_directory: lib/localization/sources
+paramCase: camel
+base_locale: en

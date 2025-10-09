@@ -1,0 +1,50 @@
+{
+    "ui": {
+        "totalCost": "${amount: price}",
+        "eventCard": {
+            "date": "${date: DateFormat('MMM dd')}",
+            "services": {
+                "one": "${n: int} service",
+                "other": "${n: int} services"
+            }
+        },
+        "serviceDetails": {
+            "updateAt": "${date: DateFormat('MMM dd, HH:mm')}",
+            "hour": {
+                "zero": "${n: int} hour",
+                "one": "${n: int} hour",
+                "other": "${n: int} hours"
+            }
+        },
+        "common": {
+            "cancel": "Cancel",
+            "ok": "OK"
+        }
+    },
+    "core": {
+        "appName": "Eventi",
+        "languages(map)": {
+            "en": "English",
+            "ar": "العربية"
+        }
+    },
+    "forms": {
+        "required": "This field is required",
+        "minLength": "It must be ${length: int} letters long at least",
+        "maxLength": "The maximum limit is ${length: int} letters",
+        "minDigitsLength": "It must be ${length: int} digits long at least",
+        "maxDigitsLength": "The maximum limit is ${length: int} digits",
+        "youMustEnterAValidEmail": "You must enter a valid email"
+    },
+    "exceptions(map)": {
+        "unknown": "Unknown error",
+        "AuthenticationRepositoryExceptionCode": {
+            "unknown": "Unknown error",
+            "invalidPhoneNumber": "Invalid phone number",
+            "invalidOTP": "Invalid OTP",
+            "failedToInitialize": "Failed to initialize",
+            "failedToSendOtp": "Failed to send OTP",
+            "failedToVerifyOtp": "Failed to verify OTP"
+        }
+    }
+}

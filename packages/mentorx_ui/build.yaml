@@ -1,0 +1,7 @@
+targets:
+  $default:
+    builders:
+      slang_build_runner:
+        enabled: false
+      flutter_gen_runner:
+        enabled: true

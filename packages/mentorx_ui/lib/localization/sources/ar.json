@@ -1,0 +1,50 @@
+{
+    "ui": {
+        "totalCost": "${amount: price}",
+        "eventCard": {
+            "date": "${date: DateFormat('MMM dd')}",
+            "services": {
+                "one": "${n: int} خدمة",
+                "other": "${n: int} خدمات"
+            }
+        },
+        "serviceDetails": {
+            "updateAt": "${date: DateFormat('MMM dd, HH:mm')}",
+            "hour": {
+                "zero": "${n: int} ساعة",
+                "one": "${n: int} ساعة",
+                "other": "${n: int} ساعات"
+            }
+        },
+        "common": {
+            "cancel": "إلغاء",
+            "ok": "موافق"
+        }
+    },
+    "core": {
+        "appName": "Eventi",
+        "languages(map)": {
+            "en": "English",
+            "ar": "العربية"
+        }
+    },
+    "forms": {
+        "required": "هذا الحقل مطلوب",
+        "minLength": "يجب أن يحتوي على ${length: int} أحرف على الأقل",
+        "maxLength": "الحد الأقصى هو ${length: int} أحرف",
+        "minDigitsLength": "يجب أن يحتوي على ${length: int} أرقام على الأقل",
+        "maxDigitsLength": "الحد الأقصى هو ${length: int} أرقام",
+        "youMustEnterAValidEmail": "يجب إدخال بريد إلكتروني صحيح"
+    },
+    "exceptions(map)": {
+        "unknown": "خطأ غير معروف",
+        "AuthenticationRepositoryExceptionCode": {
+            "unknown": "خطأ غير معروف",
+            "invalidPhoneNumber": "رقم الجوال غير صحيح",
+            "invalidOTP": "رمز OTP غير صحيح",
+            "failedToInitialize": "فشل التحميل",
+            "failedToSendOtp": "فشل ارسال رمز ال OTP",
+            "failedToVerifyOtp": "فشل التحقق من رمز ال OTP"
+        }
+    }
+}

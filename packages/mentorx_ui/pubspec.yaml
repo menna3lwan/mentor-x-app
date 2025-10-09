@@ -1,0 +1,86 @@
+name: mentorx_ui
+description: "A new Flutter package project."
+version: 0.0.1
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ^3.9.2
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Theming
+  mix: ^1.7.0
+
+  #Utils:
+  intl: ^0.20.2
+  geolocator: ^14.0.2
+  permission_handler: ^12.0.1
+
+  # Image Caching
+  cached_network_image: ^3.4.1
+
+  # Vector Grahpics
+  vector_graphics: ^1.1.19
+
+  # For UI
+  gap: ^3.0.1
+  fluttertoast: ^9.0.0
+  country_flags: ^4.0.1
+  google_maps_flutter: ^2.13.1
+  skeletonizer: ^2.1.0+1
+
+  # For Localization
+  slang: ^4.8.1
+  slang_flutter: ^4.8.0
+
+  # MentorX Packages
+  mentorx_core:
+    path: ../mentorx_core
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+  # Code generation:
+  flutter_gen_runner: ^5.12.0
+  slang_build_runner: ^4.8.1
+  build_runner: ^2.7.1
+
+# For information on the generic Dart part of "pubspec.yaml""../lib/mentorx_ui"this file, see the
+# following page: https://dart.dev/tools/pub/pubspec
+
+# The following section is specific to Flutter packages.
+flutter:
+  assets:
+    - lib/assets/images/
+    - path: lib/assets/svgs/
+      transformers:
+        - package: vector_graphics_compiler
+    - path: lib/assets/icons/
+      transformers:
+        - package: vector_graphics_compiler
+
+  # To add assets to your package, add an assets section, like this:
+  # assets:
+  #   - images/a_dot_burr.jpeg
+  #   - images/a_dot_ham.jpeg
+
+# Install the package globally: dart pub global activate flutter_gen
+# Run with: dart run build_runner build
+flutter_gen:
+  output: lib/assets/gen/
+  line_length: 80
+  fonts:
+    enabled: false
+  colors:
+    enabled: false
+  assets:
+    enabled: true
+    outputs:
+      class_name: AppAssets
+      package_parameter_enabled: true

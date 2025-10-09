@@ -1,0 +1,25 @@
+name: mentorx_monorepo
+publish_to: none
+environment:
+  sdk: ^3.9.2
+
+workspace:
+  # Apps
+  - student
+  - parent
+
+  # Packages
+  - packages/mentorx_core
+  - packages/mentorx_ui
+
+  # - packages/common/flutter_secure_storage_cache_repository
+
+  # - packages/clients/dio_http_client
+
+  # Mock repos
+
+dependency_overrides:
+  test_api: ^0.7.7
+
+dev_dependencies:
+  melos: ^7.1.0
