@@ -271,7 +271,7 @@ class _TranslationsCoreAr implements TranslationsCoreEn {
 	final TranslationsAr _root; // ignore: unused_field
 
 	// Translations
-	@override String get appName => 'Eventi';
+	@override String get appName => 'MentorX';
 	@override Map<String, String> get languages => {
 		'en': 'English',
 		'ar': 'العربية',
@@ -533,7 +533,7 @@ extension on TranslationsAr {
 			);
 			case 'ui.common.cancel': return 'إلغاء';
 			case 'ui.common.ok': return 'موافق';
-			case 'core.appName': return 'Eventi';
+			case 'core.appName': return 'MentorX';
 			case 'core.languages.en': return 'English';
 			case 'core.languages.ar': return 'العربية';
 			case 'initialLanguage.header': return 'يرجى تحديد اللغة المفضلة';

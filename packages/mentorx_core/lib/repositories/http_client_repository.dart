@@ -6,7 +6,7 @@ abstract class HttpClientRepository<T> {
   /// Takes an [exceptionCode] of type [T] that represents the domain-specific error code,
   /// and an [errorResponse] containing the HttpClientException with the error details.
   ///
-  /// Throws an [EventiException<T>] with the provided code and the message from the
+  /// Throws an [MentorXException<T>] with the provided code and the message from the
   /// HttpClientException if available.
   Never handleHttpClientErrorResponse(
     T exceptionCode,
@@ -15,9 +15,6 @@ abstract class HttpClientRepository<T> {
     final httpException = errorResponse.exception;
     final errorMessage = httpException?.message;
 
-    throw MentorXException(
-      code: exceptionCode,
-      message: errorMessage,
-    );
+    throw MentorXException(code: exceptionCode, message: errorMessage);
   }
 }

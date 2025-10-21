@@ -278,8 +278,8 @@ class TranslationsCoreEn {
 
 	// Translations
 
-	/// en: 'Eventi'
-	String get appName => 'Eventi';
+	/// en: 'MentorX'
+	String get appName => 'MentorX';
 
 	Map<String, String> get languages => {
 		'en': 'English',
@@ -536,7 +536,7 @@ class TranslationsLoginWallEn {
 	/// en: 'Your Account'
 	String get header => 'Your Account';
 
-	/// en: 'Sign in or create your Eventi account to proceed.'
+	/// en: 'Sign in or create your MentorX account to proceed.'
 	String get description => 'Sign in or create your ${_root.core.appName} account to proceed.';
 
 	/// en: 'Cancel'
@@ -682,7 +682,7 @@ extension on Translations {
 			);
 			case 'ui.common.cancel': return 'Cancel';
 			case 'ui.common.ok': return 'OK';
-			case 'core.appName': return 'Eventi';
+			case 'core.appName': return 'MentorX';
 			case 'core.languages.en': return 'English';
 			case 'core.languages.ar': return 'العربية';
 			case 'initialLanguage.header': return 'Select your preferred language';

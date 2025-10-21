@@ -69,7 +69,7 @@ dependencies:
   dio_http_client:
     path: ../packages/clients/dio_http_client
 
-  # Eventi Repositories
+  # MentorX Repositories
   dio_authentication_repository:
     path: ../packages/mentorx_student/dio_authentication_repository
 
