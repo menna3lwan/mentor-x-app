@@ -13,5 +13,6 @@ part 'utils/mentorx_logger.dart';
 part 'clients/http_client.dart';
 
 // Repositories
+part 'repositories/cache_repository.dart';
 
 // Entities

@@ -1,16 +1,10 @@
 import 'dart:ui' as ui;
 
 // import 'package:mentorx_ui/assets/gen/assets.gen.dart';
-import 'package:flutter/services.dart';
-import 'package:gap/gap.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:mix/mix.dart';
-import 'package:skeletonizer/skeletonizer.dart';
-import 'package:vector_graphics/vector_graphics.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import 'localization/generated/strings.g.dart';

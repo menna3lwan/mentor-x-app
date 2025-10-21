@@ -106,7 +106,7 @@ final class MentorXThemes {
           borderRadius: BorderRadius.circular(2),
         ),
         // overlayColor: WidgetStateProperty.all(context.brandPrimaryColor),
-        fillColor: WidgetStateProperty.fromMap({
+        fillColor: const WidgetStateProperty.fromMap({
           // WidgetState.selected: context.brandPrimaryColor,
           // WidgetState.any: context.textTertiaryColor,
         }),

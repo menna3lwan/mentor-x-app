@@ -55,20 +55,15 @@ dev_dependencies:
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter packages.
-flutter:
-  assets:
-    - lib/assets/images/
-    - path: lib/assets/svgs/
-      transformers:
-        - package: vector_graphics_compiler
-    - path: lib/assets/icons/
-      transformers:
-        - package: vector_graphics_compiler
-
-  # To add assets to your package, add an assets section, like this:
+# flutter:
   # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+    # - lib/assets/images/
+    # - path: lib/assets/svgs/
+    #   transformers:
+    #     - package: vector_graphics_compiler
+    # - path: lib/assets/icons/
+    #   transformers:
+    #     - package: vector_graphics_compiler
 
 # Install the package globally: dart pub global activate flutter_gen
 # Run with: dart run build_runner build

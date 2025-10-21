@@ -12,7 +12,7 @@ workspace:
   - packages/mentorx_core
   - packages/mentorx_ui
 
-  # - packages/common/flutter_secure_storage_cache_repository
+  - packages/common/flutter_secure_storage_cache_repository
 
   # - packages/clients/dio_http_client
 

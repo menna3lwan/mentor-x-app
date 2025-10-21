@@ -2,13 +2,13 @@ part of '../mentorx_core.dart';
 
 /// A wrapper around the Logger class that provides convenience methods for logging
 /// and uses dart:developer log function for console output.
-class MentorxLogger {
+class MentorXLogger {
   static bool enabled = false;
 
   /// The name of the logger instance
   final String name;
 
-  MentorxLogger(this.name);
+  MentorXLogger(this.name);
 
   String messageWithName(String message) => '[$name] $message';
 

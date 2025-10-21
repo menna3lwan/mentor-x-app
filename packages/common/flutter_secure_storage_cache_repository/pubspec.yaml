@@ -1,0 +1,19 @@
+name: flutter_secure_storage_cache_repository
+description: A starting point for Dart libraries or applications.
+version: 1.0.0
+publish_to: none
+
+resolution: workspace
+
+environment:
+  sdk: ^3.8.1
+
+dependencies:
+  flutter_secure_storage: ^9.2.4
+
+  mentorx_core:
+    path: ../../mentorx_core
+
+dev_dependencies:
+  lints: ^6.0.0
+  test: ^1.24.0
