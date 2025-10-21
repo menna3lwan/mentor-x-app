@@ -5,8 +5,8 @@ environment:
 
 workspace:
   # Apps
-  - student
-  - parent
+  - mentorx_student
+  - mentorx_parent
 
   # Packages
   - packages/mentorx_core
