@@ -14,9 +14,13 @@ workspace:
 
   - packages/common/flutter_secure_storage_cache_repository
 
-  # - packages/clients/dio_http_client
+  - packages/clients/dio_http_client
 
-  # Mock repos
+  # Student repos
+  - packages/mentorx_student/dio_authentication_repository
+
+  # Mock Student repos
+  - packages/mock_student/mock_authentication_repository
 
 dependency_overrides:
   test_api: ^0.7.7

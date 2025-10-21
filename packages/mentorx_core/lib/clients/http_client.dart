@@ -1,14 +1,37 @@
 part of '../mentorx_core.dart';
 
-class HttpClientResponse {
+enum HttpClientExceptionCode {
+  unknown,
+  connectionTimeout,
+  sendTimeout,
+  receiveTimeout,
+  badCertificate,
+  badResponse,
+  cancel,
+  connectionError,
+  networkError,
+  unauthorized,
+  forbidden,
+  notFound,
+  serverError,
+}
+
+final class HttpClientException
+    extends MentorXException<HttpClientExceptionCode> {
+  HttpClientException({required super.code, super.message});
+}
+
+final class HttpClientResponse {
   final dynamic data;
   final int statusCode;
   final Map<String, dynamic>? headers;
+  final HttpClientException? exception;
 
   bool get isOk => statusCode >= 200 && statusCode < 300;
 
   const HttpClientResponse({
     this.headers,
+    this.exception,
     required this.data,
     required this.statusCode,
   });
@@ -32,7 +55,7 @@ abstract class HttpClient {
 
   /// Sets the bearer token for authentication
   /// This will automatically add/update the Authorization header
-  void setBearerToken(String token);
+  void setBearerToken(String token, {String? refreshToken});
 
   /// Removes the bearer token
   void removeBearerToken();
@@ -47,6 +70,7 @@ abstract class HttpClient {
     String path, {
     Map<String, dynamic>? queryParameters,
     Map<String, String>? headers,
+    String? baseUrl,
   });
 
   Future<HttpClientResponse> post(
@@ -55,6 +79,8 @@ abstract class HttpClient {
     Map<String, dynamic>? queryParameters,
     Map<String, String>? headers,
     bool isFormData = false,
+    String? baseUrl,
+    bool mergeHeaders = true,
   });
 
   Future<HttpClientResponse> put(
@@ -81,4 +107,6 @@ abstract class HttpClient {
     Map<String, dynamic>? queryParameters,
     Map<String, String>? headers,
   });
+
+  String? extractErrorMessage(HttpClientResponse errorResponse);
 }

@@ -25,10 +25,12 @@ part 'theming/mentorx_theme_extension.dart';
 part 'theming/mentorx_theme_provider.dart';
 part 'theming/mentorx_theme_tokens.dart';
 part 'theming/mentorx_themes.dart';
+
 /// Utils
 part 'utils/mentorx_platform_checker.dart';
 
 /// Widgets
+part 'widgets/mentorx_translation_provider.dart';
 
 final class MentorXUI {
   MentorXUI._();

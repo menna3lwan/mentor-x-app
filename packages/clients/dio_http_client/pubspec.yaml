@@ -1,0 +1,19 @@
+name: dio_http_client
+description: A starting point for Dart libraries or applications.
+version: 1.0.0
+publish_to: none
+
+resolution: workspace
+
+environment:
+  sdk: ^3.8.1
+
+dependencies:
+  dio: ^5.9.0
+
+  mentorx_core:
+    path: ../../mentorx_core
+
+dev_dependencies:
+  lints: ^6.0.0
+  test: ^1.26.3

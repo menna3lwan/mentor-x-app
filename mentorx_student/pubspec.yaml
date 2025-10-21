@@ -58,14 +58,20 @@ dependencies:
     path: ../packages/mentorx_ui
 
   # Common Repositories
-  # flutter_secure_storage_cache_repository:
-  #   path: ../packages/common/flutter_secure_storage_cache_repository
+  flutter_secure_storage_cache_repository:
+    path: ../packages/common/flutter_secure_storage_cache_repository
 
   # Mock Repositories
+  mock_authentication_repository:
+    path: ../packages/mock_student/mock_authentication_repository
 
   # Clients
-  # dio_http_client:
-  #   path: ../packages/clients/dio_http_client
+  dio_http_client:
+    path: ../packages/clients/dio_http_client
+
+  # Eventi Repositories
+  dio_authentication_repository:
+    path: ../packages/mentorx_student/dio_authentication_repository
 
 dev_dependencies:
   # Testing
