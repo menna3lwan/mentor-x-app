@@ -24,9 +24,6 @@ class Translations implements BaseTranslations<AppLocale, Translations> {
 		    overrides: overrides ?? {},
 		    cardinalResolver: cardinalResolver,
 		    ordinalResolver: ordinalResolver,
-		    types: {
-		      'price': ValueFormatter(() => NumberFormat.currency(symbol: '\$', locale: 'en')),
-		    },
 		  ) {
 		$meta.setFlatMapFunction(_flatMapFunction);
 	}
@@ -45,14 +42,13 @@ class Translations implements BaseTranslations<AppLocale, Translations> {
 	late final TranslationsUiEn ui = TranslationsUiEn._(_root);
 	late final TranslationsCoreEn core = TranslationsCoreEn._(_root);
 	late final TranslationsInitialLanguageEn initialLanguage = TranslationsInitialLanguageEn._(_root);
-	late final TranslationsInitialLocationEn initialLocation = TranslationsInitialLocationEn._(_root);
 	late final TranslationsLoginEn login = TranslationsLoginEn._(_root);
 	late final TranslationsHomeEn home = TranslationsHomeEn._(_root);
-	late final TranslationsSearchEn search = TranslationsSearchEn._(_root);
 	late final TranslationsFormsEn forms = TranslationsFormsEn._(_root);
 	Map<String, dynamic> get exceptions => {
 		'unknown': 'Unknown error',
 		'AuthenticationRepositoryExceptionCode': TranslationsExceptionsAuthenticationRepositoryExceptionCodeEn._(_root),
+		'promocodeExceptions': TranslationsExceptionsPromocodeExceptionsEn._(_root),
 	};
 	Map<String, String> get countries => {
 		'afghanistan': 'Afghanistan',
@@ -252,6 +248,8 @@ class Translations implements BaseTranslations<AppLocale, Translations> {
 		'zambia': 'Zambia',
 		'zimbabwe': 'Zimbabwe',
 	};
+	late final TranslationsCartEn cart = TranslationsCartEn._(_root);
+	late final TranslationsSettingsEn settings = TranslationsSettingsEn._(_root);
 }
 
 // Path: ui
@@ -261,13 +259,10 @@ class TranslationsUiEn {
 	final Translations _root; // ignore: unused_field
 
 	// Translations
-
-	/// en: '${amount: price}'
-	String totalCost({required num amount}) => '${_root.$meta.types['price']!.format(amount)}';
-
-	late final TranslationsUiEventCardEn eventCard = TranslationsUiEventCardEn._(_root);
-	late final TranslationsUiServiceDetailsEn serviceDetails = TranslationsUiServiceDetailsEn._(_root);
 	late final TranslationsUiCommonEn common = TranslationsUiCommonEn._(_root);
+	late final TranslationsUiErrorsEn errors = TranslationsUiErrorsEn._(_root);
+	late final TranslationsUiDateTimeEn dateTime = TranslationsUiDateTimeEn._(_root);
+	late final TranslationsUiMentorXReadMoreEn mentorXReadMore = TranslationsUiMentorXReadMoreEn._(_root);
 }
 
 // Path: core
@@ -278,8 +273,14 @@ class TranslationsCoreEn {
 
 	// Translations
 
-	/// en: 'MentorX'
-	String get appName => 'MentorX';
+	/// en: 'MentorX Student'
+	String get appName => 'MentorX Student';
+
+	/// en: 'EGP'
+	String get currency => 'EGP';
+
+	/// en: '${amount: num} EGP'
+	String price({required num amount}) => '${amount} ${_root.core.currency}';
 
 	Map<String, String> get languages => {
 		'en': 'English',
@@ -302,21 +303,6 @@ class TranslationsInitialLanguageEn {
 	String get kContinue => 'Continue';
 }
 
-// Path: initialLocation
-class TranslationsInitialLocationEn {
-	TranslationsInitialLocationEn._(this._root);
-
-	final Translations _root; // ignore: unused_field
-
-	// Translations
-
-	/// en: 'Please select your location for better experience'
-	String get header => 'Please select your location for better experience';
-
-	/// en: 'Continue'
-	String get kContinue => 'Continue';
-}
-
 // Path: login
 class TranslationsLoginEn {
 	TranslationsLoginEn._(this._root);
@@ -334,12 +320,7 @@ class TranslationsLoginEn {
 	/// en: 'Sign In'
 	String get signIn => 'Sign In';
 
-	/// en: 'Continue as Guest'
-	String get continueAsGuest => 'Continue as Guest';
-
 	late final TranslationsLoginOtpEn otp = TranslationsLoginOtpEn._(_root);
-	late final TranslationsLoginWallEn wall = TranslationsLoginWallEn._(_root);
-	late final TranslationsLoginCountryPickerEn countryPicker = TranslationsLoginCountryPickerEn._(_root);
 }
 
 // Path: home
@@ -350,52 +331,7 @@ class TranslationsHomeEn {
 
 	// Translations
 	late final TranslationsHomeMainEn main = TranslationsHomeMainEn._(_root);
-	late final TranslationsHomeLocationEn location = TranslationsHomeLocationEn._(_root);
-
-	/// en: 'Search for services, providers or experiences'
-	String get search => 'Search for services, providers or experiences';
-
-	/// en: 'Upcoming Events'
-	String get upcomingEvents => 'Upcoming Events';
-
-	/// en: 'Curated Service Providers'
-	String get curatedServiceProviders => 'Curated Service Providers';
-
-	/// en: 'Browse Experiences'
-	String get browseExperiences => 'Browse Experiences';
-
-	/// en: 'Services'
-	String get services => 'Services';
-
-	/// en: 'See All'
-	String get seeAll => 'See All';
-
-	/// en: 'See Past Events'
-	String get seePastEvents => 'See Past Events';
-}
-
-// Path: search
-class TranslationsSearchEn {
-	TranslationsSearchEn._(this._root);
-
-	final Translations _root; // ignore: unused_field
-
-	// Translations
-
-	/// en: 'Search'
-	String get title => 'Search';
-
-	/// en: 'Search for services'
-	String get search => 'Search for services';
-
-	/// en: 'Search for services, providers or experiences'
-	String get placeholder => 'Search for services, providers or experiences';
-
-	/// en: 'No results found'
-	String get noResults => 'No results found';
-
-	late final TranslationsSearchFiltersEn filters = TranslationsSearchFiltersEn._(_root);
-	late final TranslationsSearchTimeBottomSheetEn timeBottomSheet = TranslationsSearchTimeBottomSheetEn._(_root);
+	late final TranslationsHomeErrorsEn errors = TranslationsHomeErrorsEn._(_root);
 }
 
 // Path: forms
@@ -423,6 +359,8 @@ class TranslationsFormsEn {
 
 	/// en: 'You must enter a valid email'
 	String get youMustEnterAValidEmail => 'You must enter a valid email';
+
+	late final TranslationsFormsCardEn card = TranslationsFormsCardEn._(_root);
 }
 
 // Path: exceptions.AuthenticationRepositoryExceptionCode
@@ -452,41 +390,189 @@ class TranslationsExceptionsAuthenticationRepositoryExceptionCodeEn {
 	String get failedToVerifyOtp => 'Failed to verify OTP';
 }
 
-// Path: ui.eventCard
-class TranslationsUiEventCardEn {
-	TranslationsUiEventCardEn._(this._root);
+// Path: exceptions.promocodeExceptions
+class TranslationsExceptionsPromocodeExceptionsEn {
+	TranslationsExceptionsPromocodeExceptionsEn._(this._root);
 
 	final Translations _root; // ignore: unused_field
 
 	// Translations
 
-	/// en: '${date: DateFormat('MMM dd')}'
-	String date({required DateTime date}) => '${DateFormat('MMM dd', 'en').format(date)}';
-
-	/// en: '(one) {${n: int} service} (other) {${n: int} services}'
-	String services({required int n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
-		one: '${n} service',
-		other: '${n} services',
-	);
+	/// en: 'Promocode cannot be applied to your cart'
+	String get cantBeApplied => 'Promocode cannot be applied to your cart';
 }
 
-// Path: ui.serviceDetails
-class TranslationsUiServiceDetailsEn {
-	TranslationsUiServiceDetailsEn._(this._root);
+// Path: cart
+class TranslationsCartEn {
+	TranslationsCartEn._(this._root);
 
 	final Translations _root; // ignore: unused_field
 
 	// Translations
 
-	/// en: '${date: DateFormat('MMM dd, HH:mm')}'
-	String updateAt({required DateTime date}) => '${DateFormat('MMM dd, HH:mm', 'en').format(date)}';
+	/// en: 'Your Cart'
+	String get yourCart => 'Your Cart';
 
-	/// en: '(zero) {${n: int} hour} (one) {${n: int} hour} (other) {${n: int} hours}'
-	String hour({required int n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
-		zero: '${n} hour',
-		one: '${n} hour',
-		other: '${n} hours',
+	/// en: 'Cart is Empty'
+	String get emptyCart => 'Cart is Empty';
+
+	/// en: 'Browse Services'
+	String get browseServices => 'Browse Services';
+
+	/// en: 'Browse our offerings to add items to your cart'
+	String get browseOfferings => 'Browse our offerings \nto add items to your cart';
+
+	/// en: 'We recommend'
+	String get weRecommend => 'We recommend';
+
+	/// en: 'Edit'
+	String get edit => 'Edit';
+
+	/// en: 'Remove'
+	String get remove => 'Remove';
+
+	/// en: 'Add to Cart'
+	String get addToCart => 'Add to Cart';
+
+	/// en: 'Close'
+	String get close => 'Close';
+
+	/// en: 'Don't forget to add'
+	String get dontForgetToAdd => 'Don\'t forget to add';
+
+	/// en: '${date: DateFormat('MMM dd, hh:mm')}'
+	String itemDateTime({required DateTime date}) => '${DateFormat('MMM dd, hh:mm', 'en').format(date)}';
+
+	/// en: '(one) {service} (other) {services}'
+	String services({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
+		one: 'service',
+		other: 'services',
 	);
+
+	/// en: 'Total'
+	String get total => 'Total';
+
+	/// en: '(zero) {hour} (one) {hour} (other) {hours}'
+	String hour({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
+		zero: 'hour',
+		one: 'hour',
+		other: 'hours',
+	);
+
+	late final TranslationsCartPromocodeEn promocode = TranslationsCartPromocodeEn._(_root);
+
+	/// en: 'Update in Cart'
+	String get updateInCart => 'Update in Cart';
+
+	/// en: 'cart'
+	String get cart => 'cart';
+
+	/// en: 'Checkout'
+	String get checkout => 'Checkout';
+
+	/// en: 'Apply'
+	String get apply => 'Apply';
+
+	/// en: 'Apply Promocode'
+	String get applyPromocode => 'Apply Promocode';
+
+	/// en: 'Enter promocode'
+	String get enterPromocode => 'Enter promocode';
+
+	/// en: 'Promocode is required'
+	String get promocodeRequired => 'Promocode is required';
+
+	/// en: 'Applied Promocodes'
+	String get appliedPromocodes => 'Applied Promocodes';
+
+	/// en: 'Recommendations'
+	String get recommendations => 'Recommendations';
+
+	/// en: 'Subtotal'
+	String get subtotal => 'Subtotal';
+
+	/// en: 'Discount'
+	String get discount => 'Discount';
+
+	/// en: 'Min order'
+	String get minOrder => 'Min order';
+
+	/// en: 'Min time'
+	String get minTime => 'Min time';
+
+	/// en: 'Space required'
+	String get spaceRequired => 'Space required';
+
+	/// en: 'Hours'
+	String get hours => 'Hours';
+
+	/// en: 'Special requests'
+	String get specialRequests => 'Special requests';
+
+	/// en: 'Enter special requests...'
+	String get enterSpecialRequests => 'Enter special requests...';
+
+	/// en: 'Error loading cart'
+	String get errorLoadingCart => 'Error loading cart';
+
+	/// en: 'Cart cleared successfully'
+	String get cartCleared => 'Cart cleared successfully';
+
+	/// en: 'Failed to load service'
+	String get failedToLoadService => 'Failed to load service';
+
+	/// en: 'Please select a ${sectionName}'
+	String pleaseSelectOption({required Object sectionName}) => 'Please select a ${sectionName}';
+
+	/// en: 'Please select at least one ${sectionName} option'
+	String pleaseSelectAtLeastOne({required Object sectionName}) => 'Please select at least one ${sectionName} option';
+
+	/// en: 'Please select more ${sectionName} options'
+	String pleaseSelectMore({required Object sectionName}) => 'Please select more ${sectionName} options';
+
+	/// en: 'Too many ${sectionName} options selected'
+	String tooManyOptionsSelected({required Object sectionName}) => 'Too many ${sectionName} options selected';
+
+	/// en: 'Please add at least one ${sectionName} item'
+	String pleaseAddAtLeastOne({required Object sectionName}) => 'Please add at least one ${sectionName} item';
+
+	/// en: 'Please select a date and time'
+	String get pleaseSelectDateTime => 'Please select a date and time';
+
+	/// en: 'Canapé Options'
+	String get canapeOptions => 'Canapé Options';
+
+	/// en: 'Options'
+	String get options => 'Options';
+
+	/// en: 'Start date and time'
+	String get startDateAndTime => 'Start date and time';
+
+	/// en: 'per extra hour'
+	String get perExtraHour => 'per extra hour';
+
+	/// en: 'Go to ${vendorName} profile'
+	String goToVendorProfile({required Object vendorName}) => 'Go to ${vendorName} profile';
+}
+
+// Path: settings
+class TranslationsSettingsEn {
+	TranslationsSettingsEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'App Settings'
+	String get title => 'App Settings';
+
+	/// en: 'Language'
+	String get language => 'Language';
+
+	/// en: 'Notifications'
+	String get notifications => 'Notifications';
+
+	late final TranslationsSettingsNotificationSettingsEn notificationSettings = TranslationsSettingsNotificationSettingsEn._(_root);
 }
 
 // Path: ui.common
@@ -502,6 +588,88 @@ class TranslationsUiCommonEn {
 
 	/// en: 'OK'
 	String get ok => 'OK';
+
+	/// en: 'View All'
+	String get viewAll => 'View All';
+
+	/// en: 'Required'
+	String get required => 'Required';
+
+	/// en: 'Optional'
+	String get optional => 'Optional';
+
+	/// en: 'Customization'
+	String get customization => 'Customization';
+}
+
+// Path: ui.errors
+class TranslationsUiErrorsEn {
+	TranslationsUiErrorsEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Something went wrong'
+	String get somethingWentWrong => 'Something went wrong';
+
+	/// en: 'Retry'
+	String get retry => 'Retry';
+}
+
+// Path: ui.dateTime
+class TranslationsUiDateTimeEn {
+	TranslationsUiDateTimeEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Yesterday'
+	String get yesterday => 'Yesterday';
+
+	/// en: 'Today'
+	String get today => 'Today';
+
+	/// en: 'Now'
+	String get now => 'Now';
+
+	/// en: 'Tomorrow'
+	String get tomorrow => 'Tomorrow';
+
+	/// en: '${time: DateFormat('HH:mm')}'
+	String time({required DateTime time}) => '${DateFormat('HH:mm', 'en').format(time)}';
+
+	/// en: '${time: DateFormat('HH:mm')}, ${day}'
+	String timeWithDay({required DateTime time, required Object day}) => '${DateFormat('HH:mm', 'en').format(time)}, ${day}';
+
+	/// en: '${date: DateFormat('MMM d')}'
+	String dateWithMonth({required DateTime date}) => '${DateFormat('MMM d', 'en').format(date)}';
+
+	Map<String, String> get weekdays => {
+		'monday': 'Mon',
+		'tuesday': 'Tue',
+		'wednesday': 'Wed',
+		'thursday': 'Thu',
+		'friday': 'Fri',
+		'saturday': 'Sat',
+		'sunday': 'Sun',
+	};
+}
+
+// Path: ui.mentorXReadMore
+class TranslationsUiMentorXReadMoreEn {
+	TranslationsUiMentorXReadMoreEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'More'
+	String get more => 'More';
+
+	/// en: 'Less'
+	String get less => 'Less';
 }
 
 // Path: login.otp
@@ -523,42 +691,12 @@ class TranslationsLoginOtpEn {
 
 	/// en: 'OTP was verified successfully'
 	String get otpWasVerifiedSuccessfully => 'OTP was verified successfully';
-}
 
-// Path: login.wall
-class TranslationsLoginWallEn {
-	TranslationsLoginWallEn._(this._root);
+	/// en: 'Resend'
+	String get resend => 'Resend';
 
-	final Translations _root; // ignore: unused_field
-
-	// Translations
-
-	/// en: 'Your Account'
-	String get header => 'Your Account';
-
-	/// en: 'Sign in or create your MentorX account to proceed.'
-	String get description => 'Sign in or create your ${_root.core.appName} account to proceed.';
-
-	/// en: 'Cancel'
-	String get cancel => 'Cancel';
-
-	/// en: 'Try another number'
-	String get tryAnotherNumber => 'Try another number';
-}
-
-// Path: login.countryPicker
-class TranslationsLoginCountryPickerEn {
-	TranslationsLoginCountryPickerEn._(this._root);
-
-	final Translations _root; // ignore: unused_field
-
-	// Translations
-
-	/// en: 'Pick your country'
-	String get pickYourCountry => 'Pick your country';
-
-	/// en: 'Pick your country dail code'
-	String get pickYourCountryDailCode => 'Pick your country dail code';
+	/// en: 'OTP was resent successfully'
+	String get otpWasResentSuccessfully => 'OTP was resent successfully';
 }
 
 // Path: home.main
@@ -585,163 +723,182 @@ class TranslationsHomeMainEn {
 	String get me => 'Me';
 }
 
-// Path: home.location
-class TranslationsHomeLocationEn {
-	TranslationsHomeLocationEn._(this._root);
+// Path: home.errors
+class TranslationsHomeErrorsEn {
+	TranslationsHomeErrorsEn._(this._root);
 
 	final Translations _root; // ignore: unused_field
 
 	// Translations
 
-	/// en: 'Doha'
-	String get doha => 'Doha';
+	/// en: 'Failed to load upcoming events'
+	String get failedToLoadUpcomingEvents => 'Failed to load upcoming events';
 
-	/// en: 'Location'
-	String get title => 'Location';
+	/// en: 'Failed to load service providers'
+	String get failedToLoadVendors => 'Failed to load service providers';
 
-	/// en: 'Please select your location for better experience'
-	String get subtitle => 'Please select your location for better experience';
+	/// en: 'Failed to load occasions'
+	String get failedToLoadOccasions => 'Failed to load occasions';
 
-	/// en: 'History'
-	String get historyLocations => 'History';
-
-	/// en: 'Update Location'
-	String get updateLocation => 'Update Location';
-
-	/// en: 'Detected'
-	String get detected => 'Detected';
-
-	/// en: 'No results found'
-	String get noSearchResults => 'No results found';
-
-	/// en: 'Search for a location'
-	String get searchPlaceholder => 'Search for a location';
-
-	/// en: 'Your current location'
-	String get currentLocation => 'Your current location';
-
-	/// en: 'Use current location'
-	String get useCurrentLocation => 'Use current location';
-
-	/// en: 'Location permission denied'
-	String get permissionDenied => 'Location permission denied';
-
-	/// en: 'Retry'
-	String get retry => 'Retry';
+	/// en: 'Failed to load categories'
+	String get failedToLoadCategories => 'Failed to load categories';
 }
 
-// Path: search.filters
-class TranslationsSearchFiltersEn {
-	TranslationsSearchFiltersEn._(this._root);
+// Path: forms.card
+class TranslationsFormsCardEn {
+	TranslationsFormsCardEn._(this._root);
 
 	final Translations _root; // ignore: unused_field
 
 	// Translations
 
-	/// en: 'Filters'
-	String get title => 'Filters';
+	/// en: 'Invalid format. Use MM/YY'
+	String get expiryInvalidFormat => 'Invalid format. Use MM/YY';
+
+	/// en: 'Invalid month (01-12)'
+	String get expiryInvalidMonth => 'Invalid month (01-12)';
+
+	/// en: 'Card has expired'
+	String get expiryCardExpired => 'Card has expired';
+
+	/// en: 'CVV must be 3-4 digits'
+	String get cvvInvalid => 'CVV must be 3-4 digits';
 }
 
-// Path: search.timeBottomSheet
-class TranslationsSearchTimeBottomSheetEn {
-	TranslationsSearchTimeBottomSheetEn._(this._root);
+// Path: cart.promocode
+class TranslationsCartPromocodeEn {
+	TranslationsCartPromocodeEn._(this._root);
 
 	final Translations _root; // ignore: unused_field
 
 	// Translations
 
-	/// en: 'Event time'
-	String get title => 'Event time';
+	/// en: 'Promocode'
+	String get header => 'Promocode';
 
-	/// en: 'Please specify the desired time to filter services that can be arranged for your event'
-	String get subtitle => 'Please specify the desired time to filter services that can be arranged for your event';
+	/// en: 'Enter a Promocode'
+	String get hint => 'Enter a Promocode';
 
-	/// en: 'Update Time'
-	String get updateTime => 'Update Time';
+	/// en: 'Promocode applied'
+	String get promocodeApplied => 'Promocode applied';
 
-	/// en: '${date: DateFormat('MMMM d, HH:mm')}'
-	String selectedDate({required DateTime date}) => '${DateFormat('MMMM d, HH:mm', 'en').format(date)}';
+	/// en: 'Promocode cannot be applied to your cart'
+	String get promocodeCannotBeApplied => 'Promocode cannot be applied to your cart';
 }
 
-/// Flat map(s) containing all translations.
+// Path: settings.notificationSettings
+class TranslationsSettingsNotificationSettingsEn {
+	TranslationsSettingsNotificationSettingsEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Notifications'
+	String get title => 'Notifications';
+
+	/// en: 'Common'
+	String get common => 'Common';
+
+	/// en: 'General Notification'
+	String get generalNotification => 'General Notification';
+
+	/// en: 'Sound'
+	String get sound => 'Sound';
+
+	/// en: 'Vibrate'
+	String get vibrate => 'Vibrate';
+
+	/// en: 'System & Services Update'
+	String get systemAndServicesUpdate => 'System & Services Update';
+
+	/// en: 'App Updates'
+	String get appUpdates => 'App Updates';
+
+	/// en: 'Bill Reminder'
+	String get billReminder => 'Bill Reminder';
+
+	/// en: 'Promotion'
+	String get promotion => 'Promotion';
+
+	/// en: 'Discount Available'
+	String get discountAvailable => 'Discount Available';
+
+	/// en: 'Payment Request'
+	String get paymentRequest => 'Payment Request';
+}
+
+/// The flat map containing all translations for locale <en>.
 /// Only for edge cases! For simple maps, use the map function of this library.
+///
+/// The Dart AOT compiler has issues with very large switch statements,
+/// so the map is split into smaller functions (512 entries each).
 extension on Translations {
 	dynamic _flatMapFunction(String path) {
+		return _flatMapFunction$0(path);
+	}
+
+	dynamic _flatMapFunction$0(String path) {
 		switch (path) {
-			case 'ui.totalCost': return ({required num amount}) => '${_root.$meta.types['price']!.format(amount)}';
-			case 'ui.eventCard.date': return ({required DateTime date}) => '${DateFormat('MMM dd', 'en').format(date)}';
-			case 'ui.eventCard.services': return ({required int n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
-				one: '${n} service',
-				other: '${n} services',
-			);
-			case 'ui.serviceDetails.updateAt': return ({required DateTime date}) => '${DateFormat('MMM dd, HH:mm', 'en').format(date)}';
-			case 'ui.serviceDetails.hour': return ({required int n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
-				zero: '${n} hour',
-				one: '${n} hour',
-				other: '${n} hours',
-			);
 			case 'ui.common.cancel': return 'Cancel';
 			case 'ui.common.ok': return 'OK';
-			case 'core.appName': return 'MentorX';
+			case 'ui.common.viewAll': return 'View All';
+			case 'ui.common.required': return 'Required';
+			case 'ui.common.optional': return 'Optional';
+			case 'ui.common.customization': return 'Customization';
+			case 'ui.errors.somethingWentWrong': return 'Something went wrong';
+			case 'ui.errors.retry': return 'Retry';
+			case 'ui.dateTime.yesterday': return 'Yesterday';
+			case 'ui.dateTime.today': return 'Today';
+			case 'ui.dateTime.now': return 'Now';
+			case 'ui.dateTime.tomorrow': return 'Tomorrow';
+			case 'ui.dateTime.time': return ({required DateTime time}) => '${DateFormat('HH:mm', 'en').format(time)}';
+			case 'ui.dateTime.timeWithDay': return ({required DateTime time, required Object day}) => '${DateFormat('HH:mm', 'en').format(time)}, ${day}';
+			case 'ui.dateTime.dateWithMonth': return ({required DateTime date}) => '${DateFormat('MMM d', 'en').format(date)}';
+			case 'ui.dateTime.weekdays.monday': return 'Mon';
+			case 'ui.dateTime.weekdays.tuesday': return 'Tue';
+			case 'ui.dateTime.weekdays.wednesday': return 'Wed';
+			case 'ui.dateTime.weekdays.thursday': return 'Thu';
+			case 'ui.dateTime.weekdays.friday': return 'Fri';
+			case 'ui.dateTime.weekdays.saturday': return 'Sat';
+			case 'ui.dateTime.weekdays.sunday': return 'Sun';
+			case 'ui.mentorXReadMore.more': return 'More';
+			case 'ui.mentorXReadMore.less': return 'Less';
+			case 'core.appName': return 'MentorX Student';
+			case 'core.currency': return 'EGP';
+			case 'core.price': return ({required num amount}) => '${amount} ${_root.core.currency}';
 			case 'core.languages.en': return 'English';
 			case 'core.languages.ar': return 'العربية';
 			case 'initialLanguage.header': return 'Select your preferred language';
 			case 'initialLanguage.kContinue': return 'Continue';
-			case 'initialLocation.header': return 'Please select your location for better experience';
-			case 'initialLocation.kContinue': return 'Continue';
 			case 'login.header': return 'Enter your phone number to sign in';
 			case 'login.phoneNumber': return 'Phone Number';
 			case 'login.signIn': return 'Sign In';
-			case 'login.continueAsGuest': return 'Continue as Guest';
 			case 'login.otp.header': return 'Confirmation code';
 			case 'login.otp.description': return 'We sent a code to your device. Enter it here to continue.';
 			case 'login.otp.confirm': return 'Confirm';
 			case 'login.otp.otpWasVerifiedSuccessfully': return 'OTP was verified successfully';
-			case 'login.wall.header': return 'Your Account';
-			case 'login.wall.description': return 'Sign in or create your ${_root.core.appName} account to proceed.';
-			case 'login.wall.cancel': return 'Cancel';
-			case 'login.wall.tryAnotherNumber': return 'Try another number';
-			case 'login.countryPicker.pickYourCountry': return 'Pick your country';
-			case 'login.countryPicker.pickYourCountryDailCode': return 'Pick your country dail code';
+			case 'login.otp.resend': return 'Resend';
+			case 'login.otp.otpWasResentSuccessfully': return 'OTP was resent successfully';
 			case 'home.main.home': return 'Home';
 			case 'home.main.favorites': return 'Favorites';
 			case 'home.main.assistance': return 'Assistance';
 			case 'home.main.cart': return 'Cart';
 			case 'home.main.me': return 'Me';
-			case 'home.location.doha': return 'Doha';
-			case 'home.location.title': return 'Location';
-			case 'home.location.subtitle': return 'Please select your location for better experience';
-			case 'home.location.historyLocations': return 'History';
-			case 'home.location.updateLocation': return 'Update Location';
-			case 'home.location.detected': return 'Detected';
-			case 'home.location.noSearchResults': return 'No results found';
-			case 'home.location.searchPlaceholder': return 'Search for a location';
-			case 'home.location.currentLocation': return 'Your current location';
-			case 'home.location.useCurrentLocation': return 'Use current location';
-			case 'home.location.permissionDenied': return 'Location permission denied';
-			case 'home.location.retry': return 'Retry';
-			case 'home.search': return 'Search for services, providers or experiences';
-			case 'home.upcomingEvents': return 'Upcoming Events';
-			case 'home.curatedServiceProviders': return 'Curated Service Providers';
-			case 'home.browseExperiences': return 'Browse Experiences';
-			case 'home.services': return 'Services';
-			case 'home.seeAll': return 'See All';
-			case 'home.seePastEvents': return 'See Past Events';
-			case 'search.title': return 'Search';
-			case 'search.search': return 'Search for services';
-			case 'search.placeholder': return 'Search for services, providers or experiences';
-			case 'search.noResults': return 'No results found';
-			case 'search.filters.title': return 'Filters';
-			case 'search.timeBottomSheet.title': return 'Event time';
-			case 'search.timeBottomSheet.subtitle': return 'Please specify the desired time to filter services that can be arranged for your event';
-			case 'search.timeBottomSheet.updateTime': return 'Update Time';
-			case 'search.timeBottomSheet.selectedDate': return ({required DateTime date}) => '${DateFormat('MMMM d, HH:mm', 'en').format(date)}';
+			case 'home.errors.failedToLoadUpcomingEvents': return 'Failed to load upcoming events';
+			case 'home.errors.failedToLoadVendors': return 'Failed to load service providers';
+			case 'home.errors.failedToLoadOccasions': return 'Failed to load occasions';
+			case 'home.errors.failedToLoadCategories': return 'Failed to load categories';
 			case 'forms.required': return 'This field is required';
 			case 'forms.minLength': return ({required int length}) => 'It must be ${length} letters long at least';
 			case 'forms.maxLength': return ({required int length}) => 'The maximum limit is ${length} letters';
 			case 'forms.minDigitsLength': return ({required int length}) => 'It must be ${length} digits long at least';
 			case 'forms.maxDigitsLength': return ({required int length}) => 'The maximum limit is ${length} digits';
 			case 'forms.youMustEnterAValidEmail': return 'You must enter a valid email';
+			case 'forms.card.expiryInvalidFormat': return 'Invalid format. Use MM/YY';
+			case 'forms.card.expiryInvalidMonth': return 'Invalid month (01-12)';
+			case 'forms.card.expiryCardExpired': return 'Card has expired';
+			case 'forms.card.cvvInvalid': return 'CVV must be 3-4 digits';
 			case 'exceptions.unknown': return 'Unknown error';
 			case 'exceptions.AuthenticationRepositoryExceptionCode.unknown': return 'Unknown error';
 			case 'exceptions.AuthenticationRepositoryExceptionCode.invalidPhoneNumber': return 'Invalid phone number';
@@ -749,6 +906,7 @@ extension on Translations {
 			case 'exceptions.AuthenticationRepositoryExceptionCode.failedToInitialize': return 'Failed to initialize';
 			case 'exceptions.AuthenticationRepositoryExceptionCode.failedToSendOtp': return 'Failed to send OTP';
 			case 'exceptions.AuthenticationRepositoryExceptionCode.failedToVerifyOtp': return 'Failed to verify OTP';
+			case 'exceptions.promocodeExceptions.cantBeApplied': return 'Promocode cannot be applied to your cart';
 			case 'countries.afghanistan': return 'Afghanistan';
 			case 'countries.albania': return 'Albania';
 			case 'countries.algeria': return 'Algeria';
@@ -945,6 +1103,76 @@ extension on Translations {
 			case 'countries.yemen': return 'Yemen';
 			case 'countries.zambia': return 'Zambia';
 			case 'countries.zimbabwe': return 'Zimbabwe';
+			case 'cart.yourCart': return 'Your Cart';
+			case 'cart.emptyCart': return 'Cart is Empty';
+			case 'cart.browseServices': return 'Browse Services';
+			case 'cart.browseOfferings': return 'Browse our offerings \nto add items to your cart';
+			case 'cart.weRecommend': return 'We recommend';
+			case 'cart.edit': return 'Edit';
+			case 'cart.remove': return 'Remove';
+			case 'cart.addToCart': return 'Add to Cart';
+			case 'cart.close': return 'Close';
+			case 'cart.dontForgetToAdd': return 'Don\'t forget to add';
+			case 'cart.itemDateTime': return ({required DateTime date}) => '${DateFormat('MMM dd, hh:mm', 'en').format(date)}';
+			case 'cart.services': return ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
+				one: 'service',
+				other: 'services',
+			);
+			case 'cart.total': return 'Total';
+			case 'cart.hour': return ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
+				zero: 'hour',
+				one: 'hour',
+				other: 'hours',
+			);
+			case 'cart.promocode.header': return 'Promocode';
+			case 'cart.promocode.hint': return 'Enter a Promocode';
+			case 'cart.promocode.promocodeApplied': return 'Promocode applied';
+			case 'cart.promocode.promocodeCannotBeApplied': return 'Promocode cannot be applied to your cart';
+			case 'cart.updateInCart': return 'Update in Cart';
+			case 'cart.cart': return 'cart';
+			case 'cart.checkout': return 'Checkout';
+			case 'cart.apply': return 'Apply';
+			case 'cart.applyPromocode': return 'Apply Promocode';
+			case 'cart.enterPromocode': return 'Enter promocode';
+			case 'cart.promocodeRequired': return 'Promocode is required';
+			case 'cart.appliedPromocodes': return 'Applied Promocodes';
+			case 'cart.recommendations': return 'Recommendations';
+			case 'cart.subtotal': return 'Subtotal';
+			case 'cart.discount': return 'Discount';
+			case 'cart.minOrder': return 'Min order';
+			case 'cart.minTime': return 'Min time';
+			case 'cart.spaceRequired': return 'Space required';
+			case 'cart.hours': return 'Hours';
+			case 'cart.specialRequests': return 'Special requests';
+			case 'cart.enterSpecialRequests': return 'Enter special requests...';
+			case 'cart.errorLoadingCart': return 'Error loading cart';
+			case 'cart.cartCleared': return 'Cart cleared successfully';
+			case 'cart.failedToLoadService': return 'Failed to load service';
+			case 'cart.pleaseSelectOption': return ({required Object sectionName}) => 'Please select a ${sectionName}';
+			case 'cart.pleaseSelectAtLeastOne': return ({required Object sectionName}) => 'Please select at least one ${sectionName} option';
+			case 'cart.pleaseSelectMore': return ({required Object sectionName}) => 'Please select more ${sectionName} options';
+			case 'cart.tooManyOptionsSelected': return ({required Object sectionName}) => 'Too many ${sectionName} options selected';
+			case 'cart.pleaseAddAtLeastOne': return ({required Object sectionName}) => 'Please add at least one ${sectionName} item';
+			case 'cart.pleaseSelectDateTime': return 'Please select a date and time';
+			case 'cart.canapeOptions': return 'Canapé Options';
+			case 'cart.options': return 'Options';
+			case 'cart.startDateAndTime': return 'Start date and time';
+			case 'cart.perExtraHour': return 'per extra hour';
+			case 'cart.goToVendorProfile': return ({required Object vendorName}) => 'Go to ${vendorName} profile';
+			case 'settings.title': return 'App Settings';
+			case 'settings.language': return 'Language';
+			case 'settings.notifications': return 'Notifications';
+			case 'settings.notificationSettings.title': return 'Notifications';
+			case 'settings.notificationSettings.common': return 'Common';
+			case 'settings.notificationSettings.generalNotification': return 'General Notification';
+			case 'settings.notificationSettings.sound': return 'Sound';
+			case 'settings.notificationSettings.vibrate': return 'Vibrate';
+			case 'settings.notificationSettings.systemAndServicesUpdate': return 'System & Services Update';
+			case 'settings.notificationSettings.appUpdates': return 'App Updates';
+			case 'settings.notificationSettings.billReminder': return 'Bill Reminder';
+			case 'settings.notificationSettings.promotion': return 'Promotion';
+			case 'settings.notificationSettings.discountAvailable': return 'Discount Available';
+			case 'settings.notificationSettings.paymentRequest': return 'Payment Request';
 			default: return null;
 		}
 	}

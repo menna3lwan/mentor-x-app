@@ -20,9 +20,6 @@ class TranslationsAr implements Translations {
 		    overrides: overrides ?? {},
 		    cardinalResolver: cardinalResolver,
 		    ordinalResolver: ordinalResolver,
-		    types: {
-		      'price': ValueFormatter(() => NumberFormat.currency(symbol: '\$', locale: 'ar')),
-		    },
 		  ) {
 		$meta.setFlatMapFunction(_flatMapFunction);
 	}
@@ -42,14 +39,13 @@ class TranslationsAr implements Translations {
 	@override late final _TranslationsUiAr ui = _TranslationsUiAr._(_root);
 	@override late final _TranslationsCoreAr core = _TranslationsCoreAr._(_root);
 	@override late final _TranslationsInitialLanguageAr initialLanguage = _TranslationsInitialLanguageAr._(_root);
-	@override late final _TranslationsInitialLocationAr initialLocation = _TranslationsInitialLocationAr._(_root);
 	@override late final _TranslationsLoginAr login = _TranslationsLoginAr._(_root);
 	@override late final _TranslationsHomeAr home = _TranslationsHomeAr._(_root);
-	@override late final _TranslationsSearchAr search = _TranslationsSearchAr._(_root);
 	@override late final _TranslationsFormsAr forms = _TranslationsFormsAr._(_root);
 	@override Map<String, dynamic> get exceptions => {
 		'unknown': 'خطأ غير معروف',
 		'AuthenticationRepositoryExceptionCode': _TranslationsExceptionsAuthenticationRepositoryExceptionCodeAr._(_root),
+		'promocodeExceptions': _TranslationsExceptionsPromocodeExceptionsAr._(_root),
 	};
 	@override Map<String, String> get countries => {
 		'afghanistan': 'أفغانستان',
@@ -249,6 +245,8 @@ class TranslationsAr implements Translations {
 		'zambia': 'زامبيا',
 		'zimbabwe': 'زيمبابوي',
 	};
+	@override late final _TranslationsCartAr cart = _TranslationsCartAr._(_root);
+	@override late final _TranslationsSettingsAr settings = _TranslationsSettingsAr._(_root);
 }
 
 // Path: ui
@@ -258,10 +256,10 @@ class _TranslationsUiAr implements TranslationsUiEn {
 	final TranslationsAr _root; // ignore: unused_field
 
 	// Translations
-	@override String totalCost({required num amount}) => '${_root.$meta.types['price']!.format(amount)}';
-	@override late final _TranslationsUiEventCardAr eventCard = _TranslationsUiEventCardAr._(_root);
-	@override late final _TranslationsUiServiceDetailsAr serviceDetails = _TranslationsUiServiceDetailsAr._(_root);
 	@override late final _TranslationsUiCommonAr common = _TranslationsUiCommonAr._(_root);
+	@override late final _TranslationsUiErrorsAr errors = _TranslationsUiErrorsAr._(_root);
+	@override late final _TranslationsUiDateTimeAr dateTime = _TranslationsUiDateTimeAr._(_root);
+	@override late final _TranslationsUiMentorXReadMoreAr mentorXReadMore = _TranslationsUiMentorXReadMoreAr._(_root);
 }
 
 // Path: core
@@ -271,7 +269,9 @@ class _TranslationsCoreAr implements TranslationsCoreEn {
 	final TranslationsAr _root; // ignore: unused_field
 
 	// Translations
-	@override String get appName => 'MentorX';
+	@override String get appName => 'MentorX Student';
+	@override String get currency => 'ج.م';
+	@override String price({required num amount}) => '${amount} ${_root.core.currency}';
 	@override Map<String, String> get languages => {
 		'en': 'English',
 		'ar': 'العربية',
@@ -289,17 +289,6 @@ class _TranslationsInitialLanguageAr implements TranslationsInitialLanguageEn {
 	@override String get kContinue => 'موافق';
 }
 
-// Path: initialLocation
-class _TranslationsInitialLocationAr implements TranslationsInitialLocationEn {
-	_TranslationsInitialLocationAr._(this._root);
-
-	final TranslationsAr _root; // ignore: unused_field
-
-	// Translations
-	@override String get header => 'من فضلك اختر موقعك لتجربة افضل';
-	@override String get kContinue => 'موافق';
-}
-
 // Path: login
 class _TranslationsLoginAr implements TranslationsLoginEn {
 	_TranslationsLoginAr._(this._root);
@@ -310,10 +299,7 @@ class _TranslationsLoginAr implements TranslationsLoginEn {
 	@override String get header => 'ادخل رقم الجوال لتسجيل الدخول';
 	@override String get phoneNumber => 'رقم الجوال';
 	@override String get signIn => 'تسجيل الدخول';
-	@override String get continueAsGuest => 'استمر كزائر';
 	@override late final _TranslationsLoginOtpAr otp = _TranslationsLoginOtpAr._(_root);
-	@override late final _TranslationsLoginWallAr wall = _TranslationsLoginWallAr._(_root);
-	@override late final _TranslationsLoginCountryPickerAr countryPicker = _TranslationsLoginCountryPickerAr._(_root);
 }
 
 // Path: home
@@ -324,29 +310,7 @@ class _TranslationsHomeAr implements TranslationsHomeEn {
 
 	// Translations
 	@override late final _TranslationsHomeMainAr main = _TranslationsHomeMainAr._(_root);
-	@override late final _TranslationsHomeLocationAr location = _TranslationsHomeLocationAr._(_root);
-	@override String get search => 'ابحث عن خدمات أو مزودين أو تجارب';
-	@override String get upcomingEvents => 'الأحداث القادمة';
-	@override String get curatedServiceProviders => 'مزودو الخدمة المختارون';
-	@override String get browseExperiences => 'تصفح التجارب';
-	@override String get services => 'الخدمات';
-	@override String get seeAll => 'عرض الكل';
-	@override String get seePastEvents => 'عرض الأحداث السابقة';
-}
-
-// Path: search
-class _TranslationsSearchAr implements TranslationsSearchEn {
-	_TranslationsSearchAr._(this._root);
-
-	final TranslationsAr _root; // ignore: unused_field
-
-	// Translations
-	@override String get title => 'بحث';
-	@override String get search => 'ابحث عن خدمات';
-	@override String get placeholder => 'ابحث عن خدمات أو مزودين أو تجارب';
-	@override String get noResults => 'لم يتم العثور على نتائج';
-	@override late final _TranslationsSearchFiltersAr filters = _TranslationsSearchFiltersAr._(_root);
-	@override late final _TranslationsSearchTimeBottomSheetAr timeBottomSheet = _TranslationsSearchTimeBottomSheetAr._(_root);
+	@override late final _TranslationsHomeErrorsAr errors = _TranslationsHomeErrorsAr._(_root);
 }
 
 // Path: forms
@@ -362,6 +326,7 @@ class _TranslationsFormsAr implements TranslationsFormsEn {
 	@override String minDigitsLength({required int length}) => 'يجب أن يحتوي على ${length} أرقام على الأقل';
 	@override String maxDigitsLength({required int length}) => 'الحد الأقصى هو ${length} أرقام';
 	@override String get youMustEnterAValidEmail => 'يجب إدخال بريد إلكتروني صحيح';
+	@override late final _TranslationsFormsCardAr card = _TranslationsFormsCardAr._(_root);
 }
 
 // Path: exceptions.AuthenticationRepositoryExceptionCode
@@ -379,33 +344,89 @@ class _TranslationsExceptionsAuthenticationRepositoryExceptionCodeAr implements 
 	@override String get failedToVerifyOtp => 'فشل التحقق من رمز ال OTP';
 }
 
-// Path: ui.eventCard
-class _TranslationsUiEventCardAr implements TranslationsUiEventCardEn {
-	_TranslationsUiEventCardAr._(this._root);
+// Path: exceptions.promocodeExceptions
+class _TranslationsExceptionsPromocodeExceptionsAr implements TranslationsExceptionsPromocodeExceptionsEn {
+	_TranslationsExceptionsPromocodeExceptionsAr._(this._root);
 
 	final TranslationsAr _root; // ignore: unused_field
 
 	// Translations
-	@override String date({required DateTime date}) => '${DateFormat('MMM dd', 'ar').format(date)}';
-	@override String services({required int n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('ar'))(n,
-		one: '${n} خدمة',
-		other: '${n} خدمات',
-	);
+	@override String get cantBeApplied => 'لا يمكن تطبيق الرمز الترويجي على سلتك';
 }
 
-// Path: ui.serviceDetails
-class _TranslationsUiServiceDetailsAr implements TranslationsUiServiceDetailsEn {
-	_TranslationsUiServiceDetailsAr._(this._root);
+// Path: cart
+class _TranslationsCartAr implements TranslationsCartEn {
+	_TranslationsCartAr._(this._root);
 
 	final TranslationsAr _root; // ignore: unused_field
 
 	// Translations
-	@override String updateAt({required DateTime date}) => '${DateFormat('MMM dd, HH:mm', 'ar').format(date)}';
-	@override String hour({required int n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('ar'))(n,
-		zero: '${n} ساعة',
-		one: '${n} ساعة',
-		other: '${n} ساعات',
+	@override String get yourCart => 'سلتك';
+	@override String get emptyCart => 'سلتك فارغة';
+	@override String get browseServices => 'تصفح الخدمات';
+	@override String get browseOfferings => 'تصفح عروضنا \nلإضافة عناصر إلى سلتك';
+	@override String get weRecommend => 'نوصي بـ';
+	@override String get edit => 'تعديل';
+	@override String get remove => 'إزالة';
+	@override String get addToCart => 'أضف إلى السلة';
+	@override String get close => 'إغلاق';
+	@override String itemDateTime({required DateTime date}) => '${DateFormat('MMM dd, hh:mm', 'ar').format(date)}';
+	@override String hour({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('ar'))(n,
+		zero: 'ساعة',
+		one: 'ساعة',
+		other: 'ساعات',
 	);
+	@override String get dontForgetToAdd => 'لا تنسَ الإضافة';
+	@override String services({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('ar'))(n,
+		one: 'خدمة',
+		other: 'خدمات',
+	);
+	@override String get total => 'الإجمالي';
+	@override late final _TranslationsCartPromocodeAr promocode = _TranslationsCartPromocodeAr._(_root);
+	@override String get updateInCart => 'تحديث في السلة';
+	@override String get cart => 'سلة';
+	@override String get checkout => 'إتمام الشراء';
+	@override String get apply => 'تطبيق';
+	@override String get applyPromocode => 'تطبيق كود الخصم';
+	@override String get enterPromocode => 'أدخل كود الخصم';
+	@override String get promocodeRequired => 'كود الخصم مطلوب';
+	@override String get appliedPromocodes => 'أكواد الخصم المطبقة';
+	@override String get recommendations => 'التوصيات';
+	@override String get subtotal => 'المجموع الفرعي';
+	@override String get discount => 'الخصم';
+	@override String get minOrder => 'الحد الأدنى للطلب';
+	@override String get minTime => 'الحد الأدنى للوقت';
+	@override String get spaceRequired => 'المساحة المطلوبة';
+	@override String get hours => 'ساعات';
+	@override String get specialRequests => 'طلبات خاصة';
+	@override String get enterSpecialRequests => 'أدخل الطلبات الخاصة...';
+	@override String get errorLoadingCart => 'خطأ في تحميل السلة';
+	@override String get cartCleared => 'تم مسح السلة بنجاح';
+	@override String get failedToLoadService => 'فشل تحميل الخدمة';
+	@override String pleaseSelectOption({required Object sectionName}) => 'يرجى اختيار ${sectionName}';
+	@override String pleaseSelectAtLeastOne({required Object sectionName}) => 'يرجى اختيار خيار ${sectionName} واحد على الأقل';
+	@override String pleaseSelectMore({required Object sectionName}) => 'يرجى اختيار المزيد من خيارات ${sectionName}';
+	@override String tooManyOptionsSelected({required Object sectionName}) => 'تم اختيار عدد كبير جداً من خيارات ${sectionName}';
+	@override String pleaseAddAtLeastOne({required Object sectionName}) => 'يرجى إضافة عنصر ${sectionName} واحد على الأقل';
+	@override String get pleaseSelectDateTime => 'يرجى اختيار التاريخ والوقت';
+	@override String get canapeOptions => 'خيارات الكانابيه';
+	@override String get options => 'خيارات';
+	@override String get startDateAndTime => 'تاريخ ووقت البدء';
+	@override String get perExtraHour => 'لكل ساعة إضافية';
+	@override String goToVendorProfile({required Object vendorName}) => 'انتقل إلى ملف ${vendorName}';
+}
+
+// Path: settings
+class _TranslationsSettingsAr implements TranslationsSettingsEn {
+	_TranslationsSettingsAr._(this._root);
+
+	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'إعدادات التطبيق';
+	@override String get language => 'اللغة';
+	@override String get notifications => 'الإشعارات';
+	@override late final _TranslationsSettingsNotificationSettingsAr notificationSettings = _TranslationsSettingsNotificationSettingsAr._(_root);
 }
 
 // Path: ui.common
@@ -417,6 +438,57 @@ class _TranslationsUiCommonAr implements TranslationsUiCommonEn {
 	// Translations
 	@override String get cancel => 'إلغاء';
 	@override String get ok => 'موافق';
+	@override String get viewAll => 'عرض الكل';
+	@override String get required => 'مطلوب';
+	@override String get optional => 'اختياري';
+	@override String get customization => 'التخصيص';
+}
+
+// Path: ui.errors
+class _TranslationsUiErrorsAr implements TranslationsUiErrorsEn {
+	_TranslationsUiErrorsAr._(this._root);
+
+	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
+	@override String get somethingWentWrong => 'حدث خطأ ما';
+	@override String get retry => 'إعادة المحاولة';
+}
+
+// Path: ui.dateTime
+class _TranslationsUiDateTimeAr implements TranslationsUiDateTimeEn {
+	_TranslationsUiDateTimeAr._(this._root);
+
+	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
+	@override String get yesterday => 'أمس';
+	@override String get today => 'اليوم';
+	@override String get now => 'الآن';
+	@override String get tomorrow => 'غدًا';
+	@override String time({required DateTime time}) => '${DateFormat('HH:mm', 'ar').format(time)}';
+	@override String timeWithDay({required DateTime time, required Object day}) => '${DateFormat('HH:mm', 'ar').format(time)}، ${day}';
+	@override String dateWithMonth({required DateTime date}) => '${DateFormat('MMM d', 'ar').format(date)}';
+	@override Map<String, String> get weekdays => {
+		'monday': 'الاثنين',
+		'tuesday': 'الثلاثاء',
+		'wednesday': 'الأربعاء',
+		'thursday': 'الخميس',
+		'friday': 'الجمعة',
+		'saturday': 'السبت',
+		'sunday': 'الأحد',
+	};
+}
+
+// Path: ui.mentorXReadMore
+class _TranslationsUiMentorXReadMoreAr implements TranslationsUiMentorXReadMoreEn {
+	_TranslationsUiMentorXReadMoreAr._(this._root);
+
+	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
+	@override String get more => 'المزيد';
+	@override String get less => 'أقل';
 }
 
 // Path: login.otp
@@ -430,30 +502,8 @@ class _TranslationsLoginOtpAr implements TranslationsLoginOtpEn {
 	@override String get description => 'لقد ارسلنا رمز تأكيد لجوالك. ادخله هنا للمتابعة.';
 	@override String get confirm => 'تأكيد';
 	@override String get otpWasVerifiedSuccessfully => 'تم التحقق من رمز التأكيد بنجاح';
-}
-
-// Path: login.wall
-class _TranslationsLoginWallAr implements TranslationsLoginWallEn {
-	_TranslationsLoginWallAr._(this._root);
-
-	final TranslationsAr _root; // ignore: unused_field
-
-	// Translations
-	@override String get header => 'حسابك';
-	@override String get description => 'سجل الدخول او انشى حسابك في ${_root.core.appName} للأكمال';
-	@override String get cancel => 'إلغاء';
-	@override String get tryAnotherNumber => 'اختر رقم جوال جديد';
-}
-
-// Path: login.countryPicker
-class _TranslationsLoginCountryPickerAr implements TranslationsLoginCountryPickerEn {
-	_TranslationsLoginCountryPickerAr._(this._root);
-
-	final TranslationsAr _root; // ignore: unused_field
-
-	// Translations
-	@override String get pickYourCountry => 'اختر دولتك';
-	@override String get pickYourCountryDailCode => 'اختر رمز إتصال دولتك';
+	@override String get resend => 'اعادة الارسال';
+	@override String get otpWasResentSuccessfully => 'تم اعادة الارسال بنجاح';
 }
 
 // Path: home.main
@@ -470,129 +520,136 @@ class _TranslationsHomeMainAr implements TranslationsHomeMainEn {
 	@override String get me => 'حسابي';
 }
 
-// Path: home.location
-class _TranslationsHomeLocationAr implements TranslationsHomeLocationEn {
-	_TranslationsHomeLocationAr._(this._root);
+// Path: home.errors
+class _TranslationsHomeErrorsAr implements TranslationsHomeErrorsEn {
+	_TranslationsHomeErrorsAr._(this._root);
 
 	final TranslationsAr _root; // ignore: unused_field
 
 	// Translations
-	@override String get doha => 'الدوحة';
-	@override String get title => 'الموقع';
-	@override String get subtitle => 'يرجى تحديد موقعك لتحسين التجربة';
-	@override String get historyLocations => 'المواقع السابقة';
-	@override String get updateLocation => 'تحديث الموقع';
-	@override String get detected => 'تم تحديد الموقع';
-	@override String get noSearchResults => 'لا توجد نتائج';
-	@override String get searchPlaceholder => 'ابحث عن موقع';
-	@override String get currentLocation => 'موقعك الحالي';
-	@override String get useCurrentLocation => 'استخدام الموقع الحالي';
-	@override String get permissionDenied => 'تم رفض إذن الموقع';
-	@override String get retry => 'إعادة المحاولة';
+	@override String get failedToLoadUpcomingEvents => 'فشل تحميل الفاعليات القادمة';
+	@override String get failedToLoadVendors => 'فشل تحميل مزودي الخدمات';
+	@override String get failedToLoadOccasions => 'فشل تحميل المناسبات';
+	@override String get failedToLoadCategories => 'فشل تحميل الأقسام';
 }
 
-// Path: search.filters
-class _TranslationsSearchFiltersAr implements TranslationsSearchFiltersEn {
-	_TranslationsSearchFiltersAr._(this._root);
+// Path: forms.card
+class _TranslationsFormsCardAr implements TranslationsFormsCardEn {
+	_TranslationsFormsCardAr._(this._root);
 
 	final TranslationsAr _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'الفلاتر';
+	@override String get expiryInvalidFormat => 'صيغة غير صحيحة. استخدم MM/YY';
+	@override String get expiryInvalidMonth => 'شهر غير صحيح (01-12)';
+	@override String get expiryCardExpired => 'انتهت صلاحية البطاقة';
+	@override String get cvvInvalid => 'يجب أن يكون CVV من 3-4 أرقام';
 }
 
-// Path: search.timeBottomSheet
-class _TranslationsSearchTimeBottomSheetAr implements TranslationsSearchTimeBottomSheetEn {
-	_TranslationsSearchTimeBottomSheetAr._(this._root);
+// Path: cart.promocode
+class _TranslationsCartPromocodeAr implements TranslationsCartPromocodeEn {
+	_TranslationsCartPromocodeAr._(this._root);
 
 	final TranslationsAr _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'وقت الحدث';
-	@override String get subtitle => 'يرجى تحديد الوقت المطلوب لتصفية الخدمات التي يمكن ترتيبها لحدثك';
-	@override String get updateTime => 'تحديث الوقت';
-	@override String selectedDate({required DateTime date}) => '${DateFormat('MMMM d, HH:mm', 'ar').format(date)}';
+	@override String get header => 'رمز ترويجي';
+	@override String get hint => 'أدخل الرمز الترويجي';
+	@override String get promocodeApplied => 'تم تطبيق الرمز الترويجي';
+	@override String get promocodeCannotBeApplied => 'لا يمكن تطبيق الرمز الترويجي على سلتك';
 }
 
-/// Flat map(s) containing all translations.
+// Path: settings.notificationSettings
+class _TranslationsSettingsNotificationSettingsAr implements TranslationsSettingsNotificationSettingsEn {
+	_TranslationsSettingsNotificationSettingsAr._(this._root);
+
+	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'الإشعارات';
+	@override String get common => 'عام';
+	@override String get generalNotification => 'الإشعار العام';
+	@override String get sound => 'الصوت';
+	@override String get vibrate => 'الاهتزاز';
+	@override String get systemAndServicesUpdate => 'التحديثات والخدمات';
+	@override String get appUpdates => 'تحديثات التطبيق';
+	@override String get billReminder => 'تذكير الفاتورة';
+	@override String get promotion => 'العروض الترويجية';
+	@override String get discountAvailable => 'الخصومات المتاحة';
+	@override String get paymentRequest => 'طلب الدفع';
+}
+
+/// The flat map containing all translations for locale <ar>.
 /// Only for edge cases! For simple maps, use the map function of this library.
+///
+/// The Dart AOT compiler has issues with very large switch statements,
+/// so the map is split into smaller functions (512 entries each).
 extension on TranslationsAr {
 	dynamic _flatMapFunction(String path) {
+		return _flatMapFunction$0(path);
+	}
+
+	dynamic _flatMapFunction$0(String path) {
 		switch (path) {
-			case 'ui.totalCost': return ({required num amount}) => '${_root.$meta.types['price']!.format(amount)}';
-			case 'ui.eventCard.date': return ({required DateTime date}) => '${DateFormat('MMM dd', 'ar').format(date)}';
-			case 'ui.eventCard.services': return ({required int n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('ar'))(n,
-				one: '${n} خدمة',
-				other: '${n} خدمات',
-			);
-			case 'ui.serviceDetails.updateAt': return ({required DateTime date}) => '${DateFormat('MMM dd, HH:mm', 'ar').format(date)}';
-			case 'ui.serviceDetails.hour': return ({required int n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('ar'))(n,
-				zero: '${n} ساعة',
-				one: '${n} ساعة',
-				other: '${n} ساعات',
-			);
 			case 'ui.common.cancel': return 'إلغاء';
 			case 'ui.common.ok': return 'موافق';
-			case 'core.appName': return 'MentorX';
+			case 'ui.common.viewAll': return 'عرض الكل';
+			case 'ui.common.required': return 'مطلوب';
+			case 'ui.common.optional': return 'اختياري';
+			case 'ui.common.customization': return 'التخصيص';
+			case 'ui.errors.somethingWentWrong': return 'حدث خطأ ما';
+			case 'ui.errors.retry': return 'إعادة المحاولة';
+			case 'ui.dateTime.yesterday': return 'أمس';
+			case 'ui.dateTime.today': return 'اليوم';
+			case 'ui.dateTime.now': return 'الآن';
+			case 'ui.dateTime.tomorrow': return 'غدًا';
+			case 'ui.dateTime.time': return ({required DateTime time}) => '${DateFormat('HH:mm', 'ar').format(time)}';
+			case 'ui.dateTime.timeWithDay': return ({required DateTime time, required Object day}) => '${DateFormat('HH:mm', 'ar').format(time)}، ${day}';
+			case 'ui.dateTime.dateWithMonth': return ({required DateTime date}) => '${DateFormat('MMM d', 'ar').format(date)}';
+			case 'ui.dateTime.weekdays.monday': return 'الاثنين';
+			case 'ui.dateTime.weekdays.tuesday': return 'الثلاثاء';
+			case 'ui.dateTime.weekdays.wednesday': return 'الأربعاء';
+			case 'ui.dateTime.weekdays.thursday': return 'الخميس';
+			case 'ui.dateTime.weekdays.friday': return 'الجمعة';
+			case 'ui.dateTime.weekdays.saturday': return 'السبت';
+			case 'ui.dateTime.weekdays.sunday': return 'الأحد';
+			case 'ui.mentorXReadMore.more': return 'المزيد';
+			case 'ui.mentorXReadMore.less': return 'أقل';
+			case 'core.appName': return 'MentorX Student';
+			case 'core.currency': return 'ج.م';
+			case 'core.price': return ({required num amount}) => '${amount} ${_root.core.currency}';
 			case 'core.languages.en': return 'English';
 			case 'core.languages.ar': return 'العربية';
 			case 'initialLanguage.header': return 'يرجى تحديد اللغة المفضلة';
 			case 'initialLanguage.kContinue': return 'موافق';
-			case 'initialLocation.header': return 'من فضلك اختر موقعك لتجربة افضل';
-			case 'initialLocation.kContinue': return 'موافق';
 			case 'login.header': return 'ادخل رقم الجوال لتسجيل الدخول';
 			case 'login.phoneNumber': return 'رقم الجوال';
 			case 'login.signIn': return 'تسجيل الدخول';
-			case 'login.continueAsGuest': return 'استمر كزائر';
 			case 'login.otp.header': return 'رمز التأكيد';
 			case 'login.otp.description': return 'لقد ارسلنا رمز تأكيد لجوالك. ادخله هنا للمتابعة.';
 			case 'login.otp.confirm': return 'تأكيد';
 			case 'login.otp.otpWasVerifiedSuccessfully': return 'تم التحقق من رمز التأكيد بنجاح';
-			case 'login.wall.header': return 'حسابك';
-			case 'login.wall.description': return 'سجل الدخول او انشى حسابك في ${_root.core.appName} للأكمال';
-			case 'login.wall.cancel': return 'إلغاء';
-			case 'login.wall.tryAnotherNumber': return 'اختر رقم جوال جديد';
-			case 'login.countryPicker.pickYourCountry': return 'اختر دولتك';
-			case 'login.countryPicker.pickYourCountryDailCode': return 'اختر رمز إتصال دولتك';
+			case 'login.otp.resend': return 'اعادة الارسال';
+			case 'login.otp.otpWasResentSuccessfully': return 'تم اعادة الارسال بنجاح';
 			case 'home.main.home': return 'الرئيسية';
 			case 'home.main.favorites': return 'المفضلة';
 			case 'home.main.assistance': return 'المساعدة';
 			case 'home.main.cart': return 'السلة';
 			case 'home.main.me': return 'حسابي';
-			case 'home.location.doha': return 'الدوحة';
-			case 'home.location.title': return 'الموقع';
-			case 'home.location.subtitle': return 'يرجى تحديد موقعك لتحسين التجربة';
-			case 'home.location.historyLocations': return 'المواقع السابقة';
-			case 'home.location.updateLocation': return 'تحديث الموقع';
-			case 'home.location.detected': return 'تم تحديد الموقع';
-			case 'home.location.noSearchResults': return 'لا توجد نتائج';
-			case 'home.location.searchPlaceholder': return 'ابحث عن موقع';
-			case 'home.location.currentLocation': return 'موقعك الحالي';
-			case 'home.location.useCurrentLocation': return 'استخدام الموقع الحالي';
-			case 'home.location.permissionDenied': return 'تم رفض إذن الموقع';
-			case 'home.location.retry': return 'إعادة المحاولة';
-			case 'home.search': return 'ابحث عن خدمات أو مزودين أو تجارب';
-			case 'home.upcomingEvents': return 'الأحداث القادمة';
-			case 'home.curatedServiceProviders': return 'مزودو الخدمة المختارون';
-			case 'home.browseExperiences': return 'تصفح التجارب';
-			case 'home.services': return 'الخدمات';
-			case 'home.seeAll': return 'عرض الكل';
-			case 'home.seePastEvents': return 'عرض الأحداث السابقة';
-			case 'search.title': return 'بحث';
-			case 'search.search': return 'ابحث عن خدمات';
-			case 'search.placeholder': return 'ابحث عن خدمات أو مزودين أو تجارب';
-			case 'search.noResults': return 'لم يتم العثور على نتائج';
-			case 'search.filters.title': return 'الفلاتر';
-			case 'search.timeBottomSheet.title': return 'وقت الحدث';
-			case 'search.timeBottomSheet.subtitle': return 'يرجى تحديد الوقت المطلوب لتصفية الخدمات التي يمكن ترتيبها لحدثك';
-			case 'search.timeBottomSheet.updateTime': return 'تحديث الوقت';
-			case 'search.timeBottomSheet.selectedDate': return ({required DateTime date}) => '${DateFormat('MMMM d, HH:mm', 'ar').format(date)}';
+			case 'home.errors.failedToLoadUpcomingEvents': return 'فشل تحميل الفاعليات القادمة';
+			case 'home.errors.failedToLoadVendors': return 'فشل تحميل مزودي الخدمات';
+			case 'home.errors.failedToLoadOccasions': return 'فشل تحميل المناسبات';
+			case 'home.errors.failedToLoadCategories': return 'فشل تحميل الأقسام';
 			case 'forms.required': return 'هذا الحقل مطلوب';
 			case 'forms.minLength': return ({required int length}) => 'يجب أن يحتوي على ${length} أحرف على الأقل';
 			case 'forms.maxLength': return ({required int length}) => 'الحد الأقصى هو ${length} أحرف';
 			case 'forms.minDigitsLength': return ({required int length}) => 'يجب أن يحتوي على ${length} أرقام على الأقل';
 			case 'forms.maxDigitsLength': return ({required int length}) => 'الحد الأقصى هو ${length} أرقام';
 			case 'forms.youMustEnterAValidEmail': return 'يجب إدخال بريد إلكتروني صحيح';
+			case 'forms.card.expiryInvalidFormat': return 'صيغة غير صحيحة. استخدم MM/YY';
+			case 'forms.card.expiryInvalidMonth': return 'شهر غير صحيح (01-12)';
+			case 'forms.card.expiryCardExpired': return 'انتهت صلاحية البطاقة';
+			case 'forms.card.cvvInvalid': return 'يجب أن يكون CVV من 3-4 أرقام';
 			case 'exceptions.unknown': return 'خطأ غير معروف';
 			case 'exceptions.AuthenticationRepositoryExceptionCode.unknown': return 'خطأ غير معروف';
 			case 'exceptions.AuthenticationRepositoryExceptionCode.invalidPhoneNumber': return 'رقم الجوال غير صحيح';
@@ -600,6 +657,7 @@ extension on TranslationsAr {
 			case 'exceptions.AuthenticationRepositoryExceptionCode.failedToInitialize': return 'فشل التحميل';
 			case 'exceptions.AuthenticationRepositoryExceptionCode.failedToSendOtp': return 'فشل ارسال رمز ال OTP';
 			case 'exceptions.AuthenticationRepositoryExceptionCode.failedToVerifyOtp': return 'فشل التحقق من رمز ال OTP';
+			case 'exceptions.promocodeExceptions.cantBeApplied': return 'لا يمكن تطبيق الرمز الترويجي على سلتك';
 			case 'countries.afghanistan': return 'أفغانستان';
 			case 'countries.albania': return 'ألبانيا';
 			case 'countries.algeria': return 'الجزائر';
@@ -796,6 +854,76 @@ extension on TranslationsAr {
 			case 'countries.yemen': return 'اليمن';
 			case 'countries.zambia': return 'زامبيا';
 			case 'countries.zimbabwe': return 'زيمبابوي';
+			case 'cart.yourCart': return 'سلتك';
+			case 'cart.emptyCart': return 'سلتك فارغة';
+			case 'cart.browseServices': return 'تصفح الخدمات';
+			case 'cart.browseOfferings': return 'تصفح عروضنا \nلإضافة عناصر إلى سلتك';
+			case 'cart.weRecommend': return 'نوصي بـ';
+			case 'cart.edit': return 'تعديل';
+			case 'cart.remove': return 'إزالة';
+			case 'cart.addToCart': return 'أضف إلى السلة';
+			case 'cart.close': return 'إغلاق';
+			case 'cart.itemDateTime': return ({required DateTime date}) => '${DateFormat('MMM dd, hh:mm', 'ar').format(date)}';
+			case 'cart.hour': return ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('ar'))(n,
+				zero: 'ساعة',
+				one: 'ساعة',
+				other: 'ساعات',
+			);
+			case 'cart.dontForgetToAdd': return 'لا تنسَ الإضافة';
+			case 'cart.services': return ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('ar'))(n,
+				one: 'خدمة',
+				other: 'خدمات',
+			);
+			case 'cart.total': return 'الإجمالي';
+			case 'cart.promocode.header': return 'رمز ترويجي';
+			case 'cart.promocode.hint': return 'أدخل الرمز الترويجي';
+			case 'cart.promocode.promocodeApplied': return 'تم تطبيق الرمز الترويجي';
+			case 'cart.promocode.promocodeCannotBeApplied': return 'لا يمكن تطبيق الرمز الترويجي على سلتك';
+			case 'cart.updateInCart': return 'تحديث في السلة';
+			case 'cart.cart': return 'سلة';
+			case 'cart.checkout': return 'إتمام الشراء';
+			case 'cart.apply': return 'تطبيق';
+			case 'cart.applyPromocode': return 'تطبيق كود الخصم';
+			case 'cart.enterPromocode': return 'أدخل كود الخصم';
+			case 'cart.promocodeRequired': return 'كود الخصم مطلوب';
+			case 'cart.appliedPromocodes': return 'أكواد الخصم المطبقة';
+			case 'cart.recommendations': return 'التوصيات';
+			case 'cart.subtotal': return 'المجموع الفرعي';
+			case 'cart.discount': return 'الخصم';
+			case 'cart.minOrder': return 'الحد الأدنى للطلب';
+			case 'cart.minTime': return 'الحد الأدنى للوقت';
+			case 'cart.spaceRequired': return 'المساحة المطلوبة';
+			case 'cart.hours': return 'ساعات';
+			case 'cart.specialRequests': return 'طلبات خاصة';
+			case 'cart.enterSpecialRequests': return 'أدخل الطلبات الخاصة...';
+			case 'cart.errorLoadingCart': return 'خطأ في تحميل السلة';
+			case 'cart.cartCleared': return 'تم مسح السلة بنجاح';
+			case 'cart.failedToLoadService': return 'فشل تحميل الخدمة';
+			case 'cart.pleaseSelectOption': return ({required Object sectionName}) => 'يرجى اختيار ${sectionName}';
+			case 'cart.pleaseSelectAtLeastOne': return ({required Object sectionName}) => 'يرجى اختيار خيار ${sectionName} واحد على الأقل';
+			case 'cart.pleaseSelectMore': return ({required Object sectionName}) => 'يرجى اختيار المزيد من خيارات ${sectionName}';
+			case 'cart.tooManyOptionsSelected': return ({required Object sectionName}) => 'تم اختيار عدد كبير جداً من خيارات ${sectionName}';
+			case 'cart.pleaseAddAtLeastOne': return ({required Object sectionName}) => 'يرجى إضافة عنصر ${sectionName} واحد على الأقل';
+			case 'cart.pleaseSelectDateTime': return 'يرجى اختيار التاريخ والوقت';
+			case 'cart.canapeOptions': return 'خيارات الكانابيه';
+			case 'cart.options': return 'خيارات';
+			case 'cart.startDateAndTime': return 'تاريخ ووقت البدء';
+			case 'cart.perExtraHour': return 'لكل ساعة إضافية';
+			case 'cart.goToVendorProfile': return ({required Object vendorName}) => 'انتقل إلى ملف ${vendorName}';
+			case 'settings.title': return 'إعدادات التطبيق';
+			case 'settings.language': return 'اللغة';
+			case 'settings.notifications': return 'الإشعارات';
+			case 'settings.notificationSettings.title': return 'الإشعارات';
+			case 'settings.notificationSettings.common': return 'عام';
+			case 'settings.notificationSettings.generalNotification': return 'الإشعار العام';
+			case 'settings.notificationSettings.sound': return 'الصوت';
+			case 'settings.notificationSettings.vibrate': return 'الاهتزاز';
+			case 'settings.notificationSettings.systemAndServicesUpdate': return 'التحديثات والخدمات';
+			case 'settings.notificationSettings.appUpdates': return 'تحديثات التطبيق';
+			case 'settings.notificationSettings.billReminder': return 'تذكير الفاتورة';
+			case 'settings.notificationSettings.promotion': return 'العروض الترويجية';
+			case 'settings.notificationSettings.discountAvailable': return 'الخصومات المتاحة';
+			case 'settings.notificationSettings.paymentRequest': return 'طلب الدفع';
 			default: return null;
 		}
 	}
