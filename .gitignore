@@ -95,10 +95,14 @@ migrate_working_dir/
 **/instructions/
 **/GEMINI.md
 *.env
-**/docs/**
+# **/docs/**
 **/screenshots/**
 **/endpoints/**
 mentorx/ios/Runner/GoogleService-Info.plist
 mentorx/android/app/google-services.json
 mentorx/firebase.json
 mentorx/lib/firebase_options.dart
+
+doc.docx
+doc.pdf
+docs/assets/
