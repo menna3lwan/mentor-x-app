@@ -691,6 +691,7 @@ CREATE TABLE session_progress (
 #### Environment Variables (.env)
 
 ```bash
+
 # Application Settings
 APP_NAME=MentorX
 APP_ENV=production
@@ -876,6 +877,7 @@ pip install -r requirements.txt
 ```bash
 cp .env.example .env
 nano .env
+
 # Edit with your configuration values
 ```
 
@@ -995,6 +997,7 @@ sudo ufw enable
 **Step 19: Verify Installation**
 
 ```bash
+
 # Check API
 curl https://mentorx.edu.eg/api/health
 
@@ -1009,6 +1012,7 @@ pm2 logs mentorx-api
 
 ```bash
 sudo crontab -e
+
 # Add daily backup at 2 AM
 0 2 * * * /var/www/mentorx/scripts/backup.sh
 ```
@@ -1170,7 +1174,7 @@ sudo crontab -e
 
 ## Overview
 
-MentorX is an innovative, AI-powered e-learning platform designed to revolutionize the educational experience for high school students, teachers, parents, and educational institutions. Developed as a graduation project at Benha University's Faculty of Computers & Artificial Intelligence, MentorX addresses critical challenges in modern education through intelligent technology integration, transparent communication systems, and data-driven insights.
+MentorX is an innovative, AI-powered e-learning platform designed to transform the educational experience for high school students by integrating AI-powered tools, teachers, parents, and educational institutions. Developed as a graduation project at Benha University's Faculty of Computers & Artificial Intelligence, MentorX addresses the critical challenges in modern education through intelligent technology integration, transparent communication systems, and data-driven insights.
 
 The platform combines cutting-edge artificial intelligence, robust backend architecture, and intuitive user interfaces to create a comprehensive learning ecosystem. MentorX tackles persistent educational problems including student absenteeism, lack of parental transparency, revenue loss from session sharing, examination integrity issues, and teacher workload management.
 
@@ -1215,7 +1219,7 @@ MentorX employs a modern, scalable technical stack:
 
 **Mobile**: Flutter with Dart for cross-platform applications
 
-**Database**: Microsoft SQL Server with Entity Framework Core
+**Database**: Microsoft SQL Server using Entity Framework Core
 
 **AI/ML**: Python, TensorFlow, PyTorch, Scikit-learn, Transformers
 
@@ -1241,7 +1245,7 @@ MentorX delivers measurable improvements in educational outcomes:
 - Enhanced parental involvement via transparent reporting
 - Improved teaching efficiency through automated analytics
 - Higher student engagement through gamification
-- Maintained academic integrity through AI-generated assessments
+- Ensured academic integrity through AI-generated assessments
 
 ## Development Methodology
 
@@ -1264,7 +1268,7 @@ Comprehensive risk assessment addresses technical risks (server downtime, integr
 
 ## Future Enhancements
 
-Planned improvements include:
+Planned improvements under consideration include:
 
 - Advanced AI models using BERT and transformer architectures
 - Collaborative filtering for enhanced recommendations
@@ -1278,7 +1282,7 @@ Planned improvements include:
 
 MentorX represents a comprehensive solution to modern educational challenges, combining pedagogical best practices with advanced technology. The platform demonstrates the transformative potential of AI in education, providing scalable, secure, and intelligent tools that benefit all stakeholders in the learning ecosystem. Through rigorous design, implementation, and testing, MentorX delivers a production-ready system capable of deployment in educational institutions, offering immediate value and long-term scalability.
 
-This project fulfills the academic requirements for the Bachelor's degree in Computers and Artificial Intelligence while contributing meaningful innovation to the field of educational technology.
+MentorX fulfills the academic requirements for the Bachelor's degree in Computers and Artificial Intelligence while contributing meaningful innovation to the field of educational technology.
 
 ---
 <div style="page-break-after: always;"></div>
@@ -1288,7 +1292,7 @@ This project fulfills the academic requirements for the Bachelor's degree in Com
 
 The landscape of modern education faces unprecedented challenges and opportunities. Traditional educational systems struggle with student engagement, transparent communication between stakeholders, resource optimization, and personalized learning delivery. The COVID-19 pandemic accelerated the digital transformation of education, exposing both the potential and limitations of existing e-learning solutions.
 
-MentorX emerges as a strategic response to these challenges, designed specifically for the unique needs of high school education in emerging markets. The platform recognizes that effective learning requires more than content delivery—it demands intelligent adaptation, stakeholder transparency, robust security, and continuous engagement mechanisms.
+MentorX emerges as a strategic response to these challenges, designed specifically for the unique needs of high school education in emerging markets. The platform recognizes that effective learning requires more than content delivery: it demands intelligent adaptation, stakeholder transparency, robust security, and continuous engagement mechanisms.
 
 ### The Educational Technology Gap
 
@@ -1323,13 +1327,13 @@ MentorX is grounded in several pedagogical principles:
 
 The education sector has witnessed several technological waves:
 
-**First Wave (1990s-2000s)**: Computer labs and basic digital content
+**First Generation (1990s-2000s)**: Computer labs and basic digital content
 
-**Second Wave (2000s-2010s)**: Learning Management Systems (LMS) and online courses
+**Second Generation (2000s-2010s)**: Learning Management Systems (LMS) and online courses
 
-**Third Wave (2010s-2020s)**: Mobile learning, video content, and social learning platforms
+**Third Generation (2010s-2020s)**: Mobile learning, video content, and social learning platforms
 
-**Fourth Wave (2020s-present)**: AI integration, predictive analytics, and adaptive learning
+**Fourth Generation (2020s-present)**: AI integration, predictive analytics, and adaptive learning
 
 MentorX represents a comprehensive fourth-wave platform, integrating artificial intelligence not as an afterthought but as a foundational component. The system employs machine learning for performance prediction, natural language processing for intelligent chatbots, and recommendation algorithms for personalized content delivery.
 
@@ -1702,7 +1706,7 @@ Users shall manage personal information through dedicated interfaces.
 **Requirements**:
 
 - FR-1.3.1: Users shall update: name, photo, contact information, password
-- FR-1.3.2: Profile modifications shall be validated and audit-logged
+- FR-1.3.2: The system shall validate and log profile modifications
 - FR-1.3.3: Parents shall link multiple student profiles under single account
 - FR-1.3.4: Profile updates shall propagate across all system modules within 60 seconds
 - FR-1.3.5: Password change shall require current password verification
@@ -1836,7 +1840,7 @@ System shall support hybrid grading model.
 - FR-4.4.1: AI shall instantly grade objective questions upon submission
 - FR-4.4.2: Subjective responses shall queue for instructor review
 - FR-4.4.3: System shall calculate final scores automatically based on weightage
-- FR-4.4.4: Grades shall be stored in student profile
+- FR-4.4.4: The system shall store grades in student profile
 - FR-4.4.5: Notifications shall be sent to student and parent upon grade release
 - FR-4.4.6: Teachers shall modify AI-generated scores with documented reasons in audit log
 - FR-4.4.7: Students shall receive detailed performance feedback highlighting strengths and weaknesses
@@ -1867,7 +1871,7 @@ Internal messaging system shall enable direct communication.
 - FR-5.2.1: System shall support messaging between: Student↔Teacher, Parent↔Teacher, Admin↔User
 - FR-5.2.2: Unread messages shall trigger notification badges
 - FR-5.2.3: Optional email alerts shall be configurable by user
-- FR-5.2.4: Messages shall be encrypted in transit and at rest
+- FR-5.2.4: The system shall encrypt messages in transit and at rest
 - FR-5.2.5: Message history shall be retained according to privacy policy (minimum 1 semester)
 - FR-5.2.6: Users shall be able to delete their own messages
 - FR-5.2.7: System shall support file attachments in messages (max 10 MB)
@@ -1930,7 +1934,7 @@ System shall implement role-based access control (RBAC).
 - FR-7.1.4: Administrator role shall have full system access: user management, configuration, financial data, system logs
 - FR-7.1.5: Permissions shall be granular and configurable at feature level
 - FR-7.1.6: Permission changes shall take effect immediately
-- FR-7.1.7: Unauthorized access attempts shall be logged and alerted
+- FR-7.1.7: The system shall log and alert unauthorized access attempts
 
 **FR-7.2 Session Management**
 
@@ -1943,7 +1947,7 @@ User sessions shall be secure and properly managed.
 - FR-7.2.3: Logout shall immediately terminate session and invalidate token
 - FR-7.2.4: Security breach detection shall auto-terminate all user sessions
 - FR-7.2.5: Concurrent sessions from different devices shall be prevented for students
-- FR-7.2.6: Session activity shall be logged for audit purposes
+- FR-7.2.6: The system shall log session activity for audit purposes
 - FR-7.2.7: "Remember Me" functionality shall extend session to 30 days with periodic re-authentication
 
 ### 2.1.8 Gamification
@@ -2058,7 +2062,7 @@ Non-functional requirements define system quality attributes governing overall p
 
 - All communication shall use SSL/TLS (HTTPS) with minimum TLS 1.2
 - Sensitive data at rest shall use AES-256 encryption
-- Database connections shall be encrypted
+- The system shall encrypt database connections
 - Password storage shall use bcrypt with salt (cost factor ≥ 12)
 - Session tokens shall use cryptographically secure random generation
 
@@ -2174,7 +2178,7 @@ Non-functional requirements define system quality attributes governing overall p
 **NFR-8.2 User Rights**
 
 - Users shall access their personal data on demand
-- Data portability shall be supported (JSON, CSV export)
+- The platform shall support data portability (JSON, CSV export)
 - Right to erasure shall be implemented (with legal retention requirements)
 - Data rectification shall be available through profile management
 
@@ -3100,7 +3104,7 @@ flowchart TD
 **Figure 3.16: Activity Diagram - Attend Live Session**
 
 ---
-## 4.0 PROJECT MANAGEMENT
+## 4.0 Project Management
 
 ### 4.1 Scheduling and Planning
 
@@ -4054,45 +4058,45 @@ MentorX represents a comprehensive modernization of educational technology, comb
 **users Table:**
 
 - id: BIGINT PRIMARY KEY
-- email: VARCHAR(255) UNIQUE
-- password_hash: VARCHAR(255)
-- full_name: VARCHAR(255)
-- phone: VARCHAR(20)
-- role_id: BIGINT
-- avatar_url: TEXT
-- is_active: BOOLEAN
-- created_at: TIMESTAMP
-- updated_at: TIMESTAMP
+- Email: VARCHAR(255) UNIQUE
+- Password_hash: VARCHAR(255)
+- Full_name: VARCHAR(255)
+- Phone: VARCHAR(20)
+- Role_id: BIGINT
+- Avatar_url: TEXT
+- Is_active: BOOLEAN
+- Created_at: TIMESTAMP
+- Updated_at: TIMESTAMP
 
 **courses Table:**
 
 - id: BIGINT PRIMARY KEY
-- teacher_id: BIGINT
-- title: VARCHAR(255)
-- description: TEXT
-- price: DECIMAL(10,2)
-- duration_days: INT
-- is_published: BOOLEAN
-- created_at: TIMESTAMP
+- Teacher_id: BIGINT
+- Title: VARCHAR(255)
+- Description: TEXT
+- Price: DECIMAL(10,2)
+- Duration_days: INT
+- Is_published: BOOLEAN
+- Created_at: TIMESTAMP
 
 **enrollments Table:**
 
 - id: BIGINT PRIMARY KEY
-- student_id: BIGINT
-- course_id: BIGINT
-- enrolled_at: TIMESTAMP
-- progress: INT
-- status: VARCHAR(50)
+- Student_id: BIGINT
+- Course_id: BIGINT
+- Enrolled_at: TIMESTAMP
+- Progress: INT
+- Status: VARCHAR(50)
 
 **grades Table:**
 
 - id: BIGINT PRIMARY KEY
-- student_id: BIGINT
-- assignment_id: BIGINT
-- score: DECIMAL(5,2)
-- feedback: TEXT
-- graded_by: BIGINT
-- graded_at: TIMESTAMP
+- Student_id: BIGINT
+- Assignment_id: BIGINT
+- Score: DECIMAL(5,2)
+- Feedback: TEXT
+- Graded_by: BIGINT
+- Graded_at: TIMESTAMP
 
 ---
 ## APPENDIX B: Installation Guide
@@ -4127,6 +4131,7 @@ pip install -r requirements.txt
 
 ```bash
 cp .env.example .env
+
 # Edit .env with local database credentials
 ```
 
@@ -4347,7 +4352,7 @@ graph TD
 
 ```mermaid
 graph TD
-    Start([Start - Teacher Portal]) --> SelectClass["Select Class/<br/>Subject"]
+    Start([Start - Teacher Dashboard]) --> SelectClass["Select Class/<br/>Subject"]
     SelectClass --> ViewStudents["View List of<br/>Students"]
     ViewStudents --> ChooseGrading{Grading<br/>Method?}
     ChooseGrading -->|Manual Entry| EnterGrades["Enter Grades<br/>Manually"]
@@ -5476,6 +5481,7 @@ L4: Database Query Cache (PostgreSQL)
 **Unit Test Examples:**
 
 ```python
+
 # Test: Calculate Student Progress
 def test_calculate_progress():
     student = Student(id=1, name="Ahmed")
@@ -5529,6 +5535,7 @@ describe('Authentication Endpoint', () => {
 **Kubernetes Configuration:**
 
 ```yaml
+
 # production-config.yaml
 ---
 apiVersion: v1
@@ -5562,7 +5569,7 @@ services:
       POSTGRES_DB: mentorx_dev
       POSTGRES_PASSWORD: dev_password
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - Postgres_data:/var/lib/postgresql/data
 
   redis:
     image: redis:7-alpine
@@ -5576,8 +5583,8 @@ services:
       DATABASE_URL: postgresql://postgres:dev_password@postgres/mentorx_dev
       REDIS_URL: redis://redis:6379
     depends_on:
-      - postgres
-      - redis
+      - Postgres
+      - Redis
 
 volumes:
   postgres_data:
@@ -5620,7 +5627,7 @@ volumes:
 groups:
   - name: mentorx_alerts
     rules:
-      - alert: HighErrorRate
+      - Alert: HighErrorRate
         expr: rate(http_requests_total{status=~"5.."}[5m]) > 0.05
         for: 5m
         labels:
@@ -5628,13 +5635,13 @@ groups:
         annotations:
           summary: "High error rate detected"
 
-      - alert: DatabaseConnectionPoolExhausted
+      - Alert: DatabaseConnectionPoolExhausted
         expr: pg_connections_used / pg_connections_max > 0.9
         for: 2m
         labels:
           severity: warning
 
-      - alert: CacheHitRateLow
+      - Alert: CacheHitRateLow
         expr: redis_stats_hits / (redis_stats_hits + redis_stats_misses) < 0.7
         for: 10m
         labels:
@@ -5647,6 +5654,7 @@ groups:
 
 ```bash
 #!/bin/bash
+
 # .git/hooks/pre-commit
 
 # Run security scans
