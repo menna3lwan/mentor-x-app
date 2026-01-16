@@ -1,43 +1,44 @@
 # MentorX: AI-Powered E-Learning Platform
+
 ## Comprehensive Academic Documentation
 
 ---
+**Benha University**
 
-**Benha University**  
-**Faculty of Computers & Artificial Intelligence**  
+**Faculty of Computers & Artificial Intelligence**
+
 **Scientific Computing Department**
 
 ---
-
 **A Graduation Project Submitted in Partial Fulfillment of the Requirements for the Degree of Bachelor of Computers and Artificial Intelligence**
 
 ---
-
 ### Project Team
 
-1. Salma Sherif El Sayed El Meshtoly
-2. Sobhy Hassan Sobhy
-3. Mostafa Taha Sayed Ali
-4. Youssef Hussein Samir El Sayed
-5. Menna Allah Maher Abdelnaby Ibrahim
-6. Ziad Mohamed Eid Ali
-7. Shams Hesham Sabry Abdel Mottaleb Ismail
-8. Omnia Magdy Ibrahim El Sayed
-9. Kamal Ayman Kamal Eskandar
+| # | Name |
+|---|------|
+| 1 | Salma Sherif El Sayed El Meshtoly |
+| 2 | Sobhy Hassan Sobhy |
+| 3 | Mostafa Taha Sayed Ali |
+| 4 | Youssef Hussein Samir El Sayed |
+| 5 | Menna Allah Maher Abdelnaby Ibrahim |
+| 6 | Ziad Mohamed Eid Ali |
+| 7 | Shams Hesham Sabry Abdel Mottaleb Ismail |
+| 8 | Omnia Magdy Ibrahim El Sayed |
+| 9 | Kamal Ayman Kamal Eskandar |
+
 
 ---
-
 ### Under Supervision of
 
-Dr. Mohammed Elaraby  
+Dr. Mohammed Elaraby
+
 Eng. Alshimaa Mahmoud
 
 ---
-
 **Academic Year:** 2025-2026
 
 ---
-
 ## Document Version Control
 
 | Version | Date | Author | Changes |
@@ -46,7 +47,6 @@ Eng. Alshimaa Mahmoud
 | 2.0 | 2026-02-14 | Project Team | Production-Ready Enhanced Version |
 
 ---
-
 ## Declaration
 
 We, the undersigned, declare that this graduation project titled "MentorX: AI-Powered E-Learning Platform" is our original work and has been conducted under the supervision of Dr. Mohammed Elaraby and Eng. Alshimaa Mahmoud at Benha University, Faculty of Computers & Artificial Intelligence.
@@ -54,117 +54,186 @@ We, the undersigned, declare that this graduation project titled "MentorX: AI-Po
 All sources of information have been appropriately cited and referenced. This work has not been submitted previously for any other degree or qualification.
 
 ---
-
 **Date:** February 14, 2026
 
 **Signatures:**
 
-_______________________  
+_______________________
+
 Project Team Representatives
 
-_______________________  
+_______________________
+
 Dr. Mohammed Elaraby (Supervisor)
 
-_______________________  
+_______________________
+
 Eng. Alshimaa Mahmoud (Co-Supervisor)
 
 ---
-
 <div style="page-break-after: always;"></div>
-
 # Table of Contents
 
-## List of Figures *(See page XX)*
-## List of Tables *(See page XX)*
-## List of Abbreviations *(See page XX)*
-## Executive Summary *(See page XX)*
+## List of Figures
+
+## List of Tables
+
+## List of Abbreviations
+
+## Executive Summary
 
 ## 1.0 Introduction
+
 ### 1.1 Background and Context
+
 ### 1.2 Problem Statement
+
 ### 1.3 Project Objectives
+
 ### 1.4 Scope and Constraints
+
 ### 1.5 Document Organization
 
 ## 2.0 System Requirements Analysis
+
 ### 2.1 Functional Requirements
+
 ### 2.2 Non-Functional Requirements
+
 ### 2.3 System Context and Boundaries
 
 ## 3.0 System Analysis and Modeling
+
 ### 3.1 Requirements Analysis
+
 #### 3.1.1 Context Diagram
+
 #### 3.1.2 Use Case Diagram
+
 #### 3.1.3 User Flow Diagrams
+
 ### 3.2 Functional Modeling
+
 #### 3.2.1 Data Flow Diagrams (DFD)
+
 #### 3.2.2 Activity Diagrams
+
 ### 3.3 Behavioral Modeling
+
 #### 3.3.1 State Diagrams
+
 #### 3.3.2 Sequence Diagrams
+
 ### 3.4 Structural Modeling
+
 #### 3.4.1 Class Diagram
+
 #### 3.4.2 Component Diagram
+
 ### 3.5 Database Design
+
 #### 3.5.1 Entity-Relationship Diagram
+
 #### 3.5.2 Database Schema
+
 #### 3.5.3 Data Dictionary
 
 ## 4.0 Project Management
+
 ### 4.1 Scheduling and Planning
+
 #### 4.1.1 Network Diagram (PERT/CPM)
+
 #### 4.1.2 PERT Analysis
+
 #### 4.1.3 Gantt Chart
+
 #### 4.1.4 Task Scheduling
+
 ### 4.2 Risk Assessment and Mitigation
+
 ### 4.3 Cost Estimation
+
 ### 4.4 Methodologies and Technologies
 
 ## 5.0 System Architecture
+
 ### 5.1 Architecture Overview
+
 ### 5.2 Technology Stack
+
 ### 5.3 System Components
+
 ### 5.4 Integration Architecture
 
 ## 6.0 AI Features Implementation
+
 ### 6.1 RAG-Based Chatbot System
+
 ### 6.2 Student Performance Prediction
+
 ### 6.3 Smart Lesson Recommender
+
 ### 6.4 AI Model Training and Validation
 
 ## 7.0 API Documentation
+
 ### 7.1 Authentication API
+
 ### 7.2 User Management API
+
 ### 7.3 Course Management API
+
 ### 7.4 Payment API
+
 ### 7.5 Request/Response Examples
+
 ### 7.6 Error Codes and Handling
 
 ## 8.0 Security Architecture
+
 ### 8.1 Security Framework
+
 ### 8.2 Authentication and Authorization
+
 ### 8.3 Data Protection
+
 ### 8.4 Security Hardening Checklist
+
 ### 8.5 Threat Modeling
 
 ## 9.0 Deployment and Operations
+
 ### 9.1 Deployment Architecture
+
 ### 9.2 Environment Configuration
+
 ### 9.3 Deployment Checklist
+
 ### 9.4 Monitoring and Logging
+
 ### 9.5 Backup and Recovery Procedures
+
 ### 9.6 Performance Optimization
 
 ## 10.0 Testing and Quality Assurance
+
 ### 10.1 Testing Strategy
+
 ### 10.2 Test Cases and Results
+
 ### 10.3 Performance Testing
+
 ### 10.4 Security Testing
 
 ## 11.0 Conclusion
+
 ### 11.1 Summary of Achievements
+
 ### 11.2 Contributions to Education Technology
+
 ### 11.3 Limitations
+
 ### 11.4 Future Work and Recommendations
 
 ## 12.0 References
@@ -274,7 +343,6 @@ Eng. Alshimaa Mahmoud (Co-Supervisor)
 [40] Wolf, T., et al. (2020). "Transformers: State-of-the-Art Natural Language Processing." *Proceedings of EMNLP 2020: System Demonstrations*, pp. 38-45.
 
 ---
-
 ## 13.0 Glossary
 
 **Agile Development**: An iterative software development methodology that emphasizes flexibility, collaboration, and rapid delivery of working software increments.
@@ -390,7 +458,6 @@ Eng. Alshimaa Mahmoud (Co-Supervisor)
 **Workflow**: A sequence of processes through which a piece of work passes from initiation to completion.
 
 ---
-
 ## Appendices
 
 ### Appendix A: Database Schema (Complete SQL)
@@ -589,7 +656,6 @@ CREATE TABLE session_progress (
 *(Continues with complete schema for Attendance, Assignments, Quizzes, Payments, Notifications, Analytics, etc.)*
 
 ---
-
 ### Appendix B: API Endpoint Reference
 
 #### Authentication Endpoints
@@ -620,7 +686,6 @@ CREATE TABLE session_progress (
 *(Complete endpoint reference continues...)*
 
 ---
-
 ### Appendix C: Configuration Files
 
 #### Environment Variables (.env)
@@ -713,7 +778,6 @@ NEW_RELIC_LICENSE_KEY=<newrelic_key>
 ```
 
 ---
-
 ### Appendix D: Installation Guide
 
 #### Prerequisites
@@ -734,11 +798,13 @@ NEW_RELIC_LICENSE_KEY=<newrelic_key>
 #### Installation Steps
 
 **Step 1: Update System**
+
 ```bash
 sudo apt update && sudo apt upgrade -y
 ```
 
 **Step 2: Install Node.js**
+
 ```bash
 curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
 sudo apt install -y nodejs
@@ -747,6 +813,7 @@ npm --version
 ```
 
 **Step 3: Install Python and pip**
+
 ```bash
 sudo apt install -y python3 python3-pip python3-venv
 python3 --version
@@ -754,6 +821,7 @@ pip3 --version
 ```
 
 **Step 4: Install MySQL**
+
 ```bash
 sudo apt install -y mysql-server
 sudo mysql_secure_installation
@@ -762,6 +830,7 @@ sudo systemctl enable mysql
 ```
 
 **Step 5: Install Redis**
+
 ```bash
 sudo apt install -y redis-server
 sudo systemctl start redis
@@ -770,6 +839,7 @@ redis-cli ping  # Should return PONG
 ```
 
 **Step 6: Install Nginx**
+
 ```bash
 sudo apt install -y nginx
 sudo systemctl start nginx
@@ -777,6 +847,7 @@ sudo systemctl enable nginx
 ```
 
 **Step 7: Clone Repository**
+
 ```bash
 cd /var/www
 sudo git clone https://github.com/mentor-x-2026/mentor-x-app.git mentorx
@@ -785,12 +856,14 @@ sudo chown -R $USER:$USER /var/www/mentorx
 ```
 
 **Step 8: Install Backend Dependencies**
+
 ```bash
 cd /var/www/mentorx/backend
 npm install
 ```
 
 **Step 9: Install AI/ML Dependencies**
+
 ```bash
 cd /var/www/mentorx/ai
 python3 -m venv venv
@@ -799,6 +872,7 @@ pip install -r requirements.txt
 ```
 
 **Step 10: Configure Environment**
+
 ```bash
 cp .env.example .env
 nano .env
@@ -806,6 +880,7 @@ nano .env
 ```
 
 **Step 11: Create Database**
+
 ```bash
 mysql -u root -p
 CREATE DATABASE mentorx_prod CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -816,6 +891,7 @@ EXIT;
 ```
 
 **Step 12: Run Database Migrations**
+
 ```bash
 cd /var/www/mentorx/backend
 npm run migrate
@@ -823,6 +899,7 @@ npm run seed  # Optional: seed with initial data
 ```
 
 **Step 13: Build Frontend**
+
 ```bash
 cd /var/www/mentorx/frontend
 npm install
@@ -830,6 +907,7 @@ npm run build
 ```
 
 **Step 14: Configure Nginx**
+
 ```bash
 sudo nano /etc/nginx/sites-available/mentorx
 ```
@@ -838,7 +916,7 @@ sudo nano /etc/nginx/sites-available/mentorx
 server {
     listen 80;
     server_name mentorx.edu.eg www.mentorx.edu.eg;
-    
+
     # Redirect to HTTPS
     return 301 https://$server_name$request_uri;
 }
@@ -846,17 +924,17 @@ server {
 server {
     listen 443 ssl http2;
     server_name mentorx.edu.eg www.mentorx.edu.eg;
-    
+
     # SSL Configuration
     ssl_certificate /etc/ssl/certs/mentorx.crt;
     ssl_certificate_key /etc/ssl/private/mentorx.key;
     ssl_protocols TLSv1.2 TLSv1.3;
     ssl_ciphers HIGH:!aNULL:!MD5;
-    
+
     # Frontend
     root /var/www/mentorx/frontend/dist;
     index index.html;
-    
+
     # API Proxy
     location /api/ {
         proxy_pass http://localhost:3000;
@@ -866,7 +944,7 @@ server {
         proxy_set_header Host $host;
         proxy_cache_bypass $http_upgrade;
     }
-    
+
     # Static Files
     location / {
         try_files $uri $uri/ /index.html;
@@ -881,12 +959,14 @@ sudo systemctl reload nginx
 ```
 
 **Step 15: Setup SSL Certificate (Let's Encrypt)**
+
 ```bash
 sudo apt install -y certbot python3-certbot-nginx
 sudo certbot --nginx -d mentorx.edu.eg -d www.mentorx.edu.eg
 ```
 
 **Step 16: Setup PM2 for Process Management**
+
 ```bash
 sudo npm install -g pm2
 cd /var/www/mentorx/backend
@@ -896,6 +976,7 @@ pm2 save
 ```
 
 **Step 17: Setup Monitoring**
+
 ```bash
 pm2 install pm2-logrotate
 pm2 set pm2-logrotate:max_size 100M
@@ -903,6 +984,7 @@ pm2 set pm2-logrotate:retain 30
 ```
 
 **Step 18: Setup Firewall**
+
 ```bash
 sudo ufw allow 22/tcp
 sudo ufw allow 80/tcp
@@ -911,6 +993,7 @@ sudo ufw enable
 ```
 
 **Step 19: Verify Installation**
+
 ```bash
 # Check API
 curl https://mentorx.edu.eg/api/health
@@ -923,6 +1006,7 @@ pm2 logs mentorx-api
 ```
 
 **Step 20: Setup Automated Backups**
+
 ```bash
 sudo crontab -e
 # Add daily backup at 2 AM
@@ -930,13 +1014,10 @@ sudo crontab -e
 ```
 
 ---
-
 *End of Comprehensive Appendices*
 
 ---
-
 <div style="page-break-after: always;"></div>
-
 # List of Figures
 
 | Figure No. | Title | Page |
@@ -982,9 +1063,7 @@ sudo crontab -e
 | Figure 6.3 | Lesson Recommender System | XX |
 
 ---
-
 <div style="page-break-after: always;"></div>
-
 # List of Tables
 
 | Table No. | Title | Page |
@@ -1013,9 +1092,7 @@ sudo crontab -e
 | Table 10.2 | Performance Metrics | XX |
 
 ---
-
 <div style="page-break-after: always;"></div>
-
 # List of Abbreviations
 
 | Abbreviation | Full Form |
@@ -1088,9 +1165,7 @@ sudo crontab -e
 | XSS | Cross-Site Scripting |
 
 ---
-
 <div style="page-break-after: always;"></div>
-
 # Executive Summary
 
 ## Overview
@@ -1102,42 +1177,56 @@ The platform combines cutting-edge artificial intelligence, robust backend archi
 ## Key Features
 
 ### 1. Intelligent Learning Management
+
 MentorX provides a complete learning management system with online and offline course delivery, structured makeup session processes, comprehensive content libraries, and progress tracking mechanisms. The system ensures learning continuity through recorded sessions, assignments, quizzes, and personalized study materials.
 
 ### 2. AI-Powered Educational Tools
+
 The platform integrates three core AI modules:
+
 - **RAG-Based Chatbot**: A Retrieval-Augmented Generation system that provides contextual, accurate answers to student questions based on course materials
 - **Performance Prediction**: Machine learning models that predict student readiness and identify at-risk learners
 - **Smart Lesson Recommender**: Content-based recommendation system that suggests relevant lessons based on individual weaknesses
 
 ### 3. Multi-Stakeholder Dashboards
+
 Dedicated interfaces for students, teachers, parents, and administrators provide role-specific functionality:
+
 - **Student Dashboard**: Course access, progress tracking, gamification elements, AI assistance
 - **Teacher Dashboard**: Class management, attendance tracking, grade entry, analytics
 - **Parent Dashboard**: Real-time performance monitoring, attendance reports, WhatsApp notifications
 - **Admin Dashboard**: System management, financial tracking, institutional analytics
 
 ### 4. Security and Access Control
+
 Advanced security measures include device-bound authentication, OTP verification, IP restrictions, encrypted data storage, and role-based access control (RBAC) to protect sensitive educational data and prevent unauthorized access.
 
 ### 5. Gamification and Engagement
+
 Point-based reward systems, achievement badges, leaderboards, and redeemable rewards motivate consistent student participation and performance improvement.
 
 ## Technical Architecture
 
 MentorX employs a modern, scalable technical stack:
 
-**Frontend**: HTML5, CSS3, JavaScript, Bootstrap, Sass, Pug.js  
-**Backend**: ASP.NET Core (C#), RESTful API architecture  
-**Mobile**: Flutter with Dart for cross-platform applications  
-**Database**: Microsoft SQL Server with Entity Framework Core  
-**AI/ML**: Python, TensorFlow, PyTorch, Scikit-learn, Transformers  
-**Cloud**: AWS/Azure/Google Cloud with CI/CD pipelines  
+**Frontend**: HTML5, CSS3, JavaScript, Bootstrap, Sass, Pug.js
+
+**Backend**: ASP.NET Core (C#), RESTful API architecture
+
+**Mobile**: Flutter with Dart for cross-platform applications
+
+**Database**: Microsoft SQL Server with Entity Framework Core
+
+**AI/ML**: Python, TensorFlow, PyTorch, Scikit-learn, Transformers
+
+**Cloud**: AWS/Azure/Google Cloud with CI/CD pipelines
+
 **Security**: SSL/TLS encryption, AES-256 data protection, session management
 
 ## Project Outcomes
 
 ### Quantifiable Achievements
+
 - **System Capacity**: Support for 10,000+ concurrent users
 - **Response Time**: 95th percentile API latency ≤ 2 seconds
 - **Availability**: 99.5% uptime target
@@ -1145,7 +1234,9 @@ MentorX employs a modern, scalable technical stack:
 - **Test Coverage**: 80%+ automated test coverage for critical modules
 
 ### Educational Impact
+
 MentorX delivers measurable improvements in educational outcomes:
+
 - Reduced learning gaps through structured makeup sessions
 - Enhanced parental involvement via transparent reporting
 - Improved teaching efficiency through automated analytics
@@ -1161,6 +1252,7 @@ The project follows Agile SDLC principles with iterative sprints, continuous int
 Total project cost: approximately $13,360 USD
 
 **Breakdown**:
+
 - Human Resources: $11,700
 - Software & Tools: $500
 - Cloud Infrastructure: $360
@@ -1173,6 +1265,7 @@ Comprehensive risk assessment addresses technical risks (server downtime, integr
 ## Future Enhancements
 
 Planned improvements include:
+
 - Advanced AI models using BERT and transformer architectures
 - Collaborative filtering for enhanced recommendations
 - Real-time video streaming capabilities
@@ -1188,9 +1281,7 @@ MentorX represents a comprehensive solution to modern educational challenges, co
 This project fulfills the academic requirements for the Bachelor's degree in Computers and Artificial Intelligence while contributing meaningful innovation to the field of educational technology.
 
 ---
-
 <div style="page-break-after: always;"></div>
-
 # 1.0 Introduction
 
 ## 1.1 Background and Context
@@ -1202,6 +1293,7 @@ MentorX emerges as a strategic response to these challenges, designed specifical
 ### The Educational Technology Gap
 
 Current educational platforms often suffer from:
+
 - **Fragmented ecosystems**: Separate tools for content delivery, assessment, communication, and analytics
 - **Limited intelligence**: Minimal use of AI for personalization, prediction, and assistance
 - **Poor transparency**: Inadequate visibility for parents into their children's academic progress
@@ -1231,9 +1323,12 @@ MentorX is grounded in several pedagogical principles:
 
 The education sector has witnessed several technological waves:
 
-**First Wave (1990s-2000s)**: Computer labs and basic digital content  
-**Second Wave (2000s-2010s)**: Learning Management Systems (LMS) and online courses  
-**Third Wave (2010s-2020s)**: Mobile learning, video content, and social learning platforms  
+**First Wave (1990s-2000s)**: Computer labs and basic digital content
+
+**Second Wave (2000s-2010s)**: Learning Management Systems (LMS) and online courses
+
+**Third Wave (2010s-2020s)**: Mobile learning, video content, and social learning platforms
+
 **Fourth Wave (2020s-present)**: AI integration, predictive analytics, and adaptive learning
 
 MentorX represents a comprehensive fourth-wave platform, integrating artificial intelligence not as an afterthought but as a foundational component. The system employs machine learning for performance prediction, natural language processing for intelligent chatbots, and recommendation algorithms for personalized content delivery.
@@ -1247,6 +1342,7 @@ Educational institutions face recurring, interconnected challenges that diminish
 **Challenge**: Students miss classes due to illness, family commitments, transportation issues, or scheduling conflicts. Traditional systems lack structured mechanisms for compensating missed learning, leading to knowledge gaps that compound over time.
 
 **Impact**:
+
 - Incomplete understanding of foundational concepts
 - Lower exam performance
 - Increased dropout rates
@@ -1259,6 +1355,7 @@ Educational institutions face recurring, interconnected challenges that diminish
 **Challenge**: Parents struggle to monitor their children's academic performance due to infrequent reporting, unclear grading systems, and limited communication channels with teachers. This information asymmetry prevents timely intervention when students underperform.
 
 **Impact**:
+
 - Delayed response to academic struggles
 - Weakened home-school partnership
 - Reduced parental support effectiveness
@@ -1271,6 +1368,7 @@ Educational institutions face recurring, interconnected challenges that diminish
 **Challenge**: In online education, students frequently share login credentials with peers, allowing unauthorized access to paid content. This credential sharing results in significant revenue loss for teachers and institutions while undermining the sustainability of quality education delivery.
 
 **Impact**:
+
 - Direct financial losses (estimated 20-40% revenue leakage)
 - Unfair advantage for non-paying users
 - Reduced investment in content quality
@@ -1283,6 +1381,7 @@ Educational institutions face recurring, interconnected challenges that diminish
 **Challenge**: Traditional examination systems use identical questions for all students, making it trivial for students to share answers during online or even in-person exams. This undermines assessment validity and fails to accurately measure individual knowledge.
 
 **Impact**:
+
 - Invalid performance measurements
 - Erosion of academic standards
 - Unfair grading outcomes
@@ -1295,6 +1394,7 @@ Educational institutions face recurring, interconnected challenges that diminish
 **Challenge**: Teachers managing hundreds of students face overwhelming administrative burdens. Manual attendance tracking, grade calculation, progress monitoring, and report generation consume time that should be devoted to instruction and student interaction.
 
 **Impact**:
+
 - Teacher burnout
 - Reduced individual student attention
 - Delayed feedback on assignments
@@ -1312,6 +1412,7 @@ MentorX pursues five primary objectives, each contributing to a comprehensive ed
 **Goal**: Guarantee that no student falls behind due to absence or scheduling conflicts.
 
 **Implementation**:
+
 - Automated recording of all live sessions
 - Structured makeup content delivery
 - Progress tracking for missed content
@@ -1319,6 +1420,7 @@ MentorX pursues five primary objectives, each contributing to a comprehensive ed
 - Equivalence verification (makeup ≈ live session)
 
 **Success Metrics**:
+
 - 95% of students complete makeup content within 7 days
 - Average performance gap between attendees and makeup users < 5%
 - Student satisfaction rating for makeup system > 4.2/5.0
@@ -1328,6 +1430,7 @@ MentorX pursues five primary objectives, each contributing to a comprehensive ed
 **Goal**: Transform parents from passive observers to active partners in their children's education.
 
 **Implementation**:
+
 - Real-time parent dashboard access
 - Automated WhatsApp notifications
 - Attendance alerts within 2 hours
@@ -1335,6 +1438,7 @@ MentorX pursues five primary objectives, each contributing to a comprehensive ed
 - Direct teacher-parent messaging
 
 **Success Metrics**:
+
 - 80%+ parent dashboard activation rate
 - Average parent login frequency: 3+ times per week
 - Parent satisfaction rating > 4.3/5.0
@@ -1345,6 +1449,7 @@ MentorX pursues five primary objectives, each contributing to a comprehensive ed
 **Goal**: Foster intrinsic motivation through gamification while maintaining focus on learning outcomes.
 
 **Implementation**:
+
 - Point-based reward system (attendance, assignment completion, quiz performance)
 - Achievement badges for milestones
 - Class and school-wide leaderboards
@@ -1352,6 +1457,7 @@ MentorX pursues five primary objectives, each contributing to a comprehensive ed
 - Progress visualization tools
 
 **Success Metrics**:
+
 - Sustained engagement rate > 85% throughout semester
 - Attendance improvement of 15% vs. baseline
 - Assignment completion rate improvement of 20%
@@ -1362,6 +1468,7 @@ MentorX pursues five primary objectives, each contributing to a comprehensive ed
 **Goal**: Streamline administrative processes to reduce costs and improve service quality.
 
 **Implementation**:
+
 - QR code-based attendance tracking
 - Automated grade calculation and reporting
 - Financial analytics dashboard
@@ -1369,6 +1476,7 @@ MentorX pursues five primary objectives, each contributing to a comprehensive ed
 - Capacity planning tools
 
 **Success Metrics**:
+
 - Administrative time reduction: 40%
 - Attendance recording accuracy: 99%+
 - Report generation time reduced from hours to minutes
@@ -1379,6 +1487,7 @@ MentorX pursues five primary objectives, each contributing to a comprehensive ed
 **Goal**: Leverage artificial intelligence to provide personalized, adaptive learning experiences.
 
 **Implementation**:
+
 - RAG-based chatbot for 24/7 question answering
 - Performance prediction models identifying at-risk students
 - Smart lesson recommender suggesting targeted content
@@ -1386,6 +1495,7 @@ MentorX pursues five primary objectives, each contributing to a comprehensive ed
 - Learning path optimization algorithms
 
 **Success Metrics**:
+
 - Chatbot response accuracy > 85%
 - Performance prediction accuracy: 90-95%
 - Recommendation relevance rating > 4.0/5.0
@@ -1466,40 +1576,47 @@ The following features are explicitly excluded from the current project scope:
 ### 1.4.3 Project Constraints
 
 **Budget Constraints**:
+
 - Fixed budget of approximately $13,360
 - No provision for major financial expansion
 - Cost optimization required for all components
 
 **Timeline Constraints**:
+
 - Project completion deadline: February 14, 2026
 - 5-month development window
 - Agile sprints limited to 2-week cycles
 
 **Technical Constraints**:
+
 - Limited to available cloud infrastructure (shared hosting)
 - Performance optimized for 10,000 concurrent users (not millions)
 - AI models constrained by available GPU resources
 - Database scaling limited to vertical expansion initially
 
 **Resource Constraints**:
+
 - Nine-member development team
 - Limited testing device availability
 - No dedicated QA department
 - Minimal post-deployment support budget
 
 **Security Constraints**:
+
 - Security measures within available budget
 - Cannot guarantee protection against all advanced threats
 - Penetration testing limited to basic automated scans
 - Compliance with GDPR-equivalent regulations required
 
 **Regulatory Constraints**:
+
 - Must comply with Egyptian data protection laws
 - Educational content must align with Ministry of Education standards
 - Student data handling subject to institutional policies
 - Age restrictions for certain features (COPPA-equivalent)
 
 **User Acceptance Constraints**:
+
 - Success depends on adoption by teachers, students, and parents
 - Requires change management and training
 - Cultural factors may affect feature utilization
@@ -1538,10 +1655,7 @@ This document is structured to provide comprehensive coverage of the MentorX pro
 **Appendices**: Include complete SQL schemas, API references, configuration templates, and installation guides.
 
 ---
-
 <div style="page-break-after: always;"></div>
-
-
 # 2.0 System Requirements Analysis
 
 ## 2.1 Functional Requirements
@@ -1555,6 +1669,7 @@ The functional requirements specify all system capabilities and behaviors essent
 The system shall allow users (students, teachers, parents, administrators) to create accounts through web and mobile interfaces.
 
 **Requirements**:
+
 - FR-1.1.1: System shall support registration for four user roles: Student, Teacher, Parent, Administrator
 - FR-1.1.2: Registration form shall require: full name, email address, mobile number, role selection, secure password
 - FR-1.1.3: Email validation shall conform to RFC 5322 standard format
@@ -1569,6 +1684,7 @@ The system shall allow users (students, teachers, parents, administrators) to cr
 The system shall implement secure multi-layered authentication.
 
 **Requirements**:
+
 - FR-1.2.1: System shall support username/email and password login
 - FR-1.2.2: System shall implement OTP-based two-factor authentication
 - FR-1.2.3: System shall recognize device fingerprints for known devices
@@ -1584,6 +1700,7 @@ The system shall implement secure multi-layered authentication.
 Users shall manage personal information through dedicated interfaces.
 
 **Requirements**:
+
 - FR-1.3.1: Users shall update: name, photo, contact information, password
 - FR-1.3.2: Profile modifications shall be validated and audit-logged
 - FR-1.3.3: Parents shall link multiple student profiles under single account
@@ -1599,6 +1716,7 @@ Users shall manage personal information through dedicated interfaces.
 Teachers shall create and configure courses through management interface.
 
 **Requirements**:
+
 - FR-2.1.1: Course creation shall require: title, description, subject, grade level, duration, schedule
 - FR-2.1.2: System shall support course materials: PDF, PowerPoint, video files, web links
 - FR-2.1.3: Maximum file upload size: 500 MB per file
@@ -1612,6 +1730,7 @@ Teachers shall create and configure courses through management interface.
 Each course shall contain ordered lesson sequences.
 
 **Requirements**:
+
 - FR-2.2.1: Lessons shall include: title, description, video/live link, summary notes, assignments
 - FR-2.2.2: System shall enforce lesson progression control (sequential completion)
 - FR-2.2.3: Students shall not access subsequent lessons without completing prerequisites
@@ -1625,6 +1744,7 @@ Each course shall contain ordered lesson sequences.
 System shall deliver educational content reliably and efficiently.
 
 **Requirements**:
+
 - FR-2.3.1: Video streaming shall support adaptive bitrate (360p, 480p, 720p, 1080p)
 - FR-2.3.2: Video playback shall resume from last viewing position
 - FR-2.3.3: System shall support video speed control (0.5x, 0.75x, 1x, 1.25x, 1.5x, 2x)
@@ -1639,6 +1759,7 @@ System shall deliver educational content reliably and efficiently.
 System shall track student attendance for physical and online sessions.
 
 **Requirements**:
+
 - FR-3.1.1: Physical session attendance shall use QR code scanning linked to Student ID
 - FR-3.1.2: QR codes shall expire after session start time + 15 minutes
 - FR-3.1.3: Online session attendance shall auto-log upon joining live class or viewing recorded content
@@ -1652,6 +1773,7 @@ System shall track student attendance for physical and online sessions.
 System shall track comprehensive student engagement metrics.
 
 **Requirements**:
+
 - FR-3.2.1: System shall track: video completion percentage, assignment submission frequency, login activity, session duration
 - FR-3.2.2: Engagement data shall update in real-time
 - FR-3.2.3: AI algorithms shall process engagement data to compute participation levels
@@ -1666,6 +1788,7 @@ System shall track comprehensive student engagement metrics.
 Teachers shall create, distribute, and grade assignments.
 
 **Requirements**:
+
 - FR-4.1.1: Assignments shall link to specific lessons or topics
 - FR-4.1.2: Students shall submit via file upload (PDF, DOCX, images), structured forms, or text input
 - FR-4.1.3: Maximum submission size: 50 MB per assignment
@@ -1680,6 +1803,7 @@ Teachers shall create, distribute, and grade assignments.
 Teachers shall create examinations with customizable parameters.
 
 **Requirements**:
+
 - FR-4.2.1: Exam creation shall specify: course/topic coverage, number of questions, difficulty level (easy/medium/hard), duration, grading weightage
 - FR-4.2.2: AI Question Generator shall create randomized question variations per student
 - FR-4.2.3: Question variations shall maintain identical concept coverage and difficulty
@@ -1693,6 +1817,7 @@ Teachers shall create examinations with customizable parameters.
 Students shall take exams in secure, monitored environment.
 
 **Requirements**:
+
 - FR-4.3.1: Exam interface shall disable browser navigation away from exam page
 - FR-4.3.2: System shall track exam progress in real-time
 - FR-4.3.3: Auto-save shall occur every 30 seconds
@@ -1707,6 +1832,7 @@ Students shall take exams in secure, monitored environment.
 System shall support hybrid grading model.
 
 **Requirements**:
+
 - FR-4.4.1: AI shall instantly grade objective questions upon submission
 - FR-4.4.2: Subjective responses shall queue for instructor review
 - FR-4.4.3: System shall calculate final scores automatically based on weightage
@@ -1723,6 +1849,7 @@ System shall support hybrid grading model.
 Each course shall include moderated discussion board.
 
 **Requirements**:
+
 - FR-5.1.1: Students and teachers shall post questions, replies, and resource links
 - FR-5.1.2: AI moderation filter shall detect offensive or irrelevant content
 - FR-5.1.3: Flagged content shall queue for teacher review
@@ -1736,6 +1863,7 @@ Each course shall include moderated discussion board.
 Internal messaging system shall enable direct communication.
 
 **Requirements**:
+
 - FR-5.2.1: System shall support messaging between: Student↔Teacher, Parent↔Teacher, Admin↔User
 - FR-5.2.2: Unread messages shall trigger notification badges
 - FR-5.2.3: Optional email alerts shall be configurable by user
@@ -1749,6 +1877,7 @@ Internal messaging system shall enable direct communication.
 AI chatbot shall provide real-time help across all modules.
 
 **Requirements**:
+
 - FR-5.3.1: Chatbot shall provide real-time answers to user questions
 - FR-5.3.2: Chatbot shall answer FAQs automatically
 - FR-5.3.3: Chatbot shall recommend relevant learning materials based on question context
@@ -1764,6 +1893,7 @@ AI chatbot shall provide real-time help across all modules.
 System shall manage financial transactions comprehensively.
 
 **Requirements**:
+
 - FR-6.1.1: System shall process: tuition fees, course subscriptions, refund requests, promotional discounts
 - FR-6.1.2: Payment methods shall include: cash (offline verification), online gateway (Fawry), voucher codes
 - FR-6.1.3: Payment gateway integration shall use secure APIs with encryption
@@ -1777,6 +1907,7 @@ System shall manage financial transactions comprehensively.
 Administrators shall generate comprehensive analytical reports.
 
 **Requirements**:
+
 - FR-6.2.1: Reports shall include: student performance summaries, teacher productivity metrics, revenue reports, attendance statistics, dropout risk predictions
 - FR-6.2.2: Reports shall be exportable in PDF, Excel, and CSV formats
 - FR-6.2.3: Report access shall be restricted by role (RBAC)
@@ -1792,6 +1923,7 @@ Administrators shall generate comprehensive analytical reports.
 System shall implement role-based access control (RBAC).
 
 **Requirements**:
+
 - FR-7.1.1: Student role shall access: personal academic data, enrolled courses, grades, assignments, chatbot
 - FR-7.1.2: Teacher role shall access: managed courses, enrolled student data, grade entry, analytics for their classes
 - FR-7.1.3: Parent role shall access: linked children's data only (performance, attendance, communication)
@@ -1805,6 +1937,7 @@ System shall implement role-based access control (RBAC).
 User sessions shall be secure and properly managed.
 
 **Requirements**:
+
 - FR-7.2.1: Session tokens shall be cryptographically random (256-bit)
 - FR-7.2.2: Tokens shall have expiration timestamps (24-hour maximum)
 - FR-7.2.3: Logout shall immediately terminate session and invalidate token
@@ -1820,6 +1953,7 @@ User sessions shall be secure and properly managed.
 Students shall earn points for various activities.
 
 **Requirements**:
+
 - FR-8.1.1: Points shall be awarded for: attendance (10 points), assignment completion (20 points), quiz passing (score × 1 point), course completion (100 points)
 - FR-8.1.2: Point calculations shall be automatic and real-time
 - FR-8.1.3: Point history shall be visible to students
@@ -1833,6 +1967,7 @@ Students shall earn points for various activities.
 Students shall redeem points for rewards.
 
 **Requirements**:
+
 - FR-8.2.1: Reward marketplace shall display available items with point costs
 - FR-8.2.2: Reward categories shall include: digital badges, certificates, physical prizes, privileges
 - FR-8.2.3: Redemption requests shall queue for administrator approval
@@ -2074,17 +2209,20 @@ Non-functional requirements define system quality attributes governing overall p
 ### 2.3.1 System Stakeholders
 
 **Primary Users**:
+
 1. **Students**: High school students (ages 15-18) seeking flexible learning options
 2. **Teachers**: Subject matter experts delivering online/offline instruction
 3. **Parents**: Guardians monitoring their children's academic progress
 4. **Administrators**: Institution staff managing system operations
 
 **Secondary Users**:
+
 5. **Support Staff**: Technical support and helpdesk personnel
 6. **Content Creators**: Third-party content developers
 7. **System Administrators**: IT personnel maintaining infrastructure
 
 **External Entities**:
+
 8. **Payment Gateways**: Fawry, credit card processors
 9. **SMS Providers**: OTP delivery services
 10. **Email Services**: Transactional email providers
@@ -2094,6 +2232,7 @@ Non-functional requirements define system quality attributes governing overall p
 ### 2.3.2 System Boundaries
 
 **Included in System**:
+
 - User authentication and authorization
 - Course content management and delivery
 - Assignment and examination systems
@@ -2105,6 +2244,7 @@ Non-functional requirements define system quality attributes governing overall p
 - Analytics and reporting dashboards
 
 **Outside System Boundaries**:
+
 - Video recording/editing tools (teachers use external software)
 - Live streaming infrastructure (integrated third-party service)
 - Physical QR code scanner devices (standard smartphone cameras)
@@ -2115,6 +2255,7 @@ Non-functional requirements define system quality attributes governing overall p
 ### 2.3.3 Integration Points
 
 **Inbound Integrations**:
+
 1. Payment Gateway API (Fawry)
 2. SMS Gateway API (OTP delivery)
 3. Email Service API (transactional emails)
@@ -2122,16 +2263,14 @@ Non-functional requirements define system quality attributes governing overall p
 5. Video hosting service API (YouTube, Vimeo)
 
 **Outbound Integrations**:
+
 1. WhatsApp Business API (parent notifications)
 2. Analytics platforms (Google Analytics)
 3. Cloud storage services (AWS S3, Azure Blob)
 4. CDN for static content delivery
 
 ---
-
 <div style="page-break-after: always;"></div>
-
-
 # 3.0 System Analysis and Modeling
 
 ## 3.1 Requirements Analysis
@@ -2150,29 +2289,29 @@ graph TB
     SMSAPI[("SMS Service")]
     EmailAPI[("Email Service")]
     WhatsApp[("WhatsApp API")]
-    
+
     Student -->|Registration, Login, Course Access| MentorX
     Teacher -->|Course Creation, Grading| MentorX
     Parent -->|Monitor Progress| MentorX
     Admin -->|System Configuration| MentorX
-    
+
     MentorX -->|Course Content, Grades, Reports| Student
     MentorX -->|Analytics, Attendance| Teacher
     MentorX -->|Performance Reports, Alerts| Parent
     MentorX -->|System Status| Admin
-    
+
     MentorX -->|Payment Requests| PaymentGW
     PaymentGW -->|Payment Confirmation| MentorX
-    
+
     MentorX -->|OTP Requests| SMSAPI
     SMSAPI -->|OTP Delivery| Student
-    
+
     MentorX -->|Email Notifications| EmailAPI
     EmailAPI -->|Email Delivery| Student
-    
+
     MentorX -->|Parent Notifications| WhatsApp
     WhatsApp -->|Message Delivery| Parent
-    
+
     style MentorX fill:#4A90E2,stroke:#2E5C8A,stroke-width:4px,color:#fff
     style Student fill:#50C878,stroke:#2D7A4A,stroke-width:2px
     style Teacher fill:#FF6B6B,stroke:#C92A2A,stroke-width:2px
@@ -2215,13 +2354,13 @@ graph TB
         UC22[View Financial Reports]
         UC23[Make Payment]
     end
-    
+
     Student((Student))
     Teacher((Teacher))
     Parent((Parent))
     Admin((Administrator))
     PaymentGW((Payment<br/>Gateway))
-    
+
     Student -->|enrolls| UC1
     Student -->|authenticates| UC2
     Student -->|explores| UC3
@@ -2234,23 +2373,23 @@ graph TB
     Student -->|interacts with| UC10
     Student -->|participates in| UC11
     Student -->|processes| UC23
-    
+
     Teacher -->|creates| UC12
     Teacher -->|uploads| UC13
     Teacher -->|evaluates| UC14
     Teacher -->|monitors| UC15
     Teacher -->|reviews| UC16
     Teacher -->|distributes| UC17
-    
+
     Parent -->|observes| UC18
     Parent -->|gets| UC19
-    
+
     Admin -->|controls| UC20
     Admin -->|sets| UC21
     Admin -->|analyzes| UC22
-    
+
     UC23 -.->|integrates with| PaymentGW
-    
+
     style Student fill:#50C878,stroke:#2D7A4A,stroke-width:2px
     style Teacher fill:#FF6B6B,stroke:#C92A2A,stroke-width:2px
     style Parent fill:#FFD93D,stroke:#B8860B,stroke-width:2px
@@ -2274,30 +2413,30 @@ flowchart TD
     DeviceBind[Device Binding]
     Login[Login with Credentials]
     Dashboard[Student Dashboard]
-    
+
     Browse[Browse Courses]
     Enroll[Enroll in Course]
     Payment{Payment Required?}
     PayProcess[Process Payment]
     CourseAccess[Access Course Content]
-    
+
     WatchVideo[Watch Video Lessons]
     Assignment[Complete Assignments]
     Quiz[Take Quizzes]
     Chatbot[Use AI Chatbot]
     Progress[View Progress]
     Rewards[Check Rewards]
-    
+
     Logout[Logout]
     End([End])
-    
+
     Start --> Register
     Register -->|No| RegForm
     RegForm --> OTP
     OTP --> DeviceBind
     DeviceBind --> Login
     Register -->|Yes| Login
-    
+
     Login --> Dashboard
     Dashboard --> Browse
     Browse --> Enroll
@@ -2305,21 +2444,21 @@ flowchart TD
     Payment -->|Yes| PayProcess
     PayProcess --> CourseAccess
     Payment -->|No/Paid| CourseAccess
-    
+
     CourseAccess --> WatchVideo
     WatchVideo --> Assignment
     Assignment --> Quiz
-    
+
     Dashboard --> Progress
     Dashboard --> Rewards
     Dashboard --> Chatbot
-    
+
     WatchVideo --> Logout
     Assignment --> Logout
     Quiz --> Logout
     Progress --> Logout
     Logout --> End
-    
+
     style Start fill:#50C878,stroke:#2D7A4A,stroke-width:2px
     style Dashboard fill:#4A90E2,stroke:#2E5C8A,stroke-width:3px
     style End fill:#FF6B6B,stroke:#C92A2A,stroke-width:2px
@@ -2334,7 +2473,7 @@ flowchart TD
     Start([Parent Starts])
     Login[Login with Credentials]
     Dashboard[Parent Dashboard]
-    
+
     SelectChild{Multiple<br/>Children?}
     ChooseChild[Select Child]
     ViewPerf[View Performance]
@@ -2343,34 +2482,34 @@ flowchart TD
     Reports[Read Reports]
     Notifications[View Notifications]
     ContactTeacher[Message Teacher]
-    
+
     Action{Take Action?}
     SendMessage[Send Message to Teacher]
-    
+
     Logout[Logout]
     End([End])
-    
+
     Start --> Login
     Login --> Dashboard
     Dashboard --> SelectChild
     SelectChild -->|Yes| ChooseChild
     ChooseChild --> ViewPerf
     SelectChild -->|No| ViewPerf
-    
+
     ViewPerf --> Attendance
     Attendance --> Grades
     Grades --> Reports
-    
+
     Dashboard --> Notifications
     Dashboard --> ContactTeacher
-    
+
     Reports --> Action
     Action -->|Yes| SendMessage
     SendMessage --> Logout
     Action -->|No| Logout
-    
+
     Logout --> End
-    
+
     style Start fill:#FFD93D,stroke:#B8860B,stroke-width:2px
     style Dashboard fill:#4A90E2,stroke:#2E5C8A,stroke-width:3px
     style End fill:#FF6B6B,stroke:#C92A2A,stroke-width:2px
@@ -2385,46 +2524,46 @@ flowchart TD
     Start([User Initiates Registration])
     ChooseRole[Select Role:<br/>Student/Teacher/Parent/Admin]
     FormInput[Enter Personal Information:<br/>Name, Email, Phone, Password]
-    
+
     Validate{Form Valid?}
     ErrorMsg[Display Error Messages]
-    
+
     SendOTP[System Sends OTP via<br/>Email & SMS]
     EnterOTP[User Enters OTP]
-    
+
     VerifyOTP{OTP Correct &<br/>Not Expired?}
     OTPFail[OTP Verification Failed]
-    
+
     DeviceCapture[Capture Device Fingerprint<br/>& IP Address]
     BindDevice[Bind Account to Device]
-    
+
     CreateAccount[Create Account in Database]
     SendWelcome[Send Welcome Email]
-    
+
     Success[Registration Successful]
     RedirectLogin[Redirect to Login]
     End([End])
-    
+
     Start --> ChooseRole
     ChooseRole --> FormInput
     FormInput --> Validate
     Validate -->|No| ErrorMsg
     ErrorMsg --> FormInput
     Validate -->|Yes| SendOTP
-    
+
     SendOTP --> EnterOTP
     EnterOTP --> VerifyOTP
     VerifyOTP -->|No| OTPFail
     OTPFail --> SendOTP
     VerifyOTP -->|Yes| DeviceCapture
-    
+
     DeviceCapture --> BindDevice
     BindDevice --> CreateAccount
     CreateAccount --> SendWelcome
     SendWelcome --> Success
     Success --> RedirectLogin
     RedirectLogin --> End
-    
+
     style Start fill:#50C878,stroke:#2D7A4A,stroke-width:2px
     style Success fill:#4A90E2,stroke:#2E5C8A,stroke-width:3px
     style End fill:#FF6B6B,stroke:#C92A2A,stroke-width:2px
@@ -2438,24 +2577,24 @@ flowchart TD
 flowchart TD
     Start([User Initiates Login])
     EnterCreds[Enter Email/Username<br/>& Password]
-    
+
     ValidateCreds{Credentials<br/>Valid?}
     FailCount{Failed Attempts<br/>< 3?}
     LockAccount[Lock Account for 15 Minutes]
     CredError[Display Error: Invalid Credentials]
-    
+
     CheckDevice{Known<br/>Device?}
     SendOTP[Send OTP to<br/>Email & Phone]
     EnterOTP[User Enters OTP]
     VerifyOTP{OTP Valid?}
     OTPError[Display Error: Invalid OTP]
-    
+
     CreateSession[Create Session Token]
     LogActivity[Log Login Activity:<br/>Timestamp, IP, Device]
-    
+
     LoadDashboard[Load User Dashboard]
     Success([Successful Login])
-    
+
     Start --> EnterCreds
     EnterCreds --> ValidateCreds
     ValidateCreds -->|No| FailCount
@@ -2463,7 +2602,7 @@ flowchart TD
     CredError --> EnterCreds
     FailCount -->|No| LockAccount
     LockAccount --> Start
-    
+
     ValidateCreds -->|Yes| CheckDevice
     CheckDevice -->|No| SendOTP
     SendOTP --> EnterOTP
@@ -2471,19 +2610,18 @@ flowchart TD
     VerifyOTP -->|No| OTPError
     OTPError --> EnterOTP
     VerifyOTP -->|Yes| CreateSession
-    
+
     CheckDevice -->|Yes| CreateSession
     CreateSession --> LogActivity
     LogActivity --> LoadDashboard
     LoadDashboard --> Success
-    
+
     style Start fill:#50C878,stroke:#2D7A4A,stroke-width:2px
     style Success fill:#4A90E2,stroke:#2E5C8A,stroke-width:3px
     style LockAccount fill:#FF6B6B,stroke:#C92A2A,stroke-width:2px
 ```
 
 **Figure 3.6: Login Flow Diagram**
-
 
 ## 3.2 Functional Modeling
 
@@ -2499,31 +2637,31 @@ graph LR
     Teacher((Teacher))
     Parent((Parent))
     Admin((Administrator))
-    
+
     System[MentorX<br/>E-Learning Platform]
-    
+
     PaymentGW[Payment Gateway]
     SMS[SMS Service]
     Email[Email Service]
-    
+
     Student -->|Course Requests,<br/>Assignments,<br/>Quiz Responses| System
     System -->|Course Content,<br/>Grades,<br/>Reports| Student
-    
+
     Teacher -->|Course Content,<br/>Grades| System
     System -->|Student Analytics,<br/>Attendance| Teacher
-    
+
     Parent -->|Monitoring Requests| System
     System -->|Performance Reports,<br/>Notifications| Parent
-    
+
     Admin -->|Configuration,<br/>User Management| System
     System -->|System Reports,<br/>Financial Data| Admin
-    
+
     System -->|Payment Requests| PaymentGW
     PaymentGW -->|Confirmations| System
-    
+
     System -->|OTP Requests| SMS
     System -->|Email Notifications| Email
-    
+
     style System fill:#4A90E2,stroke:#2E5C8A,stroke-width:4px
 ```
 
@@ -2537,7 +2675,7 @@ graph TB
     Teacher((Teacher))
     Parent((Parent))
     Admin((Admin))
-    
+
     P1[1.0<br/>User<br/>Management]
     P2[2.0<br/>Course<br/>Management]
     P3[3.0<br/>Assessment<br/>System]
@@ -2546,7 +2684,7 @@ graph TB
     P6[6.0<br/>AI<br/>Services]
     P7[7.0<br/>Financial<br/>Management]
     P8[8.0<br/>Analytics &<br/>Reporting]
-    
+
     D1[(User<br/>Database)]
     D2[(Course<br/>Database)]
     D3[(Assessment<br/>Database)]
@@ -2555,47 +2693,47 @@ graph TB
     D6[(AI Models<br/>& Logs)]
     D7[(Financial<br/>Database)]
     D8[(Analytics<br/>Database)]
-    
+
     Student -->|Registration| P1
     P1 -->|User Data| D1
     D1 -->|User Info| P1
     P1 -->|Auth Token| Student
-    
+
     Teacher -->|Course Creation| P2
     P2 -->|Course Data| D2
     D2 -->|Course Info| P2
     P2 -->|Course List| Student
-    
+
     Student -->|Quiz Responses| P3
     P3 -->|Grades| D3
     D3 -->|Score History| P3
     P3 -->|Results| Student
-    
+
     Teacher -->|Attendance Mark| P4
     P4 -->|Records| D4
     D4 -->|Attendance Data| P4
     P4 -->|Reports| Parent
-    
+
     Student -->|Messages| P5
     P5 -->|Chat History| D5
     D5 -->|Messages| P5
     P5 -->|Notifications| Teacher
-    
+
     Student -->|Questions| P6
     P6 -->|AI Data| D6
     D6 -->|Models| P6
     P6 -->|Answers| Student
-    
+
     Student -->|Payment| P7
     P7 -->|Transactions| D7
     D7 -->|Financial Data| P7
     P7 -->|Reports| Admin
-    
+
     Admin -->|Query| P8
     P8 -->|Read| D8
     D8 -->|Aggregated Data| P8
     P8 -->|Dashboard| Admin
-    
+
     style P1 fill:#FFB6C1
     style P2 fill:#FFD700
     style P3 fill:#90EE90
@@ -2613,33 +2751,33 @@ graph TB
 ```mermaid
 graph TB
     Student((Student))
-    
+
     P6_1[6.1<br/>Question<br/>Processing]
     P6_2[6.2<br/>Document<br/>Retrieval]
     P6_3[6.3<br/>Answer<br/>Generation]
     P6_4[6.4<br/>Response<br/>Formatting]
-    
+
     D6_1[(Course<br/>Content)]
     D6_2[(Vector<br/>Database)]
     D6_3[(Chat<br/>Logs)]
-    
+
     Student -->|Natural Language Query| P6_1
     P6_1 -->|Processed Query| P6_2
     P6_1 -->|Log Query| D6_3
-    
+
     P6_2 -->|Search Vectors| D6_2
     D6_2 -->|Relevant Chunks| P6_2
     P6_2 -->|Retrieved Documents| D6_1
     D6_1 -->|Content Chunks| P6_2
-    
+
     P6_2 -->|Context + Query| P6_3
     P6_3 -->|LLM API Call| P6_3
     P6_3 -->|Raw Answer| P6_4
-    
+
     P6_4 -->|Format & Cite| P6_4
     P6_4 -->|Final Response| Student
     P6_4 -->|Log Response| D6_3
-    
+
     style P6_1 fill:#FF6347,stroke:#C92A2A
     style P6_2 fill:#FF7F50,stroke:#D63031
     style P6_3 fill:#FF8C69,stroke:#E17055
@@ -2648,43 +2786,41 @@ graph TB
 
 **Figure 3.9: DFD Level 2 - AI Assistant Module**
 
-
-
 #### 3.2.1.4 DFD Level 2 - Payment Module
 
 ```mermaid
 graph TB
     Student((Student))
     Admin((Admin))
-    
+
     P7_1[7.1<br/>Payment<br/>Initiation]
     P7_2[7.2<br/>Payment<br/>Verification]
     P7_3[7.3<br/>Transaction<br/>Processing]
     P7_4[7.4<br/>Receipt<br/>Generation]
-    
+
     D7_1[(Payment<br/>Requests)]
     D7_2[(Transactions)]
     D7_3[(Receipts)]
-    
+
     PayGW[Payment<br/>Gateway]
-    
+
     Student -->|Course Purchase| P7_1
     P7_1 -->|Payment Request| D7_1
     P7_1 -->|Payment Data| P7_2
-    
+
     P7_2 -->|Verify Details| P7_2
     P7_2 -->|Gateway Request| PayGW
     PayGW -->|Payment Confirmation| P7_3
-    
+
     P7_3 -->|Update Status| D7_2
     P7_3 -->|Transaction Data| P7_4
-    
+
     P7_4 -->|Store Receipt| D7_3
     P7_4 -->|Email Receipt| Student
     P7_4 -->|Notification| Admin
-    
+
     D7_2 -->|Transaction History| Admin
-    
+
     style P7_1 fill:#20B2AA,stroke:#0E7C7B
     style P7_2 fill:#3CB371,stroke:#27AE60
     style P7_3 fill:#2ECC71,stroke:#16A085
@@ -2705,75 +2841,75 @@ flowchart TD
     Browse[Browse Available Books]
     SelectBook[Select Book]
     CheckPrice[View Price & Description]
-    
+
     Decision1{Add to Cart?}
     AddCart[Add to Cart]
     Continue1[Continue Shopping]
-    
+
     Checkout[Proceed to Checkout]
     ReviewCart[Review Cart Items]
-    
+
     PaymentMethod{Select Payment<br/>Method}
     Wallet[Use Wallet Balance]
     Online[Online Payment]
     Voucher[Use Voucher Code]
-    
+
     CheckWallet{Sufficient<br/>Balance?}
     InsufficientFunds[Display Insufficient Funds]
     TopUp[Redirect to Top-Up]
-    
+
     ProcessPayment[Process Payment]
     PaymentSuccess{Payment<br/>Successful?}
     PaymentFailed[Display Payment Error]
     Retry{Retry?}
-    
+
     GenerateReceipt[Generate Purchase Receipt]
     UpdateInventory[Update Book Inventory]
     GrantAccess[Grant Book Access]
     SendConfirmation[Send Confirmation Email]
-    
+
     Success([Purchase Complete])
     Cancel([Purchase Cancelled])
-    
+
     Start --> Browse
     Browse --> SelectBook
     SelectBook --> CheckPrice
     CheckPrice --> Decision1
-    
+
     Decision1 -->|Yes| AddCart
     Decision1 -->|No| Continue1
     Continue1 --> Browse
-    
+
     AddCart --> Checkout
     Checkout --> ReviewCart
     ReviewCart --> PaymentMethod
-    
+
     PaymentMethod -->|Wallet| Wallet
     PaymentMethod -->|Online| Online
     PaymentMethod -->|Voucher| Voucher
-    
+
     Wallet --> CheckWallet
     CheckWallet -->|Yes| ProcessPayment
     CheckWallet -->|No| InsufficientFunds
     InsufficientFunds --> TopUp
     TopUp --> Wallet
-    
+
     Online --> ProcessPayment
     Voucher --> ProcessPayment
-    
+
     ProcessPayment --> PaymentSuccess
     PaymentSuccess -->|Yes| GenerateReceipt
     PaymentSuccess -->|No| PaymentFailed
-    
+
     PaymentFailed --> Retry
     Retry -->|Yes| PaymentMethod
     Retry -->|No| Cancel
-    
+
     GenerateReceipt --> UpdateInventory
     UpdateInventory --> GrantAccess
     GrantAccess --> SendConfirmation
     SendConfirmation --> Success
-    
+
     style Start fill:#50C878,stroke:#2D7A4A
     style Success fill:#4A90E2,stroke:#2E5C8A
     style Cancel fill:#FF6B6B,stroke:#C92A2A
@@ -2790,61 +2926,61 @@ flowchart TD
     SelectCourse[Select Course]
     ViewSessions[View Course Sessions]
     SelectSession[Select Session to Purchase]
-    
+
     CheckEligibility{Meets<br/>Prerequisites?}
     PrereqError[Display Prerequisite Error]
-    
+
     CheckEnrollment{Already<br/>Enrolled?}
     AlreadyEnrolled[Display Already Enrolled Message]
-    
+
     ViewPricing[View Session Pricing]
     ApplyDiscount{Discount<br/>Available?}
     ApplyCode[Apply Discount Code]
-    
+
     SelectPayment[Select Payment Method]
     ProcessPayment[Process Payment Transaction]
-    
+
     PaymentVerify{Payment<br/>Verified?}
     PaymentFail[Payment Failed]
     RetryPayment{Retry<br/>Payment?}
-    
+
     EnrollStudent[Enroll Student in Session]
     UpdateSchedule[Update Student Schedule]
     SendNotification[Send Enrollment Confirmation]
     GrantAccess[Grant Session Access]
     AddToCalendar[Add to Student Calendar]
     AwardPoints[Award Enrollment Points]
-    
+
     Success([Enrollment Complete])
     Cancel([Purchase Cancelled])
-    
+
     Start --> ViewCourses
     ViewCourses --> SelectCourse
     SelectCourse --> ViewSessions
     ViewSessions --> SelectSession
-    
+
     SelectSession --> CheckEligibility
     CheckEligibility -->|No| PrereqError
     PrereqError --> ViewCourses
     CheckEligibility -->|Yes| CheckEnrollment
-    
+
     CheckEnrollment -->|Yes| AlreadyEnrolled
     AlreadyEnrolled --> ViewSessions
     CheckEnrollment -->|No| ViewPricing
-    
+
     ViewPricing --> ApplyDiscount
     ApplyDiscount -->|Yes| ApplyCode
     ApplyCode --> SelectPayment
     ApplyDiscount -->|No| SelectPayment
-    
+
     SelectPayment --> ProcessPayment
     ProcessPayment --> PaymentVerify
-    
+
     PaymentVerify -->|No| PaymentFail
     PaymentFail --> RetryPayment
     RetryPayment -->|Yes| SelectPayment
     RetryPayment -->|No| Cancel
-    
+
     PaymentVerify -->|Yes| EnrollStudent
     EnrollStudent --> UpdateSchedule
     UpdateSchedule --> SendNotification
@@ -2852,7 +2988,7 @@ flowchart TD
     GrantAccess --> AddToCalendar
     AddToCalendar --> AwardPoints
     AwardPoints --> Success
-    
+
     style Start fill:#50C878,stroke:#2D7A4A
     style Success fill:#4A90E2,stroke:#2E5C8A
     style Cancel fill:#FF6B6B,stroke:#C92A2A
@@ -2866,87 +3002,87 @@ flowchart TD
 flowchart TD
     Start([Student Initiates<br/>Live Session])
     CheckSchedule[Check Session Schedule]
-    
+
     SessionTime{Session<br/>Started?}
     EarlyWait[Wait for Session Start]
-    
+
     VerifyEnrollment{Enrolled in<br/>Session?}
     NotEnrolled[Display Not Enrolled Error]
-    
+
     CheckDevice{Authorized<br/>Device?}
     DeviceVerify[Perform Device Verification]
     OTPSend[Send OTP]
     OTPEnter[Enter OTP]
-    
+
     OTPValid{OTP<br/>Correct?}
     OTPFail[OTP Verification Failed]
     RetryOTP{Retry?}
-    
+
     JoinSession[Join Live Session]
     LoadInterface[Load Session Interface]
     ConnectStream[Connect to Video Stream]
-    
+
     MarkAttendance[Mark Attendance]
     LogEntry[Log Entry Time]
-    
+
     SessionActive{Session<br/>Active?}
     ViewContent[View Live Content]
     Interact[Participate in Chat/Q&A]
     TakeNotes[Take Notes]
-    
+
     SessionEnd{Session<br/>Ended?}
     LogExit[Log Exit Time]
     CalculateDuration[Calculate Attendance Duration]
-    
+
     MeetsCriteria{Met Attendance<br/>Criteria<br/>≥80% Duration?}
     PartialAttendance[Mark Partial Attendance]
     FullAttendance[Mark Full Attendance]
-    
+
     AwardPoints[Award Attendance Points]
     SendSummary[Send Session Summary]
     UnlockNext[Unlock Next Lesson]
-    
+
     Success([Session Completed])
     Cancel([Session Cancelled])
-    
+
     Start --> CheckSchedule
     CheckSchedule --> SessionTime
-    
+
     SessionTime -->|No| EarlyWait
     EarlyWait --> SessionTime
     SessionTime -->|Yes| VerifyEnrollment
-    
+
     VerifyEnrollment -->|No| NotEnrolled
     NotEnrolled --> Cancel
     VerifyEnrollment -->|Yes| CheckDevice
-    
+
     CheckDevice -->|Yes| JoinSession
     CheckDevice -->|No| DeviceVerify
     DeviceVerify --> OTPSend
     OTPSend --> OTPEnter
     OTPEnter --> OTPValid
-    
+
     OTPValid -->|No| OTPFail
     OTPFail --> RetryOTP
     RetryOTP -->|Yes| OTPEnter
     RetryOTP -->|No| Cancel
     OTPValid -->|Yes| JoinSession
-    
+
     JoinSession --> LoadInterface
     LoadInterface --> ConnectStream
     ConnectStream --> MarkAttendance
     MarkAttendance --> LogEntry
-    
+
     LogEntry --> SessionActive
     SessionActive -->|Yes| ViewContent
     ViewContent --> Interact
     Interact --> TakeNotes
     TakeNotes --> SessionActive
-    
+
     SessionActive -->|No| SessionEnd
     SessionEnd -->|Yes| LogExit
     LogExit --> CalculateDuration
-    
+
     CalculateDuration --> MeetsCriteria
     MeetsCriteria -->|No| PartialAttendance
     PartialAttendance --> SendSummary
@@ -2955,7 +3091,7 @@ flowchart TD
     AwardPoints --> SendSummary
     SendSummary --> UnlockNext
     UnlockNext --> Success
-    
+
     style Start fill:#50C878,stroke:#2D7A4A
     style Success fill:#4A90E2,stroke:#2E5C8A
     style Cancel fill:#FF6B6B,stroke:#C92A2A
@@ -2963,19 +3099,17 @@ flowchart TD
 
 **Figure 3.16: Activity Diagram - Attend Live Session**
 
-
-
 ---
+## 4.0 PROJECT MANAGEMENT
 
-## **4.0 PROJECT MANAGEMENT**
+### 4.1 Scheduling and Planning
 
-### **4.1 Scheduling and Planning**
-
-#### **4.1.1 Project Timeline and Milestones**
+#### 4.1.1 Project Timeline and Milestones
 
 The MentorX project follows a carefully structured timeline spanning 22 weeks with clearly defined milestones:
 
 **Phase 1: Requirements & Analysis (Week 1-2)**
+
 - Stakeholder interviews
 - System requirements documentation
 - User flow analysis
@@ -2983,6 +3117,7 @@ The MentorX project follows a carefully structured timeline spanning 22 weeks wi
 - Milestone: Requirements document approved
 
 **Phase 2: Design (Week 3-4)**
+
 - System architecture design
 - Database schema design
 - UI/UX wireframing
@@ -2990,12 +3125,14 @@ The MentorX project follows a carefully structured timeline spanning 22 weeks wi
 - Milestone: Design review and sign-off
 
 **Phase 3: Prototyping (Week 5)**
+
 - Prototype development
 - Stakeholder feedback collection
 - Refinement based on feedback
 - Milestone: Working prototype demonstrated
 
 **Phase 4: Backend Development (Week 6-9)**
+
 - API development
 - Authentication implementation
 - Database integration
@@ -3003,6 +3140,7 @@ The MentorX project follows a carefully structured timeline spanning 22 weeks wi
 - Milestone: API endpoints ready for testing
 
 **Phase 5: Frontend Development (Week 7-12)**
+
 - Web application development
 - Mobile app development (Flutter)
 - UI implementation
@@ -3010,6 +3148,7 @@ The MentorX project follows a carefully structured timeline spanning 22 weeks wi
 - Milestone: All UI components functional
 
 **Phase 6: AI Integration (Week 10-13)**
+
 - RAG Chatbot implementation
 - Performance prediction model training
 - Lesson recommender setup
@@ -3017,6 +3156,7 @@ The MentorX project follows a carefully structured timeline spanning 22 weeks wi
 - Milestone: All AI features functional
 
 **Phase 7: Testing (Week 14-16)**
+
 - Unit testing
 - Integration testing
 - System testing
@@ -3024,6 +3164,7 @@ The MentorX project follows a carefully structured timeline spanning 22 weeks wi
 - Milestone: All tests passed
 
 **Phase 8: Deployment (Week 17-18)**
+
 - Server setup and configuration
 - Security hardening
 - Database migration
@@ -3031,30 +3172,34 @@ The MentorX project follows a carefully structured timeline spanning 22 weeks wi
 - Milestone: Live in production
 
 **Phase 9: Monitoring & Optimization (Week 19-22)**
+
 - Performance monitoring
 - Bug fixes and patches
 - Feature enhancements
 - Optimization based on usage patterns
 - Milestone: System stable and optimized
 
-#### **4.1.2 PERT Analysis and Critical Path**
+#### 4.1.2 PERT Analysis and Critical Path
 
 PERT (Program Evaluation and Review Technique) provides probabilistic timelines:
 
 **Formula:** Expected Time (ET) = (Optimistic + 4×Realistic + Pessimistic) / 6
 
 **Critical Path Activities (Longest Duration):**
+
 1. Requirements → Architecture → Backend Dev → Frontend Dev → Testing → Deployment
 2. Any delay in these activities directly impacts go-live date
 3. Total critical path duration: ~18 weeks
 
 **Non-Critical Activities:**
+
 - Can have slack time without affecting project deadline
 - Resource buffer for unexpected issues
 
-#### **4.1.3 Resource Allocation**
+#### 4.1.3 Resource Allocation
 
 **Development Team Structure:**
+
 - 1 Project Manager (Full-time)
 - 2 Backend Developers (Full-time)
 - 2 Frontend Developers (Full-time)
@@ -3067,12 +3212,13 @@ PERT (Program Evaluation and Review Technique) provides probabilistic timelines:
 - 1 Technical Writer (0.5 FTE)
 
 **Budget Allocation:**
+
 - Personnel: 65%
 - Infrastructure: 15%
 - Tools and Software: 10%
 - Contingency: 10%
 
-### **4.2 Risk Assessment**
+### 4.2 Risk Assessment
 
 **High Priority Risks:**
 
@@ -3107,14 +3253,16 @@ PERT (Program Evaluation and Review Technique) provides probabilistic timelines:
    - Contingency: Rapid feature iteration based on feedback
 
 **Risk Matrix:**
+
 - High Probability + High Impact = Critical (immediate action required)
 - Medium Probability + High Impact = Major (active mitigation needed)
 - Low Probability + High Impact = Monitor closely
 - Any Low Impact = Accept or monitor
 
-### **4.3 Technologies and Methodologies**
+### 4.3 Technologies and Methodologies
 
 **Agile/Scrum Methodology:**
+
 - 2-week sprints
 - Daily standups (15 minutes)
 - Sprint planning (2 hours)
@@ -3122,6 +3270,7 @@ PERT (Program Evaluation and Review Technique) provides probabilistic timelines:
 - Retrospectives (1 hour)
 
 **Technology Stack:**
+
 - Frontend: React/Next.js + Flutter
 - Backend: Node.js/Express + Python
 - Database: PostgreSQL + Redis
@@ -3131,10 +3280,9 @@ PERT (Program Evaluation and Review Technique) provides probabilistic timelines:
 - Monitoring: Prometheus + Grafana
 
 ---
+## 5.0 SYSTEM ARCHITECTURE
 
-## **5.0 SYSTEM ARCHITECTURE**
-
-### **5.1 Architecture Overview**
+### 5.1 Architecture Overview
 
 **Microservices-Based Architecture** with independent, scalable services:
 
@@ -3148,17 +3296,23 @@ PERT (Program Evaluation and Review Technique) provides probabilistic timelines:
 8. **Analytics Service:** Dashboard generation, reporting
 9. **Payment Service:** Transaction processing, billing
 
-### **5.2 Technology Stack**
+### 5.2 Technology Stack
 
 **Frontend:** React 18, Next.js 13, Redux Toolkit, Material-UI
+
 **Mobile:** Flutter 3, Riverpod, Firebase
+
 **Backend:** Node.js, Express, TypeScript
+
 **Database:** PostgreSQL 14, Redis 7, Elasticsearch 8
+
 **AI/ML:** OpenAI API, sentence-transformers, scikit-learn
+
 **Infrastructure:** Docker, Kubernetes, AWS
+
 **Monitoring:** Prometheus, Grafana, ELK Stack
 
-### **5.3 Security Layers**
+### 5.3 Security Layers
 
 - TLS 1.3 for all communications
 - JWT authentication with refresh tokens
@@ -3170,12 +3324,12 @@ PERT (Program Evaluation and Review Technique) provides probabilistic timelines:
 - Regular security audits and penetration testing
 
 ---
+## 6.0 AI FEATURES
 
-## **6.0 AI FEATURES**
-
-### **6.1 RAG Chatbot System**
+### 6.1 RAG Chatbot System
 
 **Components:**
+
 1. Document Ingestion: Extract from PDFs, PPTX, DOCX
 2. Text Processing: Tokenization, normalization, cleaning
 3. Chunking: 256-512 token chunks with overlap
@@ -3185,28 +3339,32 @@ PERT (Program Evaluation and Review Technique) provides probabilistic timelines:
 7. Confidence Scoring: Based on retrieval scores
 
 **Quality Metrics:**
+
 - Response accuracy: 92%
 - Hallucination rate: <5%
 - Average response time: <2 seconds
 - User satisfaction: 4.2/5 stars
 
-### **6.2 Student Performance Prediction**
+### 6.2 Student Performance Prediction
 
 **ML Pipeline:**
+
 - Input: Historical grades, attendance, engagement metrics
 - Features: 15 engineered features
 - Model: Random Forest (100 estimators)
 - Output: Ready/Needs Revision prediction with confidence
 
 **Performance:**
+
 - Accuracy: 94%
 - Precision: 91%
 - Recall: 93%
 - F1-Score: 0.92
 
-### **6.3 Smart Lesson Recommender**
+### 6.3 Smart Lesson Recommender
 
 **Algorithm:**
+
 1. Identify weak topics from quiz/assignment results
 2. Calculate TF-IDF vectors for all lessons
 3. Compute cosine similarity
@@ -3214,24 +3372,28 @@ PERT (Program Evaluation and Review Technique) provides probabilistic timelines:
 5. Present top-3 personalized lessons
 
 **Effectiveness:**
+
 - Recommendation click-through rate: 65%
 - Student improvement in weak areas: 35% average gain
 - Time-to-competency reduction: 20%
 
 ---
+## 7.0 API DOCUMENTATION
 
-## **7.0 API DOCUMENTATION**
-
-### **7.1 API Overview**
+### 7.1 API Overview
 
 **Base URL:** https://api.mentorx.com/v1
+
 **Authentication:** Bearer Token (JWT)
+
 **Rate Limits:** 1000 requests/hour per user
+
 **Response Format:** JSON with standard envelope
 
-### **7.2 Core Endpoints**
+### 7.2 Core Endpoints
 
 **Authentication:**
+
 - POST /auth/register - User registration
 - POST /auth/login - User login
 - POST /auth/verify-otp - OTP verification
@@ -3239,6 +3401,7 @@ PERT (Program Evaluation and Review Technique) provides probabilistic timelines:
 - POST /auth/logout - User logout
 
 **Courses:**
+
 - GET /courses - List courses
 - GET /courses/{id} - Course details
 - POST /courses - Create course (teacher)
@@ -3247,12 +3410,14 @@ PERT (Program Evaluation and Review Technique) provides probabilistic timelines:
 - GET /courses/{id}/progress - Student progress
 
 **Assignments:**
+
 - GET /assignments - List assignments
 - POST /assignments/{id}/submit - Submit assignment
 - GET /assignments/{id}/grade - Get grade
 - PUT /assignments/{id}/grade - Grade assignment (teacher)
 
 **Quizzes:**
+
 - GET /quizzes - List quizzes
 - GET /quizzes/{id} - Quiz details
 - POST /quizzes/{id}/start - Start quiz attempt
@@ -3260,23 +3425,27 @@ PERT (Program Evaluation and Review Technique) provides probabilistic timelines:
 - GET /quizzes/{id}/results - Quiz results
 
 **Grades:**
+
 - GET /grades - Student grades
 - GET /grades/analytics - Grade analytics
 - POST /grades/export - Export grades report
 
 **Notifications:**
+
 - GET /notifications - User notifications
 - POST /notifications/read - Mark as read
 - DELETE /notifications/{id} - Delete notification
 
 **AI Services:**
+
 - POST /ai/chat - Chatbot query
 - GET /ai/predictions/{student_id} - Performance prediction
 - GET /ai/recommend-lessons/{student_id} - Lesson recommendations
 
-### **7.3 Error Handling**
+### 7.3 Error Handling
 
 **Standard Error Response:**
+
 ```json
 {
   "success": false,
@@ -3290,6 +3459,7 @@ PERT (Program Evaluation and Review Technique) provides probabilistic timelines:
 ```
 
 **Common Error Codes:**
+
 - 400 INVALID_INPUT
 - 401 UNAUTHORIZED
 - 403 FORBIDDEN
@@ -3299,58 +3469,64 @@ PERT (Program Evaluation and Review Technique) provides probabilistic timelines:
 - 500 SERVER_ERROR
 
 ---
+## 8.0 SECURITY ARCHITECTURE
 
-## **8.0 SECURITY ARCHITECTURE**
-
-### **8.1 Security Framework**
+### 8.1 Security Framework
 
 **Defense Strategy:**
+
 - Defense in Depth: Multiple security layers
 - Zero Trust: Assume compromise, verify everything
 - Secure by Default: Security first in design
 - Least Privilege: Minimum necessary permissions
 
 **Standards Compliance:**
+
 - OWASP Top 10 vulnerabilities addressed
 - GDPR compliant data handling
 - PCI-DSS for payment processing
 - ISO 27001 information security
 
-### **8.2 Authentication & Authorization**
+### 8.2 Authentication & Authorization
 
 **MFA Implementation:**
+
 1. Username + Password
 2. OTP via SMS/Email
 3. Device verification
 4. Behavior analysis
 
 **RBAC Structure:**
+
 - Admin: Full system access
 - Teacher: Course and grading management
 - Student: Course enrollment and learning
 - Parent: Child progress monitoring
 - Support: Ticket management
 
-### **8.3 Data Protection**
+### 8.3 Data Protection
 
 **Encryption:**
+
 - In-Transit: TLS 1.3 mandatory
 - At-Rest: AES-256 for sensitive data
 - Key Management: AWS KMS
 - Key Rotation: 90-day cycle
 
 **Password Policy:**
+
 - Minimum 12 characters
 - Complexity requirements
 - 90-day expiration
 - Hash: bcrypt (cost factor 12)
 - Account lockout after 3 failed attempts
 
-### **8.4 Security Hardening Checklist**
+### 8.4 Security Hardening Checklist
 
 **Pre-Deployment Security Controls (50+ items):**
 
 Frontend Security:
+
 - [ ] CSP headers configured
 - [ ] X-Frame-Options set
 - [ ] XSS prevention implemented
@@ -3361,6 +3537,7 @@ Frontend Security:
 - [ ] Certificate pinning (mobile)
 
 Backend Security:
+
 - [ ] Input validation on all endpoints
 - [ ] Parameterized queries
 - [ ] Request rate limiting
@@ -3371,6 +3548,7 @@ Backend Security:
 - [ ] Error message sanitization
 
 Database Security:
+
 - [ ] Encryption enabled
 - [ ] Row-level security
 - [ ] Least privilege users
@@ -3379,6 +3557,7 @@ Database Security:
 - [ ] Audit logging
 
 Infrastructure Security:
+
 - [ ] VPC with security groups
 - [ ] Network segmentation
 - [ ] OS hardening
@@ -3389,6 +3568,7 @@ Infrastructure Security:
 - [ ] Container scanning
 
 Operations Security:
+
 - [ ] Incident response plan
 - [ ] Backup testing
 - [ ] Disaster recovery plan
@@ -3396,43 +3576,48 @@ Operations Security:
 - [ ] Access logging
 - [ ] Regular security audits
 
-### **8.5 Threat Model & Mitigation**
+### 8.5 Threat Model & Mitigation
 
 **Authentication Threats:**
+
 - Credential Stuffing → Rate limiting, account lockout
 - Phishing → Security awareness, MFA
 - Session Hijacking → Session timeout, IP validation
 
 **Injection Threats:**
+
 - SQL Injection → Parameterized queries
 - XSS → Input sanitization, CSP
 - Command Injection → Input validation
 
 **Authorization Threats:**
+
 - Privilege Escalation → RBAC enforcement
 - IDOR → Object-level access checks
 - Unauthorized Access → API validation
 
 **Data Threats:**
+
 - Exfiltration → Encryption, DLP
 - Modification → Integrity checks, audit logs
 - Deletion → Backups, disaster recovery
 
 ---
+## 9.0 DEPLOYMENT & OPERATIONS
 
-## **9.0 DEPLOYMENT & OPERATIONS**
-
-### **9.1 Deployment Architecture**
+### 9.1 Deployment Architecture
 
 **Multi-Tier Environment:**
 
 **Development:**
+
 - Local Docker Compose setup
 - SQLite/PostgreSQL local database
 - Mock external services
 - No data restrictions
 
 **Staging:**
+
 - AWS EC2 cluster
 - RDS PostgreSQL replica
 - Real service integrations
@@ -3440,15 +3625,17 @@ Operations Security:
 - Limited test data
 
 **Production:**
+
 - Multi-region AWS
 - RDS with Multi-AZ failover
 - CloudFront CDN
 - Auto-scaling groups
 - Real-time monitoring
 
-### **9.2 Infrastructure Configuration**
+### 9.2 Infrastructure Configuration
 
 **Docker Deployment:**
+
 ```dockerfile
 FROM node:18-alpine
 WORKDIR /app
@@ -3460,6 +3647,7 @@ CMD ["node", "server.js"]
 ```
 
 **Kubernetes Configuration:**
+
 ```yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -3484,9 +3672,10 @@ spec:
             memory: "512Mi"
 ```
 
-### **9.3 Deployment Checklist**
+### 9.3 Deployment Checklist
 
 **Pre-Deployment (7 days):**
+
 - [ ] All automated tests passing
 - [ ] Code review completed
 - [ ] Security scan passed
@@ -3496,6 +3685,7 @@ spec:
 - [ ] Team trained
 
 **Deployment (Day of):**
+
 - [ ] Database backup
 - [ ] Feature flags configured
 - [ ] DNS verified
@@ -3507,15 +3697,17 @@ spec:
 - [ ] Gradual 100% rollout
 
 **Post-Deployment (48 hours):**
+
 - [ ] Stability verified
 - [ ] No error spikes
 - [ ] User feedback positive
 - [ ] Documentation updated
 - [ ] Lessons learned captured
 
-### **9.4 CI/CD Pipeline**
+### 9.4 CI/CD Pipeline
 
 **GitHub Actions Workflow:**
+
 - Trigger: Push to main branch
 - Stage 1: Tests (unit, integration)
 - Stage 2: Security scan (SAST, dependency check)
@@ -3526,9 +3718,10 @@ spec:
 - Stage 7: Manual approval
 - Stage 8: Deploy to production
 
-### **9.5 Monitoring & Alerting**
+### 9.5 Monitoring & Alerting
 
 **Prometheus Metrics:**
+
 - API response time (p50, p95, p99)
 - Request error rate
 - Database connection pool usage
@@ -3537,6 +3730,7 @@ spec:
 - Cache hit rates
 
 **Grafana Dashboards:**
+
 - System health overview
 - API performance metrics
 - Business KPIs
@@ -3544,6 +3738,7 @@ spec:
 - Cost tracking
 
 **Alert Conditions:**
+
 - Error rate > 1%
 - Response time p95 > 2s
 - CPU > 80%
@@ -3551,88 +3746,98 @@ spec:
 - Disk space < 10%
 - Database replication lag > 30s
 
-### **9.6 Backup & Disaster Recovery**
+### 9.6 Backup & Disaster Recovery
 
 **Backup Strategy:**
+
 - Database: Daily full + hourly incremental
 - Files: Continuous replication to S3
 - Configuration: Version control
 - Retention: 30 days hot, 90 days warm, 1 year cold
 
 **RPO/RTO Targets:**
+
 - RPO: < 1 hour
 - RTO: < 4 hours
 
 **DR Testing:**
+
 - Monthly failover drills (non-prod)
 - Quarterly production tests
 - Annual full disaster recovery exercise
 
 ---
+## 10.0 TESTING STRATEGY
 
-## **10.0 TESTING STRATEGY**
-
-### **10.1 Test Pyramid**
+### 10.1 Test Pyramid
 
 **Unit Tests (70% coverage):**
+
 - Individual functions/methods
 - Framework: Jest, Pytest
 - Execution: Every commit
 - Target: >80% code coverage
 
 **Integration Tests (50% coverage):**
+
 - Module/service interactions
 - Framework: Supertest, REST Assured
 - Database: Test database with fixtures
 - Execution: Before deployment
 
 **E2E Tests (30% coverage):**
+
 - Complete user workflows
 - Framework: Cypress, Selenium
 - Real browser environments
 - Execution: Pre-release
 
 **Performance Tests:**
+
 - Load: 1000 concurrent users
 - Stress: Gradual increase to breaking point
 - Spike: Sudden 10x traffic increase
 - Endurance: 24-hour runs
 
 **Security Tests:**
+
 - SAST: SonarQube scans
 - DAST: OWASP ZAP automated scans
 - Dependency: Snyk vulnerability scanning
 - Penetration: Manual testing quarterly
 
-### **10.2 Sample Test Cases**
+### 10.2 Sample Test Cases
 
 **Test Case: User Registration**
+
 - Precondition: User not registered
 - Input: Valid email, password, name
 - Expected: User created, OTP sent
 - Post: User email verified in database
 
 **Test Case: Course Enrollment**
+
 - Precondition: Student logged in, course available
 - Input: Valid course ID, payment successful
 - Expected: Enrollment created, access granted
 - Post: Student appears in course roster
 
 **Test Case: Assignment Submission**
+
 - Precondition: Assignment due, student has content
 - Input: File upload valid format/size
 - Expected: Submission saved, timestamp recorded
 - Post: Teacher notification sent
 
 ---
+## 11.0 CONCLUSION
 
-## **11.0 CONCLUSION**
-
-### **11.1 Project Summary**
+### 11.1 Project Summary
 
 MentorX represents a comprehensive modernization of educational technology, combining:
 
 **Key Achievements:**
+
 - Unified platform for students, teachers, parents, administrators
 - AI-powered personalized learning recommendations
 - Real-time performance predictions
@@ -3642,6 +3847,7 @@ MentorX represents a comprehensive modernization of educational technology, comb
 - Mobile-first responsive design
 
 **Quantifiable Goals:**
+
 - 10,000+ concurrent users supported
 - <2 second API response time
 - 99.5% system uptime
@@ -3649,9 +3855,10 @@ MentorX represents a comprehensive modernization of educational technology, comb
 - 94% prediction accuracy
 - 92% chatbot response accuracy
 
-### **11.2 Implementation Challenges**
+### 11.2 Implementation Challenges
 
 **Technical Challenges:**
+
 1. Scaling to 100,000+ students across multiple centers
    - Solution: Microservices with auto-scaling
 2. Real-time data synchronization across devices
@@ -3662,6 +3869,7 @@ MentorX represents a comprehensive modernization of educational technology, comb
    - Solution: End-to-end encryption, RBAC, audit logging
 
 **Organizational Challenges:**
+
 1. User adoption across different demographics
    - Solution: Extensive training, gradual rollout, feedback loops
 2. Change management for teachers and parents
@@ -3669,17 +3877,19 @@ MentorX represents a comprehensive modernization of educational technology, comb
 3. Data privacy compliance
    - Solution: GDPR/CCPA compliance by design
 
-### **11.3 Future Enhancements**
+### 11.3 Future Enhancements
 
 **Phase 2 Features (Post-Launch):**
 
 **Enhanced AI Capabilities:**
+
 - Multimodal learning (text + audio + video)
 - Emotion detection from voice/video
 - Peer learning recommendations
 - Collaborative group recommendations
 
 **Extended Platform Features:**
+
 - Virtual classroom with 3D avatars
 - Blockchain-based credentials
 - Social learning communities
@@ -3687,6 +3897,7 @@ MentorX represents a comprehensive modernization of educational technology, comb
 - Integration with international curricula
 
 **Business Expansion:**
+
 - White-label solution for other institutions
 - Franchise model for regional centers
 - International language support (20+ languages)
@@ -3694,6 +3905,7 @@ MentorX represents a comprehensive modernization of educational technology, comb
 - Enterprise resource planning (ERP) integration
 
 **Technology Evolution:**
+
 - Quantum-safe cryptography preparation
 - 5G optimization
 - AR/VR learning experiences
@@ -3701,10 +3913,9 @@ MentorX represents a comprehensive modernization of educational technology, comb
 - IoT integration for classroom management
 
 ---
+## 12.0 REFERENCES
 
-## **12.0 REFERENCES**
-
-### **IEEE/ACM Format References**
+### IEEE/ACM Format References
 
 [1] J. Smith and M. Brown, "Microservices Architecture for Educational Platforms," IEEE Transactions on Software Engineering, vol. 45, no. 3, pp. 234-251, Mar. 2023.
 
@@ -3727,8 +3938,7 @@ MentorX represents a comprehensive modernization of educational technology, comb
 [10] J. Martinez, "Mobile-First Responsive Design: Flutter and React Native Comparison," Mobile Development Quarterly, vol. 12, no. 3, pp. 89-107, 2023.
 
 ---
-
-## **13.0 GLOSSARY**
+## 13.0 GLOSSARY
 
 **Access Control List (ACL):** Rules that determine who can access specific resources
 
@@ -3837,12 +4047,12 @@ MentorX represents a comprehensive modernization of educational technology, comb
 **Zero Trust:** Security model assuming all access must be verified
 
 ---
+## APPENDIX A: Database Schema
 
-## **APPENDIX A: Database Schema**
-
-### **Core Tables**
+### Core Tables
 
 **users Table:**
+
 - id: BIGINT PRIMARY KEY
 - email: VARCHAR(255) UNIQUE
 - password_hash: VARCHAR(255)
@@ -3855,6 +4065,7 @@ MentorX represents a comprehensive modernization of educational technology, comb
 - updated_at: TIMESTAMP
 
 **courses Table:**
+
 - id: BIGINT PRIMARY KEY
 - teacher_id: BIGINT
 - title: VARCHAR(255)
@@ -3865,6 +4076,7 @@ MentorX represents a comprehensive modernization of educational technology, comb
 - created_at: TIMESTAMP
 
 **enrollments Table:**
+
 - id: BIGINT PRIMARY KEY
 - student_id: BIGINT
 - course_id: BIGINT
@@ -3873,6 +4085,7 @@ MentorX represents a comprehensive modernization of educational technology, comb
 - status: VARCHAR(50)
 
 **grades Table:**
+
 - id: BIGINT PRIMARY KEY
 - student_id: BIGINT
 - assignment_id: BIGINT
@@ -3882,12 +4095,12 @@ MentorX represents a comprehensive modernization of educational technology, comb
 - graded_at: TIMESTAMP
 
 ---
+## APPENDIX B: Installation Guide
 
-## **APPENDIX B: Installation Guide**
-
-### **Development Environment Setup**
+### Development Environment Setup
 
 **Prerequisites:**
+
 - Node.js 18+
 - PostgreSQL 14+
 - Redis 7+
@@ -3897,30 +4110,35 @@ MentorX represents a comprehensive modernization of educational technology, comb
 **Installation Steps:**
 
 1. **Clone Repository:**
+
 ```bash
 git clone https://github.com/mentorx/mentorx-app.git
 cd mentorx-app
 ```
 
 2. **Install Dependencies:**
+
 ```bash
 npm install
 pip install -r requirements.txt
 ```
 
 3. **Environment Configuration:**
+
 ```bash
 cp .env.example .env
 # Edit .env with local database credentials
 ```
 
 4. **Database Setup:**
+
 ```bash
 npm run migrate
 npm run seed
 ```
 
 5. **Start Services:**
+
 ```bash
 docker-compose up -d
 npm run dev
@@ -3932,12 +4150,12 @@ npm run dev
 - Docs: http://localhost:3000/api-docs
 
 ---
+## APPENDIX C: User Manual
 
-## **APPENDIX C: User Manual**
-
-### **For Students**
+### For Students
 
 **Getting Started:**
+
 1. Visit www.mentorx.com
 2. Click "Register as Student"
 3. Enter email, password, full name, phone
@@ -3947,6 +4165,7 @@ npm run dev
 7. Enroll in desired courses
 
 **Taking Assignments:**
+
 1. Navigate to course
 2. Select lesson and assignment
 3. Download instructions and resources
@@ -3955,15 +4174,17 @@ npm run dev
 6. Wait for teacher feedback
 
 **Taking Quizzes:**
+
 1. Click "Start Quiz"
 2. Read each question carefully
 3. Select or type answers
 4. Click "Submit" when done
 5. View results and feedback
 
-### **For Teachers**
+### For Teachers
 
 **Course Creation:**
+
 1. Click "Create Course"
 2. Fill in course details
 3. Add lessons and sessions
@@ -3972,15 +4193,17 @@ npm run dev
 6. Publish course
 
 **Grading:**
+
 1. Go to "Submissions"
 2. Review student work
 3. Enter grade and feedback
 4. Click "Release Grades"
 5. Students and parents notified
 
-### **For Parents**
+### For Parents
 
 **Monitoring Child:**
+
 1. Link child to parent account
 2. View dashboard with child's progress
 3. Check attendance records
@@ -3988,12 +4211,10 @@ npm run dev
 5. Communicate with teachers
 6. Receive WhatsApp updates
 
-
 ---
+## 3.0 Completion of System Design Diagrams
 
-## **3.0 Completion of System Design Diagrams**
-
-### **3.1 Activity Diagrams (Complete Set)**
+### 3.1 Activity Diagrams (Complete Set)
 
 **Figure 3.17: Activity Diagram - Register User**
 
@@ -4017,7 +4238,7 @@ graph TD
     BindDevice --> CreateUser["Create User<br/>Record in Database"]
     CreateUser --> SendConfirmation["Send Confirmation<br/>Email"]
     SendConfirmation --> Success([Registration Success])
-    
+
     style Start fill:#50C878,stroke:#2D7A4A
     style Success fill:#4A90E2,stroke:#2E5C8A
     style ErrorEmail fill:#FF6B6B,stroke:#C92A2A
@@ -4043,7 +4264,7 @@ graph TD
     DirectionsPrompt -->|No| End1([End])
     OpenMaps --> End2([Directions Started])
     UserSelect -->|No| End3([Cancel])
-    
+
     style Start fill:#50C878,stroke:#2D7A4A
     style End1 fill:#4A90E2,stroke:#2E5C8A
     style End2 fill:#4A90E2,stroke:#2E5C8A
@@ -4067,7 +4288,7 @@ graph TD
     SendResponse --> NotifyStudent["Notify Student<br/>of Response"]
     NotifyStudent --> LogResponse["Log Inquiry<br/>in Database"]
     LogResponse --> Success([Inquiry Resolved])
-    
+
     style Start fill:#50C878,stroke:#2D7A4A
     style Success fill:#4A90E2,stroke:#2E5C8A
 ```
@@ -4094,7 +4315,7 @@ graph TD
     UploadFile --> GenerateReceipt["Generate<br/>Submission Receipt"]
     GenerateReceipt --> NotifyTeacher["Notify Teacher<br/>of Submission"]
     NotifyTeacher --> Success([Submission Complete])
-    
+
     style Start fill:#50C878,stroke:#2D7A4A
     style Success fill:#4A90E2,stroke:#2E5C8A
     style ErrorFile fill:#FF6B6B,stroke:#C92A2A
@@ -4117,7 +4338,7 @@ graph TD
     SendWhatsApp --> LogSent["Log Sent Message<br/>in Database"]
     LogSent --> NotifyInApp["Send In-App<br/>Notification"]
     NotifyInApp --> Success([Report Sent])
-    
+
     style Start fill:#50C878,stroke:#2D7A4A
     style Success fill:#4A90E2,stroke:#2E5C8A
 ```
@@ -4148,7 +4369,7 @@ graph TD
     NotifyStudents --> NotifyParents["Notify Parents<br/>via WhatsApp"]
     NotifyParents --> UpdateAnalytics["Update Performance<br/>Analytics"]
     UpdateAnalytics --> Success([Grades Uploaded])
-    
+
     style Start fill:#50C878,stroke:#2D7A4A
     style Success fill:#4A90E2,stroke:#2E5C8A
 ```
@@ -4171,7 +4392,7 @@ graph TD
     ApplyFilters --> UpdateDisplay["Update Display<br/>with Filters"]
     UpdateDisplay --> DisplayDashboard
     UserInteract -->|Exit| Success([Close Dashboard])
-    
+
     style Start fill:#50C878,stroke:#2D7A4A
     style Success fill:#4A90E2,stroke:#2E5C8A
 ```
@@ -4200,7 +4421,7 @@ graph TD
     PublishPrompt -->|Yes| PublishQuiz["Publish Quiz"]
     PublishQuiz --> NotifyStudents["Notify Students<br/>of New Quiz"]
     NotifyStudents --> Success([Quiz Published])
-    
+
     style Start fill:#50C878,stroke:#2D7A4A
     style Success fill:#4A90E2,stroke:#2E5C8A
     style End1 fill:#FFD700,stroke:#DAA520
@@ -4230,7 +4451,7 @@ graph TD
     GradeQuiz --> CalculateScore["Calculate Final<br/>Score"]
     CalculateScore --> DisplayResult["Display Score<br/>and Feedback"]
     DisplayResult --> Success([Quiz Complete])
-    
+
     style Start fill:#50C878,stroke:#2D7A4A
     style Success fill:#4A90E2,stroke:#2E5C8A
 ```
@@ -4254,7 +4475,7 @@ graph TD
     ExportData --> EndAction
     ApplyFilter --> DisplayChart
     OffersAction -->|Exit| EndAction([Close Analytics])
-    
+
     style Start fill:#50C878,stroke:#2D7A4A
     style EndAction fill:#4A90E2,stroke:#2E5C8A
 ```
@@ -4276,7 +4497,7 @@ graph TD
     DisplayEventDetail --> UserDone{Continue<br/>Browsing?}
     UserDone -->|Yes| UserScroll
     UserDone -->|No| Success([Close Timeline])
-    
+
     style Start fill:#50C878,stroke:#2D7A4A
     style Success fill:#4A90E2,stroke:#2E5C8A
 ```
@@ -4296,7 +4517,7 @@ graph TD
     CreateTicketRecord --> SendConfirmation["Send Confirmation<br/>Email to User"]
     SendConfirmation --> ShowTicketStatus["Show Ticket Status<br/>in Dashboard"]
     ShowTicketStatus --> End1([Ticket Created])
-    
+
     style Start fill:#50C878,stroke:#2D7A4A
     style End1 fill:#4A90E2,stroke:#2E5C8A
 ```
@@ -4321,7 +4542,7 @@ graph TD
     SendNotification --> Success
     ExportReport --> Success
     UpdateDB --> Success([Close Attendance])
-    
+
     style Start fill:#50C878,stroke:#2D7A4A
     style Success fill:#4A90E2,stroke:#2E5C8A
 ```
@@ -4345,7 +4566,7 @@ graph TD
     ShareReport --> Success
     DetailedAnalysis --> DisplayReport
     SaveFile --> Success([Report Ready])
-    
+
     style Start fill:#50C878,stroke:#2D7A4A
     style Success fill:#4A90E2,stroke:#2E5C8A
 ```
@@ -4369,7 +4590,7 @@ graph TD
     RenewSubscription --> ProcessPayment["Process Payment"]
     ProcessPayment --> Success
     ContactSupport --> Success([Close Purchase])
-    
+
     style Start fill:#50C878,stroke:#2D7A4A
     style Success fill:#4A90E2,stroke:#2E5C8A
 ```
@@ -4388,7 +4609,7 @@ graph TD
     ShowAnswers --> Success
     ShowFeedback --> Success
     CompareQuizzes --> Success([Close Quiz Grades])
-    
+
     style Start fill:#50C878,stroke:#2D7A4A
     style Success fill:#4A90E2,stroke:#2E5C8A
 ```
@@ -4409,7 +4630,7 @@ graph TD
     SubjectDetail --> Success
     ViewTimeline --> Success
     ComparePerformance --> Success([Close Stats])
-    
+
     style Start fill:#50C878,stroke:#2D7A4A
     style Success fill:#4A90E2,stroke:#2E5C8A
 ```
@@ -4432,7 +4653,7 @@ graph TD
     SaveToServer --> GenerateReceipt["Generate<br/>Submission Receipt"]
     GenerateReceipt --> NotifyTeacher["Notify Teacher<br/>of Submission"]
     NotifyTeacher --> Success([Assignment Submitted])
-    
+
     style Start fill:#50C878,stroke:#2D7A4A
     style Success fill:#4A90E2,stroke:#2E5C8A
 ```
@@ -4454,7 +4675,7 @@ graph TD
     Confirmation --> Success
     ViewTimetable --> UserInteract
     OfferAction --> UserInteract
-    
+
     style Start fill:#50C878,stroke:#2D7A4A
     style Success fill:#4A90E2,stroke:#2E5C8A
 ```
@@ -4472,7 +4693,7 @@ graph TD
     CloseSession --> ClearCookies["Clear Authentication<br/>Cookies"]
     ClearCookies --> RedirectLogin["Redirect to<br/>Login Page"]
     RedirectLogin --> Success([Logout Complete])
-    
+
     style Start fill:#50C878,stroke:#2D7A4A
     style Success fill:#4A90E2,stroke:#2E5C8A
 ```
@@ -4495,12 +4716,12 @@ graph TD
     SaveToDatabase --> NotifyStudents["Notify Potential<br/>Students"]
     NotifyStudents --> Success([Class Published])
     DraftConfirm --> Success
-    
+
     style Start fill:#50C878,stroke:#2D7A4A
     style Success fill:#4A90E2,stroke:#2E5C8A
 ```
 
-### **3.2 State Diagrams (Essential User States)**
+### 3.2 State Diagrams (Essential User States)
 
 **Figure 3.38: State Diagram - User Login States**
 
@@ -4608,7 +4829,7 @@ stateDiagram-v2
     NotificationSent --> [*]
 ```
 
-### **3.3 Sequence Diagram - System Interactions**
+### 3.3 Sequence Diagram - System Interactions
 
 **Figure 3.43: Sequence Diagram - Complete Login Flow**
 
@@ -4650,7 +4871,7 @@ sequenceDiagram
     Mobile-->>Student: Display Dashboard
 ```
 
-### **3.4 Class Diagram**
+### 3.4 Class Diagram
 
 **Figure 3.44: Class Diagram - System Architecture**
 
@@ -4669,7 +4890,7 @@ classDiagram
         +updateProfile(): void
         +changePassword(): void
     }
-    
+
     class Student {
         -studentId: Long
         -enrolledCourses: List
@@ -4680,7 +4901,7 @@ classDiagram
         +takeQuiz(): void
         +viewGrades(): List
     }
-    
+
     class Teacher {
         -teacherId: Long
         -managedCourses: List
@@ -4691,7 +4912,7 @@ classDiagram
         +createQuiz(): void
         +viewAnalytics(): Map
     }
-    
+
     class Parent {
         -parentId: Long
         -linkedStudents: List
@@ -4699,7 +4920,7 @@ classDiagram
         +viewAttendance(): List
         +contactTeacher(): void
     }
-    
+
     class Course {
         -courseId: Long
         -title: String
@@ -4711,7 +4932,7 @@ classDiagram
         +publish(): void
         +updateContent(): void
     }
-    
+
     class Lesson {
         -lessonId: Long
         -courseId: Long
@@ -4721,7 +4942,7 @@ classDiagram
         +addResource(): void
         +markComplete(): void
     }
-    
+
     class Assignment {
         -assignmentId: Long
         -lessonId: Long
@@ -4731,7 +4952,7 @@ classDiagram
         +submit(): void
         +grade(): void
     }
-    
+
     class Quiz {
         -quizId: Long
         -courseId: Long
@@ -4742,7 +4963,7 @@ classDiagram
         +generateAIQuestions(): void
         +grade(): void
     }
-    
+
     class Grade {
         -gradeId: Long
         -studentId: Long
@@ -4752,7 +4973,7 @@ classDiagram
         -gradedBy: Long
         -gradedAt: Timestamp
     }
-    
+
     class Attendance {
         -attendanceId: Long
         -studentId: Long
@@ -4761,7 +4982,7 @@ classDiagram
         -date: Date
         -recordedAt: Timestamp
     }
-    
+
     class Device {
         -deviceId: Long
         -userId: Long
@@ -4771,7 +4992,7 @@ classDiagram
         +bindDevice(): void
         +validateDevice(): Boolean
     }
-    
+
     User <|-- Student
     User <|-- Teacher
     User <|-- Parent
@@ -4785,7 +5006,7 @@ classDiagram
     User "1" -- "*" Device : owns
 ```
 
-### **3.5 Entity Relationship Diagram (ERD)**
+### 3.5 Entity Relationship Diagram (ERD)
 
 **Figure 3.45: ER Diagram - Database Schema**
 
@@ -4796,44 +5017,44 @@ erDiagram
     USERS ||--o{ PARENTS : creates
     USERS ||--o{ DEVICES : binds
     USERS ||--o{ SESSIONS : initiates
-    
+
     STUDENTS ||--o{ ENROLLMENTS : has
     STUDENTS ||--o{ GRADES : receives
     STUDENTS ||--o{ ATTENDANCE : has
     STUDENTS ||--o{ QUIZ_ATTEMPTS : takes
     STUDENTS ||--o{ ASSIGNMENTS_SUBMITTED : submits
-    
+
     TEACHERS ||--o{ COURSES : creates
     TEACHERS ||--o{ GRADES : assigns
     TEACHERS ||--o{ QUIZ_QUESTIONS : creates
     TEACHERS ||--o{ SUPPORT_TICKETS : resolves
-    
+
     PARENTS ||--o{ STUDENTS : monitors
     PARENTS ||--o{ NOTIFICATIONS : receives
-    
+
     COURSES ||--o{ SESSIONS : organizes
     COURSES ||--o{ LESSONS : contains
     COURSES ||--o{ QUIZZES : includes
     COURSES ||--o{ ASSIGNMENTS : has
     COURSES ||--o{ ENROLLMENTS : offers
-    
+
     LESSONS ||--o{ SESSION_ITEMS : structures
     LESSONS ||--o{ ASSIGNMENTS : includes
-    
+
     QUIZZES ||--o{ QUIZ_QUESTIONS : contains
     QUIZZES ||--o{ QUIZ_ATTEMPTS : tests
-    
+
     ASSIGNMENTS ||--o{ GRADES : grades
     ASSIGNMENTS ||--o{ ASSIGNMENTS_SUBMITTED : tracks
-    
+
     QUIZ_ATTEMPTS ||--o{ QUIZ_ANSWERS : records
     QUIZ_ATTEMPTS ||--o{ GRADES : generates
-    
+
     SESSIONS ||--o{ ATTENDANCE : records
     SESSIONS ||--o{ SESSION_ITEMS : contains
 ```
 
-### **3.6 Block Diagram - System Architecture**
+### 3.6 Block Diagram - System Architecture
 
 **Figure 3.46: Block Diagram - MentorX System Architecture**
 
@@ -4844,7 +5065,7 @@ graph TB
         Mobile["Mobile App<br/>Flutter"]
         Admin["Admin Console"]
     end
-    
+
     subgraph API["API Gateway & Services"]
         Gateway["API Gateway<br/>Kong/AWS Gateway"]
         AuthService["Authentication<br/>Service"]
@@ -4853,54 +5074,54 @@ graph TB
         GradeService["Grading Service"]
         NotificationService["Notification<br/>Service"]
     end
-    
+
     subgraph AI["AI & ML Services"]
         ChatBot["RAG Chatbot<br/>LLM + Embeddings"]
         PredictionModel["Student Performance<br/>Predictor"]
         Recommender["Lesson<br/>Recommender"]
         QuestionGenerator["AI Question<br/>Generator"]
     end
-    
+
     subgraph Data["Data Layer"]
         MainDB["PostgreSQL<br/>Primary Database"]
         Cache["Redis<br/>Cache"]
         FileStore["S3/Cloud Storage<br/>Media Files"]
         VectorDB["Vector DB<br/>Embeddings"]
     end
-    
+
     subgraph Infra["Infrastructure & Monitoring"]
         DockerK8s["Docker & Kubernetes<br/>Orchestration"]
         Monitoring["Monitoring<br/>Prometheus/ELK"]
         Logging["Centralized Logging<br/>ELK Stack"]
         Security["Security<br/>OAuth2/JWT"]
     end
-    
+
     Web -->|HTTPS| Gateway
     Mobile -->|HTTPS| Gateway
     Admin -->|HTTPS| Gateway
-    
+
     Gateway --> AuthService
     Gateway --> UserService
     Gateway --> CourseService
     Gateway --> GradeService
     Gateway --> NotificationService
-    
+
     CourseService --> AI
     GradeService --> AI
     UserService --> AI
-    
+
     AuthService --> MainDB
     UserService --> MainDB
     CourseService --> MainDB
     GradeService --> MainDB
-    
+
     AuthService --> Cache
     CourseService --> Cache
-    
+
     CourseService --> FileStore
     Recommender --> FileStore
     ChatBot --> VectorDB
-    
+
     Gateway --> Security
     AuthService --> Security
     Monitoring --> Infra
@@ -4909,14 +5130,12 @@ graph TB
 
 Now I'll create the rest of the comprehensive sections. Let me continue with sections 4.0 onwards:
 
-
 ---
+## ADDITIONAL TECHNICAL DOCUMENTATION - EXPANDED SECTIONS
 
-## **ADDITIONAL TECHNICAL DOCUMENTATION - EXPANDED SECTIONS**
+### Detailed Implementation Specifications
 
-### **Detailed Implementation Specifications**
-
-#### **State Diagram Specifications**
+#### State Diagram Specifications
 
 **Figure 3.38A: Enhanced Login State Flow**
 
@@ -4953,7 +5172,7 @@ stateDiagram-v2
     SessionTerminated --> Unauthenticated: Return to login
 ```
 
-#### **Payment Processing State Diagram**
+#### Payment Processing State Diagram
 
 ```mermaid
 stateDiagram-v2
@@ -4980,7 +5199,7 @@ stateDiagram-v2
     Abandoned --> [*]
 ```
 
-#### **Detailed Sequence Diagrams**
+#### Detailed Sequence Diagrams
 
 **Figure 3.43A: Complete Quiz Submission Flow**
 
@@ -5002,7 +5221,7 @@ sequenceDiagram
     DB-->>QuizService: Return 10 questions
     QuizService-->>Mobile: Questions + metadata
     Mobile-->>Student: Display Quiz UI
-    
+
     Student->>Mobile: Answers questions Q1-Q10
     Mobile->>Mobile: Save locally every 30s
     Student->>Mobile: Clicks Submit
@@ -5010,7 +5229,7 @@ sequenceDiagram
     Gateway->>QuizService: Validate submission
     QuizService->>DB: Store answers
     QuizService->>AIGrading: Grade objective questions
-    
+
     par Grading Path
         AIGrading->>AIGrading: Evaluate MC/TF answers
         AIGrading->>DB: Save scores
@@ -5018,7 +5237,7 @@ sequenceDiagram
         NotificationService->>NotificationService: Format results
         NotificationService->>DB: Queue notification
     end
-    
+
     AIGrading-->>QuizService: Grading complete
     QuizService->>DB: Finalize attempt
     QuizService-->>Mobile: Return score + feedback
@@ -5027,7 +5246,7 @@ sequenceDiagram
     NotificationService-->>DB: Notify parent/teacher
 ```
 
-#### **Advanced Class Diagram with Relationships**
+#### Advanced Class Diagram with Relationships
 
 **Figure 3.44A: Complete Domain Model**
 
@@ -5042,7 +5261,7 @@ classDiagram
         +addCenter(): void
         +generateReport(): Report
     }
-    
+
     class Center {
         -id: Long
         -institutionId: Long
@@ -5053,7 +5272,7 @@ classDiagram
         +getDistance(userLocation): Float
         +getAvailableSessions(): List
     }
-    
+
     class SessionType {
         -id: Long
         -name: String
@@ -5061,7 +5280,7 @@ classDiagram
         -sessionMode: Enum (ONLINE, IN_PERSON, HYBRID)
         +getDefaultDuration(): Int
     }
-    
+
     class StudentProgress {
         -id: Long
         -studentId: Long
@@ -5073,7 +5292,7 @@ classDiagram
         +calculateCompletionPercentage(): Float
         +isEligibleForCertificate(): Boolean
     }
-    
+
     class QuizAttempt {
         -id: Long
         -quizId: Long
@@ -5086,7 +5305,7 @@ classDiagram
         +isCompleted(): Boolean
         +getPreviousAttempts(): List
     }
-    
+
     class PerformanceMetric {
         -id: Long
         -studentId: Long
@@ -5095,7 +5314,7 @@ classDiagram
         -timestamp: Timestamp
         +generateTrendReport(): Chart
     }
-    
+
     Institution "1" -- "*" Center
     Center "1" -- "*" SessionType
     User "1" -- "*" StudentProgress
@@ -5103,7 +5322,7 @@ classDiagram
     User "1" -- "*" PerformanceMetric
 ```
 
-#### **Network Architecture Diagram**
+#### Network Architecture Diagram
 
 ```mermaid
 graph TB
@@ -5112,22 +5331,22 @@ graph TB
         MobileApp["Mobile App<br/>Flutter"]
         TabletApp["Tablet App<br/>Flutter"]
     end
-    
+
     subgraph "CDN & Edge"
         CloudFront["AWS CloudFront<br/>Global CDN"]
         EdgeLoc1["Edge Location 1<br/>Frankfurt"]
         EdgeLoc2["Edge Location 2<br/>Singapore"]
     end
-    
+
     subgraph "Load Balancing"
         Route53["Route 53<br/>DNS + Health Check"]
         ALB["Application Load Balancer<br/>Layer 7 Routing"]
     end
-    
+
     subgraph "API Gateway"
         Gateway["Kong API Gateway<br/>- Rate Limiting<br/>- Request Validation<br/>- Auth Enforcement"]
     end
-    
+
     subgraph "Microservices Cluster"
         AuthPod1["Auth Service<br/>Pod 1"]
         AuthPod2["Auth Service<br/>Pod 2"]
@@ -5136,7 +5355,7 @@ graph TB
         NotifPod["Notification Service<br/>Pod 1-2"]
         AIPod["AI Service<br/>Pod 1-2"]
     end
-    
+
     subgraph "Data Layer"
         PrimaryDB["PostgreSQL<br/>Primary"]
         ReplicaDB["PostgreSQL<br/>Replica"]
@@ -5144,65 +5363,65 @@ graph TB
         S3["AWS S3<br/>File Storage"]
         VectorDB["Pinecone<br/>Vector DB"]
     end
-    
+
     subgraph "Message Queue"
         Kafka["Apache Kafka<br/>Event Streaming"]
     end
-    
+
     subgraph "Monitoring"
         Prometheus["Prometheus<br/>Metrics"]
         Grafana["Grafana<br/>Dashboards"]
         ELK["ELK Stack<br/>Logs"]
         DataDog["DataDog<br/>APM"]
     end
-    
+
     WebBrowser --> CloudFront
     MobileApp --> CloudFront
     TabletApp --> CloudFront
-    
+
     CloudFront --> EdgeLoc1
     CloudFront --> EdgeLoc2
     EdgeLoc1 --> Route53
     EdgeLoc2 --> Route53
-    
+
     Route53 --> ALB
     ALB --> Gateway
-    
+
     Gateway --> AuthPod1
     Gateway --> AuthPod2
     Gateway --> CoursePod
     Gateway --> GradePod
     Gateway --> NotifPod
     Gateway --> AIPod
-    
+
     AuthPod1 --> PrimaryDB
     CoursePod --> PrimaryDB
     GradePod --> PrimaryDB
-    
+
     PrimaryDB --> ReplicaDB
-    
+
     AuthPod1 --> RedisCache
     CoursePod --> RedisCache
-    
+
     CoursePod --> S3
     NotifPod --> S3
-    
+
     AIPod --> VectorDB
-    
+
     Gateway --> Kafka
     NotifPod --> Kafka
     GradePod --> Kafka
-    
+
     AuthPod1 --> Prometheus
     CoursePod --> Prometheus
     Prometheus --> Grafana
-    
+
     Gateway --> ELK
     AuthPod1 --> ELK
     AuthPod1 --> DataDog
 ```
 
-#### **Distributed System Communication**
+#### Distributed System Communication
 
 **Inter-Service Communication Patterns:**
 
@@ -5221,9 +5440,10 @@ graph TB
    - Nightly report generation
    - Weekly email digest
 
-#### **Performance Optimization Strategies**
+#### Performance Optimization Strategies
 
 **Caching Layers:**
+
 ```
 L1: Browser Cache (Static assets)
 L2: CDN Cache (CloudFront)
@@ -5232,6 +5452,7 @@ L4: Database Query Cache (PostgreSQL)
 ```
 
 **Database Optimization:**
+
 ```
 - Indexes on frequently queried columns
 - Materialized views for analytics
@@ -5241,6 +5462,7 @@ L4: Database Query Cache (PostgreSQL)
 ```
 
 **Frontend Optimization:**
+
 ```
 - Code splitting (lazy loading)
 - Image compression and WebP format
@@ -5249,7 +5471,7 @@ L4: Database Query Cache (PostgreSQL)
 - Lighthouse score target: >90
 ```
 
-#### **Comprehensive Test Coverage**
+#### Comprehensive Test Coverage
 
 **Unit Test Examples:**
 
@@ -5258,19 +5480,19 @@ L4: Database Query Cache (PostgreSQL)
 def test_calculate_progress():
     student = Student(id=1, name="Ahmed")
     course = Course(id=1, total_lessons=10)
-    
+
     # Complete 7 out of 10 lessons
     progress = StudentProgress(student, course)
     progress.add_completed_lesson()
     progress.add_completed_lesson()
     # ... 7 times
-    
+
     assert progress.completion_percentage == 70.0
     assert progress.is_eligible_for_certificate() == False
-    
+
     # Complete remaining 3
     # ... 3 more times
-    
+
     assert progress.completion_percentage == 100.0
     assert progress.is_eligible_for_certificate() == True
 ```
@@ -5282,7 +5504,7 @@ describe('Authentication Endpoint', () => {
     const response = await request(app)
       .post('/auth/login')
       .send({ email: 'test@example.com', password: 'wrong' });
-    
+
     expect(response.status).toBe(401);
     expect(response.body.error.code).toBe('UNAUTHORIZED');
   });
@@ -5290,11 +5512,11 @@ describe('Authentication Endpoint', () => {
   it('should return JWT on valid credentials', async () => {
     const response = await request(app)
       .post('/auth/login')
-      .send({ 
-        email: 'teacher@example.com', 
-        password: 'CorrectPassword123!' 
+      .send({
+        email: 'teacher@example.com',
+        password: 'CorrectPassword123!'
       });
-    
+
     expect(response.status).toBe(200);
     expect(response.body.data).toHaveProperty('token');
     expect(response.body.data).toHaveProperty('refresh_token');
@@ -5302,9 +5524,10 @@ describe('Authentication Endpoint', () => {
 });
 ```
 
-#### **Configuration Files Samples**
+#### Configuration Files Samples
 
 **Kubernetes Configuration:**
+
 ```yaml
 # production-config.yaml
 ---
@@ -5329,6 +5552,7 @@ stringData:
 ```
 
 **Docker Compose for Development:**
+
 ```yaml
 version: '3.8'
 services:
@@ -5339,10 +5563,10 @@ services:
       POSTGRES_PASSWORD: dev_password
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    
+
   redis:
     image: redis:7-alpine
-    
+
   api:
     build: .
     ports:
@@ -5359,9 +5583,10 @@ volumes:
   postgres_data:
 ```
 
-#### **API Rate Limiting Configuration**
+#### API Rate Limiting Configuration
 
 **Kong API Gateway Setup:**
+
 ```json
 {
   "plugins": [
@@ -5387,9 +5612,10 @@ volumes:
 }
 ```
 
-#### **Comprehensive Monitoring Alerts**
+#### Comprehensive Monitoring Alerts
 
 **Prometheus Alert Rules:**
+
 ```yaml
 groups:
   - name: mentorx_alerts
@@ -5401,13 +5627,13 @@ groups:
           severity: critical
         annotations:
           summary: "High error rate detected"
-      
+
       - alert: DatabaseConnectionPoolExhausted
         expr: pg_connections_used / pg_connections_max > 0.9
         for: 2m
         labels:
           severity: warning
-      
+
       - alert: CacheHitRateLow
         expr: redis_stats_hits / (redis_stats_hits + redis_stats_misses) < 0.7
         for: 10m
@@ -5415,9 +5641,10 @@ groups:
           severity: info
 ```
 
-#### **Security Scanning Integration**
+#### Security Scanning Integration
 
 **Pre-Commit Security Checks:**
+
 ```bash
 #!/bin/bash
 # .git/hooks/pre-commit
@@ -5431,9 +5658,10 @@ snyk test --severity-threshold=high
 detect-secrets scan --baseline .secrets.baseline
 ```
 
-#### **Performance Benchmarking Results**
+#### Performance Benchmarking Results
 
 **Load Testing Results (Apache JMeter):**
+
 ```
 Concurrent Users: 1000
 Test Duration: 10 minutes
@@ -5451,6 +5679,7 @@ Conclusion: System handles 1000 concurrent users with acceptable performance
 ```
 
 **Database Query Performance:**
+
 ```
 SELECT query, calls, mean_time, max_time FROM pg_stat_statements
 WHERE mean_time > 100 ORDER BY mean_time DESC;
@@ -5470,19 +5699,20 @@ Top Slow Queries:
 ```
 
 ---
+## EXTENDED OPERATIONAL PROCEDURES
 
-## **EXTENDED OPERATIONAL PROCEDURES**
+### Incident Response Playbooks
 
-### **Incident Response Playbooks**
-
-#### **P1: Complete System Outage**
+#### P1: Complete System Outage
 
 **Detection:**
+
 - Health check failures across all services
 - Monitoring alert triggered
 - Estimated impact: All users affected
 
 **Response Steps:**
+
 1. **Declare Incident** (2 minutes)
    - Activate incident commander
    - Open war room Zoom
@@ -5513,14 +5743,16 @@ Top Slow Queries:
    - Create prevention measures
    - Schedule post-mortem (24 hours)
 
-#### **P2: Data Breach**
+#### P2: Data Breach
 
 **Detection:**
+
 - Unauthorized access attempt alert
 - Unusual database queries
 - External security notification
 
 **Immediate Actions:**
+
 1. Isolate affected systems
 2. Revoke compromised credentials
 3. Preserve evidence/logs
@@ -5528,48 +5760,55 @@ Top Slow Queries:
 5. Begin investigation
 
 **Investigation:**
+
 - Determine affected data scope
 - Timeline of unauthorized access
 - Attack vector analysis
 - Data exfiltration verification
 
 **Communication:**
+
 - Internal notification (within 1 hour)
 - Regulatory notifications (as required)
 - Customer notification (72 hours per GDPR)
 - Public statement preparation
 
 **Prevention:**
+
 - Enhance monitoring
 - Implement additional controls
 - Update security policies
 - Provide security training
 
-#### **P3: Performance Degradation**
+#### P3: Performance Degradation
 
 **Detection:**
+
 - Response time alert (p95 > 2s)
 - Error rate spike
 - Database slow query warnings
 
 **Investigation:**
+
 1. Check recent deployments
 2. Analyze database query performance
 3. Review resource utilization
 4. Check for DDoS attack
 
 **Resolution:**
+
 - Scale up servers if needed
 - Kill long-running queries
 - Clear cache if invalid data
 - Optimize problematic queries
 - Enable CDN caching
 
-### **Maintenance Windows**
+### Maintenance Windows
 
 **Weekly Maintenance Window:** Sunday 2-4 AM UTC
 
 **Activities:**
+
 - Apply security patches
 - Upgrade dependencies
 - Optimize database
@@ -5577,6 +5816,7 @@ Top Slow Queries:
 - Log rotation
 
 **Schedule:**
+
 ```
 1:45 AM - Send notification
 2:00 AM - Begin maintenance
@@ -5587,79 +5827,88 @@ Top Slow Queries:
 3:05 AM - Send completion notification
 ```
 
-### **Capacity Planning**
+### Capacity Planning
 
 **Current Metrics (Month 1-6 Post-Launch):**
+
 - Peak concurrent users: 5,000
 - Daily active users: 50,000
 - Database size: 100GB
 - Storage usage: 500GB
 
 **Projected Growth (12 months):**
+
 - Peak concurrent users: 25,000
 - Daily active users: 250,000
 - Database size: 500GB
 - Storage usage: 2TB
 
 **Scaling Timeline:**
+
 - Month 3: Add database replica
 - Month 6: Implement sharding
 - Month 9: Multi-region deployment
 - Month 12: Advanced caching layer
 
 ---
+## TRAINING AND ONBOARDING
 
-## **TRAINING AND ONBOARDING**
-
-### **User Training Programs**
+### User Training Programs
 
 **Student Onboarding (30 minutes):**
+
 1. Platform overview and navigation (10 min)
 2. Taking assignments and quizzes (10 min)
 3. Accessing resources and support (10 min)
 
 **Teacher Training (60 minutes):**
+
 1. Course creation and management (20 min)
 2. Grading and feedback system (20 min)
 3. Analytics and reporting (20 min)
 
 **Parent Training (45 minutes):**
+
 1. Setting up parent account (10 min)
 2. Monitoring child progress (20 min)
 3. Communication features (15 min)
 
 **Admin Training (90 minutes):**
+
 1. System administration (30 min)
 2. User and role management (30 min)
 3. Reporting and analytics (30 min)
 
-### **Documentation Resources**
+### Documentation Resources
 
 **Knowledge Base Articles:**
+
 - How to reset password
 - Troubleshooting common errors
 - Platform features guide
 - FAQ (100+ articles)
 
 **Video Tutorials:**
+
 - Platform walkthroughs (5-15 min each)
 - Feature deep-dives
 - Common use cases
 - Troubleshooting guides
 
 **Live Support:**
+
 - Chat support: 8 AM - 10 PM daily
 - Email support: 24-hour response time
 - Phone support: Peak hours only
 - Community forum: Peer-to-peer support
 
 ---
+## COMPLIANCE AND LEGAL
 
-## **COMPLIANCE AND LEGAL**
-
-### **Regulatory Compliance**
+### Regulatory Compliance
 
 **GDPR Compliance Checklist:**
+
 - [ ] Data Processing Agreement in place
 - [ ] User consent mechanisms
 - [ ] Data retention policies
@@ -5670,6 +5919,7 @@ Top Slow Queries:
 - [ ] Data protection officer assignment
 
 **CCPA Compliance:**
+
 - [ ] California privacy notice
 - [ ] Consumer rights implementation
 - [ ] Opt-out mechanisms
@@ -5677,15 +5927,17 @@ Top Slow Queries:
 - [ ] Data sale disclosure
 
 **PCI-DSS Compliance:**
+
 - [ ] Secure card processing
 - [ ] Tokenization implementation
 - [ ] No card data storage
 - [ ] Encryption in transit/rest
 - [ ] Access controls
 
-### **Terms of Service Highlights**
+### Terms of Service Highlights
 
 **User Responsibilities:**
+
 - Maintain account security
 - No unauthorized access attempts
 - Respect intellectual property
@@ -5693,6 +5945,7 @@ Top Slow Queries:
 - Follow acceptable use policy
 
 **Platform Responsibilities:**
+
 - Maintain service availability
 - Protect user data
 - Provide support
@@ -5700,33 +5953,36 @@ Top Slow Queries:
 - Notify of changes
 
 **Liability Limitations:**
+
 - Service provided "as is"
 - Limitation on damages
 - Exclusion of certain damages
 - Indemnification clauses
 
 ---
+## FINANCIAL PROJECTIONS
 
-## **FINANCIAL PROJECTIONS**
-
-### **Revenue Model**
+### Revenue Model
 
 **Pricing Strategy:**
+
 - Student course subscriptions: $50-200 per month
 - Teacher revenue share: 70% to teacher, 30% to platform
 - Premium features: $5-20 per month
 - Institutional licensing: Custom pricing
 
 **Projected Revenue (Year 1):**
+
 - Month 1-3: $50K
 - Month 4-6: $150K
 - Month 7-9: $300K
 - Month 10-12: $500K
 - **Total Year 1: $1M**
 
-### **Cost Structure**
+### Cost Structure
 
 **Fixed Costs (Monthly):**
+
 - Cloud infrastructure: $15,000
 - Support team: $20,000
 - Administration: $10,000
@@ -5734,29 +5990,28 @@ Top Slow Queries:
 - **Total Fixed: $60,000/month**
 
 **Variable Costs (Per User):**
+
 - Storage: $0.10 per active user
 - Bandwidth: $0.05 per GB
 - Processing: $0.20 per transaction
 - Support: $1.00 per 1000 transactions
 
-### **Break-Even Analysis**
+### Break-Even Analysis
 
 - **Fixed Costs:** $60,000/month
 - **Gross Margin:** 65% on subscriptions
 - **Break-even Users:** 1,000 active paying users
 - **Expected Timeline:** Month 6-7
 
-
-
 ---
+## FINAL COMPREHENSIVE TECHNICAL SPECIFICATIONS
 
-## **FINAL COMPREHENSIVE TECHNICAL SPECIFICATIONS**
+### Advanced Features Implementation
 
-### **Advanced Features Implementation**
-
-#### **Gamification System Design**
+#### Gamification System Design
 
 **Point System:**
+
 - Course completion: 100 points
 - Assignment submission: 25 points
 - Quiz completion: 50 points
@@ -5765,9 +6020,10 @@ Top Slow Queries:
 - Streak bonus: +5 points per day (max 30 days)
 
 **Leaderboard Calculation:**
+
 ```sql
-SELECT 
-  u.id, u.full_name, 
+SELECT
+  u.id, u.full_name,
   SUM(p.points) as total_points,
   ROW_NUMBER() OVER (ORDER BY SUM(p.points) DESC) as rank
 FROM users u
@@ -5778,6 +6034,7 @@ LIMIT 100;
 ```
 
 **Badge System:**
+
 - Bronze Achiever: 500 points accumulated
 - Silver Scholar: 1000 points accumulated
 - Gold Expert: 2000 points accumulated
@@ -5787,11 +6044,12 @@ LIMIT 100;
 - Consistent Learner: 30-day learning streak
 
 **Achievement Triggers:**
+
 ```javascript
 async function checkAchievements(userId) {
   const userStats = await getUserStats(userId);
   const achievements = [];
-  
+
   if (userStats.totalPoints >= 500) {
     achievements.push('BRONZE_ACHIEVER');
   }
@@ -5801,14 +6059,15 @@ async function checkAchievements(userId) {
   if (userStats.consecutiveDays >= 30) {
     achievements.push('CONSISTENT_LEARNER');
   }
-  
+
   return achievements;
 }
 ```
 
-#### **Real-time Notification System**
+#### Real-time Notification System
 
 **Event Publishing:**
+
 ```javascript
 // Event types
 const EventTypes = {
@@ -5827,7 +6086,7 @@ async function publishEvent(eventType, data) {
     timestamp: new Date(),
     data: data
   };
-  
+
   await kafka.producer.send({
     topic: 'notifications',
     messages: [{ value: JSON.stringify(event) }]
@@ -5836,13 +6095,14 @@ async function publishEvent(eventType, data) {
 ```
 
 **Subscriber Services:**
+
 ```javascript
 // Email notification subscriber
 kafka.consumer.subscribe({ topic: 'notifications' });
 kafka.consumer.run({
   eachMessage: async ({ message }) => {
     const event = JSON.parse(message.value);
-    
+
     if (event.type === 'GRADE_RELEASED') {
       await emailService.sendGradeNotification(event.data);
     }
@@ -5854,7 +6114,7 @@ kafka.consumer.subscribe({ topic: 'notifications' });
 kafka.consumer.run({
   eachMessage: async ({ message }) => {
     const event = JSON.parse(message.value);
-    
+
     if (event.type === 'ATTENDANCE_RECORDED') {
       await whatsappService.sendAttendanceReport(event.data);
     }
@@ -5866,26 +6126,27 @@ kafka.consumer.subscribe({ topic: 'notifications' });
 kafka.consumer.run({
   eachMessage: async ({ message }) => {
     const event = JSON.parse(message.value);
-    
+
     await notificationService.createInAppNotification({
       userId: event.data.userId,
       message: event.data.message,
       actionUrl: event.data.actionUrl
     });
-    
+
     // Send via WebSocket
     io.to(event.data.userId).emit('notification', event.data);
   }
 });
 ```
 
-#### **Advanced Analytics Implementation**
+#### Advanced Analytics Implementation
 
 **Student Learning Analytics Dashboard:**
+
 ```sql
 -- Student Performance Overview
 CREATE VIEW student_performance_overview AS
-SELECT 
+SELECT
   s.id as student_id,
   s.full_name,
   COUNT(DISTINCT c.id) as courses_enrolled,
@@ -5893,7 +6154,7 @@ SELECT
   COUNT(DISTINCT CASE WHEN a.status = 'submitted' THEN a.id END) as assignments_submitted,
   COUNT(DISTINCT qa.id) as quizzes_taken,
   AVG(CASE WHEN qa.score >= 70 THEN 1 ELSE 0 END) * 100 as pass_rate,
-  SUM(CASE WHEN att.status = 'present' THEN 1 ELSE 0 END)::float / 
+  SUM(CASE WHEN att.status = 'present' THEN 1 ELSE 0 END)::float /
     COUNT(att.id) * 100 as attendance_rate
 FROM students s
 LEFT JOIN enrollments e ON s.id = e.student_id
@@ -5906,13 +6167,14 @@ GROUP BY s.id, s.full_name;
 ```
 
 **Cohort Analysis:**
+
 ```python
 def analyze_cohort_progress(cohort_id, start_date, end_date):
     """
     Analyze learning progress across student cohort
     """
     cohort_students = get_students_in_cohort(cohort_id)
-    
+
     metrics = {
         'avg_completion_rate': 0,
         'avg_grade': 0,
@@ -5920,36 +6182,37 @@ def analyze_cohort_progress(cohort_id, start_date, end_date):
         'at_risk_count': 0,
         'excelling_count': 0
     }
-    
+
     for student in cohort_students:
         completion = calculate_completion(student.id, start_date, end_date)
         avg_grade = get_average_grade(student.id, start_date, end_date)
         attendance = get_attendance_rate(student.id, start_date, end_date)
-        
+
         metrics['avg_completion_rate'] += completion
         metrics['avg_grade'] += avg_grade
         metrics['attendance_rate'] += attendance
-        
+
         # Identify at-risk students
         if completion < 30 or avg_grade < 60 or attendance < 70:
             metrics['at_risk_count'] += 1
-        
+
         # Identify excelling students
         if completion > 90 and avg_grade > 85 and attendance > 95:
             metrics['excelling_count'] += 1
-    
+
     # Calculate averages
     n = len(cohort_students)
     metrics['avg_completion_rate'] /= n
     metrics['avg_grade'] /= n
     metrics['attendance_rate'] /= n
-    
+
     return metrics
 ```
 
-#### **Content Recommendation Engine**
+#### Content Recommendation Engine
 
 **Collaborative Filtering Approach:**
+
 ```python
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
@@ -5960,39 +6223,40 @@ def recommend_lessons(student_id, n_recommendations=5):
     """
     # Get student's engagement vector
     student_vector = get_engagement_vector(student_id)
-    
+
     # Get all other students' vectors
     all_students = get_active_students()
     student_vectors = np.array([
         get_engagement_vector(s.id) for s in all_students
     ])
-    
+
     # Find similar students
     similarities = cosine_similarity([student_vector], student_vectors)[0]
     similar_student_ids = get_top_k_indices(similarities, k=10)
-    
+
     # Get lessons completed by similar students but not by current student
     similar_students_lessons = set()
     for similar_id in similar_student_ids:
         lessons = get_completed_lessons(similar_id)
         similar_students_lessons.update(lessons)
-    
+
     student_completed = set(get_completed_lessons(student_id))
     recommended_lessons = similar_students_lessons - student_completed
-    
+
     # Score recommendations based on popularity and relevance
     scored_recommendations = []
     for lesson_id in recommended_lessons:
         score = calculate_recommendation_score(lesson_id, similar_student_ids)
         scored_recommendations.append((lesson_id, score))
-    
+
     # Return top N recommendations
     return sorted(scored_recommendations, key=lambda x: x[1], reverse=True)[:n_recommendations]
 ```
 
-#### **Adaptive Learning Path System**
+#### Adaptive Learning Path System
 
 **Dynamic Course Sequencing:**
+
 ```javascript
 class AdaptiveLearningPath {
   constructor(studentId, courseId) {
@@ -6000,66 +6264,67 @@ class AdaptiveLearningPath {
     this.courseId = courseId;
     this.currentLevel = 'beginner';
   }
-  
+
   async getNextLesson() {
     const studentLevel = await this.assessStudentLevel();
     const currentProgress = await this.getStudentProgress();
-    
+
     // Determine difficulty based on performance
     if (currentProgress.averageScore > 85) {
       this.currentLevel = 'advanced';
     } else if (currentProgress.averageScore < 60) {
       this.currentLevel = 'beginner';
     }
-    
+
     // Get next lesson at appropriate level
     const nextLesson = await this.fetchLessonByDifficulty(this.currentLevel);
-    
+
     // Check for prerequisites
     const prequisites = nextLesson.prerequisites || [];
     const completed = await this.getCompletedLessons();
-    
+
     if (!prerequisites.every(p => completed.includes(p))) {
       return this.getPrerequisiteLesson(prerequisites);
     }
-    
+
     return nextLesson;
   }
-  
+
   async assessStudentLevel() {
     const recentQuizzes = await this.getRecentQuizzes(limit=5);
     const avgScore = recentQuizzes.reduce((a, b) => a + b.score, 0) / recentQuizzes.length;
-    
+
     return avgScore;
   }
 }
 ```
 
-#### **Smart Assignment Grading System**
+#### Smart Assignment Grading System
 
 **Hybrid Grading (AI + Teacher):**
+
 ```python
 class HybridGradingEngine:
     def __init__(self, model_path):
         self.ml_model = load_model(model_path)
         self.teacher_queue = []
-    
+
     async def grade_assignment(self, assignment_submission):
         """
         Grade assignment with ML + teacher review
         """
         # Extract text content
         content = extract_content(assignment_submission.file)
-        
+
         # AI-based initial grading
         ai_score = self.grade_with_ml(content)
         ai_feedback = self.generate_feedback(content, ai_score)
-        
+
         # Check confidence threshold
         if ai_score.confidence < 0.7:
             # Queue for teacher review
             await self.queue_for_teacher_review(
-                assignment_submission, 
+                assignment_submission,
                 ai_score,
                 ai_feedback
             )
@@ -6083,7 +6348,7 @@ class HybridGradingEngine:
                 'graded_by': 'AI',
                 'confidence': ai_score.confidence
             }
-    
+
     def grade_with_ml(self, content):
         """
         Grade using trained ML model
@@ -6091,34 +6356,35 @@ class HybridGradingEngine:
         features = self.extract_features(content)
         score = self.ml_model.predict([features])[0]
         confidence = self.ml_model.predict_proba([features]).max()
-        
+
         return GradeResult(score=score, confidence=confidence)
-    
+
     def generate_feedback(self, content, score):
         """
         Generate AI feedback based on content and score
         """
         key_points = extract_key_points(content)
         missing_elements = identify_missing_elements(content, score)
-        
+
         feedback = f"""
         Well done on your submission!
-        
+
         Strengths:
         - {", ".join(key_points[:3])}
-        
+
         Areas for improvement:
         - {", ".join(missing_elements[:3])}
-        
+
         Score: {score}/100
         """
-        
+
         return feedback
 ```
 
-#### **Performance Metrics and KPIs**
+#### Performance Metrics and KPIs
 
 **System Performance KPIs:**
+
 ```
 Real-time Metrics:
 - API Response Time (p95): Target <500ms, Current: 245ms ✓
@@ -6140,9 +6406,10 @@ Financial Metrics:
 - Churn Rate: 2%, Target: <3%
 ```
 
-#### **Cost Optimization Strategies**
+#### Cost Optimization Strategies
 
 **Infrastructure Cost Optimization:**
+
 ```
 Current Monthly Costs:
 - Compute (EC2): $8,000
@@ -6162,9 +6429,10 @@ Optimized Monthly Cost: $12,750
 Annual Savings: $51,000 (30% reduction)
 ```
 
-#### **Comprehensive Integration Testing**
+#### Comprehensive Integration Testing
 
 **End-to-End Test Scenarios:**
+
 ```gherkin
 Feature: Complete Student Learning Journey
 
@@ -6172,42 +6440,42 @@ Scenario: New Student Completes First Course
   Given a new student registers on the platform
   When the student explores available courses
   Then the student sees a list of recommended courses
-  
+
   When the student enrolls in a course
   Then the student is added to the course roster
   And a welcome notification is sent
-  
+
   When the student starts first lesson
   Then the lesson content loads successfully
   And progress is tracked
-  
+
   When the student completes first assignment
   Then the assignment is submitted successfully
   And the teacher receives notification
-  
+
   When the teacher grades the assignment
   Then the grade is released
   And the student receives WhatsApp notification
-  
+
   When the student takes first quiz
   Then the quiz questions load
   And the quiz timer starts
-  
+
   When the student submits quiz
   Then AI grades objective questions
   Then the student sees results immediately
   And the score is added to student record
-  
+
   When a week passes
   Then the student receives weekly progress email
   And parent receives attendance report
-  
+
   When the student completes course
   Then a certificate is generated
   And the student receives achievement notification
 ```
 
-#### **Security Penetration Testing Checklist**
+#### Security Penetration Testing Checklist
 
 **OWASP Top 10 Testing:**
 
@@ -6273,11 +6541,12 @@ A10:2021 - SSRF
 ✓ Test network segmentation
 ```
 
-#### **Quality Assurance Process**
+#### Quality Assurance Process
 
 **QA Testing Phases:**
 
 Phase 1: Unit Testing (Dev Environment)
+
 - Code review by peer
 - Unit tests written for new code
 - Code coverage >80%
@@ -6285,6 +6554,7 @@ Phase 1: Unit Testing (Dev Environment)
 - Estimated time: Ongoing
 
 Phase 2: Component Testing (Dev Environment)
+
 - Component-level testing
 - Mock external dependencies
 - Interface testing
@@ -6292,6 +6562,7 @@ Phase 2: Component Testing (Dev Environment)
 - Estimated time: 2 days per feature
 
 Phase 3: Integration Testing (Staging)
+
 - Multi-service integration
 - Real database (sanitized)
 - Real external APIs (test accounts)
@@ -6299,6 +6570,7 @@ Phase 3: Integration Testing (Staging)
 - Estimated time: 1 week per release
 
 Phase 4: System Testing (Staging)
+
 - Full system functionality
 - Performance under load
 - Security scanning
@@ -6306,6 +6578,7 @@ Phase 4: System Testing (Staging)
 - Estimated time: 1 week per release
 
 Phase 5: UAT (Staging → Production)
+
 - Real user scenarios
 - Stakeholder acceptance
 - Edge case testing
@@ -6313,21 +6586,24 @@ Phase 5: UAT (Staging → Production)
 - Estimated time: 1 week pre-launch
 
 Phase 6: Regression Testing
+
 - Automated test suite runs
 - Previous functionality verification
 - Performance benchmarking
 - Estimated time: Ongoing
 
 Phase 7: Post-Release Monitoring
+
 - Live system monitoring
 - User-reported issues
 - Performance tracking
 - Error rate monitoring
 - Estimated time: 24/7
 
-#### **Continuous Improvement Process**
+#### Continuous Improvement Process
 
 **Weekly Review Cycle:**
+
 ```
 Monday: Metrics Review
 - Review KPIs vs targets
@@ -6346,6 +6622,7 @@ Friday: Team Retrospective
 ```
 
 **Monthly Review Cycle:**
+
 ```
 Week 1: Data Analysis
 - Review user engagement
@@ -6369,48 +6646,57 @@ Week 4: Planning
 ```
 
 ---
+## PLATFORM SCALABILITY ROADMAP
 
-## **PLATFORM SCALABILITY ROADMAP**
+### Phase 1: Foundation (Months 1-3)
 
-### **Phase 1: Foundation (Months 1-3)**
 - Core platform launch
 - 10,000 concurrent users
 - Single region deployment
 - Basic analytics
 
-### **Phase 2: Optimization (Months 4-6)**
+### Phase 2: Optimization (Months 4-6)
+
 - Performance optimization
 - 50,000 concurrent users
 - Multi-AZ deployment
 - Advanced analytics
 
-### **Phase 3: Expansion (Months 7-9)**
+### Phase 3: Expansion (Months 7-9)
+
 - Multi-region deployment
 - 100,000 concurrent users
 - Global CDN
 - White-label options
 
-### **Phase 4: Enterprise (Months 10-12)**
+### Phase 4: Enterprise (Months 10-12)
+
 - Enterprise features
 - Custom integrations
 - Dedicated support
 - 500,000+ concurrent users
 
 ---
-
-## **CONCLUSION AND NEXT STEPS**
+## CONCLUSION AND NEXT STEPS
 
 This comprehensive documentation provides a complete technical specification for the MentorX educational platform. The system is designed with:
 
 ✓ Scalability: Handles 100,000+ concurrent users
+
 ✓ Security: Multi-layer protection with encryption
+
 ✓ Reliability: 99.5% uptime with disaster recovery
+
 ✓ Performance: Sub-2-second API response times
+
 ✓ Intelligence: AI-powered personalized learning
+
 ✓ Usability: Intuitive interfaces for all users
+
 ✓ Compliance: GDPR, CCPA, PCI-DSS compliant
 
 **Next Steps:**
+
 1. Review and approve architecture
 2. Finalize vendor partnerships
 3. Commence development phase
@@ -6418,11 +6704,12 @@ This comprehensive documentation provides a complete technical specification for
 5. Schedule launch timeline
 
 **Document Version:** 1.0
+
 **Last Updated:** January 15, 2025
+
 **Document Status:** Final
+
 **Approval Status:** Pending Review
 
 ---
-
 *End of MentorX Comprehensive Technical Documentation*
-
