@@ -5,7 +5,7 @@ publish_to: none
 resolution: workspace
 
 environment:
-  sdk: ^3.9.2
+  sdk: ">=3.5.0 <4.0.0"
   flutter: ">=1.17.0"
 
 dependencies:
@@ -56,14 +56,14 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 # flutter:
-  # assets:
-    # - lib/assets/images/
-    # - path: lib/assets/svgs/
-    #   transformers:
-    #     - package: vector_graphics_compiler
-    # - path: lib/assets/icons/
-    #   transformers:
-    #     - package: vector_graphics_compiler
+# assets:
+# - lib/assets/images/
+# - path: lib/assets/svgs/
+#   transformers:
+#     - package: vector_graphics_compiler
+# - path: lib/assets/icons/
+#   transformers:
+#     - package: vector_graphics_compiler
 
 # Install the package globally: dart pub global activate flutter_gen
 # Run with: dart run build_runner build
