@@ -578,7 +578,7 @@ CREATE TABLE courses (
     INDEX idx_course_featured (featured, pinned)
 );
 
--- Sessions/Lessons Table
+-- Sessions Table
 CREATE TABLE sessions (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     course_id BIGINT NOT NULL,
@@ -1067,9 +1067,9 @@ APP_URL=https://mentorx.edu.eg
 APP_PORT=3000
 
 # Database Configuration
-DB_CONNECTION=mysql
+DB_CONNECTION=postgresql
 DB_HOST=localhost
-DB_PORT=3306
+DB_PORT=5432
 DB_DATABASE=mentorx_prod
 DB_USERNAME=mentorx_user
 DB_PASSWORD=<strong_password>
@@ -1159,7 +1159,7 @@ NEW_RELIC_LICENSE_KEY=<newrelic_key>
 2. **Software Requirements:**
    - Node.js v16.x or later
    - Python 3.9 or later
-   - MySQL 8.0 or later
+   - PostgreSQL 14.x or later
    - Redis 6.x or later
    - Nginx 1.18 or later
 
@@ -1188,13 +1188,13 @@ python3 --version
 pip3 --version
 ```
 
-**Step 4: Install MySQL**
+**Step 4: Install PostgreSQL**
 
 ```bash
-sudo apt install -y mysql-server
-sudo mysql_secure_installation
-sudo systemctl start mysql
-sudo systemctl enable mysql
+sudo apt install -y postgresql postgresql-contrib
+sudo systemctl start postgresql
+sudo systemctl enable postgresql
+sudo -u postgres psql -c "SELECT version();"  # Verify installation
 ```
 
 **Step 5: Install Redis**
@@ -1251,12 +1251,11 @@ nano .env
 **Step 11: Create Database**
 
 ```bash
-mysql -u root -p
-CREATE DATABASE mentorx_prod CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-CREATE USER 'mentorx_user'@'localhost' IDENTIFIED BY 'strong_password';
-GRANT ALL PRIVILEGES ON mentorx_prod.* TO 'mentorx_user'@'localhost';
-FLUSH PRIVILEGES;
-EXIT;
+sudo -u postgres psql
+CREATE DATABASE mentorx_prod;
+CREATE USER mentorx_user WITH PASSWORD 'strong_password';
+GRANT ALL PRIVILEGES ON DATABASE mentorx_prod TO mentorx_user;
+\q
 ```
 
 **Step 12: Run Database Migrations**
@@ -1470,7 +1469,6 @@ sudo crontab -e
 |--------------|-----------|
 | AI | Artificial Intelligence |
 | API | Application Programming Interface |
-| ASP.NET | Active Server Pages .NET |
 | AWS | Amazon Web Services |
 | CCPA | California Consumer Privacy Act |
 | CDN | Content Delivery Network |
@@ -1997,31 +1995,31 @@ The following features are explicitly excluded from the current project scope:
 
 This document is structured to provide comprehensive coverage of the MentorX project across eleven main sections:
 
-**Section 1 (Current)**: Introduces the project background, problem statement, objectives, and scope.
+**Section 1 (Introduction)**: Introduces the project background, problem statement, objectives, and scope.
 
-**Section 2**: Details functional and non-functional requirements, establishing measurable system specifications.
+**Section 2 (System Requirements Analysis)**: Details functional and non-functional requirements, establishing measurable system specifications.
 
-**Section 3**: Presents system analysis and modeling through diagrams (context, use case, DFD, activity, state, sequence, class, ER) using Mermaid notation.
+**Section 3 (System Analysis and Modeling)**: Presents system analysis and modeling through diagrams (context, use case, DFD, activity, state, sequence, class, ER) using Mermaid notation.
 
-**Section 4**: Covers project management including scheduling (PERT, Gantt), risk assessment, cost estimation, and methodology selection.
+**Section 4 (Project Management)**: Covers project management including scheduling (PERT, Gantt), risk assessment, cost estimation, and methodology selection.
 
-**Section 5**: Describes system architecture, technology stack, and component integration.
+**Section 5 (System Architecture)**: Describes system architecture, technology stack, and component integration.
 
-**Section 6**: Explains AI feature implementation including RAG chatbot, performance prediction, and lesson recommendation systems.
+**Section 6 (AI Features Implementation)**: Explains AI feature implementation including RAG chatbot, performance prediction, and lesson recommendation systems.
 
-**Section 7**: Provides comprehensive API documentation with endpoints, request/response formats, and error handling.
+**Section 7 (API Documentation)**: Provides comprehensive API documentation with endpoints, request/response formats, and error handling.
 
-**Section 8**: Outlines security architecture including authentication, encryption, access control, and threat mitigation.
+**Section 8 (Security Architecture)**: Outlines security architecture including authentication, encryption, access control, and threat mitigation.
 
-**Section 9**: Details deployment procedures, environment configuration, monitoring, logging, and backup strategies.
+**Section 9 (Deployment and Operations)**: Details deployment procedures, environment configuration, monitoring, logging, and backup strategies.
 
-**Section 10**: Describes testing strategies, test cases, performance benchmarks, and quality assurance processes.
+**Section 10 (Testing and Quality Assurance)**: Describes testing strategies, test cases, performance benchmarks, and quality assurance processes.
 
-**Section 11**: Concludes with achievement summary, limitations, and future work recommendations.
+**Section 11 (Conclusion)**: Concludes with achievement summary, limitations, and future work recommendations.
 
-**Section 12**: Lists all references in IEEE format.
+**Section 12 (References)**: Lists all references in IEEE format.
 
-**Section 13**: Provides a comprehensive glossary of technical terms.
+**Section 13 (Glossary)**: Provides a comprehensive glossary of technical terms.
 
 **Appendices**: Include complete SQL schemas, API references, configuration templates, and installation guides.
 
@@ -5936,10 +5934,12 @@ services:
       POSTGRES_DB: mentorx_dev
       POSTGRES_PASSWORD: dev_password
     volumes:
-      - Postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
 
   redis:
     image: redis:7-alpine
+    restart: unless-stopped
 
   api:
     build: .
@@ -5950,8 +5950,9 @@ services:
       DATABASE_URL: postgresql://postgres:dev_password@postgres/mentorx_dev
       REDIS_URL: redis://redis:6379
     depends_on:
-      - Postgres
-      - Redis
+      - postgres
+      - redis
+    restart: unless-stopped
 
 volumes:
   postgres_data:
