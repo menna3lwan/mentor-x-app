@@ -462,7 +462,16 @@ Eng. Alshimaa Mahmoud (Co-Supervisor)
 
 ### Appendix A: Database Schema (Complete SQL)
 
-**Note:** The SQL schemas below use MySQL-compatible syntax for broad compatibility. For PostgreSQL implementation, replace `AUTO_INCREMENT` with `SERIAL` or `GENERATED ALWAYS AS IDENTITY`, and adjust data types as needed (e.g., `ENUM` types should be created separately in PostgreSQL).
+**Important Note:** The SQL schemas below are presented in MySQL-compatible syntax for broad readability and compatibility across different SQL implementations. However, **the MentorX system uses PostgreSQL 14+ as its primary database** (as documented in Section 5.2 and the installation guide).
+
+**For PostgreSQL implementation**, the following adaptations are required:
+- Replace `AUTO_INCREMENT` with `SERIAL` or `GENERATED ALWAYS AS IDENTITY`
+- Create `ENUM` types separately using `CREATE TYPE` before table creation
+- Adjust syntax for JSON fields if needed
+- Use PostgreSQL-specific features like `JSONB` for better performance
+- Follow PostgreSQL naming conventions and best practices
+
+These schemas serve as a logical model and can be adapted to any SQL database system as needed.
 
 #### Core User Tables
 
@@ -580,7 +589,7 @@ CREATE TABLE courses (
     INDEX idx_course_featured (featured, pinned)
 );
 
--- Sessions Table
+-- Sessions Table (represents class sessions/lessons in a course)
 CREATE TABLE sessions (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     course_id BIGINT NOT NULL,
