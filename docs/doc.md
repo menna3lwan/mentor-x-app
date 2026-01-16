@@ -653,7 +653,290 @@ CREATE TABLE session_progress (
 );
 ```
 
-*(Continues with complete schema for Attendance, Assignments, Quizzes, Payments, Notifications, Analytics, etc.)*
+#### Attendance, Assignments, and Assessment Tables
+
+```sql
+-- Attendance Table
+CREATE TABLE attendance (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    student_id BIGINT NOT NULL,
+    session_id BIGINT NOT NULL,
+    course_id BIGINT NOT NULL,
+    status ENUM('present', 'absent', 'excused', 'late') DEFAULT 'absent',
+    check_in_time TIMESTAMP NULL,
+    check_out_time TIMESTAMP NULL,
+    qr_code VARCHAR(255),
+    device_hash VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (session_id) REFERENCES sessions(id) ON DELETE CASCADE,
+    FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE,
+    INDEX idx_attendance_student (student_id, session_id),
+    INDEX idx_attendance_date (created_at)
+);
+
+-- Assignments Table
+CREATE TABLE assignments (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    session_id BIGINT NOT NULL,
+    course_id BIGINT NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    due_date TIMESTAMP,
+    max_score DECIMAL(5,2) DEFAULT 100.00,
+    file_url TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (session_id) REFERENCES sessions(id) ON DELETE CASCADE,
+    FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE,
+    INDEX idx_assignment_course (course_id, due_date)
+);
+
+-- Assignment Submissions Table
+CREATE TABLE assignment_submissions (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    assignment_id BIGINT NOT NULL,
+    student_id BIGINT NOT NULL,
+    submission_file_url TEXT,
+    submission_text TEXT,
+    submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    grade DECIMAL(5,2),
+    feedback TEXT,
+    graded_at TIMESTAMP NULL,
+    graded_by BIGINT,
+    FOREIGN KEY (assignment_id) REFERENCES assignments(id) ON DELETE CASCADE,
+    FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (graded_by) REFERENCES users(id) ON DELETE SET NULL,
+    UNIQUE KEY unique_student_assignment (student_id, assignment_id)
+);
+
+-- Quizzes Table
+CREATE TABLE quizzes (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    session_id BIGINT,
+    course_id BIGINT NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    time_limit_minutes INT DEFAULT 60,
+    max_attempts INT DEFAULT 1,
+    passing_score DECIMAL(5,2) DEFAULT 70.00,
+    randomize_questions BOOLEAN DEFAULT TRUE,
+    show_correct_answers BOOLEAN DEFAULT TRUE,
+    available_from TIMESTAMP,
+    available_until TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (session_id) REFERENCES sessions(id) ON DELETE CASCADE,
+    FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE,
+    INDEX idx_quiz_course (course_id, available_from)
+);
+
+-- Quiz Questions Table
+CREATE TABLE quiz_questions (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    quiz_id BIGINT NOT NULL,
+    question_text TEXT NOT NULL,
+    question_type ENUM('multiple_choice', 'true_false', 'short_answer', 'essay') NOT NULL,
+    points DECIMAL(5,2) DEFAULT 1.00,
+    order_index INT DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (quiz_id) REFERENCES quizzes(id) ON DELETE CASCADE,
+    INDEX idx_question_quiz (quiz_id, order_index)
+);
+
+-- Quiz Answers Table
+CREATE TABLE quiz_answers (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    question_id BIGINT NOT NULL,
+    answer_text TEXT NOT NULL,
+    is_correct BOOLEAN DEFAULT FALSE,
+    order_index INT DEFAULT 0,
+    FOREIGN KEY (question_id) REFERENCES quiz_questions(id) ON DELETE CASCADE
+);
+
+-- Quiz Attempts Table
+CREATE TABLE quiz_attempts (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    quiz_id BIGINT NOT NULL,
+    student_id BIGINT NOT NULL,
+    attempt_number INT DEFAULT 1,
+    started_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    completed_at TIMESTAMP NULL,
+    score DECIMAL(5,2),
+    passed BOOLEAN DEFAULT FALSE,
+    time_spent_seconds INT,
+    FOREIGN KEY (quiz_id) REFERENCES quizzes(id) ON DELETE CASCADE,
+    FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE,
+    INDEX idx_attempt_student (student_id, quiz_id)
+);
+
+-- Quiz Responses Table
+CREATE TABLE quiz_responses (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    attempt_id BIGINT NOT NULL,
+    question_id BIGINT NOT NULL,
+    answer_id BIGINT,
+    answer_text TEXT,
+    is_correct BOOLEAN,
+    points_earned DECIMAL(5,2),
+    FOREIGN KEY (attempt_id) REFERENCES quiz_attempts(id) ON DELETE CASCADE,
+    FOREIGN KEY (question_id) REFERENCES quiz_questions(id) ON DELETE CASCADE,
+    FOREIGN KEY (answer_id) REFERENCES quiz_answers(id) ON DELETE SET NULL
+);
+```
+
+#### Payment and Transaction Tables
+
+```sql
+-- Payment Transactions Table
+CREATE TABLE payment_transactions (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    student_id BIGINT NOT NULL,
+    course_id BIGINT,
+    amount DECIMAL(10,2) NOT NULL,
+    currency VARCHAR(3) DEFAULT 'USD',
+    payment_method ENUM('credit_card', 'wallet', 'fawry', 'bank_transfer') NOT NULL,
+    payment_status ENUM('pending', 'completed', 'failed', 'refunded') DEFAULT 'pending',
+    transaction_reference VARCHAR(255),
+    payment_gateway VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    completed_at TIMESTAMP NULL,
+    FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE SET NULL,
+    INDEX idx_payment_student (student_id, created_at),
+    INDEX idx_payment_status (payment_status)
+);
+
+-- Wallet Transactions Table
+CREATE TABLE wallet_transactions (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    user_id BIGINT NOT NULL,
+    transaction_type ENUM('credit', 'debit', 'refund') NOT NULL,
+    amount DECIMAL(10,2) NOT NULL,
+    balance_after DECIMAL(10,2) NOT NULL,
+    description TEXT,
+    reference_id BIGINT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    INDEX idx_wallet_user (user_id, created_at)
+);
+```
+
+#### Notification and Communication Tables
+
+```sql
+-- Notifications Table
+CREATE TABLE notifications (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    user_id BIGINT NOT NULL,
+    notification_type VARCHAR(50) NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    message TEXT NOT NULL,
+    action_url TEXT,
+    is_read BOOLEAN DEFAULT FALSE,
+    read_at TIMESTAMP NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    INDEX idx_notification_user (user_id, is_read, created_at)
+);
+
+-- Messages Table (Chat/Discussion)
+CREATE TABLE messages (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    sender_id BIGINT NOT NULL,
+    recipient_id BIGINT,
+    course_id BIGINT,
+    parent_message_id BIGINT,
+    message_text TEXT NOT NULL,
+    is_read BOOLEAN DEFAULT FALSE,
+    read_at TIMESTAMP NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (recipient_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE,
+    FOREIGN KEY (parent_message_id) REFERENCES messages(id) ON DELETE CASCADE,
+    INDEX idx_message_conversation (sender_id, recipient_id, created_at)
+);
+
+-- Announcements Table
+CREATE TABLE announcements (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    course_id BIGINT,
+    teacher_id BIGINT NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
+    target_audience ENUM('all', 'students', 'parents') DEFAULT 'all',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE,
+    FOREIGN KEY (teacher_id) REFERENCES users(id) ON DELETE CASCADE,
+    INDEX idx_announcement_course (course_id, created_at)
+);
+```
+
+#### Analytics and Gamification Tables
+
+```sql
+-- Student Analytics Table
+CREATE TABLE student_analytics (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    student_id BIGINT NOT NULL,
+    course_id BIGINT,
+    metric_type VARCHAR(50) NOT NULL,
+    metric_value DECIMAL(10,2),
+    metric_date DATE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE,
+    INDEX idx_analytics_student (student_id, metric_type, metric_date)
+);
+
+-- Points Table (Gamification)
+CREATE TABLE points (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    user_id BIGINT NOT NULL,
+    points INT NOT NULL,
+    reason VARCHAR(255),
+    reference_type VARCHAR(50),
+    reference_id BIGINT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    INDEX idx_points_user (user_id, created_at)
+);
+
+-- Badges Table
+CREATE TABLE badges (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    description TEXT,
+    icon_url TEXT,
+    criteria JSON,
+    points_required INT DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- User Badges Table
+CREATE TABLE user_badges (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    user_id BIGINT NOT NULL,
+    badge_id BIGINT NOT NULL,
+    earned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (badge_id) REFERENCES badges(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_user_badge (user_id, badge_id)
+);
+
+-- Leaderboard Table
+CREATE TABLE leaderboard (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    user_id BIGINT NOT NULL,
+    course_id BIGINT,
+    total_points INT DEFAULT 0,
+    rank_position INT,
+    period ENUM('daily', 'weekly', 'monthly', 'all_time') DEFAULT 'all_time',
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE,
+    INDEX idx_leaderboard_rank (course_id, period, rank_position)
+);
+```
 
 ---
 ### Appendix B: API Endpoint Reference
@@ -683,7 +966,91 @@ CREATE TABLE session_progress (
 | GET | `/api/v1/users/{id}/courses` | Get user's enrolled courses | Yes |
 | GET | `/api/v1/users/{id}/progress` | Get user's learning progress | Yes |
 
-*(Complete endpoint reference continues...)*
+#### Course Management Endpoints
+
+| Method | Endpoint | Description | Authentication Required |
+|--------|----------|-------------|------------------------|
+| GET | `/api/v1/courses` | List all courses | No |
+| POST | `/api/v1/courses` | Create new course | Yes (Teacher/Admin) |
+| GET | `/api/v1/courses/{id}` | Get course details | Yes |
+| PUT | `/api/v1/courses/{id}` | Update course | Yes (Teacher/Admin) |
+| DELETE | `/api/v1/courses/{id}` | Delete course | Yes (Admin) |
+| POST | `/api/v1/courses/{id}/enroll` | Enroll in course | Yes |
+| GET | `/api/v1/courses/{id}/sessions` | Get course sessions | Yes |
+| GET | `/api/v1/courses/{id}/students` | Get enrolled students | Yes (Teacher/Admin) |
+
+#### Session/Lesson Endpoints
+
+| Method | Endpoint | Description | Authentication Required |
+|--------|----------|-------------|------------------------|
+| GET | `/api/v1/sessions/{id}` | Get session details | Yes |
+| POST | `/api/v1/sessions` | Create new session | Yes (Teacher/Admin) |
+| PUT | `/api/v1/sessions/{id}` | Update session | Yes (Teacher/Admin) |
+| DELETE | `/api/v1/sessions/{id}` | Delete session | Yes (Teacher/Admin) |
+| POST | `/api/v1/sessions/{id}/attend` | Mark attendance | Yes |
+| GET | `/api/v1/sessions/{id}/items` | Get session items | Yes |
+
+#### Assignment Endpoints
+
+| Method | Endpoint | Description | Authentication Required |
+|--------|----------|-------------|------------------------|
+| GET | `/api/v1/assignments` | List assignments | Yes |
+| POST | `/api/v1/assignments` | Create assignment | Yes (Teacher/Admin) |
+| GET | `/api/v1/assignments/{id}` | Get assignment details | Yes |
+| POST | `/api/v1/assignments/{id}/submit` | Submit assignment | Yes (Student) |
+| PUT | `/api/v1/assignments/{id}/grade` | Grade assignment | Yes (Teacher/Admin) |
+| GET | `/api/v1/assignments/{id}/submissions` | Get all submissions | Yes (Teacher/Admin) |
+
+#### Quiz Endpoints
+
+| Method | Endpoint | Description | Authentication Required |
+|--------|----------|-------------|------------------------|
+| GET | `/api/v1/quizzes` | List quizzes | Yes |
+| POST | `/api/v1/quizzes` | Create quiz | Yes (Teacher/Admin) |
+| GET | `/api/v1/quizzes/{id}` | Get quiz details | Yes |
+| POST | `/api/v1/quizzes/{id}/start` | Start quiz attempt | Yes (Student) |
+| POST | `/api/v1/quizzes/{id}/submit` | Submit quiz answers | Yes (Student) |
+| GET | `/api/v1/quizzes/{id}/results` | Get quiz results | Yes |
+| GET | `/api/v1/quizzes/{id}/attempts` | Get student attempts | Yes |
+
+#### Payment Endpoints
+
+| Method | Endpoint | Description | Authentication Required |
+|--------|----------|-------------|------------------------|
+| POST | `/api/v1/payments/initiate` | Initiate payment | Yes |
+| GET | `/api/v1/payments/{id}` | Get payment status | Yes |
+| POST | `/api/v1/payments/{id}/confirm` | Confirm payment | Yes |
+| GET | `/api/v1/payments/history` | Get payment history | Yes |
+| POST | `/api/v1/wallet/recharge` | Recharge wallet | Yes |
+| GET | `/api/v1/wallet/balance` | Get wallet balance | Yes |
+
+#### Notification Endpoints
+
+| Method | Endpoint | Description | Authentication Required |
+|--------|----------|-------------|------------------------|
+| GET | `/api/v1/notifications` | List notifications | Yes |
+| PUT | `/api/v1/notifications/{id}/read` | Mark as read | Yes |
+| DELETE | `/api/v1/notifications/{id}` | Delete notification | Yes |
+| PUT | `/api/v1/notifications/read-all` | Mark all as read | Yes |
+
+#### Analytics Endpoints
+
+| Method | Endpoint | Description | Authentication Required |
+|--------|----------|-------------|------------------------|
+| GET | `/api/v1/analytics/student/{id}` | Get student analytics | Yes |
+| GET | `/api/v1/analytics/course/{id}` | Get course analytics | Yes (Teacher/Admin) |
+| GET | `/api/v1/analytics/teacher/{id}` | Get teacher analytics | Yes (Teacher/Admin) |
+| GET | `/api/v1/analytics/dashboard` | Get dashboard data | Yes |
+
+#### Gamification Endpoints
+
+| Method | Endpoint | Description | Authentication Required |
+|--------|----------|-------------|------------------------|
+| GET | `/api/v1/points/history` | Get points history | Yes |
+| GET | `/api/v1/badges` | List available badges | Yes |
+| GET | `/api/v1/badges/earned` | Get earned badges | Yes |
+| GET | `/api/v1/leaderboard` | Get leaderboard | Yes |
+| GET | `/api/v1/leaderboard/course/{id}` | Get course leaderboard | Yes |
 
 ---
 ### Appendix C: Configuration Files
@@ -1026,45 +1393,45 @@ sudo crontab -e
 
 | Figure No. | Title | Page |
 |------------|-------|------|
-| Figure 3.1 | System Context Diagram | XX |
-| Figure 3.2 | Use Case Diagram | XX |
-| Figure 3.3 | Student User Flow | XX |
-| Figure 3.4 | Parent User Flow | XX |
-| Figure 3.5 | Registration Flow | XX |
-| Figure 3.6 | Login Flow | XX |
-| Figure 3.7 | DFD Level 0 (Context Level) | XX |
-| Figure 3.8 | DFD Level 1 (System Decomposition) | XX |
-| Figure 3.9 | DFD - AI Assistant Module | XX |
-| Figure 3.10 | DFD - Payment Module | XX |
-| Figure 3.11 | DFD - Teacher Services | XX |
-| Figure 3.12 | DFD - Student Services | XX |
-| Figure 3.13 | DFD - Parent Services | XX |
-| Figure 3.14 | Activity Diagram - Buy Book | XX |
-| Figure 3.15 | Activity Diagram - Buy Session | XX |
-| Figure 3.16 | Activity Diagram - Attend Live Session | XX |
-| Figure 3.17 | Activity Diagram - Register | XX |
-| Figure 3.18 | Activity Diagram - Locate Center | XX |
-| Figure 3.19 | Activity Diagram - Upload Assignment | XX |
-| Figure 3.20 | Activity Diagram - Upload Grades | XX |
-| Figure 3.21 | Activity Diagram - Create Quiz | XX |
-| Figure 3.22 | Activity Diagram - Take Quiz | XX |
-| Figure 3.23 | Activity Diagram - View Analytics | XX |
-| Figure 3.24 | State Diagram - Login Process | XX |
-| Figure 3.25 | State Diagram - Registration | XX |
-| Figure 3.26 | State Diagram - Session Selection | XX |
-| Figure 3.27 | State Diagram - Payment Process | XX |
-| Figure 3.28 | State Diagram - Exam Taking | XX |
-| Figure 3.29 | Sequence Diagram - User Authentication | XX |
-| Figure 3.30 | Class Diagram - Complete System | XX |
-| Figure 3.31 | Component Diagram - System Architecture | XX |
-| Figure 3.32 | ER Diagram - Database Design | XX |
-| Figure 4.1 | Network Diagram (PERT/CPM) | XX |
-| Figure 4.2 | Gantt Chart - Project Timeline | XX |
-| Figure 5.1 | System Architecture Block Diagram | XX |
-| Figure 5.2 | Technology Stack | XX |
-| Figure 6.1 | RAG Chatbot Architecture | XX |
-| Figure 6.2 | Performance Prediction Model | XX |
-| Figure 6.3 | Lesson Recommender System | XX |
+| Figure 3.1 | System Context Diagram | See Section 3.1.1 |
+| Figure 3.2 | Use Case Diagram | See Section 3.1.2 |
+| Figure 3.3 | Student User Flow | See Section 3.1.3 |
+| Figure 3.4 | Parent User Flow | See Section 3.1.3 |
+| Figure 3.5 | Registration Flow | See Section 3.1.3 |
+| Figure 3.6 | Login Flow | See Section 3.1.3 |
+| Figure 3.7 | DFD Level 0 (Context Level) | See Section 3.2.1 |
+| Figure 3.8 | DFD Level 1 (System Decomposition) | See Section 3.2.1 |
+| Figure 3.9 | DFD - AI Assistant Module | See Section 3.2.1 |
+| Figure 3.10 | DFD - Payment Module | See Section 3.2.1 |
+| Figure 3.11 | DFD - Teacher Services | See Section 3.2.1 |
+| Figure 3.12 | DFD - Student Services | See Section 3.2.1 |
+| Figure 3.13 | DFD - Parent Services | See Section 3.2.1 |
+| Figure 3.14 | Activity Diagram - Buy Book | See Section 3.2.2 |
+| Figure 3.15 | Activity Diagram - Buy Session | See Section 3.2.2 |
+| Figure 3.16 | Activity Diagram - Attend Live Session | See Section 3.2.2 |
+| Figure 3.17 | Activity Diagram - Register | See Section 3.2.2 |
+| Figure 3.18 | Activity Diagram - Locate Center | See Section 3.2.2 |
+| Figure 3.19 | Activity Diagram - Upload Assignment | See Section 3.2.2 |
+| Figure 3.20 | Activity Diagram - Upload Grades | See Section 3.2.2 |
+| Figure 3.21 | Activity Diagram - Create Quiz | See Section 3.2.2 |
+| Figure 3.22 | Activity Diagram - Take Quiz | See Section 3.2.2 |
+| Figure 3.23 | Activity Diagram - View Analytics | See Section 3.2.2 |
+| Figure 3.24 | State Diagram - Login Process | See Section 3.3.1 |
+| Figure 3.25 | State Diagram - Registration | See Section 3.3.1 |
+| Figure 3.26 | State Diagram - Session Selection | See Section 3.3.1 |
+| Figure 3.27 | State Diagram - Payment Process | See Section 3.3.1 |
+| Figure 3.28 | State Diagram - Exam Taking | See Section 3.3.1 |
+| Figure 3.29 | Sequence Diagram - User Authentication | See Section 3.3.2 |
+| Figure 3.30 | Class Diagram - Complete System | See Section 3.4.1 |
+| Figure 3.31 | Component Diagram - System Architecture | See Section 3.4.2 |
+| Figure 3.32 | ER Diagram - Database Design | See Section 3.5.1 |
+| Figure 4.1 | Network Diagram (PERT/CPM) | See Section 4.1.1 |
+| Figure 4.2 | Gantt Chart - Project Timeline | See Section 4.1.3 |
+| Figure 5.1 | System Architecture Block Diagram | See Section 5.1 |
+| Figure 5.2 | Technology Stack | See Section 5.2 |
+| Figure 6.1 | RAG Chatbot Architecture | See Section 6.1 |
+| Figure 6.2 | Performance Prediction Model | See Section 6.2 |
+| Figure 6.3 | Lesson Recommender System | See Section 6.3 |
 
 ---
 <div style="page-break-after: always;"></div>
@@ -1072,28 +1439,28 @@ sudo crontab -e
 
 | Table No. | Title | Page |
 |-----------|-------|------|
-| Table 2.1 | Functional Requirements Summary | XX |
-| Table 2.2 | Non-Functional Requirements | XX |
-| Table 3.1 | Entity Relationship Overview | XX |
-| Table 3.2 | Data Dictionary - Users Table | XX |
-| Table 3.3 | Data Dictionary - Courses Table | XX |
-| Table 4.1 | PERT Analysis - Task Duration | XX |
-| Table 4.2 | Task Scheduling | XX |
-| Table 4.3 | Risk Assessment Matrix | XX |
-| Table 4.4 | Cost Estimation - Human Resources | XX |
-| Table 4.5 | Cost Estimation - Software Tools | XX |
-| Table 4.6 | Cost Estimation - Infrastructure | XX |
-| Table 5.1 | Technology Stack Components | XX |
-| Table 7.1 | Authentication API Endpoints | XX |
-| Table 7.2 | User Management API Endpoints | XX |
-| Table 7.3 | Course API Endpoints | XX |
-| Table 7.4 | HTTP Status Codes | XX |
-| Table 7.5 | Error Code Reference | XX |
-| Table 8.1 | Security Controls Matrix | XX |
-| Table 9.1 | Environment Variables | XX |
-| Table 9.2 | Deployment Checklist | XX |
-| Table 10.1 | Test Case Summary | XX |
-| Table 10.2 | Performance Metrics | XX |
+| Table 2.1 | Functional Requirements Summary | See Section 2.1 |
+| Table 2.2 | Non-Functional Requirements | See Section 2.2 |
+| Table 3.1 | Entity Relationship Overview | See Section 3.5.1 |
+| Table 3.2 | Data Dictionary - Users Table | See Section 3.5.3 |
+| Table 3.3 | Data Dictionary - Courses Table | See Section 3.5.3 |
+| Table 4.1 | PERT Analysis - Task Duration | See Section 4.1.2 |
+| Table 4.2 | Task Scheduling | See Section 4.1.4 |
+| Table 4.3 | Risk Assessment Matrix | See Section 4.2 |
+| Table 4.4 | Cost Estimation - Human Resources | See Section 4.3 |
+| Table 4.5 | Cost Estimation - Software Tools | See Section 4.3 |
+| Table 4.6 | Cost Estimation - Infrastructure | See Section 4.3 |
+| Table 5.1 | Technology Stack Components | See Section 5.2 |
+| Table 7.1 | Authentication API Endpoints | See Section 7.1 |
+| Table 7.2 | User Management API Endpoints | See Section 7.2 |
+| Table 7.3 | Course API Endpoints | See Section 7.3 |
+| Table 7.4 | HTTP Status Codes | See Section 7.6 |
+| Table 7.5 | Error Code Reference | See Section 7.6 |
+| Table 8.1 | Security Controls Matrix | See Section 8.1 |
+| Table 9.1 | Environment Variables | See Appendix C |
+| Table 9.2 | Deployment Checklist | See Section 9.3 |
+| Table 10.1 | Test Case Summary | See Section 10.2 |
+| Table 10.2 | Performance Metrics | See Section 10.3 |
 
 ---
 <div style="page-break-after: always;"></div>
@@ -1213,19 +1580,19 @@ Point-based reward systems, achievement badges, leaderboards, and redeemable rew
 
 MentorX employs a modern, scalable technical stack:
 
-**Frontend**: HTML5, CSS3, JavaScript, Bootstrap, Sass, Pug.js
+**Frontend**: HTML5, CSS3, JavaScript, React/Next.js, Bootstrap, Sass
 
-**Backend**: ASP.NET Core (C#), RESTful API architecture
+**Backend**: Node.js with Express.js, TypeScript, RESTful API architecture
 
 **Mobile**: Flutter with Dart for cross-platform applications
 
-**Database**: Microsoft SQL Server using Entity Framework Core
+**Database**: PostgreSQL 14+ with Redis for caching
 
 **AI/ML**: Python, TensorFlow, PyTorch, Scikit-learn, Transformers
 
 **Cloud**: AWS/Azure/Google Cloud with CI/CD pipelines
 
-**Security**: SSL/TLS encryption, AES-256 data protection, session management
+**Security**: SSL/TLS encryption, AES-256 data protection, JWT-based authentication
 
 ## Project Outcomes
 
