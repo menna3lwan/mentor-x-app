@@ -74,10 +74,10 @@ Eng. Alshimaa Mahmoud (Co-Supervisor)
 
 # Table of Contents
 
-## List of Figures
-## List of Tables
-## List of Abbreviations
-## Executive Summary
+## List of Figures *(See page XX)*
+## List of Tables *(See page XX)*
+## List of Abbreviations *(See page XX)*
+## Executive Summary *(See page XX)*
 
 ## 1.0 Introduction
 ### 1.1 Background and Context
@@ -169,13 +169,769 @@ Eng. Alshimaa Mahmoud (Co-Supervisor)
 
 ## 12.0 References
 
+### Academic and Technical Publications
+
+[1] Goodfellow, I., Bengio, Y., & Courville, A. (2016). *Deep Learning*. MIT Press. ISBN: 978-0262035613.
+
+[2] Russell, S., & Norvig, P. (2020). *Artificial Intelligence: A Modern Approach* (4th ed.). Pearson. ISBN: 978-0134610993.
+
+[3] Lewis, P., et al. (2020). "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks." *Proceedings of NeurIPS 2020*. arXiv:2005.11401.
+
+[4] Devlin, J., Chang, M. W., Lee, K., & Toutanova, K. (2019). "BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding." *Proceedings of NAACL-HLT 2019*, pp. 4171-4186.
+
+[5] Vaswani, A., et al. (2017). "Attention Is All You Need." *Proceedings of NIPS 2017*, pp. 5998-6008.
+
+[6] Breiman, L. (2001). "Random Forests." *Machine Learning*, 45(1), pp. 5-32. DOI: 10.1023/A:1010933404324.
+
+[7] Ricci, F., Rokach, L., & Shapira, B. (2015). *Recommender Systems Handbook* (2nd ed.). Springer. ISBN: 978-1489976369.
+
+### Software Engineering and Architecture
+
+[8] Fowler, M. (2018). *Refactoring: Improving the Design of Existing Code* (2nd ed.). Addison-Wesley. ISBN: 978-0134757599.
+
+[9] Newman, S. (2021). *Building Microservices* (2nd ed.). O'Reilly Media. ISBN: 978-1492034025.
+
+[10] Richardson, C. (2018). *Microservices Patterns*. Manning Publications. ISBN: 978-1617294549.
+
+[11] Gamma, E., Helm, R., Johnson, R., & Vlissides, J. (1994). *Design Patterns: Elements of Reusable Object-Oriented Software*. Addison-Wesley. ISBN: 978-0201633610.
+
+### Web Development and APIs
+
+[12] Fielding, R. T. (2000). "Architectural Styles and the Design of Network-based Software Architectures." *Doctoral Dissertation*, University of California, Irvine.
+
+[13] Lauret, A. (2019). *The Design of Web APIs*. Manning Publications. ISBN: 978-1617295102.
+
+[14] Masse, M. (2011). *REST API Design Rulebook*. O'Reilly Media. ISBN: 978-1449310509.
+
+### Security and Privacy
+
+[15] OWASP Foundation. (2021). *OWASP Top 10 - 2021*. Retrieved from https://owasp.org/Top10/
+
+[16] Stallings, W., & Brown, L. (2018). *Computer Security: Principles and Practice* (4th ed.). Pearson. ISBN: 978-0134794105.
+
+[17] European Parliament. (2016). *General Data Protection Regulation (GDPR)*. Regulation (EU) 2016/679.
+
+[18] PCI Security Standards Council. (2022). *Payment Card Industry Data Security Standard (PCI DSS) v4.0*.
+
+### Database Design
+
+[19] Elmasri, R., & Navathe, S. B. (2020). *Fundamentals of Database Systems* (7th ed.). Pearson. ISBN: 978-0133970777.
+
+[20] Date, C. J. (2012). *Database Design and Relational Theory*. O'Reilly Media. ISBN: 978-1449328016.
+
+### Flutter and Mobile Development
+
+[21] Windmill, E., & Giordano, M. (2020). *Flutter in Action*. Manning Publications. ISBN: 978-1617296147.
+
+[22] Wu, F. (2021). *Flutter for Beginners* (2nd ed.). Packt Publishing. ISBN: 978-1800565999.
+
+### Educational Technology
+
+[23] Siemens, G., & Long, P. (2011). "Penetrating the Fog: Analytics in Learning and Education." *EDUCAUSE Review*, 46(5), pp. 30-40.
+
+[24] Baker, R. S., & Inventado, P. S. (2014). "Educational Data Mining and Learning Analytics." In *Learning Analytics: From Research to Practice*, pp. 61-75. Springer.
+
+[25] Zawacki-Richter, O., Marín, V. I., Bond, M., & Gouverneur, F. (2019). "Systematic Review of Research on Artificial Intelligence Applications in Higher Education." *International Journal of Educational Technology in Higher Education*, 16(1), Article 39.
+
+### Standards and Guidelines
+
+[26] IEEE Computer Society. (2014). *IEEE Standard for Software Quality Assurance Processes (IEEE Std 730-2014)*. DOI: 10.1109/IEEESTD.2014.6835311.
+
+[27] W3C. (2018). *Web Content Accessibility Guidelines (WCAG) 2.1*. Retrieved from https://www.w3.org/TR/WCAG21/
+
+[28] ISO/IEC. (2018). *ISO/IEC 25010:2011 - Systems and Software Quality Requirements and Evaluation (SQuaRE)*. ISO.
+
+[29] ISO/IEC. (2013). *ISO/IEC 27001:2013 - Information Security Management Systems*. ISO.
+
+### Cloud Computing and DevOps
+
+[30] Kim, G., Humble, J., Debois, P., & Willis, J. (2016). *The DevOps Handbook*. IT Revolution Press. ISBN: 978-1942788003.
+
+[31] Morris, K. (2016). *Infrastructure as Code: Managing Servers in the Cloud*. O'Reilly Media. ISBN: 978-1491924358.
+
+[32] Amazon Web Services. (2022). *AWS Well-Architected Framework*. Retrieved from https://aws.amazon.com/architecture/well-architected/
+
+### Testing and Quality Assurance
+
+[33] Crispin, L., & Gregory, J. (2014). *More Agile Testing*. Addison-Wesley. ISBN: 978-0321967053.
+
+[34] Humble, J., & Farley, D. (2010). *Continuous Delivery*. Addison-Wesley. ISBN: 978-0321601919.
+
+### Project Management
+
+[35] Project Management Institute. (2021). *A Guide to the Project Management Body of Knowledge (PMBOK Guide)* (7th ed.). PMI. ISBN: 978-1628256642.
+
+[36] Schwaber, K., & Sutherland, J. (2020). *The Scrum Guide*. Retrieved from https://scrumguides.org/
+
+### Python and Machine Learning Tools
+
+[37] Pedregosa, F., et al. (2011). "Scikit-learn: Machine Learning in Python." *Journal of Machine Learning Research*, 12, pp. 2825-2830.
+
+[38] Abadi, M., et al. (2016). "TensorFlow: A System for Large-Scale Machine Learning." *Proceedings of OSDI 2016*, pp. 265-283.
+
+[39] Paszke, A., et al. (2019). "PyTorch: An Imperative Style, High-Performance Deep Learning Library." *Proceedings of NeurIPS 2019*, pp. 8024-8035.
+
+[40] Wolf, T., et al. (2020). "Transformers: State-of-the-Art Natural Language Processing." *Proceedings of EMNLP 2020: System Demonstrations*, pp. 38-45.
+
+---
+
 ## 13.0 Glossary
 
+**Agile Development**: An iterative software development methodology that emphasizes flexibility, collaboration, and rapid delivery of working software increments.
+
+**API (Application Programming Interface)**: A set of defined protocols and tools that allows different software applications to communicate and exchange data.
+
+**Authentication**: The process of verifying the identity of a user, system, or entity attempting to access a resource.
+
+**Authorization**: The process of determining what actions or resources an authenticated user is permitted to access.
+
+**Backend**: The server-side portion of an application responsible for business logic, database interactions, and API services.
+
+**Caching**: The temporary storage of frequently accessed data in memory to improve application performance and reduce database load.
+
+**CI/CD (Continuous Integration/Continuous Deployment)**: A practice of automating the integration, testing, and deployment of code changes to production environments.
+
+**Cloud Computing**: The delivery of computing services (servers, storage, databases, networking, software) over the internet ("the cloud").
+
+**Concurrent Users**: The number of users actively interacting with a system at the same time.
+
+**CRUD Operations**: The four basic operations of persistent storage: Create, Read, Update, and Delete.
+
+**Data Flow Diagram (DFD)**: A graphical representation showing how data moves through a system, including processes, data stores, and external entities.
+
+**Database Schema**: The structure that defines the organization of data in a database, including tables, fields, relationships, and constraints.
+
+**DevOps**: A set of practices combining software development (Dev) and IT operations (Ops) to shorten development cycles and provide continuous delivery.
+
+**Docker**: A platform for developing, shipping, and running applications in isolated containers that package code and dependencies.
+
+**Encryption**: The process of converting data into an encoded format that can only be read by authorized parties with the decryption key.
+
+**Entity-Relationship Diagram (ERD)**: A visual representation of entities (tables) in a database and their relationships.
+
+**Firebase**: A comprehensive mobile and web application development platform provided by Google, offering services like authentication, real-time database, and cloud storage.
+
+**Flutter**: An open-source UI software development kit created by Google for building natively compiled applications for mobile, web, and desktop from a single codebase.
+
+**Frontend**: The client-side portion of an application that users interact with directly, typically involving user interfaces and user experience design.
+
+**Gamification**: The application of game-design elements (points, badges, leaderboards) in non-game contexts to increase user engagement.
+
+**JSON (JavaScript Object Notation)**: A lightweight data interchange format that is easy for humans to read and write and easy for machines to parse and generate.
+
+**JWT (JSON Web Token)**: A compact, URL-safe token format used for securely transmitting information between parties as a JSON object.
+
+**Kubernetes**: An open-source container orchestration platform for automating deployment, scaling, and management of containerized applications.
+
+**Latency**: The time delay between a user action and the system's response, typically measured in milliseconds.
+
+**Load Balancer**: A device or software that distributes network traffic across multiple servers to ensure no single server bears too much demand.
+
+**Machine Learning (ML)**: A subset of artificial intelligence that enables systems to learn and improve from experience without being explicitly programmed.
+
+**Microservices**: An architectural style that structures an application as a collection of loosely coupled, independently deployable services.
+
+**Migration**: The process of moving data, applications, or infrastructure from one environment to another, such as from on-premises to cloud.
+
+**Middleware**: Software that acts as a bridge between different applications, operating systems, or database systems, facilitating communication and data management.
+
+**Natural Language Processing (NLP)**: A branch of artificial intelligence focused on enabling computers to understand, interpret, and generate human language.
+
+**ORM (Object-Relational Mapping)**: A programming technique that converts data between incompatible type systems (objects in programming languages and relational databases).
+
+**OTP (One-Time Password)**: A password that is valid for only one login session or transaction, providing enhanced security.
+
+**Performance Metrics**: Quantifiable measures used to evaluate the efficiency and effectiveness of a system, such as response time, throughput, and resource utilization.
+
+**PERT (Program Evaluation and Review Technique)**: A statistical project management tool used to analyze and represent the tasks involved in completing a project.
+
+**RAG (Retrieval-Augmented Generation)**: An AI technique that combines information retrieval with text generation to provide accurate, context-aware responses.
+
+**RBAC (Role-Based Access Control)**: A security approach that restricts system access based on a user's role within an organization.
+
+**Recommendation System**: An intelligent filtering system that predicts and suggests items a user might be interested in based on various data sources.
+
+**RESTful API**: An architectural style for designing networked applications that uses HTTP requests to access and manipulate data.
+
+**RPO (Recovery Point Objective)**: The maximum acceptable amount of data loss measured in time (e.g., data can be restored to within 1 hour of a failure).
+
+**RTO (Recovery Time Objective)**: The maximum acceptable amount of time to restore a system after a failure.
+
+**Scalability**: The capability of a system to handle a growing amount of work by adding resources to the system.
+
+**Schema Validation**: The process of ensuring that data conforms to a predefined structure and set of rules before processing.
+
+**Session**: A temporary interactive information interchange between a user and a system, typically maintained through cookies or tokens.
+
+**SQL (Structured Query Language)**: A standard language for storing, manipulating, and retrieving data in relational databases.
+
+**SSL/TLS (Secure Sockets Layer/Transport Layer Security)**: Cryptographic protocols that provide secure communication over a computer network.
+
+**Stakeholder**: Any individual, group, or organization that has an interest in or is affected by a project.
+
+**Throughput**: The amount of data or transactions a system can process in a given amount of time.
+
+**Unit Testing**: A software testing method where individual components or units of code are tested in isolation to verify they function correctly.
+
+**Use Case**: A description of how a user will interact with a system to achieve a specific goal.
+
+**User Story**: A short, simple description of a feature told from the perspective of the user who desires the capability.
+
+**Validation**: The process of checking whether data meets specified criteria or rules before processing.
+
+**Version Control**: A system that records changes to files over time so that specific versions can be recalled later (e.g., Git).
+
+**Virtual Machine (VM)**: An emulation of a computer system that provides the functionality of a physical computer.
+
+**Vulnerability**: A weakness in a system that can be exploited by threats to gain unauthorized access or cause harm.
+
+**Webhook**: A method of augmenting or altering the behavior of a web application with custom callbacks triggered by specific events.
+
+**Workflow**: A sequence of processes through which a piece of work passes from initiation to completion.
+
+---
+
 ## Appendices
+
 ### Appendix A: Database Schema (Complete SQL)
+
+#### Core User Tables
+
+```sql
+-- Users Table
+CREATE TABLE users (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    first_name VARCHAR(100) NOT NULL,
+    last_name VARCHAR(100) NOT NULL,
+    phone VARCHAR(20),
+    avatar_url TEXT,
+    date_of_birth DATE,
+    gender ENUM('male', 'female', 'other'),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    last_login TIMESTAMP NULL,
+    is_active BOOLEAN DEFAULT TRUE,
+    is_verified BOOLEAN DEFAULT FALSE,
+    wallet_balance DECIMAL(10,2) DEFAULT 0.00,
+    total_points INT DEFAULT 0,
+    INDEX idx_email (email),
+    INDEX idx_phone (phone),
+    INDEX idx_created_at (created_at)
+);
+
+-- Roles Table
+CREATE TABLE roles (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(50) UNIQUE NOT NULL,
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- User Roles Junction Table
+CREATE TABLE user_roles (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    user_id BIGINT NOT NULL,
+    role_id BIGINT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_user_role (user_id, role_id)
+);
+
+-- Devices Table (for device binding)
+CREATE TABLE devices (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    student_id BIGINT NOT NULL,
+    device_hash VARCHAR(255) NOT NULL UNIQUE,
+    device_name VARCHAR(255),
+    device_type ENUM('mobile', 'tablet', 'desktop') DEFAULT 'mobile',
+    ip_address VARCHAR(100),
+    last_used_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    is_active BOOLEAN DEFAULT TRUE,
+    FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE,
+    INDEX idx_student_device (student_id, device_hash)
+);
+```
+
+#### Educational Content Tables
+
+```sql
+-- Grades/Levels Table
+CREATE TABLE grades (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    description TEXT,
+    order_index INT DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Categories/Subjects Table
+CREATE TABLE categories (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    grade_id BIGINT NOT NULL,
+    name VARCHAR(150) NOT NULL,
+    description TEXT,
+    image_url TEXT,
+    active BOOLEAN DEFAULT TRUE,
+    order_index INT DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (grade_id) REFERENCES grades(id) ON DELETE CASCADE,
+    INDEX idx_grade_category (grade_id, active)
+);
+
+-- Courses Table
+CREATE TABLE courses (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    grade_id BIGINT NOT NULL,
+    category_id BIGINT NOT NULL,
+    teacher_id BIGINT NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    price DECIMAL(10,2) DEFAULT 0,
+    old_price DECIMAL(10,2),
+    discount_percentage INT DEFAULT 0,
+    points_reward INT DEFAULT 0,
+    duration_days INT DEFAULT 0,
+    type ENUM('online', 'center', 'both') DEFAULT 'both',
+    featured BOOLEAN DEFAULT FALSE,
+    pinned BOOLEAN DEFAULT FALSE,
+    ordering_mode ENUM('free', 'lock_session', 'lock_item') DEFAULT 'free',
+    has_attendance BOOLEAN DEFAULT FALSE,
+    thumbnail_url TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (grade_id) REFERENCES grades(id),
+    FOREIGN KEY (category_id) REFERENCES categories(id),
+    FOREIGN KEY (teacher_id) REFERENCES users(id),
+    INDEX idx_course_grade (grade_id),
+    INDEX idx_course_category (category_id),
+    INDEX idx_course_teacher (teacher_id),
+    INDEX idx_course_featured (featured, pinned)
+);
+
+-- Sessions/Lessons Table
+CREATE TABLE sessions (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    course_id BIGINT NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    duration_minutes INT DEFAULT 0,
+    is_center_content BOOLEAN DEFAULT FALSE,
+    image_url TEXT,
+    video_url TEXT,
+    order_index INT DEFAULT 0,
+    is_free BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE,
+    INDEX idx_session_course (course_id, order_index)
+);
+
+-- Session Items Table (videos, files, quizzes, assignments)
+CREATE TABLE session_items (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    session_id BIGINT NOT NULL,
+    title VARCHAR(255),
+    item_type ENUM('video', 'file', 'quiz', 'assignment', 'note', 'link') NOT NULL,
+    required BOOLEAN DEFAULT FALSE,
+    skippable BOOLEAN DEFAULT TRUE,
+    content_url TEXT,
+    duration_minutes INT DEFAULT 0,
+    extra_settings JSON,
+    order_index INT DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (session_id) REFERENCES sessions(id) ON DELETE CASCADE,
+    INDEX idx_item_session (session_id, order_index)
+);
+```
+
+#### Enrollment and Progress Tables
+
+```sql
+-- Student Courses (Enrollments)
+CREATE TABLE student_courses (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    student_id BIGINT NOT NULL,
+    course_id BIGINT NOT NULL,
+    enrolled_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    expires_at TIMESTAMP NULL,
+    progress_percent DECIMAL(5,2) DEFAULT 0,
+    completed_at TIMESTAMP NULL,
+    last_accessed_at TIMESTAMP NULL,
+    FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_student_course (student_id, course_id),
+    INDEX idx_student_enrollments (student_id, enrolled_at),
+    INDEX idx_course_enrollments (course_id)
+);
+
+-- Student Session Progress
+CREATE TABLE session_progress (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    student_id BIGINT NOT NULL,
+    session_id BIGINT NOT NULL,
+    item_id BIGINT,
+    progress_percent DECIMAL(5,2) DEFAULT 0,
+    completed BOOLEAN DEFAULT FALSE,
+    completed_at TIMESTAMP NULL,
+    last_position_seconds INT DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (session_id) REFERENCES sessions(id) ON DELETE CASCADE,
+    FOREIGN KEY (item_id) REFERENCES session_items(id) ON DELETE SET NULL,
+    UNIQUE KEY unique_student_session (student_id, session_id, item_id),
+    INDEX idx_student_progress (student_id, session_id)
+);
+```
+
+*(Continues with complete schema for Attendance, Assignments, Quizzes, Payments, Notifications, Analytics, etc.)*
+
+---
+
 ### Appendix B: API Endpoint Reference
+
+#### Authentication Endpoints
+
+| Method | Endpoint | Description | Authentication Required |
+|--------|----------|-------------|------------------------|
+| POST | `/api/v1/auth/register` | Register new user | No |
+| POST | `/api/v1/auth/login` | User login | No |
+| POST | `/api/v1/auth/logout` | User logout | Yes |
+| POST | `/api/v1/auth/refresh-token` | Refresh access token | Yes |
+| POST | `/api/v1/auth/forgot-password` | Request password reset | No |
+| POST | `/api/v1/auth/reset-password` | Reset password with token | No |
+| POST | `/api/v1/auth/verify-email` | Verify email address | No |
+| POST | `/api/v1/auth/resend-verification` | Resend verification email | No |
+| GET | `/api/v1/auth/me` | Get current user profile | Yes |
+
+#### User Management Endpoints
+
+| Method | Endpoint | Description | Authentication Required |
+|--------|----------|-------------|------------------------|
+| GET | `/api/v1/users` | List all users (Admin) | Yes (Admin) |
+| GET | `/api/v1/users/{id}` | Get user by ID | Yes |
+| PUT | `/api/v1/users/{id}` | Update user profile | Yes |
+| DELETE | `/api/v1/users/{id}` | Delete user account | Yes (Admin) |
+| GET | `/api/v1/users/{id}/courses` | Get user's enrolled courses | Yes |
+| GET | `/api/v1/users/{id}/progress` | Get user's learning progress | Yes |
+
+*(Complete endpoint reference continues...)*
+
+---
+
 ### Appendix C: Configuration Files
+
+#### Environment Variables (.env)
+
+```bash
+# Application Settings
+APP_NAME=MentorX
+APP_ENV=production
+APP_DEBUG=false
+APP_URL=https://mentorx.edu.eg
+APP_PORT=3000
+
+# Database Configuration
+DB_CONNECTION=mysql
+DB_HOST=localhost
+DB_PORT=3306
+DB_DATABASE=mentorx_prod
+DB_USERNAME=mentorx_user
+DB_PASSWORD=<strong_password>
+
+# JWT Configuration
+JWT_SECRET=<generate_strong_secret_256_bit>
+JWT_EXPIRATION=3600
+JWT_REFRESH_EXPIRATION=604800
+
+# Email Configuration
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USERNAME=noreply@mentorx.edu.eg
+MAIL_PASSWORD=<app_specific_password>
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS=noreply@mentorx.edu.eg
+MAIL_FROM_NAME=MentorX Platform
+
+# SMS Configuration (for OTP)
+SMS_PROVIDER=twilio
+TWILIO_ACCOUNT_SID=<your_account_sid>
+TWILIO_AUTH_TOKEN=<your_auth_token>
+TWILIO_PHONE_NUMBER=+1234567890
+
+# Firebase Configuration
+FIREBASE_API_KEY=<your_api_key>
+FIREBASE_AUTH_DOMAIN=mentorx.firebaseapp.com
+FIREBASE_PROJECT_ID=mentorx-prod
+FIREBASE_STORAGE_BUCKET=mentorx-prod.appspot.com
+FIREBASE_MESSAGING_SENDER_ID=<sender_id>
+FIREBASE_APP_ID=<app_id>
+
+# Cloud Storage
+CLOUD_STORAGE_PROVIDER=s3
+AWS_ACCESS_KEY_ID=<access_key>
+AWS_SECRET_ACCESS_KEY=<secret_key>
+AWS_DEFAULT_REGION=us-east-1
+AWS_BUCKET=mentorx-content
+
+# Payment Gateway
+PAYMENT_GATEWAY=fawry
+FAWRY_MERCHANT_CODE=<merchant_code>
+FAWRY_SECURITY_KEY=<security_key>
+FAWRY_API_URL=https://api.fawry.com/
+
+# AI Services
+OPENAI_API_KEY=<openai_api_key>
+OPENAI_MODEL=gpt-4
+OPENAI_MAX_TOKENS=2000
+
+# Redis Cache
+REDIS_HOST=localhost
+REDIS_PORT=6379
+REDIS_PASSWORD=<redis_password>
+
+# Session Configuration
+SESSION_DRIVER=redis
+SESSION_LIFETIME=120
+
+# Logging
+LOG_CHANNEL=stack
+LOG_LEVEL=warning
+
+# Security
+ALLOWED_ORIGINS=https://mentorx.edu.eg,https://www.mentorx.edu.eg
+RATE_LIMIT_PER_MINUTE=60
+MAX_LOGIN_ATTEMPTS=5
+LOCKOUT_DURATION=900
+
+# Monitoring
+SENTRY_DSN=<sentry_dsn>
+NEW_RELIC_LICENSE_KEY=<newrelic_key>
+```
+
+---
+
 ### Appendix D: Installation Guide
+
+#### Prerequisites
+
+1. **Server Requirements:**
+   - Ubuntu 20.04 LTS or later
+   - Minimum 4 CPU cores
+   - Minimum 8GB RAM
+   - Minimum 50GB SSD storage
+
+2. **Software Requirements:**
+   - Node.js v16.x or later
+   - Python 3.9 or later
+   - MySQL 8.0 or later
+   - Redis 6.x or later
+   - Nginx 1.18 or later
+
+#### Installation Steps
+
+**Step 1: Update System**
+```bash
+sudo apt update && sudo apt upgrade -y
+```
+
+**Step 2: Install Node.js**
+```bash
+curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+sudo apt install -y nodejs
+node --version
+npm --version
+```
+
+**Step 3: Install Python and pip**
+```bash
+sudo apt install -y python3 python3-pip python3-venv
+python3 --version
+pip3 --version
+```
+
+**Step 4: Install MySQL**
+```bash
+sudo apt install -y mysql-server
+sudo mysql_secure_installation
+sudo systemctl start mysql
+sudo systemctl enable mysql
+```
+
+**Step 5: Install Redis**
+```bash
+sudo apt install -y redis-server
+sudo systemctl start redis
+sudo systemctl enable redis
+redis-cli ping  # Should return PONG
+```
+
+**Step 6: Install Nginx**
+```bash
+sudo apt install -y nginx
+sudo systemctl start nginx
+sudo systemctl enable nginx
+```
+
+**Step 7: Clone Repository**
+```bash
+cd /var/www
+sudo git clone https://github.com/mentor-x-2026/mentor-x-app.git mentorx
+cd mentorx
+sudo chown -R $USER:$USER /var/www/mentorx
+```
+
+**Step 8: Install Backend Dependencies**
+```bash
+cd /var/www/mentorx/backend
+npm install
+```
+
+**Step 9: Install AI/ML Dependencies**
+```bash
+cd /var/www/mentorx/ai
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+**Step 10: Configure Environment**
+```bash
+cp .env.example .env
+nano .env
+# Edit with your configuration values
+```
+
+**Step 11: Create Database**
+```bash
+mysql -u root -p
+CREATE DATABASE mentorx_prod CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE USER 'mentorx_user'@'localhost' IDENTIFIED BY 'strong_password';
+GRANT ALL PRIVILEGES ON mentorx_prod.* TO 'mentorx_user'@'localhost';
+FLUSH PRIVILEGES;
+EXIT;
+```
+
+**Step 12: Run Database Migrations**
+```bash
+cd /var/www/mentorx/backend
+npm run migrate
+npm run seed  # Optional: seed with initial data
+```
+
+**Step 13: Build Frontend**
+```bash
+cd /var/www/mentorx/frontend
+npm install
+npm run build
+```
+
+**Step 14: Configure Nginx**
+```bash
+sudo nano /etc/nginx/sites-available/mentorx
+```
+
+```nginx
+server {
+    listen 80;
+    server_name mentorx.edu.eg www.mentorx.edu.eg;
+    
+    # Redirect to HTTPS
+    return 301 https://$server_name$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    server_name mentorx.edu.eg www.mentorx.edu.eg;
+    
+    # SSL Configuration
+    ssl_certificate /etc/ssl/certs/mentorx.crt;
+    ssl_certificate_key /etc/ssl/private/mentorx.key;
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers HIGH:!aNULL:!MD5;
+    
+    # Frontend
+    root /var/www/mentorx/frontend/dist;
+    index index.html;
+    
+    # API Proxy
+    location /api/ {
+        proxy_pass http://localhost:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+    
+    # Static Files
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+}
+```
+
+```bash
+sudo ln -s /etc/nginx/sites-available/mentorx /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl reload nginx
+```
+
+**Step 15: Setup SSL Certificate (Let's Encrypt)**
+```bash
+sudo apt install -y certbot python3-certbot-nginx
+sudo certbot --nginx -d mentorx.edu.eg -d www.mentorx.edu.eg
+```
+
+**Step 16: Setup PM2 for Process Management**
+```bash
+sudo npm install -g pm2
+cd /var/www/mentorx/backend
+pm2 start server.js --name mentorx-api
+pm2 startup
+pm2 save
+```
+
+**Step 17: Setup Monitoring**
+```bash
+pm2 install pm2-logrotate
+pm2 set pm2-logrotate:max_size 100M
+pm2 set pm2-logrotate:retain 30
+```
+
+**Step 18: Setup Firewall**
+```bash
+sudo ufw allow 22/tcp
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+sudo ufw enable
+```
+
+**Step 19: Verify Installation**
+```bash
+# Check API
+curl https://mentorx.edu.eg/api/health
+
+# Check Frontend
+curl https://mentorx.edu.eg
+
+# Check Logs
+pm2 logs mentorx-api
+```
+
+**Step 20: Setup Automated Backups**
+```bash
+sudo crontab -e
+# Add daily backup at 2 AM
+0 2 * * * /var/www/mentorx/scripts/backup.sh
+```
+
+---
+
+*End of Comprehensive Appendices*
 
 ---
 
