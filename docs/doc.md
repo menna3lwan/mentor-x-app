@@ -462,6 +462,8 @@ Eng. Alshimaa Mahmoud (Co-Supervisor)
 
 ### Appendix A: Database Schema (Complete SQL)
 
+**Note:** The SQL schemas below use MySQL-compatible syntax for broad compatibility. For PostgreSQL implementation, replace `AUTO_INCREMENT` with `SERIAL` or `GENERATED ALWAYS AS IDENTITY`, and adjust data types as needed (e.g., `ENUM` types should be created separately in PostgreSQL).
+
 #### Core User Tables
 
 ```sql
