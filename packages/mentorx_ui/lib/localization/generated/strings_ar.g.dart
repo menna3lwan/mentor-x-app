@@ -310,6 +310,7 @@ class _TranslationsHomeAr implements TranslationsHomeEn {
 
 	// Translations
 	@override late final _TranslationsHomeMainAr main = _TranslationsHomeMainAr._(_root);
+	@override late final _TranslationsHomeDashboardAr dashboard = _TranslationsHomeDashboardAr._(_root);
 	@override late final _TranslationsHomeErrorsAr errors = _TranslationsHomeErrorsAr._(_root);
 }
 
@@ -520,6 +521,34 @@ class _TranslationsHomeMainAr implements TranslationsHomeMainEn {
 	@override String get me => 'حسابي';
 }
 
+// Path: home.dashboard
+class _TranslationsHomeDashboardAr implements TranslationsHomeDashboardEn {
+	_TranslationsHomeDashboardAr._(this._root);
+
+	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
+	@override String get greetingMorning => 'صباح الخير';
+	@override String get greetingEvening => 'مساء الخير';
+	@override String greetingWithName({required Object greeting, required Object name}) => '${greeting}، ${name} 👋';
+	@override String updatedAt({required DateTime time}) => 'تم التحديث ${DateFormat('HH:mm', 'ar').format(time)}';
+	@override String get continueLearning => 'استكمل التعلم';
+	@override String get featuredCourses => 'الدورات المميزة';
+	@override String get announcements => 'الإعلانات';
+	@override String get quickActions => 'إجراءات سريعة';
+	@override String get walletBalance => 'رصيد المحفظة';
+	@override String points({required int count}) => '${count} نقطة';
+	@override String get startLearningJourney => 'ابدأ رحلتك التعليمية! تصفح الدورات المتاحة.';
+	@override String continueProgress({required num progress}) => 'استكمل ${progress}%';
+	@override String get free => 'مجاني';
+	@override String get loadingCourse => 'جاري تحميل الدورة';
+	@override String get loadingFeaturedCourse => 'جاري تحميل الدورة المميزة';
+	@override String get loadingAnnouncement => 'جاري تحميل الإعلان';
+	@override String get loadingAnnouncementDetails => 'جاري تحميل تفاصيل الإعلان';
+	@override String get unableToLoadTapRetry => 'تعذر التحميل. اضغط لإعادة المحاولة.';
+	@override late final _TranslationsHomeDashboardActionsAr actions = _TranslationsHomeDashboardActionsAr._(_root);
+}
+
 // Path: home.errors
 class _TranslationsHomeErrorsAr implements TranslationsHomeErrorsEn {
 	_TranslationsHomeErrorsAr._(this._root);
@@ -579,6 +608,21 @@ class _TranslationsSettingsNotificationSettingsAr implements TranslationsSetting
 	@override String get paymentRequest => 'طلب الدفع';
 }
 
+// Path: home.dashboard.actions
+class _TranslationsHomeDashboardActionsAr implements TranslationsHomeDashboardActionsEn {
+	_TranslationsHomeDashboardActionsAr._(this._root);
+
+	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
+	@override String get myCourses => 'دوراتي';
+	@override String get attendance => 'الحضور';
+	@override String get grades => 'الدرجات';
+	@override String get aiAssistant => 'المساعد الذكي';
+	@override String get rewards => 'المكافآت';
+	@override String get marketplace => 'المتجر';
+}
+
 /// The flat map containing all translations for locale <ar>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -636,6 +680,30 @@ extension on TranslationsAr {
 			case 'home.main.assistance': return 'المساعدة';
 			case 'home.main.cart': return 'السلة';
 			case 'home.main.me': return 'حسابي';
+			case 'home.dashboard.greetingMorning': return 'صباح الخير';
+			case 'home.dashboard.greetingEvening': return 'مساء الخير';
+			case 'home.dashboard.greetingWithName': return ({required Object greeting, required Object name}) => '${greeting}، ${name} 👋';
+			case 'home.dashboard.updatedAt': return ({required DateTime time}) => 'تم التحديث ${DateFormat('HH:mm', 'ar').format(time)}';
+			case 'home.dashboard.continueLearning': return 'استكمل التعلم';
+			case 'home.dashboard.featuredCourses': return 'الدورات المميزة';
+			case 'home.dashboard.announcements': return 'الإعلانات';
+			case 'home.dashboard.quickActions': return 'إجراءات سريعة';
+			case 'home.dashboard.walletBalance': return 'رصيد المحفظة';
+			case 'home.dashboard.points': return ({required int count}) => '${count} نقطة';
+			case 'home.dashboard.startLearningJourney': return 'ابدأ رحلتك التعليمية! تصفح الدورات المتاحة.';
+			case 'home.dashboard.continueProgress': return ({required num progress}) => 'استكمل ${progress}%';
+			case 'home.dashboard.free': return 'مجاني';
+			case 'home.dashboard.loadingCourse': return 'جاري تحميل الدورة';
+			case 'home.dashboard.loadingFeaturedCourse': return 'جاري تحميل الدورة المميزة';
+			case 'home.dashboard.loadingAnnouncement': return 'جاري تحميل الإعلان';
+			case 'home.dashboard.loadingAnnouncementDetails': return 'جاري تحميل تفاصيل الإعلان';
+			case 'home.dashboard.unableToLoadTapRetry': return 'تعذر التحميل. اضغط لإعادة المحاولة.';
+			case 'home.dashboard.actions.myCourses': return 'دوراتي';
+			case 'home.dashboard.actions.attendance': return 'الحضور';
+			case 'home.dashboard.actions.grades': return 'الدرجات';
+			case 'home.dashboard.actions.aiAssistant': return 'المساعد الذكي';
+			case 'home.dashboard.actions.rewards': return 'المكافآت';
+			case 'home.dashboard.actions.marketplace': return 'المتجر';
 			case 'home.errors.failedToLoadUpcomingEvents': return 'فشل تحميل الفاعليات القادمة';
 			case 'home.errors.failedToLoadVendors': return 'فشل تحميل مزودي الخدمات';
 			case 'home.errors.failedToLoadOccasions': return 'فشل تحميل المناسبات';

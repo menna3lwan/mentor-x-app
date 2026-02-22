@@ -69,6 +69,34 @@
             "cart": "Cart",
             "me": "Me"
         },
+        "dashboard": {
+            "greetingMorning": "Good morning",
+            "greetingEvening": "Good evening",
+            "greetingWithName": "${greeting}, ${name} 👋",
+            "updatedAt": "Updated ${time: DateFormat('HH:mm')}",
+            "continueLearning": "Continue Learning",
+            "featuredCourses": "Featured Courses",
+            "announcements": "Announcements",
+            "quickActions": "Quick Actions",
+            "walletBalance": "Wallet Balance",
+            "points": "${count: int} points",
+            "startLearningJourney": "Start your learning journey! Browse available courses.",
+            "continueProgress": "Continue ${progress: num}%",
+            "free": "Free",
+            "loadingCourse": "Loading course",
+            "loadingFeaturedCourse": "Loading featured course",
+            "loadingAnnouncement": "Loading announcement",
+            "loadingAnnouncementDetails": "Loading announcement details",
+            "unableToLoadTapRetry": "Unable to load. Tap to retry.",
+            "actions": {
+                "myCourses": "My Courses",
+                "attendance": "Attendance",
+                "grades": "Grades",
+                "aiAssistant": "AI Assistant",
+                "rewards": "Rewards",
+                "marketplace": "Marketplace"
+            }
+        },
         "errors": {
             "failedToLoadUpcomingEvents": "Failed to load upcoming events",
             "failedToLoadVendors": "Failed to load service providers",

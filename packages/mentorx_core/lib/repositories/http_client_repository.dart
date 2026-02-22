@@ -1,13 +1,14 @@
 part of '../mentorx_core.dart';
 
-abstract class HttpClientRepository<T> {
+abstract class HttpClientRepository<T extends Enum> {
+  const HttpClientRepository();
+
+  Never throwException(T code, {String? message});
+
   /// Handles HTTP client error responses and maps them to domain-specific exceptions
   ///
   /// Takes an [exceptionCode] of type [T] that represents the domain-specific error code,
   /// and an [errorResponse] containing the HttpClientException with the error details.
-  ///
-  /// Throws an [MentorXException<T>] with the provided code and the message from the
-  /// HttpClientException if available.
   Never handleHttpClientErrorResponse(
     T exceptionCode,
     HttpClientResponse errorResponse,
@@ -15,6 +16,6 @@ abstract class HttpClientRepository<T> {
     final httpException = errorResponse.exception;
     final errorMessage = httpException?.message;
 
-    throw MentorXException(code: exceptionCode, message: errorMessage);
+    throwException(exceptionCode, message: errorMessage);
   }
 }

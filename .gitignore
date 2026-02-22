@@ -92,8 +92,6 @@ migrate_working_dir/
 **/ios/GoogleMapsApiKey.xcconfig
 
 # User specific
-**/instructions/
-**/GEMINI.md
 *.env
 **/docs/**
 **/screenshots/**

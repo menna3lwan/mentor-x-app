@@ -9,8 +9,6 @@ final class DioHttpClient implements HttpClient {
   final CacheRepository _cacheRepository;
   final Map<String, String> _defaultHeaders = {};
 
-  static final MentorXLogger _logger = MentorXLogger('DioHttpClient');
-
   DioHttpClient({
     required String baseUrl,
     required CacheRepository cacheRepository,

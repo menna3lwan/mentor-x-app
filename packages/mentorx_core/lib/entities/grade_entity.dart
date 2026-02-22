@@ -1,0 +1,14 @@
+part of '../mentorx_core.dart';
+
+final class GradeEntity extends Equatable {
+  final String id;
+  final String name;
+
+  const GradeEntity({
+    required this.id,
+    required this.name,
+  });
+
+  @override
+  List<Object?> get props => [id, name];
+}

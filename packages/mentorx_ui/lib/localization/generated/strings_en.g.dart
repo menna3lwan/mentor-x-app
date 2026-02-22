@@ -331,6 +331,7 @@ class TranslationsHomeEn {
 
 	// Translations
 	late final TranslationsHomeMainEn main = TranslationsHomeMainEn._(_root);
+	late final TranslationsHomeDashboardEn dashboard = TranslationsHomeDashboardEn._(_root);
 	late final TranslationsHomeErrorsEn errors = TranslationsHomeErrorsEn._(_root);
 }
 
@@ -723,6 +724,71 @@ class TranslationsHomeMainEn {
 	String get me => 'Me';
 }
 
+// Path: home.dashboard
+class TranslationsHomeDashboardEn {
+	TranslationsHomeDashboardEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Good morning'
+	String get greetingMorning => 'Good morning';
+
+	/// en: 'Good evening'
+	String get greetingEvening => 'Good evening';
+
+	/// en: '${greeting}, ${name} 👋'
+	String greetingWithName({required Object greeting, required Object name}) => '${greeting}, ${name} 👋';
+
+	/// en: 'Updated ${time: DateFormat('HH:mm')}'
+	String updatedAt({required DateTime time}) => 'Updated ${DateFormat('HH:mm', 'en').format(time)}';
+
+	/// en: 'Continue Learning'
+	String get continueLearning => 'Continue Learning';
+
+	/// en: 'Featured Courses'
+	String get featuredCourses => 'Featured Courses';
+
+	/// en: 'Announcements'
+	String get announcements => 'Announcements';
+
+	/// en: 'Quick Actions'
+	String get quickActions => 'Quick Actions';
+
+	/// en: 'Wallet Balance'
+	String get walletBalance => 'Wallet Balance';
+
+	/// en: '${count: int} points'
+	String points({required int count}) => '${count} points';
+
+	/// en: 'Start your learning journey! Browse available courses.'
+	String get startLearningJourney => 'Start your learning journey! Browse available courses.';
+
+	/// en: 'Continue ${progress: num}%'
+	String continueProgress({required num progress}) => 'Continue ${progress}%';
+
+	/// en: 'Free'
+	String get free => 'Free';
+
+	/// en: 'Loading course'
+	String get loadingCourse => 'Loading course';
+
+	/// en: 'Loading featured course'
+	String get loadingFeaturedCourse => 'Loading featured course';
+
+	/// en: 'Loading announcement'
+	String get loadingAnnouncement => 'Loading announcement';
+
+	/// en: 'Loading announcement details'
+	String get loadingAnnouncementDetails => 'Loading announcement details';
+
+	/// en: 'Unable to load. Tap to retry.'
+	String get unableToLoadTapRetry => 'Unable to load. Tap to retry.';
+
+	late final TranslationsHomeDashboardActionsEn actions = TranslationsHomeDashboardActionsEn._(_root);
+}
+
 // Path: home.errors
 class TranslationsHomeErrorsEn {
 	TranslationsHomeErrorsEn._(this._root);
@@ -828,6 +894,33 @@ class TranslationsSettingsNotificationSettingsEn {
 	String get paymentRequest => 'Payment Request';
 }
 
+// Path: home.dashboard.actions
+class TranslationsHomeDashboardActionsEn {
+	TranslationsHomeDashboardActionsEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'My Courses'
+	String get myCourses => 'My Courses';
+
+	/// en: 'Attendance'
+	String get attendance => 'Attendance';
+
+	/// en: 'Grades'
+	String get grades => 'Grades';
+
+	/// en: 'AI Assistant'
+	String get aiAssistant => 'AI Assistant';
+
+	/// en: 'Rewards'
+	String get rewards => 'Rewards';
+
+	/// en: 'Marketplace'
+	String get marketplace => 'Marketplace';
+}
+
 /// The flat map containing all translations for locale <en>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -885,6 +978,30 @@ extension on Translations {
 			case 'home.main.assistance': return 'Assistance';
 			case 'home.main.cart': return 'Cart';
 			case 'home.main.me': return 'Me';
+			case 'home.dashboard.greetingMorning': return 'Good morning';
+			case 'home.dashboard.greetingEvening': return 'Good evening';
+			case 'home.dashboard.greetingWithName': return ({required Object greeting, required Object name}) => '${greeting}, ${name} 👋';
+			case 'home.dashboard.updatedAt': return ({required DateTime time}) => 'Updated ${DateFormat('HH:mm', 'en').format(time)}';
+			case 'home.dashboard.continueLearning': return 'Continue Learning';
+			case 'home.dashboard.featuredCourses': return 'Featured Courses';
+			case 'home.dashboard.announcements': return 'Announcements';
+			case 'home.dashboard.quickActions': return 'Quick Actions';
+			case 'home.dashboard.walletBalance': return 'Wallet Balance';
+			case 'home.dashboard.points': return ({required int count}) => '${count} points';
+			case 'home.dashboard.startLearningJourney': return 'Start your learning journey! Browse available courses.';
+			case 'home.dashboard.continueProgress': return ({required num progress}) => 'Continue ${progress}%';
+			case 'home.dashboard.free': return 'Free';
+			case 'home.dashboard.loadingCourse': return 'Loading course';
+			case 'home.dashboard.loadingFeaturedCourse': return 'Loading featured course';
+			case 'home.dashboard.loadingAnnouncement': return 'Loading announcement';
+			case 'home.dashboard.loadingAnnouncementDetails': return 'Loading announcement details';
+			case 'home.dashboard.unableToLoadTapRetry': return 'Unable to load. Tap to retry.';
+			case 'home.dashboard.actions.myCourses': return 'My Courses';
+			case 'home.dashboard.actions.attendance': return 'Attendance';
+			case 'home.dashboard.actions.grades': return 'Grades';
+			case 'home.dashboard.actions.aiAssistant': return 'AI Assistant';
+			case 'home.dashboard.actions.rewards': return 'Rewards';
+			case 'home.dashboard.actions.marketplace': return 'Marketplace';
 			case 'home.errors.failedToLoadUpcomingEvents': return 'Failed to load upcoming events';
 			case 'home.errors.failedToLoadVendors': return 'Failed to load service providers';
 			case 'home.errors.failedToLoadOccasions': return 'Failed to load occasions';

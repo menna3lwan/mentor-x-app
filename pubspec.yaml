@@ -1,26 +1,37 @@
 name: mentorx_monorepo
 publish_to: none
 environment:
-  sdk: ">=3.5.0 <4.0.0"
+  sdk: ^3.9.2
 
 workspace:
   # Apps
-  - mentorx_student
-  - mentorx_parent
+  - student
+  - parent
 
-  # Packages
+  # Domain core
   - packages/mentorx_core
+  # UI kit
   - packages/mentorx_ui
 
-  - packages/common/flutter_secure_storage_cache_repository
-
+  # Clients
   - packages/clients/dio_http_client
 
-  # Student repos
-  - packages/mentorx_student/dio_authentication_repository
+  # Common
+  - packages/common/flutter_secure_storage_cache_repository
 
-  # Mock Student repos
-  - packages/mock_student/mock_authentication_repository
+  # Mock data
+  - packages/mock_data
+
+  # Dio repositories
+  - student/packages/student/dio_authentication_repository
+  - student/packages/student/dio_home_repository
+
+  # Student core
+  - student/packages/student_core
+
+  # Mock repositories
+  - student/packages/mock/mock_authentication_repository
+  - student/packages/mock/mock_home_repository
 
 dependency_overrides:
   test_api: ^0.7.7

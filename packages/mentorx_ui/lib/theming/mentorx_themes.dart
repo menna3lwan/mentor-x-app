@@ -23,13 +23,29 @@ final class MentorXThemes {
   }) {
     final colorTokens = $mentorxToken.color;
     final radiusTokens = $mentorxToken.radius;
-    final styleTokens = $mentorxToken.textStyle;
-    final fontFamily = 'HT-Mosafer-Rounded';
-    final fontPackage = null;
-    final fallbackFontFamily = 'HT-Mosafer-Rounded-English';
     return MixThemeData(
       colors: {
-
+        colorTokens.brandPrimary: palette.brandPrimary,
+        colorTokens.brandPressed: palette.brandPressed,
+        colorTokens.brandTransparent: palette.brandTransparent,
+        colorTokens.brandSecondary: palette.brandSecondary,
+        colorTokens.brandTertiary: palette.brandTertiary,
+        colorTokens.textPrimary: palette.textPrimary,
+        colorTokens.textSecondary: palette.textSecondary,
+        colorTokens.textTertiary: palette.textTertiary,
+        colorTokens.textForeground: palette.textForeground,
+        colorTokens.backgroundPrimary: palette.backgroundPrimary,
+        colorTokens.backgroundSecondary: palette.backgroundSecondary,
+        colorTokens.backgroundTertiary: palette.backgroundTertiary,
+        colorTokens.backgroundPrimaryTransparent:
+            palette.backgroundPrimaryTransparent,
+        colorTokens.backgroundElevatedSurface:
+            palette.backgroundElevatedSurface,
+        colorTokens.backgroundElevatedSurfaceShadow:
+            palette.backgroundElevatedSurfaceShadow,
+        colorTokens.statusDanger: palette.statusDanger,
+        colorTokens.statusSuccess: palette.statusSuccess,
+        colorTokens.statusWarning: palette.statusWarning,
       }..addAll(colorOverrides),
       textStyles: {
         // styleTokens.titleH1: TextStyle(
@@ -58,61 +74,82 @@ final class MentorXThemes {
     MixThemeData theme,
     BuildContext context,
   ) {
-    final ThemeData defaultThemeData = Theme.of(context);
-    // final backgroundColor = context.backgroundPrimaryColor;
-    final backgroundColor = Colors.amber;
-    final primaryColor = Colors.amber;
+    final defaultThemeData = Theme.of(context);
+    final backgroundColor = context.backgroundPrimaryColor;
+    final primaryColor = context.brandPrimaryColor;
+    final surfaceColor = context.backgroundElevatedSurfaceColor;
+    final textColor = context.textPrimaryColor;
+    final secondaryTextColor = context.textSecondaryColor;
+    final errorColor = context.statusDangerColor;
     final focusedBorderSide = BorderSide(color: primaryColor, width: 1);
     final focusedBorder = OutlineInputBorder(
       borderSide: focusedBorderSide,
       borderRadius: BorderRadius.all(context.mediumRadius.topLeft),
     );
-    final textStyle = Colors.amber;
+
     final mainInputDecoration = InputDecorationTheme(
       filled: true,
+      fillColor: surfaceColor,
       helperMaxLines: 1,
       iconColor: primaryColor,
       suffixIconColor: primaryColor,
       prefixIconColor: primaryColor,
+      hintStyle: TextStyle(color: secondaryTextColor),
       focusedBorder: focusedBorder,
       contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
       enabledBorder: focusedBorder.copyWith(
         borderSide: focusedBorderSide.copyWith(
-          // color: context.backgroundSecondaryColor,
+          color: context.backgroundSecondaryColor,
         ),
       ),
       errorBorder: focusedBorder.copyWith(
         borderSide: focusedBorderSide.copyWith(
-          // color: context.backgroundElevatedSurfaceColor,
+          color: errorColor,
         ),
       ),
       focusedErrorBorder: focusedBorder.copyWith(
         borderSide: focusedBorderSide.copyWith(
-          // color: context.backgroundPrimaryColor,
+          color: errorColor,
         ),
       ),
       disabledBorder: focusedBorder.copyWith(
         borderSide: focusedBorderSide.copyWith(
-          // color: context.backgroundSecondaryColor,
+          color: context.backgroundSecondaryColor,
         ),
       ),
     );
+
+    final colorScheme = ColorScheme.fromSeed(
+      seedColor: primaryColor,
+      brightness: Theme.of(context).brightness,
+    ).copyWith(
+      primary: primaryColor,
+      onPrimary: context.textForegroundColor,
+      secondary: context.brandSecondaryColor,
+      onSecondary: context.textPrimaryColor,
+      error: errorColor,
+      onError: context.textForegroundColor,
+      surface: surfaceColor,
+      onSurface: textColor,
+    );
+
     return defaultThemeData.copyWith(
-      // scaffoldBackgroundColor: context.backgroundPrimaryColor,
-      // colorScheme: ColorScheme.fromSeed(seedColor: context.brandPrimaryColor),
+      scaffoldBackgroundColor: backgroundColor,
+      canvasColor: backgroundColor,
+      primaryColor: primaryColor,
+      colorScheme: colorScheme,
       checkboxTheme: CheckboxThemeData(
         shape: RoundedRectangleBorder(
           side: BorderSide(color: primaryColor, width: 2),
           borderRadius: BorderRadius.circular(2),
         ),
-        // overlayColor: WidgetStateProperty.all(context.brandPrimaryColor),
-        fillColor: const WidgetStateProperty.fromMap({
-          // WidgetState.selected: context.brandPrimaryColor,
-          // WidgetState.any: context.textTertiaryColor,
+        fillColor: WidgetStateProperty.fromMap({
+          WidgetState.selected: primaryColor,
+          WidgetState.any: context.textTertiaryColor,
         }),
         checkColor: WidgetStateProperty.fromMap({
           WidgetState.selected: backgroundColor,
-          // WidgetState.any: context.brandPrimaryColor,
+          WidgetState.any: primaryColor,
         }),
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         visualDensity: const VisualDensity(
@@ -121,8 +158,6 @@ final class MentorXThemes {
         ),
       ),
       inputDecorationTheme: mainInputDecoration,
-      // canvasColor: context.backgroundPrimaryColor,
-      // primaryColor: context.brandPrimaryColor,
     );
   }
 }
