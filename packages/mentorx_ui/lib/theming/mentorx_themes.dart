@@ -24,23 +24,62 @@ final class MentorXThemes {
     final colorTokens = $mentorxToken.color;
     final radiusTokens = $mentorxToken.radius;
     final styleTokens = $mentorxToken.textStyle;
-    final fontFamily = 'HT-Mosafer-Rounded';
-    final fontPackage = null;
-    final fallbackFontFamily = 'HT-Mosafer-Rounded-English';
+
     return MixThemeData(
       colors: {
-
+        colorTokens.brandPrimary: palette.brandPrimary,
+        colorTokens.brandPressed: palette.brandPressed,
+        colorTokens.brandTransparent: palette.brandTransparent,
+        colorTokens.brandSecondary: palette.brandSecondary,
+        colorTokens.brandTertiary: palette.brandTertiary,
+        colorTokens.textPrimary: palette.textPrimary,
+        colorTokens.textSecondary: palette.textSecondary,
+        colorTokens.textTertiary: palette.textTertiary,
+        colorTokens.textForeground: palette.textForeground,
+        colorTokens.backgroundPrimary: palette.backgroundPrimary,
+        colorTokens.backgroundSecondary: palette.backgroundSecondary,
+        colorTokens.backgroundTertiary: palette.backgroundTertiary,
+        colorTokens.backgroundPrimaryTransparent:
+            palette.backgroundPrimaryTransparent,
+        colorTokens.backgroundElevatedSurface:
+            palette.backgroundElevatedSurface,
+        colorTokens.backgroundElevatedSurfaceShadow:
+            palette.backgroundElevatedSurfaceShadow,
+        colorTokens.statusDanger: palette.statusDanger,
+        colorTokens.statusSuccess: palette.statusSuccess,
+        colorTokens.statusWarning: palette.statusWarning,
       }..addAll(colorOverrides),
       textStyles: {
-        // styleTokens.titleH1: TextStyle(
-        //   height: 1.15,
-        //   fontSize: 44,
-        //   package: fontPackage,
-        //   fontFamily: fontFamily,
-        //   fontWeight: FontWeight.w700,
-        //   color: palette.textPrimary,
-        //   fontFamilyFallback: [fallbackFontFamily],
-        // ),
+        styleTokens.titleH1: GoogleFonts.poppins(
+          fontSize: 24,
+          fontWeight: FontWeight.w700,
+          color: palette.textPrimary,
+        ),
+        styleTokens.titleH2: GoogleFonts.poppins(
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+          color: palette.textPrimary,
+        ),
+        styleTokens.sectionTitle: GoogleFonts.poppins(
+          fontSize: 18,
+          fontWeight: FontWeight.w500,
+          color: palette.textPrimary,
+        ),
+        styleTokens.bodyPrimary: GoogleFonts.poppins(
+          fontSize: 16,
+          fontWeight: FontWeight.w400,
+          color: palette.textPrimary,
+        ),
+        styleTokens.bodySecondary: GoogleFonts.poppins(
+          fontSize: 14,
+          fontWeight: FontWeight.w400,
+          color: palette.textSecondary,
+        ),
+        styleTokens.smallText: GoogleFonts.poppins(
+          fontSize: 12,
+          fontWeight: FontWeight.w400,
+          color: palette.textSecondary,
+        ),
       }..addAll(textStyleOverrides),
       radii: {
         radiusTokens.thin: const Radius.circular(2),
@@ -59,60 +98,172 @@ final class MentorXThemes {
     BuildContext context,
   ) {
     final ThemeData defaultThemeData = Theme.of(context);
-    // final backgroundColor = context.backgroundPrimaryColor;
-    final backgroundColor = Colors.amber;
-    final primaryColor = Colors.amber;
-    final focusedBorderSide = BorderSide(color: primaryColor, width: 1);
+
+    // Resolve colors from theme tokens
+    final oxfordBlue = theme.colors[$mentorxToken.color.brandPrimary]!;
+    final pumpkinOrange = theme.colors[$mentorxToken.color.brandSecondary]!;
+    final tealGreen = theme.colors[$mentorxToken.color.statusSuccess]!;
+    final ashGrey = theme.colors[$mentorxToken.color.textSecondary]!;
+    final lightBeige = theme.colors[$mentorxToken.color.backgroundPrimary]!;
+    final white = theme.colors[$mentorxToken.color.backgroundSecondary]!;
+    final textPrimary = theme.colors[$mentorxToken.color.textPrimary]!;
+    final textForeground = theme.colors[$mentorxToken.color.textForeground]!;
+    final statusDanger = theme.colors[$mentorxToken.color.statusDanger]!;
+
+    // Input decoration
+    const inputBorderRadius = BorderRadius.all(Radius.circular(12));
+    final focusedBorderSide = BorderSide(color: oxfordBlue, width: 1.5);
+    final inactiveBorderSide = BorderSide(color: ashGrey, width: 1);
+    final errorBorderSide = BorderSide(color: statusDanger, width: 1.5);
+
     final focusedBorder = OutlineInputBorder(
       borderSide: focusedBorderSide,
-      borderRadius: BorderRadius.all(context.mediumRadius.topLeft),
+      borderRadius: inputBorderRadius,
     );
-    final textStyle = Colors.amber;
+
     final mainInputDecoration = InputDecorationTheme(
       filled: true,
+      fillColor: white,
       helperMaxLines: 1,
-      iconColor: primaryColor,
-      suffixIconColor: primaryColor,
-      prefixIconColor: primaryColor,
+      iconColor: oxfordBlue,
+      suffixIconColor: oxfordBlue,
+      prefixIconColor: oxfordBlue,
+      labelStyle: GoogleFonts.poppins(color: ashGrey, fontSize: 14),
+      hintStyle: GoogleFonts.poppins(color: ashGrey, fontSize: 14),
+      floatingLabelStyle: GoogleFonts.poppins(color: oxfordBlue, fontSize: 14),
+      contentPadding:
+          const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
       focusedBorder: focusedBorder,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-      enabledBorder: focusedBorder.copyWith(
-        borderSide: focusedBorderSide.copyWith(
-          // color: context.backgroundSecondaryColor,
-        ),
+      enabledBorder: OutlineInputBorder(
+        borderSide: inactiveBorderSide,
+        borderRadius: inputBorderRadius,
       ),
-      errorBorder: focusedBorder.copyWith(
-        borderSide: focusedBorderSide.copyWith(
-          // color: context.backgroundElevatedSurfaceColor,
-        ),
+      errorBorder: OutlineInputBorder(
+        borderSide: errorBorderSide,
+        borderRadius: inputBorderRadius,
       ),
-      focusedErrorBorder: focusedBorder.copyWith(
-        borderSide: focusedBorderSide.copyWith(
-          // color: context.backgroundPrimaryColor,
-        ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderSide: errorBorderSide,
+        borderRadius: inputBorderRadius,
       ),
-      disabledBorder: focusedBorder.copyWith(
-        borderSide: focusedBorderSide.copyWith(
-          // color: context.backgroundSecondaryColor,
+      disabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(
+          color: ashGrey.withValues(alpha: 0.3),
+          width: 1,
         ),
+        borderRadius: inputBorderRadius,
       ),
     );
+
     return defaultThemeData.copyWith(
-      // scaffoldBackgroundColor: context.backgroundPrimaryColor,
-      // colorScheme: ColorScheme.fromSeed(seedColor: context.brandPrimaryColor),
+      scaffoldBackgroundColor: lightBeige,
+      canvasColor: lightBeige,
+      primaryColor: oxfordBlue,
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: oxfordBlue,
+        primary: oxfordBlue,
+        secondary: pumpkinOrange,
+        surface: lightBeige,
+        error: statusDanger,
+        onPrimary: textForeground,
+        onSecondary: textForeground,
+        onSurface: textPrimary,
+        tertiary: tealGreen,
+      ),
+      // AppBar: Oxford Blue bg, white title, elevation 0, centered
+      appBarTheme: AppBarTheme(
+        backgroundColor: oxfordBlue,
+        foregroundColor: textForeground,
+        elevation: 0,
+        centerTitle: true,
+        titleTextStyle: GoogleFonts.poppins(
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+          color: textForeground,
+        ),
+        iconTheme: IconThemeData(color: textForeground),
+      ),
+      // Primary Button: Oxford Blue bg, white text, borderRadius 14, height 50, elevation 2
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: oxfordBlue,
+          foregroundColor: textForeground,
+          elevation: 2,
+          minimumSize: const Size.fromHeight(50),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
+          textStyle: GoogleFonts.poppins(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+          disabledBackgroundColor: ashGrey.withValues(alpha: 0.3),
+          disabledForegroundColor: textForeground.withValues(alpha: 0.5),
+        ),
+      ),
+      // CTA / accent buttons use Pumpkin Orange
+      filledButtonTheme: FilledButtonThemeData(
+        style: FilledButton.styleFrom(
+          backgroundColor: pumpkinOrange,
+          foregroundColor: textForeground,
+          minimumSize: const Size.fromHeight(50),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
+          textStyle: GoogleFonts.poppins(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+          disabledBackgroundColor: ashGrey.withValues(alpha: 0.3),
+          disabledForegroundColor: textForeground.withValues(alpha: 0.5),
+        ),
+      ),
+      // Text button with Pumpkin Orange text
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+          foregroundColor: pumpkinOrange,
+          textStyle: GoogleFonts.poppins(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ),
+      // Outlined button
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(
+          foregroundColor: oxfordBlue,
+          minimumSize: const Size.fromHeight(50),
+          side: BorderSide(color: oxfordBlue),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
+          textStyle: GoogleFonts.poppins(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+      // Card: white bg, borderRadius 16, soft shadow
+      cardTheme: CardThemeData(
+        color: white,
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        shadowColor: Colors.black.withValues(alpha: 0.1),
+      ),
+      // Checkbox
       checkboxTheme: CheckboxThemeData(
         shape: RoundedRectangleBorder(
-          side: BorderSide(color: primaryColor, width: 2),
           borderRadius: BorderRadius.circular(2),
         ),
-        // overlayColor: WidgetStateProperty.all(context.brandPrimaryColor),
-        fillColor: const WidgetStateProperty.fromMap({
-          // WidgetState.selected: context.brandPrimaryColor,
-          // WidgetState.any: context.textTertiaryColor,
+        fillColor: WidgetStateProperty.fromMap({
+          WidgetState.selected: oxfordBlue,
+          WidgetState.any: ashGrey,
         }),
         checkColor: WidgetStateProperty.fromMap({
-          WidgetState.selected: backgroundColor,
-          // WidgetState.any: context.brandPrimaryColor,
+          WidgetState.selected: textForeground,
+          WidgetState.any: textForeground,
         }),
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         visualDensity: const VisualDensity(
@@ -120,9 +271,41 @@ final class MentorXThemes {
           vertical: VisualDensity.minimumDensity,
         ),
       ),
+      // Text theme using Poppins
+      textTheme: GoogleFonts.poppinsTextTheme(defaultThemeData.textTheme)
+          .copyWith(
+        headlineLarge: GoogleFonts.poppins(
+          fontSize: 24,
+          fontWeight: FontWeight.w700,
+          color: textPrimary,
+        ),
+        headlineMedium: GoogleFonts.poppins(
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+          color: textPrimary,
+        ),
+        titleLarge: GoogleFonts.poppins(
+          fontSize: 18,
+          fontWeight: FontWeight.w500,
+          color: textPrimary,
+        ),
+        bodyLarge: GoogleFonts.poppins(
+          fontSize: 16,
+          fontWeight: FontWeight.w400,
+          color: textPrimary,
+        ),
+        bodyMedium: GoogleFonts.poppins(
+          fontSize: 14,
+          fontWeight: FontWeight.w400,
+          color: ashGrey,
+        ),
+        bodySmall: GoogleFonts.poppins(
+          fontSize: 12,
+          fontWeight: FontWeight.w400,
+          color: ashGrey,
+        ),
+      ),
       inputDecorationTheme: mainInputDecoration,
-      // canvasColor: context.backgroundPrimaryColor,
-      // primaryColor: context.brandPrimaryColor,
     );
   }
 }
