@@ -31,6 +31,9 @@ dependencies:
   # Navigation:
   go_router: ^16.3.0
 
+  # Fonts
+  google_fonts: ^6.2.1
+
   # For UI
   gap: ^3.0.1
   # For loading shimmers
