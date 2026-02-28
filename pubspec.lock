@@ -61,18 +61,18 @@ packages:
     dependency: transitive
     description:
       name: bloc
-      sha256: a2cebb899f91d36eeeaa55c7b20b5915db5a9df1b8fd4a3c9c825e22e474537d
+      sha256: a48653a82055a900b88cd35f92429f068c5a8057ae9b136d197b3d56c57efb81
       url: "https://pub.dev"
     source: hosted
-    version: "9.1.0"
+    version: "9.2.0"
   bloc_presentation:
     dependency: transitive
     description:
       name: bloc_presentation
-      sha256: "7b2ff185f9e8ebc793224d7196a9ab34b9a28a15ef85e06f5caa67aadf96eb66"
+      sha256: ccc309371d49b2618692cf75664b87dd135fc439b5d0b0faaa7515117de1d493
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.1"
+    version: "1.1.2"
   bloc_presentation_test:
     dependency: transitive
     description:
@@ -125,10 +125,10 @@ packages:
     dependency: transitive
     description:
       name: build_runner
-      sha256: a9461b8e586bf018dd4afd2e13b49b08c6a844a4b226c8d1d10f3a723cdd78c3
+      sha256: "39ad4ca8a2876779737c60e4228b4bcd35d4352ef7e14e47514093edc012c734"
       url: "https://pub.dev"
     source: hosted
-    version: "2.10.1"
+    version: "2.11.1"
   built_collection:
     dependency: transitive
     description:
@@ -269,10 +269,10 @@ packages:
     dependency: transitive
     description:
       name: country_flags
-      sha256: "9226e95993a6225f746f8ad84e07ff492ce8bfa130bb141426473bcc2a6927ed"
+      sha256: f022d18337f3861f1f4e319b936cb53920de9259f38cb09e169eace9942e2b79
       url: "https://pub.dev"
     source: hosted
-    version: "4.0.1"
+    version: "4.1.2"
   coverage:
     dependency: transitive
     description:
@@ -365,10 +365,10 @@ packages:
     dependency: transitive
     description:
       name: equatable
-      sha256: "567c64b3cb4cf82397aac55f4f0cbd3ca20d77c6c03bedbc4ceaddc08904aef7"
+      sha256: "3e0141505477fd8ad55d6eb4e7776d3fe8430be8e497ccb1521370c3f21a3e2b"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.7"
+    version: "2.0.8"
   event_bus:
     dependency: transitive
     description:
@@ -617,18 +617,18 @@ packages:
     dependency: transitive
     description:
       name: geocoding
-      sha256: d580c801cba9386b4fac5047c4c785a4e19554f46be42f4f5e5b7deacd088a66
+      sha256: "606be036287842d779d7ec4e2f6c9435fc29bbbd3c6da6589710f981d8852895"
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.0"
+    version: "4.0.0"
   geocoding_android:
     dependency: transitive
     description:
       name: geocoding_android
-      sha256: "1b13eca79b11c497c434678fed109c2be020b158cec7512c848c102bc7232603"
+      sha256: ba810da90d6633cbb82bbab630e5b4a3b7d23503263c00ae7f1ef0316dcae5b9
       url: "https://pub.dev"
     source: hosted
-    version: "3.3.1"
+    version: "4.0.1"
   geocoding_ios:
     dependency: transitive
     description:
@@ -713,18 +713,18 @@ packages:
     dependency: transitive
     description:
       name: go_router
-      sha256: d8f590a69729f719177ea68eb1e598295e8dbc41bbc247fed78b2c8a25660d7c
+      sha256: "7974313e217a7771557add6ff2238acb63f635317c35fa590d348fb238f00896"
       url: "https://pub.dev"
     source: hosted
-    version: "16.3.0"
+    version: "17.1.0"
   go_router_builder:
     dependency: transitive
     description:
       name: go_router_builder
-      sha256: e0646fb5586e04e1df92678f539059f38e4314848f06dd4f3cd87fed434e16b5
+      sha256: "135648d2febcf6e45d87ad12f4dbcf2d0fb46eb1aa14722c0a42c7a60f02ac55"
       url: "https://pub.dev"
     source: hosted
-    version: "4.1.1"
+    version: "4.2.0"
   google_maps:
     dependency: transitive
     description:
@@ -841,10 +841,10 @@ packages:
     dependency: transitive
     description:
       name: image_picker
-      sha256: "736eb56a911cf24d1859315ad09ddec0b66104bc41a7f8c5b96b4e2620cf5041"
+      sha256: "784210112be18ea55f69d7076e2c656a4e24949fa9e76429fe53af0c0f4fa320"
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.0"
+    version: "1.2.1"
   image_picker_android:
     dependency: transitive
     description:
@@ -1241,10 +1241,10 @@ packages:
     dependency: transitive
     description:
       name: pinput
-      sha256: c41f42ee301505ae2375ec32871c985d3717bf8aee845620465b286e0140aad2
+      sha256: "4c3f1b84768b47a56a1abdaca551bd7cef4ac673b882209039ecdf803a5d6e68"
       url: "https://pub.dev"
     source: hosted
-    version: "5.0.2"
+    version: "6.0.2"
   platform:
     dependency: transitive
     description:
@@ -1393,10 +1393,10 @@ packages:
     dependency: transitive
     description:
       name: skeletonizer
-      sha256: eebc03dc86b298e2d7f61e0ebce5713e9dbbc3e786f825909b4591756f196eb6
+      sha256: "9f38f9b47ec3cf2235a6a4f154a88a95432bc55ba98b3e2eb6ced5c1974bc122"
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.0+1"
+    version: "2.1.3"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -1406,26 +1406,26 @@ packages:
     dependency: transitive
     description:
       name: slang
-      sha256: bb92f1777d086483251dd1a359d86d174d2ea3f8000eb7f55ad7ef9a1323c9e7
+      sha256: "81e277dc5e2305f53412b92afeb803620453259afe147d5cd6417700f998a7a6"
       url: "https://pub.dev"
     source: hosted
-    version: "4.9.2"
+    version: "4.12.1"
   slang_build_runner:
     dependency: transitive
     description:
       name: slang_build_runner
-      sha256: "99b2f3c88f65c302fd604148b6ed567f59c944f1b5c87baa9ab8c3453b1038a6"
+      sha256: "010f337703dbc736ac9f0e3eb9d6e1464850736fed69f85a23c07ee4678fcc1c"
       url: "https://pub.dev"
     source: hosted
-    version: "4.9.0"
+    version: "4.12.1"
   slang_flutter:
     dependency: transitive
     description:
       name: slang_flutter
-      sha256: "5ecf841d6252c05ea335920ec299bb7edbb860eb793eebb4b40f68b9d148a571"
+      sha256: "0f0276c400660c8b67150005aa4df57643b86ce6ae9c824abee8e25f345d9abc"
       url: "https://pub.dev"
     source: hosted
-    version: "4.9.0"
+    version: "4.12.1"
   smart_auth:
     dependency: transitive
     description:
@@ -1618,14 +1618,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.2"
-  universal_platform:
-    dependency: transitive
-    description:
-      name: universal_platform
-      sha256: "64e16458a0ea9b99260ceb5467a214c1f298d647c659af1bff6d3bf82536b1ec"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.0"
   url_launcher_linux:
     dependency: transitive
     description:

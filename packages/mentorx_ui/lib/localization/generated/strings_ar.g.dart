@@ -3,6 +3,7 @@
 ///
 // coverage:ignore-file
 // ignore_for_file: type=lint, unused_import
+// dart format off
 
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
@@ -10,7 +11,7 @@ import 'package:slang/generated.dart';
 import 'strings.g.dart';
 
 // Path: <root>
-class TranslationsAr implements Translations {
+class TranslationsAr with BaseTranslations<AppLocale, Translations> implements Translations {
 	/// You can call this constructor and build your own translation instance of this locale.
 	/// Constructing via the enum [AppLocale.build] is preferred.
 	TranslationsAr({Map<String, Node>? overrides, PluralResolver? cardinalResolver, PluralResolver? ordinalResolver, TranslationMetadata<AppLocale, Translations>? meta})
@@ -630,370 +631,358 @@ class _TranslationsHomeDashboardActionsAr implements TranslationsHomeDashboardAc
 /// so the map is split into smaller functions (512 entries each).
 extension on TranslationsAr {
 	dynamic _flatMapFunction(String path) {
-		return _flatMapFunction$0(path);
-	}
-
-	dynamic _flatMapFunction$0(String path) {
-		switch (path) {
-			case 'ui.common.cancel': return 'إلغاء';
-			case 'ui.common.ok': return 'موافق';
-			case 'ui.common.viewAll': return 'عرض الكل';
-			case 'ui.common.required': return 'مطلوب';
-			case 'ui.common.optional': return 'اختياري';
-			case 'ui.common.customization': return 'التخصيص';
-			case 'ui.errors.somethingWentWrong': return 'حدث خطأ ما';
-			case 'ui.errors.retry': return 'إعادة المحاولة';
-			case 'ui.dateTime.yesterday': return 'أمس';
-			case 'ui.dateTime.today': return 'اليوم';
-			case 'ui.dateTime.now': return 'الآن';
-			case 'ui.dateTime.tomorrow': return 'غدًا';
-			case 'ui.dateTime.time': return ({required DateTime time}) => '${DateFormat('HH:mm', 'ar').format(time)}';
-			case 'ui.dateTime.timeWithDay': return ({required DateTime time, required Object day}) => '${DateFormat('HH:mm', 'ar').format(time)}، ${day}';
-			case 'ui.dateTime.dateWithMonth': return ({required DateTime date}) => '${DateFormat('MMM d', 'ar').format(date)}';
-			case 'ui.dateTime.weekdays.monday': return 'الاثنين';
-			case 'ui.dateTime.weekdays.tuesday': return 'الثلاثاء';
-			case 'ui.dateTime.weekdays.wednesday': return 'الأربعاء';
-			case 'ui.dateTime.weekdays.thursday': return 'الخميس';
-			case 'ui.dateTime.weekdays.friday': return 'الجمعة';
-			case 'ui.dateTime.weekdays.saturday': return 'السبت';
-			case 'ui.dateTime.weekdays.sunday': return 'الأحد';
-			case 'ui.mentorXReadMore.more': return 'المزيد';
-			case 'ui.mentorXReadMore.less': return 'أقل';
-			case 'core.appName': return 'MentorX Student';
-			case 'core.currency': return 'ج.م';
-			case 'core.price': return ({required num amount}) => '${amount} ${_root.core.currency}';
-			case 'core.languages.en': return 'English';
-			case 'core.languages.ar': return 'العربية';
-			case 'initialLanguage.header': return 'يرجى تحديد اللغة المفضلة';
-			case 'initialLanguage.kContinue': return 'موافق';
-			case 'login.header': return 'ادخل رقم الجوال لتسجيل الدخول';
-			case 'login.phoneNumber': return 'رقم الجوال';
-			case 'login.signIn': return 'تسجيل الدخول';
-			case 'login.otp.header': return 'رمز التأكيد';
-			case 'login.otp.description': return 'لقد ارسلنا رمز تأكيد لجوالك. ادخله هنا للمتابعة.';
-			case 'login.otp.confirm': return 'تأكيد';
-			case 'login.otp.otpWasVerifiedSuccessfully': return 'تم التحقق من رمز التأكيد بنجاح';
-			case 'login.otp.resend': return 'اعادة الارسال';
-			case 'login.otp.otpWasResentSuccessfully': return 'تم اعادة الارسال بنجاح';
-			case 'home.main.home': return 'الرئيسية';
-			case 'home.main.favorites': return 'المفضلة';
-			case 'home.main.assistance': return 'المساعدة';
-			case 'home.main.cart': return 'السلة';
-			case 'home.main.me': return 'حسابي';
-			case 'home.dashboard.greetingMorning': return 'صباح الخير';
-			case 'home.dashboard.greetingEvening': return 'مساء الخير';
-			case 'home.dashboard.greetingWithName': return ({required Object greeting, required Object name}) => '${greeting}، ${name} 👋';
-			case 'home.dashboard.updatedAt': return ({required DateTime time}) => 'تم التحديث ${DateFormat('HH:mm', 'ar').format(time)}';
-			case 'home.dashboard.continueLearning': return 'استكمل التعلم';
-			case 'home.dashboard.featuredCourses': return 'الدورات المميزة';
-			case 'home.dashboard.announcements': return 'الإعلانات';
-			case 'home.dashboard.quickActions': return 'إجراءات سريعة';
-			case 'home.dashboard.walletBalance': return 'رصيد المحفظة';
-			case 'home.dashboard.points': return ({required int count}) => '${count} نقطة';
-			case 'home.dashboard.startLearningJourney': return 'ابدأ رحلتك التعليمية! تصفح الدورات المتاحة.';
-			case 'home.dashboard.continueProgress': return ({required num progress}) => 'استكمل ${progress}%';
-			case 'home.dashboard.free': return 'مجاني';
-			case 'home.dashboard.loadingCourse': return 'جاري تحميل الدورة';
-			case 'home.dashboard.loadingFeaturedCourse': return 'جاري تحميل الدورة المميزة';
-			case 'home.dashboard.loadingAnnouncement': return 'جاري تحميل الإعلان';
-			case 'home.dashboard.loadingAnnouncementDetails': return 'جاري تحميل تفاصيل الإعلان';
-			case 'home.dashboard.unableToLoadTapRetry': return 'تعذر التحميل. اضغط لإعادة المحاولة.';
-			case 'home.dashboard.actions.myCourses': return 'دوراتي';
-			case 'home.dashboard.actions.attendance': return 'الحضور';
-			case 'home.dashboard.actions.grades': return 'الدرجات';
-			case 'home.dashboard.actions.aiAssistant': return 'المساعد الذكي';
-			case 'home.dashboard.actions.rewards': return 'المكافآت';
-			case 'home.dashboard.actions.marketplace': return 'المتجر';
-			case 'home.errors.failedToLoadUpcomingEvents': return 'فشل تحميل الفاعليات القادمة';
-			case 'home.errors.failedToLoadVendors': return 'فشل تحميل مزودي الخدمات';
-			case 'home.errors.failedToLoadOccasions': return 'فشل تحميل المناسبات';
-			case 'home.errors.failedToLoadCategories': return 'فشل تحميل الأقسام';
-			case 'forms.required': return 'هذا الحقل مطلوب';
-			case 'forms.minLength': return ({required int length}) => 'يجب أن يحتوي على ${length} أحرف على الأقل';
-			case 'forms.maxLength': return ({required int length}) => 'الحد الأقصى هو ${length} أحرف';
-			case 'forms.minDigitsLength': return ({required int length}) => 'يجب أن يحتوي على ${length} أرقام على الأقل';
-			case 'forms.maxDigitsLength': return ({required int length}) => 'الحد الأقصى هو ${length} أرقام';
-			case 'forms.youMustEnterAValidEmail': return 'يجب إدخال بريد إلكتروني صحيح';
-			case 'forms.card.expiryInvalidFormat': return 'صيغة غير صحيحة. استخدم MM/YY';
-			case 'forms.card.expiryInvalidMonth': return 'شهر غير صحيح (01-12)';
-			case 'forms.card.expiryCardExpired': return 'انتهت صلاحية البطاقة';
-			case 'forms.card.cvvInvalid': return 'يجب أن يكون CVV من 3-4 أرقام';
-			case 'exceptions.unknown': return 'خطأ غير معروف';
-			case 'exceptions.AuthenticationRepositoryExceptionCode.unknown': return 'خطأ غير معروف';
-			case 'exceptions.AuthenticationRepositoryExceptionCode.invalidPhoneNumber': return 'رقم الجوال غير صحيح';
-			case 'exceptions.AuthenticationRepositoryExceptionCode.invalidOTP': return 'رمز OTP غير صحيح';
-			case 'exceptions.AuthenticationRepositoryExceptionCode.failedToInitialize': return 'فشل التحميل';
-			case 'exceptions.AuthenticationRepositoryExceptionCode.failedToSendOtp': return 'فشل ارسال رمز ال OTP';
-			case 'exceptions.AuthenticationRepositoryExceptionCode.failedToVerifyOtp': return 'فشل التحقق من رمز ال OTP';
-			case 'exceptions.promocodeExceptions.cantBeApplied': return 'لا يمكن تطبيق الرمز الترويجي على سلتك';
-			case 'countries.afghanistan': return 'أفغانستان';
-			case 'countries.albania': return 'ألبانيا';
-			case 'countries.algeria': return 'الجزائر';
-			case 'countries.andorra': return 'أندورا';
-			case 'countries.angola': return 'أنغولا';
-			case 'countries.antiguaAndBarbuda': return 'أنتيغوا وباربودا';
-			case 'countries.argentina': return 'الأرجنتين';
-			case 'countries.armenia': return 'أرمينيا';
-			case 'countries.australia': return 'أستراليا';
-			case 'countries.austria': return 'النمسا';
-			case 'countries.azerbaijan': return 'أذربيجان';
-			case 'countries.bahamas': return 'جزر البهاما';
-			case 'countries.bahrain': return 'البحرين';
-			case 'countries.bangladesh': return 'بنغلاديش';
-			case 'countries.barbados': return 'بربادوس';
-			case 'countries.belarus': return 'بيلاروسيا';
-			case 'countries.belgium': return 'بلجيكا';
-			case 'countries.belize': return 'بليز';
-			case 'countries.benin': return 'بنين';
-			case 'countries.bhutan': return 'بوتان';
-			case 'countries.bolivia': return 'بوليفيا';
-			case 'countries.bosniaAndHerzegovina': return 'البوسنة والهرسك';
-			case 'countries.botswana': return 'بوتسوانا';
-			case 'countries.brazil': return 'البرازيل';
-			case 'countries.brunei': return 'بروناي';
-			case 'countries.bulgaria': return 'بلغاريا';
-			case 'countries.burkinaFaso': return 'بوركينا فاسو';
-			case 'countries.burundi': return 'بوروندي';
-			case 'countries.cambodia': return 'كمبوديا';
-			case 'countries.cameroon': return 'الكاميرون';
-			case 'countries.canada': return 'كندا';
-			case 'countries.capeVerde': return 'الرأس الأخضر';
-			case 'countries.centralAfricanRepublic': return 'جمهورية أفريقيا الوسطى';
-			case 'countries.chad': return 'تشاد';
-			case 'countries.chile': return 'تشيلي';
-			case 'countries.china': return 'الصين';
-			case 'countries.colombia': return 'كولومبيا';
-			case 'countries.comoros': return 'جزر القمر';
-			case 'countries.congo': return 'الكونغو';
-			case 'countries.democraticRepublicOfCongo': return 'جمهورية الكونغو الديمقراطية';
-			case 'countries.costaRica': return 'كوستاريكا';
-			case 'countries.croatia': return 'كرواتيا';
-			case 'countries.cuba': return 'كوبا';
-			case 'countries.cyprus': return 'قبرص';
-			case 'countries.czechRepublic': return 'جمهورية التشيك';
-			case 'countries.denmark': return 'الدنمارك';
-			case 'countries.djibouti': return 'جيبوتي';
-			case 'countries.dominica': return 'دومينيكا';
-			case 'countries.dominicanRepublic': return 'جمهورية الدومينيكان';
-			case 'countries.ecuador': return 'الإكوادور';
-			case 'countries.egypt': return 'مصر';
-			case 'countries.elSalvador': return 'السلفادور';
-			case 'countries.equatorialGuinea': return 'غينيا الاستوائية';
-			case 'countries.eritrea': return 'إريتريا';
-			case 'countries.estonia': return 'إستونيا';
-			case 'countries.eswatini': return 'إسواتيني';
-			case 'countries.ethiopia': return 'إثيوبيا';
-			case 'countries.fiji': return 'فيجي';
-			case 'countries.finland': return 'فنلندا';
-			case 'countries.france': return 'فرنسا';
-			case 'countries.gabon': return 'الغابون';
-			case 'countries.gambia': return 'غامبيا';
-			case 'countries.georgia': return 'جورجيا';
-			case 'countries.germany': return 'ألمانيا';
-			case 'countries.ghana': return 'غانا';
-			case 'countries.greece': return 'اليونان';
-			case 'countries.grenada': return 'غرينادا';
-			case 'countries.guatemala': return 'غواتيمالا';
-			case 'countries.guinea': return 'غينيا';
-			case 'countries.guineaBissau': return 'غينيا بيساو';
-			case 'countries.guyana': return 'غيانا';
-			case 'countries.haiti': return 'هايتي';
-			case 'countries.honduras': return 'هندوراس';
-			case 'countries.hungary': return 'المجر';
-			case 'countries.iceland': return 'آيسلندا';
-			case 'countries.india': return 'الهند';
-			case 'countries.indonesia': return 'إندونيسيا';
-			case 'countries.iran': return 'إيران';
-			case 'countries.iraq': return 'العراق';
-			case 'countries.ireland': return 'أيرلندا';
-			case 'countries.israel': return 'إسرائيل';
-			case 'countries.italy': return 'إيطاليا';
-			case 'countries.ivoryCoast': return 'ساحل العاج';
-			case 'countries.jamaica': return 'جامايكا';
-			case 'countries.japan': return 'اليابان';
-			case 'countries.jordan': return 'الأردن';
-			case 'countries.kazakhstan': return 'كازاخستان';
-			case 'countries.kenya': return 'كينيا';
-			case 'countries.kiribati': return 'كيريباتي';
-			case 'countries.kuwait': return 'الكويت';
-			case 'countries.kyrgyzstan': return 'قيرغيزستان';
-			case 'countries.laos': return 'لاوس';
-			case 'countries.latvia': return 'لاتفيا';
-			case 'countries.lebanon': return 'لبنان';
-			case 'countries.lesotho': return 'ليسوتو';
-			case 'countries.liberia': return 'ليبيريا';
-			case 'countries.libya': return 'ليبيا';
-			case 'countries.liechtenstein': return 'ليختنشتاين';
-			case 'countries.lithuania': return 'ليتوانيا';
-			case 'countries.luxembourg': return 'لوكسمبورغ';
-			case 'countries.madagascar': return 'مدغشقر';
-			case 'countries.malawi': return 'ملاوي';
-			case 'countries.malaysia': return 'ماليزيا';
-			case 'countries.maldives': return 'جزر المالديف';
-			case 'countries.mali': return 'مالي';
-			case 'countries.malta': return 'مالطا';
-			case 'countries.marshallIslands': return 'جزر مارشال';
-			case 'countries.mauritania': return 'موريتانيا';
-			case 'countries.mauritius': return 'موريشيوس';
-			case 'countries.mexico': return 'المكسيك';
-			case 'countries.micronesia': return 'ميكرونيزيا';
-			case 'countries.moldova': return 'مولدوفا';
-			case 'countries.monaco': return 'موناكو';
-			case 'countries.mongolia': return 'منغوليا';
-			case 'countries.montenegro': return 'الجبل الأسود';
-			case 'countries.morocco': return 'المغرب';
-			case 'countries.mozambique': return 'موزمبيق';
-			case 'countries.myanmar': return 'ميانمار';
-			case 'countries.namibia': return 'ناميبيا';
-			case 'countries.nauru': return 'ناورو';
-			case 'countries.nepal': return 'نيبال';
-			case 'countries.netherlands': return 'هولندا';
-			case 'countries.newZealand': return 'نيوزيلندا';
-			case 'countries.nicaragua': return 'نيكاراغوا';
-			case 'countries.niger': return 'النيجر';
-			case 'countries.nigeria': return 'نيجيريا';
-			case 'countries.northKorea': return 'كوريا الشمالية';
-			case 'countries.northMacedonia': return 'مقدونيا الشمالية';
-			case 'countries.norway': return 'النرويج';
-			case 'countries.oman': return 'عمان';
-			case 'countries.pakistan': return 'باكستان';
-			case 'countries.palau': return 'بالاو';
-			case 'countries.palestine': return 'فلسطين';
-			case 'countries.panama': return 'بنما';
-			case 'countries.papuaNewGuinea': return 'بابوا غينيا الجديدة';
-			case 'countries.paraguay': return 'باراغواي';
-			case 'countries.peru': return 'بيرو';
-			case 'countries.philippines': return 'الفلبين';
-			case 'countries.poland': return 'بولندا';
-			case 'countries.portugal': return 'البرتغال';
-			case 'countries.qatar': return 'قطر';
-			case 'countries.romania': return 'رومانيا';
-			case 'countries.russia': return 'روسيا';
-			case 'countries.rwanda': return 'رواندا';
-			case 'countries.saintKittsAndNevis': return 'سانت كيتس ونيفيس';
-			case 'countries.saintLucia': return 'سانت لوسيا';
-			case 'countries.saintVincentAndTheGrenadines': return 'سانت فنسنت وجزر غرينادين';
-			case 'countries.samoa': return 'ساموا';
-			case 'countries.sanMarino': return 'سان مارينو';
-			case 'countries.saoTomeAndPrincipe': return 'ساو تومي وبرينسيبي';
-			case 'countries.saudiArabia': return 'المملكة العربية السعودية';
-			case 'countries.senegal': return 'السنغال';
-			case 'countries.serbia': return 'صربيا';
-			case 'countries.seychelles': return 'سيشل';
-			case 'countries.sierraLeone': return 'سيراليون';
-			case 'countries.singapore': return 'سنغافورة';
-			case 'countries.slovakia': return 'سلوفاكيا';
-			case 'countries.slovenia': return 'سلوفينيا';
-			case 'countries.solomonIslands': return 'جزر سليمان';
-			case 'countries.somalia': return 'الصومال';
-			case 'countries.southAfrica': return 'جنوب أفريقيا';
-			case 'countries.southKorea': return 'كوريا الجنوبية';
-			case 'countries.southSudan': return 'جنوب السودان';
-			case 'countries.spain': return 'إسبانيا';
-			case 'countries.sriLanka': return 'سريلانكا';
-			case 'countries.sudan': return 'السودان';
-			case 'countries.suriname': return 'سورينام';
-			case 'countries.sweden': return 'السويد';
-			case 'countries.switzerland': return 'سويسرا';
-			case 'countries.syria': return 'سوريا';
-			case 'countries.taiwan': return 'تايوان';
-			case 'countries.tajikistan': return 'طاجيكستان';
-			case 'countries.tanzania': return 'تنزانيا';
-			case 'countries.thailand': return 'تايلاند';
-			case 'countries.timor': return 'تيمور الشرقية';
-			case 'countries.togo': return 'توغو';
-			case 'countries.tonga': return 'تونغا';
-			case 'countries.trinidadAndTobago': return 'ترينيداد وتوباغو';
-			case 'countries.tunisia': return 'تونس';
-			case 'countries.turkey': return 'تركيا';
-			case 'countries.turkmenistan': return 'تركمانستان';
-			case 'countries.tuvalu': return 'توفالو';
-			case 'countries.uganda': return 'أوغندا';
-			case 'countries.ukraine': return 'أوكرانيا';
-			case 'countries.unitedArabEmirates': return 'الإمارات العربية المتحدة';
-			case 'countries.unitedKingdom': return 'المملكة المتحدة';
-			case 'countries.unitedStates': return 'الولايات المتحدة الأمريكية';
-			case 'countries.uruguay': return 'أوروغواي';
-			case 'countries.uzbekistan': return 'أوزبكستان';
-			case 'countries.vanuatu': return 'فانواتو';
-			case 'countries.vaticanCity': return 'الفاتيكان';
-			case 'countries.venezuela': return 'فنزويلا';
-			case 'countries.vietnam': return 'فيتنام';
-			case 'countries.yemen': return 'اليمن';
-			case 'countries.zambia': return 'زامبيا';
-			case 'countries.zimbabwe': return 'زيمبابوي';
-			case 'cart.yourCart': return 'سلتك';
-			case 'cart.emptyCart': return 'سلتك فارغة';
-			case 'cart.browseServices': return 'تصفح الخدمات';
-			case 'cart.browseOfferings': return 'تصفح عروضنا \nلإضافة عناصر إلى سلتك';
-			case 'cart.weRecommend': return 'نوصي بـ';
-			case 'cart.edit': return 'تعديل';
-			case 'cart.remove': return 'إزالة';
-			case 'cart.addToCart': return 'أضف إلى السلة';
-			case 'cart.close': return 'إغلاق';
-			case 'cart.itemDateTime': return ({required DateTime date}) => '${DateFormat('MMM dd, hh:mm', 'ar').format(date)}';
-			case 'cart.hour': return ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('ar'))(n,
-				zero: 'ساعة',
-				one: 'ساعة',
-				other: 'ساعات',
-			);
-			case 'cart.dontForgetToAdd': return 'لا تنسَ الإضافة';
-			case 'cart.services': return ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('ar'))(n,
-				one: 'خدمة',
-				other: 'خدمات',
-			);
-			case 'cart.total': return 'الإجمالي';
-			case 'cart.promocode.header': return 'رمز ترويجي';
-			case 'cart.promocode.hint': return 'أدخل الرمز الترويجي';
-			case 'cart.promocode.promocodeApplied': return 'تم تطبيق الرمز الترويجي';
-			case 'cart.promocode.promocodeCannotBeApplied': return 'لا يمكن تطبيق الرمز الترويجي على سلتك';
-			case 'cart.updateInCart': return 'تحديث في السلة';
-			case 'cart.cart': return 'سلة';
-			case 'cart.checkout': return 'إتمام الشراء';
-			case 'cart.apply': return 'تطبيق';
-			case 'cart.applyPromocode': return 'تطبيق كود الخصم';
-			case 'cart.enterPromocode': return 'أدخل كود الخصم';
-			case 'cart.promocodeRequired': return 'كود الخصم مطلوب';
-			case 'cart.appliedPromocodes': return 'أكواد الخصم المطبقة';
-			case 'cart.recommendations': return 'التوصيات';
-			case 'cart.subtotal': return 'المجموع الفرعي';
-			case 'cart.discount': return 'الخصم';
-			case 'cart.minOrder': return 'الحد الأدنى للطلب';
-			case 'cart.minTime': return 'الحد الأدنى للوقت';
-			case 'cart.spaceRequired': return 'المساحة المطلوبة';
-			case 'cart.hours': return 'ساعات';
-			case 'cart.specialRequests': return 'طلبات خاصة';
-			case 'cart.enterSpecialRequests': return 'أدخل الطلبات الخاصة...';
-			case 'cart.errorLoadingCart': return 'خطأ في تحميل السلة';
-			case 'cart.cartCleared': return 'تم مسح السلة بنجاح';
-			case 'cart.failedToLoadService': return 'فشل تحميل الخدمة';
-			case 'cart.pleaseSelectOption': return ({required Object sectionName}) => 'يرجى اختيار ${sectionName}';
-			case 'cart.pleaseSelectAtLeastOne': return ({required Object sectionName}) => 'يرجى اختيار خيار ${sectionName} واحد على الأقل';
-			case 'cart.pleaseSelectMore': return ({required Object sectionName}) => 'يرجى اختيار المزيد من خيارات ${sectionName}';
-			case 'cart.tooManyOptionsSelected': return ({required Object sectionName}) => 'تم اختيار عدد كبير جداً من خيارات ${sectionName}';
-			case 'cart.pleaseAddAtLeastOne': return ({required Object sectionName}) => 'يرجى إضافة عنصر ${sectionName} واحد على الأقل';
-			case 'cart.pleaseSelectDateTime': return 'يرجى اختيار التاريخ والوقت';
-			case 'cart.canapeOptions': return 'خيارات الكانابيه';
-			case 'cart.options': return 'خيارات';
-			case 'cart.startDateAndTime': return 'تاريخ ووقت البدء';
-			case 'cart.perExtraHour': return 'لكل ساعة إضافية';
-			case 'cart.goToVendorProfile': return ({required Object vendorName}) => 'انتقل إلى ملف ${vendorName}';
-			case 'settings.title': return 'إعدادات التطبيق';
-			case 'settings.language': return 'اللغة';
-			case 'settings.notifications': return 'الإشعارات';
-			case 'settings.notificationSettings.title': return 'الإشعارات';
-			case 'settings.notificationSettings.common': return 'عام';
-			case 'settings.notificationSettings.generalNotification': return 'الإشعار العام';
-			case 'settings.notificationSettings.sound': return 'الصوت';
-			case 'settings.notificationSettings.vibrate': return 'الاهتزاز';
-			case 'settings.notificationSettings.systemAndServicesUpdate': return 'التحديثات والخدمات';
-			case 'settings.notificationSettings.appUpdates': return 'تحديثات التطبيق';
-			case 'settings.notificationSettings.billReminder': return 'تذكير الفاتورة';
-			case 'settings.notificationSettings.promotion': return 'العروض الترويجية';
-			case 'settings.notificationSettings.discountAvailable': return 'الخصومات المتاحة';
-			case 'settings.notificationSettings.paymentRequest': return 'طلب الدفع';
-			default: return null;
-		}
+		return switch (path) {
+			'ui.common.cancel' => 'إلغاء',
+			'ui.common.ok' => 'موافق',
+			'ui.common.viewAll' => 'عرض الكل',
+			'ui.common.required' => 'مطلوب',
+			'ui.common.optional' => 'اختياري',
+			'ui.common.customization' => 'التخصيص',
+			'ui.errors.somethingWentWrong' => 'حدث خطأ ما',
+			'ui.errors.retry' => 'إعادة المحاولة',
+			'ui.dateTime.yesterday' => 'أمس',
+			'ui.dateTime.today' => 'اليوم',
+			'ui.dateTime.now' => 'الآن',
+			'ui.dateTime.tomorrow' => 'غدًا',
+			'ui.dateTime.time' => ({required DateTime time}) => '${DateFormat('HH:mm', 'ar').format(time)}',
+			'ui.dateTime.timeWithDay' => ({required DateTime time, required Object day}) => '${DateFormat('HH:mm', 'ar').format(time)}، ${day}',
+			'ui.dateTime.dateWithMonth' => ({required DateTime date}) => '${DateFormat('MMM d', 'ar').format(date)}',
+			'ui.dateTime.weekdays.monday' => 'الاثنين',
+			'ui.dateTime.weekdays.tuesday' => 'الثلاثاء',
+			'ui.dateTime.weekdays.wednesday' => 'الأربعاء',
+			'ui.dateTime.weekdays.thursday' => 'الخميس',
+			'ui.dateTime.weekdays.friday' => 'الجمعة',
+			'ui.dateTime.weekdays.saturday' => 'السبت',
+			'ui.dateTime.weekdays.sunday' => 'الأحد',
+			'ui.mentorXReadMore.more' => 'المزيد',
+			'ui.mentorXReadMore.less' => 'أقل',
+			'core.appName' => 'MentorX Student',
+			'core.currency' => 'ج.م',
+			'core.price' => ({required num amount}) => '${amount} ${_root.core.currency}',
+			'core.languages.en' => 'English',
+			'core.languages.ar' => 'العربية',
+			'initialLanguage.header' => 'يرجى تحديد اللغة المفضلة',
+			'initialLanguage.kContinue' => 'موافق',
+			'login.header' => 'ادخل رقم الجوال لتسجيل الدخول',
+			'login.phoneNumber' => 'رقم الجوال',
+			'login.signIn' => 'تسجيل الدخول',
+			'login.otp.header' => 'رمز التأكيد',
+			'login.otp.description' => 'لقد ارسلنا رمز تأكيد لجوالك. ادخله هنا للمتابعة.',
+			'login.otp.confirm' => 'تأكيد',
+			'login.otp.otpWasVerifiedSuccessfully' => 'تم التحقق من رمز التأكيد بنجاح',
+			'login.otp.resend' => 'اعادة الارسال',
+			'login.otp.otpWasResentSuccessfully' => 'تم اعادة الارسال بنجاح',
+			'home.main.home' => 'الرئيسية',
+			'home.main.favorites' => 'المفضلة',
+			'home.main.assistance' => 'المساعدة',
+			'home.main.cart' => 'السلة',
+			'home.main.me' => 'حسابي',
+			'home.dashboard.greetingMorning' => 'صباح الخير',
+			'home.dashboard.greetingEvening' => 'مساء الخير',
+			'home.dashboard.greetingWithName' => ({required Object greeting, required Object name}) => '${greeting}، ${name} 👋',
+			'home.dashboard.updatedAt' => ({required DateTime time}) => 'تم التحديث ${DateFormat('HH:mm', 'ar').format(time)}',
+			'home.dashboard.continueLearning' => 'استكمل التعلم',
+			'home.dashboard.featuredCourses' => 'الدورات المميزة',
+			'home.dashboard.announcements' => 'الإعلانات',
+			'home.dashboard.quickActions' => 'إجراءات سريعة',
+			'home.dashboard.walletBalance' => 'رصيد المحفظة',
+			'home.dashboard.points' => ({required int count}) => '${count} نقطة',
+			'home.dashboard.startLearningJourney' => 'ابدأ رحلتك التعليمية! تصفح الدورات المتاحة.',
+			'home.dashboard.continueProgress' => ({required num progress}) => 'استكمل ${progress}%',
+			'home.dashboard.free' => 'مجاني',
+			'home.dashboard.loadingCourse' => 'جاري تحميل الدورة',
+			'home.dashboard.loadingFeaturedCourse' => 'جاري تحميل الدورة المميزة',
+			'home.dashboard.loadingAnnouncement' => 'جاري تحميل الإعلان',
+			'home.dashboard.loadingAnnouncementDetails' => 'جاري تحميل تفاصيل الإعلان',
+			'home.dashboard.unableToLoadTapRetry' => 'تعذر التحميل. اضغط لإعادة المحاولة.',
+			'home.dashboard.actions.myCourses' => 'دوراتي',
+			'home.dashboard.actions.attendance' => 'الحضور',
+			'home.dashboard.actions.grades' => 'الدرجات',
+			'home.dashboard.actions.aiAssistant' => 'المساعد الذكي',
+			'home.dashboard.actions.rewards' => 'المكافآت',
+			'home.dashboard.actions.marketplace' => 'المتجر',
+			'home.errors.failedToLoadUpcomingEvents' => 'فشل تحميل الفاعليات القادمة',
+			'home.errors.failedToLoadVendors' => 'فشل تحميل مزودي الخدمات',
+			'home.errors.failedToLoadOccasions' => 'فشل تحميل المناسبات',
+			'home.errors.failedToLoadCategories' => 'فشل تحميل الأقسام',
+			'forms.required' => 'هذا الحقل مطلوب',
+			'forms.minLength' => ({required int length}) => 'يجب أن يحتوي على ${length} أحرف على الأقل',
+			'forms.maxLength' => ({required int length}) => 'الحد الأقصى هو ${length} أحرف',
+			'forms.minDigitsLength' => ({required int length}) => 'يجب أن يحتوي على ${length} أرقام على الأقل',
+			'forms.maxDigitsLength' => ({required int length}) => 'الحد الأقصى هو ${length} أرقام',
+			'forms.youMustEnterAValidEmail' => 'يجب إدخال بريد إلكتروني صحيح',
+			'forms.card.expiryInvalidFormat' => 'صيغة غير صحيحة. استخدم MM/YY',
+			'forms.card.expiryInvalidMonth' => 'شهر غير صحيح (01-12)',
+			'forms.card.expiryCardExpired' => 'انتهت صلاحية البطاقة',
+			'forms.card.cvvInvalid' => 'يجب أن يكون CVV من 3-4 أرقام',
+			'exceptions.unknown' => 'خطأ غير معروف',
+			'exceptions.AuthenticationRepositoryExceptionCode.unknown' => 'خطأ غير معروف',
+			'exceptions.AuthenticationRepositoryExceptionCode.invalidPhoneNumber' => 'رقم الجوال غير صحيح',
+			'exceptions.AuthenticationRepositoryExceptionCode.invalidOTP' => 'رمز OTP غير صحيح',
+			'exceptions.AuthenticationRepositoryExceptionCode.failedToInitialize' => 'فشل التحميل',
+			'exceptions.AuthenticationRepositoryExceptionCode.failedToSendOtp' => 'فشل ارسال رمز ال OTP',
+			'exceptions.AuthenticationRepositoryExceptionCode.failedToVerifyOtp' => 'فشل التحقق من رمز ال OTP',
+			'exceptions.promocodeExceptions.cantBeApplied' => 'لا يمكن تطبيق الرمز الترويجي على سلتك',
+			'countries.afghanistan' => 'أفغانستان',
+			'countries.albania' => 'ألبانيا',
+			'countries.algeria' => 'الجزائر',
+			'countries.andorra' => 'أندورا',
+			'countries.angola' => 'أنغولا',
+			'countries.antiguaAndBarbuda' => 'أنتيغوا وباربودا',
+			'countries.argentina' => 'الأرجنتين',
+			'countries.armenia' => 'أرمينيا',
+			'countries.australia' => 'أستراليا',
+			'countries.austria' => 'النمسا',
+			'countries.azerbaijan' => 'أذربيجان',
+			'countries.bahamas' => 'جزر البهاما',
+			'countries.bahrain' => 'البحرين',
+			'countries.bangladesh' => 'بنغلاديش',
+			'countries.barbados' => 'بربادوس',
+			'countries.belarus' => 'بيلاروسيا',
+			'countries.belgium' => 'بلجيكا',
+			'countries.belize' => 'بليز',
+			'countries.benin' => 'بنين',
+			'countries.bhutan' => 'بوتان',
+			'countries.bolivia' => 'بوليفيا',
+			'countries.bosniaAndHerzegovina' => 'البوسنة والهرسك',
+			'countries.botswana' => 'بوتسوانا',
+			'countries.brazil' => 'البرازيل',
+			'countries.brunei' => 'بروناي',
+			'countries.bulgaria' => 'بلغاريا',
+			'countries.burkinaFaso' => 'بوركينا فاسو',
+			'countries.burundi' => 'بوروندي',
+			'countries.cambodia' => 'كمبوديا',
+			'countries.cameroon' => 'الكاميرون',
+			'countries.canada' => 'كندا',
+			'countries.capeVerde' => 'الرأس الأخضر',
+			'countries.centralAfricanRepublic' => 'جمهورية أفريقيا الوسطى',
+			'countries.chad' => 'تشاد',
+			'countries.chile' => 'تشيلي',
+			'countries.china' => 'الصين',
+			'countries.colombia' => 'كولومبيا',
+			'countries.comoros' => 'جزر القمر',
+			'countries.congo' => 'الكونغو',
+			'countries.democraticRepublicOfCongo' => 'جمهورية الكونغو الديمقراطية',
+			'countries.costaRica' => 'كوستاريكا',
+			'countries.croatia' => 'كرواتيا',
+			'countries.cuba' => 'كوبا',
+			'countries.cyprus' => 'قبرص',
+			'countries.czechRepublic' => 'جمهورية التشيك',
+			'countries.denmark' => 'الدنمارك',
+			'countries.djibouti' => 'جيبوتي',
+			'countries.dominica' => 'دومينيكا',
+			'countries.dominicanRepublic' => 'جمهورية الدومينيكان',
+			'countries.ecuador' => 'الإكوادور',
+			'countries.egypt' => 'مصر',
+			'countries.elSalvador' => 'السلفادور',
+			'countries.equatorialGuinea' => 'غينيا الاستوائية',
+			'countries.eritrea' => 'إريتريا',
+			'countries.estonia' => 'إستونيا',
+			'countries.eswatini' => 'إسواتيني',
+			'countries.ethiopia' => 'إثيوبيا',
+			'countries.fiji' => 'فيجي',
+			'countries.finland' => 'فنلندا',
+			'countries.france' => 'فرنسا',
+			'countries.gabon' => 'الغابون',
+			'countries.gambia' => 'غامبيا',
+			'countries.georgia' => 'جورجيا',
+			'countries.germany' => 'ألمانيا',
+			'countries.ghana' => 'غانا',
+			'countries.greece' => 'اليونان',
+			'countries.grenada' => 'غرينادا',
+			'countries.guatemala' => 'غواتيمالا',
+			'countries.guinea' => 'غينيا',
+			'countries.guineaBissau' => 'غينيا بيساو',
+			'countries.guyana' => 'غيانا',
+			'countries.haiti' => 'هايتي',
+			'countries.honduras' => 'هندوراس',
+			'countries.hungary' => 'المجر',
+			'countries.iceland' => 'آيسلندا',
+			'countries.india' => 'الهند',
+			'countries.indonesia' => 'إندونيسيا',
+			'countries.iran' => 'إيران',
+			'countries.iraq' => 'العراق',
+			'countries.ireland' => 'أيرلندا',
+			'countries.israel' => 'إسرائيل',
+			'countries.italy' => 'إيطاليا',
+			'countries.ivoryCoast' => 'ساحل العاج',
+			'countries.jamaica' => 'جامايكا',
+			'countries.japan' => 'اليابان',
+			'countries.jordan' => 'الأردن',
+			'countries.kazakhstan' => 'كازاخستان',
+			'countries.kenya' => 'كينيا',
+			'countries.kiribati' => 'كيريباتي',
+			'countries.kuwait' => 'الكويت',
+			'countries.kyrgyzstan' => 'قيرغيزستان',
+			'countries.laos' => 'لاوس',
+			'countries.latvia' => 'لاتفيا',
+			'countries.lebanon' => 'لبنان',
+			'countries.lesotho' => 'ليسوتو',
+			'countries.liberia' => 'ليبيريا',
+			'countries.libya' => 'ليبيا',
+			'countries.liechtenstein' => 'ليختنشتاين',
+			'countries.lithuania' => 'ليتوانيا',
+			'countries.luxembourg' => 'لوكسمبورغ',
+			'countries.madagascar' => 'مدغشقر',
+			'countries.malawi' => 'ملاوي',
+			'countries.malaysia' => 'ماليزيا',
+			'countries.maldives' => 'جزر المالديف',
+			'countries.mali' => 'مالي',
+			'countries.malta' => 'مالطا',
+			'countries.marshallIslands' => 'جزر مارشال',
+			'countries.mauritania' => 'موريتانيا',
+			'countries.mauritius' => 'موريشيوس',
+			'countries.mexico' => 'المكسيك',
+			'countries.micronesia' => 'ميكرونيزيا',
+			'countries.moldova' => 'مولدوفا',
+			'countries.monaco' => 'موناكو',
+			'countries.mongolia' => 'منغوليا',
+			'countries.montenegro' => 'الجبل الأسود',
+			'countries.morocco' => 'المغرب',
+			'countries.mozambique' => 'موزمبيق',
+			'countries.myanmar' => 'ميانمار',
+			'countries.namibia' => 'ناميبيا',
+			'countries.nauru' => 'ناورو',
+			'countries.nepal' => 'نيبال',
+			'countries.netherlands' => 'هولندا',
+			'countries.newZealand' => 'نيوزيلندا',
+			'countries.nicaragua' => 'نيكاراغوا',
+			'countries.niger' => 'النيجر',
+			'countries.nigeria' => 'نيجيريا',
+			'countries.northKorea' => 'كوريا الشمالية',
+			'countries.northMacedonia' => 'مقدونيا الشمالية',
+			'countries.norway' => 'النرويج',
+			'countries.oman' => 'عمان',
+			'countries.pakistan' => 'باكستان',
+			'countries.palau' => 'بالاو',
+			'countries.palestine' => 'فلسطين',
+			'countries.panama' => 'بنما',
+			'countries.papuaNewGuinea' => 'بابوا غينيا الجديدة',
+			'countries.paraguay' => 'باراغواي',
+			'countries.peru' => 'بيرو',
+			'countries.philippines' => 'الفلبين',
+			'countries.poland' => 'بولندا',
+			'countries.portugal' => 'البرتغال',
+			'countries.qatar' => 'قطر',
+			'countries.romania' => 'رومانيا',
+			'countries.russia' => 'روسيا',
+			'countries.rwanda' => 'رواندا',
+			'countries.saintKittsAndNevis' => 'سانت كيتس ونيفيس',
+			'countries.saintLucia' => 'سانت لوسيا',
+			'countries.saintVincentAndTheGrenadines' => 'سانت فنسنت وجزر غرينادين',
+			'countries.samoa' => 'ساموا',
+			'countries.sanMarino' => 'سان مارينو',
+			'countries.saoTomeAndPrincipe' => 'ساو تومي وبرينسيبي',
+			'countries.saudiArabia' => 'المملكة العربية السعودية',
+			'countries.senegal' => 'السنغال',
+			'countries.serbia' => 'صربيا',
+			'countries.seychelles' => 'سيشل',
+			'countries.sierraLeone' => 'سيراليون',
+			'countries.singapore' => 'سنغافورة',
+			'countries.slovakia' => 'سلوفاكيا',
+			'countries.slovenia' => 'سلوفينيا',
+			'countries.solomonIslands' => 'جزر سليمان',
+			'countries.somalia' => 'الصومال',
+			'countries.southAfrica' => 'جنوب أفريقيا',
+			'countries.southKorea' => 'كوريا الجنوبية',
+			'countries.southSudan' => 'جنوب السودان',
+			'countries.spain' => 'إسبانيا',
+			'countries.sriLanka' => 'سريلانكا',
+			'countries.sudan' => 'السودان',
+			'countries.suriname' => 'سورينام',
+			'countries.sweden' => 'السويد',
+			'countries.switzerland' => 'سويسرا',
+			'countries.syria' => 'سوريا',
+			'countries.taiwan' => 'تايوان',
+			'countries.tajikistan' => 'طاجيكستان',
+			'countries.tanzania' => 'تنزانيا',
+			'countries.thailand' => 'تايلاند',
+			'countries.timor' => 'تيمور الشرقية',
+			'countries.togo' => 'توغو',
+			'countries.tonga' => 'تونغا',
+			'countries.trinidadAndTobago' => 'ترينيداد وتوباغو',
+			'countries.tunisia' => 'تونس',
+			'countries.turkey' => 'تركيا',
+			'countries.turkmenistan' => 'تركمانستان',
+			'countries.tuvalu' => 'توفالو',
+			'countries.uganda' => 'أوغندا',
+			'countries.ukraine' => 'أوكرانيا',
+			'countries.unitedArabEmirates' => 'الإمارات العربية المتحدة',
+			'countries.unitedKingdom' => 'المملكة المتحدة',
+			'countries.unitedStates' => 'الولايات المتحدة الأمريكية',
+			'countries.uruguay' => 'أوروغواي',
+			'countries.uzbekistan' => 'أوزبكستان',
+			'countries.vanuatu' => 'فانواتو',
+			'countries.vaticanCity' => 'الفاتيكان',
+			'countries.venezuela' => 'فنزويلا',
+			'countries.vietnam' => 'فيتنام',
+			'countries.yemen' => 'اليمن',
+			'countries.zambia' => 'زامبيا',
+			'countries.zimbabwe' => 'زيمبابوي',
+			'cart.yourCart' => 'سلتك',
+			'cart.emptyCart' => 'سلتك فارغة',
+			'cart.browseServices' => 'تصفح الخدمات',
+			'cart.browseOfferings' => 'تصفح عروضنا \nلإضافة عناصر إلى سلتك',
+			'cart.weRecommend' => 'نوصي بـ',
+			'cart.edit' => 'تعديل',
+			'cart.remove' => 'إزالة',
+			'cart.addToCart' => 'أضف إلى السلة',
+			'cart.close' => 'إغلاق',
+			'cart.itemDateTime' => ({required DateTime date}) => '${DateFormat('MMM dd, hh:mm', 'ar').format(date)}',
+			'cart.hour' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('ar'))(n, zero: 'ساعة', one: 'ساعة', other: 'ساعات', ), 
+			'cart.dontForgetToAdd' => 'لا تنسَ الإضافة',
+			'cart.services' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('ar'))(n, one: 'خدمة', other: 'خدمات', ), 
+			'cart.total' => 'الإجمالي',
+			'cart.promocode.header' => 'رمز ترويجي',
+			'cart.promocode.hint' => 'أدخل الرمز الترويجي',
+			'cart.promocode.promocodeApplied' => 'تم تطبيق الرمز الترويجي',
+			'cart.promocode.promocodeCannotBeApplied' => 'لا يمكن تطبيق الرمز الترويجي على سلتك',
+			'cart.updateInCart' => 'تحديث في السلة',
+			'cart.cart' => 'سلة',
+			'cart.checkout' => 'إتمام الشراء',
+			'cart.apply' => 'تطبيق',
+			'cart.applyPromocode' => 'تطبيق كود الخصم',
+			'cart.enterPromocode' => 'أدخل كود الخصم',
+			'cart.promocodeRequired' => 'كود الخصم مطلوب',
+			'cart.appliedPromocodes' => 'أكواد الخصم المطبقة',
+			'cart.recommendations' => 'التوصيات',
+			'cart.subtotal' => 'المجموع الفرعي',
+			'cart.discount' => 'الخصم',
+			'cart.minOrder' => 'الحد الأدنى للطلب',
+			'cart.minTime' => 'الحد الأدنى للوقت',
+			'cart.spaceRequired' => 'المساحة المطلوبة',
+			'cart.hours' => 'ساعات',
+			'cart.specialRequests' => 'طلبات خاصة',
+			'cart.enterSpecialRequests' => 'أدخل الطلبات الخاصة...',
+			'cart.errorLoadingCart' => 'خطأ في تحميل السلة',
+			'cart.cartCleared' => 'تم مسح السلة بنجاح',
+			'cart.failedToLoadService' => 'فشل تحميل الخدمة',
+			'cart.pleaseSelectOption' => ({required Object sectionName}) => 'يرجى اختيار ${sectionName}',
+			'cart.pleaseSelectAtLeastOne' => ({required Object sectionName}) => 'يرجى اختيار خيار ${sectionName} واحد على الأقل',
+			'cart.pleaseSelectMore' => ({required Object sectionName}) => 'يرجى اختيار المزيد من خيارات ${sectionName}',
+			'cart.tooManyOptionsSelected' => ({required Object sectionName}) => 'تم اختيار عدد كبير جداً من خيارات ${sectionName}',
+			'cart.pleaseAddAtLeastOne' => ({required Object sectionName}) => 'يرجى إضافة عنصر ${sectionName} واحد على الأقل',
+			'cart.pleaseSelectDateTime' => 'يرجى اختيار التاريخ والوقت',
+			'cart.canapeOptions' => 'خيارات الكانابيه',
+			'cart.options' => 'خيارات',
+			'cart.startDateAndTime' => 'تاريخ ووقت البدء',
+			'cart.perExtraHour' => 'لكل ساعة إضافية',
+			'cart.goToVendorProfile' => ({required Object vendorName}) => 'انتقل إلى ملف ${vendorName}',
+			'settings.title' => 'إعدادات التطبيق',
+			'settings.language' => 'اللغة',
+			'settings.notifications' => 'الإشعارات',
+			'settings.notificationSettings.title' => 'الإشعارات',
+			'settings.notificationSettings.common' => 'عام',
+			'settings.notificationSettings.generalNotification' => 'الإشعار العام',
+			'settings.notificationSettings.sound' => 'الصوت',
+			'settings.notificationSettings.vibrate' => 'الاهتزاز',
+			'settings.notificationSettings.systemAndServicesUpdate' => 'التحديثات والخدمات',
+			'settings.notificationSettings.appUpdates' => 'تحديثات التطبيق',
+			'settings.notificationSettings.billReminder' => 'تذكير الفاتورة',
+			'settings.notificationSettings.promotion' => 'العروض الترويجية',
+			'settings.notificationSettings.discountAvailable' => 'الخصومات المتاحة',
+			'settings.notificationSettings.paymentRequest' => 'طلب الدفع',
+			_ => null,
+		};
 	}
 }
-
