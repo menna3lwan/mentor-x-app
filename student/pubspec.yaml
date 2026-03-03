@@ -65,7 +65,7 @@ dependencies:
     path: ../packages/common/flutter_secure_storage_cache_repository
 
   # Mock Repositories
-  mock_authentication_repository:
+  student_mock_authentication_repository:
     path: packages/mock/mock_authentication_repository
   mock_home_repository:
     path: packages/mock/mock_home_repository
@@ -75,9 +75,9 @@ dependencies:
     path: ../packages/clients/dio_http_client
 
   # Dio Repositories
-  dio_authentication_repository:
+  student_authentication_repository:
     path: packages/student/dio_authentication_repository
-  dio_home_repository:
+  student_home_repository:
     path: packages/student/dio_home_repository
 
 dev_dependencies:

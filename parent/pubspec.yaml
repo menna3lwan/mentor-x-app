@@ -57,6 +57,15 @@ dependencies:
   mentorx_ui:
     path: ../packages/mentorx_ui
 
+  parent_core:
+    path: packages/parent_core
+  parent_authentication_repository:
+    path: packages/parent/dio_authentication_repository
+  parent_mock_authentication_repository:
+    path: packages/mock/mock_authentication_repository
+  flutter_secure_storage_cache_repository:
+    path: ../packages/common/flutter_secure_storage_cache_repository
+
   # Common Repositories
   # flutter_secure_storage_cache_repository:
   #   path: ../packages/common/flutter_secure_storage_cache_repository
@@ -64,8 +73,8 @@ dependencies:
   # Mock Repositories
 
   # Clients
-  # dio_http_client:
-  #   path: ../packages/clients/dio_http_client
+  dio_http_client:
+    path: ../packages/clients/dio_http_client
 
 dev_dependencies:
   # Testing

@@ -1,29 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:parent/screens/teacher_dash_board_screen.dart';
-import 'package:parent/screens/teacher_forget_password_screen.dart';
-import 'package:parent/screens/teacher_login_screen.dart';
-import 'package:parent/screens/teacher_otp_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:parent/app/parent_app.dart';
+import 'package:parent/app/initializers/repositories_factory.dart';
+import 'package:parent/core/blocs/app_authentication_cubit/app_authentication_cubit.dart';
+import 'package:parent/core/blocs/app_locale_cubit/app_locale_cubit.dart';
 
-void main() {
-  runApp(MentorX());
-}
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
-class MentorX extends StatelessWidget {
-  const MentorX({super.key});
+  // Initialize Repositories
+  final appRepos = await RepositoriesFactory.initRepositories();
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'MentorX',
-      initialRoute: TeacherLoginScreen.routeName,
-      routes: {
-        TeacherLoginScreen.routeName: (context) => TeacherLoginScreen(),
-        TeacherForgetPasswordScreen.routeName: (context) =>
-            TeacherForgetPasswordScreen(),
-        TeacherDashBoardScreen.routeName: (context) => TeacherDashBoardScreen(),
-        TeacherOtpScreen.routeName: (context) => TeacherOtpScreen(),
-      },
-    );
-  }
+  final initialUser = await appRepos.authenticationRepository.getCachedUser();
+
+  runApp(
+    MultiRepositoryProvider(
+      providers: appRepos.toProviders(),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) =>
+                AppAuthenticationCubit(initialUser: initialUser),
+          ),
+          BlocProvider(
+            create: (context) => AppLocaleCubit(
+              initialLanguageCode: RepositoriesFactory.initialLanguageCode,
+              cacheRepository: appRepos.cacheRepository,
+            ),
+          ),
+        ],
+        child: const ParentApp(),
+      ),
+    ),
+  );
 }

@@ -1,0 +1,17 @@
+name: parent_mock_authentication_repository
+description: "Mock implementation of Parent AuthenticationRepository."
+version: 0.0.1
+publish_to: none
+
+environment:
+  sdk: ^3.9.2
+
+resolution: workspace
+
+dependencies:
+  mentorx_core:
+    path: ../../../../packages/mentorx_core
+  parent_core:
+    path: ../../parent_core
+  mock_data:
+    path: ../../../../packages/mock_data
