@@ -1,4 +1,4 @@
-name: dio_home_repository
+name: student_home_repository
 description: Dio implementation for HomeRepository.
 version: 1.0.0
 publish_to: none

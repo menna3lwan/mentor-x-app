@@ -33,6 +33,15 @@ workspace:
   - student/packages/mock/mock_authentication_repository
   - student/packages/mock/mock_home_repository
 
+  # Parent core
+  - parent/packages/parent_core
+
+  # Parent Dio repositories
+  - parent/packages/parent/dio_authentication_repository
+
+  # Parent Mock repositories
+  - parent/packages/mock/mock_authentication_repository
+
 dependency_overrides:
   test_api: ^0.7.7
 

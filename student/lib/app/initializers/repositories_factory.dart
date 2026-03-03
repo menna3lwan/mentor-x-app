@@ -1,14 +1,14 @@
 import 'dart:ui';
 
-import 'package:dio_authentication_repository/dio_authentication_repository.dart';
-import 'package:dio_home_repository/dio_home_repository.dart';
+import 'package:student_authentication_repository/dio_authentication_repository.dart';
+import 'package:student_home_repository/dio_home_repository.dart';
 import 'package:dio_http_client/dio_http_client.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage_cache_repository/flutter_secure_storage_cache_repository.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 
-import 'package:mock_authentication_repository/mock_authentication_repository.dart';
+import 'package:student_mock_authentication_repository/mock_authentication_repository.dart';
 import 'package:mock_home_repository/mock_home_repository.dart';
 
 import '../../core/utils/env.dart';
