@@ -22,8 +22,8 @@ final class StatusBlockedPagePage extends StatelessWidget {
           Text(
             context.t.accountStatus.blockedSupportInfo,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: palette.textSecondary,
-                ),
+              color: palette.textSecondary,
+            ),
             textAlign: TextAlign.center,
           ),
         ],

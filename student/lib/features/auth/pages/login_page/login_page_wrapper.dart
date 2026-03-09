@@ -26,8 +26,7 @@ final class LoginPageWrapper extends StatelessWidget {
         return LoginPagePage(
           isLoading: state.isLoading,
           errorMessage: state.isFailure ? state.errorMessage : null,
-          onPhoneChanged: (value) =>
-              bloc.add(LoginPagePhoneChanged(value)),
+          onPhoneChanged: (value) => bloc.add(LoginPagePhoneChanged(value)),
           onSubmit: () => bloc.add(const LoginPageSubmitted()),
         );
       },

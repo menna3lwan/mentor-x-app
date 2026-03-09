@@ -67,10 +67,10 @@ final class _SplashPagePageState extends State<SplashPagePage>
                   Text(
                     context.t.core.appName,
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          color: palette.textForeground,
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: 1.2,
-                        ),
+                      color: palette.textForeground,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: 1.2,
+                    ),
                   ),
                   const SizedBox(height: 40),
                   SizedBox(

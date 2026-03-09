@@ -25,9 +25,9 @@ final class StatusRejectedPagePage extends StatelessWidget {
         child: Text(
           context.t.accountStatus.rejectedReason,
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: palette.statusDanger,
-                fontWeight: FontWeight.w600,
-              ),
+            color: palette.statusDanger,
+            fontWeight: FontWeight.w600,
+          ),
           textAlign: TextAlign.center,
         ),
       ),

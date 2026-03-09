@@ -1,7 +1,8 @@
 part of '../../../../core/routing/app_routes.dart';
 
 @TypedGoRoute<WalkthroughPageRoute>(path: '/walkthrough', name: 'walkthrough')
-final class WalkthroughPageRoute extends GoRouteData with $WalkthroughPageRoute {
+final class WalkthroughPageRoute extends GoRouteData
+    with $WalkthroughPageRoute {
   const WalkthroughPageRoute();
 
   @override

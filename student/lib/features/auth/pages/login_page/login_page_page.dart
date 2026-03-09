@@ -69,18 +69,15 @@ final class _LoginPagePageState extends State<LoginPagePage> {
                     const SizedBox(height: 12),
                     Text(
                       context.t.login.header,
-                      style: Theme.of(context)
-                          .textTheme
-                          .headlineSmall
+                      style: Theme.of(context).textTheme.headlineSmall
                           ?.copyWith(fontWeight: FontWeight.w800),
                     ),
                     const SizedBox(height: 6),
                     Text(
                       context.t.login.subtitle,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodySmall
-                          ?.copyWith(color: palette.textSecondary),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: palette.textSecondary,
+                      ),
                     ),
                     const SizedBox(height: 24),
                     TextFormField(
@@ -127,9 +124,7 @@ final class _LoginPagePageState extends State<LoginPagePage> {
                         ),
                         child: Text(
                           widget.errorMessage!,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodySmall
+                          style: Theme.of(context).textTheme.bodySmall
                               ?.copyWith(color: palette.statusDanger),
                           textAlign: TextAlign.center,
                         ),

@@ -67,19 +67,17 @@ final class OtpPagePage extends StatelessWidget {
                   const SizedBox(height: 16),
                   Text(
                     context.t.login.otp.header,
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleLarge
-                        ?.copyWith(fontWeight: FontWeight.w700),
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     context.t.login.otp.description,
                     textAlign: TextAlign.center,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium
-                        ?.copyWith(color: palette.textSecondary),
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: palette.textSecondary,
+                    ),
                   ),
                   const SizedBox(height: 4),
                   Directionality(
@@ -88,9 +86,9 @@ final class OtpPagePage extends StatelessWidget {
                       phoneNumber,
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.w700,
-                            color: palette.brandPrimary,
-                          ),
+                        fontWeight: FontWeight.w700,
+                        color: palette.brandPrimary,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 24),
@@ -118,10 +116,9 @@ final class OtpPagePage extends StatelessWidget {
                       ),
                       child: Text(
                         errorMessage!,
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodySmall
-                            ?.copyWith(color: palette.statusDanger),
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: palette.statusDanger,
+                        ),
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -148,9 +145,7 @@ final class OtpPagePage extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(vertical: 12),
                             child: Text(
                               '${context.t.login.otp.resendIn} $formattedCountdown',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall
+                              style: Theme.of(context).textTheme.bodySmall
                                   ?.copyWith(color: palette.textSecondary),
                             ),
                           ),

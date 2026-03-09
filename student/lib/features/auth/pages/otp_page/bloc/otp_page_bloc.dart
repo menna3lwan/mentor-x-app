@@ -15,12 +15,14 @@ final class OtpPageBloc extends Bloc<OtpPageEvent, OtpPageState> {
     required String phoneNumber,
     int? otpLength,
     Duration? otpDuration,
-  })  : _authRepository = authRepository,
-        super(OtpPageState(
-          phoneNumber: phoneNumber,
-          otpLength: otpLength ?? 6,
-          resendCountdown: otpDuration?.inSeconds ?? 60,
-        )) {
+  }) : _authRepository = authRepository,
+       super(
+         OtpPageState(
+           phoneNumber: phoneNumber,
+           otpLength: otpLength ?? 6,
+           resendCountdown: otpDuration?.inSeconds ?? 60,
+         ),
+       ) {
     on<OtpPageOtpChanged>(_onOtpChanged);
     on<OtpPageSubmitted>(_onSubmitted);
     on<OtpPageResendRequested>(_onResendRequested);
@@ -43,11 +45,13 @@ final class OtpPageBloc extends Bloc<OtpPageEvent, OtpPageState> {
     OtpPageOtpChanged event,
     Emitter<OtpPageState> emit,
   ) {
-    emit(state.copyWith(
-      otp: event.otp,
-      status: OtpPageStatus.initial,
-      errorMessage: null,
-    ));
+    emit(
+      state.copyWith(
+        otp: event.otp,
+        status: OtpPageStatus.initial,
+        errorMessage: null,
+      ),
+    );
   }
 
   Future<void> _onSubmitted(
@@ -60,20 +64,26 @@ final class OtpPageBloc extends Bloc<OtpPageEvent, OtpPageState> {
 
     try {
       final user = await _authRepository.verifyOtp(state.otp);
-      emit(state.copyWith(
-        status: OtpPageStatus.success,
-        user: user,
-      ));
+      emit(
+        state.copyWith(
+          status: OtpPageStatus.success,
+          user: user,
+        ),
+      );
     } on AuthenticationRepositoryException catch (e) {
-      emit(state.copyWith(
-        status: OtpPageStatus.failure,
-        errorMessage: e.message,
-      ));
+      emit(
+        state.copyWith(
+          status: OtpPageStatus.failure,
+          errorMessage: e.message,
+        ),
+      );
     } catch (e) {
-      emit(state.copyWith(
-        status: OtpPageStatus.failure,
-        errorMessage: e.toString(),
-      ));
+      emit(
+        state.copyWith(
+          status: OtpPageStatus.failure,
+          errorMessage: e.toString(),
+        ),
+      );
     }
   }
 
@@ -87,10 +97,12 @@ final class OtpPageBloc extends Bloc<OtpPageEvent, OtpPageState> {
 
     try {
       final duration = await _authRepository.resendOtp(state.phoneNumber);
-      emit(state.copyWith(
-        isResending: false,
-        resendCountdown: duration?.inSeconds ?? 60,
-      ));
+      emit(
+        state.copyWith(
+          isResending: false,
+          resendCountdown: duration?.inSeconds ?? 60,
+        ),
+      );
       _startCountdown();
     } catch (e) {
       emit(state.copyWith(isResending: false));

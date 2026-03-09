@@ -10,8 +10,8 @@ final class LoginPageBloc extends Bloc<LoginPageEvent, LoginPageState> {
 
   LoginPageBloc({
     required StudentAuthenticationRepository authRepository,
-  })  : _authRepository = authRepository,
-        super(const LoginPageState()) {
+  }) : _authRepository = authRepository,
+       super(const LoginPageState()) {
     on<LoginPagePhoneChanged>(_onPhoneChanged);
     on<LoginPageSubmitted>(_onSubmitted);
   }
@@ -20,11 +20,13 @@ final class LoginPageBloc extends Bloc<LoginPageEvent, LoginPageState> {
     LoginPagePhoneChanged event,
     Emitter<LoginPageState> emit,
   ) {
-    emit(state.copyWith(
-      phoneNumber: event.phoneNumber,
-      status: LoginPageStatus.initial,
-      errorMessage: null,
-    ));
+    emit(
+      state.copyWith(
+        phoneNumber: event.phoneNumber,
+        status: LoginPageStatus.initial,
+        errorMessage: null,
+      ),
+    );
   }
 
   Future<void> _onSubmitted(
@@ -37,21 +39,27 @@ final class LoginPageBloc extends Bloc<LoginPageEvent, LoginPageState> {
 
     try {
       final result = await _authRepository.sendOtp(state.phoneNumber.trim());
-      emit(state.copyWith(
-        status: LoginPageStatus.success,
-        otpLength: result?.otpLength,
-        otpDuration: result?.otpDuration,
-      ));
+      emit(
+        state.copyWith(
+          status: LoginPageStatus.success,
+          otpLength: result?.otpLength,
+          otpDuration: result?.otpDuration,
+        ),
+      );
     } on AuthenticationRepositoryException catch (e) {
-      emit(state.copyWith(
-        status: LoginPageStatus.failure,
-        errorMessage: e.message,
-      ));
+      emit(
+        state.copyWith(
+          status: LoginPageStatus.failure,
+          errorMessage: e.message,
+        ),
+      );
     } catch (e) {
-      emit(state.copyWith(
-        status: LoginPageStatus.failure,
-        errorMessage: e.toString(),
-      ));
+      emit(
+        state.copyWith(
+          status: LoginPageStatus.failure,
+          errorMessage: e.toString(),
+        ),
+      );
     }
   }
 }

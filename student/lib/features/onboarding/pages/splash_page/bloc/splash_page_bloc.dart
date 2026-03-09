@@ -14,9 +14,9 @@ final class SplashPageBloc extends Bloc<SplashPageEvent, SplashPageState> {
   SplashPageBloc({
     required StudentAuthenticationRepository authRepository,
     required CacheRepository cacheRepository,
-  })  : _authRepository = authRepository,
-        _cacheRepository = cacheRepository,
-        super(const SplashPageState()) {
+  }) : _authRepository = authRepository,
+       _cacheRepository = cacheRepository,
+       super(const SplashPageState()) {
     on<SplashPageStarted>(_onStarted);
   }
 
@@ -30,10 +30,12 @@ final class SplashPageBloc extends Bloc<SplashPageEvent, SplashPageState> {
     try {
       final user = await _authRepository.getCachedUser();
       if (user != null) {
-        emit(state.copyWith(
-          status: SplashPageStatus.authenticated,
-          user: user,
-        ));
+        emit(
+          state.copyWith(
+            status: SplashPageStatus.authenticated,
+            user: user,
+          ),
+        );
         return;
       }
     } catch (_) {

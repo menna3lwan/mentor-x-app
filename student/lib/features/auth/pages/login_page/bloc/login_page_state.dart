@@ -39,10 +39,10 @@ final class LoginPageState extends Equatable {
 
   @override
   List<Object?> get props => [
-        phoneNumber,
-        status,
-        errorMessage,
-        otpLength,
-        otpDuration,
-      ];
+    phoneNumber,
+    status,
+    errorMessage,
+    otpLength,
+    otpDuration,
+  ];
 }

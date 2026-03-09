@@ -58,13 +58,13 @@ final class OtpPageState extends Equatable {
 
   @override
   List<Object?> get props => [
-        phoneNumber,
-        otp,
-        otpLength,
-        status,
-        errorMessage,
-        user,
-        resendCountdown,
-        isResending,
-      ];
+    phoneNumber,
+    otp,
+    otpLength,
+    status,
+    errorMessage,
+    user,
+    resendCountdown,
+    isResending,
+  ];
 }

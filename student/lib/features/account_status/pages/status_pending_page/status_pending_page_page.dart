@@ -22,8 +22,8 @@ final class StatusPendingPagePage extends StatelessWidget {
           Text(
             context.t.accountStatus.pendingSupportInfo,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: palette.textSecondary,
-                ),
+              color: palette.textSecondary,
+            ),
             textAlign: TextAlign.center,
           ),
         ],
