@@ -14,7 +14,6 @@ part '../../features/account_status/pages/status_rejected_page/status_rejected_p
 part '../../features/auth/pages/login_page/login_page_route.dart';
 part '../../features/auth/pages/otp_page/otp_page_route.dart';
 part '../../features/home/pages/home_page/home_page_route.dart';
-part '../../features/onboarding/pages/splash_page/splash_page_route.dart';
 part '../../features/onboarding/pages/walkthrough_page/walkthrough_page_route.dart';
 
 part 'app_routes.g.dart';

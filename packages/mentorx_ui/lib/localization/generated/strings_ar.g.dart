@@ -39,6 +39,7 @@ class TranslationsAr implements Translations {
 	@override late final _TranslationsUiAr ui = _TranslationsUiAr._(_root);
 	@override late final _TranslationsCoreAr core = _TranslationsCoreAr._(_root);
 	@override late final _TranslationsInitialLanguageAr initialLanguage = _TranslationsInitialLanguageAr._(_root);
+	@override late final _TranslationsOnboardingAr onboarding = _TranslationsOnboardingAr._(_root);
 	@override late final _TranslationsLoginAr login = _TranslationsLoginAr._(_root);
 	@override late final _TranslationsHomeAr home = _TranslationsHomeAr._(_root);
 	@override late final _TranslationsFormsAr forms = _TranslationsFormsAr._(_root);
@@ -290,6 +291,16 @@ class _TranslationsInitialLanguageAr implements TranslationsInitialLanguageEn {
 	@override String get kContinue => 'موافق';
 }
 
+// Path: onboarding
+class _TranslationsOnboardingAr implements TranslationsOnboardingEn {
+	_TranslationsOnboardingAr._(this._root);
+
+	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
+	@override late final _TranslationsOnboardingStepsAr steps = _TranslationsOnboardingStepsAr._(_root);
+}
+
 // Path: login
 class _TranslationsLoginAr implements TranslationsLoginEn {
 	_TranslationsLoginAr._(this._root);
@@ -518,6 +529,18 @@ class _TranslationsUiMentorXReadMoreAr implements TranslationsUiMentorXReadMoreE
 	@override String get less => 'أقل';
 }
 
+// Path: onboarding.steps
+class _TranslationsOnboardingStepsAr implements TranslationsOnboardingStepsEn {
+	_TranslationsOnboardingStepsAr._(this._root);
+
+	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
+	@override late final _TranslationsOnboardingStepsLearnAr learn = _TranslationsOnboardingStepsLearnAr._(_root);
+	@override late final _TranslationsOnboardingStepsTrackProgressAr trackProgress = _TranslationsOnboardingStepsTrackProgressAr._(_root);
+	@override late final _TranslationsOnboardingStepsQuizzesAr quizzes = _TranslationsOnboardingStepsQuizzesAr._(_root);
+}
+
 // Path: login.otp
 class _TranslationsLoginOtpAr implements TranslationsLoginOtpEn {
 	_TranslationsLoginOtpAr._(this._root);
@@ -636,6 +659,39 @@ class _TranslationsSettingsNotificationSettingsAr implements TranslationsSetting
 	@override String get paymentRequest => 'طلب الدفع';
 }
 
+// Path: onboarding.steps.learn
+class _TranslationsOnboardingStepsLearnAr implements TranslationsOnboardingStepsLearnEn {
+	_TranslationsOnboardingStepsLearnAr._(this._root);
+
+	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'تعلّم';
+	@override String get description => 'يمكنك الوصول إلى دروسك ودوراتك والمواد التعليمية في مكان واحد.';
+}
+
+// Path: onboarding.steps.trackProgress
+class _TranslationsOnboardingStepsTrackProgressAr implements TranslationsOnboardingStepsTrackProgressEn {
+	_TranslationsOnboardingStepsTrackProgressAr._(this._root);
+
+	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'تابع التقدم';
+	@override String get description => 'راقب أداءك الأكاديمي وتابع تطورك خطوة بخطوة.';
+}
+
+// Path: onboarding.steps.quizzes
+class _TranslationsOnboardingStepsQuizzesAr implements TranslationsOnboardingStepsQuizzesEn {
+	_TranslationsOnboardingStepsQuizzesAr._(this._root);
+
+	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'الاختبارات';
+	@override String get description => 'اختبر معلوماتك عبر اختبارات تفاعلية واحصل على نتائج فورية.';
+}
+
 // Path: home.dashboard.actions
 class _TranslationsHomeDashboardActionsAr implements TranslationsHomeDashboardActionsEn {
 	_TranslationsHomeDashboardActionsAr._(this._root);
@@ -698,6 +754,12 @@ extension on TranslationsAr {
 			case 'core.languages.ar': return 'العربية';
 			case 'initialLanguage.header': return 'يرجى تحديد اللغة المفضلة';
 			case 'initialLanguage.kContinue': return 'موافق';
+			case 'onboarding.steps.learn.title': return 'تعلّم';
+			case 'onboarding.steps.learn.description': return 'يمكنك الوصول إلى دروسك ودوراتك والمواد التعليمية في مكان واحد.';
+			case 'onboarding.steps.trackProgress.title': return 'تابع التقدم';
+			case 'onboarding.steps.trackProgress.description': return 'راقب أداءك الأكاديمي وتابع تطورك خطوة بخطوة.';
+			case 'onboarding.steps.quizzes.title': return 'الاختبارات';
+			case 'onboarding.steps.quizzes.description': return 'اختبر معلوماتك عبر اختبارات تفاعلية واحصل على نتائج فورية.';
 			case 'login.header': return 'ادخل رقم الجوال لتسجيل الدخول';
 			case 'login.subtitle': return 'سنرسل لك رمز تحقق';
 			case 'login.phoneNumber': return 'رقم الجوال';

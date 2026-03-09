@@ -63,10 +63,25 @@ final class MentorXRequirements {
       cacheRepository: repositories.cacheRepository,
     );
 
-    final String initialRoute = await _determineTheInitialRoute(
-      user: user,
-      cacheRepository: repositories.cacheRepository,
-    );
+    final String initialRoute;
+    if (user != null) {
+      switch (user.status) {
+        case StudentStatus.active:
+          initialRoute = '/';
+        case StudentStatus.pending:
+          initialRoute = '/status-pending';
+        case StudentStatus.blocked:
+        case StudentStatus.suspended:
+          initialRoute = '/status-blocked';
+        case StudentStatus.rejected:
+          initialRoute = '/status-rejected';
+      }
+    } else {
+      final hasSeenOnboarding = await repositories.cacheRepository.get(
+        'has_seen_onboarding',
+      );
+      initialRoute = hasSeenOnboarding == 'true' ? '/login' : '/walkthrough';
+    }
 
     final AppRouter appRouter = AppRouter(
       navigatorKey: rootNavigatorKey,
@@ -123,27 +138,5 @@ final class MentorXRequirements {
         overlays: [SystemUiOverlay.top],
       ).ignore();
     }
-  }
-
-  static Future<String> _determineTheInitialRoute({
-    required CacheRepository cacheRepository,
-    required StudentEntity? user,
-  }) async {
-    if (user != null) {
-      return switch (user.status) {
-        StudentStatus.active => '/',
-        StudentStatus.pending => '/status-pending',
-        StudentStatus.blocked => '/status-blocked',
-        StudentStatus.suspended => '/status-blocked',
-        StudentStatus.rejected => '/status-rejected',
-      };
-    }
-
-    final hasSeenOnboarding = await cacheRepository.get('has_seen_onboarding');
-    if (hasSeenOnboarding == null) {
-      return '/walkthrough';
-    }
-
-    return '/login';
   }
 }

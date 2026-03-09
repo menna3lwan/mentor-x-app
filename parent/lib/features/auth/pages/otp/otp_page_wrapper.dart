@@ -7,8 +7,6 @@ import 'package:parent/core/core.dart';
 import 'package:parent/widgets/clickable_text_widget.dart';
 import 'package:parent/widgets/matrial_button_widget.dart';
 import 'package:parent/features/features.dart';
-import 'bloc/otp_bloc.dart';
-import 'otp_page.dart';
 
 final class OtpPageWrapper extends StatefulWidget {
   final String phone;

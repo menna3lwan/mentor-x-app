@@ -10,6 +10,12 @@ final class StatusRejectedPageRoute extends GoRouteData
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return const StatusRejectedPagePage();
+    return BlocProvider<StatusRejectedPageBloc>(
+      create: (_) => StatusRejectedPageBloc()
+        ..add(
+          const StatusRejectedPageInitialized(),
+        ),
+      child: const StatusRejectedPageWrapper(),
+    );
   }
 }

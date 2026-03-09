@@ -42,6 +42,7 @@ class Translations implements BaseTranslations<AppLocale, Translations> {
 	late final TranslationsUiEn ui = TranslationsUiEn._(_root);
 	late final TranslationsCoreEn core = TranslationsCoreEn._(_root);
 	late final TranslationsInitialLanguageEn initialLanguage = TranslationsInitialLanguageEn._(_root);
+	late final TranslationsOnboardingEn onboarding = TranslationsOnboardingEn._(_root);
 	late final TranslationsLoginEn login = TranslationsLoginEn._(_root);
 	late final TranslationsHomeEn home = TranslationsHomeEn._(_root);
 	late final TranslationsFormsEn forms = TranslationsFormsEn._(_root);
@@ -302,6 +303,16 @@ class TranslationsInitialLanguageEn {
 
 	/// en: 'Continue'
 	String get kContinue => 'Continue';
+}
+
+// Path: onboarding
+class TranslationsOnboardingEn {
+	TranslationsOnboardingEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+	late final TranslationsOnboardingStepsEn steps = TranslationsOnboardingStepsEn._(_root);
 }
 
 // Path: login
@@ -731,6 +742,18 @@ class TranslationsUiMentorXReadMoreEn {
 	String get less => 'Less';
 }
 
+// Path: onboarding.steps
+class TranslationsOnboardingStepsEn {
+	TranslationsOnboardingStepsEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+	late final TranslationsOnboardingStepsLearnEn learn = TranslationsOnboardingStepsLearnEn._(_root);
+	late final TranslationsOnboardingStepsTrackProgressEn trackProgress = TranslationsOnboardingStepsTrackProgressEn._(_root);
+	late final TranslationsOnboardingStepsQuizzesEn quizzes = TranslationsOnboardingStepsQuizzesEn._(_root);
+}
+
 // Path: login.otp
 class TranslationsLoginOtpEn {
 	TranslationsLoginOtpEn._(this._root);
@@ -958,6 +981,51 @@ class TranslationsSettingsNotificationSettingsEn {
 	String get paymentRequest => 'Payment Request';
 }
 
+// Path: onboarding.steps.learn
+class TranslationsOnboardingStepsLearnEn {
+	TranslationsOnboardingStepsLearnEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Learn'
+	String get title => 'Learn';
+
+	/// en: 'Access your lessons, courses, and educational materials all in one place.'
+	String get description => 'Access your lessons, courses, and educational materials all in one place.';
+}
+
+// Path: onboarding.steps.trackProgress
+class TranslationsOnboardingStepsTrackProgressEn {
+	TranslationsOnboardingStepsTrackProgressEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Track Progress'
+	String get title => 'Track Progress';
+
+	/// en: 'Monitor your academic performance and track your growth over time.'
+	String get description => 'Monitor your academic performance and track your growth over time.';
+}
+
+// Path: onboarding.steps.quizzes
+class TranslationsOnboardingStepsQuizzesEn {
+	TranslationsOnboardingStepsQuizzesEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Quizzes'
+	String get title => 'Quizzes';
+
+	/// en: 'Test your knowledge with interactive quizzes and get instant feedback.'
+	String get description => 'Test your knowledge with interactive quizzes and get instant feedback.';
+}
+
 // Path: home.dashboard.actions
 class TranslationsHomeDashboardActionsEn {
 	TranslationsHomeDashboardActionsEn._(this._root);
@@ -1032,6 +1100,12 @@ extension on Translations {
 			case 'core.languages.ar': return 'العربية';
 			case 'initialLanguage.header': return 'Select your preferred language';
 			case 'initialLanguage.kContinue': return 'Continue';
+			case 'onboarding.steps.learn.title': return 'Learn';
+			case 'onboarding.steps.learn.description': return 'Access your lessons, courses, and educational materials all in one place.';
+			case 'onboarding.steps.trackProgress.title': return 'Track Progress';
+			case 'onboarding.steps.trackProgress.description': return 'Monitor your academic performance and track your growth over time.';
+			case 'onboarding.steps.quizzes.title': return 'Quizzes';
+			case 'onboarding.steps.quizzes.description': return 'Test your knowledge with interactive quizzes and get instant feedback.';
 			case 'login.header': return 'Enter your phone number to sign in';
 			case 'login.subtitle': return 'We will send you a verification code';
 			case 'login.phoneNumber': return 'Phone Number';

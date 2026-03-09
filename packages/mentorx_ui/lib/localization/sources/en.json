@@ -52,6 +52,22 @@
         "header": "Select your preferred language",
         "continue": "Continue"
     },
+    "onboarding": {
+        "steps": {
+            "learn": {
+                "title": "Learn",
+                "description": "Access your lessons, courses, and educational materials all in one place."
+            },
+            "trackProgress": {
+                "title": "Track Progress",
+                "description": "Monitor your academic performance and track your growth over time."
+            },
+            "quizzes": {
+                "title": "Quizzes",
+                "description": "Test your knowledge with interactive quizzes and get instant feedback."
+            }
+        }
+    },
     "login": {
         "header": "Enter your phone number to sign in",
         "subtitle": "We will send you a verification code",

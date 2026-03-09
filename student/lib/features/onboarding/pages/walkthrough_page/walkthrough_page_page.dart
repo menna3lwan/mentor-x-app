@@ -1,66 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 
-final class WalkthroughPagePage extends StatefulWidget {
-  final VoidCallback onComplete;
+final class WalkthroughPagePage extends StatelessWidget {
+  final PageController pageController;
+  final int currentPage;
+  final ValueChanged<int> onPageChanged;
+  final bool isLoading;
+  final VoidCallback onNext;
   final VoidCallback onSkip;
 
   const WalkthroughPagePage({
     super.key,
-    required this.onComplete,
+    required this.pageController,
+    required this.currentPage,
+    required this.onPageChanged,
+    required this.isLoading,
+    required this.onNext,
     required this.onSkip,
   });
-
-  @override
-  State<WalkthroughPagePage> createState() => _WalkthroughPagePageState();
-}
-
-final class _WalkthroughPagePageState extends State<WalkthroughPagePage> {
-  final PageController _pageController = PageController();
-  int _currentPage = 0;
-
-  static const _steps = [
-    _OnboardingStep(
-      icon: Icons.school_outlined,
-      title: 'Learn',
-      description:
-          'Access your lessons, courses, and educational materials all in one place.',
-    ),
-    _OnboardingStep(
-      icon: Icons.trending_up_outlined,
-      title: 'Track Progress',
-      description:
-          'Monitor your academic performance and track your growth over time.',
-    ),
-    _OnboardingStep(
-      icon: Icons.quiz_outlined,
-      title: 'Quizzes',
-      description:
-          'Test your knowledge with interactive quizzes and get instant feedback.',
-    ),
-  ];
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
-
-  void _onNext() {
-    if (_currentPage < _steps.length - 1) {
-      _pageController.nextPage(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
-    } else {
-      widget.onComplete();
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     final palette = MentorXThemeColorPalette.light;
     final textTheme = Theme.of(context).textTheme;
+    final steps = _steps(context);
 
     return Scaffold(
       body: SafeArea(
@@ -72,7 +35,7 @@ final class _WalkthroughPagePageState extends State<WalkthroughPagePage> {
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: TextButton(
-                  onPressed: widget.onSkip,
+                  onPressed: isLoading ? null : onSkip,
                   child: Text(
                     context.t.ui.common.skip,
                     style: textTheme.bodyLarge?.copyWith(
@@ -86,13 +49,11 @@ final class _WalkthroughPagePageState extends State<WalkthroughPagePage> {
             // PageView
             Expanded(
               child: PageView.builder(
-                controller: _pageController,
-                itemCount: _steps.length,
-                onPageChanged: (index) {
-                  setState(() => _currentPage = index);
-                },
+                controller: pageController,
+                itemCount: steps.length,
+                onPageChanged: onPageChanged,
                 itemBuilder: (context, index) {
-                  final step = _steps[index];
+                  final step = steps[index];
                   return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 40),
                     child: Column(
@@ -142,14 +103,14 @@ final class _WalkthroughPagePageState extends State<WalkthroughPagePage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(
-                  _steps.length,
+                  steps.length,
                   (index) => AnimatedContainer(
                     duration: const Duration(milliseconds: 300),
                     margin: const EdgeInsets.symmetric(horizontal: 4),
-                    width: _currentPage == index ? 24 : 8,
+                    width: currentPage == index ? 24 : 8,
                     height: 8,
                     decoration: BoxDecoration(
-                      color: _currentPage == index
+                      color: currentPage == index
                           ? palette.brandPrimary
                           : palette.brandPrimary.withAlpha(60),
                       borderRadius: BorderRadius.circular(4),
@@ -166,7 +127,7 @@ final class _WalkthroughPagePageState extends State<WalkthroughPagePage> {
                 width: double.infinity,
                 height: 52,
                 child: FilledButton(
-                  onPressed: _onNext,
+                  onPressed: isLoading ? null : onNext,
                   style: FilledButton.styleFrom(
                     backgroundColor: palette.brandPrimary,
                     foregroundColor: palette.textForeground,
@@ -175,7 +136,7 @@ final class _WalkthroughPagePageState extends State<WalkthroughPagePage> {
                     ),
                   ),
                   child: Text(
-                    _currentPage < _steps.length - 1
+                    currentPage < steps.length - 1
                         ? context.t.ui.common.next
                         : context.t.ui.common.getStarted,
                     style: textTheme.titleMedium?.copyWith(
@@ -190,6 +151,26 @@ final class _WalkthroughPagePageState extends State<WalkthroughPagePage> {
         ),
       ),
     );
+  }
+
+  List<_OnboardingStep> _steps(BuildContext context) {
+    return [
+      _OnboardingStep(
+        icon: Icons.school_outlined,
+        title: context.t.onboarding.steps.learn.title,
+        description: context.t.onboarding.steps.learn.description,
+      ),
+      _OnboardingStep(
+        icon: Icons.trending_up_outlined,
+        title: context.t.onboarding.steps.trackProgress.title,
+        description: context.t.onboarding.steps.trackProgress.description,
+      ),
+      _OnboardingStep(
+        icon: Icons.quiz_outlined,
+        title: context.t.onboarding.steps.quizzes.title,
+        description: context.t.onboarding.steps.quizzes.description,
+      ),
+    ];
   }
 }
 

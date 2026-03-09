@@ -1,31 +1,62 @@
 import 'package:flutter/material.dart';
-import 'package:mentorx_core/mentorx_core.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/core.dart';
+import 'bloc/walkthrough_page_bloc.dart';
 import 'walkthrough_page_page.dart';
 
-final class WalkthroughPageWrapper extends StatelessWidget {
-  final CacheRepository cacheRepository;
+final class WalkthroughPageWrapper extends StatefulWidget {
+  const WalkthroughPageWrapper({super.key});
 
-  const WalkthroughPageWrapper({
-    super.key,
-    required this.cacheRepository,
-  });
+  @override
+  State<WalkthroughPageWrapper> createState() => _WalkthroughPageWrapperState();
+}
+
+final class _WalkthroughPageWrapperState extends State<WalkthroughPageWrapper> {
+  static const int _totalSteps = 3;
+  final PageController _pageController = PageController();
+  int _currentPage = 0;
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  void _onPageChanged(int page) {
+    setState(() => _currentPage = page);
+  }
+
+  void _onNext(WalkthroughPageBloc bloc) {
+    if (_currentPage < _totalSteps - 1) {
+      _pageController.nextPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+      return;
+    }
+    bloc.add(const WalkthroughPageCompleted());
+  }
 
   @override
   Widget build(BuildContext context) {
-    return WalkthroughPagePage(
-      onComplete: () async {
-        await cacheRepository.put('has_seen_onboarding', 'true');
-        if (context.mounted) {
+    return BlocConsumer<WalkthroughPageBloc, WalkthroughPageState>(
+      listenWhen: (previous, current) => previous.status != current.status,
+      listener: (context, state) {
+        if (state.status == WalkthroughPageStatus.completed) {
           const LoginPageRoute().go(context);
         }
       },
-      onSkip: () async {
-        await cacheRepository.put('has_seen_onboarding', 'true');
-        if (context.mounted) {
-          const LoginPageRoute().go(context);
-        }
+      builder: (context, state) {
+        final bloc = context.read<WalkthroughPageBloc>();
+        return WalkthroughPagePage(
+          pageController: _pageController,
+          currentPage: _currentPage,
+          onPageChanged: _onPageChanged,
+          isLoading: state.isSubmitting,
+          onNext: () => _onNext(bloc),
+          onSkip: () => bloc.add(const WalkthroughPageSkipped()),
+        );
       },
     );
   }

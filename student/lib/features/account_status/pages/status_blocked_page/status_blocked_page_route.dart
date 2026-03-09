@@ -10,6 +10,12 @@ final class StatusBlockedPageRoute extends GoRouteData
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return const StatusBlockedPagePage();
+    return BlocProvider<StatusBlockedPageBloc>(
+      create: (_) => StatusBlockedPageBloc()
+        ..add(
+          const StatusBlockedPageInitialized(),
+        ),
+      child: const StatusBlockedPageWrapper(),
+    );
   }
 }

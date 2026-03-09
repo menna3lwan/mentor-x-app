@@ -7,8 +7,11 @@ final class WalkthroughPageRoute extends GoRouteData
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return WalkthroughPageWrapper(
-      cacheRepository: context.read<CacheRepository>(),
+    return BlocProvider<WalkthroughPageBloc>(
+      create: (context) => WalkthroughPageBloc(
+        cacheRepository: context.read<CacheRepository>(),
+      ),
+      child: const WalkthroughPageWrapper(),
     );
   }
 }

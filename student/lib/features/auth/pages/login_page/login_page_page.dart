@@ -2,38 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 
-final class LoginPagePage extends StatefulWidget {
+final class LoginPagePage extends StatelessWidget {
+  final GlobalKey<FormState> formKey;
+  final TextEditingController phoneController;
   final bool isLoading;
   final String? errorMessage;
+  final List<TextInputFormatter> inputFormatters;
+  final String? Function(String?) phoneValidator;
   final ValueChanged<String> onPhoneChanged;
   final VoidCallback onSubmit;
 
   const LoginPagePage({
     super.key,
+    required this.formKey,
+    required this.phoneController,
     required this.isLoading,
     required this.errorMessage,
+    required this.inputFormatters,
+    required this.phoneValidator,
     required this.onPhoneChanged,
     required this.onSubmit,
   });
-
-  @override
-  State<LoginPagePage> createState() => _LoginPagePageState();
-}
-
-final class _LoginPagePageState extends State<LoginPagePage> {
-  final _formKey = GlobalKey<FormState>();
-  final _phoneController = TextEditingController();
-
-  @override
-  void dispose() {
-    _phoneController.dispose();
-    super.dispose();
-  }
-
-  void _handleSubmit() {
-    if (!(_formKey.currentState?.validate() ?? false)) return;
-    widget.onSubmit();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +36,7 @@ final class _LoginPagePageState extends State<LoginPagePage> {
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 400),
               child: Form(
-                key: _formKey,
+                key: formKey,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -81,14 +70,11 @@ final class _LoginPagePageState extends State<LoginPagePage> {
                     ),
                     const SizedBox(height: 24),
                     TextFormField(
-                      controller: _phoneController,
+                      controller: phoneController,
                       keyboardType: TextInputType.phone,
                       textDirection: TextDirection.ltr,
                       textAlign: TextAlign.left,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly,
-                        LengthLimitingTextInputFormatter(11),
-                      ],
+                      inputFormatters: inputFormatters,
                       decoration: InputDecoration(
                         labelText: context.t.login.phoneNumber,
                         hintText: context.t.login.phoneHint,
@@ -96,20 +82,11 @@ final class _LoginPagePageState extends State<LoginPagePage> {
                       ),
                       autofillHints: const [AutofillHints.telephoneNumber],
                       textInputAction: TextInputAction.done,
-                      onChanged: widget.onPhoneChanged,
-                      onFieldSubmitted: (_) => _handleSubmit(),
-                      validator: (value) {
-                        final input = value?.trim() ?? '';
-                        if (input.isEmpty) {
-                          return context.t.forms.required;
-                        }
-                        if (!input.startsWith('01') || input.length != 11) {
-                          return context.t.login.phoneValidationError;
-                        }
-                        return null;
-                      },
+                      onChanged: onPhoneChanged,
+                      onFieldSubmitted: (_) => onSubmit(),
+                      validator: phoneValidator,
                     ),
-                    if (widget.errorMessage != null) ...[
+                    if (errorMessage != null) ...[
                       const SizedBox(height: 12),
                       Container(
                         width: double.infinity,
@@ -123,7 +100,7 @@ final class _LoginPagePageState extends State<LoginPagePage> {
                           ),
                         ),
                         child: Text(
-                          widget.errorMessage!,
+                          errorMessage!,
                           style: Theme.of(context).textTheme.bodySmall
                               ?.copyWith(color: palette.statusDanger),
                           textAlign: TextAlign.center,
@@ -134,8 +111,8 @@ final class _LoginPagePageState extends State<LoginPagePage> {
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: widget.isLoading ? null : _handleSubmit,
-                        child: widget.isLoading
+                        onPressed: isLoading ? null : onSubmit,
+                        child: isLoading
                             ? const SizedBox(
                                 width: 20,
                                 height: 20,
