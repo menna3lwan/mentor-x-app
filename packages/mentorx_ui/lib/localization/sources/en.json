@@ -6,7 +6,11 @@
             "viewAll": "View All",
             "required": "Required",
             "optional": "Optional",
-            "customization": "Customization"
+            "customization": "Customization",
+            "skip": "Skip",
+            "next": "Next",
+            "getStarted": "Get Started",
+            "backToLogin": "Back to Login"
         },
         "errors": {
             "somethingWentWrong": "Something went wrong",
@@ -50,7 +54,10 @@
     },
     "login": {
         "header": "Enter your phone number to sign in",
+        "subtitle": "We will send you a verification code",
         "phoneNumber": "Phone Number",
+        "phoneHint": "01XXXXXXXXX",
+        "phoneValidationError": "Please enter a valid phone number",
         "signIn": "Sign In",
         "otp": {
             "header": "Confirmation code",
@@ -58,6 +65,8 @@
             "confirm": "Confirm",
             "otpWasVerifiedSuccessfully": "OTP was verified successfully",
             "resend": "Resend",
+            "resendIn": "Resend in",
+            "editNumber": "Edit Number",
             "otpWasResentSuccessfully": "OTP was resent successfully"
         }
     },
@@ -329,6 +338,17 @@
         "yemen": "Yemen",
         "zambia": "Zambia",
         "zimbabwe": "Zimbabwe"
+    },
+    "accountStatus": {
+        "pendingTitle": "Account Under Review",
+        "pendingDescription": "Your account is currently being reviewed. We will notify you once approved.",
+        "pendingSupportInfo": "If you have questions, please contact support.",
+        "rejectedTitle": "Account Rejected",
+        "rejectedDescription": "Unfortunately, your account application has been rejected.",
+        "rejectedReason": "Please contact support for more information about the reason.",
+        "blockedTitle": "Account Blocked",
+        "blockedDescription": "Your account has been blocked. Please contact support for assistance.",
+        "blockedSupportInfo": "If you believe this is an error, please reach out to our support team."
     },
     "cart": {
         "yourCart": "Your Cart",

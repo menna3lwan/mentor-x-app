@@ -6,7 +6,11 @@
             "viewAll": "عرض الكل",
             "required": "مطلوب",
             "optional": "اختياري",
-            "customization": "التخصيص"
+            "customization": "التخصيص",
+            "skip": "تخطي",
+            "next": "التالي",
+            "getStarted": "ابدأ الآن",
+            "backToLogin": "العودة لتسجيل الدخول"
         },
         "errors": {
             "somethingWentWrong": "حدث خطأ ما",
@@ -50,14 +54,19 @@
     },
     "login": {
         "header": "ادخل رقم الجوال لتسجيل الدخول",
+        "subtitle": "سنرسل لك رمز تحقق",
         "phoneNumber": "رقم الجوال",
+        "phoneHint": "01XXXXXXXXX",
+        "phoneValidationError": "يرجى إدخال رقم هاتف صحيح",
         "signIn": "تسجيل الدخول",
         "otp": {
-            "header": "رمز التأكيد",
-            "description": "لقد ارسلنا رمز تأكيد لجوالك. ادخله هنا للمتابعة.",
-            "confirm": "تأكيد",
-            "otpWasVerifiedSuccessfully": "تم التحقق من رمز التأكيد بنجاح",
+            "header": "رمز التأكيد",
+            "description": "لقد ارسلنا رمز تأكيد لجوالك. ادخله هنا للمتابعة.",
+            "confirm": "تأكيد",
+            "otpWasVerifiedSuccessfully": "تم التحقق من رمز التأكيد بنجاح",
             "resend": "اعادة الارسال",
+            "resendIn": "إعادة الإرسال خلال",
+            "editNumber": "تعديل الرقم",
             "otpWasResentSuccessfully": "تم اعادة الارسال بنجاح"
         }
     },
@@ -329,6 +338,17 @@
         "yemen": "اليمن",
         "zambia": "زامبيا",
         "zimbabwe": "زيمبابوي"
+    },
+    "accountStatus": {
+        "pendingTitle": "الحساب قيد المراجعة",
+        "pendingDescription": "حسابك قيد المراجعة حالياً. سنقوم بإعلامك فور الموافقة.",
+        "pendingSupportInfo": "إذا كان لديك أي استفسار، يرجى التواصل مع الدعم.",
+        "rejectedTitle": "تم رفض الحساب",
+        "rejectedDescription": "للأسف، تم رفض طلب حسابك.",
+        "rejectedReason": "يرجى التواصل مع الدعم لمعرفة المزيد عن السبب.",
+        "blockedTitle": "الحساب محظور",
+        "blockedDescription": "تم حظر حسابك. يرجى التواصل مع الدعم للمساعدة.",
+        "blockedSupportInfo": "إذا كنت تعتقد أن هذا خطأ، يرجى التواصل مع فريق الدعم."
     },
     "cart": {
         "yourCart": "سلتك",

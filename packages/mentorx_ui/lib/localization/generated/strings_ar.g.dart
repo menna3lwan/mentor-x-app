@@ -245,6 +245,7 @@ class TranslationsAr implements Translations {
 		'zambia': 'زامبيا',
 		'zimbabwe': 'زيمبابوي',
 	};
+	@override late final _TranslationsAccountStatusAr accountStatus = _TranslationsAccountStatusAr._(_root);
 	@override late final _TranslationsCartAr cart = _TranslationsCartAr._(_root);
 	@override late final _TranslationsSettingsAr settings = _TranslationsSettingsAr._(_root);
 }
@@ -297,7 +298,10 @@ class _TranslationsLoginAr implements TranslationsLoginEn {
 
 	// Translations
 	@override String get header => 'ادخل رقم الجوال لتسجيل الدخول';
+	@override String get subtitle => 'سنرسل لك رمز تحقق';
 	@override String get phoneNumber => 'رقم الجوال';
+	@override String get phoneHint => '01XXXXXXXXX';
+	@override String get phoneValidationError => 'يرجى إدخال رقم هاتف صحيح';
 	@override String get signIn => 'تسجيل الدخول';
 	@override late final _TranslationsLoginOtpAr otp = _TranslationsLoginOtpAr._(_root);
 }
@@ -353,6 +357,24 @@ class _TranslationsExceptionsPromocodeExceptionsAr implements TranslationsExcept
 
 	// Translations
 	@override String get cantBeApplied => 'لا يمكن تطبيق الرمز الترويجي على سلتك';
+}
+
+// Path: accountStatus
+class _TranslationsAccountStatusAr implements TranslationsAccountStatusEn {
+	_TranslationsAccountStatusAr._(this._root);
+
+	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
+	@override String get pendingTitle => 'الحساب قيد المراجعة';
+	@override String get pendingDescription => 'حسابك قيد المراجعة حالياً. سنقوم بإعلامك فور الموافقة.';
+	@override String get pendingSupportInfo => 'إذا كان لديك أي استفسار، يرجى التواصل مع الدعم.';
+	@override String get rejectedTitle => 'تم رفض الحساب';
+	@override String get rejectedDescription => 'للأسف، تم رفض طلب حسابك.';
+	@override String get rejectedReason => 'يرجى التواصل مع الدعم لمعرفة المزيد عن السبب.';
+	@override String get blockedTitle => 'الحساب محظور';
+	@override String get blockedDescription => 'تم حظر حسابك. يرجى التواصل مع الدعم للمساعدة.';
+	@override String get blockedSupportInfo => 'إذا كنت تعتقد أن هذا خطأ، يرجى التواصل مع فريق الدعم.';
 }
 
 // Path: cart
@@ -443,6 +465,10 @@ class _TranslationsUiCommonAr implements TranslationsUiCommonEn {
 	@override String get required => 'مطلوب';
 	@override String get optional => 'اختياري';
 	@override String get customization => 'التخصيص';
+	@override String get skip => 'تخطي';
+	@override String get next => 'التالي';
+	@override String get getStarted => 'ابدأ الآن';
+	@override String get backToLogin => 'العودة لتسجيل الدخول';
 }
 
 // Path: ui.errors
@@ -499,11 +525,13 @@ class _TranslationsLoginOtpAr implements TranslationsLoginOtpEn {
 	final TranslationsAr _root; // ignore: unused_field
 
 	// Translations
-	@override String get header => 'رمز التأكيد';
-	@override String get description => 'لقد ارسلنا رمز تأكيد لجوالك. ادخله هنا للمتابعة.';
-	@override String get confirm => 'تأكيد';
-	@override String get otpWasVerifiedSuccessfully => 'تم التحقق من رمز التأكيد بنجاح';
+	@override String get header => 'رمز التأكيد';
+	@override String get description => 'لقد ارسلنا رمز تأكيد لجوالك. ادخله هنا للمتابعة.';
+	@override String get confirm => 'تأكيد';
+	@override String get otpWasVerifiedSuccessfully => 'تم التحقق من رمز التأكيد بنجاح';
 	@override String get resend => 'اعادة الارسال';
+	@override String get resendIn => 'إعادة الإرسال خلال';
+	@override String get editNumber => 'تعديل الرقم';
 	@override String get otpWasResentSuccessfully => 'تم اعادة الارسال بنجاح';
 }
 
@@ -641,6 +669,10 @@ extension on TranslationsAr {
 			case 'ui.common.required': return 'مطلوب';
 			case 'ui.common.optional': return 'اختياري';
 			case 'ui.common.customization': return 'التخصيص';
+			case 'ui.common.skip': return 'تخطي';
+			case 'ui.common.next': return 'التالي';
+			case 'ui.common.getStarted': return 'ابدأ الآن';
+			case 'ui.common.backToLogin': return 'العودة لتسجيل الدخول';
 			case 'ui.errors.somethingWentWrong': return 'حدث خطأ ما';
 			case 'ui.errors.retry': return 'إعادة المحاولة';
 			case 'ui.dateTime.yesterday': return 'أمس';
@@ -667,13 +699,18 @@ extension on TranslationsAr {
 			case 'initialLanguage.header': return 'يرجى تحديد اللغة المفضلة';
 			case 'initialLanguage.kContinue': return 'موافق';
 			case 'login.header': return 'ادخل رقم الجوال لتسجيل الدخول';
+			case 'login.subtitle': return 'سنرسل لك رمز تحقق';
 			case 'login.phoneNumber': return 'رقم الجوال';
+			case 'login.phoneHint': return '01XXXXXXXXX';
+			case 'login.phoneValidationError': return 'يرجى إدخال رقم هاتف صحيح';
 			case 'login.signIn': return 'تسجيل الدخول';
-			case 'login.otp.header': return 'رمز التأكيد';
-			case 'login.otp.description': return 'لقد ارسلنا رمز تأكيد لجوالك. ادخله هنا للمتابعة.';
-			case 'login.otp.confirm': return 'تأكيد';
-			case 'login.otp.otpWasVerifiedSuccessfully': return 'تم التحقق من رمز التأكيد بنجاح';
+			case 'login.otp.header': return 'رمز التأكيد';
+			case 'login.otp.description': return 'لقد ارسلنا رمز تأكيد لجوالك. ادخله هنا للمتابعة.';
+			case 'login.otp.confirm': return 'تأكيد';
+			case 'login.otp.otpWasVerifiedSuccessfully': return 'تم التحقق من رمز التأكيد بنجاح';
 			case 'login.otp.resend': return 'اعادة الارسال';
+			case 'login.otp.resendIn': return 'إعادة الإرسال خلال';
+			case 'login.otp.editNumber': return 'تعديل الرقم';
 			case 'login.otp.otpWasResentSuccessfully': return 'تم اعادة الارسال بنجاح';
 			case 'home.main.home': return 'الرئيسية';
 			case 'home.main.favorites': return 'المفضلة';
@@ -922,6 +959,15 @@ extension on TranslationsAr {
 			case 'countries.yemen': return 'اليمن';
 			case 'countries.zambia': return 'زامبيا';
 			case 'countries.zimbabwe': return 'زيمبابوي';
+			case 'accountStatus.pendingTitle': return 'الحساب قيد المراجعة';
+			case 'accountStatus.pendingDescription': return 'حسابك قيد المراجعة حالياً. سنقوم بإعلامك فور الموافقة.';
+			case 'accountStatus.pendingSupportInfo': return 'إذا كان لديك أي استفسار، يرجى التواصل مع الدعم.';
+			case 'accountStatus.rejectedTitle': return 'تم رفض الحساب';
+			case 'accountStatus.rejectedDescription': return 'للأسف، تم رفض طلب حسابك.';
+			case 'accountStatus.rejectedReason': return 'يرجى التواصل مع الدعم لمعرفة المزيد عن السبب.';
+			case 'accountStatus.blockedTitle': return 'الحساب محظور';
+			case 'accountStatus.blockedDescription': return 'تم حظر حسابك. يرجى التواصل مع الدعم للمساعدة.';
+			case 'accountStatus.blockedSupportInfo': return 'إذا كنت تعتقد أن هذا خطأ، يرجى التواصل مع فريق الدعم.';
 			case 'cart.yourCart': return 'سلتك';
 			case 'cart.emptyCart': return 'سلتك فارغة';
 			case 'cart.browseServices': return 'تصفح الخدمات';

@@ -129,6 +129,21 @@ final class MentorXRequirements {
     required CacheRepository cacheRepository,
     required StudentEntity? user,
   }) async {
-    return '/';
+    if (user != null) {
+      return switch (user.status) {
+        StudentStatus.active => '/',
+        StudentStatus.pending => '/status-pending',
+        StudentStatus.blocked => '/status-blocked',
+        StudentStatus.suspended => '/status-blocked',
+        StudentStatus.rejected => '/status-rejected',
+      };
+    }
+
+    final hasSeenOnboarding = await cacheRepository.get('has_seen_onboarding');
+    if (hasSeenOnboarding == null) {
+      return '/walkthrough';
+    }
+
+    return '/login';
   }
 }

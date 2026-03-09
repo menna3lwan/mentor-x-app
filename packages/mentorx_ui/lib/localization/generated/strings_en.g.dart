@@ -248,6 +248,7 @@ class Translations implements BaseTranslations<AppLocale, Translations> {
 		'zambia': 'Zambia',
 		'zimbabwe': 'Zimbabwe',
 	};
+	late final TranslationsAccountStatusEn accountStatus = TranslationsAccountStatusEn._(_root);
 	late final TranslationsCartEn cart = TranslationsCartEn._(_root);
 	late final TranslationsSettingsEn settings = TranslationsSettingsEn._(_root);
 }
@@ -314,8 +315,17 @@ class TranslationsLoginEn {
 	/// en: 'Enter your phone number to sign in'
 	String get header => 'Enter your phone number to sign in';
 
+	/// en: 'We will send you a verification code'
+	String get subtitle => 'We will send you a verification code';
+
 	/// en: 'Phone Number'
 	String get phoneNumber => 'Phone Number';
+
+	/// en: '01XXXXXXXXX'
+	String get phoneHint => '01XXXXXXXXX';
+
+	/// en: 'Please enter a valid phone number'
+	String get phoneValidationError => 'Please enter a valid phone number';
 
 	/// en: 'Sign In'
 	String get signIn => 'Sign In';
@@ -401,6 +411,42 @@ class TranslationsExceptionsPromocodeExceptionsEn {
 
 	/// en: 'Promocode cannot be applied to your cart'
 	String get cantBeApplied => 'Promocode cannot be applied to your cart';
+}
+
+// Path: accountStatus
+class TranslationsAccountStatusEn {
+	TranslationsAccountStatusEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Account Under Review'
+	String get pendingTitle => 'Account Under Review';
+
+	/// en: 'Your account is currently being reviewed. We will notify you once approved.'
+	String get pendingDescription => 'Your account is currently being reviewed. We will notify you once approved.';
+
+	/// en: 'If you have questions, please contact support.'
+	String get pendingSupportInfo => 'If you have questions, please contact support.';
+
+	/// en: 'Account Rejected'
+	String get rejectedTitle => 'Account Rejected';
+
+	/// en: 'Unfortunately, your account application has been rejected.'
+	String get rejectedDescription => 'Unfortunately, your account application has been rejected.';
+
+	/// en: 'Please contact support for more information about the reason.'
+	String get rejectedReason => 'Please contact support for more information about the reason.';
+
+	/// en: 'Account Blocked'
+	String get blockedTitle => 'Account Blocked';
+
+	/// en: 'Your account has been blocked. Please contact support for assistance.'
+	String get blockedDescription => 'Your account has been blocked. Please contact support for assistance.';
+
+	/// en: 'If you believe this is an error, please reach out to our support team.'
+	String get blockedSupportInfo => 'If you believe this is an error, please reach out to our support team.';
 }
 
 // Path: cart
@@ -601,6 +647,18 @@ class TranslationsUiCommonEn {
 
 	/// en: 'Customization'
 	String get customization => 'Customization';
+
+	/// en: 'Skip'
+	String get skip => 'Skip';
+
+	/// en: 'Next'
+	String get next => 'Next';
+
+	/// en: 'Get Started'
+	String get getStarted => 'Get Started';
+
+	/// en: 'Back to Login'
+	String get backToLogin => 'Back to Login';
 }
 
 // Path: ui.errors
@@ -695,6 +753,12 @@ class TranslationsLoginOtpEn {
 
 	/// en: 'Resend'
 	String get resend => 'Resend';
+
+	/// en: 'Resend in'
+	String get resendIn => 'Resend in';
+
+	/// en: 'Edit Number'
+	String get editNumber => 'Edit Number';
 
 	/// en: 'OTP was resent successfully'
 	String get otpWasResentSuccessfully => 'OTP was resent successfully';
@@ -939,6 +1003,10 @@ extension on Translations {
 			case 'ui.common.required': return 'Required';
 			case 'ui.common.optional': return 'Optional';
 			case 'ui.common.customization': return 'Customization';
+			case 'ui.common.skip': return 'Skip';
+			case 'ui.common.next': return 'Next';
+			case 'ui.common.getStarted': return 'Get Started';
+			case 'ui.common.backToLogin': return 'Back to Login';
 			case 'ui.errors.somethingWentWrong': return 'Something went wrong';
 			case 'ui.errors.retry': return 'Retry';
 			case 'ui.dateTime.yesterday': return 'Yesterday';
@@ -965,13 +1033,18 @@ extension on Translations {
 			case 'initialLanguage.header': return 'Select your preferred language';
 			case 'initialLanguage.kContinue': return 'Continue';
 			case 'login.header': return 'Enter your phone number to sign in';
+			case 'login.subtitle': return 'We will send you a verification code';
 			case 'login.phoneNumber': return 'Phone Number';
+			case 'login.phoneHint': return '01XXXXXXXXX';
+			case 'login.phoneValidationError': return 'Please enter a valid phone number';
 			case 'login.signIn': return 'Sign In';
 			case 'login.otp.header': return 'Confirmation code';
 			case 'login.otp.description': return 'We sent a code to your device. Enter it here to continue.';
 			case 'login.otp.confirm': return 'Confirm';
 			case 'login.otp.otpWasVerifiedSuccessfully': return 'OTP was verified successfully';
 			case 'login.otp.resend': return 'Resend';
+			case 'login.otp.resendIn': return 'Resend in';
+			case 'login.otp.editNumber': return 'Edit Number';
 			case 'login.otp.otpWasResentSuccessfully': return 'OTP was resent successfully';
 			case 'home.main.home': return 'Home';
 			case 'home.main.favorites': return 'Favorites';
@@ -1220,6 +1293,15 @@ extension on Translations {
 			case 'countries.yemen': return 'Yemen';
 			case 'countries.zambia': return 'Zambia';
 			case 'countries.zimbabwe': return 'Zimbabwe';
+			case 'accountStatus.pendingTitle': return 'Account Under Review';
+			case 'accountStatus.pendingDescription': return 'Your account is currently being reviewed. We will notify you once approved.';
+			case 'accountStatus.pendingSupportInfo': return 'If you have questions, please contact support.';
+			case 'accountStatus.rejectedTitle': return 'Account Rejected';
+			case 'accountStatus.rejectedDescription': return 'Unfortunately, your account application has been rejected.';
+			case 'accountStatus.rejectedReason': return 'Please contact support for more information about the reason.';
+			case 'accountStatus.blockedTitle': return 'Account Blocked';
+			case 'accountStatus.blockedDescription': return 'Your account has been blocked. Please contact support for assistance.';
+			case 'accountStatus.blockedSupportInfo': return 'If you believe this is an error, please reach out to our support team.';
 			case 'cart.yourCart': return 'Your Cart';
 			case 'cart.emptyCart': return 'Cart is Empty';
 			case 'cart.browseServices': return 'Browse Services';
