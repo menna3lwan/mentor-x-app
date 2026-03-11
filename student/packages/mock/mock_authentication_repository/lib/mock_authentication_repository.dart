@@ -37,7 +37,7 @@ final class MockAuthenticationRepository
 
     // Store OTP details
     _sentOtpPhoneNumber = phoneNumber;
-    _validOtp = MockOtpGenerator.generate(length: MockDataConfig.otpLength);
+    _validOtp = '000000';
 
     // Simulate OTP sent successfully
     _logger.info(

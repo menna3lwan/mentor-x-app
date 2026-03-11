@@ -12,6 +12,11 @@ List<RouteBase> get $appRoutes => [
   $statusRejectedPageRoute,
   $loginPageRoute,
   $otpPageRoute,
+  $myCoursesPageRoute,
+  $courseCatalogPageRoute,
+  $courseDetailPageRoute,
+  $videoPlayerPageRoute,
+  $pdfViewerPageRoute,
   $homePageRoute,
   $walkthroughPageRoute,
 ];
@@ -179,6 +184,161 @@ T? _$convertMapValue<T>(
 ) {
   final value = map[key];
   return value == null ? null : converter(value);
+}
+
+RouteBase get $myCoursesPageRoute => GoRouteData.$route(
+  path: '/my-courses',
+  name: 'myCourses',
+  factory: $MyCoursesPageRoute._fromState,
+);
+
+mixin $MyCoursesPageRoute on GoRouteData {
+  static MyCoursesPageRoute _fromState(GoRouterState state) =>
+      const MyCoursesPageRoute();
+
+  @override
+  String get location => GoRouteData.$location('/my-courses');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $courseCatalogPageRoute => GoRouteData.$route(
+  path: '/course-catalog',
+  name: 'courseCatalog',
+  factory: $CourseCatalogPageRoute._fromState,
+);
+
+mixin $CourseCatalogPageRoute on GoRouteData {
+  static CourseCatalogPageRoute _fromState(GoRouterState state) =>
+      const CourseCatalogPageRoute();
+
+  @override
+  String get location => GoRouteData.$location('/course-catalog');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $courseDetailPageRoute => GoRouteData.$route(
+  path: '/course-detail/:courseId',
+  name: 'courseDetail',
+  factory: $CourseDetailPageRoute._fromState,
+);
+
+mixin $CourseDetailPageRoute on GoRouteData {
+  static CourseDetailPageRoute _fromState(GoRouterState state) =>
+      CourseDetailPageRoute(courseId: state.pathParameters['courseId']!);
+
+  CourseDetailPageRoute get _self => this as CourseDetailPageRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/course-detail/${Uri.encodeComponent(_self.courseId)}',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $videoPlayerPageRoute => GoRouteData.$route(
+  path: '/video-player/:itemId',
+  name: 'videoPlayer',
+  factory: $VideoPlayerPageRoute._fromState,
+);
+
+mixin $VideoPlayerPageRoute on GoRouteData {
+  static VideoPlayerPageRoute _fromState(GoRouterState state) =>
+      VideoPlayerPageRoute(
+        itemId: state.pathParameters['itemId']!,
+        title: state.uri.queryParameters['title']!,
+      );
+
+  VideoPlayerPageRoute get _self => this as VideoPlayerPageRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/video-player/${Uri.encodeComponent(_self.itemId)}',
+    queryParams: {'title': _self.title},
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $pdfViewerPageRoute => GoRouteData.$route(
+  path: '/pdf-viewer/:itemId',
+  name: 'pdfViewer',
+  factory: $PdfViewerPageRoute._fromState,
+);
+
+mixin $PdfViewerPageRoute on GoRouteData {
+  static PdfViewerPageRoute _fromState(GoRouterState state) =>
+      PdfViewerPageRoute(
+        itemId: state.pathParameters['itemId']!,
+        title: state.uri.queryParameters['title']!,
+      );
+
+  PdfViewerPageRoute get _self => this as PdfViewerPageRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/pdf-viewer/${Uri.encodeComponent(_self.itemId)}',
+    queryParams: {'title': _self.title},
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
 }
 
 RouteBase get $homePageRoute => GoRouteData.$route(

@@ -10,6 +10,7 @@ import 'package:mentorx_core/mentorx_core.dart';
 
 import 'package:student_mock_authentication_repository/mock_authentication_repository.dart';
 import 'package:mock_home_repository/mock_home_repository.dart';
+import 'package:mock_course_repository/mock_course_repository.dart';
 
 import '../../core/utils/env.dart';
 
@@ -17,11 +18,13 @@ final class AppRepositories {
   final CacheRepository cacheRepository;
   final StudentAuthenticationRepository authenticationRepository;
   final StudentHomeRepository homeRepository;
+  final CourseRepository courseRepository;
 
   const AppRepositories._({
     required this.cacheRepository,
     required this.authenticationRepository,
     required this.homeRepository,
+    required this.courseRepository,
   });
 
   List<Object> toList() {
@@ -29,6 +32,7 @@ final class AppRepositories {
       cacheRepository,
       authenticationRepository,
       homeRepository,
+      courseRepository,
     ];
   }
 
@@ -39,6 +43,7 @@ final class AppRepositories {
         create: (_) => authenticationRepository,
       ),
       RepositoryProvider<StudentHomeRepository>(create: (_) => homeRepository),
+      RepositoryProvider<CourseRepository>(create: (_) => courseRepository),
     ];
   }
 }
@@ -107,6 +112,16 @@ final class RepositoriesFactory {
     }
   }
 
+  static Future<CourseRepository> _initCourseRepository() async {
+    switch (Env.courseRepositoryMode) {
+      case RepositoryMode.mock:
+        return MockCourseRepository(delay: Env.mockDelayDuration);
+      case RepositoryMode.prod:
+        // TODO: Replace with DioCourseRepository when available
+        return MockCourseRepository(delay: Env.mockDelayDuration);
+    }
+  }
+
   static String _defaultLanguageCode() {
     final deviceLanguageCode = PlatformDispatcher.instance.locale.languageCode;
     final supportedLocales = LocaleSettings.instance.supportedLocalesRaw;
@@ -128,16 +143,19 @@ final class RepositoriesFactory {
     final [
       authenticationRepository as StudentAuthenticationRepository,
       homeRepository as StudentHomeRepository,
+      courseRepository as CourseRepository,
     ] = await Future.wait(
       [
         _initAuthenticationRepository(),
         _initHomeRepository(),
+        _initCourseRepository(),
       ],
     );
     final repos = AppRepositories._(
       cacheRepository: cacheRepository,
       authenticationRepository: authenticationRepository,
       homeRepository: homeRepository,
+      courseRepository: courseRepository,
     );
     return repos;
   }

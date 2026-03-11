@@ -13,6 +13,11 @@ part '../../features/account_status/pages/status_pending_page/status_pending_pag
 part '../../features/account_status/pages/status_rejected_page/status_rejected_page_route.dart';
 part '../../features/auth/pages/login_page/login_page_route.dart';
 part '../../features/auth/pages/otp_page/otp_page_route.dart';
+part '../../features/course/pages/my_courses_page/my_courses_page_route.dart';
+part '../../features/course/pages/course_catalog_page/course_catalog_page_route.dart';
+part '../../features/course/pages/course_detail_page/course_detail_page_route.dart';
+part '../../features/course/pages/video_player_page/video_player_page_route.dart';
+part '../../features/course/pages/pdf_viewer_page/pdf_viewer_page_route.dart';
 part '../../features/home/pages/home_page/home_page_route.dart';
 part '../../features/onboarding/pages/walkthrough_page/walkthrough_page_route.dart';
 

@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 
 final class QuickActionsGridWidget extends StatelessWidget {
-  const QuickActionsGridWidget({super.key});
+  final ValueChanged<int>? onActionTap;
+
+  const QuickActionsGridWidget({super.key, this.onActionTap});
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +13,7 @@ final class QuickActionsGridWidget extends StatelessWidget {
       (context.t.home.dashboard.actions.myCourses, Icons.menu_book_rounded),
       (
         context.t.home.dashboard.actions.attendance,
-        Icons.qr_code_scanner_rounded
+        Icons.qr_code_scanner_rounded,
       ),
       (context.t.home.dashboard.actions.grades, Icons.grading_rounded),
       (context.t.home.dashboard.actions.aiAssistant, Icons.smart_toy_rounded),
@@ -34,7 +36,7 @@ final class QuickActionsGridWidget extends StatelessWidget {
           color: palette.backgroundPrimary,
           borderRadius: BorderRadius.circular(12),
           child: InkWell(
-            onTap: () {},
+            onTap: () => onActionTap?.call(index),
             borderRadius: BorderRadius.circular(12),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,

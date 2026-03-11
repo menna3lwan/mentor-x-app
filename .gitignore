@@ -100,3 +100,7 @@ mentorx/ios/Runner/GoogleService-Info.plist
 mentorx/android/app/google-services.json
 mentorx/firebase.json
 mentorx/lib/firebase_options.dart
+
+google-services.json
+GoogleService-Info.plist
+firebase_options.dart

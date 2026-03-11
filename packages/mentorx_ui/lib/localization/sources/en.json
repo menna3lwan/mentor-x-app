@@ -443,5 +443,76 @@
             "discountAvailable": "Discount Available",
             "paymentRequest": "Payment Request"
         }
+    },
+    "course": {
+        "myCourses": "My Courses",
+        "courseCatalog": "Course Catalog",
+        "courseDetail": "Course Detail",
+        "videoPlayer": "Video Player",
+        "pdfViewer": "PDF Viewer",
+        "tabs": {
+            "inProgress": "In Progress",
+            "completed": "Completed",
+            "expired": "Expired",
+            "description": "Description",
+            "sessions": "Sessions"
+        },
+        "catalog": {
+            "searchHint": "Search courses...",
+            "allCategories": "All",
+            "sortBy": "Sort by",
+            "sortNewest": "Newest",
+            "sortPriceAsc": "Price: Low to High",
+            "sortPriceDesc": "Price: High to Low",
+            "sortPopular": "Most Popular",
+            "noCourses": "No courses found",
+            "noCoursesDescription": "Try adjusting your search or filters."
+        },
+        "detail": {
+            "aboutCourse": "About this Course",
+            "sessions": "Sessions",
+            "items": "items",
+            "enrollNow": "Enroll Now",
+            "enrolled": "Enrolled",
+            "continueStudying": "Continue Studying",
+            "courseExpired": "Course Expired",
+            "courseCompleted": "Course Completed",
+            "free": "Free",
+            "students": "students",
+            "videos": "videos",
+            "duration": "Duration",
+            "minutes": "min",
+            "hours": "hours",
+            "sessionFree": "Free",
+            "enrolling": "Enrolling...",
+            "enrollSuccess": "Successfully enrolled!",
+            "enrollFailed": "Failed to enroll. Please try again."
+        },
+        "player": {
+            "title": "Video Player",
+            "loading": "Loading video...",
+            "error": "Failed to load video",
+            "complete": "Mark as Complete",
+            "completed": "Completed"
+        },
+        "pdf": {
+            "title": "PDF Viewer",
+            "loading": "Loading document...",
+            "error": "Failed to load document",
+            "page": "Page ${current} of ${total}",
+            "markComplete": "Mark Complete",
+            "completed": "Completed"
+        },
+        "empty": {
+            "noEnrolledCourses": "No enrolled courses",
+            "noEnrolledCoursesDescription": "Start learning by browsing our course catalog.",
+            "browseCatalog": "Browse Catalog"
+        },
+        "errors": {
+            "failedToLoad": "Failed to load. Tap to retry.",
+            "failedToLoadCourses": "Failed to load courses",
+            "failedToLoadDetail": "Failed to load course details",
+            "failedToLoadSessions": "Failed to load sessions"
+        }
     }
 }

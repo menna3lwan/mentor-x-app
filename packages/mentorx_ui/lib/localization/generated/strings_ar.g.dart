@@ -249,6 +249,7 @@ class TranslationsAr implements Translations {
 	@override late final _TranslationsAccountStatusAr accountStatus = _TranslationsAccountStatusAr._(_root);
 	@override late final _TranslationsCartAr cart = _TranslationsCartAr._(_root);
 	@override late final _TranslationsSettingsAr settings = _TranslationsSettingsAr._(_root);
+	@override late final _TranslationsCourseAr course = _TranslationsCourseAr._(_root);
 }
 
 // Path: ui
@@ -463,6 +464,27 @@ class _TranslationsSettingsAr implements TranslationsSettingsEn {
 	@override late final _TranslationsSettingsNotificationSettingsAr notificationSettings = _TranslationsSettingsNotificationSettingsAr._(_root);
 }
 
+// Path: course
+class _TranslationsCourseAr implements TranslationsCourseEn {
+	_TranslationsCourseAr._(this._root);
+
+	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
+	@override String get myCourses => 'دوراتي';
+	@override String get courseCatalog => 'كتالوج الدورات';
+	@override String get courseDetail => 'تفاصيل الدورة';
+	@override String get videoPlayer => 'مشغل الفيديو';
+	@override String get pdfViewer => 'عارض PDF';
+	@override late final _TranslationsCourseTabsAr tabs = _TranslationsCourseTabsAr._(_root);
+	@override late final _TranslationsCourseCatalogAr catalog = _TranslationsCourseCatalogAr._(_root);
+	@override late final _TranslationsCourseDetailAr detail = _TranslationsCourseDetailAr._(_root);
+	@override late final _TranslationsCoursePlayerAr player = _TranslationsCoursePlayerAr._(_root);
+	@override late final _TranslationsCoursePdfAr pdf = _TranslationsCoursePdfAr._(_root);
+	@override late final _TranslationsCourseEmptyAr empty = _TranslationsCourseEmptyAr._(_root);
+	@override late final _TranslationsCourseErrorsAr errors = _TranslationsCourseErrorsAr._(_root);
+}
+
 // Path: ui.common
 class _TranslationsUiCommonAr implements TranslationsUiCommonEn {
 	_TranslationsUiCommonAr._(this._root);
@@ -657,6 +679,119 @@ class _TranslationsSettingsNotificationSettingsAr implements TranslationsSetting
 	@override String get promotion => 'العروض الترويجية';
 	@override String get discountAvailable => 'الخصومات المتاحة';
 	@override String get paymentRequest => 'طلب الدفع';
+}
+
+// Path: course.tabs
+class _TranslationsCourseTabsAr implements TranslationsCourseTabsEn {
+	_TranslationsCourseTabsAr._(this._root);
+
+	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
+	@override String get inProgress => 'قيد التقدم';
+	@override String get completed => 'مكتملة';
+	@override String get expired => 'منتهية';
+	@override String get description => 'الوصف';
+	@override String get sessions => 'الحصص';
+}
+
+// Path: course.catalog
+class _TranslationsCourseCatalogAr implements TranslationsCourseCatalogEn {
+	_TranslationsCourseCatalogAr._(this._root);
+
+	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
+	@override String get searchHint => 'ابحث عن الدورات...';
+	@override String get allCategories => 'الكل';
+	@override String get sortBy => 'ترتيب حسب';
+	@override String get sortNewest => 'الأحدث';
+	@override String get sortPriceAsc => 'السعر: من الأقل للأعلى';
+	@override String get sortPriceDesc => 'السعر: من الأعلى للأقل';
+	@override String get sortPopular => 'الأكثر شعبية';
+	@override String get noCourses => 'لا توجد دورات';
+	@override String get noCoursesDescription => 'حاول تعديل البحث أو الفلاتر.';
+}
+
+// Path: course.detail
+class _TranslationsCourseDetailAr implements TranslationsCourseDetailEn {
+	_TranslationsCourseDetailAr._(this._root);
+
+	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
+	@override String get aboutCourse => 'عن هذه الدورة';
+	@override String get sessions => 'الحصص';
+	@override String get items => 'عناصر';
+	@override String get enrollNow => 'سجل الآن';
+	@override String get enrolled => 'مسجل';
+	@override String get continueStudying => 'متابعة الدراسة';
+	@override String get courseExpired => 'انتهت صلاحية الدورة';
+	@override String get courseCompleted => 'تم إكمال الدورة';
+	@override String get free => 'مجاني';
+	@override String get students => 'طالب';
+	@override String get videos => 'فيديو';
+	@override String get duration => 'المدة';
+	@override String get minutes => 'دقيقة';
+	@override String get hours => 'ساعات';
+	@override String get sessionFree => 'مجاني';
+	@override String get enrolling => 'جاري التسجيل...';
+	@override String get enrollSuccess => 'تم التسجيل بنجاح!';
+	@override String get enrollFailed => 'فشل التسجيل. حاول مرة أخرى.';
+}
+
+// Path: course.player
+class _TranslationsCoursePlayerAr implements TranslationsCoursePlayerEn {
+	_TranslationsCoursePlayerAr._(this._root);
+
+	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'مشغل الفيديو';
+	@override String get loading => 'جاري تحميل الفيديو...';
+	@override String get error => 'فشل تحميل الفيديو';
+	@override String get complete => 'تحديد كمكتمل';
+	@override String get completed => 'مكتمل';
+}
+
+// Path: course.pdf
+class _TranslationsCoursePdfAr implements TranslationsCoursePdfEn {
+	_TranslationsCoursePdfAr._(this._root);
+
+	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'عارض PDF';
+	@override String get loading => 'جاري تحميل المستند...';
+	@override String get error => 'فشل تحميل المستند';
+	@override String page({required Object current, required Object total}) => 'صفحة ${current} من ${total}';
+	@override String get markComplete => 'تحديد كمكتمل';
+	@override String get completed => 'مكتمل';
+}
+
+// Path: course.empty
+class _TranslationsCourseEmptyAr implements TranslationsCourseEmptyEn {
+	_TranslationsCourseEmptyAr._(this._root);
+
+	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
+	@override String get noEnrolledCourses => 'لا توجد دورات مسجلة';
+	@override String get noEnrolledCoursesDescription => 'ابدأ التعلم بتصفح كتالوج الدورات.';
+	@override String get browseCatalog => 'تصفح الكتالوج';
+}
+
+// Path: course.errors
+class _TranslationsCourseErrorsAr implements TranslationsCourseErrorsEn {
+	_TranslationsCourseErrorsAr._(this._root);
+
+	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
+	@override String get failedToLoad => 'فشل التحميل. اضغط للمحاولة مرة أخرى.';
+	@override String get failedToLoadCourses => 'فشل تحميل الدورات';
+	@override String get failedToLoadDetail => 'فشل تحميل تفاصيل الدورة';
+	@override String get failedToLoadSessions => 'فشل تحميل الحصص';
 }
 
 // Path: onboarding.steps.learn
@@ -1100,6 +1235,61 @@ extension on TranslationsAr {
 			case 'settings.notificationSettings.promotion': return 'العروض الترويجية';
 			case 'settings.notificationSettings.discountAvailable': return 'الخصومات المتاحة';
 			case 'settings.notificationSettings.paymentRequest': return 'طلب الدفع';
+			case 'course.myCourses': return 'دوراتي';
+			case 'course.courseCatalog': return 'كتالوج الدورات';
+			case 'course.courseDetail': return 'تفاصيل الدورة';
+			case 'course.videoPlayer': return 'مشغل الفيديو';
+			case 'course.pdfViewer': return 'عارض PDF';
+			case 'course.tabs.inProgress': return 'قيد التقدم';
+			case 'course.tabs.completed': return 'مكتملة';
+			case 'course.tabs.expired': return 'منتهية';
+			case 'course.tabs.description': return 'الوصف';
+			case 'course.tabs.sessions': return 'الحصص';
+			case 'course.catalog.searchHint': return 'ابحث عن الدورات...';
+			case 'course.catalog.allCategories': return 'الكل';
+			case 'course.catalog.sortBy': return 'ترتيب حسب';
+			case 'course.catalog.sortNewest': return 'الأحدث';
+			case 'course.catalog.sortPriceAsc': return 'السعر: من الأقل للأعلى';
+			case 'course.catalog.sortPriceDesc': return 'السعر: من الأعلى للأقل';
+			case 'course.catalog.sortPopular': return 'الأكثر شعبية';
+			case 'course.catalog.noCourses': return 'لا توجد دورات';
+			case 'course.catalog.noCoursesDescription': return 'حاول تعديل البحث أو الفلاتر.';
+			case 'course.detail.aboutCourse': return 'عن هذه الدورة';
+			case 'course.detail.sessions': return 'الحصص';
+			case 'course.detail.items': return 'عناصر';
+			case 'course.detail.enrollNow': return 'سجل الآن';
+			case 'course.detail.enrolled': return 'مسجل';
+			case 'course.detail.continueStudying': return 'متابعة الدراسة';
+			case 'course.detail.courseExpired': return 'انتهت صلاحية الدورة';
+			case 'course.detail.courseCompleted': return 'تم إكمال الدورة';
+			case 'course.detail.free': return 'مجاني';
+			case 'course.detail.students': return 'طالب';
+			case 'course.detail.videos': return 'فيديو';
+			case 'course.detail.duration': return 'المدة';
+			case 'course.detail.minutes': return 'دقيقة';
+			case 'course.detail.hours': return 'ساعات';
+			case 'course.detail.sessionFree': return 'مجاني';
+			case 'course.detail.enrolling': return 'جاري التسجيل...';
+			case 'course.detail.enrollSuccess': return 'تم التسجيل بنجاح!';
+			case 'course.detail.enrollFailed': return 'فشل التسجيل. حاول مرة أخرى.';
+			case 'course.player.title': return 'مشغل الفيديو';
+			case 'course.player.loading': return 'جاري تحميل الفيديو...';
+			case 'course.player.error': return 'فشل تحميل الفيديو';
+			case 'course.player.complete': return 'تحديد كمكتمل';
+			case 'course.player.completed': return 'مكتمل';
+			case 'course.pdf.title': return 'عارض PDF';
+			case 'course.pdf.loading': return 'جاري تحميل المستند...';
+			case 'course.pdf.error': return 'فشل تحميل المستند';
+			case 'course.pdf.page': return ({required Object current, required Object total}) => 'صفحة ${current} من ${total}';
+			case 'course.pdf.markComplete': return 'تحديد كمكتمل';
+			case 'course.pdf.completed': return 'مكتمل';
+			case 'course.empty.noEnrolledCourses': return 'لا توجد دورات مسجلة';
+			case 'course.empty.noEnrolledCoursesDescription': return 'ابدأ التعلم بتصفح كتالوج الدورات.';
+			case 'course.empty.browseCatalog': return 'تصفح الكتالوج';
+			case 'course.errors.failedToLoad': return 'فشل التحميل. اضغط للمحاولة مرة أخرى.';
+			case 'course.errors.failedToLoadCourses': return 'فشل تحميل الدورات';
+			case 'course.errors.failedToLoadDetail': return 'فشل تحميل تفاصيل الدورة';
+			case 'course.errors.failedToLoadSessions': return 'فشل تحميل الحصص';
 			default: return null;
 		}
 	}

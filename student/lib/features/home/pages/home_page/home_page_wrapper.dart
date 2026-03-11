@@ -52,7 +52,8 @@ final class HomePageWrapper extends StatelessWidget {
                     state.walletSection.data == null)
                   InlineSectionError(
                     onRetry: () => bloc.add(
-                        const HomePageRetrySectionEvent(HomeSection.wallet)),
+                      const HomePageRetrySectionEvent(HomeSection.wallet),
+                    ),
                   )
                 else
                   WalletQuickViewCard(
@@ -65,7 +66,8 @@ final class HomePageWrapper extends StatelessWidget {
                     state.bannersSection.data == null)
                   InlineSectionError(
                     onRetry: () => bloc.add(
-                        const HomePageRetrySectionEvent(HomeSection.banners)),
+                      const HomePageRetrySectionEvent(HomeSection.banners),
+                    ),
                   )
                 else
                   BannersCarousel(
@@ -78,27 +80,33 @@ final class HomePageWrapper extends StatelessWidget {
                 const Gap(20),
                 SectionHeader(
                   title: context.t.home.dashboard.continueLearning,
-                  onSeeAll: () {},
+                  onSeeAll: () => const MyCoursesPageRoute().push(context),
                 ),
                 const Gap(8),
                 ContinueLearningSection(
                   section: state.continueLearningSection,
+                  onTapCourse: (courseId) =>
+                      CourseDetailPageRoute(courseId: courseId).push(context),
                   onRetry: () => bloc.add(
                     const HomePageRetrySectionEvent(
-                        HomeSection.continueLearning),
+                      HomeSection.continueLearning,
+                    ),
                   ),
                 ),
                 const Gap(20),
                 SectionHeader(
                   title: context.t.home.dashboard.featuredCourses,
-                  onSeeAll: () {},
+                  onSeeAll: () => const CourseCatalogPageRoute().push(context),
                 ),
                 const Gap(8),
                 FeaturedCoursesSection(
                   section: state.featuredCoursesSection,
+                  onTapCourse: (courseId) =>
+                      CourseDetailPageRoute(courseId: courseId).push(context),
                   onRetry: () => bloc.add(
                     const HomePageRetrySectionEvent(
-                        HomeSection.featuredCourses),
+                      HomeSection.featuredCourses,
+                    ),
                   ),
                 ),
                 const Gap(20),
@@ -114,14 +122,24 @@ final class HomePageWrapper extends StatelessWidget {
                     section: state.announcementsSection,
                     onRetry: () => bloc.add(
                       const HomePageRetrySectionEvent(
-                          HomeSection.announcements),
+                        HomeSection.announcements,
+                      ),
                     ),
                   ),
                   const Gap(20),
                 ],
                 SectionHeader(title: context.t.home.dashboard.quickActions),
                 const Gap(8),
-                const QuickActionsGrid(),
+                QuickActionsGrid(
+                  onActionTap: (index) {
+                    switch (index) {
+                      case 0:
+                        const MyCoursesPageRoute().push(context);
+                      default:
+                        break;
+                    }
+                  },
+                ),
               ],
             ),
           );

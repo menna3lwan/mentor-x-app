@@ -252,6 +252,7 @@ class Translations implements BaseTranslations<AppLocale, Translations> {
 	late final TranslationsAccountStatusEn accountStatus = TranslationsAccountStatusEn._(_root);
 	late final TranslationsCartEn cart = TranslationsCartEn._(_root);
 	late final TranslationsSettingsEn settings = TranslationsSettingsEn._(_root);
+	late final TranslationsCourseEn course = TranslationsCourseEn._(_root);
 }
 
 // Path: ui
@@ -633,6 +634,38 @@ class TranslationsSettingsEn {
 	late final TranslationsSettingsNotificationSettingsEn notificationSettings = TranslationsSettingsNotificationSettingsEn._(_root);
 }
 
+// Path: course
+class TranslationsCourseEn {
+	TranslationsCourseEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'My Courses'
+	String get myCourses => 'My Courses';
+
+	/// en: 'Course Catalog'
+	String get courseCatalog => 'Course Catalog';
+
+	/// en: 'Course Detail'
+	String get courseDetail => 'Course Detail';
+
+	/// en: 'Video Player'
+	String get videoPlayer => 'Video Player';
+
+	/// en: 'PDF Viewer'
+	String get pdfViewer => 'PDF Viewer';
+
+	late final TranslationsCourseTabsEn tabs = TranslationsCourseTabsEn._(_root);
+	late final TranslationsCourseCatalogEn catalog = TranslationsCourseCatalogEn._(_root);
+	late final TranslationsCourseDetailEn detail = TranslationsCourseDetailEn._(_root);
+	late final TranslationsCoursePlayerEn player = TranslationsCoursePlayerEn._(_root);
+	late final TranslationsCoursePdfEn pdf = TranslationsCoursePdfEn._(_root);
+	late final TranslationsCourseEmptyEn empty = TranslationsCourseEmptyEn._(_root);
+	late final TranslationsCourseErrorsEn errors = TranslationsCourseErrorsEn._(_root);
+}
+
 // Path: ui.common
 class TranslationsUiCommonEn {
 	TranslationsUiCommonEn._(this._root);
@@ -979,6 +1012,219 @@ class TranslationsSettingsNotificationSettingsEn {
 
 	/// en: 'Payment Request'
 	String get paymentRequest => 'Payment Request';
+}
+
+// Path: course.tabs
+class TranslationsCourseTabsEn {
+	TranslationsCourseTabsEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'In Progress'
+	String get inProgress => 'In Progress';
+
+	/// en: 'Completed'
+	String get completed => 'Completed';
+
+	/// en: 'Expired'
+	String get expired => 'Expired';
+
+	/// en: 'Description'
+	String get description => 'Description';
+
+	/// en: 'Sessions'
+	String get sessions => 'Sessions';
+}
+
+// Path: course.catalog
+class TranslationsCourseCatalogEn {
+	TranslationsCourseCatalogEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Search courses...'
+	String get searchHint => 'Search courses...';
+
+	/// en: 'All'
+	String get allCategories => 'All';
+
+	/// en: 'Sort by'
+	String get sortBy => 'Sort by';
+
+	/// en: 'Newest'
+	String get sortNewest => 'Newest';
+
+	/// en: 'Price: Low to High'
+	String get sortPriceAsc => 'Price: Low to High';
+
+	/// en: 'Price: High to Low'
+	String get sortPriceDesc => 'Price: High to Low';
+
+	/// en: 'Most Popular'
+	String get sortPopular => 'Most Popular';
+
+	/// en: 'No courses found'
+	String get noCourses => 'No courses found';
+
+	/// en: 'Try adjusting your search or filters.'
+	String get noCoursesDescription => 'Try adjusting your search or filters.';
+}
+
+// Path: course.detail
+class TranslationsCourseDetailEn {
+	TranslationsCourseDetailEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'About this Course'
+	String get aboutCourse => 'About this Course';
+
+	/// en: 'Sessions'
+	String get sessions => 'Sessions';
+
+	/// en: 'items'
+	String get items => 'items';
+
+	/// en: 'Enroll Now'
+	String get enrollNow => 'Enroll Now';
+
+	/// en: 'Enrolled'
+	String get enrolled => 'Enrolled';
+
+	/// en: 'Continue Studying'
+	String get continueStudying => 'Continue Studying';
+
+	/// en: 'Course Expired'
+	String get courseExpired => 'Course Expired';
+
+	/// en: 'Course Completed'
+	String get courseCompleted => 'Course Completed';
+
+	/// en: 'Free'
+	String get free => 'Free';
+
+	/// en: 'students'
+	String get students => 'students';
+
+	/// en: 'videos'
+	String get videos => 'videos';
+
+	/// en: 'Duration'
+	String get duration => 'Duration';
+
+	/// en: 'min'
+	String get minutes => 'min';
+
+	/// en: 'hours'
+	String get hours => 'hours';
+
+	/// en: 'Free'
+	String get sessionFree => 'Free';
+
+	/// en: 'Enrolling...'
+	String get enrolling => 'Enrolling...';
+
+	/// en: 'Successfully enrolled!'
+	String get enrollSuccess => 'Successfully enrolled!';
+
+	/// en: 'Failed to enroll. Please try again.'
+	String get enrollFailed => 'Failed to enroll. Please try again.';
+}
+
+// Path: course.player
+class TranslationsCoursePlayerEn {
+	TranslationsCoursePlayerEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Video Player'
+	String get title => 'Video Player';
+
+	/// en: 'Loading video...'
+	String get loading => 'Loading video...';
+
+	/// en: 'Failed to load video'
+	String get error => 'Failed to load video';
+
+	/// en: 'Mark as Complete'
+	String get complete => 'Mark as Complete';
+
+	/// en: 'Completed'
+	String get completed => 'Completed';
+}
+
+// Path: course.pdf
+class TranslationsCoursePdfEn {
+	TranslationsCoursePdfEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'PDF Viewer'
+	String get title => 'PDF Viewer';
+
+	/// en: 'Loading document...'
+	String get loading => 'Loading document...';
+
+	/// en: 'Failed to load document'
+	String get error => 'Failed to load document';
+
+	/// en: 'Page ${current} of ${total}'
+	String page({required Object current, required Object total}) => 'Page ${current} of ${total}';
+
+	/// en: 'Mark Complete'
+	String get markComplete => 'Mark Complete';
+
+	/// en: 'Completed'
+	String get completed => 'Completed';
+}
+
+// Path: course.empty
+class TranslationsCourseEmptyEn {
+	TranslationsCourseEmptyEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'No enrolled courses'
+	String get noEnrolledCourses => 'No enrolled courses';
+
+	/// en: 'Start learning by browsing our course catalog.'
+	String get noEnrolledCoursesDescription => 'Start learning by browsing our course catalog.';
+
+	/// en: 'Browse Catalog'
+	String get browseCatalog => 'Browse Catalog';
+}
+
+// Path: course.errors
+class TranslationsCourseErrorsEn {
+	TranslationsCourseErrorsEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Failed to load. Tap to retry.'
+	String get failedToLoad => 'Failed to load. Tap to retry.';
+
+	/// en: 'Failed to load courses'
+	String get failedToLoadCourses => 'Failed to load courses';
+
+	/// en: 'Failed to load course details'
+	String get failedToLoadDetail => 'Failed to load course details';
+
+	/// en: 'Failed to load sessions'
+	String get failedToLoadSessions => 'Failed to load sessions';
 }
 
 // Path: onboarding.steps.learn
@@ -1446,6 +1692,61 @@ extension on Translations {
 			case 'settings.notificationSettings.promotion': return 'Promotion';
 			case 'settings.notificationSettings.discountAvailable': return 'Discount Available';
 			case 'settings.notificationSettings.paymentRequest': return 'Payment Request';
+			case 'course.myCourses': return 'My Courses';
+			case 'course.courseCatalog': return 'Course Catalog';
+			case 'course.courseDetail': return 'Course Detail';
+			case 'course.videoPlayer': return 'Video Player';
+			case 'course.pdfViewer': return 'PDF Viewer';
+			case 'course.tabs.inProgress': return 'In Progress';
+			case 'course.tabs.completed': return 'Completed';
+			case 'course.tabs.expired': return 'Expired';
+			case 'course.tabs.description': return 'Description';
+			case 'course.tabs.sessions': return 'Sessions';
+			case 'course.catalog.searchHint': return 'Search courses...';
+			case 'course.catalog.allCategories': return 'All';
+			case 'course.catalog.sortBy': return 'Sort by';
+			case 'course.catalog.sortNewest': return 'Newest';
+			case 'course.catalog.sortPriceAsc': return 'Price: Low to High';
+			case 'course.catalog.sortPriceDesc': return 'Price: High to Low';
+			case 'course.catalog.sortPopular': return 'Most Popular';
+			case 'course.catalog.noCourses': return 'No courses found';
+			case 'course.catalog.noCoursesDescription': return 'Try adjusting your search or filters.';
+			case 'course.detail.aboutCourse': return 'About this Course';
+			case 'course.detail.sessions': return 'Sessions';
+			case 'course.detail.items': return 'items';
+			case 'course.detail.enrollNow': return 'Enroll Now';
+			case 'course.detail.enrolled': return 'Enrolled';
+			case 'course.detail.continueStudying': return 'Continue Studying';
+			case 'course.detail.courseExpired': return 'Course Expired';
+			case 'course.detail.courseCompleted': return 'Course Completed';
+			case 'course.detail.free': return 'Free';
+			case 'course.detail.students': return 'students';
+			case 'course.detail.videos': return 'videos';
+			case 'course.detail.duration': return 'Duration';
+			case 'course.detail.minutes': return 'min';
+			case 'course.detail.hours': return 'hours';
+			case 'course.detail.sessionFree': return 'Free';
+			case 'course.detail.enrolling': return 'Enrolling...';
+			case 'course.detail.enrollSuccess': return 'Successfully enrolled!';
+			case 'course.detail.enrollFailed': return 'Failed to enroll. Please try again.';
+			case 'course.player.title': return 'Video Player';
+			case 'course.player.loading': return 'Loading video...';
+			case 'course.player.error': return 'Failed to load video';
+			case 'course.player.complete': return 'Mark as Complete';
+			case 'course.player.completed': return 'Completed';
+			case 'course.pdf.title': return 'PDF Viewer';
+			case 'course.pdf.loading': return 'Loading document...';
+			case 'course.pdf.error': return 'Failed to load document';
+			case 'course.pdf.page': return ({required Object current, required Object total}) => 'Page ${current} of ${total}';
+			case 'course.pdf.markComplete': return 'Mark Complete';
+			case 'course.pdf.completed': return 'Completed';
+			case 'course.empty.noEnrolledCourses': return 'No enrolled courses';
+			case 'course.empty.noEnrolledCoursesDescription': return 'Start learning by browsing our course catalog.';
+			case 'course.empty.browseCatalog': return 'Browse Catalog';
+			case 'course.errors.failedToLoad': return 'Failed to load. Tap to retry.';
+			case 'course.errors.failedToLoadCourses': return 'Failed to load courses';
+			case 'course.errors.failedToLoadDetail': return 'Failed to load course details';
+			case 'course.errors.failedToLoadSessions': return 'Failed to load sessions';
 			default: return null;
 		}
 	}

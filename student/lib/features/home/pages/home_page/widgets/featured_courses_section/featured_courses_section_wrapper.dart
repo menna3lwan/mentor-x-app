@@ -7,11 +7,13 @@ import 'featured_courses_section_widget.dart';
 final class FeaturedCoursesSection extends StatelessWidget {
   final HomeAsyncSection<List<CourseSummaryEntity>> section;
   final VoidCallback onRetry;
+  final ValueChanged<String>? onTapCourse;
 
   const FeaturedCoursesSection({
     super.key,
     required this.section,
     required this.onRetry,
+    this.onTapCourse,
   });
 
   @override
@@ -22,6 +24,7 @@ final class FeaturedCoursesSection extends StatelessWidget {
       hasFailedWithEmptyData:
           section.isFailure && (section.data?.isEmpty ?? true),
       onRetry: onRetry,
+      onTapCourse: onTapCourse,
     );
   }
 }

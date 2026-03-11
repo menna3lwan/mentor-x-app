@@ -1,7 +1,7 @@
 name: mentorx_student
 description: "A new Flutter project."
 publish_to: "none"
-version: 0.0.0
+version: 1.0.0+1
 resolution: workspace
 
 environment:
@@ -10,6 +10,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
+  firebase_core: ^4.5.0
 
   # State Management
   bloc: ^9.1.0
@@ -72,6 +74,8 @@ dependencies:
     path: packages/mock/mock_authentication_repository
   mock_home_repository:
     path: packages/mock/mock_home_repository
+  mock_course_repository:
+    path: packages/mock/mock_course_repository
 
   # Clients
   dio_http_client:

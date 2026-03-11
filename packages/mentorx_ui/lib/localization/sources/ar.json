@@ -443,5 +443,76 @@
             "discountAvailable": "الخصومات المتاحة",
             "paymentRequest": "طلب الدفع"
         }
+    },
+    "course": {
+        "myCourses": "دوراتي",
+        "courseCatalog": "كتالوج الدورات",
+        "courseDetail": "تفاصيل الدورة",
+        "videoPlayer": "مشغل الفيديو",
+        "pdfViewer": "عارض PDF",
+        "tabs": {
+            "inProgress": "قيد التقدم",
+            "completed": "مكتملة",
+            "expired": "منتهية",
+            "description": "الوصف",
+            "sessions": "الحصص"
+        },
+        "catalog": {
+            "searchHint": "ابحث عن الدورات...",
+            "allCategories": "الكل",
+            "sortBy": "ترتيب حسب",
+            "sortNewest": "الأحدث",
+            "sortPriceAsc": "السعر: من الأقل للأعلى",
+            "sortPriceDesc": "السعر: من الأعلى للأقل",
+            "sortPopular": "الأكثر شعبية",
+            "noCourses": "لا توجد دورات",
+            "noCoursesDescription": "حاول تعديل البحث أو الفلاتر."
+        },
+        "detail": {
+            "aboutCourse": "عن هذه الدورة",
+            "sessions": "الحصص",
+            "items": "عناصر",
+            "enrollNow": "سجل الآن",
+            "enrolled": "مسجل",
+            "continueStudying": "متابعة الدراسة",
+            "courseExpired": "انتهت صلاحية الدورة",
+            "courseCompleted": "تم إكمال الدورة",
+            "free": "مجاني",
+            "students": "طالب",
+            "videos": "فيديو",
+            "duration": "المدة",
+            "minutes": "دقيقة",
+            "hours": "ساعات",
+            "sessionFree": "مجاني",
+            "enrolling": "جاري التسجيل...",
+            "enrollSuccess": "تم التسجيل بنجاح!",
+            "enrollFailed": "فشل التسجيل. حاول مرة أخرى."
+        },
+        "player": {
+            "title": "مشغل الفيديو",
+            "loading": "جاري تحميل الفيديو...",
+            "error": "فشل تحميل الفيديو",
+            "complete": "تحديد كمكتمل",
+            "completed": "مكتمل"
+        },
+        "pdf": {
+            "title": "عارض PDF",
+            "loading": "جاري تحميل المستند...",
+            "error": "فشل تحميل المستند",
+            "page": "صفحة ${current} من ${total}",
+            "markComplete": "تحديد كمكتمل",
+            "completed": "مكتمل"
+        },
+        "empty": {
+            "noEnrolledCourses": "لا توجد دورات مسجلة",
+            "noEnrolledCoursesDescription": "ابدأ التعلم بتصفح كتالوج الدورات.",
+            "browseCatalog": "تصفح الكتالوج"
+        },
+        "errors": {
+            "failedToLoad": "فشل التحميل. اضغط للمحاولة مرة أخرى.",
+            "failedToLoadCourses": "فشل تحميل الدورات",
+            "failedToLoadDetail": "فشل تحميل تفاصيل الدورة",
+            "failedToLoadSessions": "فشل تحميل الحصص"
+        }
     }
 }

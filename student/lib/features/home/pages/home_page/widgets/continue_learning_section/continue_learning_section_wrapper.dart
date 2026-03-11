@@ -7,11 +7,13 @@ import 'continue_learning_section_widget.dart';
 final class ContinueLearningSection extends StatelessWidget {
   final HomeAsyncSection<List<CourseSummaryEntity>> section;
   final VoidCallback onRetry;
+  final ValueChanged<String>? onTapCourse;
 
   const ContinueLearningSection({
     super.key,
     required this.section,
     required this.onRetry,
+    this.onTapCourse,
   });
 
   @override
@@ -22,6 +24,7 @@ final class ContinueLearningSection extends StatelessWidget {
       hasFailedWithEmptyData:
           section.isFailure && (section.data?.isEmpty ?? true),
       onRetry: onRetry,
+      onTapCourse: onTapCourse,
     );
   }
 }

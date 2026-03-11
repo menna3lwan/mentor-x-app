@@ -44,14 +44,21 @@ final class Env {
     const String.fromEnvironment('HOME_REPOSITORY_MODE', defaultValue: 'mock'),
   );
 
+  static final courseRepositoryMode = RepositoryMode.fromString(
+    const String.fromEnvironment(
+      'COURSE_REPOSITORY_MODE',
+      defaultValue: 'mock',
+    ),
+  );
+
   // Mock values:
   static const int _mockDelayDurationInSeconds = int.fromEnvironment(
     'MOCK_DELAY_IN_SECONDS',
     defaultValue: 2,
   );
   static Duration get mockDelayDuration => const Duration(
-        seconds: _mockDelayDurationInSeconds,
-      );
+    seconds: _mockDelayDurationInSeconds,
+  );
   static const String mockPhoneNumber = String.fromEnvironment(
     'MOCK_USER_PHONE_NUMBER',
   );
@@ -59,11 +66,11 @@ final class Env {
   static const String mockUserName = String.fromEnvironment('MOCK_USER_NAME');
 
   static StudentEntity get mockUser => StudentEntity(
-        id: 'mockUserId',
-        name: mockUserName,
-        email: 'mock@email.com',
-        phoneNumber: mockPhoneNumber,
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-      );
+    id: 'mockUserId',
+    name: mockUserName,
+    email: 'mock@email.com',
+    phoneNumber: mockPhoneNumber,
+    createdAt: DateTime.now(),
+    updatedAt: DateTime.now(),
+  );
 }

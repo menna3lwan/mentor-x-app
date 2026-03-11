@@ -1,4 +1,4 @@
-package com.mentorx.student.student
+package com.mentorx.student
 
 import io.flutter.embedding.android.FlutterActivity
 

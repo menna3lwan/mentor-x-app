@@ -32,6 +32,7 @@ workspace:
   # Mock repositories
   - student/packages/mock/mock_authentication_repository
   - student/packages/mock/mock_home_repository
+  - student/packages/mock/mock_course_repository
 
   # Parent core
   - parent/packages/parent_core
