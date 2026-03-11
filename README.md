@@ -108,12 +108,6 @@ The project follows high-standard software engineering principles to ensure scal
 
 ---
 
-## 👥 Contributors
-
-This project is maintained by **KD-Studios** as part of the Coptic Bakasa initiative.
-
----
-
 ## 📄 License
 
-Internal use only. Copyright © 2026 KD-Studios.
+Internal use only. Copyright © 2026 MentorX.
