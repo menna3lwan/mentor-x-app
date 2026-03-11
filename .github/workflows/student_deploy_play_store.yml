@@ -153,4 +153,4 @@ jobs:
           packageName: com.mentorx.student
           releaseFiles: student/build/app/outputs/bundle/release/*.aab
           track: ${{ github.event.inputs.track || 'internal' }}
-          status: completed # auto-publish; use 'draft' if you want manual review
+          status: draft # auto-publish; use 'draft' if you want manual review
