@@ -20,7 +20,7 @@
 #                           --dart-define-from-file (mirrors dev.env structure)
 # ─────────────────────────────────────────────────────────────────────────────
 
-name: Deploy to Play Store (Open Testing)
+name: Deploy Student to Play Store (Internal Testing)
 
 on:
   push:
