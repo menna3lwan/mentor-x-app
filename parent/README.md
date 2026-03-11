@@ -1,16 +1,45 @@
-# parent
+# 👨‍👩‍👧 MentorX — Parent Application
 
-A new Flutter project.
+[![Flutter](https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white)](https://flutter.dev)
+[![Role](https://img.shields.io/badge/Role-Parent-F59239?style=for-the-badge)](#)
 
-## Getting Started
+The **MentorX Parent App** provides parents with direct visibility into their children's educational journey. It bridges the gap between students, educators, and guardians through real-time data and communication.
 
-This project is a starting point for a Flutter application.
+---
 
-A few resources to get you started if this is your first Flutter project:
+## 🌟 Parent Features
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+-   **📈 Progress Monitoring**: Detailed view of child's performance metrics and course completion.
+-   **💬 Mentor Communication**: Direct channel to stay in touch with educational mentors.
+-   **🔔 Academic Alerts**: Immediate notifications for important milestones or areas needing attention.
+-   **💳 Payment Management**: Secure handling of course subscriptions and fees.
+-   **🔐 Profile Security**: Management of family account settings and child permissions.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+---
+
+## 🏗️ Technical Highlights
+
+-   **State Management**: predictable state handling with BLoC.
+-   **Data Sync**: Real-time updates via optimized Dio repositories.
+-   **UI Consistency**: Shares the same `mentorx_ui` tokens as the Student app for brand cohesion.
+
+---
+
+## 🚀 Getting Started
+
+This app is part of the [MentorX Monorepo](../README.md).
+
+### Installation
+From the root directory:
+```bash
+melos bootstrap
+cd parent
+flutter run
+```
+
+---
+
+## 📂 Internal Modules
+-   `features/auth`: Multi-factor authentication.
+-   `features/home`: Family overview and children's dashboards.
+-   `features/monitoring`: In-depth performance reports.
