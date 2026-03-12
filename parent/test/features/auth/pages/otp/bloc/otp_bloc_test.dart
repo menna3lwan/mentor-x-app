@@ -36,8 +36,9 @@ void main() {
     blocTest<OtpBloc, OtpState>(
       'emits [loading, success] on successful OTP verification',
       build: () {
-        when(() => authRepository.verifyOtp(tPhone, tCode))
-            .thenAnswer((_) async => tUser);
+        when(
+          () => authRepository.verifyOtp(tPhone, tCode),
+        ).thenAnswer((_) async => tUser);
         return OtpBloc(authenticationRepository: authRepository);
       },
       act: (bloc) =>
@@ -54,23 +55,24 @@ void main() {
     blocPresentationTest<OtpBloc, OtpState, OtpPresentationEvent>(
       'emits OtpSuccessPresentationEvent on successful OTP verification',
       build: () {
-        when(() => authRepository.verifyOtp(tPhone, tCode))
-            .thenAnswer((_) async => tUser);
+        when(
+          () => authRepository.verifyOtp(tPhone, tCode),
+        ).thenAnswer((_) async => tUser);
         return OtpBloc(authenticationRepository: authRepository);
       },
       act: (bloc) =>
           bloc.add(const OtpSubmittedEvent(phone: tPhone, code: tCode)),
       expectPresentation: () => [
-        isA<OtpSuccessPresentationEvent>()
-            .having((e) => e.user, 'user', tUser),
+        isA<OtpSuccessPresentationEvent>().having((e) => e.user, 'user', tUser),
       ],
     );
 
     blocTest<OtpBloc, OtpState>(
       'emits [loading, failure] on AuthenticationException',
       build: () {
-        when(() => authRepository.verifyOtp(tPhone, any()))
-            .thenThrow(tAuthException);
+        when(
+          () => authRepository.verifyOtp(tPhone, any()),
+        ).thenThrow(tAuthException);
         return OtpBloc(authenticationRepository: authRepository);
       },
       act: (bloc) =>
@@ -87,23 +89,28 @@ void main() {
     blocPresentationTest<OtpBloc, OtpState, OtpPresentationEvent>(
       'emits OtpFailurePresentationEvent on AuthenticationException',
       build: () {
-        when(() => authRepository.verifyOtp(tPhone, any()))
-            .thenThrow(tAuthException);
+        when(
+          () => authRepository.verifyOtp(tPhone, any()),
+        ).thenThrow(tAuthException);
         return OtpBloc(authenticationRepository: authRepository);
       },
       act: (bloc) =>
           bloc.add(const OtpSubmittedEvent(phone: tPhone, code: '000000')),
       expectPresentation: () => [
-        isA<OtpFailurePresentationEvent>()
-            .having((e) => e.exception, 'exception', tAuthException),
+        isA<OtpFailurePresentationEvent>().having(
+          (e) => e.exception,
+          'exception',
+          tAuthException,
+        ),
       ],
     );
 
     blocTest<OtpBloc, OtpState>(
       'emits [loading, failure] with unknown code on unexpected exception',
       build: () {
-        when(() => authRepository.verifyOtp(any(), any()))
-            .thenThrow(Exception('server error'));
+        when(
+          () => authRepository.verifyOtp(any(), any()),
+        ).thenThrow(Exception('server error'));
         return OtpBloc(authenticationRepository: authRepository);
       },
       act: (bloc) =>

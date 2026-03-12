@@ -44,19 +44,23 @@ void main() {
         ).thenAnswer((_) async => tUser);
         return LoginBloc(authenticationRepository: authRepository);
       },
-      act: (bloc) => bloc.add(const LoginSubmittedEvent(
-        phoneNumber: tPhone,
-        password: tPassword,
-      )),
+      act: (bloc) => bloc.add(
+        const LoginSubmittedEvent(
+          phoneNumber: tPhone,
+          password: tPassword,
+        ),
+      ),
       expect: () => [
         LoginState.initial.copyWith(loadingState: LoginLoadingState.loading),
         LoginState.initial.copyWith(loadingState: LoginLoadingState.success),
       ],
       verify: (_) {
-        verify(() => authRepository.login(
-              phone: tPhone,
-              password: tPassword,
-            )).called(1);
+        verify(
+          () => authRepository.login(
+            phone: tPhone,
+            password: tPassword,
+          ),
+        ).called(1);
       },
     );
 
@@ -71,13 +75,18 @@ void main() {
         ).thenAnswer((_) async => tUser);
         return LoginBloc(authenticationRepository: authRepository);
       },
-      act: (bloc) => bloc.add(const LoginSubmittedEvent(
-        phoneNumber: tPhone,
-        password: tPassword,
-      )),
+      act: (bloc) => bloc.add(
+        const LoginSubmittedEvent(
+          phoneNumber: tPhone,
+          password: tPassword,
+        ),
+      ),
       expectPresentation: () => [
-        isA<LoginSuccessPresentationEvent>()
-            .having((e) => e.user, 'user', tUser),
+        isA<LoginSuccessPresentationEvent>().having(
+          (e) => e.user,
+          'user',
+          tUser,
+        ),
       ],
     );
 
@@ -92,10 +101,12 @@ void main() {
         ).thenThrow(tAuthException);
         return LoginBloc(authenticationRepository: authRepository);
       },
-      act: (bloc) => bloc.add(const LoginSubmittedEvent(
-        phoneNumber: tPhone,
-        password: 'wrongpass',
-      )),
+      act: (bloc) => bloc.add(
+        const LoginSubmittedEvent(
+          phoneNumber: tPhone,
+          password: 'wrongpass',
+        ),
+      ),
       expect: () => [
         LoginState.initial.copyWith(loadingState: LoginLoadingState.loading),
         LoginState.initial.copyWith(
@@ -116,13 +127,18 @@ void main() {
         ).thenThrow(tAuthException);
         return LoginBloc(authenticationRepository: authRepository);
       },
-      act: (bloc) => bloc.add(const LoginSubmittedEvent(
-        phoneNumber: tPhone,
-        password: 'wrongpass',
-      )),
+      act: (bloc) => bloc.add(
+        const LoginSubmittedEvent(
+          phoneNumber: tPhone,
+          password: 'wrongpass',
+        ),
+      ),
       expectPresentation: () => [
-        isA<LoginFailurePresentationEvent>()
-            .having((e) => e.exception, 'exception', tAuthException),
+        isA<LoginFailurePresentationEvent>().having(
+          (e) => e.exception,
+          'exception',
+          tAuthException,
+        ),
       ],
     );
 
@@ -137,10 +153,12 @@ void main() {
         ).thenThrow(Exception('network failure'));
         return LoginBloc(authenticationRepository: authRepository);
       },
-      act: (bloc) => bloc.add(const LoginSubmittedEvent(
-        phoneNumber: tPhone,
-        password: tPassword,
-      )),
+      act: (bloc) => bloc.add(
+        const LoginSubmittedEvent(
+          phoneNumber: tPhone,
+          password: tPassword,
+        ),
+      ),
       expect: () => [
         LoginState.initial.copyWith(loadingState: LoginLoadingState.loading),
         LoginState.initial.copyWith(
