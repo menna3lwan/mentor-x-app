@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:parent/core/core.dart';
-import 'package:parent/widgets/clickable_text_widget.dart';
-import 'package:parent/widgets/matrial_button_widget.dart';
-import 'package:parent/widgets/text_form_filed_widget.dart';
 import 'package:parent/features/features.dart';
-import 'forget_password_page.dart';
+import 'package:parent_ui/parent_ui.dart';
 
 final class ForgetPasswordPageWrapper extends StatefulWidget {
   const ForgetPasswordPageWrapper({super.key});
@@ -17,55 +16,87 @@ final class ForgetPasswordPageWrapper extends StatefulWidget {
 
 class _ForgetPasswordPageWrapperState extends State<ForgetPasswordPageWrapper> {
   final _formKey = GlobalKey<FormState>();
-  final phoneController = TextEditingController();
+  late final TextEditingController _phoneController;
+
+  @override
+  void initState() {
+    super.initState();
+    _phoneController = TextEditingController();
+  }
 
   @override
   void dispose() {
-    phoneController.dispose();
+    _phoneController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: ForgetPasswordPage(
-        title: const Text(
-          "Forgot Password?",
-          style: TextStyle(
-            color: Color(0xFF183764),
-            fontSize: 28,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        subtitle: const Text(
-          "Don’t worry! Enter your phone number and we’ll send you a verification code.",
-          style: TextStyle(color: Color(0xFF183764), fontSize: 14),
-        ),
-        phoneField: TextFormFieldWidget(
-          label: "Phone",
-          icon: Icons.phone_outlined,
-          controller: phoneController,
-          keyboardType: TextInputType.phone,
-          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-          validator: Validator.validatePhoneNumber,
-        ),
-        sendCodeButton: MatrialButTonWidget(
-          onPressed: () {
-            if (_formKey.currentState?.validate() ?? false) {
-              OtpPageRoute(phone: phoneController.text).push(context);
-            }
-          },
-          text: "Send Code",
-        ),
-        backToLoginButton: ClickableTextWidget(
-          alignment: Alignment.centerLeft,
-          text: "Back To Login",
-          color: const Color(0xFF183764),
-          onPressed: () {
-            const LoginPageRoute().go(context);
-          },
-        ),
+    return BlocPresentationListener<ForgetPasswordBloc,
+        ForgetPasswordPresentationEvent>(
+      listener: (context, event) {
+        switch (event) {
+          case ForgetPasswordSuccessPresentationEvent(:final phone):
+            OtpPageRoute(phone: phone).push(context);
+          case ForgetPasswordFailurePresentationEvent(:final exception):
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(exception.message ?? 'Failed to send code'),
+              ),
+            );
+        }
+      },
+      child: Builder(
+        builder: (context) {
+          final isLoading = context.select<ForgetPasswordBloc, bool>(
+            (bloc) => bloc.state.loadingState.isLoading,
+          );
+          return Form(
+            key: _formKey,
+            child: ForgetPasswordPage(
+              title: const Text(
+                'Forgot Password?',
+                style: TextStyle(
+                  color: Color(0xFF183764),
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              subtitle: const Text(
+                "Don't worry! Enter your phone number and we'll send you a verification code.",
+                style: TextStyle(color: Color(0xFF183764), fontSize: 14),
+              ),
+              phoneField: TextFormFieldWidget(
+                label: 'Phone',
+                icon: Icons.phone_outlined,
+                controller: _phoneController,
+                keyboardType: TextInputType.phone,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                validator: Validator.validatePhoneNumber,
+              ),
+              sendCodeButton: MaterialButtonWidget(
+                onPressed: isLoading
+                    ? null
+                    : () {
+                        if (_formKey.currentState?.validate() ?? false) {
+                          context.read<ForgetPasswordBloc>().add(
+                                ForgetPasswordSubmittedEvent(
+                                  phoneNumber: _phoneController.text,
+                                ),
+                              );
+                        }
+                      },
+                text: isLoading ? 'Sending...' : 'Send Code',
+              ),
+              backToLoginButton: ClickableTextWidget(
+                alignment: Alignment.centerLeft,
+                text: 'Back To Login',
+                color: const Color(0xFF183764),
+                onPressed: () => const LoginPageRoute().go(context),
+              ),
+            ),
+          );
+        },
       ),
     );
   }

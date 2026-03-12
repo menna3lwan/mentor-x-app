@@ -1,22 +1,39 @@
 part of 'login_bloc.dart';
 
-sealed class LoginState extends Equatable {
-  const LoginState();
+enum LoginLoadingState {
+  initial,
+  loading,
+  success,
+  failure;
 
-  @override
-  List<Object?> get props => [];
+  bool get isLoading => this == LoginLoadingState.loading;
+  bool get isSuccess => this == LoginLoadingState.success;
+  bool get isFailure => this == LoginLoadingState.failure;
 }
 
-final class LoginInitial extends LoginState {}
+final class LoginState extends Equatable {
+  final LoginLoadingState loadingState;
+  final MentorXException? exception;
 
-final class LoginLoading extends LoginState {}
+  const LoginState({
+    required this.loadingState,
+    this.exception,
+  });
 
-final class LoginSuccess extends LoginState {}
+  static const initial = LoginState(
+    loadingState: LoginLoadingState.initial,
+  );
 
-final class LoginFailure extends LoginState {
-  final MentorXException exception;
-  const LoginFailure({required this.exception});
+  LoginState copyWith({
+    LoginLoadingState? loadingState,
+    MentorXException? exception,
+  }) {
+    return LoginState(
+      loadingState: loadingState ?? this.loadingState,
+      exception: exception ?? this.exception,
+    );
+  }
 
   @override
-  List<Object?> get props => [exception];
+  List<Object?> get props => [loadingState, exception];
 }

@@ -4,9 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:parent/core/core.dart';
-import 'package:parent/widgets/clickable_text_widget.dart';
-import 'package:parent/widgets/matrial_button_widget.dart';
 import 'package:parent/features/features.dart';
+import 'package:parent_ui/parent_ui.dart';
 
 final class OtpPageWrapper extends StatefulWidget {
   final String phone;
@@ -19,11 +18,15 @@ final class OtpPageWrapper extends StatefulWidget {
 
 class _OtpPageWrapperState extends State<OtpPageWrapper> {
   final _formKey = GlobalKey<FormState>();
-  final List<TextEditingController> controllers = List.generate(
-    6,
-    (_) => TextEditingController(),
-  );
-  final List<FocusNode> focusNodes = List.generate(6, (_) => FocusNode());
+  late final List<TextEditingController> controllers;
+  late final List<FocusNode> focusNodes;
+
+  @override
+  void initState() {
+    super.initState();
+    controllers = List.generate(6, (_) => TextEditingController());
+    focusNodes = List.generate(6, (_) => FocusNode());
+  }
 
   @override
   void dispose() {
@@ -49,25 +52,29 @@ class _OtpPageWrapperState extends State<OtpPageWrapper> {
   Widget build(BuildContext context) {
     return BlocPresentationListener<OtpBloc, OtpPresentationEvent>(
       listener: (context, event) {
-        if (event is OtpSuccessPresentationEvent) {
-          const DashboardPageRoute().go(context);
-        } else if (event is OtpFailurePresentationEvent) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-                content:
-                    Text(event.exception.message ?? "Verification failed")),
-          );
+        switch (event) {
+          case OtpSuccessPresentationEvent(:final user):
+            context.read<AppAuthenticationCubit>().login(user);
+            const HomePageRoute().go(context);
+          case OtpFailurePresentationEvent(:final exception):
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                  content: Text(exception.message ?? 'Verification failed')),
+            );
         }
       },
-      child: BlocBuilder<OtpBloc, OtpState>(
-        builder: (context, state) {
+      child: Builder(
+        builder: (context) {
+          final isLoading = context.select<OtpBloc, bool>(
+            (bloc) => bloc.state.loadingState.isLoading,
+          );
           return OtpPage(
             backButton: IconButton(
               onPressed: () => context.pop(),
               icon: const Icon(Icons.arrow_back, color: Color(0xFF183764)),
             ),
             title: const Text(
-              "Verify Code",
+              'Verify Code',
               style: TextStyle(
                 fontSize: 26,
                 fontWeight: FontWeight.bold,
@@ -75,7 +82,7 @@ class _OtpPageWrapperState extends State<OtpPageWrapper> {
               ),
             ),
             subtitle: const Text(
-              "Enter the 6-digit code sent to your phone",
+              'Enter the 6-digit code sent to your phone',
               style: TextStyle(color: Colors.grey),
             ),
             otpFields: Form(
@@ -100,12 +107,11 @@ class _OtpPageWrapperState extends State<OtpPageWrapper> {
                         color: Color(0xFF183764),
                       ),
                       decoration: InputDecoration(
-                        counterText: "",
+                        counterText: '',
                         filled: true,
                         fillColor: Colors.white,
-                        contentPadding: const EdgeInsets.symmetric(
-                          vertical: 20,
-                        ),
+                        contentPadding:
+                            const EdgeInsets.symmetric(vertical: 20),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(18),
                           borderSide: BorderSide(color: Colors.grey.shade400),
@@ -118,19 +124,17 @@ class _OtpPageWrapperState extends State<OtpPageWrapper> {
                           ),
                         ),
                       ),
-                      onChanged: (value) {
-                        moveToNext(index, value);
-                      },
+                      onChanged: (value) => moveToNext(index, value),
                     ),
                   );
                 }),
               ),
             ),
-            verifyButton: MatrialButTonWidget(
-              onPressed: state is OtpLoading
+            verifyButton: MaterialButtonWidget(
+              onPressed: isLoading
                   ? null
                   : () {
-                      String code = controllers.map((e) => e.text).join();
+                      final code = controllers.map((e) => e.text).join();
                       if (code.length == 6) {
                         context.read<OtpBloc>().add(
                               OtpSubmittedEvent(
@@ -140,7 +144,7 @@ class _OtpPageWrapperState extends State<OtpPageWrapper> {
                             );
                       }
                     },
-              text: state is OtpLoading ? "Verifying..." : "Verify",
+              text: isLoading ? 'Verifying...' : 'Verify',
             ),
             resendButton: ClickableTextWidget(
               alignment: Alignment.center,

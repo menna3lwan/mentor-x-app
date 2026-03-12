@@ -6,7 +6,8 @@ enum RepositoryMode {
     for (final mode in values) {
       if (mode.name == value.toLowerCase()) return mode;
     }
-    return RepositoryMode.mock;
+    throw ArgumentError(
+        'Unknown RepositoryMode: "$value". Must be mock or prod.');
   }
 }
 
@@ -40,26 +41,39 @@ final class Env {
   );
 
   // ──── Per-Repository Mode Switches ────
+  /// `AUTHENTICATION_REPOSITORY_MODE` must be `mock` or `prod` in dev.env.
   static final authenticationRepositoryMode = RepositoryMode.fromString(
-    const String.fromEnvironment('AUTHENTICATION_REPOSITORY_MODE',
-        defaultValue: 'mock'),
+    const String.fromEnvironment(
+      'AUTHENTICATION_REPOSITORY_MODE',
+      defaultValue: 'mock',
+    ),
   );
 
   static final dashboardRepositoryMode = RepositoryMode.fromString(
-    const String.fromEnvironment('DASHBOARD_REPOSITORY_MODE',
-        defaultValue: 'mock'),
+    const String.fromEnvironment(
+      'DASHBOARD_REPOSITORY_MODE',
+      defaultValue: 'mock',
+    ),
   );
 
   // ──── Mock Configuration ────
-  static const int _mockDelayDurationInSeconds = int.fromEnvironment(
+  static const int _mockDelayInSeconds = int.fromEnvironment(
     'MOCK_DELAY_IN_SECONDS',
     defaultValue: 2,
   );
   static Duration get mockDelayDuration =>
-      const Duration(seconds: _mockDelayDurationInSeconds);
+      Duration(seconds: _mockDelayInSeconds);
 
-  static const String mockPhoneNumber =
-      String.fromEnvironment('MOCK_USER_PHONE_NUMBER');
-  static const String mockOTP = String.fromEnvironment('MOCK_OTP_CODE');
-  static const String mockUserName = String.fromEnvironment('MOCK_USER_NAME');
+  static const String mockUserPhone = String.fromEnvironment(
+    'MOCK_USER_PHONE_NUMBER',
+    defaultValue: '01000000000',
+  );
+  static const String mockOtpCode = String.fromEnvironment(
+    'MOCK_OTP_CODE',
+    defaultValue: '123456',
+  );
+  static const String mockUserName = String.fromEnvironment(
+    'MOCK_USER_NAME',
+    defaultValue: 'Parent Account',
+  );
 }

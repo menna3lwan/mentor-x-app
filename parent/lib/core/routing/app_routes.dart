@@ -9,5 +9,5 @@ import 'package:parent/features/features.dart';
 part '../../features/auth/pages/login/login_page_route.dart';
 part '../../features/auth/pages/otp/otp_page_route.dart';
 part '../../features/auth/pages/forget_password/forget_password_page_route.dart';
-part '../../features/dashboard/pages/dashboard/dashboard_page_route.dart';
+part '../../features/home/pages/home_page_route.dart';
 part 'app_routes.g.dart'; // Generated code

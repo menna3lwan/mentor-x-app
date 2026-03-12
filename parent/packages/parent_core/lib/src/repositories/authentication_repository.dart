@@ -1,4 +1,26 @@
-import '../entities/parent_entity.dart';
+part of '../../parent_core.dart';
+
+// ——— Exception codes ———
+
+enum AuthenticationExceptionCode {
+  unknown,
+  invalidCredentials,
+  networkError,
+  sessionExpired,
+  invalidOtp,
+}
+
+// ——— Typed exception ———
+
+final class AuthenticationException
+    extends MentorXException<AuthenticationExceptionCode> {
+  const AuthenticationException({
+    required super.code,
+    super.message,
+  });
+}
+
+// ——— Repository interface ———
 
 abstract interface class AuthenticationRepository {
   Future<void> initialize();

@@ -1,4 +1,4 @@
-package com.mentorx.parent.parent
+package com.mentorx.parent
 
 import io.flutter.embedding.android.FlutterActivity
 

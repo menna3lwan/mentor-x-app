@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+part of '../parent_ui.dart';
 
 class ClickableTextWidget extends StatelessWidget {
   const ClickableTextWidget({
@@ -8,6 +8,7 @@ class ClickableTextWidget extends StatelessWidget {
     required this.onPressed,
     required this.alignment,
   });
+
   final String text;
   final Color color;
   final void Function()? onPressed;

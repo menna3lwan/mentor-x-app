@@ -1,13 +1,24 @@
 import 'dart:async';
 import 'package:parent_core/parent_core.dart';
 
-class MockAuthenticationRepository implements AuthenticationRepository {
+final class MockAuthenticationRepository implements AuthenticationRepository {
+  final Duration delay;
+  final String mockPhone;
+  final String mockOtp;
+  final String mockUserName;
+
   ParentEntity? _cachedUser;
+
+  MockAuthenticationRepository({
+    this.delay = const Duration(seconds: 1),
+    this.mockPhone = '01000000000',
+    this.mockOtp = '123456',
+    this.mockUserName = 'Mock Parent',
+  });
 
   @override
   Future<void> initialize() async {
-    // Simulate init
-    await Future.delayed(const Duration(milliseconds: 500));
+    await Future.delayed(const Duration(milliseconds: 100));
   }
 
   @override
@@ -15,21 +26,20 @@ class MockAuthenticationRepository implements AuthenticationRepository {
     required String phone,
     required String password,
   }) async {
-    await Future.delayed(const Duration(seconds: 1));
-    if (phone == "01000000000" && password == "password") {
+    await Future.delayed(delay);
+    if (phone == mockPhone) {
       final user = ParentEntity(
-        id: "mock_id_123",
-        name: "Mock Parent",
+        id: 'mock_parent_id',
+        name: mockUserName,
         phoneNumber: phone,
       );
       _cachedUser = user;
       return user;
-    } else {
-      throw const AuthenticationException(
-        code: AuthenticationExceptionCode.invalidCredentials,
-        message: "Invalid phone or password in mock",
-      );
     }
+    throw const AuthenticationException(
+      code: AuthenticationExceptionCode.invalidCredentials,
+      message: 'Invalid phone or password',
+    );
   }
 
   @override
@@ -44,25 +54,24 @@ class MockAuthenticationRepository implements AuthenticationRepository {
 
   @override
   Future<void> sendOtp(String phone) async {
-    await Future.delayed(const Duration(seconds: 1));
+    await Future.delayed(delay);
   }
 
   @override
   Future<ParentEntity> verifyOtp(String phone, String code) async {
-    await Future.delayed(const Duration(seconds: 1));
-    if (code == "123456") {
+    await Future.delayed(delay);
+    if (code == mockOtp) {
       final user = ParentEntity(
-        id: "mock_id_123",
-        name: "Mock Parent",
+        id: 'mock_parent_id',
+        name: mockUserName,
         phoneNumber: phone,
       );
       _cachedUser = user;
       return user;
-    } else {
-      throw const AuthenticationException(
-        code: AuthenticationExceptionCode.invalidOtp,
-        message: "Invalid OTP",
-      );
     }
+    throw const AuthenticationException(
+      code: AuthenticationExceptionCode.invalidOtp,
+      message: 'Invalid OTP code',
+    );
   }
 }

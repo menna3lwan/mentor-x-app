@@ -1,0 +1,134 @@
+name: Deploy Parent to Play Store (Internal Testing)
+
+on:
+  push:
+    branches:
+      - parent_internal_testing
+  workflow_dispatch:
+    inputs:
+      track:
+        description: "Play Store track"
+        required: false
+        default: "internal"
+        type: choice
+        options: [internal, alpha, beta, production]
+
+jobs:
+  deploy:
+    name: Build & Deploy Flutter App Bundle
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      # ── 1. Checkout ────────────────────────────────────────────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ── 2. Java 17 (matches compileOptions in build.gradle.kts) ───────────
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: "17"
+          distribution: "temurin"
+
+      # ── 2b. Cache Gradle dependencies ─────────────────────────────────────
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('parent/android/**/*.gradle*', 'parent/android/**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      # ── 2c. Pre-install Android CMake to avoid downloading mid-build ───────
+      - name: Pre-install Android CMake 3.22.1
+        run: |
+          $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --install "cmake;3.22.1"
+
+      # ── 3. Flutter 3.38.9 stable ───────────────────────────────────────────
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.38.9"
+          channel: "stable"
+          cache: true
+
+      # ── 4. Flutter dependencies (run from workspace root) ─────────────────
+      - name: Install Flutter dependencies
+        run: flutter pub get
+
+      # ── 5. Restore gitignored secret files ────────────────────────────────
+      - name: Write google-services.json
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: echo "$GOOGLE_SERVICES_JSON" > parent/android/app/google-services.json
+
+      - name: Write firebase_options.dart
+        env:
+          FIREBASE_OPTIONS_DART: ${{ secrets.PARENT_FIREBASE_OPTIONS_DART }}
+        run: echo "$FIREBASE_OPTIONS_DART" > parent/lib/firebase_options.dart
+
+      - name: Write production.env
+        env:
+          PRODUCTION_ENV: ${{ secrets.PARENT_PRODUCTION_ENV }}
+        run: echo "$PRODUCTION_ENV" > parent/production.env
+
+      # ── 6. Android signing ────────────────────────────────────────────────
+      - name: Decode keystore
+        run: |
+          echo "${{ secrets.PARENT_KEYSTORE_BASE64 }}" | base64 --decode \
+            > parent/android/app/parent.jks
+
+      - name: Create key.properties
+        run: |
+          cat > parent/android/key.properties << EOF
+          storePassword=${{ secrets.STORE_PASSWORD }}
+          keyPassword=${{ secrets.KEY_PASSWORD }}
+          keyAlias=${{ secrets.KEY_ALIAS }}
+          storeFile=../app/parent.jks
+          EOF
+
+      # ── 7. Tests ──────────────────────────────────────────────────────────
+      - name: Run unit tests
+        working-directory: parent
+        run: flutter test
+
+      # ── 8. Version — read directly from pubspec.yaml ─────────────────────────
+      # The version (name + build number) is managed entirely in pubspec.yaml.
+      # Bump version: x.y.z+N in pubspec.yaml before merging to trigger a new
+      # Play Store upload with versionCode N.
+      - name: Echo version from pubspec
+        working-directory: parent
+        run: |
+          VERSION=$(grep '^version:' pubspec.yaml | awk '{print $2}')
+          echo "Building version ${VERSION}"
+
+      # ── 9. Build App Bundle ───────────────────────────────────────────────
+      # Override gradle.properties JVM heap: CI runners have 7 GB total RAM but
+      # the local setting requests -Xmx8G, causing the OOM killer to send SIGTERM
+      # (exit 143). Cap at 4 GB so the JVM + OS overhead fits within the limit.
+      - name: Override Gradle JVM args for CI
+        run: |
+          sed -i 's/org.gradle.jvmargs=.*/org.gradle.jvmargs=-Xmx4g -XX:MaxMetaspaceSize=512m -XX:ReservedCodeCacheSize=256m/' \
+            parent/android/gradle.properties
+          echo "org.gradle.daemon=false" >> parent/android/gradle.properties
+
+      - name: Build App Bundle (release)
+        working-directory: parent
+        run: |
+          flutter build appbundle \
+            --release \
+            lib/main.dart \
+            --dart-define-from-file=production.env
+
+      # ── 10. Upload to Play Store ──────────────────────────────────────────
+      - name: Upload to Play Store (Internal Testing)
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.PLAY_STORE_JSON_KEY }}
+          packageName: com.mentorx.parent
+          releaseFiles: parent/build/app/outputs/bundle/release/*.aab
+          track: ${{ github.event.inputs.track || 'internal' }}
+          status: draft

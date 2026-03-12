@@ -1,22 +1,38 @@
 part of 'forget_password_bloc.dart';
 
-sealed class ForgetPasswordState extends Equatable {
-  const ForgetPasswordState();
+enum ForgetPasswordLoadingState {
+  initial,
+  loading,
+  success,
+  failure;
 
-  @override
-  List<Object?> get props => [];
+  bool get isLoading => this == ForgetPasswordLoadingState.loading;
+  bool get isSuccess => this == ForgetPasswordLoadingState.success;
+  bool get isFailure => this == ForgetPasswordLoadingState.failure;
 }
 
-final class ForgetPasswordInitial extends ForgetPasswordState {}
+final class ForgetPasswordState extends Equatable {
+  final ForgetPasswordLoadingState loadingState;
+  final MentorXException? exception;
 
-final class ForgetPasswordLoading extends ForgetPasswordState {}
+  const ForgetPasswordState({
+    required this.loadingState,
+    this.exception,
+  });
 
-final class ForgetPasswordSuccess extends ForgetPasswordState {}
+  static const initial = ForgetPasswordState(
+    loadingState: ForgetPasswordLoadingState.initial,
+  );
 
-final class ForgetPasswordFailure extends ForgetPasswordState {
-  final MentorXException exception;
-  const ForgetPasswordFailure({required this.exception});
+  ForgetPasswordState copyWith({
+    ForgetPasswordLoadingState? loadingState,
+    MentorXException? exception,
+  }) =>
+      ForgetPasswordState(
+        loadingState: loadingState ?? this.loadingState,
+        exception: exception ?? this.exception,
+      );
 
   @override
-  List<Object?> get props => [exception];
+  List<Object?> get props => [loadingState, exception];
 }

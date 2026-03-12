@@ -10,7 +10,7 @@ List<RouteBase> get $appRoutes => [
       $loginPageRoute,
       $otpPageRoute,
       $forgetPasswordPageRoute,
-      $dashboardPageRoute,
+      $homePageRoute,
     ];
 
 RouteBase get $loginPageRoute => GoRouteData.$route(
@@ -106,19 +106,18 @@ mixin $ForgetPasswordPageRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-RouteBase get $dashboardPageRoute => GoRouteData.$route(
-      path: '/',
-      name: 'dashboard',
-      factory: $DashboardPageRoute._fromState,
+RouteBase get $homePageRoute => GoRouteData.$route(
+      path: '/home',
+      name: 'home',
+      factory: $HomePageRoute._fromState,
     );
 
-mixin $DashboardPageRoute on GoRouteData {
-  static DashboardPageRoute _fromState(GoRouterState state) =>
-      const DashboardPageRoute();
+mixin $HomePageRoute on GoRouteData {
+  static HomePageRoute _fromState(GoRouterState state) => const HomePageRoute();
 
   @override
   String get location => GoRouteData.$location(
-        '/',
+        '/home',
       );
 
   @override

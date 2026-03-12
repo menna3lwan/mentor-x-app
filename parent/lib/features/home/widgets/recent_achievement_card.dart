@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mentorx/ui/home/widgets/achievement_icon.dart';
+import 'achievement_icon.dart';
 
 class RecentAchievementsCard extends StatelessWidget {
   const RecentAchievementsCard({super.key});
@@ -19,7 +19,6 @@ class RecentAchievementsCard extends StatelessWidget {
             "Recent Achievements",
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
-
           const SizedBox(height: 10),
           AchievementIcon(
             color: Colors.orange,

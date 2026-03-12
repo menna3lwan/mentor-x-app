@@ -9,6 +9,10 @@ import 'package:parent_mock_authentication_repository/mock_authentication_reposi
 
 import '../../core/utils/env.dart';
 
+// ────────────────────────────────────────────────────────────────────────────
+// AppRepositories — typed container for every initialized repository.
+// ────────────────────────────────────────────────────────────────────────────
+
 final class AppRepositories {
   final CacheRepository cacheRepository;
   final AuthenticationRepository authenticationRepository;
@@ -18,6 +22,10 @@ final class AppRepositories {
     required this.authenticationRepository,
   });
 
+  /// Flat list — useful for parallel teardown/iteration.
+  List<Object> toList() => [cacheRepository, authenticationRepository];
+
+  /// [RepositoryProvider] list for [MultiRepositoryProvider].
   List<RepositoryProvider<Object>> toProviders() {
     return [
       RepositoryProvider<CacheRepository>(create: (_) => cacheRepository),
@@ -28,58 +36,90 @@ final class AppRepositories {
   }
 }
 
+// ────────────────────────────────────────────────────────────────────────────
+// RepositoriesFactory — lazy-singleton wiring with mock / prod switch.
+// ────────────────────────────────────────────────────────────────────────────
+
 final class RepositoriesFactory {
   RepositoriesFactory._();
 
+  // ── Singleton instances ──────────────────────────────────────────────────
   static HttpClient? _httpClient;
+  static bool _httpClientInitialized = false;
   static CacheRepository? _cacheRepository;
+
+  /// Language code resolved on first [initRepositories] call.
   static late final String initialLanguageCode;
+
+  // ── Lazy singleton initializers ──────────────────────────────────────────
 
   static Future<CacheRepository> _initCacheRepository() async {
     if (_cacheRepository != null) return _cacheRepository!;
-    final CacheRepository cacheRepository =
-        FlutterSecureStorageCacheRepository();
-    await cacheRepository.initialize();
-    _cacheRepository = cacheRepository;
-    return cacheRepository;
+    final repo = FlutterSecureStorageCacheRepository();
+    await repo.initialize();
+    _cacheRepository = repo;
+    return repo;
   }
 
   static Future<HttpClient> _initHttpClient() async {
-    if (_httpClient != null) return _httpClient!;
+    if (_httpClientInitialized && _httpClient != null) return _httpClient!;
     final cacheRepository = await _initCacheRepository();
-    final httpClient = DioHttpClient(
+    final client = DioHttpClient(
       baseUrl: Env.mentorxBaseUrl,
       cacheRepository: cacheRepository,
     );
-    _httpClient = httpClient as HttpClient;
-    return _httpClient!;
+    _httpClient = client;
+    _httpClientInitialized = true;
+    return client;
   }
+
+  // ── Per-repository initializers ──────────────────────────────────────────
 
   static Future<AuthenticationRepository>
       _initAuthenticationRepository() async {
     late final AuthenticationRepository repo;
     switch (Env.authenticationRepositoryMode) {
       case RepositoryMode.mock:
-        repo = MockAuthenticationRepository();
+        repo = MockAuthenticationRepository(
+          delay: Env.mockDelayDuration,
+          mockPhone: Env.mockUserPhone,
+          mockOtp: Env.mockOtpCode,
+          mockUserName: Env.mockUserName,
+        );
       case RepositoryMode.prod:
         final httpClient = await _initHttpClient();
-        repo = DioAuthenticationRepository(client: httpClient as DioHttpClient);
+        repo = DioAuthenticationRepository(
+          client: httpClient as DioHttpClient,
+        );
     }
     await repo.initialize();
     return repo;
   }
 
-  static Future<AppRepositories> initRepositories() async {
-    final cacheRepository = await _initCacheRepository();
+  // ── Language detection ────────────────────────────────────────────────────
 
-    initialLanguageCode = await cacheRepository.get(CacheKeys.languageCode) ??
+  static Future<String> _resolveLanguageCode(
+    CacheRepository cacheRepository,
+  ) async {
+    return await cacheRepository.get(CacheKeys.languageCode) ??
         Env.defaultLanguageCode;
+  }
 
-    final authenticationRepository = await _initAuthenticationRepository();
+  // ── Main entry point ──────────────────────────────────────────────────────
+
+  static Future<AppRepositories> initRepositories() async {
+    // CacheRepository MUST be first — all others may depend on it.
+    final cacheRepository = await _initCacheRepository();
+    initialLanguageCode = await _resolveLanguageCode(cacheRepository);
+
+    // Initialize remaining repositories in parallel.
+    final results = await Future.wait([
+      _initAuthenticationRepository(),
+    ]);
 
     return AppRepositories._(
       cacheRepository: cacheRepository,
-      authenticationRepository: authenticationRepository,
+      authenticationRepository: results[0],
     );
   }
 }

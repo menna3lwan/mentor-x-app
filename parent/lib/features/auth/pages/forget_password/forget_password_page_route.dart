@@ -9,7 +9,9 @@ final class ForgetPasswordPageRoute extends GoRouteData
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return BlocProvider<ForgetPasswordBloc>(
-      create: (context) => ForgetPasswordBloc(),
+      create: (context) => ForgetPasswordBloc(
+        authenticationRepository: context.read<AuthenticationRepository>(),
+      ),
       child: const ForgetPasswordPageWrapper(),
     );
   }

@@ -37,6 +37,9 @@ workspace:
   # Parent core
   - parent/packages/parent_core
 
+  # Parent UI
+  - parent/packages/parent_ui
+
   # Parent Dio repositories
   - parent/packages/parent/dio_authentication_repository
 

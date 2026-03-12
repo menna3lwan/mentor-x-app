@@ -1,22 +1,39 @@
 part of 'otp_bloc.dart';
 
-sealed class OtpState extends Equatable {
-  const OtpState();
+enum OtpLoadingState {
+  initial,
+  loading,
+  success,
+  failure;
 
-  @override
-  List<Object?> get props => [];
+  bool get isLoading => this == OtpLoadingState.loading;
+  bool get isSuccess => this == OtpLoadingState.success;
+  bool get isFailure => this == OtpLoadingState.failure;
 }
 
-final class OtpInitial extends OtpState {}
+final class OtpState extends Equatable {
+  final OtpLoadingState loadingState;
+  final MentorXException? exception;
 
-final class OtpLoading extends OtpState {}
+  const OtpState({
+    required this.loadingState,
+    this.exception,
+  });
 
-final class OtpSuccess extends OtpState {}
+  static const initial = OtpState(
+    loadingState: OtpLoadingState.initial,
+  );
 
-final class OtpFailure extends OtpState {
-  final MentorXException exception;
-  const OtpFailure({required this.exception});
+  OtpState copyWith({
+    OtpLoadingState? loadingState,
+    MentorXException? exception,
+  }) {
+    return OtpState(
+      loadingState: loadingState ?? this.loadingState,
+      exception: exception ?? this.exception,
+    );
+  }
 
   @override
-  List<Object?> get props => [exception];
+  List<Object?> get props => [loadingState, exception];
 }

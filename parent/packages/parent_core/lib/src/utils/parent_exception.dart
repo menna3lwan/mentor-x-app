@@ -1,17 +1,4 @@
-import 'package:mentorx_core/mentorx_core.dart';
+part of '../../parent_core.dart';
 
-enum AuthenticationExceptionCode {
-  unknown,
-  invalidCredentials,
-  networkError,
-  sessionExpired,
-  invalidOtp,
-}
-
-final class AuthenticationException
-    extends MentorXException<AuthenticationExceptionCode> {
-  const AuthenticationException({
-    required super.code,
-    super.message,
-  });
-}
+/// Generic parent-app exception base.
+/// Use [MentorXException] from mentorx_core as the base for typed exceptions.

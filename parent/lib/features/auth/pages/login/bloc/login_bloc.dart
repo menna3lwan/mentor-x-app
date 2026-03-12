@@ -7,8 +7,14 @@ import 'package:mentorx_core/mentorx_core.dart';
 part 'login_event.dart';
 part 'login_state.dart';
 
+// ──── Presentation events (one-time side effects) ────
 sealed class LoginPresentationEvent {
   const LoginPresentationEvent();
+}
+
+final class LoginSuccessPresentationEvent extends LoginPresentationEvent {
+  final ParentEntity user;
+  const LoginSuccessPresentationEvent({required this.user});
 }
 
 final class LoginFailurePresentationEvent extends LoginPresentationEvent {
@@ -16,18 +22,15 @@ final class LoginFailurePresentationEvent extends LoginPresentationEvent {
   const LoginFailurePresentationEvent({required this.exception});
 }
 
-final class LoginSuccessPresentationEvent extends LoginPresentationEvent {
-  const LoginSuccessPresentationEvent();
-}
-
+// ──── Bloc ────
 final class LoginBloc extends Bloc<LoginEvent, LoginState>
     with BlocPresentationMixin<LoginState, LoginPresentationEvent> {
   final AuthenticationRepository _authenticationRepository;
-  final MentorXLogger _logger = MentorXLogger('ParentLoginBloc');
+  final MentorXLogger _logger = MentorXLogger('LoginBloc');
 
   LoginBloc({required AuthenticationRepository authenticationRepository})
       : _authenticationRepository = authenticationRepository,
-        super(LoginInitial()) {
+        super(LoginState.initial) {
     on<LoginSubmittedEvent>(_onLoginSubmitted);
   }
 
@@ -35,23 +38,29 @@ final class LoginBloc extends Bloc<LoginEvent, LoginState>
     LoginSubmittedEvent event,
     Emitter<LoginState> emit,
   ) async {
-    emit(LoginLoading());
+    emit(state.copyWith(loadingState: LoginLoadingState.loading));
     try {
-      await _authenticationRepository.login(
+      final user = await _authenticationRepository.login(
         phone: event.phoneNumber,
         password: event.password,
       );
-      emit(LoginSuccess());
-      emitPresentation(const LoginSuccessPresentationEvent());
+      emit(state.copyWith(loadingState: LoginLoadingState.success));
+      emitPresentation(LoginSuccessPresentationEvent(user: user));
     } on AuthenticationException catch (e) {
-      _logger.error("Login failed: ${e.message}");
-      emit(LoginFailure(exception: e));
+      _logger.error('Login failed: ${e.message}');
+      emit(state.copyWith(
+        loadingState: LoginLoadingState.failure,
+        exception: e,
+      ));
       emitPresentation(LoginFailurePresentationEvent(exception: e));
     } catch (e) {
-      _logger.error("Unexpected login error: $e");
+      _logger.error('Unexpected login error: $e');
       const exception =
           AuthenticationException(code: AuthenticationExceptionCode.unknown);
-      emit(LoginFailure(exception: exception));
+      emit(state.copyWith(
+        loadingState: LoginLoadingState.failure,
+        exception: exception,
+      ));
       emitPresentation(
           const LoginFailurePresentationEvent(exception: exception));
     }

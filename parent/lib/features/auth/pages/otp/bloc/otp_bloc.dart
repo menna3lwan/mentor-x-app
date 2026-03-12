@@ -7,8 +7,14 @@ import 'package:mentorx_core/mentorx_core.dart';
 part 'otp_event.dart';
 part 'otp_state.dart';
 
+// ──── Presentation events (one-time side effects) ────
 sealed class OtpPresentationEvent {
   const OtpPresentationEvent();
+}
+
+final class OtpSuccessPresentationEvent extends OtpPresentationEvent {
+  final ParentEntity user;
+  const OtpSuccessPresentationEvent({required this.user});
 }
 
 final class OtpFailurePresentationEvent extends OtpPresentationEvent {
@@ -16,18 +22,15 @@ final class OtpFailurePresentationEvent extends OtpPresentationEvent {
   const OtpFailurePresentationEvent({required this.exception});
 }
 
-final class OtpSuccessPresentationEvent extends OtpPresentationEvent {
-  const OtpSuccessPresentationEvent();
-}
-
+// ──── Bloc ────
 final class OtpBloc extends Bloc<OtpEvent, OtpState>
     with BlocPresentationMixin<OtpState, OtpPresentationEvent> {
   final AuthenticationRepository _authenticationRepository;
-  final MentorXLogger _logger = MentorXLogger('ParentOtpBloc');
+  final MentorXLogger _logger = MentorXLogger('OtpBloc');
 
   OtpBloc({required AuthenticationRepository authenticationRepository})
       : _authenticationRepository = authenticationRepository,
-        super(OtpInitial()) {
+        super(OtpState.initial) {
     on<OtpSubmittedEvent>(_onOtpSubmitted);
   }
 
@@ -35,20 +38,27 @@ final class OtpBloc extends Bloc<OtpEvent, OtpState>
     OtpSubmittedEvent event,
     Emitter<OtpState> emit,
   ) async {
-    emit(OtpLoading());
+    emit(state.copyWith(loadingState: OtpLoadingState.loading));
     try {
-      await _authenticationRepository.verifyOtp(event.phone, event.code);
-      emit(OtpSuccess());
-      emitPresentation(const OtpSuccessPresentationEvent());
+      final user =
+          await _authenticationRepository.verifyOtp(event.phone, event.code);
+      emit(state.copyWith(loadingState: OtpLoadingState.success));
+      emitPresentation(OtpSuccessPresentationEvent(user: user));
     } on AuthenticationException catch (e) {
-      _logger.error("OTP Verification failed: ${e.message}");
-      emit(OtpFailure(exception: e));
+      _logger.error('OTP verification failed: ${e.message}');
+      emit(state.copyWith(
+        loadingState: OtpLoadingState.failure,
+        exception: e,
+      ));
       emitPresentation(OtpFailurePresentationEvent(exception: e));
     } catch (e) {
-      _logger.error("Unexpected OTP error: $e");
+      _logger.error('Unexpected OTP error: $e');
       const exception =
           AuthenticationException(code: AuthenticationExceptionCode.unknown);
-      emit(OtpFailure(exception: exception));
+      emit(state.copyWith(
+        loadingState: OtpLoadingState.failure,
+        exception: exception,
+      ));
       emitPresentation(const OtpFailurePresentationEvent(exception: exception));
     }
   }

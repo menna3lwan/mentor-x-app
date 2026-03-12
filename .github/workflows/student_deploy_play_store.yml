@@ -1,32 +1,10 @@
-# ─────────────────────────────────────────────────────────────────────────────
-# Deploy Coptic student → Google Play Open Testing
-# ─────────────────────────────────────────────────────────────────────────────
-#
-# Required GitHub Secrets (Repo → Settings → Secrets → Actions):
-#
-#   KEYSTORE_BASE64         base64 of student/android/app/student.jks
-#                           Generate: base64 -i student/android/app/student.jks | pbcopy
-#
-#   KEY_ALIAS               upload
-#   KEY_PASSWORD            <your key password>
-#   STORE_PASSWORD          <your keystore password>
-#
-#   PLAY_STORE_JSON_KEY     Google Play service-account JSON (full file contents)
-#
-#   GOOGLE_SERVICES_JSON    Contents of student/android/app/google-services.json
-#   FIREBASE_OPTIONS_DART   Contents of student/lib/firebase_options.dart
-#
-#   PRODUCTION_ENV          Contents of the production env file used for
-#                           --dart-define-from-file (mirrors dev.env structure)
-# ─────────────────────────────────────────────────────────────────────────────
-
 name: Deploy Student to Play Store (Internal Testing)
 
 on:
   push:
     branches:
-      - student_internal_testing # triggers on every merge to main
-  workflow_dispatch: # allows manual trigger from GitHub UI
+      - student_internal_testing
+  workflow_dispatch:
     inputs:
       track:
         description: "Play Store track"
@@ -153,4 +131,4 @@ jobs:
           packageName: com.mentorx.student
           releaseFiles: student/build/app/outputs/bundle/release/*.aab
           track: ${{ github.event.inputs.track || 'internal' }}
-          status: draft # auto-publish; use 'draft' if you want manual review
+          status: draft

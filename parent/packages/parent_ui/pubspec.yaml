@@ -1,0 +1,13 @@
+name: parent_ui
+description: "Shared Parent UI widgets package."
+version: 0.0.1
+publish_to: none
+
+environment:
+  sdk: ^3.9.2
+
+resolution: workspace
+
+dependencies:
+  flutter:
+    sdk: flutter

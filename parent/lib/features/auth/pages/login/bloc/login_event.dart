@@ -7,10 +7,6 @@ sealed class LoginEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-final class LoginInitialEvent extends LoginEvent {
-  const LoginInitialEvent();
-}
-
 final class LoginSubmittedEvent extends LoginEvent {
   final String phoneNumber;
   final String password;

@@ -3,12 +3,13 @@
 ///
 // coverage:ignore-file
 // ignore_for_file: type=lint, unused_import
+// dart format off
 
 part of 'strings.g.dart';
 
 // Path: <root>
 typedef TranslationsEn = Translations; // ignore: unused_element
-class Translations implements BaseTranslations<AppLocale, Translations> {
+class Translations with BaseTranslations<AppLocale, Translations> {
 	/// Returns the current translations of the given [context].
 	///
 	/// Usage:
@@ -1306,449 +1307,437 @@ class TranslationsHomeDashboardActionsEn {
 /// so the map is split into smaller functions (512 entries each).
 extension on Translations {
 	dynamic _flatMapFunction(String path) {
-		return _flatMapFunction$0(path);
-	}
-
-	dynamic _flatMapFunction$0(String path) {
-		switch (path) {
-			case 'ui.common.cancel': return 'Cancel';
-			case 'ui.common.ok': return 'OK';
-			case 'ui.common.viewAll': return 'View All';
-			case 'ui.common.required': return 'Required';
-			case 'ui.common.optional': return 'Optional';
-			case 'ui.common.customization': return 'Customization';
-			case 'ui.common.skip': return 'Skip';
-			case 'ui.common.next': return 'Next';
-			case 'ui.common.getStarted': return 'Get Started';
-			case 'ui.common.backToLogin': return 'Back to Login';
-			case 'ui.errors.somethingWentWrong': return 'Something went wrong';
-			case 'ui.errors.retry': return 'Retry';
-			case 'ui.dateTime.yesterday': return 'Yesterday';
-			case 'ui.dateTime.today': return 'Today';
-			case 'ui.dateTime.now': return 'Now';
-			case 'ui.dateTime.tomorrow': return 'Tomorrow';
-			case 'ui.dateTime.time': return ({required DateTime time}) => '${DateFormat('HH:mm', 'en').format(time)}';
-			case 'ui.dateTime.timeWithDay': return ({required DateTime time, required Object day}) => '${DateFormat('HH:mm', 'en').format(time)}, ${day}';
-			case 'ui.dateTime.dateWithMonth': return ({required DateTime date}) => '${DateFormat('MMM d', 'en').format(date)}';
-			case 'ui.dateTime.weekdays.monday': return 'Mon';
-			case 'ui.dateTime.weekdays.tuesday': return 'Tue';
-			case 'ui.dateTime.weekdays.wednesday': return 'Wed';
-			case 'ui.dateTime.weekdays.thursday': return 'Thu';
-			case 'ui.dateTime.weekdays.friday': return 'Fri';
-			case 'ui.dateTime.weekdays.saturday': return 'Sat';
-			case 'ui.dateTime.weekdays.sunday': return 'Sun';
-			case 'ui.mentorXReadMore.more': return 'More';
-			case 'ui.mentorXReadMore.less': return 'Less';
-			case 'core.appName': return 'MentorX Student';
-			case 'core.currency': return 'EGP';
-			case 'core.price': return ({required num amount}) => '${amount} ${_root.core.currency}';
-			case 'core.languages.en': return 'English';
-			case 'core.languages.ar': return 'العربية';
-			case 'initialLanguage.header': return 'Select your preferred language';
-			case 'initialLanguage.kContinue': return 'Continue';
-			case 'onboarding.steps.learn.title': return 'Learn';
-			case 'onboarding.steps.learn.description': return 'Access your lessons, courses, and educational materials all in one place.';
-			case 'onboarding.steps.trackProgress.title': return 'Track Progress';
-			case 'onboarding.steps.trackProgress.description': return 'Monitor your academic performance and track your growth over time.';
-			case 'onboarding.steps.quizzes.title': return 'Quizzes';
-			case 'onboarding.steps.quizzes.description': return 'Test your knowledge with interactive quizzes and get instant feedback.';
-			case 'login.header': return 'Enter your phone number to sign in';
-			case 'login.subtitle': return 'We will send you a verification code';
-			case 'login.phoneNumber': return 'Phone Number';
-			case 'login.phoneHint': return '01XXXXXXXXX';
-			case 'login.phoneValidationError': return 'Please enter a valid phone number';
-			case 'login.signIn': return 'Sign In';
-			case 'login.otp.header': return 'Confirmation code';
-			case 'login.otp.description': return 'We sent a code to your device. Enter it here to continue.';
-			case 'login.otp.confirm': return 'Confirm';
-			case 'login.otp.otpWasVerifiedSuccessfully': return 'OTP was verified successfully';
-			case 'login.otp.resend': return 'Resend';
-			case 'login.otp.resendIn': return 'Resend in';
-			case 'login.otp.editNumber': return 'Edit Number';
-			case 'login.otp.otpWasResentSuccessfully': return 'OTP was resent successfully';
-			case 'home.main.home': return 'Home';
-			case 'home.main.favorites': return 'Favorites';
-			case 'home.main.assistance': return 'Assistance';
-			case 'home.main.cart': return 'Cart';
-			case 'home.main.me': return 'Me';
-			case 'home.dashboard.greetingMorning': return 'Good morning';
-			case 'home.dashboard.greetingEvening': return 'Good evening';
-			case 'home.dashboard.greetingWithName': return ({required Object greeting, required Object name}) => '${greeting}, ${name} 👋';
-			case 'home.dashboard.updatedAt': return ({required DateTime time}) => 'Updated ${DateFormat('HH:mm', 'en').format(time)}';
-			case 'home.dashboard.continueLearning': return 'Continue Learning';
-			case 'home.dashboard.featuredCourses': return 'Featured Courses';
-			case 'home.dashboard.announcements': return 'Announcements';
-			case 'home.dashboard.quickActions': return 'Quick Actions';
-			case 'home.dashboard.walletBalance': return 'Wallet Balance';
-			case 'home.dashboard.points': return ({required int count}) => '${count} points';
-			case 'home.dashboard.startLearningJourney': return 'Start your learning journey! Browse available courses.';
-			case 'home.dashboard.continueProgress': return ({required num progress}) => 'Continue ${progress}%';
-			case 'home.dashboard.free': return 'Free';
-			case 'home.dashboard.loadingCourse': return 'Loading course';
-			case 'home.dashboard.loadingFeaturedCourse': return 'Loading featured course';
-			case 'home.dashboard.loadingAnnouncement': return 'Loading announcement';
-			case 'home.dashboard.loadingAnnouncementDetails': return 'Loading announcement details';
-			case 'home.dashboard.unableToLoadTapRetry': return 'Unable to load. Tap to retry.';
-			case 'home.dashboard.actions.myCourses': return 'My Courses';
-			case 'home.dashboard.actions.attendance': return 'Attendance';
-			case 'home.dashboard.actions.grades': return 'Grades';
-			case 'home.dashboard.actions.aiAssistant': return 'AI Assistant';
-			case 'home.dashboard.actions.rewards': return 'Rewards';
-			case 'home.dashboard.actions.marketplace': return 'Marketplace';
-			case 'home.errors.failedToLoadUpcomingEvents': return 'Failed to load upcoming events';
-			case 'home.errors.failedToLoadVendors': return 'Failed to load service providers';
-			case 'home.errors.failedToLoadOccasions': return 'Failed to load occasions';
-			case 'home.errors.failedToLoadCategories': return 'Failed to load categories';
-			case 'forms.required': return 'This field is required';
-			case 'forms.minLength': return ({required int length}) => 'It must be ${length} letters long at least';
-			case 'forms.maxLength': return ({required int length}) => 'The maximum limit is ${length} letters';
-			case 'forms.minDigitsLength': return ({required int length}) => 'It must be ${length} digits long at least';
-			case 'forms.maxDigitsLength': return ({required int length}) => 'The maximum limit is ${length} digits';
-			case 'forms.youMustEnterAValidEmail': return 'You must enter a valid email';
-			case 'forms.card.expiryInvalidFormat': return 'Invalid format. Use MM/YY';
-			case 'forms.card.expiryInvalidMonth': return 'Invalid month (01-12)';
-			case 'forms.card.expiryCardExpired': return 'Card has expired';
-			case 'forms.card.cvvInvalid': return 'CVV must be 3-4 digits';
-			case 'exceptions.unknown': return 'Unknown error';
-			case 'exceptions.AuthenticationRepositoryExceptionCode.unknown': return 'Unknown error';
-			case 'exceptions.AuthenticationRepositoryExceptionCode.invalidPhoneNumber': return 'Invalid phone number';
-			case 'exceptions.AuthenticationRepositoryExceptionCode.invalidOTP': return 'Invalid OTP';
-			case 'exceptions.AuthenticationRepositoryExceptionCode.failedToInitialize': return 'Failed to initialize';
-			case 'exceptions.AuthenticationRepositoryExceptionCode.failedToSendOtp': return 'Failed to send OTP';
-			case 'exceptions.AuthenticationRepositoryExceptionCode.failedToVerifyOtp': return 'Failed to verify OTP';
-			case 'exceptions.promocodeExceptions.cantBeApplied': return 'Promocode cannot be applied to your cart';
-			case 'countries.afghanistan': return 'Afghanistan';
-			case 'countries.albania': return 'Albania';
-			case 'countries.algeria': return 'Algeria';
-			case 'countries.andorra': return 'Andorra';
-			case 'countries.angola': return 'Angola';
-			case 'countries.antiguaAndBarbuda': return 'Antigua and Barbuda';
-			case 'countries.argentina': return 'Argentina';
-			case 'countries.armenia': return 'Armenia';
-			case 'countries.australia': return 'Australia';
-			case 'countries.austria': return 'Austria';
-			case 'countries.azerbaijan': return 'Azerbaijan';
-			case 'countries.bahamas': return 'Bahamas';
-			case 'countries.bahrain': return 'Bahrain';
-			case 'countries.bangladesh': return 'Bangladesh';
-			case 'countries.barbados': return 'Barbados';
-			case 'countries.belarus': return 'Belarus';
-			case 'countries.belgium': return 'Belgium';
-			case 'countries.belize': return 'Belize';
-			case 'countries.benin': return 'Benin';
-			case 'countries.bhutan': return 'Bhutan';
-			case 'countries.bolivia': return 'Bolivia';
-			case 'countries.bosniaAndHerzegovina': return 'Bosnia and Herzegovina';
-			case 'countries.botswana': return 'Botswana';
-			case 'countries.brazil': return 'Brazil';
-			case 'countries.brunei': return 'Brunei';
-			case 'countries.bulgaria': return 'Bulgaria';
-			case 'countries.burkinaFaso': return 'Burkina Faso';
-			case 'countries.burundi': return 'Burundi';
-			case 'countries.cambodia': return 'Cambodia';
-			case 'countries.cameroon': return 'Cameroon';
-			case 'countries.canada': return 'Canada';
-			case 'countries.capeVerde': return 'Cape Verde';
-			case 'countries.centralAfricanRepublic': return 'Central African Republic';
-			case 'countries.chad': return 'Chad';
-			case 'countries.chile': return 'Chile';
-			case 'countries.china': return 'China';
-			case 'countries.colombia': return 'Colombia';
-			case 'countries.comoros': return 'Comoros';
-			case 'countries.congo': return 'Congo';
-			case 'countries.democraticRepublicOfCongo': return 'Democratic Republic of the Congo';
-			case 'countries.costaRica': return 'Costa Rica';
-			case 'countries.croatia': return 'Croatia';
-			case 'countries.cuba': return 'Cuba';
-			case 'countries.cyprus': return 'Cyprus';
-			case 'countries.czechRepublic': return 'Czech Republic';
-			case 'countries.denmark': return 'Denmark';
-			case 'countries.djibouti': return 'Djibouti';
-			case 'countries.dominica': return 'Dominica';
-			case 'countries.dominicanRepublic': return 'Dominican Republic';
-			case 'countries.ecuador': return 'Ecuador';
-			case 'countries.egypt': return 'Egypt';
-			case 'countries.elSalvador': return 'El Salvador';
-			case 'countries.equatorialGuinea': return 'Equatorial Guinea';
-			case 'countries.eritrea': return 'Eritrea';
-			case 'countries.estonia': return 'Estonia';
-			case 'countries.eswatini': return 'Eswatini';
-			case 'countries.ethiopia': return 'Ethiopia';
-			case 'countries.fiji': return 'Fiji';
-			case 'countries.finland': return 'Finland';
-			case 'countries.france': return 'France';
-			case 'countries.gabon': return 'Gabon';
-			case 'countries.gambia': return 'Gambia';
-			case 'countries.georgia': return 'Georgia';
-			case 'countries.germany': return 'Germany';
-			case 'countries.ghana': return 'Ghana';
-			case 'countries.greece': return 'Greece';
-			case 'countries.grenada': return 'Grenada';
-			case 'countries.guatemala': return 'Guatemala';
-			case 'countries.guinea': return 'Guinea';
-			case 'countries.guineaBissau': return 'Guinea-Bissau';
-			case 'countries.guyana': return 'Guyana';
-			case 'countries.haiti': return 'Haiti';
-			case 'countries.honduras': return 'Honduras';
-			case 'countries.hungary': return 'Hungary';
-			case 'countries.iceland': return 'Iceland';
-			case 'countries.india': return 'India';
-			case 'countries.indonesia': return 'Indonesia';
-			case 'countries.iran': return 'Iran';
-			case 'countries.iraq': return 'Iraq';
-			case 'countries.ireland': return 'Ireland';
-			case 'countries.israel': return 'Israel';
-			case 'countries.italy': return 'Italy';
-			case 'countries.ivoryCoast': return 'Ivory Coast';
-			case 'countries.jamaica': return 'Jamaica';
-			case 'countries.japan': return 'Japan';
-			case 'countries.jordan': return 'Jordan';
-			case 'countries.kazakhstan': return 'Kazakhstan';
-			case 'countries.kenya': return 'Kenya';
-			case 'countries.kiribati': return 'Kiribati';
-			case 'countries.kuwait': return 'Kuwait';
-			case 'countries.kyrgyzstan': return 'Kyrgyzstan';
-			case 'countries.laos': return 'Laos';
-			case 'countries.latvia': return 'Latvia';
-			case 'countries.lebanon': return 'Lebanon';
-			case 'countries.lesotho': return 'Lesotho';
-			case 'countries.liberia': return 'Liberia';
-			case 'countries.libya': return 'Libya';
-			case 'countries.liechtenstein': return 'Liechtenstein';
-			case 'countries.lithuania': return 'Lithuania';
-			case 'countries.luxembourg': return 'Luxembourg';
-			case 'countries.madagascar': return 'Madagascar';
-			case 'countries.malawi': return 'Malawi';
-			case 'countries.malaysia': return 'Malaysia';
-			case 'countries.maldives': return 'Maldives';
-			case 'countries.mali': return 'Mali';
-			case 'countries.malta': return 'Malta';
-			case 'countries.marshallIslands': return 'Marshall Islands';
-			case 'countries.mauritania': return 'Mauritania';
-			case 'countries.mauritius': return 'Mauritius';
-			case 'countries.mexico': return 'Mexico';
-			case 'countries.micronesia': return 'Micronesia';
-			case 'countries.moldova': return 'Moldova';
-			case 'countries.monaco': return 'Monaco';
-			case 'countries.mongolia': return 'Mongolia';
-			case 'countries.montenegro': return 'Montenegro';
-			case 'countries.morocco': return 'Morocco';
-			case 'countries.mozambique': return 'Mozambique';
-			case 'countries.myanmar': return 'Myanmar';
-			case 'countries.namibia': return 'Namibia';
-			case 'countries.nauru': return 'Nauru';
-			case 'countries.nepal': return 'Nepal';
-			case 'countries.netherlands': return 'Netherlands';
-			case 'countries.newZealand': return 'New Zealand';
-			case 'countries.nicaragua': return 'Nicaragua';
-			case 'countries.niger': return 'Niger';
-			case 'countries.nigeria': return 'Nigeria';
-			case 'countries.northKorea': return 'North Korea';
-			case 'countries.northMacedonia': return 'North Macedonia';
-			case 'countries.norway': return 'Norway';
-			case 'countries.oman': return 'Oman';
-			case 'countries.pakistan': return 'Pakistan';
-			case 'countries.palau': return 'Palau';
-			case 'countries.palestine': return 'Palestine';
-			case 'countries.panama': return 'Panama';
-			case 'countries.papuaNewGuinea': return 'Papua New Guinea';
-			case 'countries.paraguay': return 'Paraguay';
-			case 'countries.peru': return 'Peru';
-			case 'countries.philippines': return 'Philippines';
-			case 'countries.poland': return 'Poland';
-			case 'countries.portugal': return 'Portugal';
-			case 'countries.qatar': return 'Qatar';
-			case 'countries.romania': return 'Romania';
-			case 'countries.russia': return 'Russia';
-			case 'countries.rwanda': return 'Rwanda';
-			case 'countries.saintKittsAndNevis': return 'Saint Kitts and Nevis';
-			case 'countries.saintLucia': return 'Saint Lucia';
-			case 'countries.saintVincentAndTheGrenadines': return 'Saint Vincent and the Grenadines';
-			case 'countries.samoa': return 'Samoa';
-			case 'countries.sanMarino': return 'San Marino';
-			case 'countries.saoTomeAndPrincipe': return 'Sao Tome and Principe';
-			case 'countries.saudiArabia': return 'Saudi Arabia';
-			case 'countries.senegal': return 'Senegal';
-			case 'countries.serbia': return 'Serbia';
-			case 'countries.seychelles': return 'Seychelles';
-			case 'countries.sierraLeone': return 'Sierra Leone';
-			case 'countries.singapore': return 'Singapore';
-			case 'countries.slovakia': return 'Slovakia';
-			case 'countries.slovenia': return 'Slovenia';
-			case 'countries.solomonIslands': return 'Solomon Islands';
-			case 'countries.somalia': return 'Somalia';
-			case 'countries.southAfrica': return 'South Africa';
-			case 'countries.southKorea': return 'South Korea';
-			case 'countries.southSudan': return 'South Sudan';
-			case 'countries.spain': return 'Spain';
-			case 'countries.sriLanka': return 'Sri Lanka';
-			case 'countries.sudan': return 'Sudan';
-			case 'countries.suriname': return 'Suriname';
-			case 'countries.sweden': return 'Sweden';
-			case 'countries.switzerland': return 'Switzerland';
-			case 'countries.syria': return 'Syria';
-			case 'countries.taiwan': return 'Taiwan';
-			case 'countries.tajikistan': return 'Tajikistan';
-			case 'countries.tanzania': return 'Tanzania';
-			case 'countries.thailand': return 'Thailand';
-			case 'countries.timor': return 'Timor-Leste';
-			case 'countries.togo': return 'Togo';
-			case 'countries.tonga': return 'Tonga';
-			case 'countries.trinidadAndTobago': return 'Trinidad and Tobago';
-			case 'countries.tunisia': return 'Tunisia';
-			case 'countries.turkey': return 'Turkey';
-			case 'countries.turkmenistan': return 'Turkmenistan';
-			case 'countries.tuvalu': return 'Tuvalu';
-			case 'countries.uganda': return 'Uganda';
-			case 'countries.ukraine': return 'Ukraine';
-			case 'countries.unitedArabEmirates': return 'United Arab Emirates';
-			case 'countries.unitedKingdom': return 'United Kingdom';
-			case 'countries.unitedStates': return 'United States';
-			case 'countries.uruguay': return 'Uruguay';
-			case 'countries.uzbekistan': return 'Uzbekistan';
-			case 'countries.vanuatu': return 'Vanuatu';
-			case 'countries.vaticanCity': return 'Vatican City';
-			case 'countries.venezuela': return 'Venezuela';
-			case 'countries.vietnam': return 'Vietnam';
-			case 'countries.yemen': return 'Yemen';
-			case 'countries.zambia': return 'Zambia';
-			case 'countries.zimbabwe': return 'Zimbabwe';
-			case 'accountStatus.pendingTitle': return 'Account Under Review';
-			case 'accountStatus.pendingDescription': return 'Your account is currently being reviewed. We will notify you once approved.';
-			case 'accountStatus.pendingSupportInfo': return 'If you have questions, please contact support.';
-			case 'accountStatus.rejectedTitle': return 'Account Rejected';
-			case 'accountStatus.rejectedDescription': return 'Unfortunately, your account application has been rejected.';
-			case 'accountStatus.rejectedReason': return 'Please contact support for more information about the reason.';
-			case 'accountStatus.blockedTitle': return 'Account Blocked';
-			case 'accountStatus.blockedDescription': return 'Your account has been blocked. Please contact support for assistance.';
-			case 'accountStatus.blockedSupportInfo': return 'If you believe this is an error, please reach out to our support team.';
-			case 'cart.yourCart': return 'Your Cart';
-			case 'cart.emptyCart': return 'Cart is Empty';
-			case 'cart.browseServices': return 'Browse Services';
-			case 'cart.browseOfferings': return 'Browse our offerings \nto add items to your cart';
-			case 'cart.weRecommend': return 'We recommend';
-			case 'cart.edit': return 'Edit';
-			case 'cart.remove': return 'Remove';
-			case 'cart.addToCart': return 'Add to Cart';
-			case 'cart.close': return 'Close';
-			case 'cart.dontForgetToAdd': return 'Don\'t forget to add';
-			case 'cart.itemDateTime': return ({required DateTime date}) => '${DateFormat('MMM dd, hh:mm', 'en').format(date)}';
-			case 'cart.services': return ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
-				one: 'service',
-				other: 'services',
-			);
-			case 'cart.total': return 'Total';
-			case 'cart.hour': return ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
-				zero: 'hour',
-				one: 'hour',
-				other: 'hours',
-			);
-			case 'cart.promocode.header': return 'Promocode';
-			case 'cart.promocode.hint': return 'Enter a Promocode';
-			case 'cart.promocode.promocodeApplied': return 'Promocode applied';
-			case 'cart.promocode.promocodeCannotBeApplied': return 'Promocode cannot be applied to your cart';
-			case 'cart.updateInCart': return 'Update in Cart';
-			case 'cart.cart': return 'cart';
-			case 'cart.checkout': return 'Checkout';
-			case 'cart.apply': return 'Apply';
-			case 'cart.applyPromocode': return 'Apply Promocode';
-			case 'cart.enterPromocode': return 'Enter promocode';
-			case 'cart.promocodeRequired': return 'Promocode is required';
-			case 'cart.appliedPromocodes': return 'Applied Promocodes';
-			case 'cart.recommendations': return 'Recommendations';
-			case 'cart.subtotal': return 'Subtotal';
-			case 'cart.discount': return 'Discount';
-			case 'cart.minOrder': return 'Min order';
-			case 'cart.minTime': return 'Min time';
-			case 'cart.spaceRequired': return 'Space required';
-			case 'cart.hours': return 'Hours';
-			case 'cart.specialRequests': return 'Special requests';
-			case 'cart.enterSpecialRequests': return 'Enter special requests...';
-			case 'cart.errorLoadingCart': return 'Error loading cart';
-			case 'cart.cartCleared': return 'Cart cleared successfully';
-			case 'cart.failedToLoadService': return 'Failed to load service';
-			case 'cart.pleaseSelectOption': return ({required Object sectionName}) => 'Please select a ${sectionName}';
-			case 'cart.pleaseSelectAtLeastOne': return ({required Object sectionName}) => 'Please select at least one ${sectionName} option';
-			case 'cart.pleaseSelectMore': return ({required Object sectionName}) => 'Please select more ${sectionName} options';
-			case 'cart.tooManyOptionsSelected': return ({required Object sectionName}) => 'Too many ${sectionName} options selected';
-			case 'cart.pleaseAddAtLeastOne': return ({required Object sectionName}) => 'Please add at least one ${sectionName} item';
-			case 'cart.pleaseSelectDateTime': return 'Please select a date and time';
-			case 'cart.canapeOptions': return 'Canapé Options';
-			case 'cart.options': return 'Options';
-			case 'cart.startDateAndTime': return 'Start date and time';
-			case 'cart.perExtraHour': return 'per extra hour';
-			case 'cart.goToVendorProfile': return ({required Object vendorName}) => 'Go to ${vendorName} profile';
-			case 'settings.title': return 'App Settings';
-			case 'settings.language': return 'Language';
-			case 'settings.notifications': return 'Notifications';
-			case 'settings.notificationSettings.title': return 'Notifications';
-			case 'settings.notificationSettings.common': return 'Common';
-			case 'settings.notificationSettings.generalNotification': return 'General Notification';
-			case 'settings.notificationSettings.sound': return 'Sound';
-			case 'settings.notificationSettings.vibrate': return 'Vibrate';
-			case 'settings.notificationSettings.systemAndServicesUpdate': return 'System & Services Update';
-			case 'settings.notificationSettings.appUpdates': return 'App Updates';
-			case 'settings.notificationSettings.billReminder': return 'Bill Reminder';
-			case 'settings.notificationSettings.promotion': return 'Promotion';
-			case 'settings.notificationSettings.discountAvailable': return 'Discount Available';
-			case 'settings.notificationSettings.paymentRequest': return 'Payment Request';
-			case 'course.myCourses': return 'My Courses';
-			case 'course.courseCatalog': return 'Course Catalog';
-			case 'course.courseDetail': return 'Course Detail';
-			case 'course.videoPlayer': return 'Video Player';
-			case 'course.pdfViewer': return 'PDF Viewer';
-			case 'course.tabs.inProgress': return 'In Progress';
-			case 'course.tabs.completed': return 'Completed';
-			case 'course.tabs.expired': return 'Expired';
-			case 'course.tabs.description': return 'Description';
-			case 'course.tabs.sessions': return 'Sessions';
-			case 'course.catalog.searchHint': return 'Search courses...';
-			case 'course.catalog.allCategories': return 'All';
-			case 'course.catalog.sortBy': return 'Sort by';
-			case 'course.catalog.sortNewest': return 'Newest';
-			case 'course.catalog.sortPriceAsc': return 'Price: Low to High';
-			case 'course.catalog.sortPriceDesc': return 'Price: High to Low';
-			case 'course.catalog.sortPopular': return 'Most Popular';
-			case 'course.catalog.noCourses': return 'No courses found';
-			case 'course.catalog.noCoursesDescription': return 'Try adjusting your search or filters.';
-			case 'course.detail.aboutCourse': return 'About this Course';
-			case 'course.detail.sessions': return 'Sessions';
-			case 'course.detail.items': return 'items';
-			case 'course.detail.enrollNow': return 'Enroll Now';
-			case 'course.detail.enrolled': return 'Enrolled';
-			case 'course.detail.continueStudying': return 'Continue Studying';
-			case 'course.detail.courseExpired': return 'Course Expired';
-			case 'course.detail.courseCompleted': return 'Course Completed';
-			case 'course.detail.free': return 'Free';
-			case 'course.detail.students': return 'students';
-			case 'course.detail.videos': return 'videos';
-			case 'course.detail.duration': return 'Duration';
-			case 'course.detail.minutes': return 'min';
-			case 'course.detail.hours': return 'hours';
-			case 'course.detail.sessionFree': return 'Free';
-			case 'course.detail.enrolling': return 'Enrolling...';
-			case 'course.detail.enrollSuccess': return 'Successfully enrolled!';
-			case 'course.detail.enrollFailed': return 'Failed to enroll. Please try again.';
-			case 'course.player.title': return 'Video Player';
-			case 'course.player.loading': return 'Loading video...';
-			case 'course.player.error': return 'Failed to load video';
-			case 'course.player.complete': return 'Mark as Complete';
-			case 'course.player.completed': return 'Completed';
-			case 'course.pdf.title': return 'PDF Viewer';
-			case 'course.pdf.loading': return 'Loading document...';
-			case 'course.pdf.error': return 'Failed to load document';
-			case 'course.pdf.page': return ({required Object current, required Object total}) => 'Page ${current} of ${total}';
-			case 'course.pdf.markComplete': return 'Mark Complete';
-			case 'course.pdf.completed': return 'Completed';
-			case 'course.empty.noEnrolledCourses': return 'No enrolled courses';
-			case 'course.empty.noEnrolledCoursesDescription': return 'Start learning by browsing our course catalog.';
-			case 'course.empty.browseCatalog': return 'Browse Catalog';
-			case 'course.errors.failedToLoad': return 'Failed to load. Tap to retry.';
-			case 'course.errors.failedToLoadCourses': return 'Failed to load courses';
-			case 'course.errors.failedToLoadDetail': return 'Failed to load course details';
-			case 'course.errors.failedToLoadSessions': return 'Failed to load sessions';
-			default: return null;
-		}
+		return switch (path) {
+			'ui.common.cancel' => 'Cancel',
+			'ui.common.ok' => 'OK',
+			'ui.common.viewAll' => 'View All',
+			'ui.common.required' => 'Required',
+			'ui.common.optional' => 'Optional',
+			'ui.common.customization' => 'Customization',
+			'ui.common.skip' => 'Skip',
+			'ui.common.next' => 'Next',
+			'ui.common.getStarted' => 'Get Started',
+			'ui.common.backToLogin' => 'Back to Login',
+			'ui.errors.somethingWentWrong' => 'Something went wrong',
+			'ui.errors.retry' => 'Retry',
+			'ui.dateTime.yesterday' => 'Yesterday',
+			'ui.dateTime.today' => 'Today',
+			'ui.dateTime.now' => 'Now',
+			'ui.dateTime.tomorrow' => 'Tomorrow',
+			'ui.dateTime.time' => ({required DateTime time}) => '${DateFormat('HH:mm', 'en').format(time)}',
+			'ui.dateTime.timeWithDay' => ({required DateTime time, required Object day}) => '${DateFormat('HH:mm', 'en').format(time)}, ${day}',
+			'ui.dateTime.dateWithMonth' => ({required DateTime date}) => '${DateFormat('MMM d', 'en').format(date)}',
+			'ui.dateTime.weekdays.monday' => 'Mon',
+			'ui.dateTime.weekdays.tuesday' => 'Tue',
+			'ui.dateTime.weekdays.wednesday' => 'Wed',
+			'ui.dateTime.weekdays.thursday' => 'Thu',
+			'ui.dateTime.weekdays.friday' => 'Fri',
+			'ui.dateTime.weekdays.saturday' => 'Sat',
+			'ui.dateTime.weekdays.sunday' => 'Sun',
+			'ui.mentorXReadMore.more' => 'More',
+			'ui.mentorXReadMore.less' => 'Less',
+			'core.appName' => 'MentorX Student',
+			'core.currency' => 'EGP',
+			'core.price' => ({required num amount}) => '${amount} ${_root.core.currency}',
+			'core.languages.en' => 'English',
+			'core.languages.ar' => 'العربية',
+			'initialLanguage.header' => 'Select your preferred language',
+			'initialLanguage.kContinue' => 'Continue',
+			'onboarding.steps.learn.title' => 'Learn',
+			'onboarding.steps.learn.description' => 'Access your lessons, courses, and educational materials all in one place.',
+			'onboarding.steps.trackProgress.title' => 'Track Progress',
+			'onboarding.steps.trackProgress.description' => 'Monitor your academic performance and track your growth over time.',
+			'onboarding.steps.quizzes.title' => 'Quizzes',
+			'onboarding.steps.quizzes.description' => 'Test your knowledge with interactive quizzes and get instant feedback.',
+			'login.header' => 'Enter your phone number to sign in',
+			'login.subtitle' => 'We will send you a verification code',
+			'login.phoneNumber' => 'Phone Number',
+			'login.phoneHint' => '01XXXXXXXXX',
+			'login.phoneValidationError' => 'Please enter a valid phone number',
+			'login.signIn' => 'Sign In',
+			'login.otp.header' => 'Confirmation code',
+			'login.otp.description' => 'We sent a code to your device. Enter it here to continue.',
+			'login.otp.confirm' => 'Confirm',
+			'login.otp.otpWasVerifiedSuccessfully' => 'OTP was verified successfully',
+			'login.otp.resend' => 'Resend',
+			'login.otp.resendIn' => 'Resend in',
+			'login.otp.editNumber' => 'Edit Number',
+			'login.otp.otpWasResentSuccessfully' => 'OTP was resent successfully',
+			'home.main.home' => 'Home',
+			'home.main.favorites' => 'Favorites',
+			'home.main.assistance' => 'Assistance',
+			'home.main.cart' => 'Cart',
+			'home.main.me' => 'Me',
+			'home.dashboard.greetingMorning' => 'Good morning',
+			'home.dashboard.greetingEvening' => 'Good evening',
+			'home.dashboard.greetingWithName' => ({required Object greeting, required Object name}) => '${greeting}, ${name} 👋',
+			'home.dashboard.updatedAt' => ({required DateTime time}) => 'Updated ${DateFormat('HH:mm', 'en').format(time)}',
+			'home.dashboard.continueLearning' => 'Continue Learning',
+			'home.dashboard.featuredCourses' => 'Featured Courses',
+			'home.dashboard.announcements' => 'Announcements',
+			'home.dashboard.quickActions' => 'Quick Actions',
+			'home.dashboard.walletBalance' => 'Wallet Balance',
+			'home.dashboard.points' => ({required int count}) => '${count} points',
+			'home.dashboard.startLearningJourney' => 'Start your learning journey! Browse available courses.',
+			'home.dashboard.continueProgress' => ({required num progress}) => 'Continue ${progress}%',
+			'home.dashboard.free' => 'Free',
+			'home.dashboard.loadingCourse' => 'Loading course',
+			'home.dashboard.loadingFeaturedCourse' => 'Loading featured course',
+			'home.dashboard.loadingAnnouncement' => 'Loading announcement',
+			'home.dashboard.loadingAnnouncementDetails' => 'Loading announcement details',
+			'home.dashboard.unableToLoadTapRetry' => 'Unable to load. Tap to retry.',
+			'home.dashboard.actions.myCourses' => 'My Courses',
+			'home.dashboard.actions.attendance' => 'Attendance',
+			'home.dashboard.actions.grades' => 'Grades',
+			'home.dashboard.actions.aiAssistant' => 'AI Assistant',
+			'home.dashboard.actions.rewards' => 'Rewards',
+			'home.dashboard.actions.marketplace' => 'Marketplace',
+			'home.errors.failedToLoadUpcomingEvents' => 'Failed to load upcoming events',
+			'home.errors.failedToLoadVendors' => 'Failed to load service providers',
+			'home.errors.failedToLoadOccasions' => 'Failed to load occasions',
+			'home.errors.failedToLoadCategories' => 'Failed to load categories',
+			'forms.required' => 'This field is required',
+			'forms.minLength' => ({required int length}) => 'It must be ${length} letters long at least',
+			'forms.maxLength' => ({required int length}) => 'The maximum limit is ${length} letters',
+			'forms.minDigitsLength' => ({required int length}) => 'It must be ${length} digits long at least',
+			'forms.maxDigitsLength' => ({required int length}) => 'The maximum limit is ${length} digits',
+			'forms.youMustEnterAValidEmail' => 'You must enter a valid email',
+			'forms.card.expiryInvalidFormat' => 'Invalid format. Use MM/YY',
+			'forms.card.expiryInvalidMonth' => 'Invalid month (01-12)',
+			'forms.card.expiryCardExpired' => 'Card has expired',
+			'forms.card.cvvInvalid' => 'CVV must be 3-4 digits',
+			'exceptions.unknown' => 'Unknown error',
+			'exceptions.AuthenticationRepositoryExceptionCode.unknown' => 'Unknown error',
+			'exceptions.AuthenticationRepositoryExceptionCode.invalidPhoneNumber' => 'Invalid phone number',
+			'exceptions.AuthenticationRepositoryExceptionCode.invalidOTP' => 'Invalid OTP',
+			'exceptions.AuthenticationRepositoryExceptionCode.failedToInitialize' => 'Failed to initialize',
+			'exceptions.AuthenticationRepositoryExceptionCode.failedToSendOtp' => 'Failed to send OTP',
+			'exceptions.AuthenticationRepositoryExceptionCode.failedToVerifyOtp' => 'Failed to verify OTP',
+			'exceptions.promocodeExceptions.cantBeApplied' => 'Promocode cannot be applied to your cart',
+			'countries.afghanistan' => 'Afghanistan',
+			'countries.albania' => 'Albania',
+			'countries.algeria' => 'Algeria',
+			'countries.andorra' => 'Andorra',
+			'countries.angola' => 'Angola',
+			'countries.antiguaAndBarbuda' => 'Antigua and Barbuda',
+			'countries.argentina' => 'Argentina',
+			'countries.armenia' => 'Armenia',
+			'countries.australia' => 'Australia',
+			'countries.austria' => 'Austria',
+			'countries.azerbaijan' => 'Azerbaijan',
+			'countries.bahamas' => 'Bahamas',
+			'countries.bahrain' => 'Bahrain',
+			'countries.bangladesh' => 'Bangladesh',
+			'countries.barbados' => 'Barbados',
+			'countries.belarus' => 'Belarus',
+			'countries.belgium' => 'Belgium',
+			'countries.belize' => 'Belize',
+			'countries.benin' => 'Benin',
+			'countries.bhutan' => 'Bhutan',
+			'countries.bolivia' => 'Bolivia',
+			'countries.bosniaAndHerzegovina' => 'Bosnia and Herzegovina',
+			'countries.botswana' => 'Botswana',
+			'countries.brazil' => 'Brazil',
+			'countries.brunei' => 'Brunei',
+			'countries.bulgaria' => 'Bulgaria',
+			'countries.burkinaFaso' => 'Burkina Faso',
+			'countries.burundi' => 'Burundi',
+			'countries.cambodia' => 'Cambodia',
+			'countries.cameroon' => 'Cameroon',
+			'countries.canada' => 'Canada',
+			'countries.capeVerde' => 'Cape Verde',
+			'countries.centralAfricanRepublic' => 'Central African Republic',
+			'countries.chad' => 'Chad',
+			'countries.chile' => 'Chile',
+			'countries.china' => 'China',
+			'countries.colombia' => 'Colombia',
+			'countries.comoros' => 'Comoros',
+			'countries.congo' => 'Congo',
+			'countries.democraticRepublicOfCongo' => 'Democratic Republic of the Congo',
+			'countries.costaRica' => 'Costa Rica',
+			'countries.croatia' => 'Croatia',
+			'countries.cuba' => 'Cuba',
+			'countries.cyprus' => 'Cyprus',
+			'countries.czechRepublic' => 'Czech Republic',
+			'countries.denmark' => 'Denmark',
+			'countries.djibouti' => 'Djibouti',
+			'countries.dominica' => 'Dominica',
+			'countries.dominicanRepublic' => 'Dominican Republic',
+			'countries.ecuador' => 'Ecuador',
+			'countries.egypt' => 'Egypt',
+			'countries.elSalvador' => 'El Salvador',
+			'countries.equatorialGuinea' => 'Equatorial Guinea',
+			'countries.eritrea' => 'Eritrea',
+			'countries.estonia' => 'Estonia',
+			'countries.eswatini' => 'Eswatini',
+			'countries.ethiopia' => 'Ethiopia',
+			'countries.fiji' => 'Fiji',
+			'countries.finland' => 'Finland',
+			'countries.france' => 'France',
+			'countries.gabon' => 'Gabon',
+			'countries.gambia' => 'Gambia',
+			'countries.georgia' => 'Georgia',
+			'countries.germany' => 'Germany',
+			'countries.ghana' => 'Ghana',
+			'countries.greece' => 'Greece',
+			'countries.grenada' => 'Grenada',
+			'countries.guatemala' => 'Guatemala',
+			'countries.guinea' => 'Guinea',
+			'countries.guineaBissau' => 'Guinea-Bissau',
+			'countries.guyana' => 'Guyana',
+			'countries.haiti' => 'Haiti',
+			'countries.honduras' => 'Honduras',
+			'countries.hungary' => 'Hungary',
+			'countries.iceland' => 'Iceland',
+			'countries.india' => 'India',
+			'countries.indonesia' => 'Indonesia',
+			'countries.iran' => 'Iran',
+			'countries.iraq' => 'Iraq',
+			'countries.ireland' => 'Ireland',
+			'countries.israel' => 'Israel',
+			'countries.italy' => 'Italy',
+			'countries.ivoryCoast' => 'Ivory Coast',
+			'countries.jamaica' => 'Jamaica',
+			'countries.japan' => 'Japan',
+			'countries.jordan' => 'Jordan',
+			'countries.kazakhstan' => 'Kazakhstan',
+			'countries.kenya' => 'Kenya',
+			'countries.kiribati' => 'Kiribati',
+			'countries.kuwait' => 'Kuwait',
+			'countries.kyrgyzstan' => 'Kyrgyzstan',
+			'countries.laos' => 'Laos',
+			'countries.latvia' => 'Latvia',
+			'countries.lebanon' => 'Lebanon',
+			'countries.lesotho' => 'Lesotho',
+			'countries.liberia' => 'Liberia',
+			'countries.libya' => 'Libya',
+			'countries.liechtenstein' => 'Liechtenstein',
+			'countries.lithuania' => 'Lithuania',
+			'countries.luxembourg' => 'Luxembourg',
+			'countries.madagascar' => 'Madagascar',
+			'countries.malawi' => 'Malawi',
+			'countries.malaysia' => 'Malaysia',
+			'countries.maldives' => 'Maldives',
+			'countries.mali' => 'Mali',
+			'countries.malta' => 'Malta',
+			'countries.marshallIslands' => 'Marshall Islands',
+			'countries.mauritania' => 'Mauritania',
+			'countries.mauritius' => 'Mauritius',
+			'countries.mexico' => 'Mexico',
+			'countries.micronesia' => 'Micronesia',
+			'countries.moldova' => 'Moldova',
+			'countries.monaco' => 'Monaco',
+			'countries.mongolia' => 'Mongolia',
+			'countries.montenegro' => 'Montenegro',
+			'countries.morocco' => 'Morocco',
+			'countries.mozambique' => 'Mozambique',
+			'countries.myanmar' => 'Myanmar',
+			'countries.namibia' => 'Namibia',
+			'countries.nauru' => 'Nauru',
+			'countries.nepal' => 'Nepal',
+			'countries.netherlands' => 'Netherlands',
+			'countries.newZealand' => 'New Zealand',
+			'countries.nicaragua' => 'Nicaragua',
+			'countries.niger' => 'Niger',
+			'countries.nigeria' => 'Nigeria',
+			'countries.northKorea' => 'North Korea',
+			'countries.northMacedonia' => 'North Macedonia',
+			'countries.norway' => 'Norway',
+			'countries.oman' => 'Oman',
+			'countries.pakistan' => 'Pakistan',
+			'countries.palau' => 'Palau',
+			'countries.palestine' => 'Palestine',
+			'countries.panama' => 'Panama',
+			'countries.papuaNewGuinea' => 'Papua New Guinea',
+			'countries.paraguay' => 'Paraguay',
+			'countries.peru' => 'Peru',
+			'countries.philippines' => 'Philippines',
+			'countries.poland' => 'Poland',
+			'countries.portugal' => 'Portugal',
+			'countries.qatar' => 'Qatar',
+			'countries.romania' => 'Romania',
+			'countries.russia' => 'Russia',
+			'countries.rwanda' => 'Rwanda',
+			'countries.saintKittsAndNevis' => 'Saint Kitts and Nevis',
+			'countries.saintLucia' => 'Saint Lucia',
+			'countries.saintVincentAndTheGrenadines' => 'Saint Vincent and the Grenadines',
+			'countries.samoa' => 'Samoa',
+			'countries.sanMarino' => 'San Marino',
+			'countries.saoTomeAndPrincipe' => 'Sao Tome and Principe',
+			'countries.saudiArabia' => 'Saudi Arabia',
+			'countries.senegal' => 'Senegal',
+			'countries.serbia' => 'Serbia',
+			'countries.seychelles' => 'Seychelles',
+			'countries.sierraLeone' => 'Sierra Leone',
+			'countries.singapore' => 'Singapore',
+			'countries.slovakia' => 'Slovakia',
+			'countries.slovenia' => 'Slovenia',
+			'countries.solomonIslands' => 'Solomon Islands',
+			'countries.somalia' => 'Somalia',
+			'countries.southAfrica' => 'South Africa',
+			'countries.southKorea' => 'South Korea',
+			'countries.southSudan' => 'South Sudan',
+			'countries.spain' => 'Spain',
+			'countries.sriLanka' => 'Sri Lanka',
+			'countries.sudan' => 'Sudan',
+			'countries.suriname' => 'Suriname',
+			'countries.sweden' => 'Sweden',
+			'countries.switzerland' => 'Switzerland',
+			'countries.syria' => 'Syria',
+			'countries.taiwan' => 'Taiwan',
+			'countries.tajikistan' => 'Tajikistan',
+			'countries.tanzania' => 'Tanzania',
+			'countries.thailand' => 'Thailand',
+			'countries.timor' => 'Timor-Leste',
+			'countries.togo' => 'Togo',
+			'countries.tonga' => 'Tonga',
+			'countries.trinidadAndTobago' => 'Trinidad and Tobago',
+			'countries.tunisia' => 'Tunisia',
+			'countries.turkey' => 'Turkey',
+			'countries.turkmenistan' => 'Turkmenistan',
+			'countries.tuvalu' => 'Tuvalu',
+			'countries.uganda' => 'Uganda',
+			'countries.ukraine' => 'Ukraine',
+			'countries.unitedArabEmirates' => 'United Arab Emirates',
+			'countries.unitedKingdom' => 'United Kingdom',
+			'countries.unitedStates' => 'United States',
+			'countries.uruguay' => 'Uruguay',
+			'countries.uzbekistan' => 'Uzbekistan',
+			'countries.vanuatu' => 'Vanuatu',
+			'countries.vaticanCity' => 'Vatican City',
+			'countries.venezuela' => 'Venezuela',
+			'countries.vietnam' => 'Vietnam',
+			'countries.yemen' => 'Yemen',
+			'countries.zambia' => 'Zambia',
+			'countries.zimbabwe' => 'Zimbabwe',
+			'accountStatus.pendingTitle' => 'Account Under Review',
+			'accountStatus.pendingDescription' => 'Your account is currently being reviewed. We will notify you once approved.',
+			'accountStatus.pendingSupportInfo' => 'If you have questions, please contact support.',
+			'accountStatus.rejectedTitle' => 'Account Rejected',
+			'accountStatus.rejectedDescription' => 'Unfortunately, your account application has been rejected.',
+			'accountStatus.rejectedReason' => 'Please contact support for more information about the reason.',
+			'accountStatus.blockedTitle' => 'Account Blocked',
+			'accountStatus.blockedDescription' => 'Your account has been blocked. Please contact support for assistance.',
+			'accountStatus.blockedSupportInfo' => 'If you believe this is an error, please reach out to our support team.',
+			'cart.yourCart' => 'Your Cart',
+			'cart.emptyCart' => 'Cart is Empty',
+			'cart.browseServices' => 'Browse Services',
+			'cart.browseOfferings' => 'Browse our offerings \nto add items to your cart',
+			'cart.weRecommend' => 'We recommend',
+			'cart.edit' => 'Edit',
+			'cart.remove' => 'Remove',
+			'cart.addToCart' => 'Add to Cart',
+			'cart.close' => 'Close',
+			'cart.dontForgetToAdd' => 'Don\'t forget to add',
+			'cart.itemDateTime' => ({required DateTime date}) => '${DateFormat('MMM dd, hh:mm', 'en').format(date)}',
+			'cart.services' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: 'service', other: 'services', ), 
+			'cart.total' => 'Total',
+			'cart.hour' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, zero: 'hour', one: 'hour', other: 'hours', ), 
+			'cart.promocode.header' => 'Promocode',
+			'cart.promocode.hint' => 'Enter a Promocode',
+			'cart.promocode.promocodeApplied' => 'Promocode applied',
+			'cart.promocode.promocodeCannotBeApplied' => 'Promocode cannot be applied to your cart',
+			'cart.updateInCart' => 'Update in Cart',
+			'cart.cart' => 'cart',
+			'cart.checkout' => 'Checkout',
+			'cart.apply' => 'Apply',
+			'cart.applyPromocode' => 'Apply Promocode',
+			'cart.enterPromocode' => 'Enter promocode',
+			'cart.promocodeRequired' => 'Promocode is required',
+			'cart.appliedPromocodes' => 'Applied Promocodes',
+			'cart.recommendations' => 'Recommendations',
+			'cart.subtotal' => 'Subtotal',
+			'cart.discount' => 'Discount',
+			'cart.minOrder' => 'Min order',
+			'cart.minTime' => 'Min time',
+			'cart.spaceRequired' => 'Space required',
+			'cart.hours' => 'Hours',
+			'cart.specialRequests' => 'Special requests',
+			'cart.enterSpecialRequests' => 'Enter special requests...',
+			'cart.errorLoadingCart' => 'Error loading cart',
+			'cart.cartCleared' => 'Cart cleared successfully',
+			'cart.failedToLoadService' => 'Failed to load service',
+			'cart.pleaseSelectOption' => ({required Object sectionName}) => 'Please select a ${sectionName}',
+			'cart.pleaseSelectAtLeastOne' => ({required Object sectionName}) => 'Please select at least one ${sectionName} option',
+			'cart.pleaseSelectMore' => ({required Object sectionName}) => 'Please select more ${sectionName} options',
+			'cart.tooManyOptionsSelected' => ({required Object sectionName}) => 'Too many ${sectionName} options selected',
+			'cart.pleaseAddAtLeastOne' => ({required Object sectionName}) => 'Please add at least one ${sectionName} item',
+			'cart.pleaseSelectDateTime' => 'Please select a date and time',
+			'cart.canapeOptions' => 'Canapé Options',
+			'cart.options' => 'Options',
+			'cart.startDateAndTime' => 'Start date and time',
+			'cart.perExtraHour' => 'per extra hour',
+			'cart.goToVendorProfile' => ({required Object vendorName}) => 'Go to ${vendorName} profile',
+			'settings.title' => 'App Settings',
+			'settings.language' => 'Language',
+			'settings.notifications' => 'Notifications',
+			'settings.notificationSettings.title' => 'Notifications',
+			'settings.notificationSettings.common' => 'Common',
+			'settings.notificationSettings.generalNotification' => 'General Notification',
+			'settings.notificationSettings.sound' => 'Sound',
+			'settings.notificationSettings.vibrate' => 'Vibrate',
+			'settings.notificationSettings.systemAndServicesUpdate' => 'System & Services Update',
+			'settings.notificationSettings.appUpdates' => 'App Updates',
+			'settings.notificationSettings.billReminder' => 'Bill Reminder',
+			'settings.notificationSettings.promotion' => 'Promotion',
+			'settings.notificationSettings.discountAvailable' => 'Discount Available',
+			'settings.notificationSettings.paymentRequest' => 'Payment Request',
+			'course.myCourses' => 'My Courses',
+			'course.courseCatalog' => 'Course Catalog',
+			'course.courseDetail' => 'Course Detail',
+			'course.videoPlayer' => 'Video Player',
+			'course.pdfViewer' => 'PDF Viewer',
+			'course.tabs.inProgress' => 'In Progress',
+			'course.tabs.completed' => 'Completed',
+			'course.tabs.expired' => 'Expired',
+			'course.tabs.description' => 'Description',
+			'course.tabs.sessions' => 'Sessions',
+			'course.catalog.searchHint' => 'Search courses...',
+			'course.catalog.allCategories' => 'All',
+			'course.catalog.sortBy' => 'Sort by',
+			'course.catalog.sortNewest' => 'Newest',
+			'course.catalog.sortPriceAsc' => 'Price: Low to High',
+			'course.catalog.sortPriceDesc' => 'Price: High to Low',
+			'course.catalog.sortPopular' => 'Most Popular',
+			'course.catalog.noCourses' => 'No courses found',
+			'course.catalog.noCoursesDescription' => 'Try adjusting your search or filters.',
+			'course.detail.aboutCourse' => 'About this Course',
+			'course.detail.sessions' => 'Sessions',
+			'course.detail.items' => 'items',
+			'course.detail.enrollNow' => 'Enroll Now',
+			'course.detail.enrolled' => 'Enrolled',
+			'course.detail.continueStudying' => 'Continue Studying',
+			'course.detail.courseExpired' => 'Course Expired',
+			'course.detail.courseCompleted' => 'Course Completed',
+			'course.detail.free' => 'Free',
+			'course.detail.students' => 'students',
+			'course.detail.videos' => 'videos',
+			'course.detail.duration' => 'Duration',
+			'course.detail.minutes' => 'min',
+			'course.detail.hours' => 'hours',
+			'course.detail.sessionFree' => 'Free',
+			'course.detail.enrolling' => 'Enrolling...',
+			'course.detail.enrollSuccess' => 'Successfully enrolled!',
+			'course.detail.enrollFailed' => 'Failed to enroll. Please try again.',
+			'course.player.title' => 'Video Player',
+			'course.player.loading' => 'Loading video...',
+			'course.player.error' => 'Failed to load video',
+			'course.player.complete' => 'Mark as Complete',
+			'course.player.completed' => 'Completed',
+			'course.pdf.title' => 'PDF Viewer',
+			'course.pdf.loading' => 'Loading document...',
+			'course.pdf.error' => 'Failed to load document',
+			'course.pdf.page' => ({required Object current, required Object total}) => 'Page ${current} of ${total}',
+			'course.pdf.markComplete' => 'Mark Complete',
+			'course.pdf.completed' => 'Completed',
+			'course.empty.noEnrolledCourses' => 'No enrolled courses',
+			'course.empty.noEnrolledCoursesDescription' => 'Start learning by browsing our course catalog.',
+			'course.empty.browseCatalog' => 'Browse Catalog',
+			'course.errors.failedToLoad' => 'Failed to load. Tap to retry.',
+			'course.errors.failedToLoadCourses' => 'Failed to load courses',
+			'course.errors.failedToLoadDetail' => 'Failed to load course details',
+			'course.errors.failedToLoadSessions' => 'Failed to load sessions',
+			_ => null,
+		};
 	}
 }
-
