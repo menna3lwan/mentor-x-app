@@ -1,3 +1,6 @@
+test:
+	flutter test
+
 update_localization:
 	dart run slang
 	
