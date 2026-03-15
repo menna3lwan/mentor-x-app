@@ -1,6 +1,5 @@
 part of '../../../../core/routing/app_routes.dart';
 
-@TypedGoRoute<MyCoursesPageRoute>(path: '/my-courses', name: 'myCourses')
 final class MyCoursesPageRoute extends GoRouteData with $MyCoursesPageRoute {
   const MyCoursesPageRoute();
 

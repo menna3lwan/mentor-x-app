@@ -1,3 +1,4 @@
+import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -8,11 +9,28 @@ import 'bloc/home_page_bloc.dart';
 import 'home_page_page.dart';
 import 'widgets/widgets.dart';
 
-final class HomePageWrapper extends StatelessWidget {
+final class HomePageWrapper extends StatefulWidget {
   const HomePageWrapper({super.key});
 
   @override
+  State<HomePageWrapper> createState() => _HomePageWrapperState();
+}
+
+final class _HomePageWrapperState extends State<HomePageWrapper> {
+  @override
   Widget build(BuildContext context) {
+    return BlocPresentationListener<HomePageBloc, HomePagePresentationEvent>(
+      listener: (context, event) {
+        switch (event) {
+          case HomePageFailurePresentationEvent(:final message):
+            MentorXUI.showToast(message: message);
+        }
+      },
+      child: _buildContent(context),
+    );
+  }
+
+  Widget _buildContent(BuildContext context) {
     final bloc = context.read<HomePageBloc>();
     return AppRefreshListener(
       onRefresh: () => bloc.add(const HomePageRefreshedEvent()),

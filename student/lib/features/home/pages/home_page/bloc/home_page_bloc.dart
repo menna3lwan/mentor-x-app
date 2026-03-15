@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:equatable/equatable.dart';
 
 import 'package:mentorx_core/mentorx_core.dart';
@@ -6,18 +7,28 @@ import 'package:mentorx_core/mentorx_core.dart';
 part 'home_page_event.dart';
 part 'home_page_state.dart';
 
-final class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
+sealed class HomePagePresentationEvent {
+  const HomePagePresentationEvent();
+}
+
+final class HomePageFailurePresentationEvent extends HomePagePresentationEvent {
+  final String message;
+  const HomePageFailurePresentationEvent({required this.message});
+}
+
+final class HomePageBloc extends Bloc<HomePageEvent, HomePageState>
+    with BlocPresentationMixin<HomePageState, HomePagePresentationEvent> {
   final StudentHomeRepository _homeRepository;
 
   HomePageBloc({
     required StudentHomeRepository homeRepository,
     required String studentName,
-  })  : _homeRepository = homeRepository,
-        super(
-          HomePageState.initial(
-            studentName: studentName.trim().isEmpty ? 'Student' : studentName,
-          ),
-        ) {
+  }) : _homeRepository = homeRepository,
+       super(
+         HomePageState.initial(
+           studentName: studentName.trim().isEmpty ? 'Student' : studentName,
+         ),
+       ) {
     on<HomePageInitializedEvent>(_onInitialized);
     on<HomePageRefreshedEvent>(_onRefreshed);
     on<HomePageRetrySectionEvent>(_onRetrySection);
@@ -49,8 +60,11 @@ final class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
         emit(state.copyWith(walletSection: state.walletSection.toLoading()));
         await _loadWallet(emit);
       case HomeSection.unreadCount:
-        emit(state.copyWith(
-            unreadCountSection: state.unreadCountSection.toLoading()));
+        emit(
+          state.copyWith(
+            unreadCountSection: state.unreadCountSection.toLoading(),
+          ),
+        );
         await _loadUnreadCount(emit);
       case HomeSection.banners:
         emit(state.copyWith(bannersSection: state.bannersSection.toLoading()));
@@ -135,6 +149,9 @@ final class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
           walletSection: HomeAsyncSection.failure(e.toString()),
         ),
       );
+      emitPresentation(
+        HomePageFailurePresentationEvent(message: e.toString()),
+      );
     }
   }
 
@@ -151,6 +168,9 @@ final class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
         state.copyWith(
           unreadCountSection: HomeAsyncSection.failure(e.toString()),
         ),
+      );
+      emitPresentation(
+        HomePageFailurePresentationEvent(message: e.toString()),
       );
     }
   }
@@ -169,6 +189,9 @@ final class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
           bannersSection: HomeAsyncSection.failure(e.toString()),
         ),
       );
+      emitPresentation(
+        HomePageFailurePresentationEvent(message: e.toString()),
+      );
     }
   }
 
@@ -185,6 +208,9 @@ final class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
         state.copyWith(
           continueLearningSection: HomeAsyncSection.failure(e.toString()),
         ),
+      );
+      emitPresentation(
+        HomePageFailurePresentationEvent(message: e.toString()),
       );
     }
   }
@@ -203,6 +229,9 @@ final class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
           featuredCoursesSection: HomeAsyncSection.failure(e.toString()),
         ),
       );
+      emitPresentation(
+        HomePageFailurePresentationEvent(message: e.toString()),
+      );
     }
   }
 
@@ -219,6 +248,9 @@ final class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
         state.copyWith(
           announcementsSection: HomeAsyncSection.failure(e.toString()),
         ),
+      );
+      emitPresentation(
+        HomePageFailurePresentationEvent(message: e.toString()),
       );
     }
   }

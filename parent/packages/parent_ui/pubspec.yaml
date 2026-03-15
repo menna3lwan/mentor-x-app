@@ -1,6 +1,6 @@
 name: parent_ui
 description: "Shared Parent UI widgets package."
-version: 0.0.1
+version: 1.0.0
 publish_to: none
 
 environment:

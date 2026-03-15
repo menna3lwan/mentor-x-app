@@ -1,24 +1,26 @@
 part of 'walkthrough_page_bloc.dart';
 
-enum WalkthroughPageStatus { initial, submitting, completed, failure }
-
 final class WalkthroughPageState extends Equatable {
-  final WalkthroughPageStatus status;
+  final LoadingState loadingState;
 
   const WalkthroughPageState({
-    this.status = WalkthroughPageStatus.initial,
+    required this.loadingState,
   });
 
-  bool get isSubmitting => status == WalkthroughPageStatus.submitting;
+  static const initial = WalkthroughPageState(
+    loadingState: LoadingState.initial,
+  );
+
+  bool get isSubmitting => loadingState.isLoading;
 
   WalkthroughPageState copyWith({
-    WalkthroughPageStatus? status,
+    LoadingState? loadingState,
   }) {
     return WalkthroughPageState(
-      status: status ?? this.status,
+      loadingState: loadingState ?? this.loadingState,
     );
   }
 
   @override
-  List<Object?> get props => [status];
+  List<Object?> get props => [loadingState];
 }

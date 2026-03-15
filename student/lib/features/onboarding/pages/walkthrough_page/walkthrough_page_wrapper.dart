@@ -1,3 +1,4 @@
+import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -40,24 +41,31 @@ final class _WalkthroughPageWrapperState extends State<WalkthroughPageWrapper> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<WalkthroughPageBloc, WalkthroughPageState>(
-      listenWhen: (previous, current) => previous.status != current.status,
-      listener: (context, state) {
-        if (state.status == WalkthroughPageStatus.completed) {
-          const LoginPageRoute().go(context);
+    return BlocPresentationListener<
+      WalkthroughPageBloc,
+      WalkthroughPagePresentationEvent
+    >(
+      listener: (context, event) {
+        switch (event) {
+          case WalkthroughPageCompletedPresentationEvent():
+            const LoginPageRoute().go(context);
+          case WalkthroughPageFailurePresentationEvent():
+            break;
         }
       },
-      builder: (context, state) {
-        final bloc = context.read<WalkthroughPageBloc>();
-        return WalkthroughPagePage(
-          pageController: _pageController,
-          currentPage: _currentPage,
-          onPageChanged: _onPageChanged,
-          isLoading: state.isSubmitting,
-          onNext: () => _onNext(bloc),
-          onSkip: () => bloc.add(const WalkthroughPageSkipped()),
-        );
-      },
+      child: BlocBuilder<WalkthroughPageBloc, WalkthroughPageState>(
+        builder: (context, state) {
+          final bloc = context.read<WalkthroughPageBloc>();
+          return WalkthroughPagePage(
+            pageController: _pageController,
+            currentPage: _currentPage,
+            onPageChanged: _onPageChanged,
+            isLoading: state.isSubmitting,
+            onNext: () => _onNext(bloc),
+            onSkip: () => bloc.add(const WalkthroughPageSkipped()),
+          );
+        },
+      ),
     );
   }
 }

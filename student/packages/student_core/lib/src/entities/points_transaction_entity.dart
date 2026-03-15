@@ -19,6 +19,16 @@ final class PointsTransactionEntity extends Equatable {
     required this.createdAt,
   });
 
+
+  static final placeholder = PointsTransactionEntity(
+    id: '',
+    transactionType: PointsTransactionType.earn,
+    points: 0,
+    balanceAfter: 0,
+    source: '',
+    createdAt: DateTime.fromMillisecondsSinceEpoch(0),
+  );
+
   @override
   List<Object?> get props => [
         id,

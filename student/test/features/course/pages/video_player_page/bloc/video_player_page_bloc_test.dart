@@ -1,6 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mock_course_repository/mock_course_repository.dart';
+import 'package:mentorx_student/core/core.dart';
 
 import 'package:mentorx_student/features/course/pages/video_player_page/bloc/video_player_page_bloc.dart';
 
@@ -12,8 +13,25 @@ void main() {
   });
 
   group('VideoPlayerPageBloc', () {
+    test('initial state is correct', () {
+      final bloc = VideoPlayerPageBloc(
+        courseRepository: courseRepository,
+        itemId: 'i1',
+        title: 'Test Video',
+      );
+      expect(bloc.state.itemId, 'i1');
+      expect(bloc.state.title, 'Test Video');
+      expect(bloc.state.loadingState, LoadingState.initial);
+      expect(bloc.state.streamUrl, isNull);
+      expect(bloc.state.currentPositionSeconds, 0);
+      expect(bloc.state.totalDurationSeconds, 0);
+      expect(bloc.state.isCompleted, false);
+      expect(bloc.state.errorMessage, isNull);
+      bloc.close();
+    });
+
     blocTest<VideoPlayerPageBloc, VideoPlayerPageState>(
-      'emits [loading, ready] with stream URL when initialized',
+      'emits [loading, loaded] with stream URL when initialized',
       build: () => VideoPlayerPageBloc(
         courseRepository: courseRepository,
         itemId: 'i1',
@@ -22,12 +40,12 @@ void main() {
       act: (bloc) => bloc.add(const VideoPlayerPageInitialized()),
       expect: () => [
         isA<VideoPlayerPageState>().having(
-          (s) => s.status,
-          'status',
-          VideoPlayerStatus.loading,
+          (s) => s.loadingState,
+          'loadingState',
+          LoadingState.loading,
         ),
         isA<VideoPlayerPageState>()
-            .having((s) => s.status, 'status', VideoPlayerStatus.ready)
+            .having((s) => s.loadingState, 'loadingState', LoadingState.loaded)
             .having((s) => s.streamUrl, 'streamUrl', isNotNull),
       ],
     );
@@ -42,7 +60,7 @@ void main() {
       seed: () => const VideoPlayerPageState(
         itemId: 'i1',
         title: 'Test Video',
-        status: VideoPlayerStatus.ready,
+        loadingState: LoadingState.loaded,
         streamUrl: 'https://example.com/video.mp4',
       ),
       act: (bloc) => bloc.add(
@@ -68,7 +86,7 @@ void main() {
       seed: () => const VideoPlayerPageState(
         itemId: 'i1',
         title: 'Test Video',
-        status: VideoPlayerStatus.ready,
+        loadingState: LoadingState.loaded,
       ),
       act: (bloc) => bloc.add(const VideoPlayerPageCompleted()),
       expect: () => [
@@ -80,18 +98,65 @@ void main() {
       ],
     );
 
-    test('initial state is correct', () {
-      final bloc = VideoPlayerPageBloc(
+    blocTest<VideoPlayerPageBloc, VideoPlayerPageState>(
+      'progress with totalSeconds 0 does not crash',
+      build: () => VideoPlayerPageBloc(
         courseRepository: courseRepository,
         itemId: 'i1',
         title: 'Test Video',
-      );
-      expect(bloc.state.itemId, 'i1');
-      expect(bloc.state.title, 'Test Video');
-      expect(bloc.state.status, VideoPlayerStatus.initial);
-      expect(bloc.state.streamUrl, isNull);
-      expect(bloc.state.isCompleted, false);
-      bloc.close();
-    });
+      ),
+      seed: () => const VideoPlayerPageState(
+        itemId: 'i1',
+        title: 'Test Video',
+        loadingState: LoadingState.loaded,
+        streamUrl: 'https://example.com/video.mp4',
+      ),
+      act: (bloc) => bloc.add(
+        const VideoPlayerPageProgressUpdated(
+          positionSeconds: 10,
+          totalSeconds: 0,
+        ),
+      ),
+      expect: () => [
+        isA<VideoPlayerPageState>()
+            .having((s) => s.currentPositionSeconds, 'position', 10)
+            .having((s) => s.totalDurationSeconds, 'total', 0),
+      ],
+    );
+
+    blocTest<VideoPlayerPageBloc, VideoPlayerPageState>(
+      'multiple progress updates accumulate correctly',
+      build: () => VideoPlayerPageBloc(
+        courseRepository: courseRepository,
+        itemId: 'i1',
+        title: 'Test Video',
+      ),
+      seed: () => const VideoPlayerPageState(
+        itemId: 'i1',
+        title: 'Test Video',
+        loadingState: LoadingState.loaded,
+        streamUrl: 'https://example.com/video.mp4',
+      ),
+      act: (bloc) {
+        bloc
+          ..add(
+            const VideoPlayerPageProgressUpdated(
+              positionSeconds: 30,
+              totalSeconds: 600,
+            ),
+          )
+          ..add(
+            const VideoPlayerPageProgressUpdated(
+              positionSeconds: 120,
+              totalSeconds: 600,
+            ),
+          );
+      },
+      wait: const Duration(milliseconds: 50),
+      verify: (bloc) {
+        expect(bloc.state.currentPositionSeconds, 120);
+        expect(bloc.state.totalDurationSeconds, 600);
+      },
+    );
   });
 }

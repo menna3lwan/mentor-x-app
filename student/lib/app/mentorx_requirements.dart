@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'mentorx_student.dart';
-import 'package:mentorx_core/mentorx_core.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +25,9 @@ final class MentorXRequirements {
   /// Router configuration for navigation
   final RouterConfig<Object> routerConfig;
 
+  /// Clients that receive locale updates when the app language changes
+  final List<LocalizedClient> localizedClients;
+
   static final MentorXLogger _logger = MentorXLogger('MentorXRequirements');
 
   MentorXRequirements({
@@ -34,12 +36,14 @@ final class MentorXRequirements {
     required this.brightness,
     required this.repositories,
     required this.routerConfig,
+    required this.localizedClients,
   });
 
   static Future<MentorXRequirements> initialize() async {
     MentorXLogger.enabled = kDebugMode;
     await _initSystemUIStyle();
-    final repositories = await RepositoriesFactory.initRepositories();
+    final (:repositories, :localizedClients) =
+        await RepositoriesFactory.initRepositories();
     final languageCode = RepositoriesFactory.initialLanguageCode;
     final initalBrightness = await _initBrightness(
       repositories.cacheRepository,
@@ -93,6 +97,7 @@ final class MentorXRequirements {
       locale: Locale(languageCode),
       brightness: initalBrightness,
       routerConfig: appRouter.routes,
+      localizedClients: localizedClients,
     );
   }
 

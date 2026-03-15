@@ -1,18 +1,33 @@
 import 'package:bloc/bloc.dart';
+import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:equatable/equatable.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 
 part 'course_catalog_page_event.dart';
 part 'course_catalog_page_state.dart';
 
+sealed class CourseCatalogPagePresentationEvent {
+  const CourseCatalogPagePresentationEvent();
+}
+
+final class CourseCatalogPageFailurePresentationEvent
+    extends CourseCatalogPagePresentationEvent {
+  final String message;
+  const CourseCatalogPageFailurePresentationEvent({required this.message});
+}
+
 final class CourseCatalogPageBloc
-    extends Bloc<CourseCatalogPageEvent, CourseCatalogPageState> {
+    extends Bloc<CourseCatalogPageEvent, CourseCatalogPageState>
+    with
+        BlocPresentationMixin<
+          CourseCatalogPageState,
+          CourseCatalogPagePresentationEvent
+        > {
   final CourseRepository _courseRepository;
 
-  CourseCatalogPageBloc({
-    required CourseRepository courseRepository,
-  }) : _courseRepository = courseRepository,
-       super(const CourseCatalogPageState()) {
+  CourseCatalogPageBloc({required CourseRepository courseRepository})
+    : _courseRepository = courseRepository,
+      super(const CourseCatalogPageState()) {
     on<CourseCatalogPageInitialized>(_onInitialized);
     on<CourseCatalogPageSearchChanged>(_onSearchChanged);
     on<CourseCatalogPageCategoryChanged>(_onCategoryChanged);
@@ -79,7 +94,6 @@ final class CourseCatalogPageBloc
     required Emitter<CourseCatalogPageState> emit,
   }) async {
     emit(state.copyWith(coursesStatus: CatalogSectionStatus.loading));
-
     try {
       final (sort, order) = switch (state.sortOption) {
         CatalogSortOption.newest => (null, null),
@@ -87,14 +101,12 @@ final class CourseCatalogPageBloc
         CatalogSortOption.priceDesc => ('price', 'desc'),
         CatalogSortOption.popular => ('enrolled', null),
       };
-
       final courses = await _courseRepository.getCourseCatalog(
         categoryId: state.selectedCategoryId,
         search: state.searchQuery.isNotEmpty ? state.searchQuery : null,
         sort: sort,
         order: order,
       );
-
       emit(
         state.copyWith(
           coursesStatus: CatalogSectionStatus.loaded,
@@ -108,12 +120,18 @@ final class CourseCatalogPageBloc
           errorMessage: e.message,
         ),
       );
+      emitPresentation(
+        CourseCatalogPageFailurePresentationEvent(message: e.message ?? ''),
+      );
     } catch (e) {
       emit(
         state.copyWith(
           coursesStatus: CatalogSectionStatus.failure,
           errorMessage: e.toString(),
         ),
+      );
+      emitPresentation(
+        CourseCatalogPageFailurePresentationEvent(message: e.toString()),
       );
     }
   }

@@ -23,6 +23,16 @@ final class ProfileEditRequestEntity extends Equatable {
     this.reviewNotes,
   });
 
+
+  static final placeholder = ProfileEditRequestEntity(
+    id: '',
+    fieldName: '',
+    oldValue: '',
+    newValue: '',
+    status: EditRequestStatus.pending,
+    createdAt: DateTime.fromMillisecondsSinceEpoch(0),
+  );
+
   @override
   List<Object?> get props => [
         id,

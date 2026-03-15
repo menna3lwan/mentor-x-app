@@ -1,0 +1,37 @@
+import 'package:bloc_presentation/bloc_presentation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'assignment_detail_page_page.dart';
+import 'bloc/assignment_detail_page_bloc.dart';
+
+final class AssignmentDetailPageWrapper extends StatefulWidget {
+  const AssignmentDetailPageWrapper({super.key});
+
+  @override
+  State<AssignmentDetailPageWrapper> createState() =>
+      _AssignmentDetailPageWrapperState();
+}
+
+class _AssignmentDetailPageWrapperState
+    extends State<AssignmentDetailPageWrapper> {
+  @override
+  Widget build(BuildContext context) {
+    return BlocPresentationListener<
+      AssignmentDetailPageBloc,
+      AssignmentDetailPagePresentationEvent
+    >(
+      listener: (context, event) {
+        switch (event) {
+          case AssignmentDetailPageNavigateBack():
+            Navigator.of(context).pop();
+        }
+      },
+      child: BlocBuilder<AssignmentDetailPageBloc, AssignmentDetailPageState>(
+        builder: (context, state) {
+          return const AssignmentDetailPage();
+        },
+      ),
+    );
+  }
+}

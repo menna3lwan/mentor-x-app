@@ -1,14 +1,11 @@
 part of 'otp_page_bloc.dart';
 
-enum OtpPageStatus { initial, loading, success, failure }
-
 final class OtpPageState extends Equatable {
   final String phoneNumber;
   final String otp;
   final int otpLength;
-  final OtpPageStatus status;
+  final LoadingState loadingState;
   final String? errorMessage;
-  final StudentEntity? user;
   final int resendCountdown;
   final bool isResending;
 
@@ -16,16 +13,13 @@ final class OtpPageState extends Equatable {
     required this.phoneNumber,
     this.otp = '',
     this.otpLength = 6,
-    this.status = OtpPageStatus.initial,
+    this.loadingState = LoadingState.initial,
     this.errorMessage,
-    this.user,
     this.resendCountdown = 60,
     this.isResending = false,
   });
 
-  bool get isLoading => status == OtpPageStatus.loading;
-  bool get isSuccess => status == OtpPageStatus.success;
-  bool get isFailure => status == OtpPageStatus.failure;
+  bool get isLoading => loadingState.isLoading;
   bool get canResend => resendCountdown <= 0 && !isResending;
 
   String get formattedCountdown {
@@ -38,9 +32,8 @@ final class OtpPageState extends Equatable {
     String? phoneNumber,
     String? otp,
     int? otpLength,
-    OtpPageStatus? status,
+    LoadingState? loadingState,
     String? errorMessage,
-    StudentEntity? user,
     int? resendCountdown,
     bool? isResending,
   }) {
@@ -48,9 +41,8 @@ final class OtpPageState extends Equatable {
       phoneNumber: phoneNumber ?? this.phoneNumber,
       otp: otp ?? this.otp,
       otpLength: otpLength ?? this.otpLength,
-      status: status ?? this.status,
+      loadingState: loadingState ?? this.loadingState,
       errorMessage: errorMessage,
-      user: user ?? this.user,
       resendCountdown: resendCountdown ?? this.resendCountdown,
       isResending: isResending ?? this.isResending,
     );
@@ -61,9 +53,8 @@ final class OtpPageState extends Equatable {
     phoneNumber,
     otp,
     otpLength,
-    status,
+    loadingState,
     errorMessage,
-    user,
     resendCountdown,
     isResending,
   ];

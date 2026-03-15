@@ -9,6 +9,12 @@ final class MarketplaceCategoryEntity extends Equatable {
     required this.name,
   });
 
+
+  static final placeholder = MarketplaceCategoryEntity(
+    id: '',
+    name: '',
+  );
+
   @override
   List<Object?> get props => [id, name];
 }

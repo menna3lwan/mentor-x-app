@@ -1,11 +1,11 @@
 import 'package:event_bus/event_bus.dart';
-import 'mentorx_requirements.dart';
-import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:mentorx_ui/mentorx_ui.dart';
 
 import 'app.dart';
+import 'mentorx_requirements.dart';
 
 final EventBus appEventBus = EventBus();
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -44,7 +44,9 @@ final class MentorXStudent extends StatelessWidget {
                   routerConfig: requirements.routerConfig,
                   locale: TranslationProvider.of(context).flutterLocale,
                   supportedLocales: LocaleSettings.instance.supportedLocales,
-                  localizationsDelegates: GlobalMaterialLocalizations.delegates,
+                  localizationsDelegates: [
+                    ...GlobalMaterialLocalizations.delegates,
+                  ],
                   theme: MentorXThemes.materialThemeDataFromTheme(
                     lightMixTheme,
                     context,

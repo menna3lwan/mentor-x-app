@@ -1,0 +1,20 @@
+name: mock_profile_repository
+description: Mock implementation for ProfileRepository.
+version: 1.0.0
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ^3.9.2
+
+dependencies:
+  mentorx_core:
+    path: ../../../../packages/mentorx_core
+  student_core:
+    path: ../../student_core
+  mock_data:
+    path: ../../../../packages/mock_data
+
+dev_dependencies:
+  lints: ^6.0.0
+  test: ^1.25.6

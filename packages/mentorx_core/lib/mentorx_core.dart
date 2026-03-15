@@ -1,75 +1,79 @@
+library;
+
 import 'dart:developer';
 
 import 'package:equatable/equatable.dart';
 
-// Extensions
-part 'extensions/string_extensions.dart';
+// ——— Extensions ———
+part 'src/extensions/string_extensions.dart';
 
-// Utils
-part 'utils/mentorx_exception.dart';
-part 'utils/mentorx_logger.dart';
+// ——— Utils ———
+part 'src/utils/mentorx_exception.dart';
+part 'src/utils/mentorx_logger.dart';
+part 'src/utils/mentorx_nullable_value.dart';
+part 'src/utils/mentorx_pagination_info.dart';
 
-// Clients
-part 'clients/http_client.dart';
+// ——— Clients ———
+part 'src/clients/http_client.dart';
 
-// ──────────────────────────────────────────────
+// ——————————————————————————————————————————————
 // Entities — Common (shared by student & parent)
-// ──────────────────────────────────────────────
+// ——————————————————————————————————————————————
 
 // User / Auth
-part 'entities/student_entity.dart';
-part 'entities/tenant_entity.dart';
-part 'entities/device_entity.dart';
+part 'src/entities/student_entity.dart';
+part 'src/entities/tenant_entity.dart';
+part 'src/entities/device_entity.dart';
 
 // Learning
-part 'entities/grade_entity.dart';
-part 'entities/category_entity.dart';
-part 'entities/course_entity.dart';
-part 'entities/course_summary_entity.dart';
-part 'entities/session_entity.dart';
-part 'entities/session_item_entity.dart';
-part 'entities/enrollment_entity.dart';
+part 'src/entities/grade_entity.dart';
+part 'src/entities/category_entity.dart';
+part 'src/entities/course_entity.dart';
+part 'src/entities/course_summary_entity.dart';
+part 'src/entities/session_entity.dart';
+part 'src/entities/session_item_entity.dart';
+part 'src/entities/enrollment_entity.dart';
 
 // Home / Dashboard
-part 'entities/banner_entity.dart';
-part 'entities/announcement_entity.dart';
-part 'entities/wallet_summary_entity.dart';
+part 'src/entities/banner_entity.dart';
+part 'src/entities/announcement_entity.dart';
+part 'src/entities/wallet_summary_entity.dart';
 
 // Assessment
-part 'entities/quiz_entity.dart';
-part 'entities/quiz_question_entity.dart';
-part 'entities/quiz_attempt_entity.dart';
-part 'entities/assignment_entity.dart';
-part 'entities/assignment_submission_entity.dart';
+part 'src/entities/quiz_entity.dart';
+part 'src/entities/quiz_question_entity.dart';
+part 'src/entities/quiz_attempt_entity.dart';
+part 'src/entities/assignment_entity.dart';
+part 'src/entities/assignment_submission_entity.dart';
 
 // Attendance
-part 'entities/attendance_record_entity.dart';
-part 'entities/attendance_summary_entity.dart';
+part 'src/entities/attendance_record_entity.dart';
+part 'src/entities/attendance_summary_entity.dart';
 
 // Financial
-part 'entities/wallet_transaction_entity.dart';
-part 'entities/payment_entity.dart';
+part 'src/entities/wallet_transaction_entity.dart';
+part 'src/entities/payment_entity.dart';
 
 // Communication
-part 'entities/notification_entity.dart';
-part 'entities/whatsapp_group_entity.dart';
+part 'src/entities/notification_entity.dart';
+part 'src/entities/whatsapp_group_entity.dart';
 
 // Settings
-part 'entities/user_settings_entity.dart';
+part 'src/entities/user_settings_entity.dart';
 
-// ──────────────────────────────────────────────
+// ——————————————————————————————————————————————
 // Repositories — Common interfaces
-// ──────────────────────────────────────────────
-part 'repositories/cache_repository.dart';
-part 'repositories/http_client_repository.dart';
-part 'repositories/student_authentication_repository.dart';
-part 'repositories/student_home_repository.dart';
-part 'repositories/course_repository.dart';
-part 'repositories/attendance_repository.dart';
-part 'repositories/wallet_repository.dart';
-part 'repositories/notification_repository.dart';
-part 'repositories/grade_repository.dart';
-part 'repositories/profile_repository.dart';
-part 'repositories/settings_repository.dart';
-part 'repositories/tenant_repository.dart';
-part 'repositories/announcement_repository.dart';
+// ——————————————————————————————————————————————
+part 'src/repositories/cache_repository.dart';
+part 'src/repositories/http_client_repository.dart';
+part 'src/repositories/student_authentication_repository.dart';
+part 'src/repositories/student_home_repository.dart';
+part 'src/repositories/course_repository.dart';
+part 'src/repositories/attendance_repository.dart';
+part 'src/repositories/wallet_repository.dart';
+part 'src/repositories/notification_repository.dart';
+part 'src/repositories/grade_repository.dart';
+part 'src/repositories/profile_repository.dart';
+part 'src/repositories/settings_repository.dart';
+part 'src/repositories/tenant_repository.dart';
+part 'src/repositories/announcement_repository.dart';

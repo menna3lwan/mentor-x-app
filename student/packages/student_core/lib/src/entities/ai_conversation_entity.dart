@@ -19,6 +19,14 @@ final class AIConversationEntity extends Equatable {
     this.isActive = true,
   });
 
+
+  static final placeholder = AIConversationEntity(
+    id: '',
+    messageCount: 0,
+    createdAt: DateTime.fromMillisecondsSinceEpoch(0),
+    updatedAt: DateTime.fromMillisecondsSinceEpoch(0),
+  );
+
   @override
   List<Object?> get props => [
         id,

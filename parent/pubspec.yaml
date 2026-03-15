@@ -19,8 +19,8 @@ dependencies:
   # For Localization
   flutter_localizations:
     sdk: flutter
-  slang: ^4.13.0
-  slang_flutter: ^4.13.0
+  slang: ^4.14.0
+  slang_flutter: ^4.14.0
 
   # Caching
   cached_network_image: ^3.4.1

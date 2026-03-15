@@ -1,22 +1,24 @@
 part of 'status_rejected_page_bloc.dart';
 
-enum StatusRejectedPageStatus { initial, ready }
-
 final class StatusRejectedPageState extends Equatable {
-  final StatusRejectedPageStatus status;
+  final LoadingState loadingState;
 
   const StatusRejectedPageState({
-    this.status = StatusRejectedPageStatus.initial,
+    required this.loadingState,
   });
 
+  static const initial = StatusRejectedPageState(
+    loadingState: LoadingState.initial,
+  );
+
   StatusRejectedPageState copyWith({
-    StatusRejectedPageStatus? status,
+    LoadingState? loadingState,
   }) {
     return StatusRejectedPageState(
-      status: status ?? this.status,
+      loadingState: loadingState ?? this.loadingState,
     );
   }
 
   @override
-  List<Object?> get props => [status];
+  List<Object?> get props => [loadingState];
 }

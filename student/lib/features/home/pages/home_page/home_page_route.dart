@@ -1,6 +1,5 @@
 part of '../../../../core/routing/app_routes.dart';
 
-@TypedGoRoute<HomePageRoute>(path: '/', name: 'home')
 final class HomePageRoute extends GoRouteData with $HomePageRoute {
   const HomePageRoute();
 

@@ -1,3 +1,4 @@
+import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -42,33 +43,43 @@ final class _LoginPageWrapperState extends State<LoginPageWrapper> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<LoginPageBloc, LoginPageState>(
-      listenWhen: (previous, current) => previous.status != current.status,
-      listener: (context, state) {
-        if (state.isSuccess) {
-          OtpPageRoute(
-            phoneNumber: state.phoneNumber.trim(),
-            otpLength: state.otpLength,
-            otpDurationSeconds: state.otpDuration?.inSeconds,
-          ).go(context);
+    return BlocPresentationListener<LoginPageBloc, LoginPagePresentationEvent>(
+      listener: (context, event) {
+        switch (event) {
+          case LoginPageNavigateToOtpPresentationEvent(
+            :final phoneNumber,
+            :final otpLength,
+            :final otpDuration,
+          ):
+            OtpPageRoute(
+              phoneNumber: phoneNumber,
+              otpLength: otpLength,
+              otpDurationSeconds: otpDuration?.inSeconds,
+            ).go(context);
+          case LoginPageFailurePresentationEvent():
+            break;
         }
       },
-      builder: (context, state) {
-        final bloc = context.read<LoginPageBloc>();
-        return LoginPagePage(
-          formKey: _formKey,
-          phoneController: _phoneController,
-          isLoading: state.isLoading,
-          errorMessage: state.isFailure ? state.errorMessage : null,
-          inputFormatters: [
-            FilteringTextInputFormatter.digitsOnly,
-            LengthLimitingTextInputFormatter(11),
-          ],
-          phoneValidator: _phoneValidator,
-          onPhoneChanged: (value) => bloc.add(LoginPagePhoneChanged(value)),
-          onSubmit: () => _submit(bloc),
-        );
-      },
+      child: BlocBuilder<LoginPageBloc, LoginPageState>(
+        builder: (context, state) {
+          final bloc = context.read<LoginPageBloc>();
+          return LoginPagePage(
+            formKey: _formKey,
+            phoneController: _phoneController,
+            isLoading: state.isLoading,
+            errorMessage: state.loadingState.isError
+                ? state.errorMessage
+                : null,
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly,
+              LengthLimitingTextInputFormatter(11),
+            ],
+            phoneValidator: _phoneValidator,
+            onPhoneChanged: (value) => bloc.add(LoginPagePhoneChanged(value)),
+            onSubmit: () => _submit(bloc),
+          );
+        },
+      ),
     );
   }
 }

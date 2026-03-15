@@ -1,22 +1,24 @@
 part of 'status_pending_page_bloc.dart';
 
-enum StatusPendingPageStatus { initial, ready }
-
 final class StatusPendingPageState extends Equatable {
-  final StatusPendingPageStatus status;
+  final LoadingState loadingState;
 
   const StatusPendingPageState({
-    this.status = StatusPendingPageStatus.initial,
+    required this.loadingState,
   });
 
+  static const initial = StatusPendingPageState(
+    loadingState: LoadingState.initial,
+  );
+
   StatusPendingPageState copyWith({
-    StatusPendingPageStatus? status,
+    LoadingState? loadingState,
   }) {
     return StatusPendingPageState(
-      status: status ?? this.status,
+      loadingState: loadingState ?? this.loadingState,
     );
   }
 
   @override
-  List<Object?> get props => [status];
+  List<Object?> get props => [loadingState];
 }

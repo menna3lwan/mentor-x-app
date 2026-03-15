@@ -19,6 +19,15 @@ final class RewardClaimEntity extends Equatable {
     this.rewardTitle,
   });
 
+
+  static final placeholder = RewardClaimEntity(
+    id: '',
+    rewardItemId: '',
+    pointsSpent: 0,
+    status: RewardClaimStatus.pending,
+    claimedAt: DateTime.fromMillisecondsSinceEpoch(0),
+  );
+
   @override
   List<Object?> get props => [
         id,

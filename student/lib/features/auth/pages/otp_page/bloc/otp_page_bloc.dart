@@ -1,13 +1,32 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:equatable/equatable.dart';
-import 'package:mentorx_core/mentorx_core.dart';
+import '../../../../../core/core.dart';
 
 part 'otp_page_event.dart';
 part 'otp_page_state.dart';
 
-final class OtpPageBloc extends Bloc<OtpPageEvent, OtpPageState> {
+// ──── Presentation events (one-time, not state) ────
+sealed class OtpPagePresentationEvent {
+  const OtpPagePresentationEvent();
+}
+
+final class OtpPageAuthenticatedPresentationEvent
+    extends OtpPagePresentationEvent {
+  final StudentEntity user;
+  const OtpPageAuthenticatedPresentationEvent({required this.user});
+}
+
+final class OtpPageFailurePresentationEvent extends OtpPagePresentationEvent {
+  final String message;
+  const OtpPageFailurePresentationEvent({required this.message});
+}
+
+// ──── Bloc ────
+final class OtpPageBloc extends Bloc<OtpPageEvent, OtpPageState>
+    with BlocPresentationMixin<OtpPageState, OtpPagePresentationEvent> {
   final StudentAuthenticationRepository _authRepository;
 
   OtpPageBloc({
@@ -48,7 +67,7 @@ final class OtpPageBloc extends Bloc<OtpPageEvent, OtpPageState> {
     emit(
       state.copyWith(
         otp: event.otp,
-        status: OtpPageStatus.initial,
+        loadingState: LoadingState.initial,
         errorMessage: null,
       ),
     );
@@ -60,29 +79,33 @@ final class OtpPageBloc extends Bloc<OtpPageEvent, OtpPageState> {
   ) async {
     if (state.otp.length != state.otpLength) return;
 
-    emit(state.copyWith(status: OtpPageStatus.loading));
+    emit(state.copyWith(loadingState: LoadingState.loading));
 
     try {
       final user = await _authRepository.verifyOtp(state.otp);
-      emit(
-        state.copyWith(
-          status: OtpPageStatus.success,
-          user: user,
-        ),
+      emit(state.copyWith(loadingState: LoadingState.loaded));
+      emitPresentation(
+        OtpPageAuthenticatedPresentationEvent(user: user),
       );
     } on AuthenticationRepositoryException catch (e) {
       emit(
         state.copyWith(
-          status: OtpPageStatus.failure,
+          loadingState: LoadingState.error,
           errorMessage: e.message,
         ),
+      );
+      emitPresentation(
+        OtpPageFailurePresentationEvent(message: e.message ?? ''),
       );
     } catch (e) {
       emit(
         state.copyWith(
-          status: OtpPageStatus.failure,
+          loadingState: LoadingState.error,
           errorMessage: e.toString(),
         ),
+      );
+      emitPresentation(
+        OtpPageFailurePresentationEvent(message: e.toString()),
       );
     }
   }

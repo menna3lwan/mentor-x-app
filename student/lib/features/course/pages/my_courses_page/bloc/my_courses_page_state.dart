@@ -1,38 +1,36 @@
 part of 'my_courses_page_bloc.dart';
 
-enum MyCoursesPageStatus { initial, loading, loaded, failure }
-
 enum MyCoursesTab { inProgress, completed, expired }
 
 final class MyCoursesPageState extends Equatable {
-  final MyCoursesPageStatus status;
+  final LoadingState loadingState;
   final MyCoursesTab selectedTab;
   final List<CourseSummaryEntity> courses;
   final String searchQuery;
   final String? errorMessage;
 
   const MyCoursesPageState({
-    this.status = MyCoursesPageStatus.initial,
+    required this.loadingState,
     this.selectedTab = MyCoursesTab.inProgress,
     this.courses = const [],
     this.searchQuery = '',
     this.errorMessage,
   });
 
-  bool get isLoading => status == MyCoursesPageStatus.loading;
-  bool get isLoaded => status == MyCoursesPageStatus.loaded;
-  bool get isFailure => status == MyCoursesPageStatus.failure;
-  bool get isInitial => status == MyCoursesPageStatus.initial;
+  static const initial = MyCoursesPageState(loadingState: LoadingState.initial);
+
+  bool get isLoading => loadingState.isLoading;
+  bool get isLoaded => loadingState.isLoaded;
 
   MyCoursesPageState copyWith({
-    MyCoursesPageStatus? status,
+    LoadingState? loadingState,
     MyCoursesTab? selectedTab,
     List<CourseSummaryEntity>? courses,
     String? searchQuery,
     String? errorMessage,
   }) {
     return MyCoursesPageState(
-      status: status ?? this.status,
+      loadingState: loadingState ?? this.loadingState,
       selectedTab: selectedTab ?? this.selectedTab,
       courses: courses ?? this.courses,
       searchQuery: searchQuery ?? this.searchQuery,
@@ -42,7 +40,7 @@ final class MyCoursesPageState extends Equatable {
 
   @override
   List<Object?> get props => [
-    status,
+    loadingState,
     selectedTab,
     courses,
     searchQuery,

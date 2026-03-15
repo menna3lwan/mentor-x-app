@@ -1,18 +1,33 @@
 import 'package:bloc/bloc.dart';
+import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:equatable/equatable.dart';
-import 'package:mentorx_core/mentorx_core.dart';
+import '../../../../../core/core.dart';
 
 part 'my_courses_page_event.dart';
 part 'my_courses_page_state.dart';
 
+sealed class MyCoursesPagePresentationEvent {
+  const MyCoursesPagePresentationEvent();
+}
+
+final class MyCoursesPageFailurePresentationEvent
+    extends MyCoursesPagePresentationEvent {
+  final String message;
+  const MyCoursesPageFailurePresentationEvent({required this.message});
+}
+
 final class MyCoursesPageBloc
-    extends Bloc<MyCoursesPageEvent, MyCoursesPageState> {
+    extends Bloc<MyCoursesPageEvent, MyCoursesPageState>
+    with
+        BlocPresentationMixin<
+          MyCoursesPageState,
+          MyCoursesPagePresentationEvent
+        > {
   final CourseRepository _courseRepository;
 
-  MyCoursesPageBloc({
-    required CourseRepository courseRepository,
-  }) : _courseRepository = courseRepository,
-       super(const MyCoursesPageState()) {
+  MyCoursesPageBloc({required CourseRepository courseRepository})
+    : _courseRepository = courseRepository,
+      super(MyCoursesPageState.initial) {
     on<MyCoursesPageInitialized>(_onInitialized);
     on<MyCoursesPageTabChanged>(_onTabChanged);
     on<MyCoursesPageRefreshed>(_onRefreshed);
@@ -33,7 +48,7 @@ final class MyCoursesPageBloc
     emit(
       state.copyWith(
         selectedTab: event.tab,
-        status: MyCoursesPageStatus.loading,
+        loadingState: LoadingState.loading,
       ),
     );
     await _loadCourses(emit: emit);
@@ -54,42 +69,38 @@ final class MyCoursesPageBloc
     await _loadCourses(emit: emit);
   }
 
-  Future<void> _loadCourses({
-    required Emitter<MyCoursesPageState> emit,
-  }) async {
-    emit(state.copyWith(status: MyCoursesPageStatus.loading));
-
+  Future<void> _loadCourses({required Emitter<MyCoursesPageState> emit}) async {
+    emit(state.copyWith(loadingState: LoadingState.loading));
     try {
       final statusFilter = switch (state.selectedTab) {
         MyCoursesTab.inProgress => 'in_progress',
         MyCoursesTab.completed => 'completed',
         MyCoursesTab.expired => 'expired',
       };
-
       final courses = await _courseRepository.getEnrolledCourses(
         status: statusFilter,
         search: state.searchQuery.isNotEmpty ? state.searchQuery : null,
       );
-
-      emit(
-        state.copyWith(
-          status: MyCoursesPageStatus.loaded,
-          courses: courses,
-        ),
-      );
+      emit(state.copyWith(loadingState: LoadingState.loaded, courses: courses));
     } on CourseRepositoryException catch (e) {
       emit(
         state.copyWith(
-          status: MyCoursesPageStatus.failure,
+          loadingState: LoadingState.error,
           errorMessage: e.message,
         ),
+      );
+      emitPresentation(
+        MyCoursesPageFailurePresentationEvent(message: e.message ?? ''),
       );
     } catch (e) {
       emit(
         state.copyWith(
-          status: MyCoursesPageStatus.failure,
+          loadingState: LoadingState.error,
           errorMessage: e.toString(),
         ),
+      );
+      emitPresentation(
+        MyCoursesPageFailurePresentationEvent(message: e.toString()),
       );
     }
   }

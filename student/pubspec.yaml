@@ -54,6 +54,9 @@ dependencies:
   smart_auth: ^3.2.0
   image_picker: ^1.2.1
   share_plus: ^12.0.1
+  percent_indicator: ^4.2.5
+  qr_flutter: ^4.1.0
+  url_launcher: ^6.3.2
 
   # Core
   student_core:
@@ -76,6 +79,24 @@ dependencies:
     path: packages/mock/mock_home_repository
   mock_course_repository:
     path: packages/mock/mock_course_repository
+  mock_attendance_repository:
+    path: packages/mock/mock_attendance_repository
+  mock_wallet_repository:
+    path: packages/mock/mock_wallet_repository
+  mock_notification_repository:
+    path: packages/mock/mock_notification_repository
+  mock_settings_repository:
+    path: packages/mock/mock_settings_repository
+  mock_profile_repository:
+    path: packages/mock/mock_profile_repository
+  mock_quiz_repository:
+    path: packages/mock/mock_quiz_repository
+  mock_assignment_repository:
+    path: packages/mock/mock_assignment_repository
+  mock_ai_repository:
+    path: packages/mock/mock_ai_repository
+  mock_marketplace_repository:
+    path: packages/mock/mock_marketplace_repository
 
   # Clients
   dio_http_client:

@@ -25,6 +25,15 @@ final class AIMessageEntity extends Equatable {
     this.confidence,
   });
 
+
+  static final placeholder = AIMessageEntity(
+    id: '',
+    conversationId: '',
+    role: AIMessageRole.user,
+    content: '',
+    createdAt: DateTime.fromMillisecondsSinceEpoch(0),
+  );
+
   @override
   List<Object?> get props => [
         id,

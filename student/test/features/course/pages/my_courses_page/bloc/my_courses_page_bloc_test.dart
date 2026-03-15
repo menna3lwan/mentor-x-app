@@ -1,6 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mock_course_repository/mock_course_repository.dart';
+import 'package:mentorx_student/core/core.dart';
 
 import 'package:mentorx_student/features/course/pages/my_courses_page/bloc/my_courses_page_bloc.dart';
 
@@ -18,12 +19,12 @@ void main() {
       act: (bloc) => bloc.add(const MyCoursesPageInitialized()),
       expect: () => [
         isA<MyCoursesPageState>().having(
-          (s) => s.status,
-          'status',
-          MyCoursesPageStatus.loading,
+          (s) => s.loadingState,
+          'loadingState',
+          LoadingState.loading,
         ),
         isA<MyCoursesPageState>()
-            .having((s) => s.status, 'status', MyCoursesPageStatus.loaded)
+            .having((s) => s.loadingState, 'loadingState', LoadingState.loaded)
             .having((s) => s.courses.isNotEmpty, 'has courses', true),
       ],
     );
@@ -32,17 +33,21 @@ void main() {
       'emits state with new tab when tab changed',
       build: () => MyCoursesPageBloc(courseRepository: courseRepository),
       seed: () => const MyCoursesPageState(
-        status: MyCoursesPageStatus.loaded,
+        loadingState: LoadingState.loaded,
       ),
       act: (bloc) =>
           bloc.add(const MyCoursesPageTabChanged(MyCoursesTab.completed)),
       expect: () => [
         isA<MyCoursesPageState>()
             .having((s) => s.selectedTab, 'tab', MyCoursesTab.completed)
-            .having((s) => s.status, 'status', MyCoursesPageStatus.loading),
+            .having(
+              (s) => s.loadingState,
+              'loadingState',
+              LoadingState.loading,
+            ),
         isA<MyCoursesPageState>()
             .having((s) => s.selectedTab, 'tab', MyCoursesTab.completed)
-            .having((s) => s.status, 'status', MyCoursesPageStatus.loaded),
+            .having((s) => s.loadingState, 'loadingState', LoadingState.loaded),
       ],
     );
 
@@ -50,7 +55,7 @@ void main() {
       'loads expired courses when expired tab selected',
       build: () => MyCoursesPageBloc(courseRepository: courseRepository),
       seed: () => const MyCoursesPageState(
-        status: MyCoursesPageStatus.loaded,
+        loadingState: LoadingState.loaded,
       ),
       act: (bloc) =>
           bloc.add(const MyCoursesPageTabChanged(MyCoursesTab.expired)),
@@ -70,7 +75,7 @@ void main() {
       'search filters courses',
       build: () => MyCoursesPageBloc(courseRepository: courseRepository),
       seed: () => const MyCoursesPageState(
-        status: MyCoursesPageStatus.loaded,
+        loadingState: LoadingState.loaded,
       ),
       act: (bloc) => bloc.add(const MyCoursesPageSearchChanged('Algebra')),
       expect: () => [
@@ -82,13 +87,13 @@ void main() {
         ),
         // loading
         isA<MyCoursesPageState>().having(
-          (s) => s.status,
-          'status',
-          MyCoursesPageStatus.loading,
+          (s) => s.loadingState,
+          'loadingState',
+          LoadingState.loading,
         ),
         // loaded with filtered results
         isA<MyCoursesPageState>()
-            .having((s) => s.status, 'status', MyCoursesPageStatus.loaded)
+            .having((s) => s.loadingState, 'loadingState', LoadingState.loaded)
             .having(
               (s) => s.courses.every(
                 (c) => c.title.toLowerCase().contains('algebra'),
@@ -103,22 +108,56 @@ void main() {
       'refresh reloads courses',
       build: () => MyCoursesPageBloc(courseRepository: courseRepository),
       seed: () => const MyCoursesPageState(
-        status: MyCoursesPageStatus.loaded,
+        loadingState: LoadingState.loaded,
         selectedTab: MyCoursesTab.inProgress,
       ),
       act: (bloc) => bloc.add(const MyCoursesPageRefreshed()),
       expect: () => [
         isA<MyCoursesPageState>().having(
-          (s) => s.status,
-          'status',
-          MyCoursesPageStatus.loading,
+          (s) => s.loadingState,
+          'loadingState',
+          LoadingState.loading,
         ),
         isA<MyCoursesPageState>().having(
-          (s) => s.status,
-          'status',
-          MyCoursesPageStatus.loaded,
+          (s) => s.loadingState,
+          'loadingState',
+          LoadingState.loaded,
         ),
       ],
+    );
+
+    test('initial state has default values', () {
+      final bloc = MyCoursesPageBloc(courseRepository: courseRepository);
+      expect(bloc.state.loadingState, LoadingState.initial);
+      expect(bloc.state.selectedTab, MyCoursesTab.inProgress);
+      expect(bloc.state.courses, isEmpty);
+      expect(bloc.state.searchQuery, '');
+      expect(bloc.state.errorMessage, isNull);
+      bloc.close();
+    });
+
+    test('inProgress tab is default', () {
+      final bloc = MyCoursesPageBloc(courseRepository: courseRepository);
+      expect(bloc.state.selectedTab, MyCoursesTab.inProgress);
+      expect(bloc.state, equals(MyCoursesPageState.initial));
+      bloc.close();
+    });
+
+    blocTest<MyCoursesPageBloc, MyCoursesPageState>(
+      'clearing search loads all courses',
+      build: () => MyCoursesPageBloc(courseRepository: courseRepository),
+      seed: () => const MyCoursesPageState(
+        loadingState: LoadingState.loaded,
+        searchQuery: 'Algebra',
+      ),
+      act: (bloc) => bloc.add(const MyCoursesPageSearchChanged('')),
+      wait: const Duration(milliseconds: 50),
+      verify: (bloc) {
+        expect(bloc.state.searchQuery, '');
+        expect(bloc.state.loadingState, LoadingState.loaded);
+        // Empty search returns all in_progress courses (unfiltered)
+        expect(bloc.state.courses.isNotEmpty, true);
+      },
     );
   });
 }

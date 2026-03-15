@@ -33,6 +33,15 @@ workspace:
   - student/packages/mock/mock_authentication_repository
   - student/packages/mock/mock_home_repository
   - student/packages/mock/mock_course_repository
+  - student/packages/mock/mock_attendance_repository
+  - student/packages/mock/mock_wallet_repository
+  - student/packages/mock/mock_notification_repository
+  - student/packages/mock/mock_settings_repository
+  - student/packages/mock/mock_profile_repository
+  - student/packages/mock/mock_quiz_repository
+  - student/packages/mock/mock_assignment_repository
+  - student/packages/mock/mock_ai_repository
+  - student/packages/mock/mock_marketplace_repository
 
   # Parent core
   - parent/packages/parent_core

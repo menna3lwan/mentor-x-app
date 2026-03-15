@@ -3,22 +3,80 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mentorx_core/mentorx_core.dart';
 
 import '../../features/features.dart';
 import '../core.dart';
 
+// ── Account Status ──────────────────────────────────────────────────────────
 part '../../features/account_status/pages/status_blocked_page/status_blocked_page_route.dart';
 part '../../features/account_status/pages/status_pending_page/status_pending_page_route.dart';
 part '../../features/account_status/pages/status_rejected_page/status_rejected_page_route.dart';
+
+// ── Auth ─────────────────────────────────────────────────────────────────────
 part '../../features/auth/pages/login_page/login_page_route.dart';
 part '../../features/auth/pages/otp_page/otp_page_route.dart';
+
+// ── Onboarding ───────────────────────────────────────────────────────────────
+part '../../features/onboarding/pages/walkthrough_page/walkthrough_page_route.dart';
+
+// ── Shell ─────────────────────────────────────────────────────────────────────
+part '../../features/shell/pages/shell_page/shell_page_route.dart';
+
+// ── Home ─────────────────────────────────────────────────────────────────────
+part '../../features/home/pages/home_page/home_page_route.dart';
+
+// ── AI Chat ───────────────────────────────────────────────────────────────────
+part '../../features/ai_chat/pages/ai_chat_page/ai_chat_page_route.dart';
+
+// ── Course ───────────────────────────────────────────────────────────────────
 part '../../features/course/pages/my_courses_page/my_courses_page_route.dart';
 part '../../features/course/pages/course_catalog_page/course_catalog_page_route.dart';
 part '../../features/course/pages/course_detail_page/course_detail_page_route.dart';
 part '../../features/course/pages/video_player_page/video_player_page_route.dart';
 part '../../features/course/pages/pdf_viewer_page/pdf_viewer_page_route.dart';
-part '../../features/home/pages/home_page/home_page_route.dart';
-part '../../features/onboarding/pages/walkthrough_page/walkthrough_page_route.dart';
+
+// ── Assignments ───────────────────────────────────────────────────────────────
+part '../../features/assignments/pages/assignment_detail_page/assignment_detail_page_route.dart';
+part '../../features/assignments/pages/assignment_submit_page/assignment_submit_page_route.dart';
+part '../../features/assignments/pages/assignment_result_page/assignment_result_page_route.dart';
+
+// ── Attendance ────────────────────────────────────────────────────────────────
+part '../../features/attendance/pages/attendance_qr_page/attendance_qr_page_route.dart';
+part '../../features/attendance/pages/attendance_history_page/attendance_history_page_route.dart';
+
+// ── Notifications ─────────────────────────────────────────────────────────────
+part '../../features/notifications/pages/notifications_page/notifications_page_route.dart';
+
+// ── Products ──────────────────────────────────────────────────────────────────
+part '../../features/products/pages/products_grid_page/products_grid_page_route.dart';
+part '../../features/products/pages/product_detail_page/product_detail_page_route.dart';
+part '../../features/products/pages/shopping_cart_page/shopping_cart_page_route.dart';
+
+// ── Profile ───────────────────────────────────────────────────────────────────
+part '../../features/profile/pages/profile_view_page/profile_view_page_route.dart';
+part '../../features/profile/pages/edit_profile_page/edit_profile_page_route.dart';
+part '../../features/profile/pages/change_password_page/change_password_page_route.dart';
+
+// ── Quizzes ───────────────────────────────────────────────────────────────────
+part '../../features/quizzes/pages/quiz_list_page/quiz_list_page_route.dart';
+part '../../features/quizzes/pages/quiz_intro_page/quiz_intro_page_route.dart';
+part '../../features/quizzes/pages/quiz_taking_page/quiz_taking_page_route.dart';
+part '../../features/quizzes/pages/quiz_result_page/quiz_result_page_route.dart';
+part '../../features/quizzes/pages/quiz_review_page/quiz_review_page_route.dart';
+part '../../features/quizzes/pages/quiz_answers_review_page/quiz_answers_review_page_route.dart';
+part '../../features/quizzes/pages/quiz_rewards_page/quiz_rewards_page_route.dart';
+
+// ── Settings ──────────────────────────────────────────────────────────────────
+part '../../features/settings/pages/settings_list_page/settings_list_page_route.dart';
+part '../../features/settings/pages/about_page/about_page_route.dart';
+part '../../features/settings/pages/support_page/support_page_route.dart';
+
+// ── Wallet ────────────────────────────────────────────────────────────────────
+part '../../features/wallet/pages/wallet_main_page/wallet_main_page_route.dart';
+part '../../features/wallet/pages/add_balance_page/add_balance_page_route.dart';
+part '../../features/wallet/pages/redeem_code_page/redeem_code_page_route.dart';
+part '../../features/wallet/pages/transactions_history_page/transactions_history_page_route.dart';
+part '../../features/wallet/pages/purchase_confirm_page/purchase_confirm_page_route.dart';
+part '../../features/wallet/pages/payment_success_page/payment_success_page_route.dart';
 
 part 'app_routes.g.dart';

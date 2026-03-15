@@ -34,6 +34,13 @@ final class RewardItemEntity extends Equatable {
     return true;
   }
 
+
+  static final placeholder = RewardItemEntity(
+    id: '',
+    title: '',
+    requiredPoints: 0,
+  );
+
   @override
   List<Object?> get props => [
         id,

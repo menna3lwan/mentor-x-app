@@ -19,6 +19,14 @@ final class CodeRedemptionEntity extends Equatable {
     this.resultType,
   });
 
+
+  static final placeholder = CodeRedemptionEntity(
+    id: '',
+    code: '',
+    codeType: CodeType.wallet,
+    redeemedAt: DateTime.fromMillisecondsSinceEpoch(0),
+  );
+
   @override
   List<Object?> get props => [
         id,

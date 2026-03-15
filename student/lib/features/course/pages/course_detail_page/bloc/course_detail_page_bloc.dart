@@ -1,12 +1,39 @@
 import 'package:bloc/bloc.dart';
+import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:equatable/equatable.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 
 part 'course_detail_page_event.dart';
 part 'course_detail_page_state.dart';
 
+sealed class CourseDetailPagePresentationEvent {
+  const CourseDetailPagePresentationEvent();
+}
+
+final class CourseDetailPageEnrollSuccessPresentationEvent
+    extends CourseDetailPagePresentationEvent {
+  const CourseDetailPageEnrollSuccessPresentationEvent();
+}
+
+final class CourseDetailPageEnrollFailurePresentationEvent
+    extends CourseDetailPagePresentationEvent {
+  final String message;
+  const CourseDetailPageEnrollFailurePresentationEvent({required this.message});
+}
+
+final class CourseDetailPageFailurePresentationEvent
+    extends CourseDetailPagePresentationEvent {
+  final String message;
+  const CourseDetailPageFailurePresentationEvent({required this.message});
+}
+
 final class CourseDetailPageBloc
-    extends Bloc<CourseDetailPageEvent, CourseDetailPageState> {
+    extends Bloc<CourseDetailPageEvent, CourseDetailPageState>
+    with
+        BlocPresentationMixin<
+          CourseDetailPageState,
+          CourseDetailPagePresentationEvent
+        > {
   final CourseRepository _courseRepository;
 
   CourseDetailPageBloc({
@@ -40,7 +67,6 @@ final class CourseDetailPageBloc
     Emitter<CourseDetailPageState> emit,
   ) async {
     emit(state.copyWith(enrollStatus: EnrollActionStatus.loading));
-
     try {
       final enrollment = await _courseRepository.enrollInCourse(state.courseId);
       emit(
@@ -49,11 +75,17 @@ final class CourseDetailPageBloc
           enrollment: enrollment,
         ),
       );
+      emitPresentation(const CourseDetailPageEnrollSuccessPresentationEvent());
     } on CourseRepositoryException catch (e) {
       emit(
         state.copyWith(
           enrollStatus: EnrollActionStatus.failure,
           enrollErrorMessage: e.message,
+        ),
+      );
+      emitPresentation(
+        CourseDetailPageEnrollFailurePresentationEvent(
+          message: e.message ?? '',
         ),
       );
     } catch (e) {
@@ -62,6 +94,9 @@ final class CourseDetailPageBloc
           enrollStatus: EnrollActionStatus.failure,
           enrollErrorMessage: e.toString(),
         ),
+      );
+      emitPresentation(
+        CourseDetailPageEnrollFailurePresentationEvent(message: e.toString()),
       );
     }
   }
@@ -73,16 +108,13 @@ final class CourseDetailPageBloc
     await _loadAll(emit: emit);
   }
 
-  Future<void> _loadAll({
-    required Emitter<CourseDetailPageState> emit,
-  }) async {
+  Future<void> _loadAll({required Emitter<CourseDetailPageState> emit}) async {
     emit(
       state.copyWith(
         courseStatus: DetailSectionStatus.loading,
         sessionsStatus: DetailSectionStatus.loading,
       ),
     );
-
     await Future.wait([
       _loadCourseDetail(emit),
       _loadSessions(emit),
@@ -120,8 +152,6 @@ final class CourseDetailPageBloc
           sessions: sessions,
         ),
       );
-
-      // Load items for each session in parallel
       final itemFutures = <String, Future<List<SessionItemEntity>>>{};
       for (final session in sessions) {
         itemFutures[session.id] = _courseRepository.getSessionItems(session.id);
@@ -136,11 +166,7 @@ final class CourseDetailPageBloc
       }
       emit(state.copyWith(sessionItems: itemsMap));
     } catch (e) {
-      emit(
-        state.copyWith(
-          sessionsStatus: DetailSectionStatus.failure,
-        ),
-      );
+      emit(state.copyWith(sessionsStatus: DetailSectionStatus.failure));
     }
   }
 
@@ -155,8 +181,6 @@ final class CourseDetailPageBloc
           clearEnrollment: enrollment == null,
         ),
       );
-    } catch (_) {
-      // Silently fail — means not enrolled
-    }
+    } catch (_) {}
   }
 }

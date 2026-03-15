@@ -29,6 +29,13 @@ final class MarketplaceItemEntity extends Equatable {
 
   bool get inStock => stockQuantity > 0;
 
+
+  static final placeholder = MarketplaceItemEntity(
+    id: '',
+    title: '',
+    price: 0.0,
+  );
+
   @override
   List<Object?> get props => [
         id,

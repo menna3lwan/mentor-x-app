@@ -1,11 +1,9 @@
 part of 'video_player_page_bloc.dart';
 
-enum VideoPlayerStatus { initial, loading, ready, failure }
-
 final class VideoPlayerPageState extends Equatable {
   final String itemId;
   final String title;
-  final VideoPlayerStatus status;
+  final LoadingState loadingState;
   final String? streamUrl;
   final int currentPositionSeconds;
   final int totalDurationSeconds;
@@ -15,7 +13,7 @@ final class VideoPlayerPageState extends Equatable {
   const VideoPlayerPageState({
     required this.itemId,
     required this.title,
-    this.status = VideoPlayerStatus.initial,
+    this.loadingState = LoadingState.initial,
     this.streamUrl,
     this.currentPositionSeconds = 0,
     this.totalDurationSeconds = 0,
@@ -24,15 +22,14 @@ final class VideoPlayerPageState extends Equatable {
   });
 
   bool get isLoading =>
-      status == VideoPlayerStatus.loading ||
-      status == VideoPlayerStatus.initial;
-  bool get isReady => status == VideoPlayerStatus.ready;
-  bool get isFailure => status == VideoPlayerStatus.failure;
+      loadingState.isLoading || loadingState == LoadingState.initial;
+  bool get isReady => loadingState.isLoaded;
+  bool get isFailure => loadingState.isError;
 
   VideoPlayerPageState copyWith({
     String? itemId,
     String? title,
-    VideoPlayerStatus? status,
+    LoadingState? loadingState,
     String? streamUrl,
     int? currentPositionSeconds,
     int? totalDurationSeconds,
@@ -42,7 +39,7 @@ final class VideoPlayerPageState extends Equatable {
     return VideoPlayerPageState(
       itemId: itemId ?? this.itemId,
       title: title ?? this.title,
-      status: status ?? this.status,
+      loadingState: loadingState ?? this.loadingState,
       streamUrl: streamUrl ?? this.streamUrl,
       currentPositionSeconds:
           currentPositionSeconds ?? this.currentPositionSeconds,
@@ -56,7 +53,7 @@ final class VideoPlayerPageState extends Equatable {
   List<Object?> get props => [
     itemId,
     title,
-    status,
+    loadingState,
     streamUrl,
     currentPositionSeconds,
     totalDurationSeconds,

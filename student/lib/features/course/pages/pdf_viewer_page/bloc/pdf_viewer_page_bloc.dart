@@ -1,12 +1,30 @@
 import 'package:bloc/bloc.dart';
+import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:equatable/equatable.dart';
-import 'package:mentorx_core/mentorx_core.dart';
+import '../../../../../core/core.dart';
 
 part 'pdf_viewer_page_event.dart';
 part 'pdf_viewer_page_state.dart';
 
+// ──── Presentation events (one-time, not state) ────
+sealed class PdfViewerPagePresentationEvent {
+  const PdfViewerPagePresentationEvent();
+}
+
+final class PdfViewerPageFailurePresentationEvent
+    extends PdfViewerPagePresentationEvent {
+  final String message;
+  const PdfViewerPageFailurePresentationEvent({required this.message});
+}
+
+// ──── Bloc ────
 final class PdfViewerPageBloc
-    extends Bloc<PdfViewerPageEvent, PdfViewerPageState> {
+    extends Bloc<PdfViewerPageEvent, PdfViewerPageState>
+    with
+        BlocPresentationMixin<
+          PdfViewerPageState,
+          PdfViewerPagePresentationEvent
+        > {
   final CourseRepository _courseRepository;
 
   PdfViewerPageBloc({
@@ -23,28 +41,34 @@ final class PdfViewerPageBloc
     PdfViewerPageInitialized event,
     Emitter<PdfViewerPageState> emit,
   ) async {
-    emit(state.copyWith(status: PdfViewerStatus.loading));
+    emit(state.copyWith(loadingState: LoadingState.loading));
     try {
       final url = await _courseRepository.getContentUrl(state.itemId);
       emit(
         state.copyWith(
-          status: PdfViewerStatus.ready,
+          loadingState: LoadingState.loaded,
           contentUrl: url,
         ),
       );
     } on CourseRepositoryException catch (e) {
       emit(
         state.copyWith(
-          status: PdfViewerStatus.failure,
+          loadingState: LoadingState.error,
           errorMessage: e.message,
         ),
+      );
+      emitPresentation(
+        PdfViewerPageFailurePresentationEvent(message: e.message ?? ''),
       );
     } catch (e) {
       emit(
         state.copyWith(
-          status: PdfViewerStatus.failure,
+          loadingState: LoadingState.error,
           errorMessage: e.toString(),
         ),
+      );
+      emitPresentation(
+        PdfViewerPageFailurePresentationEvent(message: e.toString()),
       );
     }
   }

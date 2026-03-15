@@ -1,46 +1,56 @@
+import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mentorx_core/mentorx_core.dart';
 
 import '../../../../app/mentorx_student.dart';
 import '../../../../core/core.dart';
 import 'bloc/otp_page_bloc.dart';
 import 'otp_page_page.dart';
 
-final class OtpPageWrapper extends StatelessWidget {
+final class OtpPageWrapper extends StatefulWidget {
   const OtpPageWrapper({super.key});
 
   @override
+  State<OtpPageWrapper> createState() => _OtpPageWrapperState();
+}
+
+final class _OtpPageWrapperState extends State<OtpPageWrapper> {
+  @override
   Widget build(BuildContext context) {
-    return BlocConsumer<OtpPageBloc, OtpPageState>(
-      listenWhen: (previous, current) => previous.status != current.status,
-      listener: (context, state) {
-        if (state.isSuccess && state.user != null) {
-          _handleAuthenticatedUser(context, state.user!);
+    return BlocPresentationListener<OtpPageBloc, OtpPagePresentationEvent>(
+      listener: (context, event) {
+        switch (event) {
+          case OtpPageAuthenticatedPresentationEvent(:final user):
+            _handleAuthenticatedUser(context, user);
+          case OtpPageFailurePresentationEvent():
+            break;
         }
       },
-      builder: (context, state) {
-        final bloc = context.read<OtpPageBloc>();
-        return OtpPagePage(
-          phoneNumber: state.phoneNumber,
-          otpLength: state.otpLength,
-          isLoading: state.isLoading,
-          isResending: state.isResending,
-          canResend: state.canResend,
-          formattedCountdown: state.formattedCountdown,
-          errorMessage: state.isFailure ? state.errorMessage : null,
-          onOtpChanged: (value) => bloc.add(OtpPageOtpChanged(value)),
-          onSubmit: () => bloc.add(const OtpPageSubmitted()),
-          onResend: () => bloc.add(const OtpPageResendRequested()),
-          onEditPhone: () => context.pop(),
-        );
-      },
+      child: BlocBuilder<OtpPageBloc, OtpPageState>(
+        builder: (context, state) {
+          final bloc = context.read<OtpPageBloc>();
+          return OtpPagePage(
+            phoneNumber: state.phoneNumber,
+            otpLength: state.otpLength,
+            isLoading: state.isLoading,
+            isResending: state.isResending,
+            canResend: state.canResend,
+            formattedCountdown: state.formattedCountdown,
+            errorMessage: state.loadingState.isError
+                ? state.errorMessage
+                : null,
+            onOtpChanged: (value) => bloc.add(OtpPageOtpChanged(value)),
+            onSubmit: () => bloc.add(const OtpPageSubmitted()),
+            onResend: () => bloc.add(const OtpPageResendRequested()),
+            onEditPhone: () => context.pop(),
+          );
+        },
+      ),
     );
   }
 
   void _handleAuthenticatedUser(BuildContext context, StudentEntity user) {
-    // Update global auth state
     appEventBus.fire(AppAuthenticationUpdateEvent(user: user));
 
     switch (user.status) {

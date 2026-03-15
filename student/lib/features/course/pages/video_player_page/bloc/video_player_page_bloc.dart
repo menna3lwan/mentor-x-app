@@ -1,12 +1,30 @@
 import 'package:bloc/bloc.dart';
+import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:equatable/equatable.dart';
-import 'package:mentorx_core/mentorx_core.dart';
+import '../../../../../core/core.dart';
 
 part 'video_player_page_event.dart';
 part 'video_player_page_state.dart';
 
+// ──── Presentation events (one-time, not state) ────
+sealed class VideoPlayerPagePresentationEvent {
+  const VideoPlayerPagePresentationEvent();
+}
+
+final class VideoPlayerPageFailurePresentationEvent
+    extends VideoPlayerPagePresentationEvent {
+  final String message;
+  const VideoPlayerPageFailurePresentationEvent({required this.message});
+}
+
+// ──── Bloc ────
 final class VideoPlayerPageBloc
-    extends Bloc<VideoPlayerPageEvent, VideoPlayerPageState> {
+    extends Bloc<VideoPlayerPageEvent, VideoPlayerPageState>
+    with
+        BlocPresentationMixin<
+          VideoPlayerPageState,
+          VideoPlayerPagePresentationEvent
+        > {
   final CourseRepository _courseRepository;
 
   VideoPlayerPageBloc({
@@ -24,28 +42,34 @@ final class VideoPlayerPageBloc
     VideoPlayerPageInitialized event,
     Emitter<VideoPlayerPageState> emit,
   ) async {
-    emit(state.copyWith(status: VideoPlayerStatus.loading));
+    emit(state.copyWith(loadingState: LoadingState.loading));
     try {
       final url = await _courseRepository.getStreamUrl(state.itemId);
       emit(
         state.copyWith(
-          status: VideoPlayerStatus.ready,
+          loadingState: LoadingState.loaded,
           streamUrl: url,
         ),
       );
     } on CourseRepositoryException catch (e) {
       emit(
         state.copyWith(
-          status: VideoPlayerStatus.failure,
+          loadingState: LoadingState.error,
           errorMessage: e.message,
         ),
+      );
+      emitPresentation(
+        VideoPlayerPageFailurePresentationEvent(message: e.message ?? ''),
       );
     } catch (e) {
       emit(
         state.copyWith(
-          status: VideoPlayerStatus.failure,
+          loadingState: LoadingState.error,
           errorMessage: e.toString(),
         ),
+      );
+      emitPresentation(
+        VideoPlayerPageFailurePresentationEvent(message: e.toString()),
       );
     }
   }

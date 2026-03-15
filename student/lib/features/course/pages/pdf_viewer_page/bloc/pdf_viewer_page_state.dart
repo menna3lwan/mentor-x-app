@@ -1,11 +1,9 @@
 part of 'pdf_viewer_page_bloc.dart';
 
-enum PdfViewerStatus { initial, loading, ready, failure }
-
 final class PdfViewerPageState extends Equatable {
   final String itemId;
   final String title;
-  final PdfViewerStatus status;
+  final LoadingState loadingState;
   final String? contentUrl;
   final bool isCompleted;
   final String? errorMessage;
@@ -13,21 +11,21 @@ final class PdfViewerPageState extends Equatable {
   const PdfViewerPageState({
     required this.itemId,
     required this.title,
-    this.status = PdfViewerStatus.initial,
+    this.loadingState = LoadingState.initial,
     this.contentUrl,
     this.isCompleted = false,
     this.errorMessage,
   });
 
   bool get isLoading =>
-      status == PdfViewerStatus.loading || status == PdfViewerStatus.initial;
-  bool get isReady => status == PdfViewerStatus.ready;
-  bool get isFailure => status == PdfViewerStatus.failure;
+      loadingState.isLoading || loadingState == LoadingState.initial;
+  bool get isReady => loadingState.isLoaded;
+  bool get isFailure => loadingState.isError;
 
   PdfViewerPageState copyWith({
     String? itemId,
     String? title,
-    PdfViewerStatus? status,
+    LoadingState? loadingState,
     String? contentUrl,
     bool? isCompleted,
     String? errorMessage,
@@ -35,7 +33,7 @@ final class PdfViewerPageState extends Equatable {
     return PdfViewerPageState(
       itemId: itemId ?? this.itemId,
       title: title ?? this.title,
-      status: status ?? this.status,
+      loadingState: loadingState ?? this.loadingState,
       contentUrl: contentUrl ?? this.contentUrl,
       isCompleted: isCompleted ?? this.isCompleted,
       errorMessage: errorMessage,
@@ -46,7 +44,7 @@ final class PdfViewerPageState extends Equatable {
   List<Object?> get props => [
     itemId,
     title,
-    status,
+    loadingState,
     contentUrl,
     isCompleted,
     errorMessage,

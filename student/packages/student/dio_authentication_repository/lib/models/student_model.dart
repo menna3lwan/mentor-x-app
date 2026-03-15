@@ -1,6 +1,6 @@
-part of '../dio_authentication_repository.dart';
+import 'package:mentorx_core/mentorx_core.dart';
 
-class StudentModel extends StudentEntity {
+final class StudentModel extends StudentEntity {
   const StudentModel({
     required super.id,
     required super.name,

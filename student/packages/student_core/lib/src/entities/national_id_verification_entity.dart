@@ -17,6 +17,11 @@ final class NationalIdVerificationEntity extends Equatable {
 
   bool get isVerified => status == VerificationStatus.verified;
 
+
+  static final placeholder = NationalIdVerificationEntity(
+    status: VerificationStatus.pending,
+  );
+
   @override
   List<Object?> get props => [
         status,

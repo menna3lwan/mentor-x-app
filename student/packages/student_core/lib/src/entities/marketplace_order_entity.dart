@@ -32,6 +32,15 @@ final class MarketplaceOrderEntity extends Equatable {
     this.deliveryNotes,
   });
 
+
+  static final placeholder = MarketplaceOrderEntity(
+    id: '',
+    orderNumber: '',
+    totalAmount: 0.0,
+    status: MarketplaceOrderStatus.pending,
+    createdAt: DateTime.fromMillisecondsSinceEpoch(0),
+  );
+
   @override
   List<Object?> get props => [
         id,

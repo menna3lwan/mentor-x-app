@@ -31,7 +31,10 @@ final class Env {
   // MentorX Configuration
   static const String mentorXBaseUrl = String.fromEnvironment(
     'MENTORX_API_BASE_URL',
+    defaultValue: '',
   );
+
+  static bool get hasMentorXBaseUrl => mentorXBaseUrl.trim().isNotEmpty;
 
   static final authenticationRepositoryMode = RepositoryMode.fromString(
     const String.fromEnvironment(
@@ -50,6 +53,83 @@ final class Env {
       defaultValue: 'mock',
     ),
   );
+
+  static final attendanceRepositoryMode = RepositoryMode.fromString(
+    const String.fromEnvironment(
+      'ATTENDANCE_REPOSITORY_MODE',
+      defaultValue: 'mock',
+    ),
+  );
+
+  static final walletRepositoryMode = RepositoryMode.fromString(
+    const String.fromEnvironment(
+      'WALLET_REPOSITORY_MODE',
+      defaultValue: 'mock',
+    ),
+  );
+
+  static final notificationRepositoryMode = RepositoryMode.fromString(
+    const String.fromEnvironment(
+      'NOTIFICATION_REPOSITORY_MODE',
+      defaultValue: 'mock',
+    ),
+  );
+
+  static final settingsRepositoryMode = RepositoryMode.fromString(
+    const String.fromEnvironment(
+      'SETTINGS_REPOSITORY_MODE',
+      defaultValue: 'mock',
+    ),
+  );
+
+  static final profileRepositoryMode = RepositoryMode.fromString(
+    const String.fromEnvironment(
+      'PROFILE_REPOSITORY_MODE',
+      defaultValue: 'mock',
+    ),
+  );
+
+  static final quizRepositoryMode = RepositoryMode.fromString(
+    const String.fromEnvironment(
+      'QUIZ_REPOSITORY_MODE',
+      defaultValue: 'mock',
+    ),
+  );
+
+  static final assignmentRepositoryMode = RepositoryMode.fromString(
+    const String.fromEnvironment(
+      'ASSIGNMENT_REPOSITORY_MODE',
+      defaultValue: 'mock',
+    ),
+  );
+
+  static final aiRepositoryMode = RepositoryMode.fromString(
+    const String.fromEnvironment(
+      'AI_REPOSITORY_MODE',
+      defaultValue: 'mock',
+    ),
+  );
+
+  static final marketplaceRepositoryMode = RepositoryMode.fromString(
+    const String.fromEnvironment(
+      'MARKETPLACE_REPOSITORY_MODE',
+      defaultValue: 'mock',
+    ),
+  );
+
+  static bool get usesAnyProdRepository =>
+      authenticationRepositoryMode == RepositoryMode.prod ||
+      homeRepositoryMode == RepositoryMode.prod ||
+      courseRepositoryMode == RepositoryMode.prod ||
+      attendanceRepositoryMode == RepositoryMode.prod ||
+      walletRepositoryMode == RepositoryMode.prod ||
+      notificationRepositoryMode == RepositoryMode.prod ||
+      settingsRepositoryMode == RepositoryMode.prod ||
+      profileRepositoryMode == RepositoryMode.prod ||
+      quizRepositoryMode == RepositoryMode.prod ||
+      assignmentRepositoryMode == RepositoryMode.prod ||
+      aiRepositoryMode == RepositoryMode.prod ||
+      marketplaceRepositoryMode == RepositoryMode.prod;
 
   // Mock values:
   static const int _mockDelayDurationInSeconds = int.fromEnvironment(

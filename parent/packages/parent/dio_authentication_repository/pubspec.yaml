@@ -1,6 +1,6 @@
 name: parent_authentication_repository
 description: "Dio implementation of Parent AuthenticationRepository."
-version: 0.0.1
+version: 1.0.0
 publish_to: none
 
 environment:
