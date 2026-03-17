@@ -73,7 +73,7 @@ dependencies:
     path: ../packages/common/flutter_secure_storage_cache_repository
 
   # Mock Repositories
-  student_mock_authentication_repository:
+  mock_authentication_repository:
     path: packages/mock/mock_authentication_repository
   mock_home_repository:
     path: packages/mock/mock_home_repository

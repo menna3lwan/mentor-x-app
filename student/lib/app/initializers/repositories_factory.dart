@@ -9,21 +9,21 @@ import 'package:flutter_secure_storage_cache_repository/flutter_secure_storage_c
 import 'package:mentorx_core/mentorx_core.dart';
 import 'package:student_core/student_core.dart';
 
-import 'package:dio_course_repository/student_course_repository.dart';
+import 'package:dio_course_repository/dio_course_repository.dart';
 import 'package:dio_attendance_repository/dio_attendance_repository.dart';
 import 'package:dio_wallet_repository/dio_wallet_repository.dart';
 import 'package:dio_notification_repository/dio_notification_repository.dart';
-import 'package:dio_profile_repository/student_profile_repository.dart';
-import 'package:dio_quiz_repository/student_quiz_repository.dart';
-import 'package:dio_assignment_repository/student_assignment_repository.dart';
-import 'package:dio_ai_repository/student_ai_repository.dart';
-import 'package:dio_marketplace_repository/student_marketplace_repository.dart';
-import 'package:dio_rewards_repository/student_rewards_repository.dart';
+import 'package:dio_profile_repository/dio_profile_repository.dart';
+import 'package:dio_quiz_repository/dio_quiz_repository.dart';
+import 'package:dio_assignment_repository/dio_assignment_repository.dart';
+import 'package:dio_ai_repository/dio_ai_repository.dart';
+import 'package:dio_marketplace_repository/dio_marketplace_repository.dart';
+import 'package:dio_rewards_repository/dio_rewards_repository.dart';
 import 'package:dio_grade_repository/dio_grade_repository.dart';
 import 'package:dio_announcement_repository/dio_announcement_repository.dart';
 import 'package:dio_settings_repository/dio_settings_repository.dart';
 
-import 'package:student_mock_authentication_repository/mock_authentication_repository.dart';
+import 'package:mock_authentication_repository/mock_authentication_repository.dart';
 import 'package:mock_home_repository/mock_home_repository.dart';
 import 'package:mock_course_repository/mock_course_repository.dart';
 import 'package:mock_attendance_repository/mock_attendance_repository.dart';

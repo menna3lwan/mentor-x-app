@@ -1,6 +1,6 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:student_mock_authentication_repository/mock_authentication_repository.dart';
+import 'package:mock_authentication_repository/mock_authentication_repository.dart';
 
 import 'package:mentorx_student/core/core.dart';
 import 'package:mentorx_student/features/auth/pages/otp_page/bloc/otp_page_bloc.dart';

@@ -1,4 +1,4 @@
-import 'package:dio_course_repository/student_course_repository.dart';
+import 'package:dio_course_repository/dio_course_repository.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';

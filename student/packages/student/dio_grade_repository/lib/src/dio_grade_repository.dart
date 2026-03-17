@@ -1,6 +1,6 @@
 import 'package:mentorx_core/mentorx_core.dart';
-import 'package:dio_quiz_repository/student_quiz_repository.dart';
-import 'package:dio_assignment_repository/student_assignment_repository.dart';
+import 'package:dio_quiz_repository/dio_quiz_repository.dart';
+import 'package:dio_assignment_repository/dio_assignment_repository.dart';
 
 final class DioGradeRepository
     extends HttpClientRepository<GradeRepositoryExceptionCode>

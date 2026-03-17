@@ -1,4 +1,4 @@
-name: student_mock_authentication_repository
+name: mock_authentication_repository
 description: A starting point for Dart libraries or applications.
 version: 1.0.0
 publish_to: none
