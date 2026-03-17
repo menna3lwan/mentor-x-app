@@ -21,8 +21,8 @@ class _LoginPageWrapperState extends State<LoginPageWrapper> {
   @override
   void initState() {
     super.initState();
-    _phoneController = TextEditingController();
-    _passwordController = TextEditingController();
+    _phoneController = TextEditingController(text: '201201250706');
+    _passwordController = TextEditingController(text: 'Mentorx123123#');
   }
 
   @override

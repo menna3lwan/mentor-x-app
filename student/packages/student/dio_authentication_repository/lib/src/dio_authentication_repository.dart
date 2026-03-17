@@ -14,7 +14,8 @@ final class DioAuthenticationRepository
   Never throwException(
     AuthenticationRepositoryExceptionCode code, {
     String? message,
-  }) => throw _Exception(code: code, message: message);
+  }) =>
+      throw _Exception(code: code, message: message);
 
   final HttpClient httpClient;
   final CacheRepository cacheRepository;
@@ -69,20 +70,17 @@ final class DioAuthenticationRepository
   Future<StudentEntity?> getCurrentUser() async {
     final defaultException = _ExceptionCode.failedToGetCurrentUser;
     try {
-      // Making sure that the client has the required authentication token
       final bool isAuthenticated = await httpClient.isAuthenticated();
       if (!isAuthenticated) return null;
-      final response = await httpClient.get('/users/me');
-      if (response.isOk) {
-        final user = StudentModel.fromJson(response.data['data']['user']);
-        try {
-          await _cacheUser(user);
-        } catch (e, s) {
-          _logger.error('Failed to cache user', e, s);
-        }
+      
+      final response = await httpClient.get('/api/auth/student/me');
+      if (response.statusCode == 200) {
+        final user = StudentModel.fromJson(response.data['data']);
+        await _cacheUser(user);
         return user;
       }
     } on HttpClientResponse catch (errorResponse) {
+      if (errorResponse.statusCode == 401) return null;
       handleHttpClientErrorResponse(defaultException, errorResponse);
     } catch (e, s) {
       _logger.error('Failed to get current user', e, s);
@@ -102,16 +100,23 @@ final class DioAuthenticationRepository
   Future<Duration?> resendOtp(String phoneNumber) async {
     final defaultException = _ExceptionCode.failedToResendOtp;
     try {
-      final result = await sendOtp(phoneNumber);
-      return result?.otpDuration;
+      final response = await httpClient.post(
+        '/api/student/register/resend-otp',
+        data: {'phone': phoneNumber},
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final data = response.data['data'];
+        final expiresIn = data['otp_expires_in_seconds'] as int?;
+        return expiresIn != null ? Duration(seconds: expiresIn) : null;
+      }
+      throw _Exception(code: defaultException);
+    } on HttpClientResponse catch (errorResponse) {
+      handleHttpClientErrorResponse(defaultException, errorResponse);
     } catch (e, s) {
       _logger.error('Failed to resend OTP', e, s);
       if (e is _Exception) {
-        if (e.code == _ExceptionCode.failedToSendOtp) {
-          throw _Exception(code: defaultException, message: e.message);
-        } else {
-          rethrow;
-        }
+        rethrow;
       } else {
         throw _Exception(code: defaultException);
       }
@@ -125,23 +130,20 @@ final class DioAuthenticationRepository
     final defaultException = _ExceptionCode.failedToSendOtp;
     try {
       final response = await httpClient.post(
-        '/auth/users/login',
-        data: {'phoneNumber': phoneNumber},
+        '/api/student/register/start',
+        data: {'phone': phoneNumber},
       );
 
-      if (response.isOk) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         phoneNumberToBeVerified = phoneNumber;
-        final data = response.data;
+        final data = response.data['data'];
 
-        // Parse OTP duration if provided
         Duration? otpDuration;
-        if (data['expiresIn'] != null) {
-          final durationInSeconds = data['expiresIn'] as int;
-          otpDuration = Duration(seconds: durationInSeconds);
+        if (data['otp_expires_in_seconds'] != null) {
+          otpDuration = Duration(seconds: data['otp_expires_in_seconds'] as int);
         }
 
-        // Parse OTP length if provided
-        final int? otpLength = data['otpLength'] as int?;
+        final int? otpLength = data['otp_length'] as int?;
 
         return (otpDuration: otpDuration, otpLength: otpLength);
       } else {
@@ -167,26 +169,23 @@ final class DioAuthenticationRepository
     final defaultException = _ExceptionCode.failedToVerifyOtp;
     try {
       final response = await httpClient.post(
-        '/auth/users/verify',
-        data: {'code': otp, 'phoneNumber': phoneNumberToBeVerified},
+        '/api/student/register/complete',
+        data: {'otp': otp, 'phone': phoneNumberToBeVerified},
       );
 
-      if (response.isOk) {
-        final data = response.data;
-        final String accessToken = data['accessToken'] as String;
-        httpClient.setBearerToken(accessToken);
-        final user = await getCurrentUser();
-        if (user != null) {
-          return user;
-        } else {
-          _logger.error('Failed to get current user after verification');
-          throw _Exception(code: defaultException);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final data = response.data['data'];
+        final String? accessToken = data['accessToken'] as String? ?? response.data['accessToken'] as String?;
+        
+        if (accessToken != null) {
+          httpClient.setBearerToken(accessToken);
         }
+
+        final user = StudentModel.fromJson(data);
+        await _cacheUser(user);
+        return user;
       } else {
-        throw _Exception(
-          code: defaultException,
-          message: 'Failed to verify OTP',
-        );
+        throw _Exception(code: defaultException);
       }
     } on HttpClientResponse catch (errorResponse) {
       handleHttpClientErrorResponse(defaultException, errorResponse);
@@ -205,16 +204,18 @@ final class DioAuthenticationRepository
 
   @override
   Future<void> signOut() async {
-    final defaultException = _ExceptionCode.failedToSignOut;
     try {
+      await httpClient.post('/api/auth/student/logout');
       await _deleteCachedUser();
+      httpClient.removeBearerToken();
+    } on HttpClientResponse catch (_) {
+      // Still logout locally if API fails
+      await _deleteCachedUser();
+      httpClient.removeBearerToken();
     } catch (e, s) {
-      _logger.error('Failed to delete cached user', e, s);
-      if (e is _Exception) {
-        rethrow;
-      } else {
-        throw _Exception(code: defaultException);
-      }
+      _logger.error('Failed to sign out', e, s);
+      await _deleteCachedUser();
+      httpClient.removeBearerToken();
     }
   }
 }

@@ -2,7 +2,7 @@ part of '../../student_core.dart';
 
 enum EditRequestStatus { pending, approved, rejected }
 
-final class ProfileEditRequestEntity extends Equatable {
+base class ProfileEditRequestEntity extends Equatable {
   final String id;
   final String fieldName;
   final String oldValue;

@@ -4,7 +4,7 @@ enum EnrollmentStatus { active, expired, completed }
 
 enum EnrolledBy { self, code, admin }
 
-final class EnrollmentEntity extends Equatable {
+base class EnrollmentEntity extends Equatable {
   final String id;
   final String courseId;
   final double progressPercent;

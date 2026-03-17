@@ -97,6 +97,14 @@ abstract class HttpClient {
     bool isFormData = false,
   });
 
+  Future<HttpClientResponse> patch(
+    String path, {
+    dynamic data,
+    Map<String, dynamic>? queryParameters,
+    Map<String, String>? headers,
+    bool isFormData = false,
+  });
+
   Future<HttpClientResponse> delete(
     String path, {
     dynamic data,

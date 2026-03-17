@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
-import 'package:equatable/equatable.dart';
 import '../../../../../core/core.dart';
 
 part 'otp_page_event.dart';

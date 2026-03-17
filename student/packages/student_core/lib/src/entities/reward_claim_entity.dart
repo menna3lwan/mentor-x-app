@@ -2,7 +2,7 @@ part of '../../student_core.dart';
 
 enum RewardClaimStatus { pending, approved, rejected, delivered }
 
-final class RewardClaimEntity extends Equatable {
+base class RewardClaimEntity extends Equatable {
   final String id;
   final String rewardItemId;
   final String? rewardTitle;

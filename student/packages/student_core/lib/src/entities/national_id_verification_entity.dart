@@ -2,7 +2,7 @@ part of '../../student_core.dart';
 
 enum VerificationStatus { pending, verified, rejected }
 
-final class NationalIdVerificationEntity extends Equatable {
+base class NationalIdVerificationEntity extends Equatable {
   final VerificationStatus status;
   final String? idCardPhotoUrl;
   final DateTime? verifiedAt;

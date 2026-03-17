@@ -117,6 +117,27 @@ final class Env {
     ),
   );
 
+  static final announcementRepositoryMode = RepositoryMode.fromString(
+    const String.fromEnvironment(
+      'ANNOUNCEMENT_REPOSITORY_MODE',
+      defaultValue: 'mock',
+    ),
+  );
+
+  static final rewardsRepositoryMode = RepositoryMode.fromString(
+    const String.fromEnvironment(
+      'REWARDS_REPOSITORY_MODE',
+      defaultValue: 'mock',
+    ),
+  );
+
+  static final gradeRepositoryMode = RepositoryMode.fromString(
+    const String.fromEnvironment(
+      'GRADE_REPOSITORY_MODE',
+      defaultValue: 'mock',
+    ),
+  );
+
   static bool get usesAnyProdRepository =>
       authenticationRepositoryMode == RepositoryMode.prod ||
       homeRepositoryMode == RepositoryMode.prod ||
@@ -129,7 +150,10 @@ final class Env {
       quizRepositoryMode == RepositoryMode.prod ||
       assignmentRepositoryMode == RepositoryMode.prod ||
       aiRepositoryMode == RepositoryMode.prod ||
-      marketplaceRepositoryMode == RepositoryMode.prod;
+      marketplaceRepositoryMode == RepositoryMode.prod ||
+      announcementRepositoryMode == RepositoryMode.prod ||
+      rewardsRepositoryMode == RepositoryMode.prod ||
+      gradeRepositoryMode == RepositoryMode.prod;
 
   // Mock values:
   static const int _mockDelayDurationInSeconds = int.fromEnvironment(

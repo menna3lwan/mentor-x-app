@@ -4,7 +4,7 @@ enum CourseType { online, center, both }
 
 enum OrderingMode { free, sequential, lockSession, lockItem }
 
-final class CourseEntity extends Equatable {
+base class CourseEntity extends Equatable {
   final String id;
   final String title;
   final String? subtitle;

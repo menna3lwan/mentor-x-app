@@ -5,7 +5,7 @@ class AppValues {
 
   // Password
   static const String passwordRegex =
-      r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$';
+      r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#]).{8,}$';
 
   // Username
   static const String usernameRegex =

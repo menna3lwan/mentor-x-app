@@ -1,8 +1,6 @@
-library;
-
 import 'dart:developer';
-
 import 'package:equatable/equatable.dart';
+export 'package:equatable/equatable.dart';
 
 // ——— Extensions ———
 part 'src/extensions/string_extensions.dart';
@@ -27,12 +25,12 @@ part 'src/entities/device_entity.dart';
 
 // Learning
 part 'src/entities/grade_entity.dart';
-part 'src/entities/category_entity.dart';
+part 'src/entities/category_entity.dart'; // This entity's class should be 'base class CategoryEntity'
 part 'src/entities/course_entity.dart';
-part 'src/entities/course_summary_entity.dart';
-part 'src/entities/session_entity.dart';
-part 'src/entities/session_item_entity.dart';
-part 'src/entities/enrollment_entity.dart';
+part 'src/entities/course_summary_entity.dart'; // This entity's class should be 'base class CourseSummaryEntity'
+part 'src/entities/session_entity.dart'; // This entity's class should be 'base class SessionEntity'
+part 'src/entities/session_item_entity.dart'; // This entity's class should be 'base class SessionItemEntity'
+part 'src/entities/enrollment_entity.dart'; // This entity's class should be 'base class EnrollmentEntity'
 
 // Home / Dashboard
 part 'src/entities/banner_entity.dart';

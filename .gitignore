@@ -93,7 +93,7 @@ migrate_working_dir/
 
 # User specific
 *.env
-**/docs/**
+# **/docs/**
 **/screenshots/**
 **/endpoints/**
 mentorx/ios/Runner/GoogleService-Info.plist

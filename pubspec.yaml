@@ -25,6 +25,18 @@ workspace:
   # Dio repositories
   - student/packages/student/dio_authentication_repository
   - student/packages/student/dio_home_repository
+  - student/packages/student/dio_course_repository
+  - student/packages/student/dio_quiz_repository
+  - student/packages/student/dio_assignment_repository
+  - student/packages/student/dio_profile_repository
+  - student/packages/student/dio_marketplace_repository
+  - student/packages/student/dio_ai_repository
+  - student/packages/student/dio_rewards_repository
+  - student/packages/student/dio_wallet_repository
+  - student/packages/student/dio_notification_repository
+  - student/packages/student/dio_announcement_repository
+  - student/packages/student/dio_attendance_repository
+  - student/packages/student/dio_grade_repository
 
   # Student core
   - student/packages/student_core

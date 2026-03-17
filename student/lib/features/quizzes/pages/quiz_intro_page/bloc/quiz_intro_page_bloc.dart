@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
-import 'package:equatable/equatable.dart';
 import 'package:mentorx_student/core/core.dart';
 
 part 'quiz_intro_page_event.dart';

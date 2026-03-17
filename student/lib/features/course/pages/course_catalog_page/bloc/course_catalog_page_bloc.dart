@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
-import 'package:equatable/equatable.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 
 part 'course_catalog_page_event.dart';

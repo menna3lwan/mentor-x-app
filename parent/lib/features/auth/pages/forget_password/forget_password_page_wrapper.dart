@@ -21,7 +21,7 @@ class _ForgetPasswordPageWrapperState extends State<ForgetPasswordPageWrapper> {
   @override
   void initState() {
     super.initState();
-    _phoneController = TextEditingController();
+    _phoneController = TextEditingController(text: '201201250706');
   }
 
   @override

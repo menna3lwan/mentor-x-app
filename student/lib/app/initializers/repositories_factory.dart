@@ -1,13 +1,27 @@
 import 'dart:ui';
 
-import 'package:student_authentication_repository/dio_authentication_repository.dart';
-import 'package:student_home_repository/dio_home_repository.dart';
+import 'package:dio_authentication_repository/dio_authentication_repository.dart';
+import 'package:dio_home_repository/dio_home_repository.dart';
 import 'package:dio_http_client/dio_http_client.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage_cache_repository/flutter_secure_storage_cache_repository.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 import 'package:student_core/student_core.dart';
+
+import 'package:dio_course_repository/student_course_repository.dart';
+import 'package:dio_attendance_repository/dio_attendance_repository.dart';
+import 'package:dio_wallet_repository/dio_wallet_repository.dart';
+import 'package:dio_notification_repository/dio_notification_repository.dart';
+import 'package:dio_profile_repository/student_profile_repository.dart';
+import 'package:dio_quiz_repository/student_quiz_repository.dart';
+import 'package:dio_assignment_repository/student_assignment_repository.dart';
+import 'package:dio_ai_repository/student_ai_repository.dart';
+import 'package:dio_marketplace_repository/student_marketplace_repository.dart';
+import 'package:dio_rewards_repository/student_rewards_repository.dart';
+import 'package:dio_grade_repository/dio_grade_repository.dart';
+import 'package:dio_announcement_repository/dio_announcement_repository.dart';
+import 'package:dio_settings_repository/dio_settings_repository.dart';
 
 import 'package:student_mock_authentication_repository/mock_authentication_repository.dart';
 import 'package:mock_home_repository/mock_home_repository.dart';
@@ -21,6 +35,9 @@ import 'package:mock_quiz_repository/mock_quiz_repository.dart';
 import 'package:mock_assignment_repository/mock_assignment_repository.dart';
 import 'package:mock_ai_repository/mock_ai_repository.dart';
 import 'package:mock_marketplace_repository/mock_marketplace_repository.dart';
+import 'package:mock_announcement_repository/mock_announcement_repository.dart';
+import 'package:mock_rewards_repository/mock_rewards_repository.dart';
+import 'package:mock_grade_repository/mock_grade_repository.dart';
 
 import '../../core/utils/env.dart';
 
@@ -38,6 +55,9 @@ final class AppRepositories {
   final AssignmentRepository assignmentRepository;
   final AIRepository aiRepository;
   final MarketplaceRepository marketplaceRepository;
+  final RewardsRepository rewardsRepository;
+  final GradeRepository gradeRepository;
+  final AnnouncementRepository announcementRepository;
 
   const AppRepositories._({
     required this.cacheRepository,
@@ -53,6 +73,9 @@ final class AppRepositories {
     required this.assignmentRepository,
     required this.aiRepository,
     required this.marketplaceRepository,
+    required this.rewardsRepository,
+    required this.gradeRepository,
+    required this.announcementRepository,
   });
 
   List<Object> toList() {
@@ -70,6 +93,9 @@ final class AppRepositories {
       assignmentRepository,
       aiRepository,
       marketplaceRepository,
+      rewardsRepository,
+      gradeRepository,
+      announcementRepository,
     ];
   }
 
@@ -99,6 +125,11 @@ final class AppRepositories {
       RepositoryProvider<AIRepository>(create: (_) => aiRepository),
       RepositoryProvider<MarketplaceRepository>(
         create: (_) => marketplaceRepository,
+      ),
+      RepositoryProvider<RewardsRepository>(create: (_) => rewardsRepository),
+      RepositoryProvider<GradeRepository>(create: (_) => gradeRepository),
+      RepositoryProvider<AnnouncementRepository>(
+        create: (_) => announcementRepository,
       ),
     ];
   }
@@ -173,9 +204,8 @@ final class RepositoriesFactory {
       case RepositoryMode.mock:
         return MockCourseRepository(delay: Env.mockDelayDuration);
       case RepositoryMode.prod:
-        throw UnsupportedError(
-          'COURSE_REPOSITORY_MODE=prod is not supported yet because DioCourseRepository is missing.',
-        );
+        final httpClient = await _initHttpClient();
+        return DioCourseRepository(httpClient: httpClient);
     }
   }
 
@@ -184,9 +214,8 @@ final class RepositoriesFactory {
       case RepositoryMode.mock:
         return MockAttendanceRepository(delay: Env.mockDelayDuration);
       case RepositoryMode.prod:
-        throw UnsupportedError(
-          'ATTENDANCE_REPOSITORY_MODE=prod is not supported yet.',
-        );
+        final httpClient = await _initHttpClient();
+        return DioAttendanceRepository(httpClient: httpClient);
     }
   }
 
@@ -195,9 +224,8 @@ final class RepositoriesFactory {
       case RepositoryMode.mock:
         return MockWalletRepository(delay: Env.mockDelayDuration);
       case RepositoryMode.prod:
-        throw UnsupportedError(
-          'WALLET_REPOSITORY_MODE=prod is not supported yet.',
-        );
+        final httpClient = await _initHttpClient();
+        return DioWalletRepository(httpClient: httpClient);
     }
   }
 
@@ -206,9 +234,8 @@ final class RepositoriesFactory {
       case RepositoryMode.mock:
         return MockNotificationRepository(delay: Env.mockDelayDuration);
       case RepositoryMode.prod:
-        throw UnsupportedError(
-          'NOTIFICATION_REPOSITORY_MODE=prod is not supported yet.',
-        );
+        final httpClient = await _initHttpClient();
+        return DioNotificationRepository(httpClient: httpClient);
     }
   }
 
@@ -217,9 +244,18 @@ final class RepositoriesFactory {
       case RepositoryMode.mock:
         return MockSettingsRepository(delay: Env.mockDelayDuration);
       case RepositoryMode.prod:
-        throw UnsupportedError(
-          'SETTINGS_REPOSITORY_MODE=prod is not supported yet.',
-        );
+        final httpClient = await _initHttpClient();
+        return DioSettingsRepository(httpClient: httpClient);
+    }
+  }
+
+  static Future<AnnouncementRepository> _initAnnouncementRepository() async {
+    switch (Env.announcementRepositoryMode) {
+      case RepositoryMode.mock:
+        return MockAnnouncementRepository(delay: Env.mockDelayDuration);
+      case RepositoryMode.prod:
+        final httpClient = await _initHttpClient();
+        return DioAnnouncementRepository(httpClient: httpClient);
     }
   }
 
@@ -228,9 +264,8 @@ final class RepositoriesFactory {
       case RepositoryMode.mock:
         return MockProfileRepository(delay: Env.mockDelayDuration);
       case RepositoryMode.prod:
-        throw UnsupportedError(
-          'PROFILE_REPOSITORY_MODE=prod is not supported yet.',
-        );
+        final httpClient = await _initHttpClient();
+        return DioStudentProfileRepository(httpClient: httpClient);
     }
   }
 
@@ -239,9 +274,8 @@ final class RepositoriesFactory {
       case RepositoryMode.mock:
         return MockQuizRepository(delay: Env.mockDelayDuration);
       case RepositoryMode.prod:
-        throw UnsupportedError(
-          'QUIZ_REPOSITORY_MODE=prod is not supported yet.',
-        );
+        final httpClient = await _initHttpClient();
+        return DioQuizRepository(httpClient: httpClient);
     }
   }
 
@@ -250,9 +284,8 @@ final class RepositoriesFactory {
       case RepositoryMode.mock:
         return MockAssignmentRepository(delay: Env.mockDelayDuration);
       case RepositoryMode.prod:
-        throw UnsupportedError(
-          'ASSIGNMENT_REPOSITORY_MODE=prod is not supported yet.',
-        );
+        final httpClient = await _initHttpClient();
+        return DioAssignmentRepository(httpClient: httpClient);
     }
   }
 
@@ -261,9 +294,8 @@ final class RepositoriesFactory {
       case RepositoryMode.mock:
         return MockAIRepository(delay: Env.mockDelayDuration);
       case RepositoryMode.prod:
-        throw UnsupportedError(
-          'AI_REPOSITORY_MODE=prod is not supported yet.',
-        );
+        final httpClient = await _initHttpClient();
+        return DioAiRepository(httpClient: httpClient);
     }
   }
 
@@ -272,9 +304,28 @@ final class RepositoriesFactory {
       case RepositoryMode.mock:
         return MockMarketplaceRepository(delay: Env.mockDelayDuration);
       case RepositoryMode.prod:
-        throw UnsupportedError(
-          'MARKETPLACE_REPOSITORY_MODE=prod is not supported yet.',
-        );
+        final httpClient = await _initHttpClient();
+        return DioMarketplaceRepository(httpClient: httpClient);
+    }
+  }
+
+  static Future<RewardsRepository> _initRewardsRepository() async {
+    switch (Env.rewardsRepositoryMode) {
+      case RepositoryMode.mock:
+        return MockRewardsRepository(delay: Env.mockDelayDuration);
+      case RepositoryMode.prod:
+        final httpClient = await _initHttpClient();
+        return DioRewardsRepository(httpClient: httpClient);
+    }
+  }
+
+  static Future<GradeRepository> _initGradeRepository() async {
+    switch (Env.gradeRepositoryMode) {
+      case RepositoryMode.mock:
+        return MockGradeRepository(delay: Env.mockDelayDuration);
+      case RepositoryMode.prod:
+        final httpClient = await _initHttpClient();
+        return DioGradeRepository(httpClient: httpClient);
     }
   }
 
@@ -315,6 +366,9 @@ final class RepositoriesFactory {
       assignmentRepository as AssignmentRepository,
       aiRepository as AIRepository,
       marketplaceRepository as MarketplaceRepository,
+      rewardsRepository as RewardsRepository,
+      gradeRepository as GradeRepository,
+      announcementRepository as AnnouncementRepository,
     ] = await Future.wait(
       [
         _initAuthenticationRepository(),
@@ -329,6 +383,9 @@ final class RepositoriesFactory {
         _initAssignmentRepository(),
         _initAIRepository(),
         _initMarketplaceRepository(),
+        _initRewardsRepository(),
+        _initGradeRepository(),
+        _initAnnouncementRepository(),
       ],
     );
     final repos = AppRepositories._(
@@ -345,6 +402,9 @@ final class RepositoriesFactory {
       assignmentRepository: assignmentRepository,
       aiRepository: aiRepository,
       marketplaceRepository: marketplaceRepository,
+      rewardsRepository: rewardsRepository,
+      gradeRepository: gradeRepository,
+      announcementRepository: announcementRepository,
     );
     return (repositories: repos, localizedClients: <LocalizedClient>[]);
   }

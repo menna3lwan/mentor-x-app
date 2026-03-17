@@ -1,5 +1,5 @@
-name: student_home_repository
-description: Dio implementation for HomeRepository.
+name: dio_home_repository
+description: "Dio implementation of StudentHomeRepository for student app."
 version: 1.0.0
 publish_to: none
 resolution: workspace
@@ -12,9 +12,8 @@ dependencies:
     path: ../../../../packages/mentorx_core
   student_core:
     path: ../../student_core
-  dio_http_client:
-    path: ../../../../packages/clients/dio_http_client
 
 dev_dependencies:
   lints: ^6.0.0
   test: ^1.25.6
+  mocktail: ^1.0.4

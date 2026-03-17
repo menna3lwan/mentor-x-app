@@ -1,6 +1,6 @@
 part of '../../student_core.dart';
 
-final class AIConversationEntity extends Equatable {
+base class AIConversationEntity extends Equatable {
   final String id;
   final String? title;
   final String? subject;

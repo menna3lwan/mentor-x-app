@@ -1,6 +1,6 @@
 part of '../../mentorx_core.dart';
 
-final class AttendanceSummaryEntity extends Equatable {
+base class AttendanceSummaryEntity extends Equatable {
   final int totalSessions;
   final int present;
   final int late;

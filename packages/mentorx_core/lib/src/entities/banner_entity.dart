@@ -1,6 +1,6 @@
 part of '../../mentorx_core.dart';
 
-final class BannerEntity extends Equatable {
+base class BannerEntity extends Equatable {
   final String id;
   final String imageUrl;
   final String? title;

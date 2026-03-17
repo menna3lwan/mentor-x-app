@@ -1,6 +1,6 @@
 part of '../../student_core.dart';
 
-final class RewardItemEntity extends Equatable {
+base class RewardItemEntity extends Equatable {
   final String id;
   final String title;
   final String? imageUrl;

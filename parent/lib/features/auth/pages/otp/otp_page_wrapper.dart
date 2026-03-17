@@ -24,7 +24,11 @@ class _OtpPageWrapperState extends State<OtpPageWrapper> {
   @override
   void initState() {
     super.initState();
-    controllers = List.generate(6, (_) => TextEditingController());
+    const mockOtp = '123456';
+    controllers = List.generate(
+      6,
+      (index) => TextEditingController(text: mockOtp[index]),
+    );
     focusNodes = List.generate(6, (_) => FocusNode());
   }
 

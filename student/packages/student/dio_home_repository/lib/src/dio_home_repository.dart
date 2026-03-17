@@ -14,25 +14,25 @@ final class DioHomeRepository
 
   @override
   Future<WalletSummaryEntity> getWalletSummary() async {
-    final response = await httpClient.get('/api/v1/student/wallet/summary');
-    if (!response.isOk) {
+    final response = await httpClient.get('/api/student/wallet/summary');
+    if (response.statusCode != 200) {
       throw StudentHomeRepositoryException(
         code: StudentHomeRepositoryExceptionCode.failedToLoadWalletSummary,
         message: response.exception?.message,
       );
     }
 
-    final json = _asMap(response.data);
+    final data = _asMap(response.data)['data'] ?? _asMap(response.data);
     return WalletSummaryEntity(
-      walletBalance: _toDouble(json['wallet_balance']),
-      points: _toInt(json['total_points']),
+      walletBalance: _toDouble(data['walletBalance'] ?? data['wallet_balance']),
+      points: _toInt(data['totalPoints'] ?? data['total_points']),
     );
   }
 
   @override
   Future<int> getUnreadNotificationsCount() async {
-    final response = await httpClient.get('/api/v1/notifications/unread-count');
-    if (!response.isOk) {
+    final response = await httpClient.get('/api/notifications/unread-count');
+    if (response.statusCode != 200) {
       throw StudentHomeRepositoryException(
         code: StudentHomeRepositoryExceptionCode
             .failedToLoadUnreadNotificationsCount,
@@ -40,36 +40,37 @@ final class DioHomeRepository
       );
     }
 
-    final json = _asMap(response.data);
-    return _toInt(json['count']);
+    final data = _asMap(response.data)['data'] ?? _asMap(response.data);
+    return _toInt(data['count']);
   }
 
   @override
   Future<List<BannerEntity>> getHomeBanners({String? gradeId}) async {
     final response = await httpClient.get(
-      '/api/v1/banners',
+      '/api/banners',
       queryParameters: {
         'placement': 'home',
         if (gradeId != null) 'grade_id': gradeId,
       },
     );
 
-    if (!response.isOk) {
+    if (response.statusCode != 200) {
       throw StudentHomeRepositoryException(
         code: StudentHomeRepositoryExceptionCode.failedToLoadBanners,
         message: response.exception?.message,
       );
     }
 
-    return _asList(response.data)
+    final list = _asList(response.data);
+    return list
         .map(_asMap)
         .map(
           (e) => BannerEntity(
             id: e['id']?.toString() ?? '',
-            imageUrl: e['image_url']?.toString() ?? '',
-            title: e['title']?.toString(),
-            actionType: e['action_type']?.toString() ?? 'internal',
-            actionValue: e['action_value']?.toString() ?? '',
+            imageUrl: (e['imageUrl'] ?? e['image_url'])?.toString() ?? '',
+            title: (e['title'] ?? e['name'])?.toString(),
+            actionType: (e['actionType'] ?? e['action_type'])?.toString() ?? 'internal',
+            actionValue: (e['actionValue'] ?? e['action_value'])?.toString() ?? '',
           ),
         )
         .where((banner) => banner.id.isNotEmpty && banner.imageUrl.isNotEmpty)
@@ -79,7 +80,7 @@ final class DioHomeRepository
   @override
   Future<List<CourseSummaryEntity>> getContinueLearningCourses() async {
     final response = await httpClient.get(
-      '/api/v1/student/courses',
+      '/api/student/courses',
       queryParameters: {
         'status': 'in_progress',
         'sort': 'last_accessed',
@@ -87,7 +88,7 @@ final class DioHomeRepository
       },
     );
 
-    if (!response.isOk) {
+    if (response.statusCode != 200) {
       throw StudentHomeRepositoryException(
         code: StudentHomeRepositoryExceptionCode.failedToLoadContinueLearning,
         message: response.exception?.message,
@@ -101,7 +102,7 @@ final class DioHomeRepository
   Future<List<CourseSummaryEntity>> getFeaturedCourses(
       {String? gradeId}) async {
     final response = await httpClient.get(
-      '/api/v1/courses',
+      '/api/courses',
       queryParameters: {
         'featured': true,
         if (gradeId != null) 'grade_id': gradeId,
@@ -109,7 +110,7 @@ final class DioHomeRepository
       },
     );
 
-    if (!response.isOk) {
+    if (response.statusCode != 200) {
       throw StudentHomeRepositoryException(
         code: StudentHomeRepositoryExceptionCode.failedToLoadFeaturedCourses,
         message: response.exception?.message,
@@ -122,11 +123,11 @@ final class DioHomeRepository
   @override
   Future<List<AnnouncementEntity>> getRecentAnnouncements() async {
     final response = await httpClient.get(
-      '/api/v1/announcements',
+      '/api/announcements',
       queryParameters: {'limit': 3},
     );
 
-    if (!response.isOk) {
+    if (response.statusCode != 200) {
       throw StudentHomeRepositoryException(
         code: StudentHomeRepositoryExceptionCode.failedToLoadAnnouncements,
         message: response.exception?.message,
@@ -140,9 +141,9 @@ final class DioHomeRepository
             id: e['id']?.toString() ?? '',
             title: e['title']?.toString() ?? '',
             preview: e['preview']?.toString() ?? e['content']?.toString() ?? '',
-            createdAt: DateTime.tryParse(e['created_at']?.toString() ?? '') ??
+            createdAt: DateTime.tryParse((e['createdAt'] ?? e['created_at'])?.toString() ?? '') ??
                 DateTime.now(),
-            isPinned: (e['is_pinned'] as bool?) ?? false,
+            isPinned: (e['isPinned'] ?? e['is_pinned'] as bool?) ?? false,
           ),
         )
         .toList();
@@ -150,8 +151,8 @@ final class DioHomeRepository
 
   @override
   Future<void> trackBannerClick(String bannerId) async {
-    final response = await httpClient.post('/api/v1/banners/$bannerId/click');
-    if (!response.isOk) {
+    final response = await httpClient.post('/api/banners/$bannerId/click');
+    if (response.statusCode != 200 && response.statusCode != 201) {
       throw StudentHomeRepositoryException(
         code: StudentHomeRepositoryExceptionCode.failedToTrackBannerClick,
         message: response.exception?.message,
@@ -163,12 +164,12 @@ final class DioHomeRepository
     return CourseSummaryEntity(
       id: e['id']?.toString() ?? '',
       title: e['title']?.toString() ?? '',
-      thumbnailUrl: e['thumbnail_url']?.toString() ?? '',
-      progressPercent: e['progress_percent'] == null
+      thumbnailUrl: (e['thumbnailUrl'] ?? e['thumbnail_url'])?.toString() ?? '',
+      progressPercent: (e['progressPercent'] ?? e['progress_percent']) == null
           ? null
-          : _toDouble(e['progress_percent']),
+          : _toDouble(e['progressPercent'] ?? e['progress_percent']),
       price: e['price'] == null ? null : _toDouble(e['price']),
-      enrolledCount: _toInt(e['enrolled_count']),
+      enrolledCount: _toInt(e['enrolledCount'] ?? e['enrolled_count']),
     );
   }
 

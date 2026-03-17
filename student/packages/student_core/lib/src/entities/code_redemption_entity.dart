@@ -2,7 +2,7 @@ part of '../../student_core.dart';
 
 enum CodeType { wallet, courseAccess, sessionAccess, discountPercent, discountAmount }
 
-final class CodeRedemptionEntity extends Equatable {
+base class CodeRedemptionEntity extends Equatable {
   final String id;
   final String code;
   final CodeType codeType;

@@ -2,7 +2,7 @@ part of '../../student_core.dart';
 
 enum AIMessageRole { user, assistant, system }
 
-final class AIMessageEntity extends Equatable {
+base class AIMessageEntity extends Equatable {
   final String id;
   final String conversationId;
   final AIMessageRole role;

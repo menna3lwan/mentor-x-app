@@ -97,16 +97,48 @@ dependencies:
     path: packages/mock/mock_ai_repository
   mock_marketplace_repository:
     path: packages/mock/mock_marketplace_repository
+  mock_announcement_repository:
+    path: packages/mock/mock_announcement_repository
+  mock_rewards_repository:
+    path: packages/mock/mock_rewards_repository
+  mock_grade_repository:
+    path: packages/mock/mock_grade_repository
 
   # Clients
   dio_http_client:
     path: ../packages/clients/dio_http_client
 
   # Dio Repositories
-  student_authentication_repository:
+  dio_authentication_repository:
     path: packages/student/dio_authentication_repository
-  student_home_repository:
+  dio_home_repository:
     path: packages/student/dio_home_repository
+  dio_course_repository:
+    path: packages/student/dio_course_repository
+  dio_quiz_repository:
+    path: packages/student/dio_quiz_repository
+  dio_assignment_repository:
+    path: packages/student/dio_assignment_repository
+  dio_profile_repository:
+    path: packages/student/dio_profile_repository
+  dio_marketplace_repository:
+    path: packages/student/dio_marketplace_repository
+  dio_ai_repository:
+    path: packages/student/dio_ai_repository
+  dio_rewards_repository:
+    path: packages/student/dio_rewards_repository
+  dio_wallet_repository:
+    path: packages/student/dio_wallet_repository
+  dio_notification_repository:
+    path: packages/student/dio_notification_repository
+  dio_announcement_repository:
+    path: packages/student/dio_announcement_repository
+  dio_attendance_repository:
+    path: packages/student/dio_attendance_repository
+  dio_grade_repository:
+    path: packages/student/dio_grade_repository
+  dio_settings_repository:
+    path: packages/student/dio_settings_repository
 
 dev_dependencies:
   # Testing

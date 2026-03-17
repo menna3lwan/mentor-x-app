@@ -1,6 +1,6 @@
 part of '../../student_core.dart';
 
-final class MarketplaceOrderItemEntity extends Equatable {
+base class MarketplaceOrderItemEntity extends Equatable {
   final String id;
   final String orderId;
   final String itemId;

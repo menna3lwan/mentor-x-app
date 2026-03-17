@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
-import 'package:equatable/equatable.dart';
 import '../../../../../core/core.dart';
 
 part 'my_courses_page_event.dart';

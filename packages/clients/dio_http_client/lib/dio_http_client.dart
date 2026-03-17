@@ -342,6 +342,35 @@ final class DioHttpClient implements HttpClient {
   }
 
   @override
+  Future<HttpClientResponse> patch(
+    String path, {
+    dynamic data,
+    Map<String, dynamic>? queryParameters,
+    Map<String, String>? headers,
+    bool isFormData = false,
+  }) async {
+    try {
+      final requestData = (isFormData && data is Map<String, dynamic>)
+          ? FormData.fromMap(data.map((k, v) => MapEntry(k, v ?? '')))
+          : data;
+
+      final response = await _dio.patch(
+        path,
+        data: requestData,
+        queryParameters: queryParameters,
+        options: Options(headers: _mergeHeaders(headers)),
+      );
+
+      // Process response for token caching
+      await _processResponse(response.data);
+
+      return _createResponse(response);
+    } on DioException catch (e) {
+      _handleDioException(e);
+    }
+  }
+
+  @override
   Future<HttpClientResponse> postMultipart(
     String path, {
     Map<String, dynamic>? data,

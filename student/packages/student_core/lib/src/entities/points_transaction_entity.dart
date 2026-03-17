@@ -2,7 +2,7 @@ part of '../../student_core.dart';
 
 enum PointsTransactionType { earn, spend }
 
-final class PointsTransactionEntity extends Equatable {
+base class PointsTransactionEntity extends Equatable {
   final String id;
   final PointsTransactionType transactionType;
   final int points;

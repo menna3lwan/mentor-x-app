@@ -9,7 +9,7 @@ enum MarketplaceOrderStatus {
   cancelled,
 }
 
-final class MarketplaceOrderEntity extends Equatable {
+base class MarketplaceOrderEntity extends Equatable {
   final String id;
   final String orderNumber;
   final double totalAmount;

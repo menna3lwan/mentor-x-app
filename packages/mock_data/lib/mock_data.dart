@@ -13,3 +13,5 @@ export 'src/generators/mock_assignment_generator.dart';
 export 'src/generators/mock_profile_generator.dart';
 export 'src/generators/mock_settings_generator.dart';
 export 'src/generators/mock_announcement_generator.dart';
+export 'src/generators/mock_rewards_generator.dart';
+export 'src/generators/mock_grade_generator.dart';
