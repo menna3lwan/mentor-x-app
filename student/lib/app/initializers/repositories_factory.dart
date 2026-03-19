@@ -37,6 +37,8 @@ import 'package:mock_marketplace_repository/mock_marketplace_repository.dart';
 import 'package:mock_announcement_repository/mock_announcement_repository.dart';
 import 'package:mock_rewards_repository/mock_rewards_repository.dart';
 import 'package:mock_grade_repository/mock_grade_repository.dart';
+import 'package:mock_student_registration_repository/mock_student_registration_repository.dart';
+
 
 import '../../core/utils/env.dart';
 
@@ -57,6 +59,8 @@ final class AppRepositories {
   final RewardsRepository rewardsRepository;
   final GradeRepository gradeRepository;
   final AnnouncementRepository announcementRepository;
+  final StudentRegistrationRepository registrationRepository;
+
 
   const AppRepositories._({
     required this.cacheRepository,
@@ -75,6 +79,7 @@ final class AppRepositories {
     required this.rewardsRepository,
     required this.gradeRepository,
     required this.announcementRepository,
+    required this.registrationRepository,
   });
 
   List<Object> toList() {
@@ -95,6 +100,7 @@ final class AppRepositories {
       rewardsRepository,
       gradeRepository,
       announcementRepository,
+      registrationRepository,
     ];
   }
 
@@ -129,6 +135,9 @@ final class AppRepositories {
       RepositoryProvider<GradeRepository>(create: (_) => gradeRepository),
       RepositoryProvider<AnnouncementRepository>(
         create: (_) => announcementRepository,
+      ),
+      RepositoryProvider<StudentRegistrationRepository>(
+        create: (_) => registrationRepository,
       ),
     ];
   }
@@ -328,6 +337,17 @@ final class RepositoriesFactory {
     }
   }
 
+  static Future<StudentRegistrationRepository>
+  _initRegistrationRepository() async {
+    switch (Env.registrationRepositoryMode) {
+      case RepositoryMode.mock:
+        return MockStudentRegistrationRepository();
+      case RepositoryMode.prod:
+        // TODO: Implement DioStudentRegistrationRepository
+        return MockStudentRegistrationRepository();
+    }
+  }
+
   static String _defaultLanguageCode() {
     final deviceLanguageCode = PlatformDispatcher.instance.locale.languageCode;
     final supportedLocales = LocaleSettings.instance.supportedLocalesRaw;
@@ -368,6 +388,7 @@ final class RepositoriesFactory {
       rewardsRepository as RewardsRepository,
       gradeRepository as GradeRepository,
       announcementRepository as AnnouncementRepository,
+      registrationRepository as StudentRegistrationRepository,
     ] = await Future.wait(
       [
         _initAuthenticationRepository(),
@@ -385,6 +406,7 @@ final class RepositoriesFactory {
         _initRewardsRepository(),
         _initGradeRepository(),
         _initAnnouncementRepository(),
+        _initRegistrationRepository(),
       ],
     );
     final repos = AppRepositories._(
@@ -404,6 +426,7 @@ final class RepositoriesFactory {
       rewardsRepository: rewardsRepository,
       gradeRepository: gradeRepository,
       announcementRepository: announcementRepository,
+      registrationRepository: registrationRepository,
     );
     return (repositories: repos, localizedClients: <LocalizedClient>[]);
   }

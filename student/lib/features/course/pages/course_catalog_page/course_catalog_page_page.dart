@@ -50,16 +50,45 @@ final class CourseCatalogPagePage extends StatelessWidget {
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-            child: TextField(
-              controller: searchController,
-              onChanged: onSearchChanged,
-              decoration: InputDecoration(
-                hintText: context.t.course.catalog.searchHint,
-                prefixIcon: const Icon(Icons.search),
-                isDense: true,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
+            padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
+            child: Container(
+              decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.04),
+                    blurRadius: 12,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: TextField(
+                controller: searchController,
+                onChanged: onSearchChanged,
+                style: TextStyle(
+                  color: palette.textPrimary,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
+                decoration: InputDecoration(
+                  hintText: context.t.course.catalog.searchHint,
+                  hintStyle: TextStyle(color: palette.textTertiary),
+                  prefixIcon: Icon(Icons.search_rounded, color: palette.brandPrimary),
+                  isDense: true,
+                  filled: true,
+                  fillColor: palette.backgroundPrimary,
+                  contentPadding: const EdgeInsets.symmetric(vertical: 14),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide.none,
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide(color: palette.textTertiary.withOpacity(0.1)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide(color: palette.brandPrimary.withOpacity(0.5), width: 1.5),
+                  ),
                 ),
               ),
             ),

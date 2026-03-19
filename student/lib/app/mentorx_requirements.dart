@@ -67,42 +67,9 @@ final class MentorXRequirements {
       cacheRepository: repositories.cacheRepository,
     );
 
-    final String initialRoute;
-    if (user != null) {
-      switch (user.status) {
-        case StudentStatus.active:
-          initialRoute = '/';
-        case StudentStatus.pending:
-          initialRoute = '/status-pending';
-        case StudentStatus.blocked:
-        case StudentStatus.suspended:
-          initialRoute = '/status-blocked';
-        case StudentStatus.rejected:
-          initialRoute = '/status-rejected';
-      }
-    } else {
-      final hasSeenOnboarding = await repositories.cacheRepository.get(
-        CacheKeys.hasSeenOnboarding,
-      );
-      final selectedTenantId = await repositories.cacheRepository.get(
-        CacheKeys.tenantId,
-      );
-
-      if (hasSeenOnboarding != 'true') {
-        initialRoute = '/walkthrough';
-      } else {
-        if (selectedTenantId == null || selectedTenantId.isEmpty) {
-          // Initialize default tenant for single-teacher mode
-          await repositories.cacheRepository.put(CacheKeys.tenantId, '1');
-          await repositories.cacheRepository.put(CacheKeys.tenantName, 'Mr. Ahmed Physics');
-        }
-        initialRoute = '/login';
-      }
-    }
-
     final AppRouter appRouter = AppRouter(
       navigatorKey: rootNavigatorKey,
-      initialLocation: initialRoute,
+      initialLocation: '/splash',
     );
     return MentorXRequirements(
       blocs: blocs,

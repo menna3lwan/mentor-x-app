@@ -26,6 +26,11 @@ part 'src/entities/student_entity.dart';
 part 'src/entities/parent_entity.dart';
 part 'src/entities/tenant_entity.dart';
 part 'src/entities/device_entity.dart';
+part 'src/entities/center_entity.dart';
+part 'src/entities/schedule_entity.dart';
+part 'src/entities/group_entity.dart';
+part 'src/entities/governorate_entity.dart';
+part 'src/entities/district_entity.dart';
 
 // Learning
 part 'src/entities/grade_entity.dart';
@@ -80,4 +85,5 @@ part 'src/repositories/profile_repository.dart';
 part 'src/repositories/settings_repository.dart';
 part 'src/repositories/tenant_repository.dart';
 part 'src/repositories/announcement_repository.dart';
+part 'src/repositories/student_registration_repository.dart';
 part 'src/repositories/parent_home_repository.dart';

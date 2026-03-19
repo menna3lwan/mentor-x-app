@@ -86,9 +86,7 @@ final class _LoginPageWrapperState extends State<LoginPageWrapper> {
             isLoading: state.isLoading,
             obscurePassword: state.obscurePassword,
             rememberMe: state.rememberMe,
-            errorMessage: state.loadingState.isError
-                ? state.errorMessage
-                : null,
+            errorMessage: state.loadingState.isError ? state.errorMessage : null,
             inputFormatters: [
               FilteringTextInputFormatter.digitsOnly,
               LengthLimitingTextInputFormatter(11),
@@ -105,20 +103,7 @@ final class _LoginPageWrapperState extends State<LoginPageWrapper> {
               );
             },
             onRegister: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Registration flow coming next.')),
-              );
-            },
-            onChangeTeacher: () async {
-              final cache = context.read<CacheRepository>();
-              await cache.remove(CacheKeys.tenantId);
-              await cache.remove(CacheKeys.tenantName);
-              await cache.remove(CacheKeys.tenantLogoUrl);
-              await cache.remove(CacheKeys.tenantPrimaryColor);
-              await cache.remove(CacheKeys.tenantAccentColor);
-
-              if (!context.mounted) return;
-              const TenantSelectionPageRoute().go(context);
+              const RegistrationPageRoute().go(context);
             },
             onSubmit: () => _submit(bloc),
           );

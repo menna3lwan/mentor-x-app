@@ -3,15 +3,26 @@ import 'package:mentorx_ui/mentorx_ui.dart';
 
 class SupportPage extends StatelessWidget {
   const SupportPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     final t = context.t.student;
     final channels = [
-      (Icons.chat, t['whatsapp']!, '01012345678', AppColors.green),
-      (Icons.phone, t['phoneCall']!, '01012345678', AppColors.primary),
+      (
+        Icons.chat_rounded,
+        t['whatsapp'] ?? 'WhatsApp',
+        '01012345678',
+        AppColors.whatsAppGreen,
+      ),
+      (
+        Icons.phone_rounded,
+        t['phoneCall'] ?? 'Phone Call',
+        '01012345678',
+        AppColors.primary,
+      ),
       (
         Icons.email_outlined,
-        t['email']!,
+        t['email'] ?? 'Email',
         'support@mentorx.com',
         AppColors.accent,
       ),
@@ -20,98 +31,158 @@ class SupportPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.backgroundLight,
       appBar: AppBar(
-        backgroundColor: AppColors.primary,
-        foregroundColor: Colors.white,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        foregroundColor: AppColors.primary,
         title: Text(
-          t['supportTitle']!,
-          style: const TextStyle(fontSize: 15),
+          t['supportTitle'] ?? 'Support',
+          style: const TextStyle(
+            fontSize: 17,
+            fontWeight: FontWeight.w700,
+            color: AppColors.primary,
+          ),
         ),
+        centerTitle: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            const SizedBox(height: 16),
+            const SizedBox(height: 12),
+
+            // Support icon with ring
             Container(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(3),
               decoration: BoxDecoration(
-                color: AppColors.success.withValues(alpha: 0.12),
                 shape: BoxShape.circle,
+                gradient: LinearGradient(
+                  colors: [
+                    AppColors.success,
+                    AppColors.teal,
+                  ],
+                ),
               ),
-              child: const Icon(
-                Icons.headset_mic,
-                size: 48,
-                color: AppColors.success,
+              child: Container(
+                padding: const EdgeInsets.all(20),
+                decoration: const BoxDecoration(
+                  color: AppColors.backgroundLight,
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.headset_mic_rounded,
+                  size: 40,
+                  color: AppColors.success,
+                ),
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 18),
             Text(
-              t['supportTitle']!,
-              style: TextStyle(
-                fontSize: 18,
+              t['supportTitle'] ?? 'Support',
+              style: const TextStyle(
+                fontSize: 20,
                 fontWeight: FontWeight.w700,
                 color: AppColors.primary,
               ),
             ),
             const SizedBox(height: 8),
             Text(
-              t['supportDesc']!,
-              style: TextStyle(fontSize: 13, color: AppColors.greyDark),
+              t['supportDesc'] ?? 'We are here to help you',
+              style: const TextStyle(
+                fontSize: 14,
+                color: AppColors.greyDark,
+                height: 1.5,
+              ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 24),
-            ...channels.map((ch) {
-              final (icon, label, value, color) = ch;
-              return Container(
-                margin: const EdgeInsets.only(bottom: 10),
-                padding: const EdgeInsets.all(14),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: color.withValues(alpha: 0.12),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Icon(icon, size: 22, color: color),
-                    ),
-                    const SizedBox(width: 14),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            label,
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.primary,
+            const SizedBox(height: 28),
+
+            // Contact channels
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.04),
+                    blurRadius: 12,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Column(
+                children: List.generate(channels.length, (i) {
+                  final (icon, label, value, color) = channels[i];
+                  final isLast = i == channels.length - 1;
+                  return Column(
+                    children: [
+                      Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: () {
+                            // TODO: launch URL/phone/email
+                          },
+                          borderRadius: BorderRadius.circular(20),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 16,
+                            ),
+                            child: Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    color: color.withValues(alpha: 0.1),
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Icon(icon, size: 22, color: color),
+                                ),
+                                const SizedBox(width: 14),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        label,
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                          color: AppColors.primary,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 2),
+                                      Text(
+                                        value,
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                          color: AppColors.greyDark,
+                                        ),
+                                        textDirection: TextDirection.ltr,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Icon(
+                                  Icons.arrow_forward_ios_rounded,
+                                  size: 14,
+                                  color: AppColors.greyDark.withValues(alpha: 0.4),
+                                ),
+                              ],
                             ),
                           ),
-                          Text(
-                            value,
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: AppColors.greyDark,
-                            ),
-                            textDirection: TextDirection.ltr,
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
-                    Icon(
-                      Icons.arrow_forward_ios,
-                      size: 14,
-                      color: AppColors.greyDark,
-                    ),
-                  ],
-                ),
-              );
-            }),
+                      if (!isLast)
+                        Divider(
+                          height: 0.8,
+                          indent: 64,
+                          color: AppColors.greyLight.withValues(alpha: 0.5),
+                        ),
+                    ],
+                  );
+                }),
+              ),
+            ),
           ],
         ),
       ),

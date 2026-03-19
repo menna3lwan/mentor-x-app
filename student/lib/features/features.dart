@@ -10,6 +10,7 @@ export 'onboarding/onboarding.dart';
 export 'products/products.dart';
 export 'profile/profile.dart';
 export 'quizzes/quizzes.dart';
+export 'rewards/rewards.dart';
 export 'settings/settings.dart';
 export 'shell/shell.dart';
 export 'wallet/wallet.dart';

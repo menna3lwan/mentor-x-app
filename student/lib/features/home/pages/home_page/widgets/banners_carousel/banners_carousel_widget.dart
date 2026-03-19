@@ -71,7 +71,7 @@ final class _BannersCarouselWidgetState extends State<BannersCarouselWidget> {
       child: Column(
         children: [
           SizedBox(
-            height: 170,
+            height: 180,
             child: PageView.builder(
               controller: _pageController,
               itemCount: hasItems ? widget.banners.length : 1,
@@ -82,78 +82,96 @@ final class _BannersCarouselWidgetState extends State<BannersCarouselWidget> {
                 final bannerImageUrl = banner?.imageUrl ??
                     'https://picsum.photos/800/450?placeholder';
                 final bannerTitle = banner?.title;
+
                 return GestureDetector(
                   onTap: hasItems ? () => widget.onTapBanner(bannerId) : null,
                   child: Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 2),
-                    clipBehavior: Clip.antiAlias,
+                    margin: const EdgeInsets.symmetric(horizontal: 4),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16),
-                      color: palette.backgroundPrimary,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: palette.textPrimary.withOpacity(0.08),
+                          blurRadius: 15,
+                          offset: const Offset(0, 8),
+                        ),
+                      ],
                     ),
-                    child: Stack(
-                      fit: StackFit.expand,
-                      children: [
-                        Image.network(
-                          bannerImageUrl,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) =>
-                              ColoredBox(
-                            color: palette.backgroundTertiary,
-                            child: Icon(
-                              Icons.image_not_supported_outlined,
-                              color: palette.textSecondary,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          Image.network(
+                            bannerImageUrl,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) =>
+                                ColoredBox(
+                              color: palette.backgroundTertiary,
+                              child: Icon(
+                                Icons.image_not_supported_outlined,
+                                color: palette.textSecondary,
+                              ),
                             ),
                           ),
-                        ),
-                        if (bannerTitle?.isNotEmpty ?? false)
-                          Positioned(
-                            left: 12,
-                            right: 12,
-                            bottom: 12,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                                vertical: 6,
+                          // Gradient Overlay
+                          const DecoratedBox(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                                  Colors.transparent,
+                                  Colors.black45,
+                                ],
                               ),
-                              decoration: BoxDecoration(
-                                color: palette.backgroundPrimaryTransparent,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
+                            ),
+                          ),
+                          if (bannerTitle?.isNotEmpty ?? false)
+                            Positioned(
+                              left: 16,
+                              right: 16,
+                              bottom: 16,
                               child: Text(
                                 bannerTitle!,
-                                maxLines: 1,
+                                maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: palette.textPrimary,
-                                  fontWeight: FontWeight.w600,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w800,
+                                  letterSpacing: -0.2,
                                 ),
                               ),
                             ),
-                          ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 );
               },
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 12),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: List.generate(
               hasItems ? widget.banners.length : 1,
-              (index) => Container(
-                width: 8,
-                height: 8,
-                margin: const EdgeInsets.symmetric(horizontal: 4),
-                decoration: BoxDecoration(
-                  color: _currentIndex == index
-                      ? palette.brandPrimary
-                      : palette.textTertiary,
-                  shape: BoxShape.circle,
-                ),
-              ),
+              (index) {
+                final isActive = _currentIndex == index;
+                return AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  width: isActive ? 20 : 8,
+                  height: 8,
+                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                  decoration: BoxDecoration(
+                    color: isActive
+                        ? palette.brandPrimary
+                        : palette.brandPrimary.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                );
+              },
             ),
           ),
         ],

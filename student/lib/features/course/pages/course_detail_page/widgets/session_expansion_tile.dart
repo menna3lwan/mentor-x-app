@@ -20,65 +20,91 @@ final class SessionExpansionTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final palette = MentorXThemeColorPalette.light;
 
-    return ExpansionTile(
-      tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      childrenPadding: const EdgeInsets.only(bottom: 8),
-      leading: Container(
-        width: 32,
-        height: 32,
-        decoration: BoxDecoration(
-          color: palette.brandPrimary.withAlpha(26),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Center(
-          child: Text(
-            '${session.orderIndex + 1}',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.w700,
-              color: palette.brandPrimary,
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+      decoration: BoxDecoration(
+        color: palette.backgroundPrimary,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: palette.textTertiary.withOpacity(0.1)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.02),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Theme(
+        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+        child: ExpansionTile(
+          tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          childrenPadding: const EdgeInsets.only(bottom: 12),
+          leading: Container(
+            width: 36,
+            height: 36,
+            decoration: BoxDecoration(
+              color: palette.brandPrimary.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(10),
             ),
-          ),
-        ),
-      ),
-      title: Text(
-        session.title,
-        style: Theme.of(
-          context,
-        ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
-      ),
-      subtitle: Row(
-        children: [
-          Text(
-            '${session.itemCount} ${context.t.course.detail.items}',
-            style: Theme.of(
-              context,
-            ).textTheme.bodySmall?.copyWith(color: palette.textSecondary),
-          ),
-          if (session.isFree) ...[
-            const SizedBox(width: 8),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
-              decoration: BoxDecoration(
-                color: palette.statusSuccess.withAlpha(26),
-                borderRadius: BorderRadius.circular(4),
-              ),
+            child: Center(
               child: Text(
-                context.t.course.detail.sessionFree,
-                style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: palette.statusSuccess,
-                  fontWeight: FontWeight.w600,
+                '${session.orderIndex + 1}',
+                style: TextStyle(
+                  fontWeight: FontWeight.w800,
+                  color: palette.brandPrimary,
+                  fontSize: 14,
                 ),
               ),
             ),
-          ],
-        ],
+          ),
+          title: Text(
+            session.title,
+            style: TextStyle(
+              fontWeight: FontWeight.w700,
+              fontSize: 15,
+              color: palette.textPrimary,
+            ),
+          ),
+          subtitle: Row(
+            children: [
+              Icon(Icons.layers_rounded, size: 12, color: palette.textTertiary),
+              const SizedBox(width: 4),
+              Text(
+                '${session.itemCount} ${context.t.course.detail.items}',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: palette.textSecondary,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              if (session.isFree) ...[
+                const SizedBox(width: 12),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: palette.statusSuccess.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Text(
+                    context.t.course.detail.sessionFree,
+                    style: TextStyle(
+                      color: palette.statusSuccess,
+                      fontSize: 10,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+              ],
+            ],
+          ),
+          children: items.map((item) {
+            return SessionItemTile(
+              item: item,
+              onTap: () => onItemTap(item),
+            );
+          }).toList(),
+        ),
       ),
-      children: items.map((item) {
-        return SessionItemTile(
-          item: item,
-          onTap: () => onItemTap(item),
-        );
-      }).toList(),
     );
   }
 }

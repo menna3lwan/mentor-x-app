@@ -20,88 +20,132 @@ final class EnrolledCourseCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 4),
         decoration: BoxDecoration(
           color: palette.backgroundPrimary,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withAlpha(13),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
+              color: Colors.black.withOpacity(0.04),
+              blurRadius: 16,
+              offset: const Offset(0, 4),
             ),
           ],
         ),
-        child: Row(
-          children: [
-            ClipRRect(
-              borderRadius: const BorderRadiusDirectional.only(
-                topStart: Radius.circular(12),
-                bottomStart: Radius.circular(12),
-              ),
-              child: Image.network(
-                course.thumbnailUrl,
-                width: 100,
-                height: 90,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => Container(
-                  width: 100,
-                  height: 90,
-                  color: palette.backgroundSecondary,
-                  child: Icon(
-                    Icons.image_outlined,
-                    color: palette.textSecondary,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: Row(
+            children: [
+              SizedBox(
+                width: 110,
+                height: 100,
+                child: Hero(
+                  tag: 'course_image_${course.id}',
+                  child: Image.network(
+                    course.thumbnailUrl,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) => Container(
+                      color: palette.backgroundSecondary,
+                      child: Icon(
+                        Icons.image_outlined,
+                        color: palette.textTertiary,
+                        size: 32,
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      course.title,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        course.title,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 14,
+                          color: palette.textPrimary,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(4),
-                            child: LinearProgressIndicator(
-                              value: progress / 100,
-                              minHeight: 6,
-                              backgroundColor: palette.backgroundSecondary,
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                progress >= 100
-                                    ? palette.statusSuccess
-                                    : palette.brandPrimary,
-                              ),
+                      const SizedBox(height: 12),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      progress >= 100 ? 'Completed' : 'In Progress',
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w600,
+                                        color: progress >= 100 
+                                          ? palette.statusSuccess 
+                                          : palette.brandPrimary,
+                                      ),
+                                    ),
+                                    Text(
+                                      '${progress.toInt()}%',
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w800,
+                                        color: palette.textPrimary,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 6),
+                                Stack(
+                                  children: [
+                                    Container(
+                                      height: 6,
+                                      width: double.infinity,
+                                      decoration: BoxDecoration(
+                                        color: palette.backgroundSecondary,
+                                        borderRadius: BorderRadius.circular(3),
+                                      ),
+                                    ),
+                                    AnimatedContainer(
+                                      duration: const Duration(milliseconds: 500),
+                                      height: 6,
+                                      width: (progress / 100) * 150, // Approximation for animation logic
+                                      decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                          colors: progress >= 100
+                                              ? [palette.statusSuccess, palette.statusSuccess.withOpacity(0.7)]
+                                              : [palette.brandPrimary, palette.brandPrimary.withOpacity(0.7)],
+                                        ),
+                                        borderRadius: BorderRadius.circular(3),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: (progress >= 100 ? palette.statusSuccess : palette.brandPrimary).withOpacity(0.3),
+                                            blurRadius: 4,
+                                            offset: const Offset(0, 2),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                           ),
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          '${progress.toInt()}%',
-                          style: Theme.of(context).textTheme.bodySmall
-                              ?.copyWith(
-                                color: palette.textSecondary,
-                                fontWeight: FontWeight.w600,
-                              ),
-                        ),
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

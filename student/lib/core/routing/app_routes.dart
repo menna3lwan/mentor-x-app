@@ -5,6 +5,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/features.dart';
+import '../../features/auth/pages/registration/bloc/student_registration_bloc.dart';
+import '../../features/auth/pages/registration/registration_page_wrapper.dart';
+import 'package:mentorx_core/mentorx_core.dart';
 import '../core.dart';
 
 // ── Account Status ──────────────────────────────────────────────────────────
@@ -15,10 +18,11 @@ part '../../features/account_status/pages/status_rejected_page/status_rejected_p
 // ── Auth ─────────────────────────────────────────────────────────────────────
 part '../../features/auth/pages/login/login_page_route.dart';
 part '../../features/auth/pages/otp/otp_page_route.dart';
+part '../../features/auth/pages/registration/registration_page_route.dart';
 
 // ── Onboarding ───────────────────────────────────────────────────────────────
+part '../../features/onboarding/pages/splash_page/splash_page_route.dart';
 part '../../features/onboarding/pages/walkthrough_page/walkthrough_page_route.dart';
-part '../../features/onboarding/pages/tenant_selection_page/tenant_selection_page_route.dart';
 
 // ── Shell ─────────────────────────────────────────────────────────────────────
 part '../../features/shell/pages/shell_page/shell_page_route.dart';
@@ -27,10 +31,12 @@ part '../../features/shell/pages/shell_page/shell_page_route.dart';
 part '../../features/home/pages/home_page/home_page_route.dart';
 
 // ── AI Chat ───────────────────────────────────────────────────────────────────
+part '../../features/ai_chat/pages/ai_conversations_page/ai_conversations_page_route.dart';
 part '../../features/ai_chat/pages/ai_chat_page/ai_chat_page_route.dart';
 
 // ── Course ───────────────────────────────────────────────────────────────────
 part '../../features/course/pages/my_courses_page/my_courses_page_route.dart';
+part '../../features/course/pages/my_grades_page/my_grades_page_route.dart';
 part '../../features/course/pages/course_catalog_page/course_catalog_page_route.dart';
 part '../../features/course/pages/course_detail_page/course_detail_page_route.dart';
 part '../../features/course/pages/video_player_page/video_player_page_route.dart';
@@ -52,11 +58,16 @@ part '../../features/notifications/pages/notifications_page/notifications_page_r
 part '../../features/products/pages/products_grid_page/products_grid_page_route.dart';
 part '../../features/products/pages/product_detail_page/product_detail_page_route.dart';
 part '../../features/products/pages/shopping_cart_page/shopping_cart_page_route.dart';
+part '../../features/products/pages/order_history_page/order_history_page_route.dart';
 
 // ── Profile ───────────────────────────────────────────────────────────────────
 part '../../features/profile/pages/profile_view_page/profile_view_page_route.dart';
 part '../../features/profile/pages/edit_profile_page/edit_profile_page_route.dart';
 part '../../features/profile/pages/change_password_page/change_password_page_route.dart';
+
+// ── Rewards ──────────────────────────────────────────────────────────────────
+part '../../features/rewards/pages/rewards_catalog_page/rewards_catalog_page_route.dart';
+part '../../features/rewards/pages/rewards_history_page/rewards_history_page_route.dart';
 
 // ── Quizzes ───────────────────────────────────────────────────────────────────
 part '../../features/quizzes/pages/quiz_list_page/quiz_list_page_route.dart';
@@ -69,6 +80,8 @@ part '../../features/quizzes/pages/quiz_rewards_page/quiz_rewards_page_route.dar
 
 // ── Settings ──────────────────────────────────────────────────────────────────
 part '../../features/settings/pages/settings_list_page/settings_list_page_route.dart';
+part '../../features/settings/pages/device_management_page/device_management_page_route.dart';
+part '../../features/settings/pages/whatsapp_groups_page/whatsapp_groups_page_route.dart';
 part '../../features/settings/pages/about_page/about_page_route.dart';
 part '../../features/settings/pages/support_page/support_page_route.dart';
 

@@ -36,7 +36,7 @@ final class AnnouncementsSectionWidget extends StatelessWidget {
         itemCount: announcementItems.isEmpty ? 2 : announcementItems.length,
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
-        separatorBuilder: (context, index) => const SizedBox(height: 10),
+        separatorBuilder: (context, index) => const SizedBox(height: 12),
         itemBuilder: (context, index) {
           final announcement =
               announcementItems.isEmpty ? null : announcementItems[index];
@@ -46,46 +46,84 @@ final class AnnouncementsSectionWidget extends StatelessWidget {
           final preview = announcement?.preview ??
               context.t.home.dashboard.loadingAnnouncementDetails;
           final createdAt = announcement?.createdAt ?? DateTime.now();
-          return Container(
-            decoration: BoxDecoration(
-              color: palette.backgroundPrimary,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    if (isPinned) ...[
-                      Icon(Icons.push_pin_rounded,
-                          size: 16, color: palette.statusWarning),
-                      const SizedBox(width: 6),
-                    ],
-                    Expanded(
-                      child: Text(
-                        title,
-                        style: TextStyle(
-                          color: palette.textPrimary,
-                          fontWeight: FontWeight.w600,
+
+          return InkWell(
+            onTap: () {},
+            borderRadius: BorderRadius.circular(16),
+            child: Container(
+              decoration: BoxDecoration(
+                color: palette.backgroundPrimary,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: isPinned ? palette.brandPrimary.withOpacity(0.2) : palette.backgroundTertiary,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: palette.textPrimary.withOpacity(0.02),
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: isPinned ? palette.brandTertiary : palette.backgroundTertiary,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          isPinned ? Icons.push_pin_rounded : Icons.campaign_rounded,
+                          size: 18,
+                          color: isPinned ? palette.brandPrimary : palette.textSecondary,
                         ),
                       ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              title,
+                              style: TextStyle(
+                                color: palette.textPrimary,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 15,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              DateFormat.yMMMd().add_jm().format(createdAt),
+                              style: TextStyle(
+                                fontSize: 11,
+                                color: palette.textSecondary,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    preview,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: palette.textSecondary,
+                      height: 1.5,
+                      fontSize: 13,
                     ),
-                  ],
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  preview,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(color: palette.textSecondary),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  DateFormat.yMMMd().add_jm().format(createdAt),
-                  style: TextStyle(fontSize: 12, color: palette.textSecondary),
-                ),
-              ],
+                  ),
+                ],
+              ),
             ),
           );
         },

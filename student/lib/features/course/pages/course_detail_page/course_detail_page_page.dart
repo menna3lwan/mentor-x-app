@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
@@ -339,72 +340,100 @@ final class _EnrollmentBar extends StatelessWidget {
     final palette = MentorXThemeColorPalette.light;
 
     return Container(
-      padding: EdgeInsets.only(
-        left: 16,
-        right: 16,
-        top: 12,
-        bottom: MediaQuery.of(context).padding.bottom + 12,
-      ),
       decoration: BoxDecoration(
-        color: palette.backgroundPrimary,
+        color: palette.backgroundPrimary.withOpacity(0.8),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withAlpha(13),
-            blurRadius: 8,
-            offset: const Offset(0, -2),
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 20,
+            offset: const Offset(0, -4),
           ),
         ],
       ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
+      child: ClipRect(
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Padding(
+            padding: EdgeInsets.only(
+              left: 24,
+              right: 24,
+              top: 16,
+              bottom: MediaQuery.of(context).padding.bottom + 16,
+            ),
+            child: Row(
               children: [
-                if (!isEnrolled) ...[
-                  if (course.isFree)
-                    Text(
-                      context.t.course.detail.free,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: palette.statusSuccess,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    )
-                  else ...[
-                    Text(
-                      '${course.price.toInt()} ${context.t.core.currency}',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w800,
-                      ),
+                if (!isEnrolled)
+                  Expanded(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (course.isFree)
+                          Text(
+                            context.t.course.detail.free,
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w900,
+                              color: palette.statusSuccess,
+                            ),
+                          )
+                        else ...[
+                          Text(
+                            '${course.price.toInt()} ${context.t.core.currency}',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w900,
+                              color: palette.textPrimary,
+                            ),
+                          ),
+                          if (course.oldPrice != null)
+                            Text(
+                              '${course.oldPrice!.toInt()} ${context.t.core.currency}',
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: palette.textTertiary,
+                                decoration: TextDecoration.lineThrough,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                        ],
+                      ],
                     ),
-                    if (course.oldPrice != null)
-                      Text(
-                        '${course.oldPrice!.toInt()} ${context.t.core.currency}',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: palette.textSecondary,
-                          decoration: TextDecoration.lineThrough,
+                  )
+                else
+                  Expanded(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Your Progress',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: palette.textSecondary,
+                          ),
                         ),
-                      ),
-                  ],
-                ] else ...[
-                  Text(
-                    '${(enrollment?.progressPercent ?? 0).toInt()}%',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w800,
-                      color: palette.brandPrimary,
+                        Text(
+                          '${(enrollment?.progressPercent ?? 0).toInt()}% Complete',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w800,
+                            color: palette.brandPrimary,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
+                const SizedBox(width: 20),
+                Expanded(
+                  flex: isEnrolled ? 1 : 2,
+                  child: _buildActionButton(context, palette),
+                ),
               ],
             ),
           ),
-          const SizedBox(width: 16),
-          Expanded(
-            flex: 2,
-            child: _buildActionButton(context, palette),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -415,40 +444,62 @@ final class _EnrollmentBar extends StatelessWidget {
   ) {
     if (isEnrolled) {
       final status = enrollment!.status;
-      switch (status) {
-        case EnrollmentStatus.active:
-          return ElevatedButton(
-            onPressed: null, // Could navigate to continue studying
-            child: Text(context.t.course.detail.continueStudying),
-          );
-        case EnrollmentStatus.expired:
-          return ElevatedButton(
-            onPressed: null,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: palette.statusDanger,
-            ),
-            child: Text(context.t.course.detail.courseExpired),
-          );
-        case EnrollmentStatus.completed:
-          return ElevatedButton(
-            onPressed: null,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: palette.statusSuccess,
-            ),
-            child: Text(context.t.course.detail.courseCompleted),
-          );
-      }
+      return SizedBox(
+        height: 54,
+        child: ElevatedButton(
+          onPressed: status == EnrollmentStatus.active ? () {} : null,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: status == EnrollmentStatus.active
+                ? palette.brandSecondary
+                : status == EnrollmentStatus.completed
+                    ? palette.statusSuccess
+                    : palette.statusDanger,
+            foregroundColor: Colors.white,
+            elevation: 0,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          ),
+          child: Text(
+            status == EnrollmentStatus.active
+                ? context.t.course.detail.continueStudying
+                : status == EnrollmentStatus.completed
+                    ? context.t.course.detail.courseCompleted
+                    : context.t.course.detail.courseExpired,
+            style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14),
+          ),
+        ),
+      );
     }
 
-    return ElevatedButton(
-      onPressed: isEnrolling ? null : onEnrollTap,
-      child: isEnrolling
-          ? const SizedBox(
-              width: 20,
-              height: 20,
-              child: CircularProgressIndicator(strokeWidth: 2),
-            )
-          : Text(context.t.course.detail.enrollNow),
+    return Container(
+      height: 54,
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: palette.brandPrimary.withOpacity(0.3),
+            blurRadius: 15,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: ElevatedButton(
+        onPressed: isEnrolling ? null : onEnrollTap,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: palette.brandPrimary,
+          foregroundColor: Colors.white,
+          elevation: 0,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        ),
+        child: isEnrolling
+            ? const SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(strokeWidth: 3, color: Colors.white),
+              )
+            : Text(
+                context.t.course.detail.enrollNow,
+                style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16),
+              ),
+      ),
     );
   }
 }

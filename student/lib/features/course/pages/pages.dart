@@ -1,4 +1,5 @@
 export 'my_courses_page/my_courses_page.dart';
+export 'my_grades_page/my_grades_page.dart';
 export 'course_catalog_page/course_catalog_page.dart';
 export 'course_detail_page/course_detail_page.dart';
 export 'video_player_page/video_player_page.dart';

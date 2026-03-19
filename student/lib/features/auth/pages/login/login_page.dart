@@ -19,7 +19,6 @@ final class LoginPage extends StatelessWidget {
   final VoidCallback onRememberMeToggled;
   final VoidCallback onForgotPassword;
   final VoidCallback onRegister;
-  final VoidCallback onChangeTeacher;
   final VoidCallback onSubmit;
 
   const LoginPage({
@@ -40,7 +39,6 @@ final class LoginPage extends StatelessWidget {
     required this.onRememberMeToggled,
     required this.onForgotPassword,
     required this.onRegister,
-    required this.onChangeTeacher,
     required this.onSubmit,
   });
 
@@ -206,10 +204,6 @@ final class LoginPage extends StatelessWidget {
                           child: const Text('Register'),
                         ),
                       ],
-                    ),
-                    TextButton(
-                      onPressed: onChangeTeacher,
-                      child: const Text('Change Teacher'),
                     ),
                       const SizedBox(height: 12),
                     ],

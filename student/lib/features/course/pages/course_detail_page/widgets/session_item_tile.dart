@@ -19,55 +19,73 @@ final class SessionItemTile extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
         child: Row(
           children: [
-            Icon(
-              _iconForType(item.itemType),
-              size: 20,
-              color: _colorForType(item.itemType, palette),
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: _colorForType(item.itemType, palette).withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                _iconForType(item.itemType),
+                size: 20,
+                color: _colorForType(item.itemType, palette),
+              ),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     item.title,
-                    style: Theme.of(context).textTheme.bodyMedium,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: palette.textPrimary,
+                    ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
+                  const SizedBox(height: 2),
                   if (_subtitle != null)
                     Text(
                       _subtitle!,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      style: TextStyle(
+                        fontSize: 12,
                         color: palette.textSecondary,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                 ],
               ),
             ),
-            if (item.isFree)
+            if (item.isFree) ...[
+              const SizedBox(width: 8),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 decoration: BoxDecoration(
-                  color: palette.statusSuccess.withAlpha(26),
-                  borderRadius: BorderRadius.circular(4),
+                  color: palette.statusSuccess.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(6),
                 ),
                 child: Text(
                   context.t.course.detail.free,
-                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  style: TextStyle(
                     color: palette.statusSuccess,
-                    fontWeight: FontWeight.w600,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
               ),
-            const SizedBox(width: 4),
+            ],
+            const SizedBox(width: 12),
             Icon(
-              Icons.chevron_right,
-              size: 18,
-              color: palette.textSecondary,
+              Icons.chevron_right_rounded,
+              size: 20,
+              color: palette.textTertiary,
             ),
           ],
         ),
@@ -78,7 +96,8 @@ final class SessionItemTile extends StatelessWidget {
   String? get _subtitle {
     if (item.durationSeconds != null) {
       final mins = item.durationSeconds! ~/ 60;
-      return '${mins}m';
+      final secs = item.durationSeconds! % 60;
+      return '${mins}m ${secs}s';
     }
     if (item.pageCount != null) {
       return '${item.pageCount} pages';
@@ -88,13 +107,13 @@ final class SessionItemTile extends StatelessWidget {
 
   static IconData _iconForType(SessionItemType type) {
     return switch (type) {
-      SessionItemType.video => Icons.play_circle_outline,
-      SessionItemType.pdf => Icons.picture_as_pdf_outlined,
-      SessionItemType.quiz => Icons.quiz_outlined,
-      SessionItemType.assignment => Icons.assignment_outlined,
-      SessionItemType.note => Icons.note_outlined,
-      SessionItemType.link => Icons.link,
-      SessionItemType.audio => Icons.headphones_outlined,
+      SessionItemType.video => Icons.play_arrow_rounded,
+      SessionItemType.pdf => Icons.description_rounded,
+      SessionItemType.quiz => Icons.quiz_rounded,
+      SessionItemType.assignment => Icons.assignment_rounded,
+      SessionItemType.note => Icons.sticky_note_2_rounded,
+      SessionItemType.link => Icons.link_rounded,
+      SessionItemType.audio => Icons.headset_rounded,
     };
   }
 
@@ -104,12 +123,12 @@ final class SessionItemTile extends StatelessWidget {
   ) {
     return switch (type) {
       SessionItemType.video => palette.brandPrimary,
-      SessionItemType.pdf => Colors.red.shade400,
-      SessionItemType.quiz => Colors.orange.shade400,
-      SessionItemType.assignment => Colors.teal.shade400,
-      SessionItemType.note => Colors.blue.shade400,
-      SessionItemType.link => Colors.purple.shade400,
-      SessionItemType.audio => Colors.indigo.shade400,
+      SessionItemType.pdf => const Color(0xFFEF5350),
+      SessionItemType.quiz => const Color(0xFFFFA726),
+      SessionItemType.assignment => const Color(0xFF26A69A),
+      SessionItemType.note => const Color(0xFF42A5F5),
+      SessionItemType.link => const Color(0xFFAB47BC),
+      SessionItemType.audio => const Color(0xFF5C6BC0),
     };
   }
 }

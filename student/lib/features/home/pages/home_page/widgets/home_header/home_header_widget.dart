@@ -16,65 +16,104 @@ final class HomeHeaderWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final palette = MentorXThemeColorPalette.light;
-    return Row(
-      children: [
-        CircleAvatar(
-          radius: 18,
-          backgroundColor: palette.brandTertiary,
-          child: Icon(Icons.person, color: palette.brandPrimary),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                context.t.home.dashboard.greetingWithName(
-                  greeting: greetingText,
-                  name: studentName,
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(2),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: LinearGradient(
+                colors: [palette.brandPrimary, palette.brandSecondary],
+              ),
+            ),
+            child: CircleAvatar(
+              radius: 20,
+              backgroundColor: palette.backgroundPrimary,
+              child: Icon(Icons.person_rounded, color: palette.brandPrimary, size: 24),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  greetingText,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: palette.textSecondary,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w700,
-                  color: palette.textPrimary,
+                Text(
+                  studentName,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w800,
+                    color: palette.textPrimary,
+                    letterSpacing: -0.5,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: palette.backgroundPrimary,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: palette.textPrimary.withOpacity(0.05),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: IconButton(
+                  onPressed: () {},
+                  icon: Icon(
+                    Icons.notifications_none_rounded,
+                    color: palette.textPrimary,
+                  ),
                 ),
               ),
-            ],
-          ),
-        ),
-        Stack(
-          children: [
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.notifications_none_rounded),
-            ),
-            if (unreadCount > 0)
-              Positioned(
-                right: 6,
-                top: 8,
-                child: Container(
-                  width: 18,
-                  height: 18,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: palette.statusDanger,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Text(
-                    unreadCount > 9 ? '9+' : '$unreadCount',
-                    style: TextStyle(
-                      color: palette.textForeground,
-                      fontSize: 10,
-                      fontWeight: FontWeight.w700,
+              if (unreadCount > 0)
+                Positioned(
+                  right: 2,
+                  top: 2,
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      color: palette.statusDanger,
+                      shape: BoxShape.circle,
+                      border: Border.all(color: palette.backgroundPrimary, width: 2),
+                    ),
+                    constraints: const BoxConstraints(
+                      minWidth: 16,
+                      minHeight: 16,
+                    ),
+                    child: Text(
+                      unreadCount > 9 ? '9+' : '$unreadCount',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: palette.textForeground,
+                        fontSize: 9,
+                        fontWeight: FontWeight.w800,
+                      ),
                     ),
                   ),
                 ),
-              ),
-          ],
-        ),
-      ],
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

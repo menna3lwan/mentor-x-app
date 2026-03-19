@@ -72,26 +72,64 @@ class _AiChatPageState extends State<AiChatPage> {
   @override
   Widget build(BuildContext context) {
     final t = context.t.student;
+    final palette = MentorXThemeColorPalette.light;
+
     return Scaffold(
-      backgroundColor: AppColors.backgroundLight,
-      appBar: AppBar(
-        backgroundColor: AppColors.teal,
-        foregroundColor: Colors.white,
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              t['aiAssistant']!,
-              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+      backgroundColor: palette.backgroundSecondary,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(70),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [palette.brandPrimary, palette.brandPrimary.withOpacity(0.8)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
-            Text(
-              t['aiSubtitle']!,
-              style: TextStyle(
-                fontSize: 11,
-                color: Colors.white.withValues(alpha: 0.8),
+            borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
+            boxShadow: [
+              BoxShadow(
+                color: palette.brandPrimary.withOpacity(0.3),
+                blurRadius: 15,
+                offset: const Offset(0, 4),
               ),
+            ],
+          ),
+          child: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            foregroundColor: Colors.white,
+            centerTitle: false,
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  t['aiAssistant']!,
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+                ),
+                Row(
+                  children: [
+                    Container(
+                      width: 8,
+                      height: 8,
+                      decoration: const BoxDecoration(
+                        color: Colors.greenAccent,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    Text(
+                      t['aiSubtitle']!,
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white.withOpacity(0.8),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
       body: Column(
@@ -99,69 +137,97 @@ class _AiChatPageState extends State<AiChatPage> {
           Expanded(
             child: ListView.builder(
               controller: _scrollController,
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
               itemCount: _messages.length + (_isBotTyping ? 1 : 0),
               itemBuilder: (context, i) {
                 if (i == _messages.length && _isBotTyping) {
-                  return _TypingIndicator();
+                  return const _TypingIndicator();
                 }
                 final msg = _messages[i];
                 return _ChatBubble(message: msg);
               },
             ),
           ),
+          _buildInputArea(context, palette, t),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInputArea(
+    BuildContext context,
+    MentorXThemeColorPalette palette,
+    dynamic t,
+  ) {
+    return Container(
+      padding: EdgeInsets.fromLTRB(
+        16,
+        12,
+        16,
+        MediaQuery.of(context).padding.bottom + 12,
+      ),
+      decoration: BoxDecoration(
+        color: palette.backgroundPrimary,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 15,
+            offset: const Offset(0, -4),
+          ),
+        ],
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                color: palette.backgroundSecondary,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: palette.textTertiary.withOpacity(0.1)),
+              ),
+              child: TextField(
+                controller: _controller,
+                onSubmitted: (_) => _sendMessage(),
+                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                decoration: InputDecoration(
+                  hintText: t['typeQuestion']!,
+                  hintStyle: TextStyle(fontSize: 14, color: palette.textTertiary),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
+                  border: InputBorder.none,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
-              color: Colors.white,
+              gradient: LinearGradient(
+                colors: [palette.brandPrimary, palette.brandPrimary.withOpacity(0.8)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.06),
+                  color: palette.brandPrimary.withOpacity(0.3),
                   blurRadius: 8,
-                  offset: const Offset(0, -2),
+                  offset: const Offset(0, 4),
                 ),
               ],
             ),
-            child: SafeArea(
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _controller,
-                      onSubmitted: (_) => _sendMessage(),
-                      decoration: InputDecoration(
-                        hintText: t['typeQuestion']!,
-                        hintStyle: TextStyle(
-                          fontSize: 13,
-                          color: AppColors.grey,
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 14,
-                          vertical: 10,
-                        ),
-                        filled: true,
-                        fillColor: AppColors.backgroundLight,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20),
-                          borderSide: BorderSide.none,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Material(
-                    color: AppColors.teal,
-                    borderRadius: BorderRadius.circular(20),
-                    child: InkWell(
-                      onTap: _sendMessage,
-                      borderRadius: BorderRadius.circular(20),
-                      child: const Padding(
-                        padding: EdgeInsets.all(10),
-                        child: Icon(Icons.send, size: 20, color: Colors.white),
-                      ),
-                    ),
-                  ),
-                ],
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: _sendMessage,
+                borderRadius: BorderRadius.circular(16),
+                child: const Padding(
+                  padding: EdgeInsets.all(12),
+                  child: Icon(Icons.send_rounded, size: 22, color: Colors.white),
+                ),
               ),
             ),
           ),
@@ -180,33 +246,49 @@ class _ChatMessage {
 class _ChatBubble extends StatelessWidget {
   const _ChatBubble({required this.message});
   final _ChatMessage message;
+
   @override
   Widget build(BuildContext context) {
+    final palette = MentorXThemeColorPalette.light;
+    final isUser = message.isUser;
+
     return Align(
-      alignment: message.isUser
-          ? AlignmentDirectional.centerEnd
-          : AlignmentDirectional.centerStart,
+      alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
-        margin: const EdgeInsets.only(bottom: 10),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+        margin: const EdgeInsets.only(bottom: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         constraints: BoxConstraints(
           maxWidth: MediaQuery.of(context).size.width * 0.75,
         ),
         decoration: BoxDecoration(
-          color: message.isUser ? AppColors.teal : Colors.white,
-          borderRadius: BorderRadius.circular(14),
+          gradient: isUser
+              ? LinearGradient(
+                  colors: [palette.brandPrimary, palette.brandPrimary.withOpacity(0.9)],
+                )
+              : null,
+          color: isUser ? null : palette.backgroundPrimary,
+          borderRadius: BorderRadius.only(
+            topLeft: const Radius.circular(20),
+            topRight: const Radius.circular(20),
+            bottomLeft: Radius.circular(isUser ? 20 : 4),
+            bottomRight: Radius.circular(isUser ? 4 : 20),
+          ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.04),
-              blurRadius: 4,
+              color: isUser
+                  ? palette.brandPrimary.withOpacity(0.2)
+                  : Colors.black.withOpacity(0.04),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
             ),
           ],
         ),
         child: Text(
           message.text,
           style: TextStyle(
-            fontSize: 13,
-            color: message.isUser ? Colors.white : AppColors.primary,
+            fontSize: 14,
+            fontWeight: isUser ? FontWeight.w600 : FontWeight.w500,
+            color: isUser ? Colors.white : palette.textPrimary,
             height: 1.5,
           ),
         ),
@@ -216,33 +298,94 @@ class _ChatBubble extends StatelessWidget {
 }
 
 class _TypingIndicator extends StatelessWidget {
+  const _TypingIndicator();
+
   @override
   Widget build(BuildContext context) {
+    final palette = MentorXThemeColorPalette.light;
     return Align(
-      alignment: AlignmentDirectional.centerStart,
+      alignment: Alignment.centerLeft,
       child: Container(
-        margin: const EdgeInsets.only(bottom: 10),
+        margin: const EdgeInsets.only(bottom: 16),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(14),
+          color: palette.backgroundPrimary,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+            bottomRight: Radius.circular(20),
+            bottomLeft: Radius.circular(4),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.04),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            ),
+          ],
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: List.generate(
             3,
-            (i) => Container(
-              margin: EdgeInsets.only(right: i < 2 ? 4 : 0),
-              width: 8,
-              height: 8,
-              decoration: BoxDecoration(
-                color: AppColors.grey,
-                shape: BoxShape.circle,
-              ),
-            ),
+            (i) => _AnimatedDot(delay: i * 200),
           ),
         ),
       ),
+    );
+  }
+}
+
+class _AnimatedDot extends StatefulWidget {
+  final int delay;
+  const _AnimatedDot({required this.delay});
+
+  @override
+  State<_AnimatedDot> createState() => _AnimatedDotState();
+}
+
+class _AnimatedDotState extends State<_AnimatedDot> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    )..addStatusListener((status) {
+        if (status == AnimationStatus.completed) _controller.reverse();
+        if (status == AnimationStatus.dismissed) _controller.forward();
+      });
+
+    Future.delayed(Duration(milliseconds: widget.delay), () {
+      if (mounted) _controller.forward();
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, child) {
+        return Container(
+          margin: const EdgeInsets.only(right: 4),
+          width: 6,
+          height: 6,
+          decoration: BoxDecoration(
+            color: MentorXThemeColorPalette.light.brandPrimary.withOpacity(
+              0.3 + (0.7 * _controller.value),
+            ),
+            shape: BoxShape.circle,
+          ),
+        );
+      },
     );
   }
 }

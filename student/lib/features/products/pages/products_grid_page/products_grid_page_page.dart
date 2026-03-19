@@ -24,6 +24,10 @@ class ProductsGridPage extends StatelessWidget {
         title: Text(t['store']!, style: const TextStyle(fontSize: 15)),
         actions: [
           IconButton(
+            icon: const Icon(Icons.history_rounded),
+            onPressed: () => context.push('/order-history'),
+          ),
+          IconButton(
             icon: const Icon(Icons.shopping_cart_outlined),
             onPressed: () => context.push('/shopping-cart'),
           ),

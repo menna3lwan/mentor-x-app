@@ -153,8 +153,24 @@ final class _HomePageWrapperState extends State<HomePageWrapper> {
                     switch (index) {
                       case 0:
                         const MyCoursesPageRoute().push(context);
+                        return;
+                      case 1:
+                        const AttendanceHistoryPageRoute().push(context);
+                        return;
+                      case 2:
+                        const MyGradesPageRoute().push(context);
+                        return;
+                      case 3:
+                        const AiConversationsPageRoute().push(context);
+                        return;
+                      case 4:
+                        const RewardsCatalogPageRoute().push(context);
+                        return;
+                      case 5:
+                        const ProductsGridPageRoute().push(context);
+                        return;
                       default:
-                        break;
+                        return;
                     }
                   },
                 ),

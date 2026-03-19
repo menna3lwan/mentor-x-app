@@ -1,5 +1,6 @@
 export 'env.dart';
 export 'loading_state.dart';
+export 'async_section.dart';
 export 'whatsapp_helper.dart';
 export 'bloc_performance_optimizer.dart';
 

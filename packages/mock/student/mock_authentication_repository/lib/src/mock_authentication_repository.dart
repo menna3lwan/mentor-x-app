@@ -64,12 +64,12 @@ final class MockAuthenticationRepository
       );
     }
     
-    if (password != 'password123') {
-       throw AuthenticationRepositoryException(
-        code: AuthenticationRepositoryExceptionCode.unknown,
-        message: 'Invalid credentials. Use password123 to mock login.',
-      );
-    }
+    // if (password != 'password123') {
+    //    throw AuthenticationRepositoryException(
+    //     code: AuthenticationRepositoryExceptionCode.unknown,
+    //     message: 'Invalid credentials. Use password123 to mock login.',
+    //   );
+    // }
 
     _currentUser = MockStudentGenerator.generate(phoneNumber: phoneNumber);
     return _currentUser!;

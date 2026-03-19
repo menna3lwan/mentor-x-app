@@ -22,57 +22,117 @@ final class WalletQuickViewCardWidget extends StatelessWidget {
 
     return Skeletonizer(
       enabled: isLoading,
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: () {},
-          borderRadius: BorderRadius.circular(16),
-          child: Ink(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              gradient: LinearGradient(
-                colors: [palette.brandPrimary, palette.brandSecondary],
-              ),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: palette.brandPrimary.withOpacity(0.3),
+              blurRadius: 20,
+              offset: const Offset(0, 10),
             ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+          ],
+        ),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: () {},
+            borderRadius: BorderRadius.circular(20),
+            child: Ink(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    palette.brandPrimary,
+                    palette.brandSecondary,
+                  ],
+                ),
+              ),
+              child: Stack(
+                children: [
+                  Positioned(
+                    right: -20,
+                    top: -20,
+                    child: Icon(
+                      Icons.account_balance_wallet_rounded,
+                      size: 100,
+                      color: palette.textForeground.withOpacity(0.1),
+                    ),
+                  ),
+                  Row(
                     children: [
-                      Text(
-                        context.t.home.dashboard.walletBalance,
-                        style: TextStyle(
-                          color: palette.textForeground.withValues(alpha: 0.8),
-                          fontSize: 13,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        context.t.core.price(amount: balance),
-                        style: TextStyle(
-                          color: palette.textForeground,
-                          fontSize: 24,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        context.t.home.dashboard.points(count: points),
-                        style: TextStyle(
-                          color: palette.textForeground.withValues(alpha: 0.8),
-                          fontSize: 13,
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.account_balance_wallet_outlined,
+                                  color: palette.textForeground.withOpacity(0.9),
+                                  size: 16,
+                                ),
+                                const SizedBox(width: 6),
+                                Text(
+                                  context.t.home.dashboard.walletBalance,
+                                  style: TextStyle(
+                                    color: palette.textForeground.withOpacity(0.9),
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 12),
+                            Text(
+                              context.t.core.price(amount: balance),
+                              style: TextStyle(
+                                color: palette.textForeground,
+                                fontSize: 28,
+                                fontWeight: FontWeight.w800,
+                                letterSpacing: -0.5,
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 4,
+                              ),
+                              decoration: BoxDecoration(
+                                color: palette.textForeground.withOpacity(0.15),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.stars_rounded,
+                                    color: palette.textForeground,
+                                    size: 14,
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    context.t.home.dashboard.points(count: points),
+                                    style: TextStyle(
+                                      color: palette.textForeground,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
                   ),
-                ),
-                Icon(
-                  Icons.account_balance_wallet_rounded,
-                  color: palette.textForeground,
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

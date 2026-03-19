@@ -1085,6 +1085,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.7.0"
+  mock_student_registration_repository:
+    dependency: transitive
+    description:
+      path: "packages/mock/student/mock_student_registration_repository"
+      relative: true
+    source: path
+    version: "0.0.1"
   mocktail:
     dependency: transitive
     description:
