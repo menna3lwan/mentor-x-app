@@ -13,6 +13,8 @@ final class AttendanceRepositoryException
 }
 
 abstract interface class AttendanceRepository {
+  Future<void> initialize();
+
   /// Fetch attendance summary statistics for a date range.
   Future<AttendanceSummaryEntity> getSummary({
     DateTime? from,
@@ -24,8 +26,7 @@ abstract interface class AttendanceRepository {
     DateTime? from,
     DateTime? to,
     String? courseId,
-    int page = 1,
-    int limit = 20,
+    MentorXPaginationInfo? paginationInfo,
   });
 
   /// Check in via QR code scan.

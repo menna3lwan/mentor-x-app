@@ -1,0 +1,23 @@
+name: dio_rewards_repository
+description: "Dio implementation of RewardsRepository for student app."
+version: 1.0.0
+publish_to: none
+
+resolution: workspace
+
+environment:
+
+    sdk: ^3.9.2
+
+dependencies:
+    mentorx_core:
+        path: ../../mentorx_core
+    student_core:
+        path: ../../student_core
+
+dev_dependencies:
+    flutter_test:
+        sdk: flutter
+    lints: ^6.0.0
+    mocktail: ^1.0.4
+    test: ^1.25.6

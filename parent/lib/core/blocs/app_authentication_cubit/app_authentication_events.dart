@@ -1,4 +1,3 @@
-import 'package:equatable/equatable.dart';
 import 'package:parent_core/parent_core.dart';
 
 /// Events fired on the [appEventBus] that relate to authentication state.

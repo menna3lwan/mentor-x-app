@@ -17,6 +17,8 @@ final class StudentHomeRepositoryException
 }
 
 abstract interface class StudentHomeRepository {
+  Future<void> initialize();
+
   Future<WalletSummaryEntity> getWalletSummary();
 
   Future<int> getUnreadNotificationsCount();

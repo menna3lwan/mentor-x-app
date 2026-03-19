@@ -1,4 +1,4 @@
-import 'package:mentorx_core/mentorx_core.dart';
+part of '../../mock_data.dart';
 
 final class MockAssignmentGenerator {
   MockAssignmentGenerator._();

@@ -1,4 +1,3 @@
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:parent_core/parent_core.dart';

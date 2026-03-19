@@ -1,6 +1,6 @@
 part of '../../mentorx_core.dart';
 
-base class GradeEntity extends Equatable {
+final class GradeEntity extends Equatable {
   final String id;
   final String name;
 

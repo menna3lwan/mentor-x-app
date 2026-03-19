@@ -17,7 +17,7 @@ enum NotificationType {
   system,
 }
 
-base class NotificationEntity extends Equatable {
+final class NotificationEntity extends Equatable {
   final String id;
   final NotificationType type;
   final String title;

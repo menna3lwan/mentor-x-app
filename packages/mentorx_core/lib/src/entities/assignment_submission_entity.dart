@@ -2,7 +2,7 @@ part of '../../mentorx_core.dart';
 
 enum SubmissionStatus { submitted, graded, resubmitRequested }
 
-base class AssignmentSubmissionEntity extends Equatable {
+final class AssignmentSubmissionEntity extends Equatable {
   final String id;
   final String assignmentId;
   final List<String> fileUrls;

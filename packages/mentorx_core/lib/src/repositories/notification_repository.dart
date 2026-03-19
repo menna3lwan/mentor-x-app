@@ -15,10 +15,11 @@ final class NotificationRepositoryException
 }
 
 abstract interface class NotificationRepository {
+  Future<void> initialize();
+
   /// Fetch paginated notifications.
   Future<List<NotificationEntity>> getNotifications({
-    int page = 1,
-    int limit = 20,
+    MentorXPaginationInfo? paginationInfo,
   });
 
   /// Mark a single notification as read.

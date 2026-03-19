@@ -16,14 +16,15 @@ final class WalletRepositoryException
 }
 
 abstract interface class WalletRepository {
+  Future<void> initialize();
+
   /// Get wallet balance and points summary.
   Future<WalletSummaryEntity> getSummary();
 
   /// Get wallet transaction history with optional filter and pagination.
   Future<List<WalletTransactionEntity>> getTransactions({
     String? type,
-    int page = 1,
-    int limit = 20,
+    MentorXPaginationInfo? paginationInfo,
   });
 
   /// Initiate a payment (top-up, course purchase, etc.).
@@ -40,5 +41,7 @@ abstract interface class WalletRepository {
   Future<Map<String, dynamic>> redeemCode(String code);
 
   /// Get code redemption history.
-  Future<List<Map<String, dynamic>>> getRedemptionHistory({int limit = 5});
+  Future<List<Map<String, dynamic>>> getRedemptionHistory({
+    MentorXPaginationInfo? paginationInfo,
+  });
 }

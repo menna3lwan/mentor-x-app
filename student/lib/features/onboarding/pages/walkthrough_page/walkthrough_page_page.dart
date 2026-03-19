@@ -60,24 +60,51 @@ final class WalkthroughPagePage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
-                          width: 140,
-                          height: 140,
+                          width: 200,
+                          height: 200,
                           decoration: BoxDecoration(
-                            color: palette.brandPrimary.withAlpha(25),
+                            gradient: RadialGradient(
+                              colors: [
+                                palette.brandPrimary.withValues(alpha: 0.15),
+                                palette.brandPrimary.withValues(alpha: 0.0),
+                              ],
+                            ),
                             shape: BoxShape.circle,
                           ),
-                          child: Icon(
-                            step.icon,
-                            size: 72,
-                            color: palette.brandPrimary,
+                          child: Center(
+                            child: Container(
+                              width: 120,
+                              height: 120,
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [palette.brandPrimary, palette.brandPrimary.withValues(alpha: 0.7)],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                                borderRadius: BorderRadius.circular(32),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: palette.brandPrimary.withValues(alpha: 0.3),
+                                    blurRadius: 20,
+                                    offset: const Offset(0, 10),
+                                  ),
+                                ],
+                              ),
+                              child: Icon(
+                                step.icon,
+                                size: 56,
+                                color: palette.textForeground,
+                              ),
+                            ),
                           ),
                         ),
-                        const SizedBox(height: 40),
+                        const SizedBox(height: 48),
                         Text(
                           step.title,
-                          style: textTheme.headlineSmall?.copyWith(
-                            fontWeight: FontWeight.w700,
-                            color: palette.brandPrimary,
+                          style: textTheme.headlineMedium?.copyWith(
+                            fontWeight: FontWeight.w800,
+                            color: palette.textPrimary,
+                            letterSpacing: -0.5,
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -86,7 +113,8 @@ final class WalkthroughPagePage extends StatelessWidget {
                           step.description,
                           style: textTheme.bodyLarge?.copyWith(
                             color: palette.textSecondary,
-                            height: 1.5,
+                            height: 1.6,
+                            fontSize: 17,
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -141,7 +169,7 @@ final class WalkthroughPagePage extends StatelessWidget {
                         : context.t.ui.common.getStarted,
                     style: textTheme.titleMedium?.copyWith(
                       color: palette.textForeground,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                 ),

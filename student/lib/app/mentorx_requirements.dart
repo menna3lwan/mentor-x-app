@@ -82,9 +82,22 @@ final class MentorXRequirements {
       }
     } else {
       final hasSeenOnboarding = await repositories.cacheRepository.get(
-        'has_seen_onboarding',
+        CacheKeys.hasSeenOnboarding,
       );
-      initialRoute = hasSeenOnboarding == 'true' ? '/login' : '/walkthrough';
+      final selectedTenantId = await repositories.cacheRepository.get(
+        CacheKeys.tenantId,
+      );
+
+      if (hasSeenOnboarding != 'true') {
+        initialRoute = '/walkthrough';
+      } else {
+        if (selectedTenantId == null || selectedTenantId.isEmpty) {
+          // Initialize default tenant for single-teacher mode
+          await repositories.cacheRepository.put(CacheKeys.tenantId, '1');
+          await repositories.cacheRepository.put(CacheKeys.tenantName, 'Mr. Ahmed Physics');
+        }
+        initialRoute = '/login';
+      }
     }
 
     final AppRouter appRouter = AppRouter(

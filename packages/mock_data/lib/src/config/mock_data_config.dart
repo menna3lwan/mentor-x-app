@@ -1,3 +1,5 @@
+part of '../../mock_data.dart';
+
 final class MockDataConfig {
   MockDataConfig._();
 

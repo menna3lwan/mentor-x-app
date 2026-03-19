@@ -13,11 +13,12 @@ part '../../features/account_status/pages/status_pending_page/status_pending_pag
 part '../../features/account_status/pages/status_rejected_page/status_rejected_page_route.dart';
 
 // ── Auth ─────────────────────────────────────────────────────────────────────
-part '../../features/auth/pages/login_page/login_page_route.dart';
-part '../../features/auth/pages/otp_page/otp_page_route.dart';
+part '../../features/auth/pages/login/login_page_route.dart';
+part '../../features/auth/pages/otp/otp_page_route.dart';
 
 // ── Onboarding ───────────────────────────────────────────────────────────────
 part '../../features/onboarding/pages/walkthrough_page/walkthrough_page_route.dart';
+part '../../features/onboarding/pages/tenant_selection_page/tenant_selection_page_route.dart';
 
 // ── Shell ─────────────────────────────────────────────────────────────────────
 part '../../features/shell/pages/shell_page/shell_page_route.dart';

@@ -34,32 +34,65 @@ final class StatusLayout extends StatelessWidget {
                   child: Column(
                     children: [
                       Container(
-                        width: 120,
-                        height: 120,
+                        width: 140,
+                        height: 140,
                         decoration: BoxDecoration(
-                          color: iconBackground,
+                          gradient: RadialGradient(
+                            colors: [
+                              iconBackground.withValues(alpha: 0.15),
+                              iconBackground.withValues(alpha: 0.0),
+                            ],
+                          ),
                           shape: BoxShape.circle,
                         ),
-                        alignment: Alignment.center,
-                        child: Icon(icon, size: 52),
+                        child: Center(
+                          child: Container(
+                            width: 80,
+                            height: 80,
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [iconBackground, iconBackground.withValues(alpha: 0.7)],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: iconBackground.withValues(alpha: 0.3),
+                                  blurRadius: 15,
+                                  offset: const Offset(0, 8),
+                                ),
+                              ],
+                            ),
+                            child: Icon(
+                              icon,
+                              size: 40,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
                       ),
-                      const SizedBox(height: 24),
+                      const SizedBox(height: 32),
                       Text(
                         title,
-                        style: Theme.of(context).textTheme.headlineSmall
-                            ?.copyWith(fontWeight: FontWeight.w700),
+                        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.w800,
+                          color: Theme.of(context).colorScheme.onSurface,
+                          letterSpacing: -0.5,
+                        ),
                         textAlign: TextAlign.center,
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 16),
                       Text(
                         description,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                           color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          height: 1.5,
                         ),
                         textAlign: TextAlign.center,
                       ),
                       if (extra != null) ...[
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 32),
                         extra!,
                       ],
                     ],

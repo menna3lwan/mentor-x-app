@@ -13,6 +13,7 @@ List<RouteBase> get $appRoutes => [
   $loginPageRoute,
   $otpPageRoute,
   $walkthroughPageRoute,
+  $tenantSelectionPageRoute,
   $shellPageRoute,
   $aiChatPageRoute,
   $courseCatalogPageRoute,
@@ -223,6 +224,33 @@ mixin $WalkthroughPageRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/walkthrough');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $tenantSelectionPageRoute => GoRouteData.$route(
+  path: '/tenant-selection',
+  name: 'tenant-selection',
+  factory: $TenantSelectionPageRoute._fromState,
+);
+
+mixin $TenantSelectionPageRoute on GoRouteData {
+  static TenantSelectionPageRoute _fromState(GoRouterState state) =>
+      const TenantSelectionPageRoute();
+
+  @override
+  String get location => GoRouteData.$location('/tenant-selection');
 
   @override
   void go(BuildContext context) => context.go(location);

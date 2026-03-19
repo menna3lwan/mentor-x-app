@@ -1,6 +1,6 @@
 part of '../../mentorx_core.dart';
 
-base class CategoryEntity extends Equatable {
+final class CategoryEntity extends Equatable {
   final String id;
   final String name;
   final String? gradeId;

@@ -48,7 +48,7 @@ final class _WalkthroughPageWrapperState extends State<WalkthroughPageWrapper> {
       listener: (context, event) {
         switch (event) {
           case WalkthroughPageCompletedPresentationEvent():
-            const LoginPageRoute().go(context);
+            const TenantSelectionPageRoute().go(context);
           case WalkthroughPageFailurePresentationEvent():
             break;
         }

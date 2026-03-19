@@ -1,13 +1,11 @@
-import 'package:faker/faker.dart';
+part of '../../mock_data.dart';
 
 final class MockOtpGenerator {
   MockOtpGenerator._();
 
   static final Faker _faker = Faker();
 
-  static String generate({int length = 6}) {
-    final max = int.parse('9' * length);
-    final min = int.parse('1${'0' * (length - 1)}');
-    return _faker.randomGenerator.integer(max, min: min).toString();
+  static String generate() {
+    return _faker.randomGenerator.numbers(9, MockDataConfig.otpLength).join();
   }
 }

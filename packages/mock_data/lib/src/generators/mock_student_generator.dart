@@ -1,5 +1,4 @@
-import 'package:faker/faker.dart';
-import 'package:mentorx_core/mentorx_core.dart';
+part of '../../mock_data.dart';
 
 final class MockStudentGenerator {
   MockStudentGenerator._();

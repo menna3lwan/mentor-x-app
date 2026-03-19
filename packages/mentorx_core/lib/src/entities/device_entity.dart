@@ -1,6 +1,6 @@
 part of '../../mentorx_core.dart';
 
-base class DeviceEntity extends Equatable {
+final class DeviceEntity extends Equatable {
   final String id;
   final String deviceName;
   final String deviceModel;

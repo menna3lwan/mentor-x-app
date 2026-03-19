@@ -1,0 +1,22 @@
+name: parent_dio_home_repository
+description: A Dio implementation of the parent home repository.
+version: 0.0.1
+publish_to: none
+
+environment:
+  sdk: ^3.9.2
+
+resolution: workspace
+
+dependencies:
+  flutter:
+    sdk: flutter
+  mentorx_core:
+    path: ../../mentorx_core
+  dio_http_client:
+    path: ../../clients/dio_http_client
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  lints: ^6.0.0

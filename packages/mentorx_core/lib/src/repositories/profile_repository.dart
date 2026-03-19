@@ -14,6 +14,8 @@ final class ProfileRepositoryException
 }
 
 abstract interface class ProfileRepository {
+  Future<void> initialize();
+
   /// Get the current user's full profile.
   Future<StudentEntity> getProfile();
 

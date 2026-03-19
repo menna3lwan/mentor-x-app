@@ -73,10 +73,12 @@ final class RepositoriesFactory {
     return client;
   }
 
+  static Future<CacheRepository> get cacheRepository async => await _initCacheRepository();
+
   // ── Per-repository initializers ──────────────────────────────────────────
 
   static Future<AuthenticationRepository>
-      _initAuthenticationRepository() async {
+  _initAuthenticationRepository() async {
     late final AuthenticationRepository repo;
     switch (Env.authenticationRepositoryMode) {
       case RepositoryMode.mock:
@@ -89,7 +91,8 @@ final class RepositoriesFactory {
       case RepositoryMode.prod:
         final httpClient = await _initHttpClient();
         repo = DioAuthenticationRepository(
-          client: httpClient as DioHttpClient,
+          httpClient: httpClient,
+          cacheRepository: await cacheRepository,
         );
     }
     await repo.initialize();

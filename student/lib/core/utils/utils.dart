@@ -1,6 +1,7 @@
 export 'env.dart';
 export 'loading_state.dart';
 export 'whatsapp_helper.dart';
+export 'bloc_performance_optimizer.dart';
 
 // Extensions
 export 'extensions/navigation_extensions.dart';

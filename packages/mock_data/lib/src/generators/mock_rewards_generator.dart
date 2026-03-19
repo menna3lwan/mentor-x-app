@@ -1,4 +1,4 @@
-import 'package:student_core/student_core.dart';
+part of '../../mock_data.dart';
 
 final class MockRewardsGenerator {
   MockRewardsGenerator._();

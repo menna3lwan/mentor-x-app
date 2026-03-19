@@ -14,17 +14,17 @@ final class GradeRepositoryException
 }
 
 abstract interface class GradeRepository {
+  Future<void> initialize();
+
   /// Fetch all assessment grades across courses.
   Future<List<QuizAttemptEntity>> getQuizGrades({
     String? courseId,
-    int page = 1,
-    int limit = 20,
+    MentorXPaginationInfo? paginationInfo,
   });
 
   /// Fetch assignment submission results.
   Future<List<AssignmentSubmissionEntity>> getAssignmentGrades({
     String? courseId,
-    int page = 1,
-    int limit = 20,
+    MentorXPaginationInfo? paginationInfo,
   });
 }

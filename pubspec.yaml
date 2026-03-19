@@ -23,49 +23,55 @@ workspace:
   - packages/mock_data
 
   # Dio repositories
-  - student/packages/student/dio_authentication_repository
-  - student/packages/student/dio_home_repository
-  - student/packages/student/dio_course_repository
-  - student/packages/student/dio_quiz_repository
-  - student/packages/student/dio_assignment_repository
-  - student/packages/student/dio_profile_repository
-  - student/packages/student/dio_marketplace_repository
-  - student/packages/student/dio_ai_repository
-  - student/packages/student/dio_rewards_repository
-  - student/packages/student/dio_wallet_repository
-  - student/packages/student/dio_notification_repository
-  - student/packages/student/dio_announcement_repository
-  - student/packages/student/dio_attendance_repository
-  - student/packages/student/dio_grade_repository
+  - packages/student/dio_authentication_repository
+  - packages/student/dio_home_repository
+  - packages/student/dio_course_repository
+  - packages/student/dio_quiz_repository
+  - packages/student/dio_assignment_repository
+  - packages/student/dio_profile_repository
+  - packages/student/dio_marketplace_repository
+  - packages/student/dio_ai_repository
+  - packages/student/dio_rewards_repository
+  - packages/student/dio_wallet_repository
+  - packages/student/dio_notification_repository
+  - packages/student/dio_announcement_repository
+  - packages/student/dio_attendance_repository
+  - packages/student/dio_grade_repository
+  - packages/student/dio_settings_repository
 
   # Student core
-  - student/packages/student_core
+  - packages/student_core
 
   # Mock repositories
-  - student/packages/mock/mock_authentication_repository
-  - student/packages/mock/mock_home_repository
-  - student/packages/mock/mock_course_repository
-  - student/packages/mock/mock_attendance_repository
-  - student/packages/mock/mock_wallet_repository
-  - student/packages/mock/mock_notification_repository
-  - student/packages/mock/mock_settings_repository
-  - student/packages/mock/mock_profile_repository
-  - student/packages/mock/mock_quiz_repository
-  - student/packages/mock/mock_assignment_repository
-  - student/packages/mock/mock_ai_repository
-  - student/packages/mock/mock_marketplace_repository
+  - packages/mock/student/mock_authentication_repository
+  - packages/mock/student/mock_home_repository
+  - packages/mock/student/mock_course_repository
+  - packages/mock/student/mock_attendance_repository
+  - packages/mock/student/mock_wallet_repository
+  - packages/mock/student/mock_notification_repository
+  - packages/mock/student/mock_settings_repository
+  - packages/mock/student/mock_profile_repository
+  - packages/mock/student/mock_quiz_repository
+  - packages/mock/student/mock_assignment_repository
+  - packages/mock/student/mock_ai_repository
+  - packages/mock/student/mock_marketplace_repository
+  - packages/mock/student/mock_rewards_repository
+  - packages/mock/student/mock_grade_repository
+  - packages/mock/student/mock_announcement_repository
 
   # Parent core
-  - parent/packages/parent_core
+  - packages/parent_core
 
   # Parent UI
-  - parent/packages/parent_ui
+  - packages/parent_ui
 
   # Parent Dio repositories
-  - parent/packages/parent/dio_authentication_repository
+  - packages/parent/dio_authentication_repository
+  - packages/parent/dio_home_repository
 
   # Parent Mock repositories
-  - parent/packages/mock/mock_authentication_repository
+  - packages/mock/parent/mock_home_repository
+  - packages/mock/parent/mock_authentication_repository
 
 dependency_overrides:
   test_api: ^0.7.7

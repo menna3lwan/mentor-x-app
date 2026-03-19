@@ -10,4 +10,10 @@ final class MentorXPaginationInfo extends Equatable {
 
   @override
   List<Object?> get props => [limit, page, cursor];
+
+  Map<String, dynamic> toJson() => {
+        if (limit != null) 'limit': limit,
+        if (page != null) 'page': page,
+        if (cursor != null) 'cursor': cursor,
+      };
 }

@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mentorx_core/mentorx_core.dart';
 
 import '../core/core.dart';
 import 'initializers/initializers.dart';

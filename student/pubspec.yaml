@@ -60,7 +60,7 @@ dependencies:
 
   # Core
   student_core:
-    path: packages/student_core
+    path: ../packages/student_core
 
   # MentorX Packages:
   mentorx_core:
@@ -74,35 +74,35 @@ dependencies:
 
   # Mock Repositories
   mock_authentication_repository:
-    path: packages/mock/mock_authentication_repository
+    path: ../packages/mock/student/mock_authentication_repository
   mock_home_repository:
-    path: packages/mock/mock_home_repository
+    path: ../packages/mock/student/mock_home_repository
   mock_course_repository:
-    path: packages/mock/mock_course_repository
+    path: ../packages/mock/student/mock_course_repository
   mock_attendance_repository:
-    path: packages/mock/mock_attendance_repository
+    path: ../packages/mock/student/mock_attendance_repository
   mock_wallet_repository:
-    path: packages/mock/mock_wallet_repository
+    path: ../packages/mock/student/mock_wallet_repository
   mock_notification_repository:
-    path: packages/mock/mock_notification_repository
+    path: ../packages/mock/student/mock_notification_repository
   mock_settings_repository:
-    path: packages/mock/mock_settings_repository
+    path: ../packages/mock/student/mock_settings_repository
   mock_profile_repository:
-    path: packages/mock/mock_profile_repository
+    path: ../packages/mock/student/mock_profile_repository
   mock_quiz_repository:
-    path: packages/mock/mock_quiz_repository
+    path: ../packages/mock/student/mock_quiz_repository
   mock_assignment_repository:
-    path: packages/mock/mock_assignment_repository
+    path: ../packages/mock/student/mock_assignment_repository
   mock_ai_repository:
-    path: packages/mock/mock_ai_repository
+    path: ../packages/mock/student/mock_ai_repository
   mock_marketplace_repository:
-    path: packages/mock/mock_marketplace_repository
+    path: ../packages/mock/student/mock_marketplace_repository
   mock_announcement_repository:
-    path: packages/mock/mock_announcement_repository
+    path: ../packages/mock/student/mock_announcement_repository
   mock_rewards_repository:
-    path: packages/mock/mock_rewards_repository
+    path: ../packages/mock/student/mock_rewards_repository
   mock_grade_repository:
-    path: packages/mock/mock_grade_repository
+    path: ../packages/mock/student/mock_grade_repository
 
   # Clients
   dio_http_client:
@@ -110,35 +110,35 @@ dependencies:
 
   # Dio Repositories
   dio_authentication_repository:
-    path: packages/student/dio_authentication_repository
+    path: ../packages/student/dio_authentication_repository
   dio_home_repository:
-    path: packages/student/dio_home_repository
+    path: ../packages/student/dio_home_repository
   dio_course_repository:
-    path: packages/student/dio_course_repository
+    path: ../packages/student/dio_course_repository
   dio_quiz_repository:
-    path: packages/student/dio_quiz_repository
+    path: ../packages/student/dio_quiz_repository
   dio_assignment_repository:
-    path: packages/student/dio_assignment_repository
+    path: ../packages/student/dio_assignment_repository
   dio_profile_repository:
-    path: packages/student/dio_profile_repository
+    path: ../packages/student/dio_profile_repository
   dio_marketplace_repository:
-    path: packages/student/dio_marketplace_repository
+    path: ../packages/student/dio_marketplace_repository
   dio_ai_repository:
-    path: packages/student/dio_ai_repository
+    path: ../packages/student/dio_ai_repository
   dio_rewards_repository:
-    path: packages/student/dio_rewards_repository
+    path: ../packages/student/dio_rewards_repository
   dio_wallet_repository:
-    path: packages/student/dio_wallet_repository
+    path: ../packages/student/dio_wallet_repository
   dio_notification_repository:
-    path: packages/student/dio_notification_repository
+    path: ../packages/student/dio_notification_repository
   dio_announcement_repository:
-    path: packages/student/dio_announcement_repository
+    path: ../packages/student/dio_announcement_repository
   dio_attendance_repository:
-    path: packages/student/dio_attendance_repository
+    path: ../packages/student/dio_attendance_repository
   dio_grade_repository:
-    path: packages/student/dio_grade_repository
+    path: ../packages/student/dio_grade_repository
   dio_settings_repository:
-    path: packages/student/dio_settings_repository
+    path: ../packages/student/dio_settings_repository
 
 dev_dependencies:
   # Testing

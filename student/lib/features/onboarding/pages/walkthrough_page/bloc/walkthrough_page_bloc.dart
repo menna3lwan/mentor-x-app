@@ -46,7 +46,7 @@ final class WalkthroughPageBloc
     emit(state.copyWith(loadingState: LoadingState.loading));
 
     try {
-      await _cacheRepository.put('has_seen_onboarding', 'true');
+      await _cacheRepository.put(CacheKeys.hasSeenOnboarding, 'true');
       emit(state.copyWith(loadingState: LoadingState.loaded));
       emitPresentation(const WalkthroughPageCompletedPresentationEvent());
     } catch (_) {

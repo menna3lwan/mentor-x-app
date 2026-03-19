@@ -1,5 +1,4 @@
 import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 
 import '../../../core/events/app_global_events.dart';

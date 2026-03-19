@@ -36,6 +36,7 @@ part 'widgets/mentorx_translation_provider.dart';
 part 'widgets/empty_state.dart';
 part 'widgets/section_header.dart';
 part 'widgets/stat_card.dart';
+part 'widgets/gradient_card.dart';
 
 final class MentorXUI {
   MentorXUI._();

@@ -50,32 +50,32 @@ final class MentorXThemes {
         colorTokens.statusWarning: palette.statusWarning,
       }..addAll(colorOverrides),
       textStyles: {
-        styleTokens.titleH1: GoogleFonts.poppins(
+        styleTokens.titleH1: GoogleFonts.cairo(
           fontSize: 24,
           fontWeight: FontWeight.w700,
           color: palette.textPrimary,
         ),
-        styleTokens.titleH2: GoogleFonts.poppins(
+        styleTokens.titleH2: GoogleFonts.cairo(
           fontSize: 20,
           fontWeight: FontWeight.w600,
           color: palette.textPrimary,
         ),
-        styleTokens.sectionTitle: GoogleFonts.poppins(
+        styleTokens.sectionTitle: GoogleFonts.cairo(
           fontSize: 18,
           fontWeight: FontWeight.w500,
           color: palette.textPrimary,
         ),
-        styleTokens.bodyPrimary: GoogleFonts.poppins(
+        styleTokens.bodyPrimary: GoogleFonts.cairo(
           fontSize: 16,
           fontWeight: FontWeight.w400,
           color: palette.textPrimary,
         ),
-        styleTokens.bodySecondary: GoogleFonts.poppins(
+        styleTokens.bodySecondary: GoogleFonts.cairo(
           fontSize: 14,
           fontWeight: FontWeight.w400,
           color: palette.textSecondary,
         ),
-        styleTokens.smallText: GoogleFonts.poppins(
+        styleTokens.smallText: GoogleFonts.cairo(
           fontSize: 12,
           fontWeight: FontWeight.w400,
           color: palette.textSecondary,
@@ -128,9 +128,9 @@ final class MentorXThemes {
       iconColor: oxfordBlue,
       suffixIconColor: oxfordBlue,
       prefixIconColor: oxfordBlue,
-      labelStyle: GoogleFonts.poppins(color: ashGrey, fontSize: 14),
-      hintStyle: GoogleFonts.poppins(color: ashGrey, fontSize: 14),
-      floatingLabelStyle: GoogleFonts.poppins(color: oxfordBlue, fontSize: 14),
+      labelStyle: GoogleFonts.cairo(color: ashGrey, fontSize: 14),
+      hintStyle: GoogleFonts.cairo(color: ashGrey, fontSize: 14),
+      floatingLabelStyle: GoogleFonts.cairo(color: oxfordBlue, fontSize: 14),
       contentPadding:
           const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
       focusedBorder: focusedBorder,
@@ -176,7 +176,7 @@ final class MentorXThemes {
         foregroundColor: textForeground,
         elevation: 0,
         centerTitle: true,
-        titleTextStyle: GoogleFonts.poppins(
+        titleTextStyle: GoogleFonts.cairo(
           fontSize: 20,
           fontWeight: FontWeight.w600,
           color: textForeground,
@@ -193,7 +193,7 @@ final class MentorXThemes {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14),
           ),
-          textStyle: GoogleFonts.poppins(
+          textStyle: GoogleFonts.cairo(
             fontSize: 16,
             fontWeight: FontWeight.w600,
           ),
@@ -210,7 +210,7 @@ final class MentorXThemes {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14),
           ),
-          textStyle: GoogleFonts.poppins(
+          textStyle: GoogleFonts.cairo(
             fontSize: 16,
             fontWeight: FontWeight.w600,
           ),
@@ -222,7 +222,7 @@ final class MentorXThemes {
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           foregroundColor: pumpkinOrange,
-          textStyle: GoogleFonts.poppins(
+          textStyle: GoogleFonts.cairo(
             fontSize: 14,
             fontWeight: FontWeight.w500,
           ),
@@ -237,7 +237,7 @@ final class MentorXThemes {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14),
           ),
-          textStyle: GoogleFonts.poppins(
+          textStyle: GoogleFonts.cairo(
             fontSize: 16,
             fontWeight: FontWeight.w600,
           ),
@@ -272,34 +272,34 @@ final class MentorXThemes {
         ),
       ),
       // Text theme using Poppins
-      textTheme: GoogleFonts.poppinsTextTheme(defaultThemeData.textTheme)
+      textTheme: GoogleFonts.cairoTextTheme(defaultThemeData.textTheme)
           .copyWith(
-        headlineLarge: GoogleFonts.poppins(
+        headlineLarge: GoogleFonts.cairo(
           fontSize: 24,
           fontWeight: FontWeight.w700,
           color: textPrimary,
         ),
-        headlineMedium: GoogleFonts.poppins(
+        headlineMedium: GoogleFonts.cairo(
           fontSize: 20,
           fontWeight: FontWeight.w600,
           color: textPrimary,
         ),
-        titleLarge: GoogleFonts.poppins(
+        titleLarge: GoogleFonts.cairo(
           fontSize: 18,
           fontWeight: FontWeight.w500,
           color: textPrimary,
         ),
-        bodyLarge: GoogleFonts.poppins(
+        bodyLarge: GoogleFonts.cairo(
           fontSize: 16,
           fontWeight: FontWeight.w400,
           color: textPrimary,
         ),
-        bodyMedium: GoogleFonts.poppins(
+        bodyMedium: GoogleFonts.cairo(
           fontSize: 14,
           fontWeight: FontWeight.w400,
           color: ashGrey,
         ),
-        bodySmall: GoogleFonts.poppins(
+        bodySmall: GoogleFonts.cairo(
           fontSize: 12,
           fontWeight: FontWeight.w400,
           color: ashGrey,

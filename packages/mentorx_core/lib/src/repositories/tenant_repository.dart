@@ -16,6 +16,7 @@ final class TenantRepositoryException
 }
 
 abstract interface class TenantRepository {
+  Future<void> initialize();
   /// Fetch grades for a tenant.
   Future<List<GradeEntity>> getGrades(String tenantId);
 

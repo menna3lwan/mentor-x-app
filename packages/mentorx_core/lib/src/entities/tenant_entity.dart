@@ -1,6 +1,6 @@
 part of '../../mentorx_core.dart';
 
-base class TenantEntity extends Equatable {
+final class TenantEntity extends Equatable {
   final String id;
   final String name;
   final String? logoUrl;

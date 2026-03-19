@@ -6,7 +6,7 @@ enum StudyType { online, center, both }
 
 enum Gender { male, female }
 
-base class StudentEntity extends Equatable {
+final class StudentEntity extends Equatable {
   final String id;
   final String name;
   final String? email;
@@ -83,42 +83,42 @@ base class StudentEntity extends Equatable {
   StudentEntity copyWith({
     String? id,
     String? name,
-    String? email,
+    MentorXNullableValue<String?>? email,
     String? phoneNumber,
-    String? studentCode,
+    MentorXNullableValue<String?>? studentCode,
     StudentStatus? status,
-    Gender? gender,
-    DateTime? dateOfBirth,
-    String? gradeId,
-    String? gradeName,
-    StudyType? studyType,
-    String? profileImageUrl,
+    MentorXNullableValue<Gender?>? gender,
+    MentorXNullableValue<DateTime?>? dateOfBirth,
+    MentorXNullableValue<String?>? gradeId,
+    MentorXNullableValue<String?>? gradeName,
+    MentorXNullableValue<StudyType?>? studyType,
+    MentorXNullableValue<String?>? profileImageUrl,
     double? walletBalance,
     int? totalPoints,
-    String? schoolName,
-    String? parentName,
-    String? parentPhone,
+    MentorXNullableValue<String?>? schoolName,
+    MentorXNullableValue<String?>? parentName,
+    MentorXNullableValue<String?>? parentPhone,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
     return StudentEntity(
       id: id ?? this.id,
       name: name ?? this.name,
-      email: email ?? this.email,
+      email: email != null ? email.value : this.email,
       phoneNumber: phoneNumber ?? this.phoneNumber,
-      studentCode: studentCode ?? this.studentCode,
+      studentCode: studentCode != null ? studentCode.value : this.studentCode,
       status: status ?? this.status,
-      gender: gender ?? this.gender,
-      dateOfBirth: dateOfBirth ?? this.dateOfBirth,
-      gradeId: gradeId ?? this.gradeId,
-      gradeName: gradeName ?? this.gradeName,
-      studyType: studyType ?? this.studyType,
-      profileImageUrl: profileImageUrl ?? this.profileImageUrl,
+      gender: gender != null ? gender.value : this.gender,
+      dateOfBirth: dateOfBirth != null ? dateOfBirth.value : this.dateOfBirth,
+      gradeId: gradeId != null ? gradeId.value : this.gradeId,
+      gradeName: gradeName != null ? gradeName.value : this.gradeName,
+      studyType: studyType != null ? studyType.value : this.studyType,
+      profileImageUrl: profileImageUrl != null ? profileImageUrl.value : this.profileImageUrl,
       walletBalance: walletBalance ?? this.walletBalance,
       totalPoints: totalPoints ?? this.totalPoints,
-      schoolName: schoolName ?? this.schoolName,
-      parentName: parentName ?? this.parentName,
-      parentPhone: parentPhone ?? this.parentPhone,
+      schoolName: schoolName != null ? schoolName.value : this.schoolName,
+      parentName: parentName != null ? parentName.value : this.parentName,
+      parentPhone: parentPhone != null ? parentPhone.value : this.parentPhone,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );

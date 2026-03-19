@@ -1,0 +1,17 @@
+name: student_core
+description: "Student core: student domain entities and repository interfaces."
+version: 0.0.1
+publish_to: none
+
+environment:
+  sdk: ^3.9.2
+
+resolution: workspace
+
+dependencies:
+  equatable: ^2.0.7
+  mentorx_core:
+    path: ../mentorx_core
+
+dev_dependencies:
+  lints: ^6.0.0

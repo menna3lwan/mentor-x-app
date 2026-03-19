@@ -1,0 +1,27 @@
+name: dio_grade_repository
+description: "Dio implementation of GradeRepository for student app."
+version: 1.0.0
+publish_to: none
+
+resolution: workspace
+
+environment:
+
+    sdk: ^3.9.2
+
+dependencies:
+    mentorx_core:
+        path: ../../mentorx_core
+    student_core:
+        path: ../../student_core
+    dio_quiz_repository:
+        path: ../dio_quiz_repository
+    dio_assignment_repository:
+        path: ../dio_assignment_repository
+
+dev_dependencies:
+    flutter_test:
+        sdk: flutter
+    lints: ^6.0.0
+    test: ^1.25.6
+    mocktail: ^1.0.4

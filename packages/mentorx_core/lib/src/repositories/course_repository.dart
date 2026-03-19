@@ -22,12 +22,13 @@ final class CourseRepositoryException
 }
 
 abstract interface class CourseRepository {
+  Future<void> initialize();
+
   /// Fetch enrolled courses with optional status filter and pagination.
   Future<List<CourseSummaryEntity>> getEnrolledCourses({
     String? status,
     String? search,
-    int page = 1,
-    int limit = 20,
+    MentorXPaginationInfo? paginationInfo,
   });
 
   /// Browse course catalog with filtering, sorting, and pagination.
@@ -37,8 +38,7 @@ abstract interface class CourseRepository {
     String? search,
     String? sort,
     String? order,
-    int page = 1,
-    int limit = 20,
+    MentorXPaginationInfo? paginationInfo,
   });
 
   /// Fetch course categories for a given grade.

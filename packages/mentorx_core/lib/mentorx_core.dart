@@ -1,5 +1,8 @@
+library;
+
 import 'dart:developer';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 export 'package:equatable/equatable.dart';
 
 // ——— Extensions ———
@@ -20,6 +23,7 @@ part 'src/clients/http_client.dart';
 
 // User / Auth
 part 'src/entities/student_entity.dart';
+part 'src/entities/parent_entity.dart';
 part 'src/entities/tenant_entity.dart';
 part 'src/entities/device_entity.dart';
 
@@ -64,6 +68,7 @@ part 'src/entities/user_settings_entity.dart';
 // ——————————————————————————————————————————————
 part 'src/repositories/cache_repository.dart';
 part 'src/repositories/http_client_repository.dart';
+part 'src/repositories/authentication_repository.dart';
 part 'src/repositories/student_authentication_repository.dart';
 part 'src/repositories/student_home_repository.dart';
 part 'src/repositories/course_repository.dart';
@@ -75,3 +80,4 @@ part 'src/repositories/profile_repository.dart';
 part 'src/repositories/settings_repository.dart';
 part 'src/repositories/tenant_repository.dart';
 part 'src/repositories/announcement_repository.dart';
+part 'src/repositories/parent_home_repository.dart';

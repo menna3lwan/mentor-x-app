@@ -12,12 +12,13 @@ final class AnnouncementRepositoryException
 }
 
 abstract interface class AnnouncementRepository {
+  Future<void> initialize();
+
   /// Fetch announcements with optional filters and pagination.
   Future<List<AnnouncementEntity>> getAnnouncements({
     String? search,
     bool? pinned,
-    int page = 1,
-    int limit = 20,
+    MentorXPaginationInfo? paginationInfo,
   });
 
   /// Fetch a single announcement detail.

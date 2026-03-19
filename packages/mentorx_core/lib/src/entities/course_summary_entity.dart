@@ -1,7 +1,7 @@
 part of '../../mentorx_core.dart';
 
 /// Lightweight course representation for lists and home dashboard sections.
-base class CourseSummaryEntity extends Equatable {
+final class CourseSummaryEntity extends Equatable {
   final String id;
   final String title;
   final String thumbnailUrl;

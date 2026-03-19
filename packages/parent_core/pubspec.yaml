@@ -1,0 +1,14 @@
+name: parent_core
+description: "Parent Domain core: entities, repository interfaces, utils."
+version: 1.0.0
+publish_to: none
+
+environment:
+  sdk: ^3.9.2
+
+resolution: workspace
+
+dependencies:
+  equatable: ^2.0.8
+  mentorx_core:
+    path: ../mentorx_core

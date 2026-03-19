@@ -12,6 +12,8 @@ final class SettingsRepositoryException
 }
 
 abstract interface class SettingsRepository {
+  Future<void> initialize();
+
   /// Get the current user's settings.
   Future<UserSettingsEntity> getSettings();
 

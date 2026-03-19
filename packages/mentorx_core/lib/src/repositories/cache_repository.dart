@@ -24,7 +24,15 @@ final class CacheKeys {
   static const String user = 'user';
   static const String brightness = 'brightness';
   static const String accessToken = 'accessToken';
+  static const String hasSeenOnboarding = 'has_seen_onboarding';
+  static const String tenantId = 'tenant_id';
+  static const String tenantName = 'tenant_name';
+  static const String tenantLogoUrl = 'tenant_logo_url';
+  static const String tenantPrimaryColor = 'tenant_primary_color';
+  static const String tenantAccentColor = 'tenant_accent_color';
+  static const String rememberedPhone = 'remembered_phone';
 }
+
 
 abstract interface class CacheRepository {
   Future<void> initialize();
