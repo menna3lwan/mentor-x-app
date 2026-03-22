@@ -33,7 +33,6 @@ final class CacheKeys {
   static const String rememberedPhone = 'remembered_phone';
 }
 
-
 abstract interface class CacheRepository {
   Future<void> initialize();
 

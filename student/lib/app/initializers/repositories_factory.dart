@@ -39,7 +39,6 @@ import 'package:mock_rewards_repository/mock_rewards_repository.dart';
 import 'package:mock_grade_repository/mock_grade_repository.dart';
 import 'package:mock_student_registration_repository/mock_student_registration_repository.dart';
 
-
 import '../../core/utils/env.dart';
 
 final class AppRepositories {
@@ -60,7 +59,6 @@ final class AppRepositories {
   final GradeRepository gradeRepository;
   final AnnouncementRepository announcementRepository;
   final StudentRegistrationRepository registrationRepository;
-
 
   const AppRepositories._({
     required this.cacheRepository,
@@ -358,7 +356,10 @@ final class RepositoriesFactory {
         : supportedLocales.first;
   }
 
-  static Future<({AppRepositories repositories, List<LocalizedClient> localizedClients})> initRepositories() async {
+  static Future<
+    ({AppRepositories repositories, List<LocalizedClient> localizedClients})
+  >
+  initRepositories() async {
     if (Env.usesAnyProdRepository && !Env.hasMentorXBaseUrl) {
       throw StateError(
         'MENTORX_API_BASE_URL must be provided when any repository mode is PROD.',

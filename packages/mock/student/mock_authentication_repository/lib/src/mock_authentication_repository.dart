@@ -63,7 +63,7 @@ final class MockAuthenticationRepository
         message: 'Repository not initialized',
       );
     }
-    
+
     // if (password != 'password123') {
     //    throw AuthenticationRepositoryException(
     //     code: AuthenticationRepositoryExceptionCode.unknown,

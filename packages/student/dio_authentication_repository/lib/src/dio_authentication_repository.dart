@@ -14,8 +14,7 @@ final class DioAuthenticationRepository
   Never throwException(
     AuthenticationRepositoryExceptionCode code, {
     String? message,
-  }) =>
-      throw _Exception(code: code, message: message);
+  }) => throw _Exception(code: code, message: message);
 
   final HttpClient httpClient;
   final CacheRepository cacheRepository;
@@ -71,7 +70,7 @@ final class DioAuthenticationRepository
     try {
       final bool isAuthenticated = await httpClient.isAuthenticated();
       if (!isAuthenticated) return null;
-      
+
       final response = await httpClient.get('/api/auth/student/me');
       if (response.statusCode == 200) {
         final user = StudentModel.fromJson(response.data['data']);
@@ -135,13 +134,13 @@ final class DioAuthenticationRepository
           'phone': phoneNumber,
           'password': password,
           // Missing but required by API in full implementation
-          'device_hash': 'mock_hash', 
+          'device_hash': 'mock_hash',
         },
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = response.data['data'];
-        
+
         final String? accessToken = data['access_token'] as String?;
         if (accessToken != null) {
           httpClient.setBearerToken(accessToken);
@@ -178,7 +177,9 @@ final class DioAuthenticationRepository
 
         Duration? otpDuration;
         if (data['otp_expires_in_seconds'] != null) {
-          otpDuration = Duration(seconds: data['otp_expires_in_seconds'] as int);
+          otpDuration = Duration(
+            seconds: data['otp_expires_in_seconds'] as int,
+          );
         }
 
         final int? otpLength = data['otp_length'] as int?;
@@ -213,8 +214,10 @@ final class DioAuthenticationRepository
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = response.data['data'];
-        final String? accessToken = data['accessToken'] as String? ?? response.data['accessToken'] as String?;
-        
+        final String? accessToken =
+            data['accessToken'] as String? ??
+            response.data['accessToken'] as String?;
+
         if (accessToken != null) {
           httpClient.setBearerToken(accessToken);
         }

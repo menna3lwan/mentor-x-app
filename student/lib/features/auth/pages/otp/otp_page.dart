@@ -65,7 +65,10 @@ final class OtpPage extends StatelessWidget {
                       height: 80,
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
-                          colors: [palette.statusSuccess, palette.statusSuccess.withValues(alpha: 0.7)],
+                          colors: [
+                            palette.statusSuccess,
+                            palette.statusSuccess.withValues(alpha: 0.7),
+                          ],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                         ),
@@ -85,132 +88,132 @@ final class OtpPage extends StatelessWidget {
                         size: 38,
                       ),
                     ),
-                  const SizedBox(height: 16),
-                  Text(
-                    context.t.login.otp.header,
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.w700,
+                    const SizedBox(height: 16),
+                    Text(
+                      context.t.login.otp.header,
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    context.t.login.otp.description,
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: palette.textSecondary,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Directionality(
-                    textDirection: TextDirection.ltr,
-                    child: Text(
-                      phoneNumber,
+                    const SizedBox(height: 8),
+                    Text(
+                      context.t.login.otp.description,
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w700,
-                        color: palette.brandPrimary,
+                        color: palette.textSecondary,
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 24),
-                  Directionality(
-                    textDirection: TextDirection.ltr,
-                    child: Pinput(
-                      length: otpLength,
-                      autofocus: true,
-                      onChanged: onOtpChanged,
-                      onCompleted: (_) => onSubmit(),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  if (errorMessage != null) ...[
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: palette.statusDanger.withAlpha(20),
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color: palette.statusDanger.withAlpha(80),
-                          width: 0.8,
-                        ),
-                      ),
+                    const SizedBox(height: 4),
+                    Directionality(
+                      textDirection: TextDirection.ltr,
                       child: Text(
-                        errorMessage!,
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: palette.statusDanger,
-                        ),
+                        phoneNumber,
                         textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: palette.brandPrimary,
+                        ),
                       ),
                     ),
-                    const SizedBox(height: 12),
-                  ],
-                  AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 200),
-                    child: canResend
-                        ? Column(
-                            key: const ValueKey('resend'),
-                            children: [
-                              TextButton(
-                                onPressed: isResending ? null : onResend,
-                                child: isResending
-                                    ? const SizedBox(
-                                        width: 16,
-                                        height: 16,
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 2,
-                                        ),
-                                      )
-                                    : Text(context.t.login.otp.resend),
-                              ),
-                              TextButton(
-                                onPressed:
-                                    isResendingWhatsapp
-                                        ? null
-                                        : onResendViaWhatsapp,
-                                child: isResendingWhatsapp
-                                    ? const SizedBox(
-                                        width: 16,
-                                        height: 16,
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 2,
-                                        ),
-                                      )
-                                    : const Text('Resend via WhatsApp'),
-                              ),
-                            ],
-                          )
-                        : Padding(
-                            key: const ValueKey('countdown'),
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                            child: Text(
-                              '${context.t.login.otp.resendIn} $formattedCountdown',
-                              style: Theme.of(context).textTheme.bodySmall
-                                  ?.copyWith(color: palette.textSecondary),
-                            ),
-                          ),
-                  ),
-                  TextButton.icon(
-                    onPressed: onEditPhone,
-                    icon: const Icon(Icons.edit_outlined, size: 18),
-                    label: Text(context.t.login.otp.editNumber),
-                  ),
-                  const SizedBox(height: 20),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: isLoading ? null : onSubmit,
-                      child: isLoading
-                          ? const SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                              ),
-                            )
-                          : Text(context.t.login.otp.confirm),
+                    const SizedBox(height: 24),
+                    Directionality(
+                      textDirection: TextDirection.ltr,
+                      child: Pinput(
+                        length: otpLength,
+                        autofocus: true,
+                        onChanged: onOtpChanged,
+                        onCompleted: (_) => onSubmit(),
+                      ),
                     ),
-                  ),
+                    const SizedBox(height: 16),
+                    if (errorMessage != null) ...[
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: palette.statusDanger.withAlpha(20),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: palette.statusDanger.withAlpha(80),
+                            width: 0.8,
+                          ),
+                        ),
+                        child: Text(
+                          errorMessage!,
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(
+                                color: palette.statusDanger,
+                              ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                    ],
+                    AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 200),
+                      child: canResend
+                          ? Column(
+                              key: const ValueKey('resend'),
+                              children: [
+                                TextButton(
+                                  onPressed: isResending ? null : onResend,
+                                  child: isResending
+                                      ? const SizedBox(
+                                          width: 16,
+                                          height: 16,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                          ),
+                                        )
+                                      : Text(context.t.login.otp.resend),
+                                ),
+                                TextButton(
+                                  onPressed: isResendingWhatsapp
+                                      ? null
+                                      : onResendViaWhatsapp,
+                                  child: isResendingWhatsapp
+                                      ? const SizedBox(
+                                          width: 16,
+                                          height: 16,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                          ),
+                                        )
+                                      : const Text('Resend via WhatsApp'),
+                                ),
+                              ],
+                            )
+                          : Padding(
+                              key: const ValueKey('countdown'),
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              child: Text(
+                                '${context.t.login.otp.resendIn} $formattedCountdown',
+                                style: Theme.of(context).textTheme.bodySmall
+                                    ?.copyWith(color: palette.textSecondary),
+                              ),
+                            ),
+                    ),
+                    TextButton.icon(
+                      onPressed: onEditPhone,
+                      icon: const Icon(Icons.edit_outlined, size: 18),
+                      label: Text(context.t.login.otp.editNumber),
+                    ),
+                    const SizedBox(height: 20),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: isLoading ? null : onSubmit,
+                        child: isLoading
+                            ? const SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : Text(context.t.login.otp.confirm),
+                      ),
+                    ),
                     const SizedBox(height: 12),
                   ],
                 ),

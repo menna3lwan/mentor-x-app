@@ -49,8 +49,7 @@ final class OtpState extends Equatable {
       errorMessage: errorMessage,
       resendCountdown: resendCountdown ?? this.resendCountdown,
       isResending: isResending ?? this.isResending,
-      isResendingWhatsapp:
-          isResendingWhatsapp ?? this.isResendingWhatsapp,
+      isResendingWhatsapp: isResendingWhatsapp ?? this.isResendingWhatsapp,
     );
   }
 

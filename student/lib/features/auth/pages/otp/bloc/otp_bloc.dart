@@ -12,8 +12,7 @@ sealed class OtpPresentationEvent {
   const OtpPresentationEvent();
 }
 
-final class OtpAuthenticatedPresentationEvent
-    extends OtpPresentationEvent {
+final class OtpAuthenticatedPresentationEvent extends OtpPresentationEvent {
   final StudentEntity user;
   const OtpAuthenticatedPresentationEvent({required this.user});
 }
