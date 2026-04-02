@@ -1,4 +1,4 @@
-import 'package:student_core/student_core.dart';
+import 'package:mentorx_core/mentorx_core.dart';
 
 abstract final class PointsTransactionModel {
   static PointsTransactionEntity fromJson(Map<String, dynamic> json) {

@@ -1,7 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
 import 'package:mentorx_core/mentorx_core.dart';
-import 'package:parent_core/parent_core.dart';
 
 import '../../../core/events/app_global_events.dart';
 
@@ -9,7 +7,7 @@ part 'app_authentication_state.dart';
 
 final class AppAuthenticationCubit extends Cubit<AppAuthenticationState> {
   AppAuthenticationCubit({ParentEntity? initialUser})
-      : super(AppAuthenticationState(user: initialUser));
+    : super(AppAuthenticationState(user: initialUser));
 
   static final MentorXLogger _logger = MentorXLogger('AppAuthenticationCubit');
 

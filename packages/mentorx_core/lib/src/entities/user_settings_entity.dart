@@ -1,6 +1,6 @@
 part of '../../mentorx_core.dart';
 
-final class UserSettingsEntity extends Equatable {
+base class UserSettingsEntity extends Equatable {
   final String language;
   final String theme;
   final bool pushNotifications;

@@ -2,8 +2,9 @@ import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mentorx_ui/mentorx_ui.dart';
 
-import '../../../../app/mentorx_student.dart';
+import '../../../../app/student_app.dart';
 import '../../../../core/core.dart';
 import 'bloc/otp_bloc.dart';
 import 'otp_page.dart';
@@ -23,8 +24,14 @@ final class _OtpPageWrapperState extends State<OtpPageWrapper> {
         switch (event) {
           case OtpAuthenticatedPresentationEvent(:final user):
             _handleAuthenticatedUser(context, user);
-          case OtpFailurePresentationEvent():
-            break;
+          case OtpFailurePresentationEvent(:final message):
+            if (message.trim().isEmpty) return;
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(message),
+                backgroundColor: MentorXThemeColorPalette.light.statusDanger,
+              ),
+            );
         }
       },
       child: BlocBuilder<OtpBloc, OtpState>(
@@ -62,7 +69,6 @@ final class _OtpPageWrapperState extends State<OtpPageWrapper> {
       case StudentStatus.pending:
         const StatusPendingPageRoute().go(context);
       case StudentStatus.blocked:
-        const StatusBlockedPageRoute().go(context);
       case StudentStatus.suspended:
         const StatusBlockedPageRoute().go(context);
       case StudentStatus.rejected:

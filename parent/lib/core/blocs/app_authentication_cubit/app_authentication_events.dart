@@ -1,4 +1,4 @@
-import 'package:parent_core/parent_core.dart';
+import 'package:mentorx_core/mentorx_core.dart';
 
 /// Events fired on the [appEventBus] that relate to authentication state.
 sealed class AppAuthenticationEvent extends Equatable {

@@ -6,7 +6,7 @@ enum StudyType { online, center, both }
 
 enum Gender { male, female }
 
-final class StudentEntity extends Equatable {
+base class StudentEntity extends Equatable {
   final String id;
   final String name;
   final String? email;
@@ -54,8 +54,8 @@ final class StudentEntity extends Equatable {
     id: '',
     name: '',
     phoneNumber: '',
-    createdAt: DateTime.fromMillisecondsSinceEpoch(0),
-    updatedAt: DateTime.fromMillisecondsSinceEpoch(0),
+    createdAt: DateTime(1970),
+    updatedAt: DateTime(1970),
   );
   @override
   List<Object?> get props => [

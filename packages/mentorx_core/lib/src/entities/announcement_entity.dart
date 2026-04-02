@@ -1,6 +1,6 @@
 part of '../../mentorx_core.dart';
 
-final class AnnouncementEntity extends Equatable {
+base class AnnouncementEntity extends Equatable {
   final String id;
   final String title;
   final String preview;

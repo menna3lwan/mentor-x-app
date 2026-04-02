@@ -6,6 +6,7 @@ enum AuthenticationRepositoryExceptionCode {
   invalidOtp,
   userNotFound,
   failedToSendOtp,
+  failedToRequestPasswordReset,
   failedToVerifyOtp,
   failedToGetCurrentUser,
   failedToResendOtp,
@@ -23,6 +24,7 @@ abstract interface class StudentAuthenticationRepository {
   Future<({Duration? otpDuration, int? otpLength})?> sendOtp(
     String phoneNumber,
   );
+  Future<void> requestPasswordReset(String phoneNumber);
   Future<StudentEntity> loginWithPassword({
     required String phoneNumber,
     required String password,

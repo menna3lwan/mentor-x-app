@@ -2,17 +2,15 @@ name: mock_student_registration_repository
 description: A mock implementation of the student registration repository.
 version: 0.0.1
 publish_to: none
+resolution: workspace
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
+  sdk: ^3.9.2
 
 dependencies:
-  flutter:
-    sdk: flutter
   mentorx_core:
     path: ../../../mentorx_core
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
-  lints: ^3.0.0
+  lints: ^6.0.0
+  test: ^1.25.6

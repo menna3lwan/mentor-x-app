@@ -1,4 +1,4 @@
-import 'package:student_core/student_core.dart';
+import 'package:mentorx_core/mentorx_core.dart';
 
 abstract final class MarketplaceCategoryModel {
   static MarketplaceCategoryEntity fromJson(Map<String, dynamic> json) {
@@ -15,12 +15,19 @@ abstract final class MarketplaceItemModel {
       id: json['id']?.toString() ?? '',
       title: json['title'] as String? ?? '',
       description: json['description'] as String?,
-      price: (json['price'] as num?)?.toDouble() ?? 0.0,
-      oldPrice: (json['oldPrice'] ?? json['old_price'] as num?)?.toDouble(),
-      imageUrls: ((json['imageUrls'] ?? json['image_urls']) as List?)?.map((e) => e.toString()).toList() ?? const [],
-      isActive: json['isActive'] as bool? ?? json['is_active'] as bool? ?? true,
-      isFeatured: json['isFeatured'] as bool? ?? json['is_featured'] as bool? ?? false,
-      stockQuantity: (json['stockQuantity'] ?? json['stock_quantity'] as num?)?.toInt() ?? 0,
+      price: _toDouble(json['price']),
+      oldPrice: _toDoubleOrNull(json['oldPrice'] ?? json['old_price']),
+      imageUrls:
+          ((json['imageUrls'] ?? json['image_urls']) as List?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          const [],
+      isActive: _toBool(
+        json['isActive'] ?? json['is_active'],
+        defaultValue: true,
+      ),
+      isFeatured: _toBool(json['isFeatured'] ?? json['is_featured']),
+      stockQuantity: _toInt(json['stockQuantity'] ?? json['stock_quantity']),
       categoryId: (json['categoryId'] ?? json['category_id'])?.toString(),
     );
   }
@@ -30,14 +37,22 @@ abstract final class MarketplaceOrderModel {
   static MarketplaceOrderEntity fromJson(Map<String, dynamic> json) {
     return MarketplaceOrderEntity(
       id: json['id']?.toString() ?? '',
-      orderNumber: (json['orderNumber'] ?? json['order_number']) as String? ?? '',
-      totalAmount: (json['totalAmount'] ?? json['total_amount'] as num?)?.toDouble() ?? 0.0,
+      orderNumber:
+          (json['orderNumber'] ?? json['order_number'])?.toString() ?? '',
+      totalAmount: _toDouble(json['totalAmount'] ?? json['total_amount']),
       status: _parseStatus(json['status']),
-      itemCount: (json['itemCount'] ?? json['item_count'] as num?)?.toInt() ?? 0,
-      deliveryAddress: (json['deliveryAddress'] ?? json['delivery_address']) as String?,
-      deliveryPhone: (json['deliveryPhone'] ?? json['delivery_phone']) as String?,
-      deliveryNotes: (json['deliveryNotes'] ?? json['delivery_notes']) as String?,
-      createdAt: DateTime.parse((json['createdAt'] ?? json['created_at']) as String),
+      itemCount: _toInt(json['itemCount'] ?? json['item_count']),
+      deliveryAddress: (json['deliveryAddress'] ?? json['delivery_address'])
+          ?.toString(),
+      deliveryPhone: (json['deliveryPhone'] ?? json['delivery_phone'])
+          ?.toString(),
+      deliveryNotes: (json['deliveryNotes'] ?? json['delivery_notes'])
+          ?.toString(),
+      createdAt:
+          DateTime.tryParse(
+            (json['createdAt'] ?? json['created_at'])?.toString() ?? '',
+          ) ??
+          DateTime.now(),
     );
   }
 
@@ -48,4 +63,30 @@ abstract final class MarketplaceOrderModel {
       orElse: () => MarketplaceOrderStatus.pending,
     );
   }
+}
+
+int _toInt(dynamic value) {
+  if (value is int) return value;
+  if (value is num) return value.toInt();
+  return int.tryParse(value?.toString() ?? '') ?? 0;
+}
+
+double _toDouble(dynamic value) {
+  if (value is double) return value;
+  if (value is num) return value.toDouble();
+  return double.tryParse(value?.toString() ?? '') ?? 0;
+}
+
+double? _toDoubleOrNull(dynamic value) {
+  if (value == null) return null;
+  if (value is num) return value.toDouble();
+  return double.tryParse(value.toString());
+}
+
+bool _toBool(dynamic value, {bool defaultValue = false}) {
+  if (value is bool) return value;
+  final normalized = value?.toString().toLowerCase();
+  if (normalized == 'true' || normalized == '1') return true;
+  if (normalized == 'false' || normalized == '0') return false;
+  return defaultValue;
 }

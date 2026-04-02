@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:dio_ai_repository/src/dio_ai_repository.dart';
-import 'package:student_core/student_core.dart';
+import 'package:mentorx_core/mentorx_core.dart';
 
 class MockHttpClient extends Mock implements HttpClient {}
 

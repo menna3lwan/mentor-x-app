@@ -2,7 +2,13 @@ import 'package:flutter/material.dart';
 import 'achievement_icon.dart';
 
 class RecentAchievementsCard extends StatelessWidget {
-  const RecentAchievementsCard({super.key});
+  const RecentAchievementsCard({
+    super.key,
+    required this.recentAchievements,
+  });
+
+  final List<({String title, String date, int iconCodePoint})>
+  recentAchievements;
 
   @override
   Widget build(BuildContext context) {
@@ -20,16 +26,18 @@ class RecentAchievementsCard extends StatelessWidget {
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 10),
-          AchievementIcon(
-            color: Colors.orange,
-            title: "Math Master Badge",
-            subtitle: "Completed 10 algebra lessons",
-          ),
-          AchievementIcon(
-            color: Colors.blue,
-            title: "Perfect Quiz Score",
-            subtitle: "100% on Quadratic Equations",
-          ),
+          if (recentAchievements.isEmpty)
+            const Text('No recent achievements yet.')
+          else ...[
+            for (final achievement in recentAchievements) ...[
+              AchievementIcon(
+                color: Colors.blue,
+                title: achievement.title,
+                subtitle: achievement.date,
+                iconCodePoint: achievement.iconCodePoint,
+              ),
+            ],
+          ],
         ],
       ),
     );

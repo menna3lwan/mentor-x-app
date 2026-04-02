@@ -4,7 +4,7 @@ enum AttendanceStatus { present, late, absent, excused, online }
 
 enum CheckInMethod { qrCode, manual, auto }
 
-final class AttendanceRecordEntity extends Equatable {
+base class AttendanceRecordEntity extends Equatable {
   final String id;
   final String? courseId;
   final String? courseName;

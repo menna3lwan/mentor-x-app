@@ -1,6 +1,6 @@
 part of '../../mentorx_core.dart';
 
-final class ParentEntity extends Equatable {
+base class ParentEntity extends Equatable {
   final String id;
   final String name;
   final String phoneNumber;

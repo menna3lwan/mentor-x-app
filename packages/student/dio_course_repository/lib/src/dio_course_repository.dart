@@ -1,6 +1,6 @@
 import 'package:mentorx_core/mentorx_core.dart';
-import '../models/course_models.dart';
-import '../models/session_models.dart';
+import 'models/course_models.dart';
+import 'models/session_models.dart';
 
 final class DioCourseRepository
     extends HttpClientRepository<CourseRepositoryExceptionCode>
@@ -38,7 +38,10 @@ final class DioCourseRepository
       );
     }
 
-    return _asList(response.data).map((e) => CourseSummaryModel.fromJson(e)).toList();
+    return _asList(response.data)
+        .map(_asMap)
+        .map(CourseSummaryModel.fromJson)
+        .toList();
   }
 
   @override
@@ -69,7 +72,10 @@ final class DioCourseRepository
       );
     }
 
-    return _asList(response.data).map((e) => CourseSummaryModel.fromJson(e)).toList();
+    return _asList(response.data)
+        .map(_asMap)
+        .map(CourseSummaryModel.fromJson)
+        .toList();
   }
 
   @override
@@ -86,7 +92,10 @@ final class DioCourseRepository
       );
     }
 
-    return _asList(response.data).map((e) => CategoryModel.fromJson(e)).toList();
+    return _asList(response.data)
+        .map(_asMap)
+        .map(CategoryModel.fromJson)
+        .toList();
   }
 
   @override
@@ -100,7 +109,8 @@ final class DioCourseRepository
       );
     }
 
-    return CourseModel.fromJson(response.data['data'] ?? response.data);
+    final data = _asMap(response.data)['data'] ?? _asMap(response.data);
+    return CourseModel.fromJson(data);
   }
 
   @override
@@ -114,7 +124,10 @@ final class DioCourseRepository
       );
     }
 
-    return _asList(response.data).map((e) => SessionModel.fromJson(e)).toList();
+    return _asList(response.data)
+        .map(_asMap)
+        .map(SessionModel.fromJson)
+        .toList();
   }
 
   @override
@@ -128,7 +141,10 @@ final class DioCourseRepository
       );
     }
 
-    return _asList(response.data).map((e) => SessionItemModel.fromJson(e)).toList();
+    return _asList(response.data)
+        .map(_asMap)
+        .map(SessionItemModel.fromJson)
+        .toList();
   }
 
   @override
@@ -143,7 +159,8 @@ final class DioCourseRepository
       );
     }
 
-    return EnrollmentModel.fromJson(response.data['data'] ?? response.data);
+    final data = _asMap(response.data)['data'] ?? _asMap(response.data);
+    return EnrollmentModel.fromJson(data);
   }
 
   @override
@@ -160,7 +177,8 @@ final class DioCourseRepository
       );
     }
 
-    return EnrollmentModel.fromJson(response.data['data'] ?? response.data);
+    final data = _asMap(response.data)['data'] ?? _asMap(response.data);
+    return EnrollmentModel.fromJson(data);
   }
 
   @override
@@ -174,7 +192,8 @@ final class DioCourseRepository
       );
     }
 
-    return (response.data['url'] ?? response.data['data']?['url']).toString();
+    final data = _asMap(response.data)['data'] ?? _asMap(response.data);
+    return data['url']?.toString() ?? '';
   }
 
   @override
@@ -188,7 +207,8 @@ final class DioCourseRepository
       );
     }
 
-    return (response.data['url'] ?? response.data['data']?['url']).toString();
+    final data = _asMap(response.data)['data'] ?? _asMap(response.data);
+    return data['url']?.toString() ?? '';
   }
 
   @override
@@ -227,7 +247,12 @@ final class DioCourseRepository
     }
   }
 
-  List<dynamic> _asList(dynamic value) {
+  static Map<String, dynamic> _asMap(dynamic value) {
+    if (value is Map<String, dynamic>) return value;
+    return <String, dynamic>{};
+  }
+
+  static List<dynamic> _asList(dynamic value) {
     if (value is List<dynamic>) return value;
     if (value is Map<String, dynamic>) {
       final data = value['data'] ?? value['items'];

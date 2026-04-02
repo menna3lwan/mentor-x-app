@@ -1,8 +1,7 @@
-library;
-
+import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 export 'package:equatable/equatable.dart';
 
 // ——— Extensions ———
@@ -13,6 +12,9 @@ part 'src/utils/mentorx_exception.dart';
 part 'src/utils/mentorx_logger.dart';
 part 'src/utils/mentorx_nullable_value.dart';
 part 'src/utils/mentorx_pagination_info.dart';
+part 'src/utils/parent_exception.dart';
+part 'src/utils/auth_rate_limiter.dart';
+part 'src/utils/security_validator.dart';
 
 // ——— Clients ———
 part 'src/clients/http_client.dart';
@@ -60,6 +62,7 @@ part 'src/entities/attendance_summary_entity.dart';
 // Financial
 part 'src/entities/wallet_transaction_entity.dart';
 part 'src/entities/payment_entity.dart';
+part 'src/entities/points_transaction_entity.dart';
 
 // Communication
 part 'src/entities/notification_entity.dart';
@@ -67,6 +70,26 @@ part 'src/entities/whatsapp_group_entity.dart';
 
 // Settings
 part 'src/entities/user_settings_entity.dart';
+
+// AI (Student only)
+part 'src/entities/ai_conversation_entity.dart';
+part 'src/entities/ai_message_entity.dart';
+
+// Marketplace & Rewards (Student only)
+part 'src/entities/marketplace_category_entity.dart';
+part 'src/entities/marketplace_item_entity.dart';
+part 'src/entities/marketplace_order_entity.dart';
+part 'src/entities/marketplace_order_item_entity.dart';
+part 'src/entities/reward_item_entity.dart';
+part 'src/entities/reward_claim_entity.dart';
+
+// Verification & Profile (Student only)
+part 'src/entities/profile_edit_request_entity.dart';
+part 'src/entities/national_id_verification_entity.dart';
+part 'src/entities/code_redemption_entity.dart';
+
+// ——— Models ———
+part 'src/models/parent_model.dart';
 
 // ——————————————————————————————————————————————
 // Repositories — Common interfaces
@@ -87,3 +110,11 @@ part 'src/repositories/tenant_repository.dart';
 part 'src/repositories/announcement_repository.dart';
 part 'src/repositories/student_registration_repository.dart';
 part 'src/repositories/parent_home_repository.dart';
+
+// Role-specific interfaces
+part 'src/repositories/student_profile_repository.dart';
+part 'src/repositories/quiz_repository.dart';
+part 'src/repositories/assignment_repository.dart';
+part 'src/repositories/ai_repository.dart';
+part 'src/repositories/marketplace_repository.dart';
+part 'src/repositories/rewards_repository.dart';

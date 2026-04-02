@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:parent/core/core.dart';
 import 'package:parent/features/features.dart';
-import 'package:parent_ui/parent_ui.dart';
+import 'package:mentorx_ui/mentorx_ui.dart';
 
 final class ForgetPasswordPageWrapper extends StatefulWidget {
   const ForgetPasswordPageWrapper({super.key});
@@ -66,7 +66,7 @@ class _ForgetPasswordPageWrapperState extends State<ForgetPasswordPageWrapper> {
                 "Don't worry! Enter your phone number and we'll send you a verification code.",
                 style: TextStyle(color: Color(0xFF183764), fontSize: 14),
               ),
-              phoneField: TextFormFieldWidget(
+              phoneField: MentorXTextFormField(
                 label: 'Phone',
                 icon: Icons.phone_outlined,
                 controller: _phoneController,
@@ -74,7 +74,7 @@ class _ForgetPasswordPageWrapperState extends State<ForgetPasswordPageWrapper> {
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 validator: Validator.validatePhoneNumber,
               ),
-              sendCodeButton: MaterialButtonWidget(
+              sendCodeButton: MentorXButton(
                 onPressed: isLoading
                     ? null
                     : () {
@@ -88,7 +88,7 @@ class _ForgetPasswordPageWrapperState extends State<ForgetPasswordPageWrapper> {
                       },
                 text: isLoading ? 'Sending...' : 'Send Code',
               ),
-              backToLoginButton: ClickableTextWidget(
+              backToLoginButton: MentorXClickableText(
                 alignment: Alignment.centerLeft,
                 text: 'Back To Login',
                 color: const Color(0xFF183764),

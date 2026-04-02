@@ -4,11 +4,17 @@ abstract final class WalletTransactionModel {
   static WalletTransactionEntity fromJson(Map<String, dynamic> json) {
     return WalletTransactionEntity(
       id: json['id']?.toString() ?? '',
-      transactionType: _parseType(json['transactionType'] ?? json['type'] ?? json['transaction_type']),
-      amount: (json['amount'] as num?)?.toDouble() ?? 0.0,
-      balanceAfter: (json['balanceAfter'] ?? json['balance_after'] as num?)?.toDouble() ?? 0.0,
+      transactionType: _parseType(
+        json['transactionType'] ?? json['type'] ?? json['transaction_type'],
+      ),
+      amount: _toDouble(json['amount']),
+      balanceAfter: _toDouble(json['balanceAfter'] ?? json['balance_after']),
       description: (json['description'] ?? json['reason'] ?? '') as String,
-      createdAt: DateTime.parse((json['createdAt'] ?? json['created_at']) as String),
+      createdAt:
+          DateTime.tryParse(
+            (json['createdAt'] ?? json['created_at'])?.toString() ?? '',
+          ) ??
+          DateTime.now(),
     );
   }
 
@@ -25,14 +31,26 @@ abstract final class PaymentModel {
   static PaymentEntity fromJson(Map<String, dynamic> json) {
     return PaymentEntity(
       id: json['id']?.toString() ?? '',
-      amount: (json['amount'] as num?)?.toDouble() ?? 0.0,
+      amount: _toDouble(json['amount']),
       currency: json['currency'] as String? ?? 'EGP',
       method: _parseMethod(json['method'] ?? json['payment_method']),
-      paymentType: _parseType(json['type'] ?? json['paymentType'] ?? json['payment_type']),
+      paymentType: _parseType(
+        json['type'] ?? json['paymentType'] ?? json['payment_type'],
+      ),
       status: _parseStatus(json['status']),
-      reference: (json['reference'] ?? json['payment_reference'] ?? json['external_id'])?.toString(),
-      expiresAt: json['expiresAt'] != null ? DateTime.parse(json['expiresAt'] as String) : null,
-      createdAt: DateTime.parse((json['createdAt'] ?? json['created_at']) as String),
+      reference:
+          (json['reference'] ??
+                  json['payment_reference'] ??
+                  json['external_id'])
+              ?.toString(),
+      expiresAt: DateTime.tryParse(
+        (json['expiresAt'] ?? json['expires_at'])?.toString() ?? '',
+      ),
+      createdAt:
+          DateTime.tryParse(
+            (json['createdAt'] ?? json['created_at'])?.toString() ?? '',
+          ) ??
+          DateTime.now(),
     );
   }
 
@@ -60,4 +78,10 @@ abstract final class PaymentModel {
       orElse: () => PaymentType.walletTopup,
     );
   }
+}
+
+double _toDouble(dynamic value) {
+  if (value is double) return value;
+  if (value is num) return value.toDouble();
+  return double.tryParse(value?.toString() ?? '') ?? 0;
 }

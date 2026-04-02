@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 
-import '../../../../app/mentorx_student.dart';
+import '../../../../app/student_app.dart';
 import '../../../../core/core.dart';
 import 'bloc/login_bloc.dart';
 import 'login_page.dart';
@@ -86,7 +86,9 @@ final class _LoginPageWrapperState extends State<LoginPageWrapper> {
             isLoading: state.isLoading,
             obscurePassword: state.obscurePassword,
             rememberMe: state.rememberMe,
-            errorMessage: state.loadingState.isError ? state.errorMessage : null,
+            errorMessage: state.loadingState.isError
+                ? state.errorMessage
+                : null,
             inputFormatters: [
               FilteringTextInputFormatter.digitsOnly,
               LengthLimitingTextInputFormatter(11),
@@ -95,12 +97,11 @@ final class _LoginPageWrapperState extends State<LoginPageWrapper> {
             passwordValidator: _passwordValidator,
             onPhoneChanged: (value) => bloc.add(LoginPhoneChanged(value)),
             onPasswordChanged: (value) => bloc.add(LoginPasswordChanged(value)),
-            onObscurePasswordToggled: () => bloc.add(const LoginObscurePasswordToggled()),
+            onObscurePasswordToggled: () =>
+                bloc.add(const LoginObscurePasswordToggled()),
             onRememberMeToggled: () => bloc.add(const LoginRememberMeToggled()),
             onForgotPassword: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Forgot password flow coming next.')),
-              );
+              _onForgotPassword(context);
             },
             onRegister: () {
               const RegistrationPageRoute().go(context);
@@ -121,11 +122,117 @@ final class _LoginPageWrapperState extends State<LoginPageWrapper> {
       case StudentStatus.pending:
         const StatusPendingPageRoute().go(context);
       case StudentStatus.blocked:
-        const StatusBlockedPageRoute().go(context);
       case StudentStatus.suspended:
         const StatusBlockedPageRoute().go(context);
       case StudentStatus.rejected:
         const StatusRejectedPageRoute().go(context);
+    }
+  }
+
+  Future<void> _onForgotPassword(BuildContext context) async {
+    final authRepository = context.read<StudentAuthenticationRepository>();
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    final formKey = GlobalKey<FormState>();
+    final controller = TextEditingController(text: _phoneController.text);
+    var isSubmitting = false;
+
+    try {
+      await showDialog<void>(
+        context: context,
+        builder: (dialogContext) {
+          return StatefulBuilder(
+            builder: (dialogContext, setDialogState) {
+              Future<void> submit() async {
+                if (!(formKey.currentState?.validate() ?? false)) return;
+
+                final dialogNavigator = Navigator.of(dialogContext);
+
+                setDialogState(() => isSubmitting = true);
+                try {
+                  await authRepository.requestPasswordReset(
+                    controller.text.trim(),
+                  );
+                  if (!mounted || !scaffoldMessenger.mounted) return;
+                  if (dialogNavigator.mounted && dialogNavigator.canPop()) {
+                    dialogNavigator.pop();
+                  }
+                  scaffoldMessenger.showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                        'Password reset instructions were sent to your phone.',
+                      ),
+                    ),
+                  );
+                } on AuthenticationRepositoryException catch (e) {
+                  if (!mounted || !scaffoldMessenger.mounted) return;
+                  setDialogState(() => isSubmitting = false);
+                  scaffoldMessenger.showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        e.message ?? 'Failed to request password reset.',
+                      ),
+                      backgroundColor:
+                          MentorXThemeColorPalette.light.statusDanger,
+                    ),
+                  );
+                } catch (_) {
+                  if (!mounted || !scaffoldMessenger.mounted) return;
+                  setDialogState(() => isSubmitting = false);
+                  scaffoldMessenger.showSnackBar(
+                    SnackBar(
+                      content: const Text(
+                        'Failed to request password reset. Please try again.',
+                      ),
+                      backgroundColor:
+                          MentorXThemeColorPalette.light.statusDanger,
+                    ),
+                  );
+                }
+              }
+
+              return AlertDialog(
+                title: const Text('Forgot Password'),
+                content: Form(
+                  key: formKey,
+                  child: TextFormField(
+                    controller: controller,
+                    keyboardType: TextInputType.phone,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(11),
+                    ],
+                    decoration: const InputDecoration(
+                      labelText: 'Phone Number',
+                      hintText: '01xxxxxxxxx',
+                    ),
+                    validator: _phoneValidator,
+                  ),
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: isSubmitting
+                        ? null
+                        : () => Navigator.of(dialogContext).pop(),
+                    child: const Text('Cancel'),
+                  ),
+                  FilledButton(
+                    onPressed: isSubmitting ? null : submit,
+                    child: isSubmitting
+                        ? const SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : const Text('Send'),
+                  ),
+                ],
+              );
+            },
+          );
+        },
+      );
+    } finally {
+      controller.dispose();
     }
   }
 }

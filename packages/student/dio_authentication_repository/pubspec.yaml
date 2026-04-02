@@ -11,8 +11,6 @@ environment:
 dependencies:
     mentorx_core:
         path: ../../mentorx_core
-    student_core:
-        path: ../../student_core
 
 dev_dependencies:
     lints: ^6.0.0

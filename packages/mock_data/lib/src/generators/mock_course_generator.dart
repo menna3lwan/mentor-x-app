@@ -3,25 +3,22 @@ part of '../../mock_data.dart';
 final class MockCourseGenerator {
   MockCourseGenerator._();
 
-  static List<CourseSummaryEntity> enrolledCourses({String? status}) {
+  static List<CourseSummaryEntity> enrolledCourses({
+    required String languageCode,
+    String? status,
+  }) {
     switch (status) {
       case 'completed':
-        return const [
-          CourseSummaryEntity(
-            id: 'ec1',
-            title: 'Algebra Fundamentals',
-            thumbnailUrl: 'https://picsum.photos/500/300?31',
-            progressPercent: 100,
-            enrolledCount: 1450,
-          ),
-          CourseSummaryEntity(
+        return [
+          LocalizedCourseData.algebraFundamentals.resolve(languageCode),
+          const CourseSummaryEntity(
             id: 'ec2',
             title: 'Introduction to Chemistry',
             thumbnailUrl: 'https://picsum.photos/500/300?32',
             progressPercent: 100,
             enrolledCount: 980,
           ),
-          CourseSummaryEntity(
+          const CourseSummaryEntity(
             id: 'ec3',
             title: 'English Grammar Basics',
             thumbnailUrl: 'https://picsum.photos/500/300?33',

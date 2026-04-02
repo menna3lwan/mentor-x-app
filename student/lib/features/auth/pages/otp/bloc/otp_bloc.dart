@@ -126,8 +126,20 @@ final class OtpBloc extends Bloc<OtpEvent, OtpState>
         ),
       );
       _startCountdown();
+    } on AuthenticationRepositoryException catch (e) {
+      emit(state.copyWith(isResending: false));
+      emitPresentation(
+        OtpFailurePresentationEvent(
+          message: e.message ?? 'Failed to resend OTP. Please try again.',
+        ),
+      );
     } catch (e) {
       emit(state.copyWith(isResending: false));
+      emitPresentation(
+        OtpFailurePresentationEvent(
+          message: 'Failed to resend OTP. Please try again.',
+        ),
+      );
     }
   }
 
@@ -148,8 +160,22 @@ final class OtpBloc extends Bloc<OtpEvent, OtpState>
         ),
       );
       _startCountdown();
+    } on AuthenticationRepositoryException catch (e) {
+      emit(state.copyWith(isResendingWhatsapp: false));
+      emitPresentation(
+        OtpFailurePresentationEvent(
+          message:
+              e.message ??
+              'Failed to resend OTP via WhatsApp. Please try again.',
+        ),
+      );
     } catch (_) {
       emit(state.copyWith(isResendingWhatsapp: false));
+      emitPresentation(
+        const OtpFailurePresentationEvent(
+          message: 'Failed to resend OTP via WhatsApp. Please try again.',
+        ),
+      );
     }
   }
 

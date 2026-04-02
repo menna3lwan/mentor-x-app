@@ -13,8 +13,6 @@ dependencies:
     dio: ^5.9.0
     mentorx_core:
         path: ../../mentorx_core
-    student_core:
-        path: ../../student_core
 
 dev_dependencies:
     flutter_test:

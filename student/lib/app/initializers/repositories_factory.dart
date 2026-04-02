@@ -6,7 +6,7 @@ import 'package:dio_http_client/dio_http_client.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage_cache_repository/flutter_secure_storage_cache_repository.dart';
-import 'package:student_core/student_core.dart';
+import 'package:mentorx_core/mentorx_core.dart';
 
 import 'package:dio_course_repository/dio_course_repository.dart';
 import 'package:dio_attendance_repository/dio_attendance_repository.dart';
@@ -21,6 +21,7 @@ import 'package:dio_rewards_repository/dio_rewards_repository.dart';
 import 'package:dio_grade_repository/dio_grade_repository.dart';
 import 'package:dio_announcement_repository/dio_announcement_repository.dart';
 import 'package:dio_settings_repository/dio_settings_repository.dart';
+import 'package:dio_student_registration_repository/dio_student_registration_repository.dart';
 
 import 'package:mock_authentication_repository/mock_authentication_repository.dart';
 import 'package:mock_home_repository/mock_home_repository.dart';
@@ -341,8 +342,8 @@ final class RepositoriesFactory {
       case RepositoryMode.mock:
         return MockStudentRegistrationRepository();
       case RepositoryMode.prod:
-        // TODO: Implement DioStudentRegistrationRepository
-        return MockStudentRegistrationRepository();
+        final httpClient = await _initHttpClient();
+        return DioStudentRegistrationRepository(httpClient: httpClient);
     }
   }
 
@@ -429,6 +430,11 @@ final class RepositoriesFactory {
       announcementRepository: announcementRepository,
       registrationRepository: registrationRepository,
     );
-    return (repositories: repos, localizedClients: <LocalizedClient>[]);
+    final localizedClients = <LocalizedClient>[];
+    if (_httpClient != null && _httpClient is LocalizedClient) {
+      localizedClients.add(_httpClient! as LocalizedClient);
+    }
+
+    return (repositories: repos, localizedClients: localizedClients);
   }
 }

@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:student_core/student_core.dart';
+import 'package:mentorx_core/mentorx_core.dart';
 
 final class MockMarketplaceRepository implements MarketplaceRepository {
   final Duration delay;

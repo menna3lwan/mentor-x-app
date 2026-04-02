@@ -51,6 +51,27 @@ final class MockAuthenticationRepository
   }
 
   @override
+  Future<void> requestPasswordReset(String phoneNumber) async {
+    await _delay;
+
+    if (!_isInitialized) {
+      throw AuthenticationRepositoryException(
+        code: AuthenticationRepositoryExceptionCode.unknown,
+        message: 'Repository not initialized',
+      );
+    }
+
+    if (phoneNumber.trim().isEmpty) {
+      throw AuthenticationRepositoryException(
+        code: AuthenticationRepositoryExceptionCode.invalidPhoneNumber,
+        message: 'Phone number is required',
+      );
+    }
+
+    _logger.info('Mock password reset requested for $phoneNumber');
+  }
+
+  @override
   Future<StudentEntity> loginWithPassword({
     required String phoneNumber,
     required String password,

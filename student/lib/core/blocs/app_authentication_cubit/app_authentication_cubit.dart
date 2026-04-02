@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:mentorx_core/mentorx_core.dart';
-import '../../../app/mentorx_student.dart';
+import '../../../app/student_app.dart';
 import 'app_authentication_events.dart';
 
 export 'app_authentication_events.dart';

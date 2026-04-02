@@ -7,12 +7,15 @@ enum RepositoryMode {
       if (mode.name == value.toLowerCase()) return mode;
     }
     throw ArgumentError(
-        'Unknown RepositoryMode: "$value". Must be mock or prod.');
+      'Unknown RepositoryMode: "$value". Must be mock or prod.',
+    );
   }
 }
 
 final class Env {
   Env._();
+
+  static bool get hasMentorxBaseUrl => mentorxBaseUrl.trim().isNotEmpty;
 
   // ──── Application Constants ────
   static const defaultLanguageCode = String.fromEnvironment(
@@ -55,6 +58,11 @@ final class Env {
       defaultValue: 'mock',
     ),
   );
+
+  static bool get usesAnyProdRepository {
+    return authenticationRepositoryMode == RepositoryMode.prod ||
+        dashboardRepositoryMode == RepositoryMode.prod;
+  }
 
   // ──── Mock Configuration ────
   static const int _mockDelayInSeconds = int.fromEnvironment(

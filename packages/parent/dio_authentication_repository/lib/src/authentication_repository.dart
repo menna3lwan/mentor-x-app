@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:parent_core/parent_core.dart';
+import 'package:mentorx_core/mentorx_core.dart';
 
 typedef _Exception = AuthenticationException;
 typedef _ExceptionCode = AuthenticationExceptionCode;

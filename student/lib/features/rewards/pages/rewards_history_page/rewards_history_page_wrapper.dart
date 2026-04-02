@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:student_core/student_core.dart';
+import 'package:mentorx_core/mentorx_core.dart';
 import '../rewards_catalog_page/bloc/rewards_page_bloc.dart';
 import 'rewards_history_page_page.dart';
 

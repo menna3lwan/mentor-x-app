@@ -1,7 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:parent/core/blocs/app_authentication_cubit/app_authentication_cubit.dart';
-import 'package:parent_core/parent_core.dart';
+import 'package:mentorx_core/mentorx_core.dart';
 
 void main() {
   const tUser = ParentEntity(

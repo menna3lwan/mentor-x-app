@@ -28,7 +28,10 @@ class RewardsCatalogPage extends StatelessWidget {
     MentorXThemeColorPalette palette,
   ) {
     return AppBar(
-      title: const Text('Rewards Catalog', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18)),
+      title: const Text(
+        'Rewards Catalog',
+        style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
+      ),
       backgroundColor: Colors.transparent,
       elevation: 0,
       actions: [
@@ -74,8 +77,8 @@ class RewardsCatalogPage extends StatelessWidget {
                   item: item,
                   onRedeem: () {
                     context.read<RewardsPageBloc>().add(
-                          RewardsPageClaimRequestedEvent(item.id),
-                        );
+                      RewardsPageClaimRequestedEvent(item.id),
+                    );
                   },
                 );
               },
@@ -122,7 +125,11 @@ class _PointsHeader extends StatelessWidget {
               color: Colors.white.withOpacity(0.2),
               shape: BoxShape.circle,
             ),
-            child: const Icon(Icons.stars_rounded, color: Colors.white, size: 32),
+            child: const Icon(
+              Icons.stars_rounded,
+              color: Colors.white,
+              size: 32,
+            ),
           ),
           const SizedBox(width: 16),
           Column(
@@ -178,13 +185,18 @@ class _RewardItemCard extends StatelessWidget {
         children: [
           Expanded(
             child: ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(20),
+              ),
               child: Image.network(
                 item.imageUrl ?? '',
                 fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => Container(
+                errorBuilder: (_, _, _) => Container(
                   color: palette.brandPrimary.withOpacity(0.1),
-                  child: Icon(Icons.card_giftcard_rounded, color: palette.brandPrimary),
+                  child: Icon(
+                    Icons.card_giftcard_rounded,
+                    color: palette.brandPrimary,
+                  ),
                 ),
               ),
             ),
@@ -198,12 +210,19 @@ class _RewardItemCard extends StatelessWidget {
                   item.title,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 14,
+                  ),
                 ),
                 const SizedBox(height: 4),
                 Row(
                   children: [
-                    Icon(Icons.stars_rounded, size: 14, color: palette.brandPrimary),
+                    Icon(
+                      Icons.stars_rounded,
+                      size: 14,
+                      color: palette.brandPrimary,
+                    ),
                     const SizedBox(width: 4),
                     Text(
                       '${item.requiredPoints} pts',
@@ -225,10 +244,18 @@ class _RewardItemCard extends StatelessWidget {
                       backgroundColor: palette.brandPrimary,
                       foregroundColor: Colors.white,
                       elevation: 0,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                       padding: EdgeInsets.zero,
                     ),
-                    child: const Text('Redeem', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13)),
+                    child: const Text(
+                      'Redeem',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 13,
+                      ),
+                    ),
                   ),
                 ),
               ],

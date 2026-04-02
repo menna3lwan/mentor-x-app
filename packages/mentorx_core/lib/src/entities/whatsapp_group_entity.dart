@@ -1,6 +1,6 @@
 part of '../../mentorx_core.dart';
 
-final class WhatsAppGroupEntity extends Equatable {
+base class WhatsAppGroupEntity extends Equatable {
   final String id;
   final String name;
   final String inviteLink;

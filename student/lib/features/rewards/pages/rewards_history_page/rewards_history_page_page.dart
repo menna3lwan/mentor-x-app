@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
-import 'package:student_core/student_core.dart';
+import 'package:mentorx_core/mentorx_core.dart';
 import 'package:mentorx_student/core/core.dart';
 import '../rewards_catalog_page/bloc/rewards_page_bloc.dart';
 import 'package:intl/intl.dart';
@@ -17,7 +17,10 @@ class RewardsHistoryPage extends StatelessWidget {
         return Scaffold(
           backgroundColor: palette.backgroundSecondary,
           appBar: AppBar(
-            title: const Text('Points History', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18)),
+            title: const Text(
+              'Points History',
+              style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
+            ),
             backgroundColor: Colors.transparent,
             elevation: 0,
           ),
@@ -57,7 +60,7 @@ class RewardsHistoryPage extends StatelessWidget {
     return ListView.separated(
       padding: const EdgeInsets.all(16),
       itemCount: transactions.length,
-      separatorBuilder: (_, __) => const SizedBox(height: 12),
+      separatorBuilder: (_, _) => const SizedBox(height: 12),
       itemBuilder: (context, index) {
         final tx = transactions[index];
         return _PointsTransactionTile(tx: tx, palette: palette);
@@ -76,7 +79,7 @@ class _PointsTransactionTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final isEarned = tx.transactionType == PointsTransactionType.earn;
     final color = isEarned ? palette.statusSuccess : palette.brandPrimary;
-    
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -111,7 +114,10 @@ class _PointsTransactionTile extends StatelessWidget {
               children: [
                 Text(
                   tx.source,
-                  style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 14,
+                  ),
                 ),
                 Text(
                   DateFormat('MMM dd, yyyy • hh:mm a').format(tx.createdAt),

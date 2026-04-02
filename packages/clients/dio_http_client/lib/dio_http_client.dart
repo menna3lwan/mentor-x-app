@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 
-final class DioHttpClient implements HttpClient {
+final class DioHttpClient implements HttpClient, LocalizedClient {
   final Dio _dio;
   final CacheRepository _cacheRepository;
   final Map<String, String> _defaultHeaders = {};
@@ -15,6 +15,11 @@ final class DioHttpClient implements HttpClient {
   }) : _dio = Dio(BaseOptions(baseUrl: baseUrl)),
        _cacheRepository = cacheRepository {
     _loadCachedToken();
+  }
+
+  @override
+  void setLocale(String languageCode) {
+    setDefaultHeader('Accept-Language', languageCode);
   }
 
   /// Loads cached token and sets it as bearer token

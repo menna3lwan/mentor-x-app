@@ -5,9 +5,10 @@ final class DioAttendanceRepository
     extends HttpClientRepository<AttendanceRepositoryExceptionCode>
     implements AttendanceRepository {
   @override
-  Never throwException(AttendanceRepositoryExceptionCode code,
-          {String? message}) =>
-      throw AttendanceRepositoryException(code: code, message: message);
+  Never throwException(
+    AttendanceRepositoryExceptionCode code, {
+    String? message,
+  }) => throw AttendanceRepositoryException(code: code, message: message);
 
   final HttpClient httpClient;
 
@@ -36,14 +37,16 @@ final class DioAttendanceRepository
       );
     }
 
-    final data = response.data['data'] ?? response.data;
+    final data = _asMap(response.data['data'] ?? response.data);
     return AttendanceSummaryEntity(
-      totalSessions: (data['totalSessions'] ?? data['total_sessions'] as num?)?.toInt() ?? 0,
-      present: (data['present'] ?? data['total_present'] as num?)?.toInt() ?? 0,
-      absent: (data['absent'] ?? data['total_absent'] as num?)?.toInt() ?? 0,
-      late: (data['late'] ?? data['total_late'] as num?)?.toInt() ?? 0,
-      excused: (data['excused'] ?? data['total_excused'] as num?)?.toInt() ?? 0,
-      attendanceRate: (data['attendanceRate'] ?? data['attendance_rate'] as num?)?.toDouble() ?? 0.0,
+      totalSessions: _toInt(data['totalSessions'] ?? data['total_sessions']),
+      present: _toInt(data['present'] ?? data['total_present']),
+      absent: _toInt(data['absent'] ?? data['total_absent']),
+      late: _toInt(data['late'] ?? data['total_late']),
+      excused: _toInt(data['excused'] ?? data['total_excused']),
+      attendanceRate: _toDouble(
+        data['attendanceRate'] ?? data['attendance_rate'],
+      ),
     );
   }
 
@@ -92,6 +95,25 @@ final class DioAttendanceRepository
       );
     }
 
-    return AttendanceRecordModel.fromJson(response.data['data'] ?? response.data);
+    return AttendanceRecordModel.fromJson(
+      response.data['data'] ?? response.data,
+    );
+  }
+
+  static Map<String, dynamic> _asMap(dynamic value) {
+    if (value is Map<String, dynamic>) return value;
+    return <String, dynamic>{};
+  }
+
+  static int _toInt(dynamic value) {
+    if (value is int) return value;
+    if (value is num) return value.toInt();
+    return int.tryParse(value?.toString() ?? '') ?? 0;
+  }
+
+  static double _toDouble(dynamic value) {
+    if (value is double) return value;
+    if (value is num) return value.toDouble();
+    return double.tryParse(value?.toString() ?? '') ?? 0;
   }
 }

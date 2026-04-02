@@ -9,14 +9,10 @@ environment:
 resolution: workspace
 
 dependencies:
-  flutter:
-    sdk: flutter
   mentorx_core:
     path: ../../../mentorx_core
   mock_data:
     path: ../../../mock_data
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
   lints: ^6.0.0

@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:parent_core/parent_core.dart';
+import 'package:mentorx_core/mentorx_core.dart';
 import '../../features/features.dart';
 
 // ★ Feature route files are `part of` this file ★

@@ -1,3 +1,3 @@
-export 'mentorx_student.dart';
-export 'mentorx_requirements.dart';
+export 'student_app.dart';
+export 'student_requirements.dart';
 export 'initializers/initializers.dart';

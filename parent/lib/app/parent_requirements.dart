@@ -16,6 +16,7 @@ final class ParentRequirements {
   final Brightness brightness;
   final AppBlocs blocs;
   final AppRepositories repositories;
+  final List<LocalizedClient> localizedClients;
   final RouterConfig<Object> routerConfig;
 
   const ParentRequirements._({
@@ -23,6 +24,7 @@ final class ParentRequirements {
     required this.brightness,
     required this.blocs,
     required this.repositories,
+    required this.localizedClients,
     required this.routerConfig,
   });
 
@@ -38,7 +40,8 @@ final class ParentRequirements {
     await _initSystemUIStyle();
 
     // 1. Initialize repositories in parallel
-    final repositories = await RepositoriesFactory.initRepositories();
+    final (:repositories, :localizedClients) =
+        await RepositoriesFactory.initRepositories();
     final languageCode = RepositoriesFactory.initialLanguageCode;
     _logger.info('Repositories initialized. Language: $languageCode');
 
@@ -60,6 +63,7 @@ final class ParentRequirements {
       user: user,
       languageCode: languageCode,
       repositories: repositories,
+      localizedClients: localizedClients,
     );
 
     // 5. Determine initial route
@@ -80,6 +84,7 @@ final class ParentRequirements {
       brightness: brightness,
       blocs: blocs,
       repositories: repositories,
+      localizedClients: localizedClients,
       routerConfig: routerConfig,
     );
   }

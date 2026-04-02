@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 import 'package:mentorx_core/mentorx_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mix/mix.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -37,6 +38,10 @@ part 'widgets/empty_state.dart';
 part 'widgets/section_header.dart';
 part 'widgets/stat_card.dart';
 part 'widgets/gradient_card.dart';
+part 'widgets/mentorx_button.dart';
+part 'widgets/mentorx_text_form_field.dart';
+part 'widgets/mentorx_logo.dart';
+part 'widgets/mentorx_clickable_text.dart';
 
 final class MentorXUI {
   MentorXUI._();

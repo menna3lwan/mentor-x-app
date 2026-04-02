@@ -3,21 +3,36 @@ part of '../../mock_data.dart';
 final class MockParentDashboardGenerator {
   MockParentDashboardGenerator._();
 
-  static List<({String title, String value, String subtitle, int colorValue, IconData icon})> stats() {
+  static const _checkCircleCodePoint = 0xe86c;
+  static const _accessTimeCodePoint = 0xe192;
+  static const _emojiEventsCodePoint = 0xe838;
+  static const _localFireDepartmentCodePoint = 0xef55;
+  static const _schoolCodePoint = 0xe80c;
+
+  static List<
+    ({
+      String title,
+      String value,
+      String subtitle,
+      int colorValue,
+      int iconCodePoint,
+    })
+  >
+  stats() {
     return [
       (
         title: 'This Week',
         value: '20',
         subtitle: 'Lessons Completed',
         colorValue: 0xFFE3F2FD, // Colors.blue.shade50
-        icon: Icons.check_circle,
+        iconCodePoint: _checkCircleCodePoint,
       ),
       (
         title: 'Study Time',
         value: '5.2h',
         subtitle: '+1.2h from last week',
         colorValue: 0xFFE8F5E9, // Colors.green.shade50
-        icon: Icons.access_time,
+        iconCodePoint: _accessTimeCodePoint,
       ),
     ];
   }
@@ -32,22 +47,23 @@ final class MockParentDashboardGenerator {
     ];
   }
 
-  static List<({String title, String date, IconData icon})> recentAchievements() {
+  static List<({String title, String date, int iconCodePoint})>
+  recentAchievements() {
     return [
       (
         title: 'Perfect Quiz Score',
         date: 'Oct 12, 2025',
-        icon: Icons.emoji_events,
+        iconCodePoint: _emojiEventsCodePoint,
       ),
       (
         title: '7 Day Study Streak',
         date: 'Oct 10, 2025',
-        icon: Icons.local_fire_department,
+        iconCodePoint: _localFireDepartmentCodePoint,
       ),
       (
         title: 'Course Completed',
         date: 'Oct 8, 2025',
-        icon: Icons.school,
+        iconCodePoint: _schoolCodePoint,
       ),
     ];
   }

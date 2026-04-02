@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../../app/mentorx_student.dart';
+import '../../app/student_app.dart';
 import '../events/events.dart';
 
 final class AppRefreshListener extends StatefulWidget {

@@ -1,12 +1,15 @@
-library mock_data;
-
-import 'package:flutter/material.dart';
 import 'package:faker/faker.dart';
 import 'package:mentorx_core/mentorx_core.dart';
-import 'package:student_core/student_core.dart';
 
 // Config
 part 'src/config/mock_data_config.dart';
+
+// Clients
+part 'src/clients/mock_localized_client.dart';
+
+// Localization
+part 'src/localization/models/localized_data.dart';
+part 'src/localization/models/localized_course_data.dart';
 
 // Generators
 part 'src/generators/mock_otp_generator.dart';

@@ -12,8 +12,6 @@ environment:
 dependencies:
     mentorx_core:
         path: ../../mentorx_core
-    student_core:
-        path: ../../student_core
     dio_quiz_repository:
         path: ../dio_quiz_repository
     dio_assignment_repository:

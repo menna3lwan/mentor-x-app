@@ -5,7 +5,7 @@ import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:parent/core/core.dart';
 import 'package:parent/features/features.dart';
-import 'package:parent_ui/parent_ui.dart';
+import 'package:mentorx_ui/mentorx_ui.dart';
 
 final class OtpPageWrapper extends StatefulWidget {
   final String phone;
@@ -134,7 +134,7 @@ class _OtpPageWrapperState extends State<OtpPageWrapper> {
                 }),
               ),
             ),
-            verifyButton: MaterialButtonWidget(
+            verifyButton: MentorXButton(
               onPressed: isLoading
                   ? null
                   : () {
@@ -150,7 +150,7 @@ class _OtpPageWrapperState extends State<OtpPageWrapper> {
                     },
               text: isLoading ? 'Verifying...' : 'Verify',
             ),
-            resendButton: ClickableTextWidget(
+            resendButton: MentorXClickableText(
               alignment: Alignment.center,
               color: const Color(0xFF183764),
               text: "Didn't receive the code ?",

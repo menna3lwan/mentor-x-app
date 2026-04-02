@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:mentorx_core/mentorx_core.dart';
 
-import '../models/student_model.dart';
+import 'models/student_model.dart';
 
 typedef _Exception = AuthenticationRepositoryException;
 typedef _ExceptionCode = AuthenticationRepositoryExceptionCode;
@@ -15,6 +15,9 @@ final class DioAuthenticationRepository
     AuthenticationRepositoryExceptionCode code, {
     String? message,
   }) => throw _Exception(code: code, message: message);
+
+  @override
+  Future<void> initialize() async {}
 
   final HttpClient httpClient;
   final CacheRepository cacheRepository;
@@ -29,9 +32,6 @@ final class DioAuthenticationRepository
   static final MentorXLogger _logger = MentorXLogger(
     'DioAuthenticationRepository',
   );
-
-  @override
-  Future<void> initialize() async {}
 
   @override
   Future<StudentEntity?> getCachedUser() async {
@@ -49,7 +49,8 @@ final class DioAuthenticationRepository
 
   Future<void> _cacheUser(StudentEntity user) async {
     try {
-      final jsonData = json.encode(StudentModel.toJson(user));
+      final model = StudentModel.fromEntity(user);
+      final jsonData = json.encode(model.toJson());
       await cacheRepository.put(CacheKeys.user, jsonData);
     } catch (e, s) {
       _logger.error('Failed to cache user:', e, s);
@@ -118,6 +119,44 @@ final class DioAuthenticationRepository
       } else {
         throw _Exception(code: defaultException);
       }
+    }
+  }
+
+  @override
+  Future<void> requestPasswordReset(String phoneNumber) async {
+    final defaultException = _ExceptionCode.failedToRequestPasswordReset;
+
+    Future<void> tryRequest(String endpoint) async {
+      final response = await httpClient.post(
+        endpoint,
+        data: {'phone': phoneNumber},
+      );
+      if (response.statusCode != 200 &&
+          response.statusCode != 201 &&
+          response.statusCode != 204) {
+        throw _Exception(code: defaultException);
+      }
+    }
+
+    try {
+      await tryRequest('/api/v1/auth/forgot-password');
+    } on HttpClientResponse catch (errorResponse) {
+      if (errorResponse.statusCode == 404) {
+        try {
+          await tryRequest('/api/auth/forgot-password');
+          return;
+        } on HttpClientResponse catch (fallbackErrorResponse) {
+          handleHttpClientErrorResponse(
+            defaultException,
+            fallbackErrorResponse,
+          );
+        }
+      }
+      handleHttpClientErrorResponse(defaultException, errorResponse);
+    } catch (e, s) {
+      _logger.error('Failed to request password reset', e, s);
+      if (e is _Exception) rethrow;
+      throw _Exception(code: defaultException);
     }
   }
 

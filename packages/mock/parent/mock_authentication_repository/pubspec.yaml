@@ -11,7 +11,5 @@ resolution: workspace
 dependencies:
   mentorx_core:
     path: ../../../mentorx_core
-  parent_core:
-    path: ../../../parent_core
   mock_data:
     path: ../../../mock_data

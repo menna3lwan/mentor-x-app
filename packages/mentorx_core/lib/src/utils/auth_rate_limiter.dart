@@ -1,4 +1,4 @@
-import 'dart:async';
+part of '../../mentorx_core.dart';
 
 /// Rate limiter for authentication endpoints to prevent abuse
 /// Implements exponential backoff and per-endpoint tracking

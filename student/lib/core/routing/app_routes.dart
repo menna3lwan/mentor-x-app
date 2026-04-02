@@ -7,7 +7,6 @@ import 'package:go_router/go_router.dart';
 import '../../features/features.dart';
 import '../../features/auth/pages/registration/bloc/student_registration_bloc.dart';
 import '../../features/auth/pages/registration/registration_page_wrapper.dart';
-import 'package:mentorx_core/mentorx_core.dart';
 import '../core.dart';
 
 // ── Account Status ──────────────────────────────────────────────────────────

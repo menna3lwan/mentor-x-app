@@ -1,4 +1,5 @@
 import 'package:mentorx_core/mentorx_core.dart';
+import 'models/home_models.dart';
 
 final class DioHomeRepository
     extends HttpClientRepository<StudentHomeRepositoryExceptionCode>
@@ -26,10 +27,7 @@ final class DioHomeRepository
     }
 
     final data = _asMap(response.data)['data'] ?? _asMap(response.data);
-    return WalletSummaryEntity(
-      walletBalance: _toDouble(data['walletBalance'] ?? data['wallet_balance']),
-      points: _toInt(data['totalPoints'] ?? data['total_points']),
-    );
+    return WalletSummaryModel.fromJson(data);
   }
 
   @override
@@ -67,15 +65,7 @@ final class DioHomeRepository
     final list = _asList(response.data);
     return list
         .map(_asMap)
-        .map(
-          (e) => BannerEntity(
-            id: e['id']?.toString() ?? '',
-            imageUrl: (e['imageUrl'] ?? e['image_url'])?.toString() ?? '',
-            title: (e['title'] ?? e['name'])?.toString(),
-            actionType: (e['actionType'] ?? e['action_type'])?.toString() ?? 'internal',
-            actionValue: (e['actionValue'] ?? e['action_value'])?.toString() ?? '',
-          ),
-        )
+        .map(BannerModel.fromJson)
         .where((banner) => banner.id.isNotEmpty && banner.imageUrl.isNotEmpty)
         .toList();
   }
@@ -98,7 +88,7 @@ final class DioHomeRepository
       );
     }
 
-    return _asList(response.data).map(_asMap).map(_mapCourse).toList();
+    return _asList(response.data).map(_asMap).map(CourseModel.fromJson).toList();
   }
 
   @override
@@ -120,7 +110,7 @@ final class DioHomeRepository
       );
     }
 
-    return _asList(response.data).map(_asMap).map(_mapCourse).toList();
+    return _asList(response.data).map(_asMap).map(CourseModel.fromJson).toList();
   }
 
   @override
@@ -139,16 +129,7 @@ final class DioHomeRepository
 
     return _asList(response.data)
         .map(_asMap)
-        .map(
-          (e) => AnnouncementEntity(
-            id: e['id']?.toString() ?? '',
-            title: e['title']?.toString() ?? '',
-            preview: e['preview']?.toString() ?? e['content']?.toString() ?? '',
-            createdAt: DateTime.tryParse((e['createdAt'] ?? e['created_at'])?.toString() ?? '') ??
-                DateTime.now(),
-            isPinned: (e['isPinned'] ?? e['is_pinned'] as bool?) ?? false,
-          ),
-        )
+        .map(AnnouncementModel.fromJson)
         .toList();
   }
 
@@ -161,19 +142,6 @@ final class DioHomeRepository
         message: response.exception?.message,
       );
     }
-  }
-
-  CourseSummaryEntity _mapCourse(Map<String, dynamic> e) {
-    return CourseSummaryEntity(
-      id: e['id']?.toString() ?? '',
-      title: e['title']?.toString() ?? '',
-      thumbnailUrl: (e['thumbnailUrl'] ?? e['thumbnail_url'])?.toString() ?? '',
-      progressPercent: (e['progressPercent'] ?? e['progress_percent']) == null
-          ? null
-          : _toDouble(e['progressPercent'] ?? e['progress_percent']),
-      price: e['price'] == null ? null : _toDouble(e['price']),
-      enrolledCount: _toInt(e['enrolledCount'] ?? e['enrolled_count']),
-    );
   }
 
   static Map<String, dynamic> _asMap(dynamic value) {
@@ -194,11 +162,5 @@ final class DioHomeRepository
     if (value is int) return value;
     if (value is num) return value.toInt();
     return int.tryParse(value?.toString() ?? '') ?? 0;
-  }
-
-  static double _toDouble(dynamic value) {
-    if (value is double) return value;
-    if (value is num) return value.toDouble();
-    return double.tryParse(value?.toString() ?? '') ?? 0;
   }
 }

@@ -19,10 +19,6 @@ dependencies:
     path: ../packages/mentorx_core
   mentorx_ui:
     path: ../packages/mentorx_ui
-  parent_core:
-    path: ../packages/parent_core
-  parent_ui:
-    path: ../packages/parent_ui
   parent_authentication_repository:
     path: ../packages/parent/dio_authentication_repository
   parent_dio_home_repository:

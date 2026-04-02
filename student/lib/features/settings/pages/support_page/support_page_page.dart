@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+enum _SupportChannelType { whatsapp, phone, email }
 
 class SupportPage extends StatelessWidget {
   const SupportPage({super.key});
@@ -9,18 +12,21 @@ class SupportPage extends StatelessWidget {
     final t = context.t.student;
     final channels = [
       (
+        _SupportChannelType.whatsapp,
         Icons.chat_rounded,
         t['whatsapp'] ?? 'WhatsApp',
         '01012345678',
         AppColors.whatsAppGreen,
       ),
       (
+        _SupportChannelType.phone,
         Icons.phone_rounded,
         t['phoneCall'] ?? 'Phone Call',
         '01012345678',
         AppColors.primary,
       ),
       (
+        _SupportChannelType.email,
         Icons.email_outlined,
         t['email'] ?? 'Email',
         'support@mentorx.com',
@@ -111,15 +117,19 @@ class SupportPage extends StatelessWidget {
               ),
               child: Column(
                 children: List.generate(channels.length, (i) {
-                  final (icon, label, value, color) = channels[i];
+                  final (type, icon, label, value, color) = channels[i];
                   final isLast = i == channels.length - 1;
                   return Column(
                     children: [
                       Material(
                         color: Colors.transparent,
                         child: InkWell(
-                          onTap: () {
-                            // TODO: launch URL/phone/email
+                          onTap: () async {
+                            await _openSupportChannel(
+                              context: context,
+                              type: type,
+                              value: value,
+                            );
                           },
                           borderRadius: BorderRadius.circular(20),
                           child: Padding(
@@ -140,7 +150,8 @@ class SupportPage extends StatelessWidget {
                                 const SizedBox(width: 14),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         label,
@@ -165,7 +176,9 @@ class SupportPage extends StatelessWidget {
                                 Icon(
                                   Icons.arrow_forward_ios_rounded,
                                   size: 14,
-                                  color: AppColors.greyDark.withValues(alpha: 0.4),
+                                  color: AppColors.greyDark.withValues(
+                                    alpha: 0.4,
+                                  ),
                                 ),
                               ],
                             ),
@@ -187,5 +200,37 @@ class SupportPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _openSupportChannel({
+    required BuildContext context,
+    required _SupportChannelType type,
+    required String value,
+  }) async {
+    final uri = switch (type) {
+      _SupportChannelType.whatsapp => Uri.parse(
+        'https://wa.me/${value.replaceAll(RegExp(r'[^0-9]'), '')}',
+      ),
+      _SupportChannelType.phone => Uri(
+        scheme: 'tel',
+        path: value.replaceAll(RegExp(r'[^0-9+]'), ''),
+      ),
+      _SupportChannelType.email => Uri(
+        scheme: 'mailto',
+        path: value,
+        queryParameters: {'subject': 'MentorX Support'},
+      ),
+    };
+
+    final launched = await launchUrl(
+      uri,
+      mode: LaunchMode.externalApplication,
+    );
+
+    if (!launched && context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Unable to open support channel.')),
+      );
+    }
   }
 }

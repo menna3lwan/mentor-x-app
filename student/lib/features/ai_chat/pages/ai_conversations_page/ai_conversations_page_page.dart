@@ -54,7 +54,9 @@ final class AiConversationsPagePage extends StatelessWidget {
           backgroundColor: palette.brandPrimary,
           foregroundColor: Colors.white,
           elevation: 0,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           icon: const Icon(Icons.add_comment_rounded),
           label: const Text(
             'New Chat',
@@ -85,23 +87,36 @@ final class AiConversationsPagePage extends StatelessWidget {
     return _buildList(context, palette);
   }
 
-  Widget _buildErrorState(BuildContext context, MentorXThemeColorPalette palette) {
+  Widget _buildErrorState(
+    BuildContext context,
+    MentorXThemeColorPalette palette,
+  ) {
     return ListView(
       physics: const AlwaysScrollableScrollPhysics(),
       children: [
         SizedBox(height: MediaQuery.of(context).size.height * 0.2),
-        Icon(Icons.error_outline_rounded, size: 60, color: palette.statusDanger),
+        Icon(
+          Icons.error_outline_rounded,
+          size: 60,
+          color: palette.statusDanger,
+        ),
         const SizedBox(height: 16),
         Text(
           state.errorMessage ?? 'Unable to load conversations.',
           textAlign: TextAlign.center,
-          style: TextStyle(color: palette.statusDanger, fontWeight: FontWeight.w600),
+          style: TextStyle(
+            color: palette.statusDanger,
+            fontWeight: FontWeight.w600,
+          ),
         ),
       ],
     );
   }
 
-  Widget _buildEmptyState(BuildContext context, MentorXThemeColorPalette palette) {
+  Widget _buildEmptyState(
+    BuildContext context,
+    MentorXThemeColorPalette palette,
+  ) {
     return ListView(
       physics: const AlwaysScrollableScrollPhysics(),
       children: [
@@ -123,8 +138,8 @@ final class AiConversationsPagePage extends StatelessWidget {
           'No conversations yet',
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.w800,
-              ),
+            fontWeight: FontWeight.w800,
+          ),
         ),
         const SizedBox(height: 12),
         Padding(
@@ -143,10 +158,12 @@ final class AiConversationsPagePage extends StatelessWidget {
     return ListView.separated(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
       itemCount: state.conversations.length,
-      separatorBuilder: (_, __) => const SizedBox(height: 12),
+      separatorBuilder: (_, _) => const SizedBox(height: 12),
       itemBuilder: (context, index) {
         final conversation = state.conversations[index];
-        final isProcessing = state.processingConversationIds.contains(conversation.id);
+        final isProcessing = state.processingConversationIds.contains(
+          conversation.id,
+        );
 
         return Container(
           decoration: BoxDecoration(
@@ -247,7 +264,10 @@ final class AiConversationsPagePage extends StatelessWidget {
                       )
                     else
                       PopupMenuButton<_ConversationAction>(
-                        icon: Icon(Icons.more_vert_rounded, color: palette.textTertiary),
+                        icon: Icon(
+                          Icons.more_vert_rounded,
+                          color: palette.textTertiary,
+                        ),
                         offset: const Offset(0, 40),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
@@ -260,7 +280,10 @@ final class AiConversationsPagePage extends StatelessWidget {
                                 conversation.title,
                               );
                               if (value != null && value.trim().isNotEmpty) {
-                                onRenameConversationSubmitted(conversation.id, value);
+                                onRenameConversationSubmitted(
+                                  conversation.id,
+                                  value,
+                                );
                               }
                             case _ConversationAction.delete:
                               onDeleteConversationTapped(conversation.id);
@@ -333,8 +356,13 @@ final class AiConversationsPagePage extends StatelessWidget {
       context: context,
       builder: (dialogContext) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          title: const Text('Rename Chat', style: TextStyle(fontWeight: FontWeight.w800)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          title: const Text(
+            'Rename Chat',
+            style: TextStyle(fontWeight: FontWeight.w800),
+          ),
           content: TextField(
             controller: controller,
             autofocus: true,
@@ -351,13 +379,19 @@ final class AiConversationsPagePage extends StatelessWidget {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(dialogContext).pop(),
-              child: Text('Cancel', style: TextStyle(color: palette.textSecondary)),
+              child: Text(
+                'Cancel',
+                style: TextStyle(color: palette.textSecondary),
+              ),
             ),
             FilledButton(
-              onPressed: () => Navigator.of(dialogContext).pop(controller.text.trim()),
+              onPressed: () =>
+                  Navigator.of(dialogContext).pop(controller.text.trim()),
               style: FilledButton.styleFrom(
                 backgroundColor: palette.brandPrimary,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
               child: const Text('Save'),
             ),

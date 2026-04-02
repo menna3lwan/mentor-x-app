@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:parent/core/core.dart';
 import 'package:parent/features/features.dart';
-import 'package:parent_ui/parent_ui.dart';
+import 'package:mentorx_ui/mentorx_ui.dart';
 
 final class LoginPageWrapper extends StatefulWidget {
   const LoginPageWrapper({super.key});
@@ -55,8 +55,8 @@ class _LoginPageWrapperState extends State<LoginPageWrapper> {
             );
 
             return LoginPage(
-              logo: const LogoWidget(),
-              phoneField: TextFormFieldWidget(
+              logo: const MentorXLogo(),
+              phoneField: MentorXTextFormField(
                 label: 'Phone',
                 icon: Icons.phone_outlined,
                 controller: _phoneController,
@@ -64,20 +64,20 @@ class _LoginPageWrapperState extends State<LoginPageWrapper> {
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 validator: Validator.validatePhoneNumber,
               ),
-              passwordField: TextFormFieldWidget(
+              passwordField: MentorXTextFormField(
                 label: 'Password',
                 icon: Icons.lock_outline,
                 controller: _passwordController,
                 isPassword: true,
                 validator: Validator.validatePassword,
               ),
-              forgetPasswordButton: ClickableTextWidget(
+              forgetPasswordButton: MentorXClickableText(
                 alignment: Alignment.centerLeft,
                 text: 'Forget Password?',
                 color: const Color(0xFFF59239),
                 onPressed: () => const ForgetPasswordPageRoute().push(context),
               ),
-              loginButton: MaterialButtonWidget(
+              loginButton: MentorXButton(
                 text: isLoading ? 'Logging in...' : 'Log In',
                 onPressed: isLoading
                     ? null

@@ -38,9 +38,7 @@ workspace:
   - packages/student/dio_attendance_repository
   - packages/student/dio_grade_repository
   - packages/student/dio_settings_repository
-
-  # Student core
-  - packages/student_core
+  - packages/student/dio_student_registration_repository
 
   # Mock repositories
   - packages/mock/student/mock_authentication_repository
@@ -58,14 +56,9 @@ workspace:
   - packages/mock/student/mock_rewards_repository
   - packages/mock/student/mock_grade_repository
   - packages/mock/student/mock_announcement_repository
+  - packages/mock/student/mock_student_registration_repository
 
-  # Parent core
-  - packages/parent_core
-
-  # Parent UI
-  - packages/parent_ui
-
-  # Parent Dio repositories
+  # Dio repositories
   - packages/parent/dio_authentication_repository
   - packages/parent/dio_home_repository
 

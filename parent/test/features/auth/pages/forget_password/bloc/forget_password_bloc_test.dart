@@ -3,7 +3,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:parent/features/auth/pages/forget_password/bloc/forget_password_bloc.dart';
-import 'package:parent_core/parent_core.dart';
+import 'package:mentorx_core/mentorx_core.dart';
 
 class MockAuthRepository extends Mock implements AuthenticationRepository {}
 

@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:mock_data/mock_data.dart';
-import 'package:student_core/student_core.dart';
+import 'package:mentorx_core/mentorx_core.dart';
 
 final class MockQuizRepository implements QuizRepository {
   final Duration delay;

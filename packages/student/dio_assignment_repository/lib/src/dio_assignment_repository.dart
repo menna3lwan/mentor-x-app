@@ -1,4 +1,4 @@
-import 'package:student_core/student_core.dart';
+import 'package:mentorx_core/mentorx_core.dart';
 import 'package:dio/dio.dart'; // For MultipartFile
 import '../models/assignment_models.dart';
 

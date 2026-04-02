@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:parent_core/parent_core.dart';
+import 'package:mentorx_core/mentorx_core.dart';
 import 'package:mock_data/mock_data.dart';
 
 final class MockAuthenticationRepository implements AuthenticationRepository {

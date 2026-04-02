@@ -11,7 +11,5 @@ resolution: workspace
 dependencies:
   mentorx_core:
     path: ../../mentorx_core
-  parent_core:
-    path: ../../parent_core
   dio_http_client:
     path: ../../clients/dio_http_client

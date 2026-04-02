@@ -1,6 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_core/mentorx_core.dart';
-import 'package:parent_core/parent_core.dart';
 
 import '../../core/blocs/app_authentication_cubit/app_authentication_cubit.dart';
 import '../../core/blocs/app_locale_cubit/app_locale_cubit.dart';
@@ -45,6 +44,7 @@ final class BlocsFactory {
     required ParentEntity? user,
     required String languageCode,
     required AppRepositories repositories,
+    required List<LocalizedClient> localizedClients,
   }) async {
     _logger.info('Initializing app-level cubits...');
 
@@ -53,6 +53,7 @@ final class BlocsFactory {
     final appLocaleCubit = AppLocaleCubit(
       initialLanguageCode: languageCode,
       cacheRepository: repositories.cacheRepository,
+      localizedClients: localizedClients,
     );
 
     _logger.info('App cubits initialized.');

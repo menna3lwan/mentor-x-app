@@ -1,5 +1,5 @@
 import 'package:mentorx_core/mentorx_core.dart';
-import '../models/wallet_models.dart';
+import 'models/wallet_models.dart';
 
 final class DioWalletRepository
     extends HttpClientRepository<WalletRepositoryExceptionCode>
@@ -26,11 +26,8 @@ final class DioWalletRepository
       );
     }
 
-    final data = response.data['data'] ?? response.data;
-    return WalletSummaryEntity(
-      walletBalance: (data['walletBalance'] ?? data['wallet_balance'] as num?)?.toDouble() ?? 0.0,
-      points: (data['totalPoints'] ?? data['total_points'] as num?)?.toInt() ?? 0,
-    );
+    final data = _asMap(response.data)['data'] ?? _asMap(response.data);
+    return WalletSummaryModel.fromJson(data);
   }
 
   @override
@@ -53,11 +50,10 @@ final class DioWalletRepository
       );
     }
 
-    final data = response.data['data'] ?? response.data;
-    if (data is List) {
-      return data.map((e) => WalletTransactionModel.fromJson(e)).toList();
-    }
-    return [];
+    return _asList(response.data)
+        .map(_asMap)
+        .map(WalletTransactionModel.fromJson)
+        .toList();
   }
 
   @override
@@ -82,7 +78,8 @@ final class DioWalletRepository
       );
     }
 
-    return PaymentModel.fromJson(response.data['data'] ?? response.data);
+    final data = _asMap(response.data)['data'] ?? _asMap(response.data);
+    return PaymentModel.fromJson(data);
   }
 
   @override
@@ -96,7 +93,8 @@ final class DioWalletRepository
       );
     }
 
-    return PaymentModel.fromJson(response.data['data'] ?? response.data);
+    final data = _asMap(response.data)['data'] ?? _asMap(response.data);
+    return PaymentModel.fromJson(data);
   }
 
   @override
@@ -113,7 +111,7 @@ final class DioWalletRepository
       );
     }
 
-    return response.data['data'] as Map<String, dynamic>? ?? response.data as Map<String, dynamic>;
+    return _asMap(response.data)['data'] ?? _asMap(response.data);
   }
 
   @override
@@ -134,10 +132,20 @@ final class DioWalletRepository
       );
     }
 
-    final data = response.data['data'] ?? response.data;
-    if (data is List) {
-      return data.cast<Map<String, dynamic>>();
+    return _asList(response.data).map(_asMap).toList();
+  }
+
+  static Map<String, dynamic> _asMap(dynamic value) {
+    if (value is Map<String, dynamic>) return value;
+    return <String, dynamic>{};
+  }
+
+  static List<dynamic> _asList(dynamic value) {
+    if (value is List<dynamic>) return value;
+    if (value is Map<String, dynamic>) {
+      final data = value['data'] ?? value['items'];
+      if (data is List<dynamic>) return data;
     }
-    return [];
+    return <dynamic>[];
   }
 }

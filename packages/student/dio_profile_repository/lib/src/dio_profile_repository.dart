@@ -1,7 +1,7 @@
-import 'package:student_core/student_core.dart';
+import 'package:mentorx_core/mentorx_core.dart';
 import 'package:dio/dio.dart';
-import '../models/profile_models.dart';
-import '../models/device_models.dart';
+import 'models/profile_models.dart';
+import 'models/device_models.dart';
 
 final class DioStudentProfileRepository
     extends HttpClientRepository<StudentProfileRepositoryExceptionCode>
@@ -40,7 +40,8 @@ final class DioStudentProfileRepository
       );
     }
 
-    return ProfileEditRequestModel.fromJson(response.data['data'] ?? response.data);
+    final data = _asMap(response.data)['data'] ?? _asMap(response.data);
+    return ProfileEditRequestModel.fromJson(data);
   }
 
   @override
@@ -57,11 +58,10 @@ final class DioStudentProfileRepository
       );
     }
 
-    final data = response.data['data'] ?? response.data;
-    if (data is List) {
-      return data.map((e) => ProfileEditRequestModel.fromJson(e)).toList();
-    }
-    return [];
+    return _asList(response.data)
+        .map(_asMap)
+        .map(ProfileEditRequestModel.fromJson)
+        .toList();
   }
 
   @override
@@ -82,7 +82,8 @@ final class DioStudentProfileRepository
         );
       }
 
-      return NationalIdVerificationModel.fromJson(response.data['data'] ?? response.data);
+      final data = _asMap(response.data)['data'] ?? _asMap(response.data);
+      return NationalIdVerificationModel.fromJson(data);
     } catch (e) {
       throw StudentProfileRepositoryException(
         code: StudentProfileRepositoryExceptionCode.failedToVerifyIdentity,
@@ -102,7 +103,8 @@ final class DioStudentProfileRepository
       );
     }
 
-    return NationalIdVerificationModel.fromJson(response.data['data'] ?? response.data);
+    final data = _asMap(response.data)['data'] ?? _asMap(response.data);
+    return NationalIdVerificationModel.fromJson(data);
   }
 
   @override
@@ -110,13 +112,14 @@ final class DioStudentProfileRepository
     final response = await httpClient.get('/api/student/profile');
 
     if (response.statusCode != 200) {
-      throw ProfileRepositoryException(
-        code: ProfileRepositoryExceptionCode.failedToLoadProfile,
+      throw StudentProfileRepositoryException(
+        code: StudentProfileRepositoryExceptionCode.failedToLoadProfile,
         message: response.exception?.message,
       );
     }
 
-    return StudentModel.fromJson(response.data['data'] ?? response.data);
+    final data = _asMap(response.data)['data'] ?? _asMap(response.data);
+    return StudentProfileModel.fromJson(data);
   }
 
   @override
@@ -124,17 +127,16 @@ final class DioStudentProfileRepository
     final response = await httpClient.get('/api/student/profile/devices');
 
     if (response.statusCode != 200) {
-      throw ProfileRepositoryException(
-        code: ProfileRepositoryExceptionCode.failedToLoadDevices,
+      throw StudentProfileRepositoryException(
+        code: StudentProfileRepositoryExceptionCode.failedToLoadDevices,
         message: response.exception?.message,
       );
     }
 
-    final data = response.data['data'] ?? response.data;
-    if (data is List) {
-      return data.map((e) => DeviceModel.fromJson(e)).toList();
-    }
-    return [];
+    return _asList(response.data)
+        .map(_asMap)
+        .map(DeviceModel.fromJson)
+        .toList();
   }
 
   @override
@@ -142,10 +144,24 @@ final class DioStudentProfileRepository
     final response = await httpClient.delete('/api/student/profile/devices/$deviceId');
 
     if (response.statusCode != 200 && response.statusCode != 204) {
-      throw ProfileRepositoryException(
-        code: ProfileRepositoryExceptionCode.failedToDeactivateDevice,
+      throw StudentProfileRepositoryException(
+        code: StudentProfileRepositoryExceptionCode.failedToDeactivateDevice,
         message: response.exception?.message,
       );
     }
+  }
+
+  static Map<String, dynamic> _asMap(dynamic value) {
+    if (value is Map<String, dynamic>) return value;
+    return <String, dynamic>{};
+  }
+
+  static List<dynamic> _asList(dynamic value) {
+    if (value is List<dynamic>) return value;
+    if (value is Map<String, dynamic>) {
+      final data = value['data'] ?? value['items'];
+      if (data is List<dynamic>) return data;
+    }
+    return <dynamic>[];
   }
 }

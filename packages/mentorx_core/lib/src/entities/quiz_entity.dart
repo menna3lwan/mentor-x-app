@@ -1,6 +1,6 @@
 part of '../../mentorx_core.dart';
 
-final class QuizEntity extends Equatable {
+base class QuizEntity extends Equatable {
   final String id;
   final String title;
   final int durationMinutes;

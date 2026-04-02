@@ -18,7 +18,10 @@ final class MockCourseRepository implements CourseRepository {
     MentorXPaginationInfo? paginationInfo,
   }) async {
     await Future<void>.delayed(delay);
-    final courses = MockCourseGenerator.enrolledCourses(status: status);
+    final courses = MockCourseGenerator.enrolledCourses(
+      status: status,
+      languageCode: 'eg',
+    );
     if (search != null && search.isNotEmpty) {
       final query = search.toLowerCase();
       return courses
@@ -41,8 +44,9 @@ final class MockCourseRepository implements CourseRepository {
     var courses = MockCourseGenerator.catalogCourses();
     if (search != null && search.isNotEmpty) {
       final query = search.toLowerCase();
-      courses =
-          courses.where((c) => c.title.toLowerCase().contains(query)).toList();
+      courses = courses
+          .where((c) => c.title.toLowerCase().contains(query))
+          .toList();
     }
     if (sort == 'price' && order == 'asc') {
       courses = List.of(courses)

@@ -10,8 +10,6 @@ environment:
 dependencies:
   mentorx_core:
     path: ../mentorx_core
-  student_core:
-    path: ../student_core
   faker: ^2.2.0
 
 dev_dependencies:
