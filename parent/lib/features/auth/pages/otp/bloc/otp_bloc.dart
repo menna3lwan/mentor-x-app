@@ -1,5 +1,7 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'dart:async';
+
 import 'package:bloc_presentation/bloc_presentation.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 
 part 'otp_event.dart';
@@ -25,11 +27,23 @@ final class OtpBloc extends Bloc<OtpEvent, OtpState>
     with BlocPresentationMixin<OtpState, OtpPresentationEvent> {
   final AuthenticationRepository _authenticationRepository;
   final MentorXLogger _logger = MentorXLogger('OtpBloc');
+  Timer? _countdownTimer;
 
-  OtpBloc({required AuthenticationRepository authenticationRepository})
-      : _authenticationRepository = authenticationRepository,
-        super(OtpState.initial) {
+  OtpBloc({
+    required AuthenticationRepository authenticationRepository,
+    int initialResendCountdown = 60,
+  }) : _authenticationRepository = authenticationRepository,
+       super(
+         OtpState(
+           resendCountdown: initialResendCountdown,
+           loadingState: OtpLoadingState.initial,
+         ),
+       ) {
     on<OtpSubmittedEvent>(_onOtpSubmitted);
+    on<OtpResendRequested>(_onResendRequested);
+    on<OtpCountdownTicked>(_onCountdownTicked);
+
+    _startCountdown();
   }
 
   Future<void> _onOtpSubmitted(
@@ -38,26 +52,95 @@ final class OtpBloc extends Bloc<OtpEvent, OtpState>
   ) async {
     emit(state.copyWith(loadingState: OtpLoadingState.loading));
     try {
-      final user =
-          await _authenticationRepository.verifyOtp(event.phone, event.code);
+      final user = await _authenticationRepository.verifyOtp(
+        event.phone,
+        event.code,
+      );
       emit(state.copyWith(loadingState: OtpLoadingState.success));
       emitPresentation(OtpSuccessPresentationEvent(user: user));
     } on AuthenticationException catch (e) {
       _logger.error('OTP verification failed: ${e.message}');
-      emit(state.copyWith(
-        loadingState: OtpLoadingState.failure,
-        exception: e,
-      ));
+      emit(
+        state.copyWith(
+          loadingState: OtpLoadingState.failure,
+          exception: e,
+        ),
+      );
       emitPresentation(OtpFailurePresentationEvent(exception: e));
     } catch (e) {
       _logger.error('Unexpected OTP error: $e');
-      const exception =
-          AuthenticationException(code: AuthenticationExceptionCode.unknown);
-      emit(state.copyWith(
-        loadingState: OtpLoadingState.failure,
-        exception: exception,
-      ));
+      const exception = AuthenticationException(
+        code: AuthenticationExceptionCode.unknown,
+      );
+      emit(
+        state.copyWith(
+          loadingState: OtpLoadingState.failure,
+          exception: exception,
+        ),
+      );
       emitPresentation(const OtpFailurePresentationEvent(exception: exception));
     }
+  }
+
+  Future<void> _onResendRequested(
+    OtpResendRequested event,
+    Emitter<OtpState> emit,
+  ) async {
+    if (!state.canResend) {
+      return;
+    }
+
+    emit(state.copyWith(isResending: true));
+
+    try {
+      final duration = await _authenticationRepository.resendOtp(event.phone);
+      emit(
+        state.copyWith(
+          isResending: false,
+          resendCountdown: duration?.inSeconds ?? 60,
+        ),
+      );
+      _startCountdown();
+    } on AuthenticationException catch (e) {
+      emit(state.copyWith(isResending: false));
+      emitPresentation(OtpFailurePresentationEvent(exception: e));
+    } catch (e, s) {
+      _logger.error('Unexpected resend OTP error: $e', e, s);
+      const exception = AuthenticationException(
+        code: AuthenticationExceptionCode.unknown,
+      );
+      emit(state.copyWith(isResending: false, exception: exception));
+      emitPresentation(const OtpFailurePresentationEvent(exception: exception));
+    }
+  }
+
+  void _onCountdownTicked(
+    OtpCountdownTicked event,
+    Emitter<OtpState> emit,
+  ) {
+    if (state.resendCountdown <= 0) {
+      _countdownTimer?.cancel();
+      return;
+    }
+
+    emit(state.copyWith(resendCountdown: state.resendCountdown - 1));
+  }
+
+  void _startCountdown() {
+    _countdownTimer?.cancel();
+    if (state.resendCountdown <= 0) {
+      return;
+    }
+
+    _countdownTimer = Timer.periodic(
+      const Duration(seconds: 1),
+      (_) => add(const OtpCountdownTicked()),
+    );
+  }
+
+  @override
+  Future<void> close() {
+    _countdownTimer?.cancel();
+    return super.close();
   }
 }

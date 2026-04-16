@@ -1,4 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:bloc_presentation_test/bloc_presentation_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mock_authentication_repository/mock_authentication_repository.dart';
 
@@ -7,6 +8,7 @@ import 'package:mentorx_student/features/auth/pages/otp/bloc/otp_bloc.dart';
 
 void main() {
   late MockAuthenticationRepository authRepository;
+  late MockAuthenticationRepository uninitializedAuthRepository;
 
   const testPhone = '0501234567';
   const validOtp = '000000';
@@ -17,10 +19,21 @@ void main() {
     await authRepository.initialize();
     // sendOtp sets _validOtp = '000000' and stores the phone number
     await authRepository.sendOtp(testPhone);
+
+    uninitializedAuthRepository = MockAuthenticationRepository(
+      delay: Duration.zero,
+    );
   });
 
   OtpBloc buildBloc() => OtpBloc(
     authRepository: authRepository,
+    phoneNumber: testPhone,
+    otpLength: 6,
+    otpDuration: Duration.zero,
+  );
+
+  OtpBloc buildUninitializedBloc() => OtpBloc(
+    authRepository: uninitializedAuthRepository,
     phoneNumber: testPhone,
     otpLength: 6,
     otpDuration: Duration.zero,
@@ -221,6 +234,64 @@ void main() {
       ),
       act: (bloc) => bloc.add(const OtpCountdownTicked()),
       expect: () => <OtpState>[],
+    );
+
+    // ──── 11. Presentation on invalid OTP ────
+    blocPresentationTest<OtpBloc, OtpState, OtpPresentationEvent>(
+      'emits OtpFailurePresentationEvent when invalid OTP is submitted',
+      build: buildBloc,
+      seed: () => const OtpState(
+        phoneNumber: testPhone,
+        otp: invalidOtp,
+        otpLength: 6,
+        resendCountdown: 0,
+      ),
+      act: (bloc) => bloc.add(const OtpSubmitted()),
+      expectPresentation: () => [
+        isA<OtpFailurePresentationEvent>().having(
+          (e) => e.message,
+          'message',
+          'Invalid OTP provided',
+        ),
+      ],
+    );
+
+    // ──── 12. Presentation on resend failure ────
+    blocPresentationTest<OtpBloc, OtpState, OtpPresentationEvent>(
+      'emits OtpFailurePresentationEvent when resend fails',
+      build: buildUninitializedBloc,
+      seed: () => const OtpState(
+        phoneNumber: testPhone,
+        otpLength: 6,
+        resendCountdown: 0,
+      ),
+      act: (bloc) => bloc.add(const OtpResendRequested()),
+      expectPresentation: () => [
+        isA<OtpFailurePresentationEvent>().having(
+          (e) => e.message,
+          'message',
+          'Repository not initialized',
+        ),
+      ],
+    );
+
+    // ──── 13. Presentation on WhatsApp resend failure ────
+    blocPresentationTest<OtpBloc, OtpState, OtpPresentationEvent>(
+      'emits OtpFailurePresentationEvent when resend via WhatsApp fails',
+      build: buildUninitializedBloc,
+      seed: () => const OtpState(
+        phoneNumber: testPhone,
+        otpLength: 6,
+        resendCountdown: 0,
+      ),
+      act: (bloc) => bloc.add(const OtpResendViaWhatsappRequested()),
+      expectPresentation: () => [
+        isA<OtpFailurePresentationEvent>().having(
+          (e) => e.message,
+          'message',
+          'Repository not initialized',
+        ),
+      ],
     );
   });
 }

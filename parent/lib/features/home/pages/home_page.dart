@@ -7,6 +7,7 @@ final class HomePage extends StatelessWidget {
   final Widget subjectPerformanceCard;
   final Widget recentAchievementsCard;
   final Widget aiInsightsCard;
+  final Widget quickActions;
 
   const HomePage({
     super.key,
@@ -16,6 +17,7 @@ final class HomePage extends StatelessWidget {
     required this.subjectPerformanceCard,
     required this.recentAchievementsCard,
     required this.aiInsightsCard,
+    required this.quickActions,
   });
 
   @override
@@ -39,6 +41,8 @@ final class HomePage extends StatelessWidget {
               recentAchievementsCard,
               const SizedBox(height: 20),
               aiInsightsCard,
+              const SizedBox(height: 20),
+              quickActions,
             ],
           ),
         ),

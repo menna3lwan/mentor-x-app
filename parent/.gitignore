@@ -45,3 +45,6 @@ app.*.map.json
 /android/app/release
 
 /tredat_flutter_cli/
+
+# Patrol generated bundle
+integration_test/test_bundle.dart

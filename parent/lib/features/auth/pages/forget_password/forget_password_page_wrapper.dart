@@ -21,7 +21,7 @@ class _ForgetPasswordPageWrapperState extends State<ForgetPasswordPageWrapper> {
   @override
   void initState() {
     super.initState();
-    _phoneController = TextEditingController(text: '201201250706');
+    _phoneController = TextEditingController();
   }
 
   @override
@@ -32,12 +32,14 @@ class _ForgetPasswordPageWrapperState extends State<ForgetPasswordPageWrapper> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocPresentationListener<ForgetPasswordBloc,
-        ForgetPasswordPresentationEvent>(
+    return BlocPresentationListener<
+      ForgetPasswordBloc,
+      ForgetPasswordPresentationEvent
+    >(
       listener: (context, event) {
         switch (event) {
           case ForgetPasswordSuccessPresentationEvent(:final phone):
-            OtpPageRoute(phone: phone).push(context);
+            _openResetPasswordDialog(phone);
           case ForgetPasswordFailurePresentationEvent(:final exception):
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -80,10 +82,10 @@ class _ForgetPasswordPageWrapperState extends State<ForgetPasswordPageWrapper> {
                     : () {
                         if (_formKey.currentState?.validate() ?? false) {
                           context.read<ForgetPasswordBloc>().add(
-                                ForgetPasswordSubmittedEvent(
-                                  phoneNumber: _phoneController.text,
-                                ),
-                              );
+                            ForgetPasswordSubmittedEvent(
+                              phoneNumber: _phoneController.text,
+                            ),
+                          );
                         }
                       },
                 text: isLoading ? 'Sending...' : 'Send Code',
@@ -99,5 +101,159 @@ class _ForgetPasswordPageWrapperState extends State<ForgetPasswordPageWrapper> {
         },
       ),
     );
+  }
+
+  Future<void> _openResetPasswordDialog(String phone) async {
+    final otpController = TextEditingController();
+    final newPasswordController = TextEditingController();
+    final confirmPasswordController = TextEditingController();
+    bool isSubmitting = false;
+
+    try {
+      if (!mounted) return;
+
+      final result = await showDialog<bool>(
+        context: context,
+        barrierDismissible: false,
+        builder: (dialogContext) {
+          return StatefulBuilder(
+            builder: (context, setState) {
+              return AlertDialog(
+                title: const Text('Reset Password'),
+                content: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      MentorXTextFormField(
+                        label: 'OTP Code',
+                        icon: Icons.verified_outlined,
+                        controller: otpController,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      MentorXTextFormField(
+                        label: 'New Password',
+                        icon: Icons.lock_outline,
+                        controller: newPasswordController,
+                        isPassword: true,
+                      ),
+                      const SizedBox(height: 12),
+                      MentorXTextFormField(
+                        label: 'Confirm Password',
+                        icon: Icons.lock_reset_outlined,
+                        controller: confirmPasswordController,
+                        isPassword: true,
+                      ),
+                    ],
+                  ),
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: isSubmitting
+                        ? null
+                        : () {
+                            Navigator.of(dialogContext).pop(false);
+                          },
+                    child: const Text('Cancel'),
+                  ),
+                  TextButton(
+                    onPressed: isSubmitting
+                        ? null
+                        : () async {
+                            final otp = otpController.text.trim();
+                            final newPassword = newPasswordController.text;
+                            final confirmPassword =
+                                confirmPasswordController.text;
+
+                            if (otp.length < 4) {
+                              if (!context.mounted) return;
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    'Please enter a valid OTP code.',
+                                  ),
+                                ),
+                              );
+                              return;
+                            }
+
+                            if (newPassword.length < 8) {
+                              if (!context.mounted) return;
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    'Password must be at least 8 characters.',
+                                  ),
+                                ),
+                              );
+                              return;
+                            }
+
+                            if (newPassword != confirmPassword) {
+                              if (!context.mounted) return;
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Passwords do not match.'),
+                                ),
+                              );
+                              return;
+                            }
+
+                            setState(() => isSubmitting = true);
+                            try {
+                              await this.context
+                                  .read<AuthenticationRepository>()
+                                  .resetPassword(
+                                    phone: phone,
+                                    otp: otp,
+                                    newPassword: newPassword,
+                                  );
+                              if (!dialogContext.mounted) return;
+                              Navigator.of(dialogContext).pop(true);
+                            } on AuthenticationException catch (e) {
+                              if (!context.mounted) return;
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    e.message ?? 'Failed to reset password.',
+                                  ),
+                                ),
+                              );
+                            } finally {
+                              if (context.mounted) {
+                                setState(() => isSubmitting = false);
+                              }
+                            }
+                          },
+                    child: isSubmitting
+                        ? const SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : const Text('Reset Password'),
+                  ),
+                ],
+              );
+            },
+          );
+        },
+      );
+
+      if (!mounted) return;
+      if (result == true) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Password reset successfully.')),
+        );
+        const LoginPageRoute().go(context);
+      }
+    } finally {
+      otpController.dispose();
+      newPasswordController.dispose();
+      confirmPasswordController.dispose();
+    }
   }
 }

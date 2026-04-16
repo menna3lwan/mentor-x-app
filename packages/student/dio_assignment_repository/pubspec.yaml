@@ -6,8 +6,7 @@ publish_to: none
 resolution: workspace
 
 environment:
-
-    sdk: ^3.9.2
+    sdk: ^3.11.4
 
 dependencies:
     dio: ^5.9.0

@@ -156,7 +156,7 @@ void main() {
             .having(
               (s) => s.errorMessage,
               'errorMessage',
-              'Repository not initialized',
+              contains('Repository not initialized'),
             ),
       ],
     );

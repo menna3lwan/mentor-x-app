@@ -37,6 +37,8 @@ final class _OtpPageWrapperState extends State<OtpPageWrapper> {
       child: BlocBuilder<OtpBloc, OtpState>(
         builder: (context, state) {
           final bloc = context.read<OtpBloc>();
+          final authRepository = context
+              .read<StudentAuthenticationRepository>();
           return OtpPage(
             phoneNumber: state.phoneNumber,
             otpLength: state.otpLength,
@@ -54,6 +56,9 @@ final class _OtpPageWrapperState extends State<OtpPageWrapper> {
             onResendViaWhatsapp: () =>
                 bloc.add(const OtpResendViaWhatsappRequested()),
             onEditPhone: () => context.pop(),
+            showEditPhone:
+                authRepository.pendingOtpPurpose ==
+                OtpVerificationPurpose.registration,
           );
         },
       ),

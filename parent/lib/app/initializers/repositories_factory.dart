@@ -9,6 +9,9 @@ import 'package:parent_dio_home_repository/dio_home_repository.dart';
 import 'package:parent_mock_home_repository/mock_home_repository.dart';
 
 import '../../core/utils/env.dart';
+import '../../features/onboarding/repositories/cache_onboarding_repository.dart';
+import '../../features/onboarding/repositories/onboarding_repository.dart';
+import '../../features/portal_data/portal_data.dart';
 
 // ────────────────────────────────────────────────────────────────────────────
 // AppRepositories — typed container for every initialized repository.
@@ -18,11 +21,15 @@ final class AppRepositories {
   final CacheRepository cacheRepository;
   final AuthenticationRepository authenticationRepository;
   final ParentHomeRepository homeRepository;
+  final ParentPortalRepository parentPortalRepository;
+  final OnboardingRepository onboardingRepository;
 
   const AppRepositories._({
     required this.cacheRepository,
     required this.authenticationRepository,
     required this.homeRepository,
+    required this.parentPortalRepository,
+    required this.onboardingRepository,
   });
 
   /// Flat list — useful for parallel teardown/iteration.
@@ -30,6 +37,8 @@ final class AppRepositories {
     cacheRepository,
     authenticationRepository,
     homeRepository,
+    parentPortalRepository,
+    onboardingRepository,
   ];
 
   /// [RepositoryProvider] list for [MultiRepositoryProvider].
@@ -41,6 +50,12 @@ final class AppRepositories {
       ),
       RepositoryProvider<ParentHomeRepository>(
         create: (_) => homeRepository,
+      ),
+      RepositoryProvider<ParentPortalRepository>(
+        create: (_) => parentPortalRepository,
+      ),
+      RepositoryProvider<OnboardingRepository>(
+        create: (_) => onboardingRepository,
       ),
     ];
   }
@@ -123,6 +138,14 @@ final class RepositoriesFactory {
     }
   }
 
+  static Future<ParentPortalRepository> _initParentPortalRepository() async {
+    return MockParentPortalRepository(delay: Env.mockDelayDuration);
+  }
+
+  static Future<OnboardingRepository> _initOnboardingRepository() async {
+    return CacheOnboardingRepository(cacheRepository: await cacheRepository);
+  }
+
   // ── Language detection ────────────────────────────────────────────────────
 
   static Future<String> _resolveLanguageCode(
@@ -134,7 +157,10 @@ final class RepositoriesFactory {
 
   // ── Main entry point ──────────────────────────────────────────────────────
 
-  static Future<({AppRepositories repositories, List<LocalizedClient> localizedClients})> initRepositories() async {
+  static Future<
+    ({AppRepositories repositories, List<LocalizedClient> localizedClients})
+  >
+  initRepositories() async {
     if (Env.usesAnyProdRepository && !Env.hasMentorxBaseUrl) {
       throw StateError(
         'MENTORX_API_BASE_URL must be provided when any repository mode is PROD.',
@@ -149,12 +175,16 @@ final class RepositoriesFactory {
     final results = await Future.wait([
       _initAuthenticationRepository(),
       _initHomeRepository(),
+      _initParentPortalRepository(),
+      _initOnboardingRepository(),
     ]);
 
     final repos = AppRepositories._(
       cacheRepository: cacheRepository,
       authenticationRepository: results[0] as AuthenticationRepository,
       homeRepository: results[1] as ParentHomeRepository,
+      parentPortalRepository: results[2] as ParentPortalRepository,
+      onboardingRepository: results[3] as OnboardingRepository,
     );
 
     final localizedClients = <LocalizedClient>[];

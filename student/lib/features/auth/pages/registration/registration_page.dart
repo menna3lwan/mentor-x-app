@@ -12,6 +12,7 @@ class RegistrationPage extends StatelessWidget {
   final VoidCallback onBack;
   final VoidCallback onNext;
   final VoidCallback onSubmit;
+  final VoidCallback onLogin;
 
   const RegistrationPage({
     super.key,
@@ -20,6 +21,7 @@ class RegistrationPage extends StatelessWidget {
     required this.onBack,
     required this.onNext,
     required this.onSubmit,
+    required this.onLogin,
   });
 
   @override
@@ -67,30 +69,34 @@ class RegistrationPage extends StatelessWidget {
         children: List.generate(steps.length, (index) {
           final isCompleted = index < currentStep;
           final isActive = index == currentStep;
-    final palette = MentorXThemeColorPalette.light;
-    return Expanded(
-      child: Row(
-        children: [
-          _buildStepCircle(context, index + 1, isActive, isCompleted),
-          if (index < steps.length - 1)
-            Expanded(
-              child: Container(
-                height: 2,
-                margin: const EdgeInsets.symmetric(horizontal: 8),
-                color: isCompleted
-                    ? palette.brandPrimary
-                    : palette.textTertiary,
-              ),
+          return Expanded(
+            child: Row(
+              children: [
+                _buildStepCircle(context, index + 1, isActive, isCompleted),
+                if (index < steps.length - 1)
+                  Expanded(
+                    child: Container(
+                      height: 2,
+                      margin: const EdgeInsets.symmetric(horizontal: 8),
+                      color: isCompleted
+                          ? palette.brandPrimary
+                          : palette.textTertiary,
+                    ),
+                  ),
+              ],
             ),
-        ],
-      ),
-    );
+          );
         }),
       ),
     );
   }
 
-  Widget _buildStepCircle(BuildContext context, int step, bool isActive, bool isCompleted) {
+  Widget _buildStepCircle(
+    BuildContext context,
+    int step,
+    bool isActive,
+    bool isCompleted,
+  ) {
     final palette = MentorXThemeColorPalette.light;
     return Container(
       width: 24,
@@ -100,8 +106,8 @@ class RegistrationPage extends StatelessWidget {
         color: isCompleted
             ? palette.brandPrimary
             : isActive
-                ? palette.brandPrimary.withValues(alpha: 0.1)
-                : palette.textTertiary,
+            ? palette.brandPrimary.withValues(alpha: 0.1)
+            : palette.textTertiary,
         border: isActive
             ? Border.all(color: palette.brandPrimary, width: 2)
             : null,
@@ -146,15 +152,33 @@ class RegistrationPage extends StatelessWidget {
       color: palette.backgroundSecondary,
       child: SizedBox(
         width: double.infinity,
-        child: ElevatedButton(
-          onPressed: isLoading ? null : (currentStep == 4 ? onSubmit : onNext),
-          child: isLoading
-              ? const SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                )
-              : Text(currentStep == 4 ? 'Complete Registration' : 'Next Step'),
+        child: Column(
+          children: [
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: isLoading
+                    ? null
+                    : (currentStep == 4 ? onSubmit : onNext),
+                child: isLoading
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : Text(
+                        currentStep == 4
+                            ? 'Complete Registration'
+                            : 'Next Step',
+                      ),
+              ),
+            ),
+            if (currentStep == 0)
+              TextButton(
+                onPressed: isLoading ? null : onLogin,
+                child: const Text('Already have an account? Login'),
+              ),
+          ],
         ),
       ),
     );

@@ -16,6 +16,7 @@ final class OtpPage extends StatelessWidget {
   final VoidCallback onResend;
   final VoidCallback onResendViaWhatsapp;
   final VoidCallback onEditPhone;
+  final bool showEditPhone;
 
   const OtpPage({
     super.key,
@@ -32,6 +33,7 @@ final class OtpPage extends StatelessWidget {
     required this.onResend,
     required this.onResendViaWhatsapp,
     required this.onEditPhone,
+    required this.showEditPhone,
   });
 
   @override
@@ -193,12 +195,14 @@ final class OtpPage extends StatelessWidget {
                               ),
                             ),
                     ),
-                    TextButton.icon(
-                      onPressed: onEditPhone,
-                      icon: const Icon(Icons.edit_outlined, size: 18),
-                      label: Text(context.t.login.otp.editNumber),
-                    ),
-                    const SizedBox(height: 20),
+                    if (showEditPhone) ...[
+                      TextButton.icon(
+                        onPressed: onEditPhone,
+                        icon: const Icon(Icons.edit_outlined, size: 18),
+                        label: Text(context.t.login.otp.editNumber),
+                      ),
+                      const SizedBox(height: 20),
+                    ],
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(

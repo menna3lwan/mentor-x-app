@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,11 +26,7 @@ class _OtpPageWrapperState extends State<OtpPageWrapper> {
   @override
   void initState() {
     super.initState();
-    const mockOtp = '123456';
-    controllers = List.generate(
-      6,
-      (index) => TextEditingController(text: mockOtp[index]),
-    );
+    controllers = List.generate(6, (_) => TextEditingController());
     focusNodes = List.generate(6, (_) => FocusNode());
   }
 
@@ -59,19 +57,28 @@ class _OtpPageWrapperState extends State<OtpPageWrapper> {
         switch (event) {
           case OtpSuccessPresentationEvent(:final user):
             context.read<AppAuthenticationCubit>().login(user);
-            const HomePageRoute().go(context);
+            unawaited(_routeAfterVerification());
           case OtpFailurePresentationEvent(:final exception):
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                  content: Text(exception.message ?? 'Verification failed')),
+                content: Text(exception.message ?? 'Verification failed'),
+              ),
             );
         }
       },
       child: Builder(
         builder: (context) {
-          final isLoading = context.select<OtpBloc, bool>(
-            (bloc) => bloc.state.loadingState.isLoading,
-          );
+          final state = context.watch<OtpBloc>().state;
+          final isLoading = state.loadingState.isLoading;
+          final isResending = state.isResending;
+          final canResend = state.canResend;
+
+          final resendText = isResending
+              ? 'Resending...'
+              : canResend
+              ? "Didn't receive the code? Resend"
+              : 'Resend in ${state.formattedCountdown}';
+
           return OtpPage(
             backButton: IconButton(
               onPressed: () => context.pop(),
@@ -114,8 +121,9 @@ class _OtpPageWrapperState extends State<OtpPageWrapper> {
                         counterText: '',
                         filled: true,
                         fillColor: Colors.white,
-                        contentPadding:
-                            const EdgeInsets.symmetric(vertical: 20),
+                        contentPadding: const EdgeInsets.symmetric(
+                          vertical: 20,
+                        ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(18),
                           borderSide: BorderSide(color: Colors.grey.shade400),
@@ -141,11 +149,11 @@ class _OtpPageWrapperState extends State<OtpPageWrapper> {
                       final code = controllers.map((e) => e.text).join();
                       if (code.length == 6) {
                         context.read<OtpBloc>().add(
-                              OtpSubmittedEvent(
-                                phone: widget.phone,
-                                code: code,
-                              ),
-                            );
+                          OtpSubmittedEvent(
+                            phone: widget.phone,
+                            code: code,
+                          ),
+                        );
                       }
                     },
               text: isLoading ? 'Verifying...' : 'Verify',
@@ -153,12 +161,55 @@ class _OtpPageWrapperState extends State<OtpPageWrapper> {
             resendButton: MentorXClickableText(
               alignment: Alignment.center,
               color: const Color(0xFF183764),
-              text: "Didn't receive the code ?",
-              onPressed: () {},
+              text: resendText,
+              onPressed: isLoading || isResending || !canResend
+                  ? null
+                  : () {
+                      context.read<OtpBloc>().add(
+                        OtpResendRequested(phone: widget.phone),
+                      );
+                    },
             ),
           );
         },
       ),
     );
+  }
+
+  Future<void> _routeAfterVerification() async {
+    final cacheRepository = context.read<CacheRepository>();
+
+    try {
+      final children = await context
+          .read<ParentPortalRepository>()
+          .getChildren();
+
+      if (!mounted) {
+        return;
+      }
+
+      if (children.isEmpty) {
+        const AddChildLinkPageRoute().go(context);
+        return;
+      }
+
+      const HomePageRoute().go(context);
+      return;
+    } catch (_) {
+      final hasLinkedChildren = await cacheRepository.get(
+        'parent_has_linked_children',
+      );
+
+      if (!mounted) {
+        return;
+      }
+
+      if (hasLinkedChildren == 'false') {
+        const AddChildLinkPageRoute().go(context);
+        return;
+      }
+
+      const HomePageRoute().go(context);
+    }
   }
 }

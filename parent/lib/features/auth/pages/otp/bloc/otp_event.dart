@@ -16,3 +16,16 @@ final class OtpSubmittedEvent extends OtpEvent {
   @override
   List<Object?> get props => [phone, code];
 }
+
+final class OtpResendRequested extends OtpEvent {
+  final String phone;
+
+  const OtpResendRequested({required this.phone});
+
+  @override
+  List<Object?> get props => [phone];
+}
+
+final class OtpCountdownTicked extends OtpEvent {
+  const OtpCountdownTicked();
+}

@@ -12,6 +12,7 @@ void main() {
 
   const tPhone = '01000000000';
   const tCode = '123456';
+  const tResendDuration = Duration(seconds: 45);
   const tUser = ParentEntity(
     id: 'user-1',
     name: 'Test Parent',
@@ -121,6 +122,69 @@ void main() {
           loadingState: OtpLoadingState.failure,
           exception: const AuthenticationException(
             code: AuthenticationExceptionCode.unknown,
+          ),
+        ),
+      ],
+    );
+
+    blocTest<OtpBloc, OtpState>(
+      'decrements resend countdown when tick event is received',
+      build: () => OtpBloc(
+        authenticationRepository: authRepository,
+        initialResendCountdown: 2,
+      ),
+      act: (bloc) => bloc.add(const OtpCountdownTicked()),
+      expect: () => [
+        OtpState.initial.copyWith(resendCountdown: 1),
+      ],
+    );
+
+    blocTest<OtpBloc, OtpState>(
+      'emits resend loading then cooldown update on successful resend',
+      build: () {
+        when(
+          () => authRepository.resendOtp(tPhone),
+        ).thenAnswer((_) async => tResendDuration);
+        return OtpBloc(
+          authenticationRepository: authRepository,
+          initialResendCountdown: 0,
+        );
+      },
+      act: (bloc) => bloc.add(const OtpResendRequested(phone: tPhone)),
+      expect: () => [
+        OtpState.initial.copyWith(resendCountdown: 0, isResending: true),
+        OtpState.initial.copyWith(
+          resendCountdown: tResendDuration.inSeconds,
+          isResending: false,
+        ),
+      ],
+      verify: (_) {
+        verify(() => authRepository.resendOtp(tPhone)).called(1);
+      },
+    );
+
+    blocPresentationTest<OtpBloc, OtpState, OtpPresentationEvent>(
+      'emits OtpFailurePresentationEvent when resend fails',
+      build: () {
+        when(() => authRepository.resendOtp(tPhone)).thenThrow(
+          const AuthenticationException(
+            code: AuthenticationExceptionCode.failedToResendOtp,
+            message: 'Unable to resend',
+          ),
+        );
+        return OtpBloc(
+          authenticationRepository: authRepository,
+          initialResendCountdown: 0,
+        );
+      },
+      act: (bloc) => bloc.add(const OtpResendRequested(phone: tPhone)),
+      expectPresentation: () => [
+        isA<OtpFailurePresentationEvent>().having(
+          (e) => e.exception,
+          'exception',
+          const AuthenticationException(
+            code: AuthenticationExceptionCode.failedToResendOtp,
+            message: 'Unable to resend',
           ),
         ),
       ],

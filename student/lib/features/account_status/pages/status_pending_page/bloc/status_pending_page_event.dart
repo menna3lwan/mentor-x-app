@@ -10,3 +10,16 @@ sealed class StatusPendingPageEvent extends Equatable {
 final class StatusPendingPageInitialized extends StatusPendingPageEvent {
   const StatusPendingPageInitialized();
 }
+
+final class StatusPendingPageRefreshRequested extends StatusPendingPageEvent {
+  final bool isManual;
+
+  const StatusPendingPageRefreshRequested({this.isManual = false});
+
+  @override
+  List<Object?> get props => [isManual];
+}
+
+final class StatusPendingPageLogoutRequested extends StatusPendingPageEvent {
+  const StatusPendingPageLogoutRequested();
+}

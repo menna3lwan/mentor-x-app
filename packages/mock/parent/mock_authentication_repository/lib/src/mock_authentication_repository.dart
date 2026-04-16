@@ -9,6 +9,30 @@ final class MockAuthenticationRepository implements AuthenticationRepository {
   final String mockUserName;
 
   ParentEntity? _cachedUser;
+  bool _passwordResetRequested = false;
+  ParentStudentLookupEntity? _lastLookedUpStudent;
+  ParentRegistrationResult? _pendingRegistration;
+
+  static const List<ParentStudentLookupEntity> _mockStudents = [
+    ParentStudentLookupEntity(
+      studentId: '42',
+      firstNameMasked: 'Ah**',
+      lastNameMasked: 'Mo**',
+      gradeName: 'Grade 10',
+      tenantName: 'MentorX Maadi',
+      tenantId: '1',
+      canAutoVerify: true,
+    ),
+    ParentStudentLookupEntity(
+      studentId: '84',
+      firstNameMasked: 'Sa**',
+      lastNameMasked: 'Al**',
+      gradeName: 'Grade 7',
+      tenantName: 'MentorX Maadi',
+      tenantId: '1',
+      canAutoVerify: false,
+    ),
+  ];
 
   MockAuthenticationRepository({
     this.delay = const Duration(seconds: 1),
@@ -28,6 +52,12 @@ final class MockAuthenticationRepository implements AuthenticationRepository {
     required String password,
   }) async {
     await Future.delayed(delay);
+    if (phone == '01011111111' && password == 'Test@1234') {
+      throw const AuthenticationException(
+        code: AuthenticationExceptionCode.otpRequired,
+        message: 'OTP verification is required to continue.',
+      );
+    }
     if (phone == mockPhone) {
       final user = MockParentGenerator.generate(
         name: mockUserName,
@@ -43,6 +73,108 @@ final class MockAuthenticationRepository implements AuthenticationRepository {
   }
 
   @override
+  Future<ParentStudentLookupEntity> findStudentForParentRegistration({
+    required ParentLookupType lookupType,
+    required String value,
+  }) async {
+    await Future.delayed(delay);
+
+    final trimmedValue = value.trim();
+    if (trimmedValue.isEmpty) {
+      throw const AuthenticationException(
+        code: AuthenticationExceptionCode.studentNotFound,
+        message: 'Please enter a child phone or student code.',
+      );
+    }
+
+    ParentStudentLookupEntity? matched;
+    if (lookupType == ParentLookupType.phone) {
+      if (trimmedValue == '01012345678') {
+        matched = _mockStudents.first;
+      }
+      if (trimmedValue == '01087654321') {
+        matched = _mockStudents.last;
+      }
+    } else {
+      if (trimmedValue.toUpperCase() == 'MX-1001') {
+        matched = _mockStudents.first;
+      }
+      if (trimmedValue.toUpperCase() == 'MX-2002') {
+        matched = _mockStudents.last;
+      }
+    }
+
+    if (matched == null) {
+      throw const AuthenticationException(
+        code: AuthenticationExceptionCode.studentNotFound,
+        message: 'No student found with this phone number/code.',
+      );
+    }
+
+    _lastLookedUpStudent = matched;
+    return matched;
+  }
+
+  @override
+  Future<ParentRegistrationResult> registerParent({
+    required String firstName,
+    required String lastName,
+    required String phone,
+    required String password,
+    required String relationship,
+    required String studentId,
+    String? email,
+    String? deviceHash,
+    String? deviceName,
+    String? fcmToken,
+    String? appVersion,
+  }) async {
+    await Future.delayed(delay);
+
+    if (phone.trim().isEmpty || password.trim().isEmpty) {
+      throw const AuthenticationException(
+        code: AuthenticationExceptionCode.registrationFailed,
+        message: 'Phone and password are required.',
+      );
+    }
+    if (password.trim().length < 8) {
+      throw const AuthenticationException(
+        code: AuthenticationExceptionCode.registrationFailed,
+        message: 'Password must be at least 8 characters.',
+      );
+    }
+
+    if (phone == mockPhone) {
+      throw const AuthenticationException(
+        code: AuthenticationExceptionCode.phoneAlreadyExists,
+        message: 'This phone number is already registered.',
+      );
+    }
+
+    final matchedStudent = _lastLookedUpStudent;
+    if (matchedStudent == null || matchedStudent.studentId != studentId) {
+      throw const AuthenticationException(
+        code: AuthenticationExceptionCode.studentNotFound,
+        message: 'Please find and confirm your child first.',
+      );
+    }
+
+    _pendingRegistration = ParentRegistrationResult(
+      userId: 'parent_${DateTime.now().millisecondsSinceEpoch}',
+      status: 'active',
+      childLinkStatus: matchedStudent.canAutoVerify
+          ? ParentChildLinkStatus.verified
+          : ParentChildLinkStatus.pending,
+      otpExpiresInSeconds: 300,
+      phone: phone,
+    );
+
+    await sendOtp(phone);
+
+    return _pendingRegistration!;
+  }
+
+  @override
   Future<void> logout() async {
     _cachedUser = null;
   }
@@ -55,6 +187,70 @@ final class MockAuthenticationRepository implements AuthenticationRepository {
   @override
   Future<void> sendOtp(String phone) async {
     await Future.delayed(delay);
+    if (phone.isEmpty) {
+      throw const AuthenticationException(
+        code: AuthenticationExceptionCode.failedToSendOtp,
+        message: 'Phone number is required',
+      );
+    }
+  }
+
+  @override
+  Future<Duration?> resendOtp(String phone) async {
+    await Future.delayed(delay);
+    if (phone.isEmpty) {
+      throw const AuthenticationException(
+        code: AuthenticationExceptionCode.failedToResendOtp,
+        message: 'Phone number is required',
+      );
+    }
+
+    return const Duration(seconds: 60);
+  }
+
+  @override
+  Future<void> requestPasswordReset(String phone) async {
+    await Future.delayed(delay);
+    if (phone != mockPhone) {
+      throw const AuthenticationException(
+        code: AuthenticationExceptionCode.failedToRequestPasswordReset,
+        message: 'Phone number not found',
+      );
+    }
+
+    _passwordResetRequested = true;
+  }
+
+  @override
+  Future<void> resetPassword({
+    required String phone,
+    required String otp,
+    required String newPassword,
+  }) async {
+    await Future.delayed(delay);
+
+    if (!_passwordResetRequested || phone != mockPhone) {
+      throw const AuthenticationException(
+        code: AuthenticationExceptionCode.failedToResetPassword,
+        message: 'Password reset request expired',
+      );
+    }
+
+    if (otp != mockOtp) {
+      throw const AuthenticationException(
+        code: AuthenticationExceptionCode.invalidOtp,
+        message: 'Invalid OTP code',
+      );
+    }
+
+    if (newPassword.trim().length < 8) {
+      throw const AuthenticationException(
+        code: AuthenticationExceptionCode.failedToResetPassword,
+        message: 'Password must be at least 8 characters',
+      );
+    }
+
+    _passwordResetRequested = false;
   }
 
   @override
@@ -63,9 +259,10 @@ final class MockAuthenticationRepository implements AuthenticationRepository {
     if (code == mockOtp) {
       final user = MockParentGenerator.generate(
         name: mockUserName,
-        phoneNumber: phone,
+        phoneNumber: _pendingRegistration?.phone ?? phone,
       );
       _cachedUser = user;
+      _pendingRegistration = null;
       return user;
     }
     throw const AuthenticationException(

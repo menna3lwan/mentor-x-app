@@ -43,6 +43,20 @@ final class StudentRegistrationPhoneChanged extends StudentRegistrationEvent {
   const StudentRegistrationPhoneChanged(this.value);
 }
 
+final class StudentRegistrationPhoneUniquenessChecked
+    extends StudentRegistrationEvent {
+  final String phone;
+  final bool isUnique;
+
+  const StudentRegistrationPhoneUniquenessChecked({
+    required this.phone,
+    required this.isUnique,
+  });
+
+  @override
+  List<Object?> get props => [phone, isUnique];
+}
+
 final class StudentRegistrationEmailChanged extends StudentRegistrationEvent {
   final String value;
   const StudentRegistrationEmailChanged(this.value);

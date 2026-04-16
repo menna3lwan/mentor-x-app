@@ -67,10 +67,7 @@ final class ParentRequirements {
     );
 
     // 5. Determine initial route
-    final initialRoute = await _determineInitialRoute(
-      user: user,
-      cacheRepository: repositories.cacheRepository,
-    );
+    final initialRoute = await _determineInitialRoute();
     _logger.info('Initial route: $initialRoute');
 
     // 6. Build router
@@ -122,13 +119,7 @@ final class ParentRequirements {
     ]);
   }
 
-  static Future<String> _determineInitialRoute({
-    required ParentEntity? user,
-    required CacheRepository cacheRepository,
-  }) async {
-    if (user == null) {
-      return const LoginPageRoute().location;
-    }
-    return const HomePageRoute().location;
+  static Future<String> _determineInitialRoute() async {
+    return const SplashScreenPageRoute().location;
   }
 }

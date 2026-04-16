@@ -26,24 +26,58 @@ final class DioHttpClient implements HttpClient, LocalizedClient {
   /// Only loads the token if it's still valid (not expired)
   Future<void> _loadCachedToken() async {
     final cachedToken = await _cacheRepository.get(CacheKeys.accessToken);
+    final cachedRefreshToken = await _cacheRepository.get(
+      CacheKeys.refreshToken,
+    );
+
     if (cachedToken != null && cachedToken.isNotEmpty) {
-      setBearerToken(cachedToken);
+      if (_isJwtTokenExpired(cachedToken)) {
+        await _cacheRepository.remove(CacheKeys.accessToken);
+        await _cacheRepository.remove(CacheKeys.refreshToken);
+        return;
+      }
+
+      setBearerToken(cachedToken, refreshToken: cachedRefreshToken);
+      return;
     }
   }
 
   /// Processes response and caches token if present
   Future<void> _processResponse(dynamic responseData) async {
-    if (responseData is Map<String, dynamic>) {
-      final accessToken = responseData['accessToken'];
-      if (accessToken != null &&
-          accessToken is String &&
-          accessToken.isNotEmpty) {
-        // Check if it's a JWT token (basic validation)
-        if (_isJwtToken(accessToken)) {
-          _cacheRepository.put(CacheKeys.accessToken, accessToken).ignore();
-          setBearerToken(accessToken);
-        }
+    if (responseData is! Map) {
+      return;
+    }
+
+    final root = _asStringKeyedMap(responseData);
+    final dynamic dataCandidate = root['data'];
+    final data = dataCandidate is Map
+        ? _asStringKeyedMap(dataCandidate)
+        : const <String, dynamic>{};
+
+    final accessToken = _stringOrNull(
+      data['accessToken'] ??
+          data['access_token'] ??
+          root['accessToken'] ??
+          root['access_token'],
+    );
+    final refreshToken = _stringOrNull(
+      data['refreshToken'] ??
+          data['refresh_token'] ??
+          root['refreshToken'] ??
+          root['refresh_token'],
+    );
+
+    if (accessToken != null && _isJwtToken(accessToken)) {
+      if (_isJwtTokenExpired(accessToken)) {
+        removeBearerToken();
+        return;
       }
+      setBearerToken(accessToken, refreshToken: refreshToken);
+      return;
+    }
+
+    if (refreshToken != null) {
+      _cacheRepository.put(CacheKeys.refreshToken, refreshToken).ignore();
     }
   }
 
@@ -65,6 +99,56 @@ final class DioHttpClient implements HttpClient, LocalizedClient {
     } catch (e) {
       return false;
     }
+  }
+
+  bool _isJwtTokenExpired(String token) {
+    try {
+      final parts = token.split('.');
+      if (parts.length != 3) {
+        return true;
+      }
+
+      final payload = json.decode(
+        String.fromCharCodes(base64Url.decode(base64Url.normalize(parts[1]))),
+      );
+
+      if (payload is! Map<String, dynamic>) {
+        return true;
+      }
+
+      final dynamic expValue = payload['exp'];
+      if (expValue == null) {
+        return false;
+      }
+
+      final expirySeconds = expValue is int
+          ? expValue
+          : int.tryParse(expValue.toString());
+      if (expirySeconds == null) {
+        return true;
+      }
+
+      final expiresAt = DateTime.fromMillisecondsSinceEpoch(
+        expirySeconds * 1000,
+      );
+
+      return DateTime.now().isAfter(expiresAt);
+    } catch (_) {
+      return true;
+    }
+  }
+
+  Map<String, dynamic> _asStringKeyedMap(Map<dynamic, dynamic> source) {
+    return source.map((key, value) => MapEntry(key.toString(), value));
+  }
+
+  String? _stringOrNull(dynamic value) {
+    if (value == null) {
+      return null;
+    }
+
+    final parsed = value.toString().trim();
+    return parsed.isEmpty ? null : parsed;
   }
 
   /// Converts Dio Headers to Map of String, dynamic
@@ -169,13 +253,20 @@ final class DioHttpClient implements HttpClient, LocalizedClient {
   }
 
   @override
-  void setBearerToken(String token, {String? refreshToken}) async {
+  void setBearerToken(String token, {String? refreshToken}) {
     _defaultHeaders['Authorization'] = 'Bearer $token';
+    _cacheRepository.put(CacheKeys.accessToken, token).ignore();
+
+    if (refreshToken != null && refreshToken.isNotEmpty) {
+      _cacheRepository.put(CacheKeys.refreshToken, refreshToken).ignore();
+    }
   }
 
   @override
   void removeBearerToken() {
     _defaultHeaders.remove('Authorization');
+    _cacheRepository.remove(CacheKeys.accessToken).ignore();
+    _cacheRepository.remove(CacheKeys.refreshToken).ignore();
   }
 
   @override
@@ -192,12 +283,27 @@ final class DioHttpClient implements HttpClient, LocalizedClient {
     // Check if there's a token in memory first
     final memoryToken = getBearerToken();
     if (memoryToken != null && memoryToken.isNotEmpty) {
+      if (_isJwtTokenExpired(memoryToken)) {
+        removeBearerToken();
+        return false;
+      }
+
       return true;
     }
+
     // Check cached token
     final cachedToken = await _cacheRepository.get(CacheKeys.accessToken);
     if (cachedToken != null && cachedToken.isNotEmpty) {
-      setBearerToken(cachedToken);
+      if (_isJwtTokenExpired(cachedToken)) {
+        await _cacheRepository.remove(CacheKeys.accessToken);
+        await _cacheRepository.remove(CacheKeys.refreshToken);
+        return false;
+      }
+
+      final cachedRefreshToken = await _cacheRepository.get(
+        CacheKeys.refreshToken,
+      );
+      setBearerToken(cachedToken, refreshToken: cachedRefreshToken);
       return true;
     }
 
@@ -209,7 +315,6 @@ final class DioHttpClient implements HttpClient, LocalizedClient {
     String baseUrl,
     Map<String, String>? headers,
   ) {
-    print(headers);
     final customDio = Dio(BaseOptions(baseUrl: baseUrl, headers: headers));
     return customDio;
   }
@@ -428,6 +533,7 @@ final class DioHttpClient implements HttpClient, LocalizedClient {
   /// Logout method to clear cached tokens
   Future<void> logout() async {
     await _cacheRepository.remove(CacheKeys.accessToken);
+    await _cacheRepository.remove(CacheKeys.refreshToken);
     removeBearerToken();
   }
 

@@ -11,10 +11,13 @@ final class StatusPendingPageRoute extends GoRouteData
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return BlocProvider<StatusPendingPageBloc>(
-      create: (_) => StatusPendingPageBloc()
-        ..add(
-          const StatusPendingPageInitialized(),
-        ),
+      create: (context) =>
+          StatusPendingPageBloc(
+            authRepository: context.read<StudentAuthenticationRepository>(),
+            cacheRepository: context.read<CacheRepository>(),
+          )..add(
+            const StatusPendingPageInitialized(),
+          ),
       child: const StatusPendingPageWrapper(),
     );
   }

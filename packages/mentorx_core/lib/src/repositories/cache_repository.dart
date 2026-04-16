@@ -24,6 +24,7 @@ final class CacheKeys {
   static const String user = 'user';
   static const String brightness = 'brightness';
   static const String accessToken = 'accessToken';
+  static const String refreshToken = 'refreshToken';
   static const String hasSeenOnboarding = 'has_seen_onboarding';
   static const String tenantId = 'tenant_id';
   static const String tenantName = 'tenant_name';

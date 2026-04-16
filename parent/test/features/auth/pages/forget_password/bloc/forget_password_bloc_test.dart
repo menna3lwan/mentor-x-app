@@ -30,7 +30,9 @@ void main() {
     blocTest<ForgetPasswordBloc, ForgetPasswordState>(
       'emits [loading, success] on successful OTP send',
       build: () {
-        when(() => authRepository.sendOtp(tPhone)).thenAnswer((_) async {});
+        when(
+          () => authRepository.requestPasswordReset(tPhone),
+        ).thenAnswer((_) async {});
         return ForgetPasswordBloc(authenticationRepository: authRepository);
       },
       act: (bloc) => bloc.add(
@@ -45,7 +47,7 @@ void main() {
         ),
       ],
       verify: (_) {
-        verify(() => authRepository.sendOtp(tPhone)).called(1);
+        verify(() => authRepository.requestPasswordReset(tPhone)).called(1);
       },
     );
 
@@ -56,7 +58,9 @@ void main() {
     >(
       'emits ForgetPasswordSuccessPresentationEvent with phone on success',
       build: () {
-        when(() => authRepository.sendOtp(tPhone)).thenAnswer((_) async {});
+        when(
+          () => authRepository.requestPasswordReset(tPhone),
+        ).thenAnswer((_) async {});
         return ForgetPasswordBloc(authenticationRepository: authRepository);
       },
       act: (bloc) => bloc.add(
@@ -74,7 +78,9 @@ void main() {
     blocTest<ForgetPasswordBloc, ForgetPasswordState>(
       'emits [loading, failure] on AuthenticationException',
       build: () {
-        when(() => authRepository.sendOtp(any())).thenThrow(tAuthException);
+        when(
+          () => authRepository.requestPasswordReset(any()),
+        ).thenThrow(tAuthException);
         return ForgetPasswordBloc(authenticationRepository: authRepository);
       },
       act: (bloc) => bloc.add(
@@ -98,7 +104,9 @@ void main() {
     >(
       'emits ForgetPasswordFailurePresentationEvent on AuthenticationException',
       build: () {
-        when(() => authRepository.sendOtp(any())).thenThrow(tAuthException);
+        when(
+          () => authRepository.requestPasswordReset(any()),
+        ).thenThrow(tAuthException);
         return ForgetPasswordBloc(authenticationRepository: authRepository);
       },
       act: (bloc) => bloc.add(

@@ -5,7 +5,7 @@ version: 1.0.0+4
 resolution: workspace
 
 environment:
-  sdk: ^3.9.2
+  sdk: ^3.11.4
 
 dependencies:
   flutter:
@@ -144,8 +144,12 @@ dev_dependencies:
   # Testing
   flutter_test:
     sdk: flutter
+  integration_test:
+    sdk: flutter
+  patrol: ^4.5.0
   bloc_test: ^10.0.0
   bloc_presentation_test: ^1.2.0
+  mocktail: ^1.0.4
 
   # Linting
   flutter_lints: ^6.0.0
@@ -186,3 +190,11 @@ flutter_gen:
     outputs:
       class_name: AppAssets
       package_parameter_enabled: true
+
+patrol:
+  app_name: MentorX Student
+  test_directory: integration_test
+  android:
+    package_name: com.mentorx.student
+  ios:
+    bundle_id: com.mentorx.student

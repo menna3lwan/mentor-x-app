@@ -20,6 +20,11 @@ final class LoginFailurePresentationEvent extends LoginPresentationEvent {
   const LoginFailurePresentationEvent({required this.exception});
 }
 
+final class LoginOtpRequiredPresentationEvent extends LoginPresentationEvent {
+  final String phoneNumber;
+  const LoginOtpRequiredPresentationEvent({required this.phoneNumber});
+}
+
 // ──── Bloc ────
 final class LoginBloc extends Bloc<LoginEvent, LoginState>
     with BlocPresentationMixin<LoginState, LoginPresentationEvent> {
@@ -27,8 +32,8 @@ final class LoginBloc extends Bloc<LoginEvent, LoginState>
   final MentorXLogger _logger = MentorXLogger('LoginBloc');
 
   LoginBloc({required AuthenticationRepository authenticationRepository})
-      : _authenticationRepository = authenticationRepository,
-        super(LoginState.initial) {
+    : _authenticationRepository = authenticationRepository,
+      super(LoginState.initial) {
     on<LoginSubmittedEvent>(_onLoginSubmitted);
   }
 
@@ -45,22 +50,36 @@ final class LoginBloc extends Bloc<LoginEvent, LoginState>
       emit(state.copyWith(loadingState: LoginLoadingState.success));
       emitPresentation(LoginSuccessPresentationEvent(user: user));
     } on AuthenticationException catch (e) {
+      if (e.code == AuthenticationExceptionCode.otpRequired) {
+        emit(state.copyWith(loadingState: LoginLoadingState.initial));
+        emitPresentation(
+          LoginOtpRequiredPresentationEvent(phoneNumber: event.phoneNumber),
+        );
+        return;
+      }
+
       _logger.error('Login failed: ${e.message}');
-      emit(state.copyWith(
-        loadingState: LoginLoadingState.failure,
-        exception: e,
-      ));
+      emit(
+        state.copyWith(
+          loadingState: LoginLoadingState.failure,
+          exception: e,
+        ),
+      );
       emitPresentation(LoginFailurePresentationEvent(exception: e));
     } catch (e) {
       _logger.error('Unexpected login error: $e');
-      const exception =
-          AuthenticationException(code: AuthenticationExceptionCode.unknown);
-      emit(state.copyWith(
-        loadingState: LoginLoadingState.failure,
-        exception: exception,
-      ));
+      const exception = AuthenticationException(
+        code: AuthenticationExceptionCode.unknown,
+      );
+      emit(
+        state.copyWith(
+          loadingState: LoginLoadingState.failure,
+          exception: exception,
+        ),
+      );
       emitPresentation(
-          const LoginFailurePresentationEvent(exception: exception));
+        const LoginFailurePresentationEvent(exception: exception),
+      );
     }
   }
 }

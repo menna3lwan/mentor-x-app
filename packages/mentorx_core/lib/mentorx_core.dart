@@ -33,6 +33,7 @@ part 'src/entities/schedule_entity.dart';
 part 'src/entities/group_entity.dart';
 part 'src/entities/governorate_entity.dart';
 part 'src/entities/district_entity.dart';
+part 'src/entities/parent_registration_entities.dart';
 
 // Learning
 part 'src/entities/grade_entity.dart';

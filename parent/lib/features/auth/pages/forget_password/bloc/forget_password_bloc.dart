@@ -24,12 +24,14 @@ final class ForgetPasswordFailurePresentationEvent
 final class ForgetPasswordBloc
     extends Bloc<ForgetPasswordEvent, ForgetPasswordState>
     with
-        BlocPresentationMixin<ForgetPasswordState,
-            ForgetPasswordPresentationEvent> {
-  ForgetPasswordBloc(
-      {required AuthenticationRepository authenticationRepository})
-      : _authenticationRepository = authenticationRepository,
-        super(ForgetPasswordState.initial) {
+        BlocPresentationMixin<
+          ForgetPasswordState,
+          ForgetPasswordPresentationEvent
+        > {
+  ForgetPasswordBloc({
+    required AuthenticationRepository authenticationRepository,
+  }) : _authenticationRepository = authenticationRepository,
+       super(ForgetPasswordState.initial) {
     on<ForgetPasswordSubmittedEvent>(_onForgetPasswordSubmitted);
   }
 
@@ -41,16 +43,18 @@ final class ForgetPasswordBloc
   ) async {
     emit(state.copyWith(loadingState: ForgetPasswordLoadingState.loading));
     try {
-      await _authenticationRepository.sendOtp(event.phoneNumber);
+      await _authenticationRepository.requestPasswordReset(event.phoneNumber);
       emit(state.copyWith(loadingState: ForgetPasswordLoadingState.success));
       emitPresentation(
         ForgetPasswordSuccessPresentationEvent(phone: event.phoneNumber),
       );
     } on AuthenticationException catch (e) {
-      emit(state.copyWith(
-        loadingState: ForgetPasswordLoadingState.failure,
-        exception: e,
-      ));
+      emit(
+        state.copyWith(
+          loadingState: ForgetPasswordLoadingState.failure,
+          exception: e,
+        ),
+      );
       emitPresentation(ForgetPasswordFailurePresentationEvent(exception: e));
     }
   }

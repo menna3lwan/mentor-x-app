@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mentorx_core/mentorx_core.dart';
 
+import '../../../core/core.dart';
 import 'home_page.dart';
 import '../widgets/recent_achievement_card.dart';
 import '../widgets/state_card.dart';
@@ -78,8 +78,67 @@ final class _HomePageWrapperState extends State<HomePageWrapper> {
             recentAchievements: recentAchievements,
           ),
           aiInsightsCard: _buildAiInsightsCard(aiInsight),
+          quickActions: _buildQuickActions(context),
         );
       },
+    );
+  }
+
+  Widget _buildQuickActions(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Wrap(
+        spacing: 10,
+        runSpacing: 10,
+        children: [
+          _QuickActionButton(
+            icon: Icons.family_restroom,
+            title: 'Children',
+            onTap: () =>
+                const LinkedChildrenManagementPageRoute().push(context),
+          ),
+          _QuickActionButton(
+            icon: Icons.menu_book,
+            title: 'Courses',
+            onTap: () => const AcademicMonitorPageRoute().push(context),
+          ),
+          _QuickActionButton(
+            icon: Icons.analytics,
+            title: 'Assessments',
+            onTap: () => const GradeMonitorPageRoute().push(context),
+          ),
+          _QuickActionButton(
+            icon: Icons.how_to_reg,
+            title: 'Attendance',
+            onTap: () => const AttendanceMonitorPageRoute().push(context),
+          ),
+          _QuickActionButton(
+            icon: Icons.account_balance_wallet,
+            title: 'Financial',
+            onTap: () => const FinancialMonitorPageRoute().push(context),
+          ),
+          _QuickActionButton(
+            icon: Icons.notifications,
+            title: 'Notifications',
+            onTap: () => const NotificationsParentPageRoute().push(context),
+          ),
+          _QuickActionButton(
+            icon: Icons.campaign,
+            title: 'Announcements',
+            onTap: () => const AnnouncementsArchivePageRoute().push(context),
+          ),
+          _QuickActionButton(
+            icon: Icons.person,
+            title: 'Profile',
+            onTap: () => const ParentProfilePageRoute().push(context),
+          ),
+        ],
+      ),
     );
   }
 
@@ -215,3 +274,27 @@ const _defaultRecentAchievements =
 
 const _defaultAiInsight =
     'Student progress is improving this week. Keep consistency on daily sessions.';
+
+final class _QuickActionButton extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final VoidCallback onTap;
+
+  const _QuickActionButton({
+    required this.icon,
+    required this.title,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 150,
+      child: OutlinedButton.icon(
+        onPressed: onTap,
+        icon: Icon(icon),
+        label: Text(title),
+      ),
+    );
+  }
+}

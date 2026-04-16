@@ -28,27 +28,43 @@ final class StudentModel extends StudentEntity {
 
     return StudentModel(
       id: (user['id'] ?? user['userId'])?.toString() ?? '',
-      name: user['name'] as String? ??
-          ((user['firstName'] != null || user['lastName'] != null)
-              ? '${user['firstName'] ?? ''} ${user['lastName'] ?? ''}'.trim()
+      name:
+          user['name'] as String? ??
+          ((user['firstName'] != null ||
+                  user['lastName'] != null ||
+                  user['first_name'] != null ||
+                  user['last_name'] != null)
+              ? '${user['firstName'] ?? user['first_name'] ?? ''} ${user['lastName'] ?? user['last_name'] ?? ''}'
+                    .trim()
               : ''),
-      phoneNumber: user['phone'] as String? ?? user['phoneNumber'] as String? ?? '',
+      phoneNumber:
+          user['phone'] as String? ?? user['phoneNumber'] as String? ?? '',
       email: user['email'] as String?,
-      studentCode: user['studentCode'] as String?,
+      studentCode:
+          user['studentCode'] as String? ?? user['student_code'] as String?,
       status: _studentStatusFromJson(user['status']),
       gender: _genderFromJson(user['gender']),
-      dateOfBirth: user['dateOfBirth'] != null ? DateTime.tryParse(user['dateOfBirth'] as String) : null,
-      gradeId: user['gradeId']?.toString(),
-      gradeName: user['gradeName'] as String?,
-      studyType: _studyTypeFromJson(user['studyType']),
-      profileImageUrl: user['profileImageUrl'] as String? ?? user['profileImage'] as String?,
+      dateOfBirth: _parseDate(user['dateOfBirth'] ?? user['date_of_birth']),
+      gradeId: (user['gradeId'] ?? user['grade_id'])?.toString(),
+      gradeName: user['gradeName'] as String? ?? user['grade_name'] as String?,
+      studyType: _studyTypeFromJson(user['studyType'] ?? user['study_type']),
+      profileImageUrl:
+          user['profileImageUrl'] as String? ??
+          user['profileImage'] as String? ??
+          user['profile_photo_url'] as String?,
       walletBalance: (user['walletBalance'] as num?)?.toDouble() ?? 0.0,
-      totalPoints: (user['totalPoints'] as num?)?.toInt() ?? 0,
-      schoolName: user['schoolName'] as String?,
-      parentName: user['parentName'] as String?,
-      parentPhone: user['parentPhone'] as String?,
-      createdAt: user['createdAt'] != null ? DateTime.parse(user['createdAt'] as String) : DateTime.now(),
-      updatedAt: user['updatedAt'] != null ? DateTime.parse(user['updatedAt'] as String) : DateTime.now(),
+      totalPoints:
+          ((user['totalPoints'] ?? user['total_points']) as num?)?.toInt() ?? 0,
+      schoolName:
+          user['schoolName'] as String? ?? user['school_name'] as String?,
+      parentName:
+          user['parentName'] as String? ?? user['parent_name'] as String?,
+      parentPhone:
+          user['parentPhone'] as String? ?? user['parent_phone'] as String?,
+      createdAt:
+          _parseDate(user['createdAt'] ?? user['created_at']) ?? DateTime.now(),
+      updatedAt:
+          _parseDate(user['updatedAt'] ?? user['updated_at']) ?? DateTime.now(),
     );
   }
 
@@ -101,6 +117,13 @@ final class StudentModel extends StudentEntity {
       if (value.name == typeStr) return value;
     }
     return null;
+  }
+
+  static DateTime? _parseDate(dynamic value) {
+    if (value == null) {
+      return null;
+    }
+    return DateTime.tryParse(value.toString());
   }
 
   Map<String, dynamic> toJson() {

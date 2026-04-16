@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -35,6 +36,7 @@ final class StudentRegistrationBloc
         > {
   final StudentRegistrationRepository _registrationRepository;
   final String _tenantId;
+  Timer? _phoneUniquenessTimer;
 
   StudentRegistrationBloc({
     required StudentRegistrationRepository registrationRepository,
@@ -53,6 +55,9 @@ final class StudentRegistrationBloc
       (event, emit) => emit(state.copyWith(lastName: event.value)),
     );
     on<StudentRegistrationPhoneChanged>(_onPhoneChanged);
+    on<StudentRegistrationPhoneUniquenessChecked>(
+      _onPhoneUniquenessChecked,
+    );
     on<StudentRegistrationEmailChanged>(
       (event, emit) => emit(state.copyWith(email: event.value)),
     );
@@ -162,24 +167,48 @@ final class StudentRegistrationBloc
     StudentRegistrationPhoneChanged event,
     Emitter<StudentRegistrationState> emit,
   ) async {
+    _phoneUniquenessTimer?.cancel();
+
     emit(state.copyWith(phone: event.value));
+
     if (event.value.length != 11) {
       emit(state.copyWith(isPhoneUnique: true));
       return;
     }
 
-    try {
-      final isUnique = await _registrationRepository.checkPhoneUniqueness(
-        event.value,
+    _phoneUniquenessTimer = Timer(const Duration(milliseconds: 500), () async {
+      bool isUnique = true;
+
+      try {
+        isUnique = await _registrationRepository.checkPhoneUniqueness(
+          event.value,
+        );
+      } catch (_) {
+        isUnique = true;
+      }
+
+      if (isClosed) {
+        return;
+      }
+
+      add(
+        StudentRegistrationPhoneUniquenessChecked(
+          phone: event.value,
+          isUnique: isUnique,
+        ),
       );
-      if (state.phone == event.value) {
-        emit(state.copyWith(isPhoneUnique: isUnique));
-      }
-    } catch (_) {
-      if (state.phone == event.value) {
-        emit(state.copyWith(isPhoneUnique: true));
-      }
+    });
+  }
+
+  void _onPhoneUniquenessChecked(
+    StudentRegistrationPhoneUniquenessChecked event,
+    Emitter<StudentRegistrationState> emit,
+  ) {
+    if (state.phone != event.phone) {
+      return;
     }
+
+    emit(state.copyWith(isPhoneUnique: event.isUnique));
   }
 
   Future<void> _onGradeChanged(
@@ -481,5 +510,11 @@ final class StudentRegistrationBloc
       Platform.localeName,
     ].join('|');
     return base64UrlEncode(utf8.encode(raw)).replaceAll('=', '');
+  }
+
+  @override
+  Future<void> close() {
+    _phoneUniquenessTimer?.cancel();
+    return super.close();
   }
 }

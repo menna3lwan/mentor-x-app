@@ -50,6 +50,8 @@ class _SecurityStepState extends State<SecurityStep> {
                   bloc.add(StudentRegistrationPasswordChanged(value)),
               initialValue: state.password,
             ),
+            const Gap(8),
+            _buildPasswordStrength(context, state.password),
             const Gap(16),
             TextFormField(
               decoration: InputDecoration(
@@ -72,6 +74,60 @@ class _SecurityStepState extends State<SecurityStep> {
         );
       },
     );
+  }
+
+  Widget _buildPasswordStrength(BuildContext context, String password) {
+    final palette = MentorXThemeColorPalette.light;
+    final score = _passwordStrengthScore(password);
+
+    final String label;
+    final Color color;
+    switch (score) {
+      case <= 0.33:
+        label = 'Weak';
+        color = palette.statusDanger;
+      case <= 0.66:
+        label = 'Medium';
+        color = palette.statusWarning;
+      default:
+        label = 'Strong';
+        color = palette.statusSuccess;
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: LinearProgressIndicator(
+            value: score,
+            minHeight: 6,
+            color: color,
+            backgroundColor: palette.backgroundTertiary,
+          ),
+        ),
+        const Gap(6),
+        Text(
+          'Password strength: $label',
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(color: color),
+        ),
+      ],
+    );
+  }
+
+  double _passwordStrengthScore(String value) {
+    if (value.isEmpty) {
+      return 0;
+    }
+
+    var points = 0;
+    if (value.length >= 8) points += 1;
+    if (RegExp(r'[A-Z]').hasMatch(value)) points += 1;
+    if (RegExp(r'[a-z]').hasMatch(value)) points += 1;
+    if (RegExp(r'[0-9]').hasMatch(value)) points += 1;
+    if (RegExp(r'[!@#\$%^&*(),.?":{}|<>]').hasMatch(value)) points += 1;
+
+    return points / 5;
   }
 
   Widget _buildIdCardUpload(

@@ -1,2 +1,11 @@
 export 'auth/auth.dart';
+export 'assessments/assessments.dart';
+export 'attendance/attendance.dart';
+export 'children/children.dart';
+export 'communication/communication.dart';
+export 'courses/courses.dart';
+export 'financial/financial.dart';
 export 'home/home.dart';
+export 'onboarding/onboarding.dart';
+export 'portal_data/portal_data.dart';
+export 'profile/profile.dart';

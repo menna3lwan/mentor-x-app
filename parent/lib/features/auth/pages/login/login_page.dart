@@ -4,16 +4,20 @@ final class LoginPage extends StatelessWidget {
   final Widget? logo;
   final Widget? phoneField;
   final Widget? passwordField;
+  final Widget? rememberMeRow;
   final Widget? forgetPasswordButton;
   final Widget? loginButton;
+  final Widget? registerButton;
 
   const LoginPage({
     super.key,
     this.logo,
     this.phoneField,
     this.passwordField,
+    this.rememberMeRow,
     this.forgetPasswordButton,
     this.loginButton,
+    this.registerButton,
   });
 
   @override
@@ -32,10 +36,14 @@ final class LoginPage extends StatelessWidget {
                   if (phoneField != null) phoneField!,
                   const SizedBox(height: 20),
                   if (passwordField != null) passwordField!,
+                  const SizedBox(height: 8),
+                  if (rememberMeRow != null) rememberMeRow!,
                   const SizedBox(height: 10),
                   if (forgetPasswordButton != null) forgetPasswordButton!,
                   const SizedBox(height: 15),
                   if (loginButton != null) loginButton!,
+                  const SizedBox(height: 16),
+                  if (registerButton != null) registerButton!,
                 ],
               ),
             ),
