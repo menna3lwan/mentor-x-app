@@ -27,4 +27,8 @@ final class MentorXThemeProvider extends StatelessWidget {
       child: child,
     );
   }
+
+  static MixThemeData of(BuildContext context) {
+    return MixTheme.of(context);
+  }
 }

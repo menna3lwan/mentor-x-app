@@ -16,15 +16,21 @@ class StatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = MentorXThemeProvider.of(context);
+    final backgroundSecondary = theme.colors[$mentorxToken.color.backgroundSecondary]!;
+    final backgroundElevatedSurfaceShadow = theme.colors[$mentorxToken.color.backgroundElevatedSurfaceShadow]!;
+    final textPrimary = theme.colors[$mentorxToken.color.textPrimary]!;
+    final textSecondary = theme.colors[$mentorxToken.color.textSecondary]!;
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: backgroundSecondary,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: Colors.black.withValues(alpha: 0.04)),
+        border: Border.all(color: backgroundElevatedSurfaceShadow.withValues(alpha: 0.1)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.06),
+            color: backgroundElevatedSurfaceShadow.withValues(alpha: 0.06),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),
@@ -45,19 +51,19 @@ class StatCard extends StatelessWidget {
           const SizedBox(height: 10),
           Text(
             value,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.w800,
-              color: AppColors.primary,
+              color: textPrimary,
             ),
           ),
           const SizedBox(height: 2),
           Text(
             label,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w600,
-              color: AppColors.greyDark,
+              color: textSecondary,
             ),
             textAlign: TextAlign.center,
           ),

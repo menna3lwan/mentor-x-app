@@ -42,6 +42,8 @@ part 'widgets/mentorx_button.dart';
 part 'widgets/mentorx_text_form_field.dart';
 part 'widgets/mentorx_logo.dart';
 part 'widgets/mentorx_clickable_text.dart';
+part 'widgets/mentorx_skeleton.dart';
+part 'widgets/mentorx_shimmer.dart';
 
 final class MentorXUI {
   MentorXUI._();

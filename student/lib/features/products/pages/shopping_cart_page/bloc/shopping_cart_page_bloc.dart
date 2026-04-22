@@ -14,6 +14,16 @@ final class ShoppingCartPageNavigateBack
   const ShoppingCartPageNavigateBack();
 }
 
+final class ShoppingCartPageOrderPlacedSuccess
+    extends ShoppingCartPagePresentationEvent {
+  const ShoppingCartPageOrderPlacedSuccess();
+}
+
+final class ShoppingCartPageOrderPlacedError
+    extends ShoppingCartPagePresentationEvent {
+  const ShoppingCartPageOrderPlacedError();
+}
+
 final class ShoppingCartPageBloc
     extends Bloc<ShoppingCartPageEvent, ShoppingCartPageState>
     with
@@ -24,6 +34,7 @@ final class ShoppingCartPageBloc
   ShoppingCartPageBloc({required this.marketplaceRepository})
     : super(ShoppingCartPageState.initial) {
     on<ShoppingCartPageLoadEvent>(_onLoad);
+    on<ShoppingCartPagePlaceOrderEvent>(_onPlaceOrder);
   }
 
   final MarketplaceRepository marketplaceRepository;
@@ -34,5 +45,24 @@ final class ShoppingCartPageBloc
   ) async {
     emit(state.copyWith(loadingState: LoadingState.loading));
     emit(state.copyWith(loadingState: LoadingState.loaded));
+  }
+
+  Future<void> _onPlaceOrder(
+    ShoppingCartPagePlaceOrderEvent event,
+    Emitter<ShoppingCartPageState> emit,
+  ) async {
+    emit(state.copyWith(loadingState: LoadingState.loading));
+    try {
+      await marketplaceRepository.placeOrder(
+        items: event.items,
+        deliveryAddress: event.address,
+        deliveryPhone: event.phone,
+      );
+      emit(state.copyWith(loadingState: LoadingState.loaded));
+      emitPresentation(const ShoppingCartPageOrderPlacedSuccess());
+    } catch (e) {
+      emit(state.copyWith(loadingState: LoadingState.error));
+      emitPresentation(const ShoppingCartPageOrderPlacedError());
+    }
   }
 }

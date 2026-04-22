@@ -18,47 +18,47 @@ final class DioSettingsRepository
 
   @override
   Future<UserSettingsEntity> getSettings() async {
-    final response = await httpClient.get('/api/student/settings');
-
-    if (response.statusCode != 200) {
-      throw SettingsRepositoryException(
-        code: SettingsRepositoryExceptionCode.failedToLoadSettings,
-        message: response.exception?.message,
+    try {
+      final response = await httpClient.get('/api/student/settings');
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      return UserSettingsModel.fromJson(data);
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: SettingsRepositoryExceptionCode.failedToLoadSettings,
       );
     }
-
-    final data = response.data['data'] ?? response.data;
-    return UserSettingsModel.fromJson(data as Map<String, dynamic>);
   }
 
   @override
   Future<UserSettingsEntity> updateSettings(
     UserSettingsEntity settings,
   ) async {
-    final body = {
-      'language': settings.language,
-      'theme': settings.theme,
-      'pushNotifications': settings.pushNotifications,
-      'notificationPreferences': settings.notificationPreferences,
-      if (settings.videoQualityDefault != null)
-        'videoQualityDefault': settings.videoQualityDefault,
-      if (settings.playbackSpeedDefault != null)
-        'playbackSpeedDefault': settings.playbackSpeedDefault,
-    };
+    try {
+      final body = {
+        'language': settings.language,
+        'theme': settings.theme,
+        'pushNotifications': settings.pushNotifications,
+        'notificationPreferences': settings.notificationPreferences,
+        if (settings.videoQualityDefault != null)
+          'videoQualityDefault': settings.videoQualityDefault,
+        if (settings.playbackSpeedDefault != null)
+          'playbackSpeedDefault': settings.playbackSpeedDefault,
+      };
 
-    final response = await httpClient.patch(
-      '/api/student/settings',
-      data: body,
-    );
+      final response = await httpClient.patch(
+        '/api/student/settings',
+        data: body,
+      );
 
-    if (response.statusCode != 200) {
-      throw SettingsRepositoryException(
-        code: SettingsRepositoryExceptionCode.failedToUpdateSettings,
-        message: response.exception?.message,
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      return UserSettingsModel.fromJson(data);
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: SettingsRepositoryExceptionCode.failedToUpdateSettings,
       );
     }
-
-    final data = response.data['data'] ?? response.data;
-    return UserSettingsModel.fromJson(data as Map<String, dynamic>);
   }
+
 }

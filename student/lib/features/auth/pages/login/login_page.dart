@@ -90,13 +90,13 @@ final class LoginPage extends StatelessWidget {
                       if (tenantName != null && tenantName!.trim().isNotEmpty)
                         const SizedBox(height: 8),
                       Text(
-                        context.t.login.header,
+                        'Student Login',
                         style: Theme.of(context).textTheme.headlineSmall
                             ?.copyWith(fontWeight: FontWeight.w800),
                       ),
                       const SizedBox(height: 6),
                       Text(
-                        context.t.login.subtitle,
+                        'Sign in to access your courses and more',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: palette.textSecondary,
                         ),
@@ -108,10 +108,10 @@ final class LoginPage extends StatelessWidget {
                         textDirection: TextDirection.ltr,
                         textAlign: TextAlign.left,
                         inputFormatters: inputFormatters,
-                        decoration: InputDecoration(
-                          labelText: context.t.login.phoneNumber,
-                          hintText: context.t.login.phoneHint,
-                          prefixIcon: const Icon(Icons.phone_android),
+                        decoration: const InputDecoration(
+                          labelText: 'Phone Number',
+                          hintText: '01xxxxxxxxx',
+                          prefixIcon: Icon(Icons.phone_android),
                           prefixText: '+20 ',
                         ),
                         autofillHints: const [AutofillHints.telephoneNumber],
@@ -127,7 +127,7 @@ final class LoginPage extends StatelessWidget {
                         decoration: InputDecoration(
                           labelText: 'Password',
                           hintText: '********',
-                          prefixIcon: const Icon(Icons.lock_outline),
+                          prefixIcon: Icon(Icons.lock_outline),
                           suffixIcon: IconButton(
                             onPressed: onObscurePasswordToggled,
                             icon: Icon(
@@ -191,7 +191,7 @@ final class LoginPage extends StatelessWidget {
                                     strokeWidth: 2,
                                   ),
                                 )
-                              : Text(context.t.login.signIn),
+                              : const Text('Sign In'),
                         ),
                       ),
                       const SizedBox(height: 16),

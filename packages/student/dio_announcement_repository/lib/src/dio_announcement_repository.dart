@@ -22,40 +22,38 @@ final class DioAnnouncementRepository
     bool? pinned,
     MentorXPaginationInfo? paginationInfo,
   }) async {
-    final response = await httpClient.get(
-      '/api/announcements',
-      queryParameters: {
-        if (search != null) 'search': search,
-        if (pinned != null) 'pinned': pinned,
-        if (paginationInfo != null) ...paginationInfo.toJson(),
-      },
-    );
+    try {
+      final response = await httpClient.get(
+        '/api/announcements',
+        queryParameters: {
+          if (search != null) 'search': search,
+          if (pinned != null) 'pinned': pinned,
+          if (paginationInfo != null) ...paginationInfo.toJson(),
+        },
+      );
 
-    if (response.statusCode != 200) {
-      throw AnnouncementRepositoryException(
-        code: AnnouncementRepositoryExceptionCode.failedToLoadAnnouncements,
-        message: response.exception?.message,
+      final data = asList(response.data);
+      return data.map((e) => AnnouncementModel.fromJson(asMap(e))).toList();
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: AnnouncementRepositoryExceptionCode.failedToLoadAnnouncements,
       );
     }
-
-    final data = response.data['data'] ?? response.data;
-    if (data is List) {
-      return data.map((e) => AnnouncementModel.fromJson(e)).toList();
-    }
-    return [];
   }
 
   @override
   Future<AnnouncementEntity> getAnnouncementDetail(String announcementId) async {
-    final response = await httpClient.get('/api/announcements/$announcementId');
-
-    if (response.statusCode != 200) {
-      throw AnnouncementRepositoryException(
-        code: AnnouncementRepositoryExceptionCode.failedToLoadAnnouncementDetail,
-        message: response.exception?.message,
+    try {
+      final response = await httpClient.get('/api/announcements/$announcementId');
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      return AnnouncementModel.fromJson(data);
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: AnnouncementRepositoryExceptionCode.failedToLoadAnnouncementDetail,
       );
     }
-
-    return AnnouncementModel.fromJson(response.data['data'] ?? response.data);
   }
+
 }

@@ -1,4 +1,4 @@
-name: dio_children_repository
+name: parent_dio_children_repository
 description: Dio implementation of Parent Children Repository.
 version: 0.0.1
 publish_to: none
@@ -11,3 +11,8 @@ resolution: workspace
 dependencies:
   mentorx_core:
     path: ../../mentorx_core
+
+dev_dependencies:
+  test: ^1.25.6
+  mocktail: ^1.0.4
+  lints: ^6.0.0

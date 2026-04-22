@@ -1,216 +1,281 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
+import '../../cubit/cart_cubit.dart';
+import 'bloc/shopping_cart_page_bloc.dart';
 
-class ShoppingCartPage extends StatefulWidget {
+class ShoppingCartPage extends StatelessWidget {
   const ShoppingCartPage({super.key});
-  @override
-  State<ShoppingCartPage> createState() => _ShoppingCartPageState();
-}
-
-class _ShoppingCartPageState extends State<ShoppingCartPage> {
-  final _items = <_CartItem>[
-    _CartItem(name: 'physicsBook', price: 120, qty: 1),
-    _CartItem(name: 'practiceWorkbook', price: 85, qty: 2),
-  ];
-
-  int get _total => _items.fold(0, (sum, item) => sum + item.price * item.qty);
 
   @override
   Widget build(BuildContext context) {
     final t = context.t.student;
+    final cartState = context.watch<CartCubit>().state;
+
     return Scaffold(
       backgroundColor: AppColors.backgroundLight,
       appBar: AppBar(
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
-        title: Text(
-          t['shoppingCart']!,
-          style: const TextStyle(fontSize: 15),
-        ),
+        title: Text(t['shoppingCart']!, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: _items.isEmpty
-                ? Center(
-                    child: Text(
-                      t['shoppingCart']!,
-                      style: TextStyle(color: AppColors.greyDark),
-                    ),
-                  )
-                : ListView.builder(
-                    padding: const EdgeInsets.all(16),
-                    itemCount: _items.length,
-                    itemBuilder: (context, i) {
-                      final item = _items[i];
-                      return Container(
-                        margin: const EdgeInsets.only(bottom: 10),
-                        padding: const EdgeInsets.all(14),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 50,
-                              height: 50,
-                              decoration: BoxDecoration(
-                                color: AppColors.backgroundLight,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Icon(
-                                Icons.menu_book,
-                                color: AppColors.primary.withValues(alpha: 0.4),
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    t[item.name]!,
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w600,
-                                      color: AppColors.primary,
-                                    ),
-                                  ),
-                                  Text(
-                                    '${item.price} ${t['egp']!}',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: AppColors.accent,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Row(
-                              children: [
-                                _QtyButton(
-                                  icon: Icons.remove,
-                                  onTap: () {
-                                    setState(() {
-                                      if (item.qty > 1) {
-                                        item.qty--;
-                                      } else {
-                                        _items.removeAt(i);
-                                      }
-                                    });
-                                  },
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 10,
-                                  ),
-                                  child: Text(
-                                    '${item.qty}',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w700,
-                                      color: AppColors.primary,
-                                    ),
-                                  ),
-                                ),
-                                _QtyButton(
-                                  icon: Icons.add,
-                                  onTap: () => setState(() => item.qty++),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      );
-                    },
+      body: cartState.items.isEmpty
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.shopping_cart_outlined, size: 64, color: Colors.grey[400]),
+                  const SizedBox(height: 16),
+                  Text(
+                    t['cartEmpty']!,
+                    style: TextStyle(fontSize: 18, color: Colors.grey[600]),
                   ),
-          ),
-          if (_items.isNotEmpty)
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.06),
-                    blurRadius: 8,
-                    offset: const Offset(0, -2),
+                  const SizedBox(height: 24),
+                  MentorXButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    text: t['startShopping']!,
                   ),
                 ],
               ),
-              child: SafeArea(
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          t['orderSummary']!,
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: AppColors.greyDark,
-                          ),
-                        ),
-                        Text(
-                          '$_total ${t['egp']!}',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
-                            color: AppColors.primary,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primary,
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        child: Text(t['checkout']!),
-                      ),
-                    ),
-                  ],
+            )
+          : Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    padding: const EdgeInsets.all(16),
+                    itemCount: cartState.items.length,
+                    itemBuilder: (context, index) {
+                      final cartItem = cartState.items[index];
+                      return _CartItemTile(cartItem: cartItem);
+                    },
+                  ),
                 ),
+                _OrderSummary(
+                  subtotal: cartState.subtotal,
+                  onCheckout: () => _showCheckoutSheet(context),
+                ),
+              ],
+            ),
+    );
+  }
+
+  void _showCheckoutSheet(BuildContext context) {
+    final addressController = TextEditingController();
+    final phoneController = TextEditingController();
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+          left: 20,
+          right: 20,
+          top: 20,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Delivery Details',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 16),
+            MentorXTextFormField(
+              controller: addressController,
+              label: 'Delivery Address',
+              icon: Icons.location_on_outlined,
+            ),
+            const SizedBox(height: 12),
+            MentorXTextFormField(
+              controller: phoneController,
+              label: 'Phone Number',
+              icon: Icons.phone_outlined,
+              keyboardType: TextInputType.phone,
+            ),
+            const SizedBox(height: 24),
+            MentorXButton(
+              onPressed: () {
+                if (addressController.text.isEmpty || phoneController.text.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Please fill all fields')),
+                  );
+                  return;
+                }
+                Navigator.pop(context);
+                _placeOrder(context, addressController.text, phoneController.text);
+              },
+              text: t['confirmOrder']!,
+            ),
+            const SizedBox(height: 20),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _placeOrder(BuildContext context, String address, String phone) {
+    final cartCubit = context.read<CartCubit>();
+    final items = cartCubit.state.items
+        .map((i) => (itemId: i.item.id, quantity: i.quantity))
+        .toList();
+
+    context.read<ShoppingCartPageBloc>().add(
+          ShoppingCartPagePlaceOrderEvent(
+            items: items,
+            address: address,
+            phone: phone,
+          ),
+        );
+  }
+}
+
+class _CartItemTile extends StatelessWidget {
+  final CartItem cartItem;
+
+  const _CartItemTile({required this.cartItem});
+
+  @override
+  Widget build(BuildContext context) {
+    final item = cartItem.item;
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 5,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: CachedNetworkImage(
+              imageUrl: item.imageUrls.isNotEmpty ? item.imageUrls.first : '',
+              width: 70,
+              height: 70,
+              fit: BoxFit.cover,
+              errorWidget: (context, url, error) => Container(
+                color: Colors.grey[200],
+                child: const Icon(Icons.image, color: Colors.grey),
               ),
             ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  item.title,
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  '${item.price} EGP',
+                  style: TextStyle(color: AppColors.accent, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          ),
+          Row(
+            children: [
+              IconButton(
+                onPressed: () => context.read<CartCubit>().updateQuantity(item.id, cartItem.quantity - 1),
+                icon: const Icon(Icons.remove_circle_outline, size: 20),
+              ),
+              Text(
+                '${cartItem.quantity}',
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              IconButton(
+                onPressed: () => context.read<CartCubit>().updateQuantity(item.id, cartItem.quantity + 1),
+                icon: const Icon(Icons.add_circle_outline, size: 20),
+              ),
+            ],
+          ),
         ],
       ),
     );
   }
 }
 
-class _CartItem {
-  final String name;
-  final int price;
-  int qty;
-  _CartItem({required this.name, required this.price, required this.qty});
-}
+class _OrderSummary extends StatelessWidget {
+  final double subtotal;
+  final VoidCallback onCheckout;
 
-class _QtyButton extends StatelessWidget {
-  const _QtyButton({required this.icon, required this.onTap});
-  final IconData icon;
-  final VoidCallback onTap;
+  const _OrderSummary({required this.subtotal, required this.onCheckout});
+
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(4),
-        decoration: BoxDecoration(
-          color: AppColors.backgroundLight,
-          borderRadius: BorderRadius.circular(6),
+
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, -5),
+          ),
+        ],
+      ),
+      child: SafeArea(
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text('Subtotal'),
+                Text('${subtotal.toStringAsFixed(2)} EGP'),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text('Delivery'),
+                const Text('0.00 EGP'), // TODO: Real delivery fee
+              ],
+            ),
+            const Divider(height: 24),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Total',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  '${subtotal.toStringAsFixed(2)} EGP',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.accent,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            MentorXButton(
+              onPressed: onCheckout,
+              text: context.t.student['checkout']!,
+            ),
+          ],
         ),
-        child: Icon(icon, size: 16, color: AppColors.primary),
       ),
     );
   }

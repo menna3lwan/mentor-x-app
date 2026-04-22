@@ -92,56 +92,42 @@ final class DioAuthenticationRepository
 
   @override
   Future<StudentEntity?> getCurrentUser() async {
-    final defaultException = _ExceptionCode.failedToGetCurrentUser;
     try {
       final isAuthenticated = await httpClient.isAuthenticated();
-      if (!isAuthenticated) {
-        return null;
-      }
+      if (!isAuthenticated) return null;
 
       final response = await _getCurrentUserResponse();
-
-      if (response.statusCode == 401) {
-        return null;
-      }
-
-      if (!_isSuccessStatus(response.statusCode)) {
-        throw _Exception(
-          code: defaultException,
-          message: response.exception?.message,
-        );
-      }
-
       final user = _extractStudentFromResponse(response.data);
       if (user == null) {
         throw _Exception(
-          code: defaultException,
+          code: _ExceptionCode.failedToGetCurrentUser,
           message: 'User payload was missing from response.',
         );
       }
 
       await _cacheUser(user);
       return user;
-    } on HttpClientResponse catch (errorResponse) {
-      if (errorResponse.statusCode == 401) {
-        return null;
-      }
-      handleHttpClientErrorResponse(defaultException, errorResponse);
-    } catch (e, s) {
-      _logger.error('Failed to get current user', e, s);
-      if (e is _Exception) {
-        rethrow;
-      }
-      throw _Exception(
-        code: defaultException,
-        message: 'Failed to get current user',
+    } on HttpClientResponse catch (e) {
+      if (e.statusCode == 401) return null;
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: _ExceptionCode.failedToGetCurrentUser,
       );
     }
   }
 
   @override
   Future<Duration?> resendOtp(String phoneNumber) async {
-    final defaultException = _ExceptionCode.failedToResendOtp;
+    final result = AuthRateLimiter.canAttempt(phoneNumber, 'resend_otp');
+    if (!result.canAttempt) {
+      throw RateLimitExceededException(
+        message: 'Too many OTP requests. Please wait.',
+        remainingCooldown: result.remainingCooldown,
+        identifier: phoneNumber,
+        endpoint: 'resend_otp',
+      );
+    }
+
     try {
       if (_pendingOtpPhoneNumber == null ||
           _pendingOtpPhoneNumber != phoneNumber) {
@@ -152,75 +138,57 @@ final class DioAuthenticationRepository
       }
 
       final response = await _resendOtpResponse(phoneNumber);
+      AuthRateLimiter.recordSuccessfulAttempt(phoneNumber, 'resend_otp');
 
-      if (!_isSuccessStatus(response.statusCode)) {
-        throw _Exception(
-          code: defaultException,
-          message: response.exception?.message,
-        );
-      }
-
-      final data = _extractDataMap(response.data);
-      final expiresIn = _intOrNull(
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final expiresIn = intOrNull(
         data['otp_expires_in_seconds'] ?? data['expires_in_seconds'],
       );
 
       return expiresIn == null ? null : Duration(seconds: expiresIn);
-    } on HttpClientResponse catch (errorResponse) {
-      handleHttpClientErrorResponse(defaultException, errorResponse);
-    } catch (e, s) {
-      _logger.error('Failed to resend OTP', e, s);
-      if (e is _Exception) {
-        rethrow;
-      }
-      throw _Exception(code: defaultException);
+    } on HttpClientResponse catch (e) {
+      AuthRateLimiter.recordFailedAttempt(phoneNumber, 'resend_otp');
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: _ExceptionCode.failedToResendOtp,
+      );
     }
   }
 
   @override
   Future<void> requestPasswordReset(String phoneNumber) async {
-    final defaultException = _ExceptionCode.failedToRequestPasswordReset;
-
-    Future<void> tryRequest(String endpoint) async {
-      final response = await httpClient.post(
-        endpoint,
+    try {
+      await httpClient.post(
+        '/api/v1/auth/forgot-password',
         data: {'phone': phoneNumber},
       );
-      if (!_isSuccessStatus(response.statusCode) &&
-          response.statusCode != 204) {
-        throw _Exception(code: defaultException);
-      }
-    }
-
-    try {
-      await tryRequest('/api/v1/auth/forgot-password');
       setOtpVerificationContext(
         phoneNumber: phoneNumber,
         purpose: OtpVerificationPurpose.passwordReset,
       );
-    } on HttpClientResponse catch (errorResponse) {
-      if (errorResponse.statusCode == 404) {
+    } on HttpClientResponse catch (e) {
+      if (e.statusCode == 404) {
         try {
-          await tryRequest('/api/auth/forgot-password');
+          await httpClient.post(
+            '/api/auth/forgot-password',
+            data: {'phone': phoneNumber},
+          );
           setOtpVerificationContext(
             phoneNumber: phoneNumber,
             purpose: OtpVerificationPurpose.passwordReset,
           );
           return;
-        } on HttpClientResponse catch (fallbackErrorResponse) {
+        } on HttpClientResponse catch (fallbackE) {
           handleHttpClientErrorResponse(
-            defaultException,
-            fallbackErrorResponse,
+            fallbackE,
+            defaultCode: _ExceptionCode.failedToRequestPasswordReset,
           );
         }
       }
-      handleHttpClientErrorResponse(defaultException, errorResponse);
-    } catch (e, s) {
-      _logger.error('Failed to request password reset', e, s);
-      if (e is _Exception) {
-        rethrow;
-      }
-      throw _Exception(code: defaultException);
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: _ExceptionCode.failedToRequestPasswordReset,
+      );
     }
   }
 
@@ -230,16 +198,6 @@ final class DioAuthenticationRepository
     required String otp,
     required String newPassword,
   }) async {
-    final defaultException = _ExceptionCode.failedToResetPassword;
-
-    Future<void> tryReset(String endpoint, Map<String, dynamic> payload) async {
-      final response = await httpClient.post(endpoint, data: payload);
-      if (!_isSuccessStatus(response.statusCode) &&
-          response.statusCode != 204) {
-        throw _Exception(code: defaultException);
-      }
-    }
-
     final primaryPayload = {
       'phone': phoneNumber,
       'otp': otp,
@@ -252,45 +210,49 @@ final class DioAuthenticationRepository
     };
 
     try {
-      await tryReset('/api/v1/auth/reset-password', primaryPayload);
+      await httpClient.post('/api/v1/auth/reset-password', data: primaryPayload);
       await _clearLocalAuthSession();
-    } on HttpClientResponse catch (errorResponse) {
-      if (errorResponse.statusCode == 400 || errorResponse.statusCode == 422) {
+    } on HttpClientResponse catch (e) {
+      if (e.statusCode == 400 || e.statusCode == 422) {
         try {
-          await tryReset('/api/v1/auth/reset-password', secondaryPayload);
+          await httpClient.post(
+            '/api/v1/auth/reset-password',
+            data: secondaryPayload,
+          );
           await _clearLocalAuthSession();
           return;
-        } on HttpClientResponse catch (_) {
-          // Continue to legacy fallbacks.
-        }
+        } catch (_) {}
       }
 
-      if (errorResponse.statusCode == 404) {
+      if (e.statusCode == 404) {
         try {
-          await tryReset('/api/auth/reset-password', primaryPayload);
+          await httpClient.post(
+            '/api/auth/reset-password',
+            data: primaryPayload,
+          );
           await _clearLocalAuthSession();
           return;
         } on HttpClientResponse catch (_) {
           try {
-            await tryReset('/api/auth/reset-password', secondaryPayload);
+            await httpClient.post(
+              '/api/auth/reset-password',
+              data: secondaryPayload,
+            );
             await _clearLocalAuthSession();
             return;
-          } on HttpClientResponse catch (fallbackErrorResponse) {
+          } on HttpClientResponse catch (fallbackE) {
             handleHttpClientErrorResponse(
-              defaultException,
-              fallbackErrorResponse,
+              fallbackE,
+              defaultCode: _ExceptionCode.failedToResetPassword,
             );
           }
         }
       }
 
-      handleHttpClientErrorResponse(defaultException, errorResponse);
-    } catch (e, s) {
-      _logger.error('Failed to reset password', e, s);
-      if (e is _Exception) {
-        rethrow;
-      }
-      throw _Exception(code: defaultException);
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: _ExceptionCode.failedToResetPassword,
+      );
     }
   }
 
@@ -305,7 +267,6 @@ final class DioAuthenticationRepository
     required String phoneNumber,
     required String password,
   }) async {
-    final defaultException = _ExceptionCode.failedToGetCurrentUser;
     try {
       final payload = await _buildLoginPayload(
         phoneNumber: phoneNumber,
@@ -313,24 +274,16 @@ final class DioAuthenticationRepository
       );
 
       final response = await _loginResponse(payload);
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
 
-      if (!_isSuccessStatus(response.statusCode)) {
-        throw _Exception(
-          code: defaultException,
-          message: response.exception?.message,
-        );
-      }
-
-      final data = _extractDataMap(response.data);
-
-      if (_boolOrFalse(data['requires_otp'])) {
+      if (boolOrFalse(data['requires_otp'])) {
         setOtpVerificationContext(
           phoneNumber: phoneNumber,
           purpose: OtpVerificationPurpose.login,
         );
 
-        final otpDurationSeconds = _intOrNull(data['otp_expires_in_seconds']);
-        final otpLength = _intOrNull(data['otp_length']);
+        final otpDurationSeconds = intOrNull(data['otp_expires_in_seconds']);
+        final otpLength = intOrNull(data['otp_length']);
 
         throw AuthenticationRequiresOtpException(
           message: 'OTP required for this login.',
@@ -346,7 +299,7 @@ final class DioAuthenticationRepository
       final user = _extractStudentFromResponse(response.data);
       if (user == null) {
         throw _Exception(
-          code: defaultException,
+          code: _ExceptionCode.failedToGetCurrentUser,
           message: 'Login response did not include user details.',
         );
       }
@@ -354,27 +307,19 @@ final class DioAuthenticationRepository
       await _cacheUser(user);
       clearOtpVerificationContext();
       return user;
-    } on HttpClientResponse catch (errorResponse) {
-      if (_isDeviceLimitError(errorResponse)) {
-        final error = _extractErrorMap(errorResponse.data);
+    } on HttpClientResponse catch (e) {
+      if (_isDeviceLimitError(e)) {
+        final error = _extractErrorMap(e.data);
         throw DeviceLimitReachedException(
-          message:
-              _stringOrNull(error['message']) ?? 'Maximum devices reached.',
-          maxDevices: _intOrNull(error['max_devices']) ?? 1,
+          message: stringOrNull(error['message']) ?? 'Maximum devices reached.',
+          maxDevices: intOrNull(error['max_devices']) ?? 1,
           activeDevices: _parseActiveDevices(error['active_devices']),
         );
       }
-      handleHttpClientErrorResponse(defaultException, errorResponse);
-    } catch (e, s) {
-      _logger.error('Failed to login with password', e, s);
-      if (e is AuthenticationRequiresOtpException ||
-          e is DeviceLimitReachedException) {
-        rethrow;
-      }
-      if (e is _Exception) {
-        rethrow;
-      }
-      throw _Exception(code: defaultException);
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: _ExceptionCode.failedToGetCurrentUser,
+      );
     }
   }
 
@@ -382,37 +327,27 @@ final class DioAuthenticationRepository
   Future<({Duration? otpDuration, int? otpLength})?> sendOtp(
     String phoneNumber,
   ) async {
-    final defaultException = _ExceptionCode.failedToSendOtp;
     try {
       final response = await _sendOtpResponse(phoneNumber);
-
-      if (!_isSuccessStatus(response.statusCode)) {
-        throw _Exception(code: defaultException);
-      }
 
       setOtpVerificationContext(
         phoneNumber: phoneNumber,
         purpose: OtpVerificationPurpose.registration,
       );
 
-      final data = _extractDataMap(response.data);
-      final otpDuration = _intOrNull(data['otp_expires_in_seconds']);
-      final otpLength = _intOrNull(data['otp_length']);
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final otpDuration = intOrNull(data['otp_expires_in_seconds']);
+      final otpLength = intOrNull(data['otp_length']);
 
       return (
-        otpDuration: otpDuration == null
-            ? null
-            : Duration(seconds: otpDuration),
+        otpDuration: otpDuration == null ? null : Duration(seconds: otpDuration),
         otpLength: otpLength,
       );
-    } on HttpClientResponse catch (errorResponse) {
-      handleHttpClientErrorResponse(defaultException, errorResponse);
-    } catch (e, s) {
-      _logger.error('Failed to send OTP', e, s);
-      if (e is _Exception) {
-        rethrow;
-      }
-      throw _Exception(code: defaultException);
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: _ExceptionCode.failedToSendOtp,
+      );
     }
   }
 
@@ -423,18 +358,9 @@ final class DioAuthenticationRepository
       throw _Exception(code: _ExceptionCode.invalidPhoneNumber);
     }
 
-    final defaultException = _ExceptionCode.failedToVerifyOtp;
     try {
       final response = await _verifyOtpResponse(phone, otp);
-
-      if (!_isSuccessStatus(response.statusCode)) {
-        throw _Exception(
-          code: defaultException,
-          message: response.exception?.message,
-        );
-      }
-
-      final data = _extractDataMap(response.data);
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
       _setTokensIfPresent(data);
 
       final studentFromPayload = _extractStudentFromResponse(response.data);
@@ -444,21 +370,22 @@ final class DioAuthenticationRepository
         return studentFromPayload;
       }
 
-      final String rawName = _stringOrNull(data['name']) ?? '';
+      final String rawName = stringOrNull(data['name']) ?? '';
       final nameParts = rawName.split(' ');
       final String fallbackFirstName = nameParts.isNotEmpty ? nameParts[0] : '';
-      final String fallbackLastName = nameParts.length > 1 ? nameParts.sublist(1).join(' ') : '';
+      final String fallbackLastName =
+          nameParts.length > 1 ? nameParts.sublist(1).join(' ') : '';
 
       final studentStatus = _parseStatus(
-        _stringOrNull(data['status'] ?? data['account_status']),
+        stringOrNull(data['status'] ?? data['account_status']),
       );
 
       final fallbackUser = StudentEntity(
-        id: _stringOrNull(data['user_id']) ?? '',
-        firstName: _stringOrNull(data['first_name']) ?? fallbackFirstName,
-        lastName: _stringOrNull(data['last_name']) ?? fallbackLastName,
+        id: stringOrNull(data['user_id']) ?? '',
+        firstName: stringOrNull(data['first_name']) ?? fallbackFirstName,
+        lastName: stringOrNull(data['last_name']) ?? fallbackLastName,
         phoneNumber: phone,
-        studentCode: _stringOrNull(data['student_code']),
+        studentCode: stringOrNull(data['student_code']),
         status: studentStatus ?? StudentStatus.pending,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
@@ -467,14 +394,11 @@ final class DioAuthenticationRepository
       await _cacheUser(fallbackUser);
       clearOtpVerificationContext();
       return fallbackUser;
-    } on HttpClientResponse catch (errorResponse) {
-      handleHttpClientErrorResponse(defaultException, errorResponse);
-    } catch (e, s) {
-      _logger.error('Failed to verify OTP', e, s);
-      if (e is _Exception) {
-        rethrow;
-      }
-      throw _Exception(code: defaultException, message: 'Failed to verify OTP');
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: _ExceptionCode.failedToVerifyOtp,
+      );
     }
   }
 
@@ -483,8 +407,8 @@ final class DioAuthenticationRepository
     try {
       try {
         await httpClient.post('/api/auth/student/logout');
-      } on HttpClientResponse catch (errorResponse) {
-        if (errorResponse.statusCode == 404) {
+      } on HttpClientResponse catch (e) {
+        if (e.statusCode == 404) {
           await httpClient.post('/api/v1/auth/logout');
         } else {
           rethrow;
@@ -493,51 +417,36 @@ final class DioAuthenticationRepository
     } catch (_) {
       // Local cleanup still happens even if backend sign out fails.
     } finally {
-      await _deleteCachedUser();
-      httpClient.removeBearerToken();
-      clearOtpVerificationContext();
+      await _clearLocalAuthSession();
     }
   }
 
   @override
   Future<StudentEntity> getAccountStatus() async {
-    final defaultException = _ExceptionCode.unknown;
     try {
       HttpClientResponse response;
       try {
         response = await httpClient.get('/api/v1/auth/account-status');
-      } on HttpClientResponse catch (errorResponse) {
-        if (errorResponse.statusCode != 404) {
-          rethrow;
-        }
+      } on HttpClientResponse catch (e) {
+        if (e.statusCode != 404) rethrow;
         response = await httpClient.get('/api/auth/student/account-status');
-      }
-
-      if (!_isSuccessStatus(response.statusCode)) {
-        throw _Exception(
-          code: defaultException,
-          message: response.exception?.message,
-        );
       }
 
       final user = _extractStudentFromResponse(response.data);
       if (user == null) {
         throw _Exception(
-          code: defaultException,
+          code: _ExceptionCode.unknown,
           message: 'Account status payload was missing user details.',
         );
       }
 
       await _cacheUser(user);
       return user;
-    } on HttpClientResponse catch (errorResponse) {
-      handleHttpClientErrorResponse(defaultException, errorResponse);
-    } catch (e, s) {
-      _logger.error('Failed to get account status', e, s);
-      if (e is _Exception) {
-        rethrow;
-      }
-      throw _Exception(code: defaultException);
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: _ExceptionCode.unknown,
+      );
     }
   }
 
@@ -667,29 +576,23 @@ final class DioAuthenticationRepository
   }
 
   void _setTokensIfPresent(Map<String, dynamic> data) {
-    final accessToken = _stringOrNull(
-      data['access_token'] ?? data['accessToken'],
-    );
-    if (accessToken == null) {
-      return;
-    }
+    final accessToken = stringOrNull(data['access_token'] ?? data['accessToken']);
+    if (accessToken == null) return;
 
-    final refreshToken = _stringOrNull(
-      data['refresh_token'] ?? data['refreshToken'],
-    );
+    final refreshToken = stringOrNull(data['refresh_token'] ?? data['refreshToken']);
     httpClient.setBearerToken(accessToken, refreshToken: refreshToken);
   }
 
   StudentEntity? _extractStudentFromResponse(dynamic rawResponse) {
-    final root = _asMap(rawResponse);
-    final data = _extractDataMap(rawResponse);
+    final root = asMap(rawResponse);
+    final data = asMap(root['data'] ?? root);
 
     if (data['user'] is Map || data['id'] != null || data['name'] != null) {
       return StudentModel.fromJson(data);
     }
 
     if (root['user'] is Map) {
-      return StudentModel.fromJson(_asMap(root['user']));
+      return StudentModel.fromJson(asMap(root['user']));
     }
 
     return null;
@@ -697,33 +600,30 @@ final class DioAuthenticationRepository
 
   bool _isDeviceLimitError(HttpClientResponse response) {
     final error = _extractErrorMap(response.data);
-    final code = _stringOrNull(error['code'])?.toUpperCase();
+    final code = stringOrNull(error['code'])?.toUpperCase();
     return response.statusCode == 403 && code == 'DEVICE_LIMIT_REACHED';
   }
 
   List<DeviceEntity> _parseActiveDevices(dynamic rawDevices) {
-    if (rawDevices is! List) {
-      return const [];
-    }
+    if (rawDevices is! List) return const [];
 
     return rawDevices
-        .map((entry) => _asMap(entry))
+        .map((entry) => asMap(entry))
         .where((entry) => entry.isNotEmpty)
         .map((entry) {
-          final rawDate = _stringOrNull(entry['last_used_at']);
+          final rawDate = stringOrNull(entry['last_used_at']);
           final parsedDate = rawDate == null
               ? DateTime.now()
               : DateTime.tryParse(rawDate) ?? DateTime.now();
 
           return DeviceEntity(
-            id: _stringOrNull(entry['id']) ?? '',
-            deviceName: _stringOrNull(entry['device_name']) ?? 'Unknown Device',
-            deviceModel:
-                _stringOrNull(entry['device_model']) ??
-                _stringOrNull(entry['device_name']) ??
+            id: stringOrNull(entry['id']) ?? '',
+            deviceName: stringOrNull(entry['device_name']) ?? 'Unknown Device',
+            deviceModel: stringOrNull(entry['device_model']) ??
+                stringOrNull(entry['device_name']) ??
                 'Unknown',
-            osVersion: _stringOrNull(entry['os_version']),
-            appVersion: _stringOrNull(entry['app_version']),
+            osVersion: stringOrNull(entry['os_version']),
+            appVersion: stringOrNull(entry['app_version']),
             isActive: true,
             lastUsedAt: parsedDate,
           );
@@ -732,79 +632,22 @@ final class DioAuthenticationRepository
   }
 
   StudentStatus? _parseStatus(String? status) {
-    if (status == null || status.isEmpty) {
-      return null;
-    }
+    if (status == null || status.isEmpty) return null;
 
     final normalized = status.toLowerCase();
     for (final value in StudentStatus.values) {
-      if (value.name == normalized) {
-        return value;
-      }
+      if (value.name == normalized) return value;
     }
     return null;
   }
 
   Map<String, dynamic> _extractErrorMap(dynamic responseData) {
-    final map = _asMap(responseData);
+    final map = asMap(responseData);
     final error = map['error'];
-    return _asMap(error);
+    return asMap(error);
   }
 
-  static Map<String, dynamic> _asMap(dynamic value) {
-    if (value is Map<String, dynamic>) {
-      return value;
-    }
-    if (value is Map) {
-      return value.map((key, val) => MapEntry(key.toString(), val));
-    }
-    return <String, dynamic>{};
-  }
 
-  static Map<String, dynamic> _extractDataMap(dynamic responseData) {
-    final root = _asMap(responseData);
-    final data = root['data'];
-    if (data is Map) {
-      return _asMap(data);
-    }
-    return root;
-  }
-
-  static bool _isSuccessStatus(int statusCode) {
-    return statusCode == 200 || statusCode == 201;
-  }
-
-  static int? _intOrNull(dynamic value) {
-    if (value == null) {
-      return null;
-    }
-    if (value is int) {
-      return value;
-    }
-    if (value is num) {
-      return value.toInt();
-    }
-    return int.tryParse(value.toString());
-  }
-
-  static String? _stringOrNull(dynamic value) {
-    if (value == null) {
-      return null;
-    }
-    final parsed = value.toString().trim();
-    return parsed.isEmpty ? null : parsed;
-  }
-
-  static bool _boolOrFalse(dynamic value) {
-    if (value is bool) {
-      return value;
-    }
-    if (value is num) {
-      return value != 0;
-    }
-    final normalized = value?.toString().trim().toLowerCase();
-    return normalized == 'true' || normalized == '1' || normalized == 'yes';
-  }
 
   static String _buildDeviceHash() {
     final raw = [
@@ -818,22 +661,15 @@ final class DioAuthenticationRepository
   }
 
   static String _buildDeviceName() {
-    if (Platform.isAndroid) {
-      return 'Android Device';
-    }
-    if (Platform.isIOS) {
-      return 'iPhone';
-    }
+    if (Platform.isAndroid) return 'Android Device';
+    if (Platform.isIOS) return 'iPhone';
     return 'Mobile Device';
   }
 
   static String _buildDeviceModel() {
-    if (Platform.isAndroid) {
-      return 'Android';
-    }
-    if (Platform.isIOS) {
-      return 'iOS';
-    }
+    if (Platform.isAndroid) return 'Android';
+    if (Platform.isIOS) return 'iOS';
     return Platform.operatingSystem;
   }
 }
+

@@ -4,18 +4,23 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage_cache_repository/flutter_secure_storage_cache_repository.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 
-import 'package:parent_authentication_repository/dio_authentication_repository.dart';
-import 'package:parent_dio_home_repository/dio_home_repository.dart';
-import 'package:dio_children_repository/dio_children_repository.dart';
+import 'package:parent_dio_authentication_repository/parent_dio_authentication_repository.dart';
+import 'package:parent_dio_home_repository/parent_dio_home_repository.dart';
+import 'package:parent_dio_children_repository/parent_dio_children_repository.dart';
+import 'package:parent_dio_attendance_repository/parent_dio_attendance_repository.dart';
+import 'package:parent_dio_course_repository/parent_dio_course_repository.dart';
+import 'package:parent_dio_financial_repository/parent_dio_financial_repository.dart';
+import 'package:parent_dio_grade_repository/parent_dio_grade_repository.dart';
+import 'package:parent_dio_communication_repository/parent_dio_communication_repository.dart';
 
-import 'package:parent_mock_authentication_repository/mock_authentication_repository.dart';
-import 'package:parent_mock_home_repository/mock_home_repository.dart';
-import 'package:parent_mock_children_repository/mock_children_repository.dart';
-import 'package:parent_mock_financial_repository/mock_financial_repository.dart';
-import 'package:parent_mock_course_repository/mock_course_repository.dart';
-import 'package:parent_mock_attendance_repository/mock_attendance_repository.dart';
-import 'package:parent_mock_grade_repository/mock_grade_repository.dart';
-import 'package:parent_mock_communication_repository/mock_communication_repository.dart';
+import 'package:parent_mock_authentication_repository/parent_mock_authentication_repository.dart';
+import 'package:parent_mock_home_repository/parent_mock_home_repository.dart';
+import 'package:parent_mock_children_repository/parent_mock_children_repository.dart';
+import 'package:parent_mock_financial_repository/parent_mock_financial_repository.dart';
+import 'package:parent_mock_course_repository/parent_mock_course_repository.dart';
+import 'package:parent_mock_attendance_repository/parent_mock_attendance_repository.dart';
+import 'package:parent_mock_grade_repository/parent_mock_grade_repository.dart';
+import 'package:parent_mock_communication_repository/parent_mock_communication_repository.dart';
 
 import '../../core/utils/env.dart';
 
@@ -167,8 +172,8 @@ final class RepositoriesFactory {
       case RepositoryMode.mock:
         return MockParentFinancialRepository(delay: Env.mockDelayDuration);
       case RepositoryMode.prod:
-        // Placeholder until Dio implementation is created
-        return MockParentFinancialRepository(delay: Env.mockDelayDuration);
+        final httpClient = await _initHttpClient();
+        return DioParentFinancialRepository(httpClient: httpClient);
     }
   }
 
@@ -177,7 +182,8 @@ final class RepositoriesFactory {
       case RepositoryMode.mock:
         return MockParentCourseRepository(delay: Env.mockDelayDuration);
       case RepositoryMode.prod:
-        return MockParentCourseRepository(delay: Env.mockDelayDuration);
+        final httpClient = await _initHttpClient();
+        return DioParentCourseRepository(httpClient: httpClient);
     }
   }
 
@@ -186,7 +192,8 @@ final class RepositoriesFactory {
       case RepositoryMode.mock:
         return MockParentAttendanceRepository(delay: Env.mockDelayDuration);
       case RepositoryMode.prod:
-        return MockParentAttendanceRepository(delay: Env.mockDelayDuration);
+        final httpClient = await _initHttpClient();
+        return DioParentAttendanceRepository(httpClient: httpClient);
     }
   }
 
@@ -195,7 +202,8 @@ final class RepositoriesFactory {
       case RepositoryMode.mock:
         return MockParentGradeRepository(delay: Env.mockDelayDuration);
       case RepositoryMode.prod:
-        return MockParentGradeRepository(delay: Env.mockDelayDuration);
+        final httpClient = await _initHttpClient();
+        return DioParentGradeRepository(httpClient: httpClient);
     }
   }
 
@@ -204,7 +212,8 @@ final class RepositoriesFactory {
       case RepositoryMode.mock:
         return MockParentCommunicationRepository(delay: Env.mockDelayDuration);
       case RepositoryMode.prod:
-        return MockParentCommunicationRepository(delay: Env.mockDelayDuration);
+        final httpClient = await _initHttpClient();
+        return DioParentCommunicationRepository(httpClient: httpClient);
     }
   }
 

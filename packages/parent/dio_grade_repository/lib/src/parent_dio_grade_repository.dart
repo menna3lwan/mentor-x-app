@@ -18,19 +18,18 @@ final class DioParentGradeRepository
 
   @override
   Future<ParentGradeSummaryEntity> getGradeSummary(String childId) async {
-    const defaultException = ParentGradeRepositoryExceptionCode.fetchError;
     try {
       final response = await httpClient.get(
         '/api/v1/parent/children/$childId/grades/summary',
       );
 
-      return ParentGradeSummaryModel.fromJson(
-        response.data['data'] ?? response.data,
-      );
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      return ParentGradeSummaryModel.fromJson(data);
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(defaultException, e);
-    } catch (e) {
-      throwException(defaultException, message: e.toString());
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: ParentGradeRepositoryExceptionCode.fetchError,
+      );
     }
   }
 
@@ -39,20 +38,19 @@ final class DioParentGradeRepository
     String childId, {
     int months = 6,
   }) async {
-    const defaultException = ParentGradeRepositoryExceptionCode.fetchError;
     try {
       final response = await httpClient.get(
         '/api/v1/parent/children/$childId/grades/trend',
         queryParameters: {'months': months},
       );
 
-      return ParentGradeTrendModel.fromJson(
-        response.data['data'] ?? response.data,
-      );
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      return ParentGradeTrendModel.fromJson(data);
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(defaultException, e);
-    } catch (e) {
-      throwException(defaultException, message: e.toString());
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: ParentGradeRepositoryExceptionCode.fetchError,
+      );
     }
   }
 
@@ -62,7 +60,6 @@ final class DioParentGradeRepository
     String? type,
     String? courseId,
   }) async {
-    const defaultException = ParentGradeRepositoryExceptionCode.fetchError;
     try {
       final response = await httpClient.get(
         '/api/v1/parent/children/$childId/assessments',
@@ -72,12 +69,14 @@ final class DioParentGradeRepository
         },
       );
 
-      final data = response.data['data'] as List? ?? [];
-      return data.map((e) => QuizAttemptModel.fromJson(e)).toList();
+      final data = asList(response.data);
+      return data.map((e) => QuizAttemptModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(defaultException, e);
-    } catch (e) {
-      throwException(defaultException, message: e.toString());
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: ParentGradeRepositoryExceptionCode.fetchError,
+      );
     }
   }
+
 }

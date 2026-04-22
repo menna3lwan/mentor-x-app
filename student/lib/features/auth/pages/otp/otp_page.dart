@@ -92,14 +92,14 @@ final class OtpPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      context.t.login.otp.header,
+                      'Verify OTP',
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.w700,
                       ),
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      context.t.login.otp.description,
+                      'Enter the code sent to your phone',
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: palette.textSecondary,
@@ -167,7 +167,7 @@ final class OtpPage extends StatelessWidget {
                                             strokeWidth: 2,
                                           ),
                                         )
-                                      : Text(context.t.login.otp.resend),
+                                      : const Text('Resend Code'),
                                 ),
                                 TextButton(
                                   onPressed: isResendingWhatsapp
@@ -189,7 +189,7 @@ final class OtpPage extends StatelessWidget {
                               key: const ValueKey('countdown'),
                               padding: const EdgeInsets.symmetric(vertical: 12),
                               child: Text(
-                                '${context.t.login.otp.resendIn} $formattedCountdown',
+                                'Resend in $formattedCountdown',
                                 style: Theme.of(context).textTheme.bodySmall
                                     ?.copyWith(color: palette.textSecondary),
                               ),
@@ -199,7 +199,7 @@ final class OtpPage extends StatelessWidget {
                       TextButton.icon(
                         onPressed: onEditPhone,
                         icon: const Icon(Icons.edit_outlined, size: 18),
-                        label: Text(context.t.login.otp.editNumber),
+                        label: const Text('Edit Number'),
                       ),
                       const SizedBox(height: 20),
                     ],
@@ -215,7 +215,7 @@ final class OtpPage extends StatelessWidget {
                                   strokeWidth: 2,
                                 ),
                               )
-                            : Text(context.t.login.otp.confirm),
+                            : const Text('Confirm'),
                       ),
                     ),
                     const SizedBox(height: 12),

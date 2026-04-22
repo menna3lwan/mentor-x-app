@@ -25,6 +25,9 @@ abstract interface class MarketplaceRepository {
     MentorXPaginationInfo? paginationInfo,
   });
 
+  /// Fetch a single marketplace item by ID.
+  Future<MarketplaceItemEntity> getItemById(String itemId);
+
   /// Place an order.
   Future<MarketplaceOrderEntity> placeOrder({
     required List<({String itemId, int quantity})> items,

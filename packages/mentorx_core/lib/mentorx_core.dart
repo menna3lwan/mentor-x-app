@@ -15,6 +15,7 @@ part 'src/utils/mentorx_pagination_info.dart';
 part 'src/utils/parent_exception.dart';
 part 'src/utils/auth_rate_limiter.dart';
 part 'src/utils/security_validator.dart';
+part 'src/utils/data_parsing_mixin.dart';
 
 // ——— Clients ———
 part 'src/clients/http_client.dart';

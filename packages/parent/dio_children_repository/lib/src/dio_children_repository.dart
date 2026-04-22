@@ -22,17 +22,14 @@ final class DioParentChildrenRepository extends HttpClientRepository<Authenticat
   Future<List<ParentChildEntity>> getChildren() async {
     try {
       final response = await _httpClient.get('/api/v1/parent/children');
-      if (response.isOk) {
-        final List<dynamic> data = response.data['data'] ?? [];
-        return data
-            .map((json) => ParentChildModel.fromJson(json as Map<String, dynamic>))
-            .toList();
-      }
-      return [];
+      final data = asList(response.data);
+      return data
+          .map((json) => ParentChildModel.fromJson(asMap(json)))
+          .toList();
     } on HttpClientResponse catch (e) {
       handleHttpClientErrorResponse(
-        AuthenticationExceptionCode.registrationFailed,
         e,
+        defaultCode: AuthenticationExceptionCode.registrationFailed,
       );
     }
   }
@@ -46,16 +43,12 @@ final class DioParentChildrenRepository extends HttpClientRepository<Authenticat
         'value': query,
       });
 
-      if (response.isOk) {
-        final data = response.data['data'] as Map<String, dynamic>;
-        return ParentStudentLookupModel.fromJson(data);
-      }
-      
-      throw const AuthenticationException(code: AuthenticationExceptionCode.studentNotFound);
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      return ParentStudentLookupModel.fromJson(data);
     } on HttpClientResponse catch (e) {
       handleHttpClientErrorResponse(
-        AuthenticationExceptionCode.studentNotFound,
         e,
+        defaultCode: AuthenticationExceptionCode.studentNotFound,
       );
     }
   }
@@ -71,15 +64,12 @@ final class DioParentChildrenRepository extends HttpClientRepository<Authenticat
         'relationship': relationship,
       });
 
-      if (response.isOk) {
-        return ParentChildModel.fromJson(response.data['data'] as Map<String, dynamic>);
-      }
-      
-      throw const AuthenticationException(code: AuthenticationExceptionCode.registrationFailed);
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      return ParentChildModel.fromJson(data);
     } on HttpClientResponse catch (e) {
       handleHttpClientErrorResponse(
-        AuthenticationExceptionCode.registrationFailed,
         e,
+        defaultCode: AuthenticationExceptionCode.registrationFailed,
       );
     }
   }
@@ -90,9 +80,10 @@ final class DioParentChildrenRepository extends HttpClientRepository<Authenticat
       await _httpClient.delete('/api/v1/parent/children/$childId');
     } on HttpClientResponse catch (e) {
       handleHttpClientErrorResponse(
-        AuthenticationExceptionCode.unknown,
         e,
+        defaultCode: AuthenticationExceptionCode.unknown,
       );
     }
   }
+
 }

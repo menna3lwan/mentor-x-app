@@ -20,75 +20,72 @@ final class DioNotificationRepository
   Future<List<NotificationEntity>> getNotifications({
     MentorXPaginationInfo? paginationInfo,
   }) async {
-    final response = await httpClient.get(
-      '/api/notifications',
-      queryParameters: {
-        if (paginationInfo != null) ...paginationInfo.toJson(),
-      },
-    );
+    try {
+      final response = await httpClient.get(
+        '/api/notifications',
+        queryParameters: {
+          if (paginationInfo != null) ...paginationInfo.toJson(),
+        },
+      );
 
-    if (response.statusCode != 200) {
-      throw NotificationRepositoryException(
-        code: NotificationRepositoryExceptionCode.failedToLoadNotifications,
-        message: response.exception?.message,
+      final data = asList(response.data);
+      return data.map((e) => NotificationModel.fromJson(asMap(e))).toList();
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: NotificationRepositoryExceptionCode.failedToLoadNotifications,
       );
     }
-
-    final data = response.data['data'] ?? response.data;
-    if (data is List) {
-      return data.map((e) => NotificationModel.fromJson(e)).toList();
-    }
-    return [];
   }
 
   @override
   Future<void> markAsRead(String notificationId) async {
-    final response = await httpClient.post('/api/notifications/$notificationId/read');
-
-    if (response.statusCode != 200 && response.statusCode != 204) {
-      throw NotificationRepositoryException(
-        code: NotificationRepositoryExceptionCode.failedToMarkAsRead,
-        message: response.exception?.message,
+    try {
+      await httpClient.post('/api/notifications/$notificationId/read');
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: NotificationRepositoryExceptionCode.failedToMarkAsRead,
       );
     }
   }
 
   @override
   Future<void> markAllAsRead() async {
-    final response = await httpClient.post('/api/notifications/read-all');
-
-    if (response.statusCode != 200 && response.statusCode != 204) {
-      throw NotificationRepositoryException(
-        code: NotificationRepositoryExceptionCode.failedToMarkAllAsRead,
-        message: response.exception?.message,
+    try {
+      await httpClient.post('/api/notifications/read-all');
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: NotificationRepositoryExceptionCode.failedToMarkAllAsRead,
       );
     }
   }
 
   @override
   Future<void> deleteNotification(String notificationId) async {
-    final response = await httpClient.delete('/api/notifications/$notificationId');
-
-    if (response.statusCode != 200 && response.statusCode != 204) {
-      throw NotificationRepositoryException(
-        code: NotificationRepositoryExceptionCode.failedToDelete,
-        message: response.exception?.message,
+    try {
+      await httpClient.delete('/api/notifications/$notificationId');
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: NotificationRepositoryExceptionCode.failedToDelete,
       );
     }
   }
 
   @override
   Future<int> getUnreadCount() async {
-    final response = await httpClient.get('/api/notifications/unread-count');
-
-    if (response.statusCode != 200) {
-      throw NotificationRepositoryException(
-        code: NotificationRepositoryExceptionCode.failedToGetUnreadCount,
-        message: response.exception?.message,
+    try {
+      final response = await httpClient.get('/api/notifications/unread-count');
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      return (data['count'] as num?)?.toInt() ?? (data is num ? data.toInt() : 0);
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: NotificationRepositoryExceptionCode.failedToGetUnreadCount,
       );
     }
-
-    final data = response.data['data'] ?? response.data;
-    return (data['count'] ?? data as num?)?.toInt() ?? 0;
   }
+
 }

@@ -13,3 +13,9 @@ dependencies:
     path: ../../../mentorx_core
   mock_data:
     path: ../../../mock_data
+
+dev_dependencies:
+  mocktail: ^1.0.4
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0

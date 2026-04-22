@@ -21,31 +21,23 @@ final class DioGradeRepository
     String? courseId,
     MentorXPaginationInfo? paginationInfo,
   }) async {
-    final response = await httpClient.get(
-      '/api/student/grades/quizzes',
-      queryParameters: {
-        if (courseId != null) 'course_id': courseId,
-        if (paginationInfo?.page != null) 'page': paginationInfo!.page,
-        if (paginationInfo?.limit != null) 'limit': paginationInfo!.limit,
-        if (paginationInfo?.cursor != null) 'cursor': paginationInfo!.cursor,
-      },
-    );
+    try {
+      final response = await httpClient.get(
+        '/api/student/grades/quizzes',
+        queryParameters: {
+          if (courseId != null) 'course_id': courseId,
+          if (paginationInfo != null) ...paginationInfo.toJson(),
+        },
+      );
 
-    if (response.statusCode != 200) {
-      throw GradeRepositoryException(
-        code: GradeRepositoryExceptionCode.failedToLoadQuizResults,
-        message: response.exception?.message,
+      final data = asList(response.data);
+      return data.map((e) => QuizAttemptModel.fromJson(asMap(e))).toList();
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: GradeRepositoryExceptionCode.failedToLoadQuizResults,
       );
     }
-
-    final data = response.data['data'] ?? response.data;
-    if (data is List) {
-      return <QuizAttemptEntity>[
-        for (final e in data)
-          QuizAttemptModel.fromJson(e as Map<String, dynamic>),
-      ];
-    }
-    return [];
   }
 
   @override
@@ -53,30 +45,23 @@ final class DioGradeRepository
     String? courseId,
     MentorXPaginationInfo? paginationInfo,
   }) async {
-    final response = await httpClient.get(
-      '/api/student/grades/assignments',
-      queryParameters: {
-        if (courseId != null) 'course_id': courseId,
-        if (paginationInfo?.page != null) 'page': paginationInfo!.page,
-        if (paginationInfo?.limit != null) 'limit': paginationInfo!.limit,
-        if (paginationInfo?.cursor != null) 'cursor': paginationInfo!.cursor,
-      },
-    );
+    try {
+      final response = await httpClient.get(
+        '/api/student/grades/assignments',
+        queryParameters: {
+          if (courseId != null) 'course_id': courseId,
+          if (paginationInfo != null) ...paginationInfo.toJson(),
+        },
+      );
 
-    if (response.statusCode != 200) {
-      throw GradeRepositoryException(
-        code: GradeRepositoryExceptionCode.failedToLoadAssignmentResults,
-        message: response.exception?.message,
+      final data = asList(response.data);
+      return data.map((e) => AssignmentSubmissionModel.fromJson(asMap(e))).toList();
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: GradeRepositoryExceptionCode.failedToLoadAssignmentResults,
       );
     }
-
-    final data = response.data['data'] ?? response.data;
-    if (data is List) {
-      return <AssignmentSubmissionEntity>[
-        for (final e in data)
-          AssignmentSubmissionModel.fromJson(e as Map<String, dynamic>),
-      ];
-    }
-    return [];
   }
+
 }

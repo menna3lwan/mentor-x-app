@@ -1,4 +1,4 @@
-name: parent_authentication_repository
+name: parent_dio_authentication_repository
 description: "Dio implementation of Parent AuthenticationRepository."
 version: 1.0.0
 publish_to: none

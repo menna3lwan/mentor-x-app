@@ -15,4 +15,6 @@ dependencies:
     path: ../../clients/dio_http_client
 
 dev_dependencies:
+  test: ^1.25.6
+  mocktail: ^1.0.4
   lints: ^6.0.0

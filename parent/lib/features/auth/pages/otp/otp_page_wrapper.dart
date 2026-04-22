@@ -1,41 +1,131 @@
+import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mentorx_core/mentorx_core.dart';
-import '../../../../core/routing/app_routes.dart';
+import 'package:mentorx_ui/mentorx_ui.dart';
+import 'package:parent/core/core.dart';
+import 'package:go_router/go_router.dart';
 
-class OtpPageWrapper extends StatelessWidget {
+import 'bloc/otp_bloc.dart';
+import 'otp_page.dart';
+
+class OtpPageWrapper extends StatefulWidget {
   final String phoneNumber;
   const OtpPageWrapper({super.key, required this.phoneNumber});
 
   @override
+  State<OtpPageWrapper> createState() => _OtpPageWrapperState();
+}
+
+class _OtpPageWrapperState extends State<OtpPageWrapper> {
+  final _otpController = TextEditingController();
+
+  @override
+  void dispose() {
+    _otpController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('OTP Verification')),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('OTP for $phoneNumber'),
-            ElevatedButton(
-              onPressed: () async {
-                final childrenRepo = context.read<ParentChildrenRepository>();
-                try {
-                  final children = await childrenRepo.getChildren();
-                  if (!context.mounted) return;
-                  if (children.isEmpty) {
-                    const AddChildLinkRoute().go(context);
-                  } else {
-                    const HomePageRoute().go(context);
+    return BlocProvider(
+      create: (context) => OtpBloc(
+        authenticationRepository: context.read<AuthenticationRepository<ParentEntity>>(),
+      ),
+      child: BlocPresentationListener<OtpBloc, OtpPresentationEvent>(
+        listener: (context, event) {
+          switch (event) {
+            case OtpSuccessPresentationEvent():
+              // On success, we need to check if the user has linked children
+              _handleSuccessNavigation(context);
+            case OtpFailurePresentationEvent(:final exception):
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(exception.message ?? 'Verification failed')),
+              );
+          }
+        },
+        child: Builder(
+          builder: (context) {
+            final state = context.watch<OtpBloc>().state;
+            final bloc = context.read<OtpBloc>();
+
+            return OtpPage(
+              backButton: IconButton(
+                onPressed: () => context.pop(),
+                icon: const Icon(Icons.arrow_back, color: Color(0xFF183764)),
+              ),
+              title: Text(
+                'Verify Your Number',
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.w800,
+                      color: const Color(0xFF183764),
+                    ),
+              ),
+              subtitle: Text(
+                'Enter the 6-digit code sent to ${widget.phoneNumber}',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Colors.black54,
+                    ),
+              ),
+              otpFields: MentorXTextFormField(
+                controller: _otpController,
+                label: 'OTP Code',
+                keyboardType: TextInputType.number,
+                maxLength: 6,
+                icon: Icons.lock_clock_outlined,
+                onChanged: (value) {
+                  if (value.length == 6) {
+                    bloc.add(OtpSubmittedEvent(
+                      phone: widget.phoneNumber,
+                      code: value,
+                    ));
                   }
-                } catch (e) {
-                  // Handle error
-                }
-              },
-              child: const Text('Verify OTP'),
-            ),
-          ],
+                },
+              ),
+              verifyButton: MentorXButton(
+                text: 'Verify',
+                onPressed: state.loadingState.isLoading || _otpController.text.length < 6
+                    ? null
+                    : () {
+                        bloc.add(OtpSubmittedEvent(
+                          phone: widget.phoneNumber,
+                          code: _otpController.text,
+                        ));
+                      },
+                loading: state.loadingState.isLoading,
+              ),
+              resendButton: TextButton(
+                onPressed: state.canResend && !state.isResending
+                    ? () => bloc.add(OtpResendRequested(phone: widget.phoneNumber))
+                    : null,
+                child: Text(
+                  state.isResending
+                      ? 'Resending...'
+                      : state.canResend
+                          ? 'Resend Code'
+                          : 'Resend in ${state.resendCountdown}s',
+                ),
+              ),
+            );
+          },
         ),
       ),
     );
+  }
+
+  Future<void> _handleSuccessNavigation(BuildContext context) async {
+    final childrenRepo = context.read<ParentChildrenRepository>();
+    try {
+      final children = await childrenRepo.getChildren();
+      if (!context.mounted) return;
+      if (children.isEmpty) {
+        const AddChildLinkRoute().go(context);
+      } else {
+        const HomePageRoute().go(context);
+      }
+    } catch (e) {
+      if (context.mounted) {
+        const HomePageRoute().go(context);
+      }
+    }
   }
 }

@@ -4,30 +4,52 @@ class MentorXButton extends StatelessWidget {
   const MentorXButton({
     super.key,
     required this.text,
-    required this.onPressed,
+    this.onPressed,
+    this.style,
+    this.loading = false,
   });
 
   final String text;
   final void Function()? onPressed;
+  final Style? style;
+  final bool loading;
+
+  Style _defaultStyle() {
+    return Style(
+      $box.width.infinity(),
+      $box.padding.vertical(18),
+      $box.borderRadius(14),
+      $box.alignment.center(),
+      $box.color.ref($mentorxToken.color.brandPrimary),
+      $text.style.ref($mentorxToken.textStyle.bodyPrimary),
+      $text.style.color.ref($mentorxToken.color.textForeground),
+      $text.style.fontWeight.w800(),
+      $text.style.fontSize(16),
+      $on.hover(
+        $box.color.ref($mentorxToken.color.brandPressed),
+      ),
+      $on.disabled(
+        $box.color.grey.shade300(),
+        $text.style.color.grey.shade500(),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialButton(
-      color: const Color(0xFFF59239),
-      minWidth: double.infinity,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-      onPressed: onPressed,
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Text(
-          text,
-          style: const TextStyle(
-            color: Color(0xFFFFFFFF),
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ),
+    return PressableBox(
+      onPress: loading ? null : onPressed,
+      style: _defaultStyle().merge(style),
+      child: loading
+          ? const SizedBox(
+              height: 20,
+              width: 20,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                valueColor: AlwaysStoppedAnimation(Colors.white),
+              ),
+            )
+          : TextSpecWidget(text),
     );
   }
 }

@@ -13,3 +13,8 @@ dependencies:
     path: ../../../mentorx_core
   mock_data:
     path: ../../../mock_data
+
+dev_dependencies:
+  test: ^1.25.6
+  mocktail: ^1.0.4
+  lints: ^6.0.0

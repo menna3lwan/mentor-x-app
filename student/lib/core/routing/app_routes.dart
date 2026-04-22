@@ -388,19 +388,21 @@ final class AssignmentSubmitPageRoute extends GoRouteData
 // --- Source: lib/features/products/pages/product_detail_page/product_detail_page_route.dart ---
 
 @TypedGoRoute<ProductDetailPageRoute>(
-  path: '/product-detail',
+  path: '/product-detail/:itemId',
   name: 'productDetail',
 )
 final class ProductDetailPageRoute extends GoRouteData
     with $ProductDetailPageRoute {
-  const ProductDetailPageRoute();
+  final String itemId;
+
+  const ProductDetailPageRoute({required this.itemId});
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return BlocProvider<ProductDetailPageBloc>(
       create: (context) => ProductDetailPageBloc(
         marketplaceRepository: context.read<MarketplaceRepository>(),
-      )..add(const ProductDetailPageLoadEvent()),
+      )..add(ProductDetailPageLoadEvent(itemId)),
       child: const ProductDetailPageWrapper(),
     );
   }

@@ -22,23 +22,23 @@ final class DioAttendanceRepository
     DateTime? from,
     DateTime? to,
   }) async {
-    final response = await httpClient.get(
-      '/api/attendance/summary',
-      queryParameters: {
-        if (from != null) 'from': from.toIso8601String(),
-        if (to != null) 'to': to.toIso8601String(),
-      },
-    );
+    try {
+      final response = await httpClient.get(
+        '/api/attendance/summary',
+        queryParameters: {
+          if (from != null) 'from': from.toIso8601String(),
+          if (to != null) 'to': to.toIso8601String(),
+        },
+      );
 
-    if (response.statusCode != 200) {
-      throw AttendanceRepositoryException(
-        code: AttendanceRepositoryExceptionCode.failedToLoadSummary,
-        message: response.exception?.message,
+      final data = asMap(response.data['data'] ?? response.data);
+      return AttendanceSummaryModel.fromJson(data);
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: AttendanceRepositoryExceptionCode.failedToLoadSummary,
       );
     }
-
-    final data = _asMap(response.data['data'] ?? response.data);
-    return AttendanceSummaryModel.fromJson(data);
   }
 
   @override
@@ -48,63 +48,43 @@ final class DioAttendanceRepository
     String? courseId,
     MentorXPaginationInfo? paginationInfo,
   }) async {
-    final response = await httpClient.get(
-      '/api/attendance/records',
-      queryParameters: {
-        if (from != null) 'from': from.toIso8601String(),
-        if (to != null) 'to': to.toIso8601String(),
-        if (courseId != null) 'course_id': courseId,
-        if (paginationInfo != null) ...paginationInfo.toJson(),
-      },
-    );
+    try {
+      final response = await httpClient.get(
+        '/api/attendance/records',
+        queryParameters: {
+          if (from != null) 'from': from.toIso8601String(),
+          if (to != null) 'to': to.toIso8601String(),
+          if (courseId != null) 'course_id': courseId,
+          if (paginationInfo != null) ...paginationInfo.toJson(),
+        },
+      );
 
-    if (response.statusCode != 200) {
-      throw AttendanceRepositoryException(
-        code: AttendanceRepositoryExceptionCode.failedToLoadRecords,
-        message: response.exception?.message,
+      final data = asList(response.data);
+      return data.map((e) => AttendanceRecordModel.fromJson(asMap(e))).toList();
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: AttendanceRepositoryExceptionCode.failedToLoadRecords,
       );
     }
-
-    final data = response.data['data'] ?? response.data;
-    if (data is List) {
-      return data.map((e) => AttendanceRecordModel.fromJson(e)).toList();
-    }
-    return [];
   }
 
   @override
   Future<AttendanceRecordEntity> checkIn(String qrData) async {
-    final response = await httpClient.post(
-      '/api/attendance/check-in',
-      data: {'qr_data': qrData},
-    );
+    try {
+      final response = await httpClient.post(
+        '/api/attendance/check-in',
+        data: {'qr_data': qrData},
+      );
 
-    if (response.statusCode != 200 && response.statusCode != 201) {
-      throw AttendanceRepositoryException(
-        code: AttendanceRepositoryExceptionCode.failedToCheckIn,
-        message: response.exception?.message,
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      return AttendanceRecordModel.fromJson(data);
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: AttendanceRepositoryExceptionCode.failedToCheckIn,
       );
     }
-
-    return AttendanceRecordModel.fromJson(
-      response.data['data'] ?? response.data,
-    );
   }
 
-  static Map<String, dynamic> _asMap(dynamic value) {
-    if (value is Map<String, dynamic>) return value;
-    return <String, dynamic>{};
-  }
-
-  static int _toInt(dynamic value) {
-    if (value is int) return value;
-    if (value is num) return value.toInt();
-    return int.tryParse(value?.toString() ?? '') ?? 0;
-  }
-
-  static double _toDouble(dynamic value) {
-    if (value is double) return value;
-    if (value is num) return value.toDouble();
-    return double.tryParse(value?.toString() ?? '') ?? 0;
-  }
 }

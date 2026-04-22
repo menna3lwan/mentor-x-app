@@ -33,6 +33,12 @@ final class ProductDetailPageBloc
     Emitter<ProductDetailPageState> emit,
   ) async {
     emit(state.copyWith(loadingState: LoadingState.loading));
-    emit(state.copyWith(loadingState: LoadingState.loaded));
+    try {
+      final items = await marketplaceRepository.getItems();
+      final item = items.firstWhere((i) => i.id == event.itemId);
+      emit(state.copyWith(loadingState: LoadingState.loaded, item: item));
+    } catch (e) {
+      emit(state.copyWith(loadingState: LoadingState.error));
+    }
   }
 }

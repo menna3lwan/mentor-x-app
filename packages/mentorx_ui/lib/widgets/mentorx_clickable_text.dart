@@ -4,9 +4,9 @@ class MentorXClickableText extends StatelessWidget {
   const MentorXClickableText({
     super.key,
     required this.text,
-    required this.color,
     required this.onPressed,
-    required this.alignment,
+    this.color = const Color(0xFF183764),
+    this.alignment = Alignment.center,
   });
 
   final String text;

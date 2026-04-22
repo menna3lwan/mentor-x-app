@@ -481,17 +481,21 @@ mixin $AssignmentSubmitPageRoute on GoRouteData {
 }
 
 RouteBase get $productDetailPageRoute => GoRouteData.$route(
-  path: '/product-detail',
+  path: '/product-detail/:itemId',
   name: 'productDetail',
   factory: $ProductDetailPageRoute._fromState,
 );
 
 mixin $ProductDetailPageRoute on GoRouteData {
   static ProductDetailPageRoute _fromState(GoRouterState state) =>
-      const ProductDetailPageRoute();
+      ProductDetailPageRoute(itemId: state.pathParameters['itemId']!);
+
+  ProductDetailPageRoute get _self => this as ProductDetailPageRoute;
 
   @override
-  String get location => GoRouteData.$location('/product-detail');
+  String get location => GoRouteData.$location(
+    '/product-detail/${Uri.encodeComponent(_self.itemId)}',
+  );
 
   @override
   void go(BuildContext context) => context.go(location);

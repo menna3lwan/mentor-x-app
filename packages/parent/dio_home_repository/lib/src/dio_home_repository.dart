@@ -25,18 +25,12 @@ final class DioParentHomeRepository extends HttpClientRepository<ParentHomeRepos
         '/api/v1/parent/dashboard/summary',
         queryParameters: {'student_id': studentId},
       );
-      if (response.isOk) {
-        final data = response.data['data'] as Map<String, dynamic>;
-        return ParentHomeSummaryModel.fromJson(data);
-      }
-      throw const ParentHomeRepositoryException(
-        code: ParentHomeRepositoryExceptionCode.fetchError,
-        message: 'Failed to fetch dashboard summary',
-      );
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      return ParentHomeSummaryModel.fromJson(data);
     } on HttpClientResponse catch (e) {
       handleHttpClientErrorResponse(
-        ParentHomeRepositoryExceptionCode.fetchError,
         e,
+        defaultCode: ParentHomeRepositoryExceptionCode.fetchError,
       );
     }
   }
@@ -56,17 +50,14 @@ final class DioParentHomeRepository extends HttpClientRepository<ParentHomeRepos
           'page': page,
         },
       );
-      if (response.isOk) {
-        final List<dynamic> data = response.data['data'] ?? [];
-        return data
-            .map((json) => ParentRecentActivityModel.fromJson(json as Map<String, dynamic>))
-            .toList();
-      }
-      return [];
+      final data = asList(response.data);
+      return data
+          .map((json) => ParentRecentActivityModel.fromJson(asMap(json)))
+          .toList();
     } on HttpClientResponse catch (e) {
       handleHttpClientErrorResponse(
-        ParentHomeRepositoryExceptionCode.fetchError,
         e,
+        defaultCode: ParentHomeRepositoryExceptionCode.fetchError,
       );
     }
   }
@@ -84,18 +75,17 @@ final class DioParentHomeRepository extends HttpClientRepository<ParentHomeRepos
           'limit': limit,
         },
       );
-      if (response.isOk) {
-        final List<dynamic> data = response.data['data'] ?? [];
-        return data
-            .map((json) => AnnouncementModel.fromJson(json as Map<String, dynamic>))
-            .toList();
-      }
-      return [];
+      final data = asList(response.data);
+      return data
+          .map((json) => AnnouncementModel.fromJson(asMap(json)))
+          .toList();
     } on HttpClientResponse catch (e) {
       handleHttpClientErrorResponse(
-        ParentHomeRepositoryExceptionCode.fetchError,
         e,
+        defaultCode: ParentHomeRepositoryExceptionCode.fetchError,
       );
     }
   }
+
+
 }

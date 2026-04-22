@@ -17,17 +17,16 @@ final class DioWalletRepository
 
   @override
   Future<WalletSummaryEntity> getSummary() async {
-    final response = await httpClient.get('/api/student/wallet/summary');
-
-    if (response.statusCode != 200) {
-      throw WalletRepositoryException(
-        code: WalletRepositoryExceptionCode.failedToLoadSummary,
-        message: response.exception?.message,
+    try {
+      final response = await httpClient.get('/api/student/wallet/summary');
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      return WalletSummaryModel.fromJson(data);
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: WalletRepositoryExceptionCode.failedToLoadSummary,
       );
     }
-
-    final data = _asMap(response.data)['data'] ?? _asMap(response.data);
-    return WalletSummaryModel.fromJson(data);
   }
 
   @override
@@ -35,25 +34,24 @@ final class DioWalletRepository
     String? type,
     MentorXPaginationInfo? paginationInfo,
   }) async {
-    final response = await httpClient.get(
-      '/api/student/wallet/transactions',
-      queryParameters: {
-        if (type != null) 'type': type,
-        if (paginationInfo != null) ...paginationInfo.toJson(),
-      },
-    );
-
-    if (response.statusCode != 200) {
-      throw WalletRepositoryException(
-        code: WalletRepositoryExceptionCode.failedToLoadTransactions,
-        message: response.exception?.message,
+    try {
+      final response = await httpClient.get(
+        '/api/student/wallet/transactions',
+        queryParameters: {
+          if (type != null) 'type': type,
+          if (paginationInfo != null) ...paginationInfo.toJson(),
+        },
+      );
+      final data = asList(response.data);
+      return data
+          .map((e) => WalletTransactionModel.fromJson(asMap(e)))
+          .toList();
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: WalletRepositoryExceptionCode.failedToLoadTransactions,
       );
     }
-
-    return _asList(response.data)
-        .map(_asMap)
-        .map(WalletTransactionModel.fromJson)
-        .toList();
   }
 
   @override
@@ -62,90 +60,77 @@ final class DioWalletRepository
     required PaymentMethod method,
     required PaymentType paymentType,
   }) async {
-    final response = await httpClient.post(
-      '/api/student/payments/initiate',
-      data: {
-        'amount': amount,
-        'method': method.name,
-        'type': paymentType.name,
-      },
-    );
+    try {
+      final response = await httpClient.post(
+        '/api/student/payments/initiate',
+        data: {
+          'amount': amount,
+          'method': method.name,
+          'type': paymentType.name,
+        },
+        headers: {
+          'X-Idempotency-Key': 'pay_${DateTime.now().millisecondsSinceEpoch}_$amount',
+        },
+      );
 
-    if (response.statusCode != 200 && response.statusCode != 201) {
-      throw WalletRepositoryException(
-        code: WalletRepositoryExceptionCode.failedToInitiatePayment,
-        message: response.exception?.message,
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      return PaymentModel.fromJson(data);
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: WalletRepositoryExceptionCode.failedToInitiatePayment,
       );
     }
-
-    final data = _asMap(response.data)['data'] ?? _asMap(response.data);
-    return PaymentModel.fromJson(data);
   }
 
   @override
   Future<PaymentEntity> getPaymentStatus(String paymentId) async {
-    final response = await httpClient.get('/api/student/payments/$paymentId/status');
-
-    if (response.statusCode != 200) {
-      throw WalletRepositoryException(
-        code: WalletRepositoryExceptionCode.failedToGetPaymentStatus,
-        message: response.exception?.message,
+    try {
+      final response = await httpClient.get('/api/student/payments/$paymentId/status');
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      return PaymentModel.fromJson(data);
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: WalletRepositoryExceptionCode.failedToGetPaymentStatus,
       );
     }
-
-    final data = _asMap(response.data)['data'] ?? _asMap(response.data);
-    return PaymentModel.fromJson(data);
   }
 
   @override
   Future<Map<String, dynamic>> redeemCode(String code) async {
-    final response = await httpClient.post(
-      '/api/student/wallet/redeem',
-      data: {'code': code},
-    );
-
-    if (response.statusCode != 200 && response.statusCode != 201) {
-      throw WalletRepositoryException(
-        code: WalletRepositoryExceptionCode.failedToRedeemCode,
-        message: response.exception?.message,
+    try {
+      final response = await httpClient.post(
+        '/api/student/wallet/redeem',
+        data: {'code': code},
+      );
+      return asMap(response.data)['data'] ?? asMap(response.data);
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: WalletRepositoryExceptionCode.failedToRedeemCode,
       );
     }
-
-    return _asMap(response.data)['data'] ?? _asMap(response.data);
   }
 
   @override
   Future<List<Map<String, dynamic>>> getRedemptionHistory({
     MentorXPaginationInfo? paginationInfo,
   }) async {
-    final response = await httpClient.get(
-      '/api/student/wallet/redemptions',
-      queryParameters: {
-        if (paginationInfo != null) ...paginationInfo.toJson(),
-      },
-    );
-
-    if (response.statusCode != 200) {
-      throw WalletRepositoryException(
-        code: WalletRepositoryExceptionCode.failedToLoadRedemptionHistory,
-        message: response.exception?.message,
+    try {
+      final response = await httpClient.get(
+        '/api/student/wallet/redemptions',
+        queryParameters: {
+          if (paginationInfo != null) ...paginationInfo.toJson(),
+        },
+      );
+      return asList(response.data).map((e) => asMap(e)).toList();
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: WalletRepositoryExceptionCode.failedToLoadRedemptionHistory,
       );
     }
-
-    return _asList(response.data).map(_asMap).toList();
   }
 
-  static Map<String, dynamic> _asMap(dynamic value) {
-    if (value is Map<String, dynamic>) return value;
-    return <String, dynamic>{};
-  }
-
-  static List<dynamic> _asList(dynamic value) {
-    if (value is List<dynamic>) return value;
-    if (value is Map<String, dynamic>) {
-      final data = value['data'] ?? value['items'];
-      if (data is List<dynamic>) return data;
-    }
-    return <dynamic>[];
-  }
 }

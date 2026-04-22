@@ -18,23 +18,14 @@ final class DioStudentRegistrationRepository
 
   @override
   Future<bool> checkPhoneUniqueness(String phone) async {
-    final defaultException = _ExceptionCode.unknown;
     try {
       final response = await httpClient.post(
         '/api/v1/auth/check-phone',
         data: {'phone': phone},
       );
 
-      if (response.statusCode == 409) return false;
-      if (!_isSuccessStatus(response.statusCode)) {
-        throw _Exception(
-          code: defaultException,
-          message: response.exception?.message,
-        );
-      }
-
-      final data = _extractDataMap(response.data);
-      final isUnique = _boolOrNull(
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final isUnique = boolOrNull(
         data['is_unique'] ??
             data['isUnique'] ??
             data['unique'] ??
@@ -42,86 +33,60 @@ final class DioStudentRegistrationRepository
       );
       if (isUnique != null) return isUnique;
 
-      final exists = _boolOrNull(
+      final exists = boolOrNull(
         data['exists'] ?? data['already_exists'] ?? data['alreadyExists'],
       );
       if (exists != null) return !exists;
 
       return true;
-    } on HttpClientResponse catch (errorResponse) {
-      if (errorResponse.statusCode == 409 ||
-          _isDuplicatePhoneError(errorResponse)) {
+    } on HttpClientResponse catch (e) {
+      if (e.statusCode == 409 || _isDuplicatePhoneError(e)) {
         return false;
       }
-      handleHttpClientErrorResponse(defaultException, errorResponse);
-    } catch (e) {
-      if (e is _Exception) rethrow;
-      throw _Exception(code: defaultException, message: e.toString());
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: _ExceptionCode.unknown,
+      );
     }
   }
 
   @override
   Future<List<GradeEntity>> getGrades(String tenantId) async {
-    final defaultException = _ExceptionCode.failedToLoadGrades;
     try {
       final response = await httpClient.get('/api/v1/tenants/$tenantId/grades');
-      if (!_isSuccessStatus(response.statusCode)) {
-        throw _Exception(
-          code: defaultException,
-          message: response.exception?.message,
+      final data = asList(response.data);
+      return data.map((item) {
+        final map = asMap(item);
+        return GradeEntity(
+          id: stringOrEmpty(map['id'] ?? map['grade_id']),
+          name: stringOrEmpty(map['name'] ?? map['grade_name']),
         );
-      }
-
-      final results = <GradeEntity>[];
-      for (final item in _extractDataList(response.data)) {
-        final map = _asMap(item);
-        final id = _string(map['id'] ?? map['grade_id']);
-        final name = _string(map['name'] ?? map['grade_name']);
-        if (id.isEmpty || name.isEmpty) continue;
-        results.add(GradeEntity(id: id, name: name));
-      }
-      return results;
-    } on HttpClientResponse catch (errorResponse) {
-      handleHttpClientErrorResponse(defaultException, errorResponse);
-    } catch (e) {
-      if (e is _Exception) rethrow;
-      throw _Exception(code: defaultException, message: e.toString());
+      }).toList();
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: _ExceptionCode.failedToLoadGrades,
+      );
     }
   }
 
   @override
   Future<List<CenterEntity>> getCenters(String tenantId) async {
-    final defaultException = _ExceptionCode.failedToLoadCenters;
     try {
-      final response = await httpClient.get(
-        '/api/v1/tenants/$tenantId/centers',
+      final response = await httpClient.get('/api/v1/tenants/$tenantId/centers');
+      final data = asList(response.data);
+      return data.map((item) {
+        final map = asMap(item);
+        return CenterEntity(
+          id: stringOrEmpty(map['id'] ?? map['center_id']),
+          name: stringOrEmpty(map['name'] ?? map['center_name']),
+        );
+      }).toList();
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: _ExceptionCode.failedToLoadCenters,
       );
-      if (!_isSuccessStatus(response.statusCode)) {
-        throw _Exception(
-          code: defaultException,
-          message: response.exception?.message,
-        );
-      }
-
-      final results = <CenterEntity>[];
-      for (final item in _extractDataList(response.data)) {
-        final map = _asMap(item);
-        final id = _string(map['id'] ?? map['center_id']);
-        final name = _string(map['name'] ?? map['center_name']);
-        if (id.isEmpty || name.isEmpty) continue;
-        results.add(
-          CenterEntity(
-            id: id,
-            name: name,
-          ),
-        );
-      }
-      return results;
-    } on HttpClientResponse catch (errorResponse) {
-      handleHttpClientErrorResponse(defaultException, errorResponse);
-    } catch (e) {
-      if (e is _Exception) rethrow;
-      throw _Exception(code: defaultException, message: e.toString());
     }
   }
 
@@ -130,7 +95,6 @@ final class DioStudentRegistrationRepository
     required String centerId,
     required String gradeId,
   }) async {
-    final defaultException = _ExceptionCode.failedToLoadSchedules;
     try {
       final response = await httpClient.get(
         '/api/v1/centers/$centerId/schedules',
@@ -138,42 +102,21 @@ final class DioStudentRegistrationRepository
           'grade_id': _toApiId(gradeId),
         },
       );
-      if (!_isSuccessStatus(response.statusCode)) {
-        throw _Exception(
-          code: defaultException,
-          message: response.exception?.message,
+      final data = asList(response.data);
+      return data.map((item) {
+        final map = asMap(item);
+        return ScheduleEntity(
+          id: stringOrEmpty(map['id'] ?? map['schedule_id']),
+          day: stringOrEmpty(map['day'] ?? map['day_name']),
+          startTime: stringOrEmpty(map['start_time'] ?? map['startTime'] ?? map['from_time']),
+          endTime: stringOrEmpty(map['end_time'] ?? map['endTime'] ?? map['to_time']),
         );
-      }
-
-      final results = <ScheduleEntity>[];
-      for (final item in _extractDataList(response.data)) {
-        final map = _asMap(item);
-        final id = _string(map['id'] ?? map['schedule_id']);
-        final day = _string(map['day'] ?? map['day_name']);
-        final startTime = _string(
-          map['start_time'] ?? map['startTime'] ?? map['from_time'],
-        );
-        final endTime = _string(
-          map['end_time'] ?? map['endTime'] ?? map['to_time'],
-        );
-        if (id.isEmpty || day.isEmpty || startTime.isEmpty || endTime.isEmpty) {
-          continue;
-        }
-        results.add(
-          ScheduleEntity(
-            id: id,
-            day: day,
-            startTime: startTime,
-            endTime: endTime,
-          ),
-        );
-      }
-      return results;
-    } on HttpClientResponse catch (errorResponse) {
-      handleHttpClientErrorResponse(defaultException, errorResponse);
-    } catch (e) {
-      if (e is _Exception) rethrow;
-      throw _Exception(code: defaultException, message: e.toString());
+      }).toList();
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: _ExceptionCode.failedToLoadSchedules,
+      );
     }
   }
 
@@ -183,7 +126,6 @@ final class DioStudentRegistrationRepository
     required String gradeId,
     required String scheduleId,
   }) async {
-    final defaultException = _ExceptionCode.failedToLoadGroups;
     try {
       final response = await httpClient.get(
         '/api/v1/centers/$centerId/groups',
@@ -192,124 +134,76 @@ final class DioStudentRegistrationRepository
           'schedule_id': _toApiId(scheduleId),
         },
       );
-      if (!_isSuccessStatus(response.statusCode)) {
-        throw _Exception(
-          code: defaultException,
-          message: response.exception?.message,
+      final data = asList(response.data);
+      return data.map((item) {
+        final map = asMap(item);
+        return GroupEntity(
+          id: stringOrEmpty(map['id'] ?? map['group_id']),
+          name: stringOrEmpty(map['name'] ?? map['group_name']),
         );
-      }
-
-      final results = <GroupEntity>[];
-      for (final item in _extractDataList(response.data)) {
-        final map = _asMap(item);
-        final id = _string(map['id'] ?? map['group_id']);
-        final name = _string(map['name'] ?? map['group_name']);
-        if (id.isEmpty || name.isEmpty) continue;
-        results.add(
-          GroupEntity(
-            id: id,
-            name: name,
-          ),
-        );
-      }
-      return results;
-    } on HttpClientResponse catch (errorResponse) {
-      handleHttpClientErrorResponse(defaultException, errorResponse);
-    } catch (e) {
-      if (e is _Exception) rethrow;
-      throw _Exception(code: defaultException, message: e.toString());
+      }).toList();
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: _ExceptionCode.failedToLoadGroups,
+      );
     }
   }
 
   @override
   Future<List<GovernorateEntity>> getGovernorates() async {
-    final defaultException = _ExceptionCode.failedToLoadGovernorates;
     try {
       final response = await httpClient.get('/api/v1/lookups/governorates');
-      if (!_isSuccessStatus(response.statusCode)) {
-        throw _Exception(
-          code: defaultException,
-          message: response.exception?.message,
+      final data = asList(response.data);
+      return data.map((item) {
+        final map = asMap(item);
+        return GovernorateEntity(
+          id: stringOrEmpty(map['id'] ?? map['governorate_id']),
+          name: stringOrEmpty(map['name'] ?? map['governorate_name']),
         );
-      }
-
-      final results = <GovernorateEntity>[];
-      for (final item in _extractDataList(response.data)) {
-        final map = _asMap(item);
-        final id = _string(map['id'] ?? map['governorate_id']);
-        final name = _string(map['name'] ?? map['governorate_name']);
-        if (id.isEmpty || name.isEmpty) continue;
-        results.add(GovernorateEntity(id: id, name: name));
-      }
-      return results;
-    } on HttpClientResponse catch (errorResponse) {
-      handleHttpClientErrorResponse(defaultException, errorResponse);
-    } catch (e) {
-      if (e is _Exception) rethrow;
-      throw _Exception(code: defaultException, message: e.toString());
+      }).toList();
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: _ExceptionCode.failedToLoadGovernorates,
+      );
     }
   }
 
   @override
   Future<List<DistrictEntity>> getDistricts(String governorateId) async {
-    final defaultException = _ExceptionCode.failedToLoadDistricts;
     try {
       final response = await httpClient.get(
         '/api/v1/lookups/governorates/$governorateId/districts',
       );
-      if (!_isSuccessStatus(response.statusCode)) {
-        throw _Exception(
-          code: defaultException,
-          message: response.exception?.message,
+      final data = asList(response.data);
+      return data.map((item) {
+        final map = asMap(item);
+        return DistrictEntity(
+          id: stringOrEmpty(map['id'] ?? map['district_id']),
+          name: stringOrEmpty(map['name'] ?? map['district_name']),
+          governorateId: stringOrEmpty(map['governorate_id'] ?? map['governorateId'] ?? governorateId),
         );
-      }
-
-      final results = <DistrictEntity>[];
-      for (final item in _extractDataList(response.data)) {
-        final map = _asMap(item);
-        final id = _string(map['id'] ?? map['district_id']);
-        final name = _string(map['name'] ?? map['district_name']);
-        if (id.isEmpty || name.isEmpty) continue;
-        final districtGovernorateId = _string(
-          map['governorate_id'] ?? map['governorateId'],
-          governorateId,
-        );
-        results.add(
-          DistrictEntity(
-            id: id,
-            name: name,
-            governorateId: districtGovernorateId,
-          ),
-        );
-      }
-      return results;
-    } on HttpClientResponse catch (errorResponse) {
-      handleHttpClientErrorResponse(defaultException, errorResponse);
-    } catch (e) {
-      if (e is _Exception) rethrow;
-      throw _Exception(code: defaultException, message: e.toString());
+      }).toList();
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: _ExceptionCode.failedToLoadDistricts,
+      );
     }
   }
 
   @override
   Future<String> uploadImage(String filePath) async {
-    final defaultException = _ExceptionCode.failedToUploadImage;
-
-    Future<String> uploadWithFieldName(String fieldName) async {
+    try {
       final response = await httpClient.postMultipart(
         '/api/v1/upload/image',
         files: {
-          fieldName: [filePath],
+          'image': [filePath],
         },
       );
-      if (!_isSuccessStatus(response.statusCode)) {
-        throw _Exception(
-          code: defaultException,
-          message: response.exception?.message,
-        );
-      }
-      final data = _extractDataMap(response.data);
-      final url = _string(
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final url = stringOrEmpty(
         data['url'] ??
             data['image_url'] ??
             data['imageUrl'] ??
@@ -319,27 +213,16 @@ final class DioStudentRegistrationRepository
       );
       if (url.isEmpty) {
         throw _Exception(
-          code: defaultException,
+          code: _ExceptionCode.failedToUploadImage,
           message: 'Image upload did not return a valid URL.',
         );
       }
       return url;
-    }
-
-    try {
-      return await uploadWithFieldName('image');
-    } on HttpClientResponse catch (errorResponse) {
-      if (_canRetryUploadWithFileField(errorResponse)) {
-        try {
-          return await uploadWithFieldName('file');
-        } on HttpClientResponse catch (retryErrorResponse) {
-          handleHttpClientErrorResponse(defaultException, retryErrorResponse);
-        }
-      }
-      handleHttpClientErrorResponse(defaultException, errorResponse);
-    } catch (e) {
-      if (e is _Exception) rethrow;
-      throw _Exception(code: defaultException, message: e.toString());
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: _ExceptionCode.failedToUploadImage,
+      );
     }
   }
 
@@ -367,7 +250,16 @@ final class DioStudentRegistrationRepository
     String? idCardPhotoUrl,
     required String deviceHash,
   }) async {
-    final defaultException = _ExceptionCode.failedToRegister;
+    final rateLimitResult = AuthRateLimiter.canAttempt(phone, 'register');
+    if (!rateLimitResult.canAttempt) {
+      throw RateLimitExceededException(
+        message: 'Too many registration attempts. Please wait.',
+        remainingCooldown: rateLimitResult.remainingCooldown,
+        identifier: phone,
+        endpoint: 'register',
+      );
+    }
+
     try {
       final payload = <String, dynamic>{
         'tenant_id': _toApiId(tenantId),
@@ -404,25 +296,18 @@ final class DioStudentRegistrationRepository
         data: payload,
       );
 
-      if (!_isSuccessStatus(response.statusCode)) {
-        throw _Exception(
-          code: defaultException,
-          message: response.exception?.message,
-        );
-      }
-
-      final data = _extractDataMap(response.data);
-      final studentCode = _string(
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final studentCode = stringOrEmpty(
         data['student_code'] ?? data['studentCode'] ?? data['code'],
       );
       if (studentCode.isEmpty) {
         throw _Exception(
-          code: defaultException,
+          code: _ExceptionCode.failedToRegister,
           message: 'Registration response did not include student code.',
         );
       }
 
-      final otpExpiresInSeconds = _intOrNull(
+      final otpExpiresInSeconds = intOrNull(
         data['otp_expires_in_seconds'] ?? data['otpExpiresInSeconds'],
       );
 
@@ -430,49 +315,27 @@ final class DioStudentRegistrationRepository
         studentCode: studentCode,
         otpExpiresInSeconds: otpExpiresInSeconds,
       );
-    } on HttpClientResponse catch (errorResponse) {
-      if (errorResponse.statusCode == 409 ||
-          _isDuplicatePhoneError(errorResponse)) {
-        throw _Exception(
-          code: _ExceptionCode.phoneAlreadyExists,
-          message: httpClient.extractErrorMessage(errorResponse),
-        );
-      }
-      handleHttpClientErrorResponse(defaultException, errorResponse);
-    } catch (e) {
-      if (e is _Exception) rethrow;
-      throw _Exception(code: defaultException, message: e.toString());
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: _ExceptionCode.failedToRegister,
+        codeFromStatusCode: (status) => status == 409 || _isDuplicatePhoneError(e)
+            ? _ExceptionCode.phoneAlreadyExists
+            : _ExceptionCode.failedToRegister,
+      );
     }
   }
 
-  static bool _isSuccessStatus(int statusCode) {
-    return statusCode == 200 || statusCode == 201;
-  }
-
   bool _isDuplicatePhoneError(HttpClientResponse response) {
-    final message =
-        httpClient.extractErrorMessage(response)?.toLowerCase().trim() ?? '';
+    final message = httpClient.extractErrorMessage(response)?.toLowerCase().trim() ?? '';
     if (message.isEmpty) return false;
-    final mentionsPhone =
-        message.contains('phone') || message.contains('mobile');
-    final mentionsConflict =
-        message.contains('exist') ||
+    final mentionsPhone = message.contains('phone') || message.contains('mobile');
+    final mentionsConflict = message.contains('exist') ||
         message.contains('taken') ||
         message.contains('used') ||
         message.contains('registered') ||
         message.contains('duplicate');
     return mentionsPhone && mentionsConflict;
-  }
-
-  bool _canRetryUploadWithFileField(HttpClientResponse response) {
-    if (response.statusCode == 400 ||
-        response.statusCode == 415 ||
-        response.statusCode == 422) {
-      return true;
-    }
-    final message =
-        httpClient.extractErrorMessage(response)?.toLowerCase().trim() ?? '';
-    return message.contains('image') || message.contains('file');
   }
 
   static dynamic _toApiId(String value) {
@@ -488,74 +351,4 @@ final class DioStudentRegistrationRepository
     return '$year-$month-$day';
   }
 
-  static Map<String, dynamic> _asMap(dynamic value) {
-    if (value is Map<String, dynamic>) return value;
-    if (value is Map) {
-      return value.map(
-        (key, val) => MapEntry(key.toString(), val),
-      );
-    }
-    return <String, dynamic>{};
-  }
-
-  static List<dynamic> _asList(dynamic value) {
-    if (value is List<dynamic>) return value;
-    if (value is List) return List<dynamic>.from(value);
-    return <dynamic>[];
-  }
-
-  static List<dynamic> _extractDataList(dynamic responseData) {
-    final root = _asMap(responseData);
-    final data = root['data'];
-
-    if (data is List) return List<dynamic>.from(data);
-    if (data is Map) {
-      final map = _asMap(data);
-      final items = map['items'] ?? map['results'] ?? map['records'];
-      return _asList(items);
-    }
-
-    return _asList(responseData);
-  }
-
-  static Map<String, dynamic> _extractDataMap(dynamic responseData) {
-    final root = _asMap(responseData);
-    final data = root['data'];
-    if (data is Map) return _asMap(data);
-    return root;
-  }
-
-  static String _string(dynamic value, [String fallback = '']) {
-    if (value == null) return fallback;
-    final parsed = value.toString().trim();
-    if (parsed.isEmpty) return fallback;
-    return parsed;
-  }
-
-  static String? _stringOrNull(dynamic value) {
-    final parsed = _string(value);
-    return parsed.isEmpty ? null : parsed;
-  }
-
-  static bool? _boolOrNull(dynamic value) {
-    if (value == null) return null;
-    if (value is bool) return value;
-    if (value is num) return value != 0;
-
-    final normalized = value.toString().trim().toLowerCase();
-    if (normalized == 'true' || normalized == '1' || normalized == 'yes') {
-      return true;
-    }
-    if (normalized == 'false' || normalized == '0' || normalized == 'no') {
-      return false;
-    }
-    return null;
-  }
-
-  static int? _intOrNull(dynamic value) {
-    if (value == null) return null;
-    if (value is int) return value;
-    if (value is num) return value.toInt();
-    return int.tryParse(value.toString());
-  }
 }

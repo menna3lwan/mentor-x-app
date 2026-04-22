@@ -87,6 +87,19 @@ final class MockMarketplaceRepository implements MarketplaceRepository {
   }
 
   @override
+  Future<MarketplaceItemEntity> getItemById(String itemId) async {
+    await Future<void>.delayed(delay);
+    final items = await getItems();
+    return items.firstWhere(
+      (item) => item.id == itemId,
+      orElse: () => throw const MarketplaceRepositoryException(
+        code: MarketplaceRepositoryExceptionCode.failedToLoadItems,
+        message: 'Item not found',
+      ),
+    );
+  }
+
+  @override
   Future<MarketplaceOrderEntity> placeOrder({
     required List<({String itemId, int quantity})> items,
     required String deliveryAddress,

@@ -7,7 +7,7 @@ import '../helpers/student_patrol_harness.dart';
 void main() {
   final routes = <({String name, GoRouteData route})>[
     (name: 'products_grid', route: const ProductsGridPageRoute()),
-    (name: 'product_detail', route: const ProductDetailPageRoute()),
+    (name: 'product_detail', route: const ProductDetailPageRoute(itemId: '1')),
     (name: 'shopping_cart', route: const ShoppingCartPageRoute()),
     (name: 'order_history', route: const OrderHistoryPageRoute()),
     (name: 'wallet_add_balance', route: const AddBalancePageRoute()),

@@ -18,22 +18,21 @@ final class DioQuizRepository
   @override
   Future<({QuizAttemptEntity attempt, List<QuizQuestionEntity> questions})>
   startQuiz(String quizId) async {
-    final response = await httpClient.post('/api/quizzes/$quizId/start');
+    try {
+      final response = await httpClient.post('/api/quizzes/$quizId/start');
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final attempt = QuizAttemptModel.fromJson(asMap(data['attempt']));
+      final questions = asList(data['questions'])
+          .map((e) => QuizQuestionModel.fromJson(asMap(e)))
+          .toList();
 
-    if (response.statusCode != 200 && response.statusCode != 201) {
-      throw QuizRepositoryException(
-        code: QuizRepositoryExceptionCode.failedToStartQuiz,
-        message: response.exception?.message,
+      return (attempt: attempt, questions: questions);
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: QuizRepositoryExceptionCode.failedToStartQuiz,
       );
     }
-
-    final data = response.data['data'] ?? response.data;
-    final attempt = QuizAttemptModel.fromJson(data['attempt']);
-    final questions = (data['questions'] as List)
-        .map((e) => QuizQuestionModel.fromJson(e))
-        .toList();
-
-    return (attempt: attempt, questions: questions);
   }
 
   @override
@@ -43,48 +42,49 @@ final class DioQuizRepository
     List<String>? selectedOptions,
     String? textAnswer,
   }) async {
-    final response = await httpClient.post(
-      '/api/quiz-attempts/$attemptId/answers',
-      data: {
-        'question_id': questionId,
-        if (selectedOptions != null) 'selected_options': selectedOptions,
-        if (textAnswer != null) 'text_answer': textAnswer,
-      },
-    );
-
-    if (response.statusCode != 200 && response.statusCode != 204) {
-      throw QuizRepositoryException(
-        code: QuizRepositoryExceptionCode.failedToSaveAnswer,
-        message: response.exception?.message,
+    try {
+      await httpClient.post(
+        '/api/quiz-attempts/$attemptId/answers',
+        data: {
+          'question_id': questionId,
+          if (selectedOptions != null) 'selected_options': selectedOptions,
+          if (textAnswer != null) 'text_answer': textAnswer,
+        },
+      );
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: QuizRepositoryExceptionCode.failedToSaveAnswer,
       );
     }
   }
 
   @override
   Future<QuizAttemptEntity> submitQuiz(String attemptId) async {
-    final response = await httpClient.post('/api/quiz-attempts/$attemptId/submit');
-
-    if (response.statusCode != 200) {
-      throw QuizRepositoryException(
-        code: QuizRepositoryExceptionCode.failedToSubmitQuiz,
-        message: response.exception?.message,
+    try {
+      final response = await httpClient.post('/api/quiz-attempts/$attemptId/submit');
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      return QuizAttemptModel.fromJson(data);
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: QuizRepositoryExceptionCode.failedToSubmitQuiz,
       );
     }
-
-    return QuizAttemptModel.fromJson(response.data['data'] ?? response.data);
   }
 
   @override
   Future<QuizAttemptEntity> getResults(String attemptId) async {
-    final response = await httpClient.get('/api/quiz-attempts/$attemptId/results');
-
-    if (response.statusCode != 200) {
-      throw QuizRepositoryException(
-        code: QuizRepositoryExceptionCode.failedToLoadResults,
-        message: response.exception?.message,
+    try {
+      final response = await httpClient.get('/api/quiz-attempts/$attemptId/results');
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      return QuizAttemptModel.fromJson(data);
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: QuizRepositoryExceptionCode.failedToLoadResults,
       );
     }
-
-    return QuizAttemptModel.fromJson(response.data['data'] ?? response.data);
   }
+
 }

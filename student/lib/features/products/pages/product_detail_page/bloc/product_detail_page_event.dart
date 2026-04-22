@@ -8,5 +8,10 @@ sealed class ProductDetailPageEvent extends Equatable {
 }
 
 final class ProductDetailPageLoadEvent extends ProductDetailPageEvent {
-  const ProductDetailPageLoadEvent();
+  final String itemId;
+
+  const ProductDetailPageLoadEvent(this.itemId);
+
+  @override
+  List<Object?> get props => [itemId];
 }

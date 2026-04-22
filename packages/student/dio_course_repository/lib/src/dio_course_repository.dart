@@ -22,26 +22,26 @@ final class DioCourseRepository
     String? search,
     MentorXPaginationInfo? paginationInfo,
   }) async {
-    final response = await httpClient.get(
-      '/api/student/courses',
-      queryParameters: {
-        if (status != null) 'status': status,
-        if (search != null) 'search': search,
-        if (paginationInfo != null) ...paginationInfo.toJson(),
-      },
-    );
+    try {
+      final response = await httpClient.get(
+        '/api/student/courses',
+        queryParameters: {
+          if (status != null) 'status': status,
+          if (search != null) 'search': search,
+          if (paginationInfo != null) ...paginationInfo.toJson(),
+        },
+      );
 
-    if (response.statusCode != 200) {
-      throw CourseRepositoryException(
-        code: CourseRepositoryExceptionCode.failedToLoadCourses,
-        message: response.exception?.message,
+      return asList(response.data)
+          .map(asMap)
+          .map(CourseSummaryModel.fromJson)
+          .toList();
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: CourseRepositoryExceptionCode.failedToLoadCourses,
       );
     }
-
-    return _asList(response.data)
-        .map(_asMap)
-        .map(CourseSummaryModel.fromJson)
-        .toList();
   }
 
   @override
@@ -53,162 +53,162 @@ final class DioCourseRepository
     String? order,
     MentorXPaginationInfo? paginationInfo,
   }) async {
-    final response = await httpClient.get(
-      '/api/courses',
-      queryParameters: {
-        if (gradeId != null) 'grade_id': gradeId,
-        if (categoryId != null) 'category_id': categoryId,
-        if (search != null) 'search': search,
-        if (sort != null) 'sort': sort,
-        if (order != null) 'order': order,
-        if (paginationInfo != null) ...paginationInfo.toJson(),
-      },
-    );
+    try {
+      final response = await httpClient.get(
+        '/api/courses',
+        queryParameters: {
+          if (gradeId != null) 'grade_id': gradeId,
+          if (categoryId != null) 'category_id': categoryId,
+          if (search != null) 'search': search,
+          if (sort != null) 'sort': sort,
+          if (order != null) 'order': order,
+          if (paginationInfo != null) ...paginationInfo.toJson(),
+        },
+      );
 
-    if (response.statusCode != 200) {
-      throw CourseRepositoryException(
-        code: CourseRepositoryExceptionCode.failedToLoadCatalog,
-        message: response.exception?.message,
+      return asList(response.data)
+          .map(asMap)
+          .map(CourseSummaryModel.fromJson)
+          .toList();
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: CourseRepositoryExceptionCode.failedToLoadCatalog,
       );
     }
-
-    return _asList(response.data)
-        .map(_asMap)
-        .map(CourseSummaryModel.fromJson)
-        .toList();
   }
 
   @override
   Future<List<CategoryEntity>> getCategories({String? gradeId}) async {
-    final response = await httpClient.get(
-      '/api/categories',
-      queryParameters: {if (gradeId != null) 'grade_id': gradeId},
-    );
+    try {
+      final response = await httpClient.get(
+        '/api/categories',
+        queryParameters: {if (gradeId != null) 'grade_id': gradeId},
+      );
 
-    if (response.statusCode != 200) {
-      throw CourseRepositoryException(
-        code: CourseRepositoryExceptionCode.failedToLoadCategories,
-        message: response.exception?.message,
+      return asList(response.data)
+          .map(asMap)
+          .map(CategoryModel.fromJson)
+          .toList();
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: CourseRepositoryExceptionCode.failedToLoadCategories,
       );
     }
-
-    return _asList(response.data)
-        .map(_asMap)
-        .map(CategoryModel.fromJson)
-        .toList();
   }
 
   @override
   Future<CourseEntity> getCourseDetail(String courseId) async {
-    final response = await httpClient.get('/api/courses/$courseId');
+    try {
+      final response = await httpClient.get('/api/courses/$courseId');
 
-    if (response.statusCode != 200) {
-      throw CourseRepositoryException(
-        code: CourseRepositoryExceptionCode.failedToLoadCourseDetail,
-        message: response.exception?.message,
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      return CourseModel.fromJson(data);
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: CourseRepositoryExceptionCode.failedToLoadCourseDetail,
       );
     }
-
-    final data = _asMap(response.data)['data'] ?? _asMap(response.data);
-    return CourseModel.fromJson(data);
   }
 
   @override
   Future<List<SessionEntity>> getCourseSessions(String courseId) async {
-    final response = await httpClient.get('/api/courses/$courseId/sessions');
+    try {
+      final response = await httpClient.get('/api/courses/$courseId/sessions');
 
-    if (response.statusCode != 200) {
-      throw CourseRepositoryException(
-        code: CourseRepositoryExceptionCode.failedToLoadSessions,
-        message: response.exception?.message,
+      return asList(response.data)
+          .map(asMap)
+          .map(SessionModel.fromJson)
+          .toList();
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: CourseRepositoryExceptionCode.failedToLoadSessions,
       );
     }
-
-    return _asList(response.data)
-        .map(_asMap)
-        .map(SessionModel.fromJson)
-        .toList();
   }
 
   @override
   Future<List<SessionItemEntity>> getSessionItems(String sessionId) async {
-    final response = await httpClient.get('/api/sessions/$sessionId/items');
+    try {
+      final response = await httpClient.get('/api/sessions/$sessionId/items');
 
-    if (response.statusCode != 200) {
-      throw CourseRepositoryException(
-        code: CourseRepositoryExceptionCode.failedToLoadSessions,
-        message: response.exception?.message,
+      return asList(response.data)
+          .map(asMap)
+          .map(SessionItemModel.fromJson)
+          .toList();
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: CourseRepositoryExceptionCode.failedToLoadSessions,
       );
     }
-
-    return _asList(response.data)
-        .map(_asMap)
-        .map(SessionItemModel.fromJson)
-        .toList();
   }
 
   @override
   Future<EnrollmentEntity?> getCourseProgress(String courseId) async {
-    final response = await httpClient.get('/api/student/enrollments/$courseId');
+    try {
+      final response = await httpClient.get('/api/student/enrollments/$courseId');
 
-    if (response.statusCode == 404) return null;
-    if (response.statusCode != 200) {
-      throw CourseRepositoryException(
-        code: CourseRepositoryExceptionCode.failedToLoadProgress,
-        message: response.exception?.message,
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      return EnrollmentModel.fromJson(data);
+    } on HttpClientResponse catch (e) {
+      if (e.statusCode == 404) return null;
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: CourseRepositoryExceptionCode.failedToLoadProgress,
       );
     }
-
-    final data = _asMap(response.data)['data'] ?? _asMap(response.data);
-    return EnrollmentModel.fromJson(data);
   }
 
   @override
   Future<EnrollmentEntity> enrollInCourse(String courseId) async {
-    final response = await httpClient.post(
-      '/api/student/enrollments',
-      data: {'course_id': courseId},
-    );
+    try {
+      final response = await httpClient.post(
+        '/api/student/enrollments',
+        data: {'course_id': courseId},
+      );
 
-    if (response.statusCode != 200 && response.statusCode != 201) {
-      throw CourseRepositoryException(
-        code: CourseRepositoryExceptionCode.failedToEnroll,
-        message: response.exception?.message,
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      return EnrollmentModel.fromJson(data);
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: CourseRepositoryExceptionCode.failedToEnroll,
       );
     }
-
-    final data = _asMap(response.data)['data'] ?? _asMap(response.data);
-    return EnrollmentModel.fromJson(data);
   }
 
   @override
   Future<String> getStreamUrl(String itemId) async {
-    final response = await httpClient.get('/api/sessions/items/$itemId/stream');
+    try {
+      final response = await httpClient.get('/api/sessions/items/$itemId/stream');
 
-    if (response.statusCode != 200) {
-      throw CourseRepositoryException(
-        code: CourseRepositoryExceptionCode.failedToLoadStreamUrl,
-        message: response.exception?.message,
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      return data['url']?.toString() ?? '';
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: CourseRepositoryExceptionCode.failedToLoadStreamUrl,
       );
     }
-
-    final data = _asMap(response.data)['data'] ?? _asMap(response.data);
-    return data['url']?.toString() ?? '';
   }
 
   @override
   Future<String> getContentUrl(String itemId) async {
-    final response = await httpClient.get('/api/sessions/items/$itemId/content');
+    try {
+      final response = await httpClient.get('/api/sessions/items/$itemId/content');
 
-    if (response.statusCode != 200) {
-      throw CourseRepositoryException(
-        code: CourseRepositoryExceptionCode.failedToLoadContentUrl,
-        message: response.exception?.message,
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      return data['url']?.toString() ?? '';
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: CourseRepositoryExceptionCode.failedToLoadContentUrl,
       );
     }
-
-    final data = _asMap(response.data)['data'] ?? _asMap(response.data);
-    return data['url']?.toString() ?? '';
   }
 
   @override
@@ -218,46 +218,33 @@ final class DioCourseRepository
     int? lastPositionSeconds,
     double? progressPercent,
   }) async {
-    final response = await httpClient.post(
-      '/api/sessions/items/$itemId/progress',
-      data: {
-        if (watchTimeSeconds != null) 'watch_time_seconds': watchTimeSeconds,
-        if (lastPositionSeconds != null) 'last_position_seconds': lastPositionSeconds,
-        if (progressPercent != null) 'progress_percent': progressPercent,
-      },
-    );
-
-    if (response.statusCode != 200 && response.statusCode != 204) {
-      throw CourseRepositoryException(
-        code: CourseRepositoryExceptionCode.failedToUpdateProgress,
-        message: response.exception?.message,
+    try {
+      await httpClient.post(
+        '/api/sessions/items/$itemId/progress',
+        data: {
+          if (watchTimeSeconds != null) 'watch_time_seconds': watchTimeSeconds,
+          if (lastPositionSeconds != null) 'last_position_seconds': lastPositionSeconds,
+          if (progressPercent != null) 'progress_percent': progressPercent,
+        },
+      );
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: CourseRepositoryExceptionCode.failedToUpdateProgress,
       );
     }
   }
 
   @override
   Future<void> markItemComplete(String itemId) async {
-    final response = await httpClient.post('/api/sessions/items/$itemId/complete');
-
-    if (response.statusCode != 200 && response.statusCode != 204) {
-      throw CourseRepositoryException(
-        code: CourseRepositoryExceptionCode.failedToMarkComplete,
-        message: response.exception?.message,
+    try {
+      await httpClient.post('/api/sessions/items/$itemId/complete');
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: CourseRepositoryExceptionCode.failedToMarkComplete,
       );
     }
   }
 
-  static Map<String, dynamic> _asMap(dynamic value) {
-    if (value is Map<String, dynamic>) return value;
-    return <String, dynamic>{};
-  }
-
-  static List<dynamic> _asList(dynamic value) {
-    if (value is List<dynamic>) return value;
-    if (value is Map<String, dynamic>) {
-      final data = value['data'] ?? value['items'];
-      if (data is List<dynamic>) return data;
-    }
-    return <dynamic>[];
-  }
 }

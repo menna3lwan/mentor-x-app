@@ -18,19 +18,21 @@ final class DioParentCourseRepository
 
   @override
   Future<List<CourseEntity>> getCourses(String childId, {String? status}) async {
-    const defaultException = ParentCourseRepositoryExceptionCode.fetchError;
     try {
       final response = await httpClient.get(
         '/api/v1/parent/children/$childId/courses',
-        queryParameters: status != null ? {'status': status} : null,
+        queryParameters: {
+          if (status != null) 'status': status,
+        },
       );
 
-      final data = response.data['data'] as List? ?? [];
-      return data.map((e) => CourseModel.fromJson(e)).toList();
+      final data = asList(response.data);
+      return data.map((e) => CourseModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(defaultException, e);
-    } catch (e) {
-      throwException(defaultException, message: e.toString());
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: ParentCourseRepositoryExceptionCode.fetchError,
+      );
     }
   }
 
@@ -39,20 +41,22 @@ final class DioParentCourseRepository
     String childId,
     String courseId,
   ) async {
-    const defaultException = ParentCourseRepositoryExceptionCode.fetchError;
     try {
       final response = await httpClient.get(
         '/api/v1/parent/children/$childId/courses/$courseId/progress',
       );
 
-      return CourseSummaryModel.fromJson(response.data['data'] ?? response.data);
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      return CourseSummaryModel.fromJson(data);
     } on HttpClientResponse catch (e) {
-      if (e.statusCode == 404) {
-        throwException(ParentCourseRepositoryExceptionCode.courseNotFound);
-      }
-      handleHttpClientErrorResponse(defaultException, e);
-    } catch (e) {
-      throwException(defaultException, message: e.toString());
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: ParentCourseRepositoryExceptionCode.fetchError,
+        codeFromStatusCode: (status) => status == 404
+            ? ParentCourseRepositoryExceptionCode.courseNotFound
+            : ParentCourseRepositoryExceptionCode.fetchError,
+      );
     }
   }
+
 }

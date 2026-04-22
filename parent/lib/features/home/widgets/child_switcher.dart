@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mentorx_ui/mentorx_ui.dart';
+import 'package:parent/core/core.dart';
 import '../bloc/home_bloc.dart';
+import '../../../../core/routing/app_routes.dart';
 
 class ChildSwitcher extends StatelessWidget {
   const ChildSwitcher({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final palette = MentorXThemeColorPalette.light;
+
     return BlocBuilder<HomeBloc, HomeState>(
       builder: (context, state) {
         if (state.children.isEmpty || state.selectedChild == null) {
@@ -14,12 +19,17 @@ class ChildSwitcher extends StatelessWidget {
         }
 
         return Container(
-          height: 100,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          height: 110,
+          padding: const EdgeInsets.symmetric(vertical: 8),
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            itemCount: state.children.length,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            itemCount: state.children.length + 1,
             itemBuilder: (context, index) {
+              if (index == state.children.length) {
+                return _AddChildButton(palette: palette);
+              }
+
               final child = state.children[index];
               final isSelected = child.id == state.selectedChild!.id;
               
@@ -28,27 +38,47 @@ class ChildSwitcher extends StatelessWidget {
                   context.read<HomeBloc>().add(HomeChildSwitched(child));
                 },
                 child: Padding(
-                  padding: const EdgeInsets.only(right: 12),
+                  padding: const EdgeInsets.only(right: 16),
                   child: Column(
                     children: [
-                      CircleAvatar(
-                        radius: 28,
-                        backgroundColor: isSelected 
-                            ? Theme.of(context).primaryColor 
-                            : Colors.grey[200],
-                        child: Text(
-                          child.name.isNotEmpty ? child.name[0] : '?',
-                          style: TextStyle(
-                            color: isSelected ? Colors.white : Colors.black,
+                      Container(
+                        padding: const EdgeInsets.all(3),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: isSelected 
+                                ? palette.brandPrimary
+                                : Colors.transparent,
+                            width: 2,
                           ),
                         ),
+                        child: CircleAvatar(
+                          radius: 28,
+                          backgroundColor: isSelected 
+                              ? palette.brandPrimary.withValues(alpha: 0.1)
+                              : palette.backgroundSecondary,
+                          backgroundImage: child.profileImageUrl != null 
+                              ? NetworkImage(child.profileImageUrl!) 
+                              : null,
+                          child: child.profileImageUrl == null 
+                              ? Text(
+                                  child.name.isNotEmpty ? child.name[0] : '?',
+                                  style: TextStyle(
+                                    color: isSelected ? palette.brandPrimary : palette.textSecondary,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                  ),
+                                )
+                              : null,
+                        ),
                       ),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: 6),
                       Text(
                         child.name.split(' ').first,
                         style: TextStyle(
-                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                          fontSize: 12,
+                          fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                          fontSize: 13,
+                          color: isSelected ? palette.brandPrimary : palette.textPrimary,
                         ),
                       ),
                     ],
@@ -59,6 +89,55 @@ class ChildSwitcher extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class _AddChildButton extends StatelessWidget {
+  final MentorXThemeColorPalette palette;
+
+  const _AddChildButton({required this.palette});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => const AddChildLinkRoute().go(context),
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(3),
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+            ),
+            child: CircleAvatar(
+              radius: 28,
+              backgroundColor: palette.backgroundPrimary,
+              child: Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: palette.textTertiary.withValues(alpha: 0.5),
+                    width: 1,
+                    style: BorderStyle.solid,
+                  ),
+                ),
+                child: Center(
+                  child: Icon(Icons.add, color: palette.textTertiary, size: 28),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            'Add Child',
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+              fontSize: 13,
+              color: palette.textTertiary,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

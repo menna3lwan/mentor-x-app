@@ -81,6 +81,32 @@ final class DioHttpClient implements HttpClient, LocalizedClient {
     }
   }
 
+  String? _userId;
+
+  @override
+  String? get userId => _userId;
+
+  String? _extractUserIdFromJwt(String token) {
+    try {
+      final parts = token.split('.');
+      if (parts.length != 3) return null;
+      final payload = utf8.decode(
+        base64Url.decode(base64Url.normalize(parts[1])),
+      );
+      final map = jsonDecode(payload) as Map<String, dynamic>;
+      return map['sub']?.toString();
+    } catch (_) {
+      return null;
+    }
+  }
+
+  String _resolvePath(String path) {
+    if (_userId != null) {
+      return path.replaceAll('[USER_ID]', _userId!);
+    }
+    return path;
+  }
+
   /// Basic JWT token validation
   bool _isJwtToken(String token) {
     final parts = token.split('.');
@@ -255,6 +281,7 @@ final class DioHttpClient implements HttpClient, LocalizedClient {
   @override
   void setBearerToken(String token, {String? refreshToken}) {
     _defaultHeaders['Authorization'] = 'Bearer $token';
+    _userId = _extractUserIdFromJwt(token);
     _cacheRepository.put(CacheKeys.accessToken, token).ignore();
 
     if (refreshToken != null && refreshToken.isNotEmpty) {
@@ -265,6 +292,7 @@ final class DioHttpClient implements HttpClient, LocalizedClient {
   @override
   void removeBearerToken() {
     _defaultHeaders.remove('Authorization');
+    _userId = null;
     _cacheRepository.remove(CacheKeys.accessToken).ignore();
     _cacheRepository.remove(CacheKeys.refreshToken).ignore();
   }
@@ -342,7 +370,7 @@ final class DioHttpClient implements HttpClient, LocalizedClient {
           : _dio;
 
       final response = await dioInstance.get(
-        path,
+        _resolvePath(path),
         queryParameters: queryParameters,
         options: Options(headers: _mergeHeaders(headers)),
       );
@@ -376,7 +404,7 @@ final class DioHttpClient implements HttpClient, LocalizedClient {
           : _dio;
 
       final response = await dioInstance.post(
-        path,
+        _resolvePath(path),
         data: requestData,
         queryParameters: queryParameters,
         options: Options(
@@ -407,7 +435,7 @@ final class DioHttpClient implements HttpClient, LocalizedClient {
           : data;
 
       final response = await _dio.put(
-        path,
+        _resolvePath(path),
         data: requestData,
         queryParameters: queryParameters,
         options: Options(headers: _mergeHeaders(headers)),
@@ -436,7 +464,7 @@ final class DioHttpClient implements HttpClient, LocalizedClient {
           : data;
 
       final response = await _dio.delete(
-        path,
+        _resolvePath(path),
         data: requestData,
         queryParameters: queryParameters,
         options: Options(headers: _mergeHeaders(headers)),
@@ -465,7 +493,7 @@ final class DioHttpClient implements HttpClient, LocalizedClient {
           : data;
 
       final response = await _dio.patch(
-        path,
+        _resolvePath(path),
         data: requestData,
         queryParameters: queryParameters,
         options: Options(headers: _mergeHeaders(headers)),

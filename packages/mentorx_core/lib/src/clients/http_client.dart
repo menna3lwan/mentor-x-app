@@ -41,9 +41,59 @@ final class HttpClientResponse {
     required this.data,
     required this.statusCode,
   });
+
+  /// Converts data to `Map<String, dynamic>` safely
+  Map<String, dynamic> asMap() {
+    final value = data;
+    if (value is Map<String, dynamic>) return value;
+    if (value is Map) {
+      return value.map((key, val) => MapEntry(key.toString(), val));
+    }
+    return <String, dynamic>{};
+  }
+
+  /// Converts data to `List<dynamic>` safely
+  /// Prioritizes 'data' or 'items' keys if value is a Map
+  List<dynamic> asList() {
+    final value = data;
+    if (value is List<dynamic>) return value;
+    if (value is Map) {
+      final d = value['data'] ?? value['items'];
+      if (d is List<dynamic>) return d;
+    }
+    return <dynamic>[];
+  }
+
+  /// Safe cast to String or null from data Map
+  String? stringOrNull(String key) => asMap()[key]?.toString();
+
+  /// Safe cast to int or null from data Map
+  int? intOrNull(String key) {
+    final value = asMap()[key];
+    if (value == null) return null;
+    if (value is int) return value;
+    if (value is String) return int.tryParse(value);
+    return null;
+  }
+
+  /// Safe cast to bool or null from data Map
+  bool? boolOrNull(String key) {
+    final value = asMap()[key];
+    if (value == null) return null;
+    if (value is bool) return value;
+    if (value is String) {
+      final v = value.toLowerCase();
+      if (v == 'true' || v == '1') return true;
+      if (v == 'false' || v == '0') return false;
+    }
+    return null;
+  }
 }
 
 abstract class HttpClient {
+  /// Returns the current authenticated user ID if available
+  String? get userId;
+
   /// Sets default headers that will be included in all requests
   void setDefaultHeaders(Map<String, String> headers);
 

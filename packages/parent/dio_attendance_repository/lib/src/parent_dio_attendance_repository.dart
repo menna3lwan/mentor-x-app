@@ -22,7 +22,6 @@ final class DioParentAttendanceRepository
     DateTime? from,
     DateTime? to,
   }) async {
-    const defaultException = ParentAttendanceRepositoryExceptionCode.fetchError;
     try {
       final response = await httpClient.get(
         '/api/v1/parent/children/$childId/attendance',
@@ -32,12 +31,13 @@ final class DioParentAttendanceRepository
         },
       );
 
-      final data = response.data['data'] as List? ?? [];
-      return data.map((e) => AttendanceRecordModel.fromJson(e)).toList();
+      final data = asList(response.data);
+      return data.map((e) => AttendanceRecordModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(defaultException, e);
-    } catch (e) {
-      throwException(defaultException, message: e.toString());
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: ParentAttendanceRepositoryExceptionCode.fetchError,
+      );
     }
   }
 
@@ -47,7 +47,6 @@ final class DioParentAttendanceRepository
     DateTime? from,
     DateTime? to,
   }) async {
-    const defaultException = ParentAttendanceRepositoryExceptionCode.fetchError;
     try {
       final response = await httpClient.get(
         '/api/v1/parent/children/$childId/attendance/summary',
@@ -57,13 +56,14 @@ final class DioParentAttendanceRepository
         },
       );
 
-      return AttendanceSummaryModel.fromJson(
-        response.data['data'] ?? response.data,
-      );
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      return AttendanceSummaryModel.fromJson(data);
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(defaultException, e);
-    } catch (e) {
-      throwException(defaultException, message: e.toString());
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: ParentAttendanceRepositoryExceptionCode.fetchError,
+      );
     }
   }
+
 }

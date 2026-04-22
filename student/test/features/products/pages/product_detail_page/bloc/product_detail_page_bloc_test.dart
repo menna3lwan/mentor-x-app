@@ -20,7 +20,7 @@ void main() {
       build: () => ProductDetailPageBloc(
         marketplaceRepository: marketplaceRepository,
       ),
-      act: (bloc) => bloc.add(const ProductDetailPageLoadEvent()),
+      act: (bloc) => bloc.add(const ProductDetailPageLoadEvent('item-1')),
       expect: () => [
         isA<ProductDetailPageState>().having(
           (s) => s.loadingState,
