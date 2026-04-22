@@ -1,4 +1,4 @@
-part of '../../mentorx_core.dart';
+part of 'package:mentorx_core/mentorx_core.dart';
 
 base class QuizEntity extends Equatable {
   final String id;
@@ -33,13 +33,13 @@ base class QuizEntity extends Equatable {
     this.availableUntil,
   });
 
-
-  static final placeholder = QuizEntity(
+  static const placeholder = QuizEntity(
     id: '',
     title: '',
     durationMinutes: 0,
     totalMarks: 0,
   );
+
   @override
   List<Object?> get props => [
         id,
@@ -57,4 +57,38 @@ base class QuizEntity extends Equatable {
         availableFrom,
         availableUntil,
       ];
+
+  QuizEntity copyWith({
+    String? id,
+    String? title,
+    int? durationMinutes,
+    int? totalMarks,
+    int? maxAttempts,
+    double? passPercentage,
+    bool? shuffleQuestions,
+    bool? shuffleOptions,
+    int? questionsPerAttempt,
+    bool? showCorrectAnswers,
+    bool? showExplanations,
+    bool? showScoreImmediately,
+    DateTime? availableFrom,
+    DateTime? availableUntil,
+  }) {
+    return QuizEntity(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      durationMinutes: durationMinutes ?? this.durationMinutes,
+      totalMarks: totalMarks ?? this.totalMarks,
+      maxAttempts: maxAttempts ?? this.maxAttempts,
+      passPercentage: passPercentage ?? this.passPercentage,
+      shuffleQuestions: shuffleQuestions ?? this.shuffleQuestions,
+      shuffleOptions: shuffleOptions ?? this.shuffleOptions,
+      questionsPerAttempt: questionsPerAttempt ?? this.questionsPerAttempt,
+      showCorrectAnswers: showCorrectAnswers ?? this.showCorrectAnswers,
+      showExplanations: showExplanations ?? this.showExplanations,
+      showScoreImmediately: showScoreImmediately ?? this.showScoreImmediately,
+      availableFrom: availableFrom ?? this.availableFrom,
+      availableUntil: availableUntil ?? this.availableUntil,
+    );
+  }
 }

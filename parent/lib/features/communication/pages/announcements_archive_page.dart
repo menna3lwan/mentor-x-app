@@ -1,59 +1,83 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
-
+import 'package:mentorx_core/mentorx_core.dart';
 import '../bloc/communication_bloc.dart';
 
-final class AnnouncementsArchivePage extends StatelessWidget {
-  const AnnouncementsArchivePage({super.key});
+class AnnouncementsArchivePage extends StatelessWidget {
+  final String childId;
+
+  const AnnouncementsArchivePage({
+    super.key,
+    required this.childId,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CommunicationBloc, CommunicationState>(
-      builder: (context, state) {
-        return Scaffold(
-          appBar: AppBar(title: const Text('Announcements Archive')),
-          body: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: TextField(
-                  decoration: const InputDecoration(
-                    prefixIcon: Icon(Icons.search),
-                    hintText: 'Search announcements',
-                    border: OutlineInputBorder(),
-                  ),
-                  onChanged: (value) {
-                    context.read<CommunicationBloc>().add(
-                      AnnouncementsSearchChanged(value),
-                    );
-                  },
-                ),
+    return BlocProvider(
+      create: (context) => CommunicationBloc(
+        repository: context.read<ParentCommunicationRepository>(),
+      )..add(CommunicationStarted(childId)),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('School Announcements'),
+          actions: [
+            Builder(
+              builder: (context) => IconButton(
+                icon: const Icon(Icons.refresh),
+                onPressed: () {
+                  context.read<CommunicationBloc>().add(CommunicationRefreshRequested(childId));
+                },
               ),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: state.announcements.length,
-                  itemBuilder: (context, index) {
-                    final announcement = state.announcements[index];
-                    return ListTile(
-                      leading: announcement.isPinned
-                          ? const Icon(Icons.push_pin)
-                          : const Icon(Icons.campaign_outlined),
-                      title: Text(announcement.title),
-                      subtitle: Text(
-                        '${DateFormat('dd MMM').format(announcement.publishedAt)} • ${announcement.priority.toUpperCase()}\n${announcement.content}',
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      isThreeLine: true,
-                    );
-                  },
+            ),
+          ],
+        ),
+        body: BlocBuilder<CommunicationBloc, CommunicationState>(
+          builder: (context, state) {
+            if (state.status == CommunicationStatus.loading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            if (state.status == CommunicationStatus.failure) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('Failed to load announcements: ${state.errorMessage}'),
+                    ElevatedButton(
+                      onPressed: () {
+                        context.read<CommunicationBloc>().add(CommunicationStarted(childId));
+                      },
+                      child: const Text('Retry'),
+                    ),
+                  ],
                 ),
+              );
+            }
+
+            if (state.announcements.isEmpty) {
+              return const Center(child: Text('No announcements found.'));
+            }
+
+            return RefreshIndicator(
+              onRefresh: () async {
+                context.read<CommunicationBloc>().add(CommunicationRefreshRequested(childId));
+              },
+              child: ListView.separated(
+                itemCount: state.announcements.length,
+                separatorBuilder: (_, _) => const Divider(),
+                itemBuilder: (context, index) {
+                  final announcement = state.announcements[index];
+                  return ListTile(
+                    title: Text(announcement.title),
+                    subtitle: Text(announcement.preview ?? ''),
+                    trailing: Text(announcement.createdAt.toString().split(' ').first),
+                  );
+                },
               ),
-            ],
-          ),
-        );
-      },
+            );
+          },
+        ),
+      ),
     );
   }
 }

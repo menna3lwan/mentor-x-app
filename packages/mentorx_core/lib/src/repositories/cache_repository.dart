@@ -1,4 +1,4 @@
-part of '../../mentorx_core.dart';
+part of 'package:mentorx_core/mentorx_core.dart';
 
 enum CacheRepositoryExceptionCode {
   saveFailed,
@@ -32,6 +32,7 @@ final class CacheKeys {
   static const String tenantPrimaryColor = 'tenant_primary_color';
   static const String tenantAccentColor = 'tenant_accent_color';
   static const String rememberedPhone = 'remembered_phone';
+  static const String isFirstTimeOpened = 'isFirstTimeOpened';
 }
 
 abstract interface class CacheRepository {

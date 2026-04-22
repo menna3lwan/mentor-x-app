@@ -1,54 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../core/blocs/app_authentication_cubit/app_authentication_cubit.dart';
+import '../../../core/routing/app_routes.dart';
 
-import '../../../core/core.dart';
-import '../bloc/onboarding_bloc.dart';
-
-final class SplashScreenPage extends StatefulWidget {
+class SplashScreenPage extends StatefulWidget {
   const SplashScreenPage({super.key});
 
   @override
   State<SplashScreenPage> createState() => _SplashScreenPageState();
 }
 
-final class _SplashScreenPageState extends State<SplashScreenPage> {
+class _SplashScreenPageState extends State<SplashScreenPage> {
   @override
   void initState() {
     super.initState();
-    context.read<OnboardingBloc>().add(const OnboardingStarted());
+    _checkStatus();
+  }
+
+  Future<void> _checkStatus() async {
+    await Future.delayed(const Duration(seconds: 2));
+    if (!mounted) return;
+
+    final authState = context.read<AppAuthenticationCubit>().state;
+    if (authState.isAuthenticated) {
+      const HomePageRoute().go(context);
+    } else {
+      const LoginPageRoute().go(context);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<OnboardingBloc, OnboardingState>(
-      listener: (context, state) {
-        if (state.step == OnboardingStep.needsOnboarding) {
-          const OnboardingPageRoute().go(context);
-          return;
-        }
-        if (state.step == OnboardingStep.needsLogin) {
-          const LoginPageRoute().go(context);
-          return;
-        }
-        if (state.step == OnboardingStep.authenticated) {
-          const HomePageRoute().go(context);
-        }
-      },
-      child: const Scaffold(
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.family_restroom, size: 72),
-              SizedBox(height: 12),
-              Text(
-                'Parent Portal',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
-              ),
-              SizedBox(height: 10),
-              CircularProgressIndicator(),
-            ],
-          ),
+    return const Scaffold(
+      backgroundColor: Colors.white,
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.school_rounded, size: 100, color: Color(0xFF1E293B)),
+            SizedBox(height: 24),
+            CircularProgressIndicator(color: Color(0xFF1E293B)),
+          ],
         ),
       ),
     );

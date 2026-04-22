@@ -1,47 +1,37 @@
 part of 'profile_bloc.dart';
 
-final class ProfileState extends Equatable {
-  final bool isLoading;
-  final bool isSaving;
-  final ParentProfileData? profile;
-  final ParentSettingsData? settings;
-  final int saveSuccessTick;
+enum ProfileStatus { initial, loading, success, failure }
+
+class ProfileState extends Equatable {
+  final ProfileStatus status;
+  final ParentEntity? profileData;
   final String? errorMessage;
 
   const ProfileState({
-    this.isLoading = false,
-    this.isSaving = false,
-    this.profile,
-    this.settings,
-    this.saveSuccessTick = 0,
+    this.status = ProfileStatus.initial,
+    this.profileData,
     this.errorMessage,
   });
 
   ProfileState copyWith({
-    bool? isLoading,
-    bool? isSaving,
-    ParentProfileData? profile,
-    ParentSettingsData? settings,
-    int? saveSuccessTick,
+    ProfileStatus? status,
+    ParentEntity? profileData,
     String? errorMessage,
   }) {
     return ProfileState(
-      isLoading: isLoading ?? this.isLoading,
-      isSaving: isSaving ?? this.isSaving,
-      profile: profile ?? this.profile,
-      settings: settings ?? this.settings,
-      saveSuccessTick: saveSuccessTick ?? this.saveSuccessTick,
-      errorMessage: errorMessage,
+      status: status ?? this.status,
+      profileData: profileData ?? this.profileData,
+      errorMessage: errorMessage ?? this.errorMessage,
     );
   }
 
   @override
-  List<Object?> get props => [
-    isLoading,
-    isSaving,
-    profile,
-    settings,
-    saveSuccessTick,
-    errorMessage,
-  ];
+  List<Object?> get props => [status, profileData, errorMessage];
+
+  // Helper for settings data
+  Map<String, dynamic> get settingsData => {
+    'notificationsEnabled': true,
+    'themeMode': 'system',
+    'languageCode': 'en',
+  };
 }

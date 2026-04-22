@@ -59,7 +59,7 @@ void main() {
       final result = await repository.getProfile();
 
       expect(result.id, '1');
-      expect(result.name, 'Test Student');
+      expect(result.fullName, 'Test Student');
     });
 
     test('getDevices returns list of devices', () async {

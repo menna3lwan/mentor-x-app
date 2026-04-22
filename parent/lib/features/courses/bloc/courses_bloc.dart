@@ -1,46 +1,50 @@
-import 'package:equatable/equatable.dart';
+import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../portal_data/portal_data.dart';
+import 'package:mentorx_core/mentorx_core.dart';
 
 part 'courses_event.dart';
 part 'courses_state.dart';
 
-final class CoursesBloc extends Bloc<CoursesEvent, CoursesState> {
-  final ParentPortalRepository _repository;
+class CoursesBloc extends Bloc<CoursesEvent, CoursesState> {
+  final ParentCourseRepository _courseRepository;
+  final ParentGradeRepository _gradeRepository;
 
-  CoursesBloc({required ParentPortalRepository repository})
-    : _repository = repository,
-      super(const CoursesState()) {
+  CoursesBloc({
+    required ParentCourseRepository courseRepository,
+    required ParentGradeRepository gradeRepository,
+  })  : _courseRepository = courseRepository,
+        _gradeRepository = gradeRepository,
+        super(const CoursesState()) {
     on<CoursesStarted>(_onStarted);
-    on<CourseSelected>(_onSelected);
+    on<CoursesRefreshRequested>(_onRefreshRequested);
   }
 
   Future<void> _onStarted(
-    CoursesStarted event,
-    Emitter<CoursesState> emit,
-  ) async {
-    emit(state.copyWith(isLoading: true, errorMessage: null));
+      CoursesStarted event, Emitter<CoursesState> emit) async {
+    emit(state.copyWith(status: CoursesStatus.loading));
     try {
-      final courses = await _repository.getCourses(childId: event.childId);
-      emit(
-        state.copyWith(
-          isLoading: false,
-          courses: courses,
-          selectedCourseId: courses.isEmpty ? null : courses.first.id,
-        ),
-      );
-    } catch (error) {
-      emit(
-        state.copyWith(
-          isLoading: false,
-          errorMessage: error.toString(),
-        ),
-      );
+      final results = await Future.wait([
+        _courseRepository.getCourses(event.childId),
+        _gradeRepository.getGradeSummary(event.childId),
+        _gradeRepository.getGradeTrend(event.childId),
+      ]);
+
+      emit(state.copyWith(
+        status: CoursesStatus.success,
+        courses: results[0] as List<CourseEntity>,
+        gradeSummary: results[1] as ParentGradeSummaryEntity,
+        gradeTrend: results[2] as ParentGradeTrendEntity,
+      ));
+    } catch (e) {
+      emit(state.copyWith(
+        status: CoursesStatus.failure,
+        errorMessage: e.toString(),
+      ));
     }
   }
 
-  void _onSelected(CourseSelected event, Emitter<CoursesState> emit) {
-    emit(state.copyWith(selectedCourseId: event.courseId));
+  Future<void> _onRefreshRequested(
+      CoursesRefreshRequested event, Emitter<CoursesState> emit) async {
+    add(CoursesStarted(event.childId));
   }
 }

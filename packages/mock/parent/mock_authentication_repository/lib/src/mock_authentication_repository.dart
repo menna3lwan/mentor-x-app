@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:mentorx_core/mentorx_core.dart';
 import 'package:mock_data/mock_data.dart';
 
-final class MockAuthenticationRepository implements AuthenticationRepository {
+final class MockAuthenticationRepository implements AuthenticationRepository<ParentEntity> {
   final Duration delay;
   final String mockPhone;
   final String mockOtp;
@@ -16,20 +16,16 @@ final class MockAuthenticationRepository implements AuthenticationRepository {
   static const List<ParentStudentLookupEntity> _mockStudents = [
     ParentStudentLookupEntity(
       studentId: '42',
-      firstNameMasked: 'Ah**',
-      lastNameMasked: 'Mo**',
+      maskedName: 'Ah** Mo**',
       gradeName: 'Grade 10',
-      tenantName: 'MentorX Maadi',
-      tenantId: '1',
+      centerName: 'Maadi Branch',
       canAutoVerify: true,
     ),
     ParentStudentLookupEntity(
       studentId: '84',
-      firstNameMasked: 'Sa**',
-      lastNameMasked: 'Al**',
+      maskedName: 'Sa** Al**',
       gradeName: 'Grade 7',
-      tenantName: 'MentorX Maadi',
-      tenantId: '1',
+      centerName: 'Maadi Branch',
       canAutoVerify: false,
     ),
   ];
@@ -50,6 +46,10 @@ final class MockAuthenticationRepository implements AuthenticationRepository {
   Future<ParentEntity> login({
     required String phone,
     required String password,
+    String? deviceHash,
+    String? deviceName,
+    String? fcmToken,
+    String? appVersion,
   }) async {
     await Future.delayed(delay);
     if (phone == '01011111111' && password == 'Test@1234') {
@@ -60,7 +60,6 @@ final class MockAuthenticationRepository implements AuthenticationRepository {
     }
     if (phone == mockPhone) {
       final user = MockParentGenerator.generate(
-        name: mockUserName,
         phoneNumber: phone,
       );
       _cachedUser = user;
@@ -163,10 +162,8 @@ final class MockAuthenticationRepository implements AuthenticationRepository {
       userId: 'parent_${DateTime.now().millisecondsSinceEpoch}',
       status: 'active',
       childLinkStatus: matchedStudent.canAutoVerify
-          ? ParentChildLinkStatus.verified
+          ? ParentChildLinkStatus.linked
           : ParentChildLinkStatus.pending,
-      otpExpiresInSeconds: 300,
-      phone: phone,
     );
 
     await sendOtp(phone);
@@ -258,8 +255,7 @@ final class MockAuthenticationRepository implements AuthenticationRepository {
     await Future.delayed(delay);
     if (code == mockOtp) {
       final user = MockParentGenerator.generate(
-        name: mockUserName,
-        phoneNumber: _pendingRegistration?.phone ?? phone,
+        phoneNumber: phone,
       );
       _cachedUser = user;
       _pendingRegistration = null;

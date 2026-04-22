@@ -1,64 +1,82 @@
 import 'package:mentorx_core/mentorx_core.dart';
 
-abstract final class PointsTransactionModel {
-  static PointsTransactionEntity fromJson(Map<String, dynamic> json) {
-    return PointsTransactionEntity(
-      id: json['id']?.toString() ?? '',
-      transactionType: _parseType(json['transactionType'] ?? json['transaction_type']),
-      points: (json['points'] as num?)?.toInt() ?? 0,
-      balanceAfter: (json['balanceAfter'] ?? json['balance_after'] as num?)?.toInt() ?? 0,
-      source: json['source'] as String? ?? '',
-      createdAt: DateTime.parse((json['createdAt'] ?? json['created_at']) as String),
-    );
-  }
+final class PointsTransactionModel extends PointsTransactionEntity {
+  const PointsTransactionModel({
+    required super.id,
+    required super.amount,
+    required super.balanceAfter,
+    required super.description,
+    required super.createdAt,
+    super.typeBadge,
+  });
 
-  static PointsTransactionType _parseType(dynamic value) {
-    final str = value?.toString().toLowerCase();
-    return PointsTransactionType.values.firstWhere(
-      (e) => e.name == str,
-      orElse: () => PointsTransactionType.earn,
+  factory PointsTransactionModel.fromJson(Map<String, dynamic> json) {
+    return PointsTransactionModel(
+      id: json['id']?.toString() ?? '',
+      amount: (json['amount'] ?? 0).toInt(),
+      balanceAfter: (json['balanceAfter'] ?? json['balance_after'] ?? 0).toInt(),
+      description: (json['description'] ?? json['reason'] ?? '') as String,
+      createdAt: DateTime.tryParse(
+            (json['createdAt'] ?? json['created_at'])?.toString() ?? '',
+          ) ??
+          DateTime.now(),
+      typeBadge:
+          (json['typeBadge'] ?? json['type_badge'] ?? json['type'])?.toString(),
     );
   }
 }
 
-abstract final class RewardItemModel {
-  static RewardItemEntity fromJson(Map<String, dynamic> json) {
-    return RewardItemEntity(
+final class RewardItemModel extends RewardItemEntity {
+  const RewardItemModel({
+    required super.id,
+    required super.title,
+    required super.requiredPoints,
+    super.imageUrl,
+    super.isActive = true,
+    super.remainingQuantity,
+    super.perUserLimit = 1,
+    super.isFeatured = false,
+    super.availableFrom,
+    super.availableUntil,
+  });
+
+  factory RewardItemModel.fromJson(Map<String, dynamic> json) {
+    return RewardItemModel(
       id: json['id']?.toString() ?? '',
-      title: json['title'] as String? ?? '',
-      imageUrl: (json['imageUrl'] ?? json['image_url']) as String?,
-      requiredPoints: (json['requiredPoints'] ?? json['required_points'] as num?)?.toInt() ?? 0,
-      remainingQuantity: (json['remainingQuantity'] ?? json['remaining_quantity'] as num?)?.toInt(),
-      perUserLimit: (json['perUserLimit'] ?? json['per_user_limit'] as num?)?.toInt() ?? 1,
-      isActive: json['isActive'] as bool? ?? json['is_active'] as bool? ?? true,
-      isFeatured: json['isFeatured'] as bool? ?? json['is_featured'] as bool? ?? false,
-      availableFrom: (json['availableFrom'] ?? json['available_from']) != null 
-          ? DateTime.tryParse((json['availableFrom'] ?? json['available_from']) as String) 
-          : null,
-      availableUntil: (json['availableUntil'] ?? json['available_until']) != null 
-          ? DateTime.tryParse((json['availableUntil'] ?? json['available_until']) as String) 
-          : null,
+      title: json['title'] ?? '',
+      requiredPoints: (json['required_points'] ?? json['points_cost'] ?? 0).toInt(),
+      imageUrl: json['image_url'],
+      isActive: json['is_active'] ?? true,
+      remainingQuantity: json['remaining_quantity']?.toInt() ?? json['stock_quantity']?.toInt(),
+      perUserLimit: (json['per_user_limit'] ?? 1).toInt(),
+      isFeatured: json['is_featured'] ?? false,
+      availableFrom: json['available_from'] != null ? DateTime.tryParse(json['available_from']) : null,
+      availableUntil: json['available_until'] != null ? DateTime.tryParse(json['available_until']) : null,
     );
   }
 }
 
-abstract final class RewardClaimModel {
-  static RewardClaimEntity fromJson(Map<String, dynamic> json) {
-    return RewardClaimEntity(
-      id: json['id']?.toString() ?? '',
-      rewardItemId: (json['rewardItemId'] ?? json['reward_item_id'])?.toString() ?? '',
-      rewardTitle: (json['rewardTitle'] ?? json['reward_title'] ?? json['reward']?['title']) as String?,
-      pointsSpent: (json['pointsSpent'] ?? json['points_spent'] as num?)?.toInt() ?? 0,
-      status: _parseStatus(json['status']),
-      claimedAt: DateTime.parse((json['claimedAt'] ?? json['claimed_at']) as String),
-    );
-  }
+final class RewardClaimModel extends RewardClaimEntity {
+  const RewardClaimModel({
+    required super.id,
+    required super.rewardItemId,
+    super.rewardTitle,
+    required super.pointsSpent,
+    required super.status,
+    required super.claimedAt,
+  });
 
-  static RewardClaimStatus _parseStatus(dynamic value) {
-    final str = value?.toString().toLowerCase();
-    return RewardClaimStatus.values.firstWhere(
-      (e) => e.name == str,
-      orElse: () => RewardClaimStatus.pending,
+  factory RewardClaimModel.fromJson(Map<String, dynamic> json) {
+    return RewardClaimModel(
+      id: json['id']?.toString() ?? '',
+      rewardItemId: json['reward_item_id']?.toString() ?? '',
+      rewardTitle: json['reward_title']?.toString(),
+      pointsSpent: (json['points_spent'] ?? json['pointsCost'] ?? 0).toInt(),
+      status: RewardClaimStatus.values.firstWhere(
+        (e) => e.name == (json['status'] ?? 'pending'),
+        orElse: () => RewardClaimStatus.pending,
+      ),
+      claimedAt: DateTime.tryParse(json['claimed_at'] ?? '') ?? DateTime.now(),
     );
   }
 }

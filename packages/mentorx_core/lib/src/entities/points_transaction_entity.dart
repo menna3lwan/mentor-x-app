@@ -1,41 +1,60 @@
-part of '../../mentorx_core.dart';
+part of 'package:mentorx_core/mentorx_core.dart';
 
-enum PointsTransactionType { earn, spend }
+enum PointsTransactionType { earned, redeemed, expired, deducted }
+
 
 base class PointsTransactionEntity extends Equatable {
   final String id;
-  final PointsTransactionType transactionType;
-  final int points;
+  final int amount;
   final int balanceAfter;
-  final String source;
+  final String description;
   final DateTime createdAt;
+  final String? typeBadge; // "Quiz" / "Course" / "Reward" / "Promo"
 
   const PointsTransactionEntity({
     required this.id,
-    required this.transactionType,
-    required this.points,
+    required this.amount,
     required this.balanceAfter,
-    required this.source,
+    required this.description,
     required this.createdAt,
+    this.typeBadge,
   });
 
+  bool get isCredit => amount > 0;
 
   static final placeholder = PointsTransactionEntity(
     id: '',
-    transactionType: PointsTransactionType.earn,
-    points: 0,
+    amount: 0,
     balanceAfter: 0,
-    source: '',
+    description: '',
     createdAt: DateTime.fromMillisecondsSinceEpoch(0),
   );
 
   @override
   List<Object?> get props => [
         id,
-        transactionType,
-        points,
+        amount,
         balanceAfter,
-        source,
+        description,
         createdAt,
+        typeBadge,
       ];
+
+  PointsTransactionEntity copyWith({
+    String? id,
+    int? amount,
+    int? balanceAfter,
+    String? description,
+    DateTime? createdAt,
+    String? typeBadge,
+  }) {
+    return PointsTransactionEntity(
+      id: id ?? this.id,
+      amount: amount ?? this.amount,
+      balanceAfter: balanceAfter ?? this.balanceAfter,
+      description: description ?? this.description,
+      createdAt: createdAt ?? this.createdAt,
+      typeBadge: typeBadge ?? this.typeBadge,
+    );
+  }
 }

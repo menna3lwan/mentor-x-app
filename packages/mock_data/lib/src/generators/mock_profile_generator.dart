@@ -6,7 +6,8 @@ final class MockProfileGenerator {
   static StudentEntity profile() {
     return StudentEntity(
       id: 'student_1',
-      name: 'Ahmed Mohamed',
+      firstName: 'Ahmed',
+      lastName: 'Mohamed',
       phoneNumber: '01012345678',
       email: 'ahmed.m@example.com',
       status: StudentStatus.active,
@@ -14,7 +15,7 @@ final class MockProfileGenerator {
       dateOfBirth: DateTime(2007, 5, 15),
       gradeId: 'g1',
       gradeName: 'Grade 10',
-      studyType: StudyType.both,
+      studyType: StudyType.hybrid.name,
       profileImageUrl: 'https://picsum.photos/200/200?profile',
       walletBalance: 1240.50,
       totalPoints: 860,

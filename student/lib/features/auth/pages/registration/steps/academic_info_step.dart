@@ -213,7 +213,7 @@ class AcademicInfoStep extends StatelessWidget {
           items: state.groups.map((group) {
             return DropdownMenuItem(
               value: group,
-              child: Text('${group.name} (${group.currentSize}/${group.maxSize})'),
+              child: Text(group.name),
             );
           }).toList(),
           onChanged: (value) => bloc.add(StudentRegistrationGroupChanged(value)),

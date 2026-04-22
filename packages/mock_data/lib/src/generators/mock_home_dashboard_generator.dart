@@ -16,22 +16,19 @@ final class MockHomeDashboardGenerator {
         id: 'b1',
         imageUrl: 'https://picsum.photos/800/450?1',
         title: 'New Revision Marathon',
-        actionType: 'course',
-        actionValue: 'course_1',
+        deepLink: 'mentorx://course/course_1',
       ),
       BannerEntity(
         id: 'b2',
         imageUrl: 'https://picsum.photos/800/450?2',
         title: 'Limited Offer for New Courses',
-        actionType: 'catalog',
-        actionValue: '/catalog',
+        deepLink: 'mentorx://catalog',
       ),
       BannerEntity(
         id: 'b3',
         imageUrl: 'https://picsum.photos/800/450?3',
         title: 'Attendance Rewards Week',
-        actionType: 'rewards',
-        actionValue: '/rewards',
+        deepLink: 'mentorx://rewards',
       ),
     ];
   }
@@ -101,24 +98,24 @@ final class MockHomeDashboardGenerator {
       AnnouncementEntity(
         id: 'a1',
         title: 'Tomorrow Session Time Updated',
-        preview:
-            'The physics live class has been moved to 7:00 PM. Please join 10 minutes earlier for attendance.',
+        content: 'The physics live class has been moved to 7:00 PM. Please join 10 minutes earlier for attendance.',
+        preview: 'The physics live class has been moved to 7:00 PM. Please join 10 minutes earlier for attendance.',
         createdAt: now.subtract(const Duration(hours: 2)),
         isPinned: true,
       ),
       AnnouncementEntity(
         id: 'a2',
         title: 'New Quiz Available',
-        preview:
-            'A new algebra quiz has been published and will stay open for 48 hours starting now.',
+        content: 'A new algebra quiz has been published and will stay open for 48 hours starting now.',
+        preview: 'A new algebra quiz has been published and will stay open for 48 hours starting now.',
         createdAt: now.subtract(const Duration(hours: 6)),
         isPinned: false,
       ),
       AnnouncementEntity(
         id: 'a3',
         title: 'Wallet Bonus Campaign',
-        preview:
-            'Top up your wallet this week and receive bonus points that can be exchanged for rewards.',
+        content: 'Top up your wallet this week and receive bonus points that can be exchanged for rewards.',
+        preview: 'Top up your wallet this week and receive bonus points that can be exchanged for rewards.',
         createdAt: now.subtract(const Duration(days: 1)),
         isPinned: false,
       ),

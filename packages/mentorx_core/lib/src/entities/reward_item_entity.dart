@@ -1,4 +1,4 @@
-part of '../../mentorx_core.dart';
+part of 'package:mentorx_core/mentorx_core.dart';
 
 base class RewardItemEntity extends Equatable {
   final String id;
@@ -34,8 +34,7 @@ base class RewardItemEntity extends Equatable {
     return true;
   }
 
-
-  static final placeholder = RewardItemEntity(
+  static const placeholder = RewardItemEntity(
     id: '',
     title: '',
     requiredPoints: 0,
@@ -54,4 +53,30 @@ base class RewardItemEntity extends Equatable {
         availableFrom,
         availableUntil,
       ];
+
+  RewardItemEntity copyWith({
+    String? id,
+    String? title,
+    String? imageUrl,
+    int? requiredPoints,
+    int? remainingQuantity,
+    int? perUserLimit,
+    bool? isActive,
+    bool? isFeatured,
+    DateTime? availableFrom,
+    DateTime? availableUntil,
+  }) {
+    return RewardItemEntity(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      imageUrl: imageUrl ?? this.imageUrl,
+      requiredPoints: requiredPoints ?? this.requiredPoints,
+      remainingQuantity: remainingQuantity ?? this.remainingQuantity,
+      perUserLimit: perUserLimit ?? this.perUserLimit,
+      isActive: isActive ?? this.isActive,
+      isFeatured: isFeatured ?? this.isFeatured,
+      availableFrom: availableFrom ?? this.availableFrom,
+      availableUntil: availableUntil ?? this.availableUntil,
+    );
+  }
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../portal_data/portal_data.dart';
+import 'package:mentorx_core/mentorx_core.dart';
 import '../bloc/assessments_bloc.dart';
 
 final class QuizGradeDetailParentViewPage extends StatelessWidget {
@@ -16,15 +15,15 @@ final class QuizGradeDetailParentViewPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AssessmentsBloc, AssessmentsState>(
       builder: (context, state) {
-        ParentAssessmentRecord? assessment;
+        QuizAttemptEntity? attempt;
         for (final item in state.assessments) {
           if (item.id == assessmentId) {
-            assessment = item;
+            attempt = item;
             break;
           }
         }
-        if (assessment == null) {
-          return const Scaffold(body: Center(child: Text('Quiz not found.')));
+        if (attempt == null) {
+          return const Scaffold(body: Center(child: Text('Quiz attempt not found.')));
         }
 
         return Scaffold(
@@ -35,35 +34,36 @@ final class QuizGradeDetailParentViewPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  assessment.title,
+                  'Quiz ID: ${attempt.quizId}',
                   style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
                 const SizedBox(height: 12),
-                Text('Course: ${assessment.courseName}'),
-                Text('Score: ${assessment.score}/${assessment.totalScore}'),
+                Text('Score: ${attempt.score}/${attempt.totalMarks}'),
                 Text(
-                  'Percentage: ${assessment.percentage.toStringAsFixed(1)}%',
+                  'Percentage: ${attempt.percentage.toStringAsFixed(1)}%',
                 ),
-                Text('Attempts: ${assessment.attempts}'),
+                Text('Status: ${attempt.status.name.toUpperCase()}'),
                 const SizedBox(height: 18),
                 const Text(
                   'Question Breakdown',
                   style: TextStyle(fontWeight: FontWeight.w700),
                 ),
                 const SizedBox(height: 8),
-                ...List.generate(
-                  6,
-                  (index) => ListTile(
-                    dense: true,
-                    leading: Icon(
-                      index.isEven ? Icons.check_circle : Icons.cancel,
-                      color: index.isEven ? Colors.green : Colors.red,
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: 6, // Mocking breakdown for now
+                    itemBuilder: (context, index) => ListTile(
+                      dense: true,
+                      leading: Icon(
+                        index.isEven ? Icons.check_circle : Icons.cancel,
+                        color: index.isEven ? Colors.green : Colors.red,
+                      ),
+                      title: Text('Question ${index + 1}'),
+                      subtitle: Text(index.isEven ? 'Correct' : 'Incorrect'),
                     ),
-                    title: Text('Question ${index + 1}'),
-                    subtitle: Text(index.isEven ? 'Correct' : 'Incorrect'),
                   ),
                 ),
               ],

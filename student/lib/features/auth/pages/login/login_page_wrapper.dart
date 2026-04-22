@@ -219,10 +219,9 @@ final class _LoginPageWrapperState extends State<LoginPageWrapper> {
         const HomePageRoute().go(context);
       case StudentStatus.pending:
         const StatusPendingPageRoute().go(context);
-      case StudentStatus.blocked:
       case StudentStatus.suspended:
         const StatusBlockedPageRoute().go(context);
-      case StudentStatus.rejected:
+      case StudentStatus.inactive:
         const StatusRejectedPageRoute().go(context);
     }
   }

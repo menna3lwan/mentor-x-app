@@ -1,4 +1,4 @@
-part of '../../mentorx_core.dart';
+part of 'package:mentorx_core/mentorx_core.dart';
 
 base class DeviceEntity extends Equatable {
   final String id;
@@ -19,7 +19,6 @@ base class DeviceEntity extends Equatable {
     this.appVersion,
   });
 
-
   static final placeholder = DeviceEntity(
     id: '',
     deviceName: '',
@@ -27,6 +26,7 @@ base class DeviceEntity extends Equatable {
     isActive: false,
     lastUsedAt: DateTime.fromMillisecondsSinceEpoch(0),
   );
+
   @override
   List<Object?> get props => [
         id,
@@ -37,4 +37,24 @@ base class DeviceEntity extends Equatable {
         isActive,
         lastUsedAt,
       ];
+
+  DeviceEntity copyWith({
+    String? id,
+    String? deviceName,
+    String? deviceModel,
+    String? osVersion,
+    String? appVersion,
+    bool? isActive,
+    DateTime? lastUsedAt,
+  }) {
+    return DeviceEntity(
+      id: id ?? this.id,
+      deviceName: deviceName ?? this.deviceName,
+      deviceModel: deviceModel ?? this.deviceModel,
+      osVersion: osVersion ?? this.osVersion,
+      appVersion: appVersion ?? this.appVersion,
+      isActive: isActive ?? this.isActive,
+      lastUsedAt: lastUsedAt ?? this.lastUsedAt,
+    );
+  }
 }

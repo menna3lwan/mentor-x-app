@@ -1,23 +1,29 @@
-part of '../../mentorx_core.dart';
+part of 'package:mentorx_core/mentorx_core.dart';
 
-class GroupEntity extends Equatable {
+base class GroupEntity extends Equatable {
   final String id;
   final String name;
-  final int? currentSize;
-  final int? maxSize;
 
   const GroupEntity({
     required this.id,
     required this.name,
-    this.currentSize,
-    this.maxSize,
   });
 
-  static final placeholder = GroupEntity(
+  static const placeholder = GroupEntity(
     id: '',
     name: '',
   );
 
   @override
-  List<Object?> get props => [id, name, currentSize, maxSize];
+  List<Object?> get props => [id, name];
+
+  GroupEntity copyWith({
+    String? id,
+    String? name,
+  }) {
+    return GroupEntity(
+      id: id ?? this.id,
+      name: name ?? this.name,
+    );
+  }
 }

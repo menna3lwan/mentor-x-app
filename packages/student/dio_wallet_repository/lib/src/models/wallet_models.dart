@@ -115,6 +115,32 @@ final class PaymentModel extends PaymentEntity {
   }
 }
 
+final class PointsTransactionModel extends PointsTransactionEntity {
+  const PointsTransactionModel({
+    required super.id,
+    required super.amount,
+    required super.balanceAfter,
+    required super.description,
+    required super.createdAt,
+    super.typeBadge,
+  });
+
+  factory PointsTransactionModel.fromJson(Map<String, dynamic> json) {
+    return PointsTransactionModel(
+      id: json['id']?.toString() ?? '',
+      amount: _toInt(json['amount']),
+      balanceAfter: _toInt(json['balanceAfter'] ?? json['balance_after']),
+      description: (json['description'] ?? json['reason'] ?? '') as String,
+      createdAt: DateTime.tryParse(
+            (json['createdAt'] ?? json['created_at'])?.toString() ?? '',
+          ) ??
+          DateTime.now(),
+      typeBadge:
+          (json['typeBadge'] ?? json['type_badge'] ?? json['type'])?.toString(),
+    );
+  }
+}
+
 int _toInt(dynamic value) {
   if (value is int) return value;
   if (value is num) return value.toInt();

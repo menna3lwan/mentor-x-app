@@ -1,90 +1,133 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
-
-import '../../../core/core.dart';
+import 'package:mentorx_core/mentorx_core.dart';
 import '../bloc/courses_bloc.dart';
 
-final class AcademicMonitorPage extends StatelessWidget {
-  const AcademicMonitorPage({super.key});
+class AcademicMonitorPage extends StatelessWidget {
+  final String childId;
+
+  const AcademicMonitorPage({
+    super.key,
+    required this.childId,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CoursesBloc, CoursesState>(
-      builder: (context, state) {
-        final courses = state.courses;
-        final completed = courses
-            .where((item) => item.progressPercent >= 100)
-            .length;
-        final overall = courses.isEmpty
-            ? 0
-            : courses
-                      .map((item) => item.progressPercent)
-                      .reduce((a, b) => a + b) /
-                  courses.length;
+    return BlocProvider(
+      create: (context) => CoursesBloc(
+        courseRepository: context.read<ParentCourseRepository>(),
+        gradeRepository: context.read<ParentGradeRepository>(),
+      )..add(CoursesStarted(childId)),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Academic Status'),
+          actions: [
+            Builder(
+              builder: (context) => IconButton(
+                icon: const Icon(Icons.refresh),
+                onPressed: () {
+                  context.read<CoursesBloc>().add(CoursesRefreshRequested(childId));
+                },
+              ),
+            ),
+          ],
+        ),
+        body: BlocBuilder<CoursesBloc, CoursesState>(
+          builder: (context, state) {
+            if (state.status == CoursesStatus.loading) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-        return Scaffold(
-          appBar: AppBar(title: const Text('Academic Monitor')),
-          body: state.isLoading
-              ? const Center(child: CircularProgressIndicator())
-              : Column(
+            if (state.status == CoursesStatus.failure) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
-                      margin: const EdgeInsets.all(16),
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.blue.shade50,
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Row(
-                        children: [
-                          SizedBox(
-                            height: 70,
-                            width: 70,
-                            child: CircularProgressIndicator(
-                              value: overall / 100,
-                              strokeWidth: 8,
-                              backgroundColor: Colors.grey.shade200,
-                            ),
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: Text(
-                              '${overall.toStringAsFixed(0)}% overall\n$completed/${courses.length} courses completed',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: ListView.separated(
-                        itemCount: courses.length,
-                        separatorBuilder: (_, _) => const Divider(height: 1),
-                        itemBuilder: (context, index) {
-                          final item = courses[index];
-                          return ListTile(
-                            title: Text(item.title),
-                            subtitle: Text(
-                              '${item.teacherName} • ${item.completedSessions}/${item.totalSessions} sessions\nLast accessed ${DateFormat('dd MMM').format(item.lastAccessedAt)}',
-                            ),
-                            isThreeLine: true,
-                            trailing: Text('${item.progressPercent}%'),
-                            onTap: () {
-                              CourseProgressDetailPageRoute(
-                                courseId: item.id,
-                              ).push(context);
-                            },
-                          );
-                        },
-                      ),
+                    Text('Failed to load courses: ${state.errorMessage}'),
+                    ElevatedButton(
+                      onPressed: () {
+                        context.read<CoursesBloc>().add(CoursesStarted(childId));
+                      },
+                      child: const Text('Retry'),
                     ),
                   ],
                 ),
-        );
-      },
+              );
+            }
+
+            if (state.courses.isEmpty) {
+              return const Center(child: Text('No enrolled courses found.'));
+            }
+
+            return RefreshIndicator(
+              onRefresh: () async {
+                context.read<CoursesBloc>().add(CoursesRefreshRequested(childId));
+              },
+              child: ListView(
+                padding: const EdgeInsets.all(16),
+                children: [
+                  if (state.gradeSummary != null) ...[
+                    Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          children: [
+                            Text(
+                              'Overall Average',
+                              style: Theme.of(context).textTheme.titleSmall,
+                            ),
+                            Text(
+                              '${state.gradeSummary!.overallAverage.toStringAsFixed(1)}%',
+                              style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                                    color: Theme.of(context).primaryColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                            ),
+                            const SizedBox(height: 16),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: state.gradeSummary!.distribution.entries
+                                  .map((entry) => Column(
+                                        children: [
+                                          Text(
+                                            entry.key,
+                                            style: const TextStyle(fontWeight: FontWeight.bold),
+                                          ),
+                                          Text(entry.value.toString()),
+                                        ],
+                                      ))
+                                  .toList(),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                  ],
+                  Text(
+                    'Enrolled Courses',
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                  const SizedBox(height: 16),
+                  ...state.courses.map((course) => Card(
+                        margin: const EdgeInsets.only(bottom: 12),
+                        child: ListTile(
+                          title: Text(course.title),
+                          subtitle: Text('Sessions: ${course.totalSessions}'),
+                          trailing: const Icon(Icons.chevron_right),
+                          onTap: () {
+                            // Navigation to progress detail
+                          },
+                        ),
+                      )),
+                ],
+              ),
+            );
+          },
+        ),
+      ),
     );
   }
 }

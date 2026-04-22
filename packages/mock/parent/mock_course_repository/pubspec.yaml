@@ -1,0 +1,15 @@
+name: parent_mock_course_repository
+description: Mock implementation of ParentCourseRepository.
+version: 1.0.0
+publish_to: none
+
+environment:
+  sdk: ^3.11.4
+
+resolution: workspace
+
+dependencies:
+  mentorx_core:
+    path: ../../../mentorx_core
+  mock_data:
+    path: ../../../mock_data

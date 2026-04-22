@@ -225,7 +225,7 @@ final class StudentRegistrationBloc
     );
     if (event.value != null &&
         (state.studyType == StudyType.center ||
-            state.studyType == StudyType.both)) {
+            state.studyType == StudyType.hybrid)) {
       final centers = await _registrationRepository.getCenters(_tenantId);
       emit(state.copyWith(centers: centers));
     }
@@ -236,7 +236,7 @@ final class StudentRegistrationBloc
     Emitter<StudentRegistrationState> emit,
   ) async {
     emit(state.copyWith(studyType: event.value));
-    if ((event.value == StudyType.center || event.value == StudyType.both) &&
+    if ((event.value == StudyType.center || event.value == StudyType.hybrid) &&
         state.selectedGrade != null) {
       final centers = await _registrationRepository.getCenters(_tenantId);
       emit(state.copyWith(centers: centers));
@@ -421,7 +421,7 @@ final class StudentRegistrationBloc
           return 'Please select your grade.';
         }
         if (state.studyType == StudyType.center ||
-            state.studyType == StudyType.both) {
+            state.studyType == StudyType.hybrid) {
           if (state.selectedCenter == null) {
             return 'Please select a center.';
           }

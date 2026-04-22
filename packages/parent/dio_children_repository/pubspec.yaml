@@ -1,0 +1,13 @@
+name: dio_children_repository
+description: Dio implementation of Parent Children Repository.
+version: 0.0.1
+publish_to: none
+
+environment:
+  sdk: ^3.9.2
+
+resolution: workspace
+
+dependencies:
+  mentorx_core:
+    path: ../../mentorx_core

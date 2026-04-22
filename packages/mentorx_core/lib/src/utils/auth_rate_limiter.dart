@@ -1,4 +1,4 @@
-part of '../../mentorx_core.dart';
+part of 'package:mentorx_core/mentorx_core.dart';
 
 /// Rate limiter for authentication endpoints to prevent abuse
 /// Implements exponential backoff and per-endpoint tracking

@@ -1,23 +1,28 @@
-part of '../../mentorx_core.dart';
+part of 'package:mentorx_core/mentorx_core.dart';
+
+// ——— Exception ———
+
+enum ParentHomeRepositoryExceptionCode {
+  unknown,
+  fetchError,
+}
+
+final class ParentHomeRepositoryException
+    extends MentorXException<ParentHomeRepositoryExceptionCode> {
+  const ParentHomeRepositoryException({required super.code, super.message});
+}
 
 abstract interface class ParentHomeRepository {
-  Future<
-    List<
-      ({
-        String title,
-        String value,
-        String subtitle,
-        int colorValue,
-        int iconCodePoint,
-      })
-    >
-  >
-  getStats();
+  Future<ParentHomeSummaryEntity> getSummary(String studentId);
 
-  Future<List<({String subject, double performance})>> getSubjectPerformance();
+  Future<List<ParentRecentActivityEntity>> getRecentActivity(
+    String studentId, {
+    int limit = 10,
+    int page = 1,
+  });
 
-  Future<List<({String title, String date, int iconCodePoint})>>
-  getRecentAchievements();
-
-  Future<String> getAiInsight();
+  Future<List<AnnouncementEntity>> getAnnouncements(
+    String studentId, {
+    int limit = 3,
+  });
 }

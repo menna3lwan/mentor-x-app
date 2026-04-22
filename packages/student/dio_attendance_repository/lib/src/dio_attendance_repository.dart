@@ -38,16 +38,7 @@ final class DioAttendanceRepository
     }
 
     final data = _asMap(response.data['data'] ?? response.data);
-    return AttendanceSummaryEntity(
-      totalSessions: _toInt(data['totalSessions'] ?? data['total_sessions']),
-      present: _toInt(data['present'] ?? data['total_present']),
-      absent: _toInt(data['absent'] ?? data['total_absent']),
-      late: _toInt(data['late'] ?? data['total_late']),
-      excused: _toInt(data['excused'] ?? data['total_excused']),
-      attendanceRate: _toDouble(
-        data['attendanceRate'] ?? data['attendance_rate'],
-      ),
-    );
+    return AttendanceSummaryModel.fromJson(data);
   }
 
   @override

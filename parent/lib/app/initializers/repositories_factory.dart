@@ -1,124 +1,133 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mentorx_core/mentorx_core.dart';
-import 'package:flutter_secure_storage_cache_repository/flutter_secure_storage_cache_repository.dart';
+
 import 'package:dio_http_client/dio_http_client.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_secure_storage_cache_repository/flutter_secure_storage_cache_repository.dart';
+import 'package:mentorx_core/mentorx_core.dart';
 
 import 'package:parent_authentication_repository/dio_authentication_repository.dart';
-import 'package:parent_mock_authentication_repository/mock_authentication_repository.dart';
 import 'package:parent_dio_home_repository/dio_home_repository.dart';
+import 'package:dio_children_repository/dio_children_repository.dart';
+
+import 'package:parent_mock_authentication_repository/mock_authentication_repository.dart';
 import 'package:parent_mock_home_repository/mock_home_repository.dart';
+import 'package:parent_mock_children_repository/mock_children_repository.dart';
+import 'package:parent_mock_financial_repository/mock_financial_repository.dart';
+import 'package:parent_mock_course_repository/mock_course_repository.dart';
+import 'package:parent_mock_attendance_repository/mock_attendance_repository.dart';
+import 'package:parent_mock_grade_repository/mock_grade_repository.dart';
+import 'package:parent_mock_communication_repository/mock_communication_repository.dart';
 
 import '../../core/utils/env.dart';
-import '../../features/onboarding/repositories/cache_onboarding_repository.dart';
-import '../../features/onboarding/repositories/onboarding_repository.dart';
-import '../../features/portal_data/portal_data.dart';
-
-// ────────────────────────────────────────────────────────────────────────────
-// AppRepositories — typed container for every initialized repository.
-// ────────────────────────────────────────────────────────────────────────────
 
 final class AppRepositories {
   final CacheRepository cacheRepository;
-  final AuthenticationRepository authenticationRepository;
+  final AuthenticationRepository<ParentEntity> authenticationRepository;
   final ParentHomeRepository homeRepository;
-  final ParentPortalRepository parentPortalRepository;
-  final OnboardingRepository onboardingRepository;
+  final ParentChildrenRepository childrenRepository;
+  final ParentFinancialRepository financialRepository;
+  final ParentCourseRepository courseRepository;
+  final ParentAttendanceRepository attendanceRepository;
+  final ParentGradeRepository gradeRepository;
+  final ParentCommunicationRepository communicationRepository;
 
   const AppRepositories._({
     required this.cacheRepository,
     required this.authenticationRepository,
     required this.homeRepository,
-    required this.parentPortalRepository,
-    required this.onboardingRepository,
+    required this.childrenRepository,
+    required this.financialRepository,
+    required this.courseRepository,
+    required this.attendanceRepository,
+    required this.gradeRepository,
+    required this.communicationRepository,
   });
 
-  /// Flat list — useful for parallel teardown/iteration.
-  List<Object> toList() => [
-    cacheRepository,
-    authenticationRepository,
-    homeRepository,
-    parentPortalRepository,
-    onboardingRepository,
-  ];
+  List<Object> toList() {
+    return [
+      cacheRepository,
+      authenticationRepository,
+      homeRepository,
+      childrenRepository,
+      financialRepository,
+      courseRepository,
+      attendanceRepository,
+      gradeRepository,
+      communicationRepository,
+    ];
+  }
 
-  /// [RepositoryProvider] list for [MultiRepositoryProvider].
   List<RepositoryProvider<Object>> toProviders() {
     return [
       RepositoryProvider<CacheRepository>(create: (_) => cacheRepository),
-      RepositoryProvider<AuthenticationRepository>(
+      RepositoryProvider<AuthenticationRepository<ParentEntity>>(
         create: (_) => authenticationRepository,
       ),
-      RepositoryProvider<ParentHomeRepository>(
-        create: (_) => homeRepository,
+      RepositoryProvider<ParentHomeRepository>(create: (_) => homeRepository),
+      RepositoryProvider<ParentChildrenRepository>(
+        create: (_) => childrenRepository,
       ),
-      RepositoryProvider<ParentPortalRepository>(
-        create: (_) => parentPortalRepository,
+      RepositoryProvider<ParentFinancialRepository>(
+        create: (_) => financialRepository,
       ),
-      RepositoryProvider<OnboardingRepository>(
-        create: (_) => onboardingRepository,
+      RepositoryProvider<ParentCourseRepository>(create: (_) => courseRepository),
+      RepositoryProvider<ParentAttendanceRepository>(
+        create: (_) => attendanceRepository,
+      ),
+      RepositoryProvider<ParentGradeRepository>(create: (_) => gradeRepository),
+      RepositoryProvider<ParentCommunicationRepository>(
+        create: (_) => communicationRepository,
       ),
     ];
   }
 }
 
-// ────────────────────────────────────────────────────────────────────────────
-// RepositoriesFactory — lazy-singleton wiring with mock / prod switch.
-// ────────────────────────────────────────────────────────────────────────────
-
 final class RepositoriesFactory {
   RepositoriesFactory._();
 
-  // ── Singleton instances ──────────────────────────────────────────────────
   static HttpClient? _httpClient;
-  static bool _httpClientInitialized = false;
-  static CacheRepository? _cacheRepository;
+  static bool isHttpClientInitialized = false;
 
-  /// Language code resolved on first [initRepositories] call.
   static late final String initialLanguageCode;
 
-  // ── Lazy singleton initializers ──────────────────────────────────────────
+  static CacheRepository? _cacheRepository;
 
   static Future<CacheRepository> _initCacheRepository() async {
     if (_cacheRepository != null) return _cacheRepository!;
-    final repo = FlutterSecureStorageCacheRepository();
-    await repo.initialize();
-    _cacheRepository = repo;
-    return repo;
+    final CacheRepository cacheRepository =
+        FlutterSecureStorageCacheRepository();
+    await cacheRepository.initialize();
+    _cacheRepository = cacheRepository;
+    return cacheRepository;
   }
 
   static Future<HttpClient> _initHttpClient() async {
-    if (_httpClientInitialized && _httpClient != null) return _httpClient!;
+    if (isHttpClientInitialized && _httpClient != null) return _httpClient!;
+    if (!Env.hasMentorXBaseUrl) {
+      throw StateError(
+        'MENTORX_API_BASE_URL is required when any repository mode is PROD.',
+      );
+    }
     final cacheRepository = await _initCacheRepository();
-    final client = DioHttpClient(
-      baseUrl: Env.mentorxBaseUrl,
+    final httpClient = DioHttpClient(
+      baseUrl: Env.mentorXBaseUrl,
       cacheRepository: cacheRepository,
     );
-    _httpClient = client;
-    _httpClientInitialized = true;
-    return client;
+    _httpClient = httpClient;
+    isHttpClientInitialized = true;
+    return httpClient;
   }
 
-  static Future<CacheRepository> get cacheRepository async =>
-      await _initCacheRepository();
-
-  // ── Per-repository initializers ──────────────────────────────────────────
-
-  static Future<AuthenticationRepository>
-  _initAuthenticationRepository() async {
-    late final AuthenticationRepository repo;
+  static Future<AuthenticationRepository<ParentEntity>> _initAuthenticationRepository() async {
+    late final AuthenticationRepository<ParentEntity> repo;
     switch (Env.authenticationRepositoryMode) {
       case RepositoryMode.mock:
-        repo = MockAuthenticationRepository(
-          delay: Env.mockDelayDuration,
-          mockPhone: Env.mockUserPhone,
-          mockOtp: Env.mockOtpCode,
-          mockUserName: Env.mockUserName,
-        );
+        repo = MockAuthenticationRepository(delay: Env.mockDelayDuration);
       case RepositoryMode.prod:
         final httpClient = await _initHttpClient();
+        final cacheRepository = await _initCacheRepository();
         repo = DioAuthenticationRepository(
           httpClient: httpClient,
-          cacheRepository: await cacheRepository,
+          cacheRepository: cacheRepository,
         );
     }
     await repo.initialize();
@@ -126,65 +135,131 @@ final class RepositoriesFactory {
   }
 
   static Future<ParentHomeRepository> _initHomeRepository() async {
-    switch (Env.dashboardRepositoryMode) {
+    switch (Env.homeRepositoryMode) {
       case RepositoryMode.mock:
-        return const MockParentHomeRepository();
+        return MockParentHomeRepository(); // Assuming it matches the name in its package
       case RepositoryMode.prod:
         final httpClient = await _initHttpClient();
+        final cacheRepository = await _initCacheRepository();
         return DioParentHomeRepository(
           httpClient: httpClient,
-          cacheRepository: await cacheRepository,
+          cacheRepository: cacheRepository,
         );
     }
   }
 
-  static Future<ParentPortalRepository> _initParentPortalRepository() async {
-    return MockParentPortalRepository(delay: Env.mockDelayDuration);
+  static Future<ParentChildrenRepository> _initChildrenRepository() async {
+    switch (Env.childrenRepositoryMode) {
+      case RepositoryMode.mock:
+        return MockChildrenRepository(delay: Env.mockDelayDuration);
+      case RepositoryMode.prod:
+        final httpClient = await _initHttpClient();
+        final cacheRepository = await _initCacheRepository();
+        return DioParentChildrenRepository(
+          httpClient: httpClient,
+          cacheRepository: cacheRepository,
+        );
+    }
   }
 
-  static Future<OnboardingRepository> _initOnboardingRepository() async {
-    return CacheOnboardingRepository(cacheRepository: await cacheRepository);
+  static Future<ParentFinancialRepository> _initFinancialRepository() async {
+    switch (Env.financialRepositoryMode) {
+      case RepositoryMode.mock:
+        return MockParentFinancialRepository(delay: Env.mockDelayDuration);
+      case RepositoryMode.prod:
+        // Placeholder until Dio implementation is created
+        return MockParentFinancialRepository(delay: Env.mockDelayDuration);
+    }
   }
 
-  // ── Language detection ────────────────────────────────────────────────────
-
-  static Future<String> _resolveLanguageCode(
-    CacheRepository cacheRepository,
-  ) async {
-    return await cacheRepository.get(CacheKeys.languageCode) ??
-        Env.defaultLanguageCode;
+  static Future<ParentCourseRepository> _initCourseRepository() async {
+    switch (Env.courseRepositoryMode) {
+      case RepositoryMode.mock:
+        return MockParentCourseRepository(delay: Env.mockDelayDuration);
+      case RepositoryMode.prod:
+        return MockParentCourseRepository(delay: Env.mockDelayDuration);
+    }
   }
 
-  // ── Main entry point ──────────────────────────────────────────────────────
+  static Future<ParentAttendanceRepository> _initAttendanceRepository() async {
+    switch (Env.attendanceRepositoryMode) {
+      case RepositoryMode.mock:
+        return MockParentAttendanceRepository(delay: Env.mockDelayDuration);
+      case RepositoryMode.prod:
+        return MockParentAttendanceRepository(delay: Env.mockDelayDuration);
+    }
+  }
+
+  static Future<ParentGradeRepository> _initGradeRepository() async {
+    switch (Env.gradeRepositoryMode) {
+      case RepositoryMode.mock:
+        return MockParentGradeRepository(delay: Env.mockDelayDuration);
+      case RepositoryMode.prod:
+        return MockParentGradeRepository(delay: Env.mockDelayDuration);
+    }
+  }
+
+  static Future<ParentCommunicationRepository> _initCommunicationRepository() async {
+    switch (Env.communicationRepositoryMode) {
+      case RepositoryMode.mock:
+        return MockParentCommunicationRepository(delay: Env.mockDelayDuration);
+      case RepositoryMode.prod:
+        return MockParentCommunicationRepository(delay: Env.mockDelayDuration);
+    }
+  }
+
+  static String _defaultLanguageCode() {
+    // In a real app, you'd use a locale setting package like student app does
+    // For now, simpler implementation or fallback
+    return Env.defaultLanguageCode;
+  }
 
   static Future<
-    ({AppRepositories repositories, List<LocalizedClient> localizedClients})
-  >
-  initRepositories() async {
-    if (Env.usesAnyProdRepository && !Env.hasMentorxBaseUrl) {
+      ({AppRepositories repositories, List<LocalizedClient> localizedClients})>
+      initRepositories() async {
+    if (Env.usesAnyProdRepository && !Env.hasMentorXBaseUrl) {
       throw StateError(
         'MENTORX_API_BASE_URL must be provided when any repository mode is PROD.',
       );
     }
 
-    // CacheRepository MUST be first — all others may depend on it.
-    final cacheRepository = await _initCacheRepository();
-    initialLanguageCode = await _resolveLanguageCode(cacheRepository);
+    final CacheRepository cacheRepository = await _initCacheRepository();
+    initialLanguageCode =
+        await cacheRepository.get(CacheKeys.languageCode) ??
+            _defaultLanguageCode();
 
-    // Initialize remaining repositories in parallel.
-    final results = await Future.wait([
-      _initAuthenticationRepository(),
-      _initHomeRepository(),
-      _initParentPortalRepository(),
-      _initOnboardingRepository(),
-    ]);
+    final [
+      authenticationRepository as AuthenticationRepository<ParentEntity>,
+      homeRepository as ParentHomeRepository,
+      childrenRepository as ParentChildrenRepository,
+      financialRepository as ParentFinancialRepository,
+      courseRepository as ParentCourseRepository,
+      attendanceRepository as ParentAttendanceRepository,
+      gradeRepository as ParentGradeRepository,
+      communicationRepository as ParentCommunicationRepository,
+    ] = await Future.wait(
+      [
+        _initAuthenticationRepository(),
+        _initHomeRepository(),
+        _initChildrenRepository(),
+        _initFinancialRepository(),
+        _initCourseRepository(),
+        _initAttendanceRepository(),
+        _initGradeRepository(),
+        _initCommunicationRepository(),
+      ],
+    );
 
     final repos = AppRepositories._(
       cacheRepository: cacheRepository,
-      authenticationRepository: results[0] as AuthenticationRepository,
-      homeRepository: results[1] as ParentHomeRepository,
-      parentPortalRepository: results[2] as ParentPortalRepository,
-      onboardingRepository: results[3] as OnboardingRepository,
+      authenticationRepository: authenticationRepository,
+      homeRepository: homeRepository,
+      childrenRepository: childrenRepository,
+      financialRepository: financialRepository,
+      courseRepository: courseRepository,
+      attendanceRepository: attendanceRepository,
+      gradeRepository: gradeRepository,
+      communicationRepository: communicationRepository,
     );
 
     final localizedClients = <LocalizedClient>[];

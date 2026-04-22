@@ -38,7 +38,7 @@ void main() {
       final result = await repository.getPointsHistory();
 
       expect(result.length, 1);
-      expect(result.first.points, 100);
+      expect(result.first.amount, 100);
     });
 
     test('getRewardItems returns list of items', () async {

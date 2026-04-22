@@ -1,4 +1,4 @@
-part of '../../mentorx_core.dart';
+part of 'package:mentorx_core/mentorx_core.dart';
 
 /// Lightweight course representation for lists and home dashboard sections.
 base class CourseSummaryEntity extends Equatable {
@@ -20,13 +20,13 @@ base class CourseSummaryEntity extends Equatable {
 
   bool get isFree => (price ?? 0) <= 0;
 
-
-  static final placeholder = CourseSummaryEntity(
+  static const placeholder = CourseSummaryEntity(
     id: '',
     title: '',
     thumbnailUrl: '',
     enrolledCount: 0,
   );
+
   @override
   List<Object?> get props => [
         id,
@@ -36,4 +36,22 @@ base class CourseSummaryEntity extends Equatable {
         price,
         enrolledCount,
       ];
+
+  CourseSummaryEntity copyWith({
+    String? id,
+    String? title,
+    String? thumbnailUrl,
+    double? progressPercent,
+    double? price,
+    int? enrolledCount,
+  }) {
+    return CourseSummaryEntity(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
+      progressPercent: progressPercent ?? this.progressPercent,
+      price: price ?? this.price,
+      enrolledCount: enrolledCount ?? this.enrolledCount,
+    );
+  }
 }

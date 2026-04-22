@@ -10,7 +10,7 @@ final class MockAttendanceGenerator {
       late: 4,
       absent: 3,
       excused: 2,
-      attendanceRate: 86.7,
+      attendanceRate: 0.867,
     );
   }
 
@@ -23,7 +23,7 @@ final class MockAttendanceGenerator {
         courseName: 'Advanced Algebra',
         sessionTitle: 'Linear Equations',
         status: AttendanceStatus.present,
-        checkInMethod: CheckInMethod.qrCode,
+        checkInMethod: CheckInMethod.qr,
         checkInTime: now.subtract(const Duration(hours: 2)),
         date: now,
       ),
@@ -43,7 +43,7 @@ final class MockAttendanceGenerator {
         courseName: 'Advanced Algebra',
         sessionTitle: 'Quadratic Equations',
         status: AttendanceStatus.present,
-        checkInMethod: CheckInMethod.qrCode,
+        checkInMethod: CheckInMethod.qr,
         checkInTime: now.subtract(const Duration(days: 2, hours: 3)),
         date: now.subtract(const Duration(days: 2)),
       ),
@@ -70,7 +70,7 @@ final class MockAttendanceGenerator {
         courseName: 'Advanced Algebra',
         sessionTitle: 'Polynomials',
         status: AttendanceStatus.present,
-        checkInMethod: CheckInMethod.qrCode,
+        checkInMethod: CheckInMethod.qr,
         checkInTime: now.subtract(const Duration(days: 7, hours: 2)),
         date: now.subtract(const Duration(days: 7)),
       ),
@@ -84,7 +84,7 @@ final class MockAttendanceGenerator {
       courseName: 'Advanced Algebra',
       sessionTitle: "Today's Session",
       status: AttendanceStatus.present,
-      checkInMethod: CheckInMethod.qrCode,
+      checkInMethod: CheckInMethod.qr,
       checkInTime: DateTime.now(),
       date: DateTime.now(),
     );

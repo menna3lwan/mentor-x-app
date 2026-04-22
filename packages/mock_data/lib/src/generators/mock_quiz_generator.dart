@@ -85,7 +85,7 @@ final class MockQuizGenerator {
       QuizQuestionEntity(
         id: 'qq1',
         questionText: 'What is the value of x in 2x + 5 = 15?',
-        questionType: QuizQuestionType.mcqSingle,
+        questionType: QuizQuestionType.multipleChoice,
         options: ['x = 3', 'x = 5', 'x = 7', 'x = 10'],
         marks: 10,
         explanation: '2x + 5 = 15 → 2x = 10 → x = 5',
@@ -104,7 +104,7 @@ final class MockQuizGenerator {
       QuizQuestionEntity(
         id: 'qq3',
         questionText: 'The quadratic formula is x = (-b ± √(b²-4ac)) / ___',
-        questionType: QuizQuestionType.fillBlank,
+        questionType: QuizQuestionType.fillInTheBlank,
         marks: 10,
         explanation: 'The denominator of the quadratic formula is 2a.',
         order: 2,
@@ -112,7 +112,7 @@ final class MockQuizGenerator {
       QuizQuestionEntity(
         id: 'qq4',
         questionText: 'Which of the following are prime numbers?',
-        questionType: QuizQuestionType.mcqMultiple,
+        questionType: QuizQuestionType.multipleChoice,
         options: ['2', '4', '7', '9', '11'],
         marks: 15,
         explanation: '2, 7, and 11 are prime numbers.',
@@ -122,7 +122,7 @@ final class MockQuizGenerator {
         id: 'qq5',
         questionText:
             'Explain the difference between a linear and quadratic equation.',
-        questionType: QuizQuestionType.text,
+        questionType: QuizQuestionType.essay,
         marks: 10,
         order: 4,
       ),

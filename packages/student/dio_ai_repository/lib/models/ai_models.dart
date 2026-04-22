@@ -1,39 +1,53 @@
 import 'package:mentorx_core/mentorx_core.dart';
 
-abstract final class AIConversationModel {
-  static AIConversationEntity fromJson(Map<String, dynamic> json) {
-    return AIConversationEntity(
+final class AIConversationModel extends AIConversationEntity {
+  const AIConversationModel({
+    required super.id,
+    super.title,
+    super.subject,
+    required super.messageCount,
+    super.isActive = true,
+    required super.createdAt,
+    required super.updatedAt,
+  });
+
+  factory AIConversationModel.fromJson(Map<String, dynamic> json) {
+    return AIConversationModel(
       id: json['id']?.toString() ?? '',
-      title: json['title'] as String?,
-      subject: json['subject'] as String?,
-      messageCount: (json['messageCount'] ?? json['message_count'] as num?)?.toInt() ?? 0,
-      isActive: json['isActive'] as bool? ?? json['is_active'] as bool? ?? true,
-      createdAt: DateTime.parse((json['createdAt'] ?? json['created_at']) as String),
-      updatedAt: DateTime.parse((json['updatedAt'] ?? json['updated_at']) as String),
+      title: json['title'] ?? json['subject'] ?? 'New Conversation',
+      subject: json['subject'],
+      messageCount: json['message_count'] ?? json['messageCount'] ?? 0,
+      isActive: json['is_active'] ?? json['isActive'] ?? true,
+      createdAt: DateTime.tryParse(json['created_at'] ?? '') ?? DateTime.now(),
+      updatedAt: DateTime.tryParse(json['updated_at'] ?? '') ?? DateTime.now(),
     );
   }
 }
 
-abstract final class AIMessageModel {
-  static AIMessageEntity fromJson(Map<String, dynamic> json) {
-    return AIMessageEntity(
+final class AIMessageModel extends AIMessageEntity {
+  const AIMessageModel({
+    required super.id,
+    required super.conversationId,
+    required super.role,
+    required super.content,
+    required super.createdAt,
+    super.userRating,
+    super.userFeedback,
+    super.sources,
+    super.confidence,
+  });
+
+  factory AIMessageModel.fromJson(Map<String, dynamic> json) {
+    return AIMessageModel(
       id: json['id']?.toString() ?? '',
-      conversationId: (json['conversationId'] ?? json['conversation_id'])?.toString() ?? '',
-      role: _parseRole(json['role']),
-      content: json['content'] as String? ?? '',
-      userRating: (json['userRating'] ?? json['user_rating'] as num?)?.toInt(),
-      userFeedback: (json['userFeedback'] ?? json['user_feedback']) as String?,
+      conversationId: json['conversation_id']?.toString() ?? '',
+      role: json['role']?.toString() == 'assistant' ? AIMessageRole.assistant : AIMessageRole.user,
+      content: json['content'] ?? '',
+      createdAt: DateTime.tryParse(json['created_at'] ?? '') ?? DateTime.now(),
+      userRating: json['rating'] ?? json['user_rating'] ?? json['userRating'],
+      userFeedback: json['feedback'] ?? json['user_feedback'] ?? json['userFeedback'],
       sources: (json['sources'] as List?)?.map((e) => e.toString()).toList(),
       confidence: json['confidence']?.toString(),
-      createdAt: DateTime.parse((json['createdAt'] ?? json['created_at']) as String),
-    );
-  }
-
-  static AIMessageRole _parseRole(dynamic value) {
-    final str = value?.toString().toLowerCase();
-    return AIMessageRole.values.firstWhere(
-      (e) => e.name == str,
-      orElse: () => AIMessageRole.user,
     );
   }
 }

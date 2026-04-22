@@ -1,4 +1,4 @@
-part of '../../mentorx_core.dart';
+part of 'package:mentorx_core/mentorx_core.dart';
 
 base class GradeEntity extends Equatable {
   final String id;
@@ -9,11 +9,21 @@ base class GradeEntity extends Equatable {
     required this.name,
   });
 
-
-  static final placeholder = GradeEntity(
+  static const placeholder = GradeEntity(
     id: '',
     name: '',
   );
+
   @override
   List<Object?> get props => [id, name];
+
+  GradeEntity copyWith({
+    String? id,
+    String? name,
+  }) {
+    return GradeEntity(
+      id: id ?? this.id,
+      name: name ?? this.name,
+    );
+  }
 }

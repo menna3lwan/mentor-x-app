@@ -1,54 +1,44 @@
 part of 'assessments_bloc.dart';
 
-final class AssessmentsState extends Equatable {
-  final bool isLoading;
-  final List<ParentAssessmentRecord> assessments;
-  final String filter;
-  final String? selectedAssessmentId;
+enum AssessmentsStatus { initial, loading, success, failure }
+
+class AssessmentsState extends Equatable {
+  final AssessmentsStatus status;
+  final List<QuizAttemptEntity> assessments;
+  final ParentGradeSummaryEntity? gradeSummary;
+  final ParentGradeTrendEntity? gradeTrend;
   final String? errorMessage;
 
   const AssessmentsState({
-    this.isLoading = false,
+    this.status = AssessmentsStatus.initial,
     this.assessments = const [],
-    this.filter = 'all',
-    this.selectedAssessmentId,
+    this.gradeSummary,
+    this.gradeTrend,
     this.errorMessage,
   });
 
-  ParentAssessmentRecord? get selectedAssessment {
-    if (selectedAssessmentId == null) {
-      return null;
-    }
-    for (final item in assessments) {
-      if (item.id == selectedAssessmentId) {
-        return item;
-      }
-    }
-    return null;
-  }
-
   AssessmentsState copyWith({
-    bool? isLoading,
-    List<ParentAssessmentRecord>? assessments,
-    String? filter,
-    String? selectedAssessmentId,
+    AssessmentsStatus? status,
+    List<QuizAttemptEntity>? assessments,
+    ParentGradeSummaryEntity? gradeSummary,
+    ParentGradeTrendEntity? gradeTrend,
     String? errorMessage,
   }) {
     return AssessmentsState(
-      isLoading: isLoading ?? this.isLoading,
+      status: status ?? this.status,
       assessments: assessments ?? this.assessments,
-      filter: filter ?? this.filter,
-      selectedAssessmentId: selectedAssessmentId ?? this.selectedAssessmentId,
-      errorMessage: errorMessage,
+      gradeSummary: gradeSummary ?? this.gradeSummary,
+      gradeTrend: gradeTrend ?? this.gradeTrend,
+      errorMessage: errorMessage ?? this.errorMessage,
     );
   }
 
   @override
   List<Object?> get props => [
-    isLoading,
-    assessments,
-    filter,
-    selectedAssessmentId,
-    errorMessage,
-  ];
+        status,
+        assessments,
+        gradeSummary,
+        gradeTrend,
+        errorMessage,
+      ];
 }

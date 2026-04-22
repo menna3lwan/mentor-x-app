@@ -77,7 +77,7 @@ class _PointsTransactionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isEarned = tx.transactionType == PointsTransactionType.earn;
+    final isEarned = tx.isCredit;
     final color = isEarned ? palette.statusSuccess : palette.brandPrimary;
 
     return Container(
@@ -113,7 +113,7 @@ class _PointsTransactionTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  tx.source,
+                  tx.description,
                   style: const TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: 14,
@@ -130,7 +130,7 @@ class _PointsTransactionTile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                '${isEarned ? '+' : '-'}${tx.points}',
+                '${isEarned ? '+' : '-'}${tx.amount.abs()}',
                 style: TextStyle(
                   color: color,
                   fontWeight: FontWeight.w900,

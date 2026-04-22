@@ -353,9 +353,9 @@ final class MockAuthenticationRepository
       case '01000000001':
         return StudentStatus.pending;
       case '01000000002':
-        return StudentStatus.blocked;
+        return StudentStatus.suspended;
       case '01000000003':
-        return StudentStatus.rejected;
+        return StudentStatus.inactive;
       default:
         return StudentStatus.active;
     }

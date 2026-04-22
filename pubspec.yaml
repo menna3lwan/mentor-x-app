@@ -61,10 +61,25 @@ workspace:
   # Dio repositories
   - packages/parent/dio_authentication_repository
   - packages/parent/dio_home_repository
+  - packages/parent/dio_children_repository
+  - packages/parent/dio_financial_repository
+  - packages/parent/dio_course_repository
+  - packages/parent/dio_attendance_repository
+  - packages/parent/dio_grade_repository
+  - packages/parent/dio_communication_repository
+
+  # Common
+  - packages/common/onboarding_repository
 
   # Parent Mock repositories
-  - packages/mock/parent/mock_home_repository
   - packages/mock/parent/mock_authentication_repository
+  - packages/mock/parent/mock_home_repository
+  - packages/mock/parent/mock_children_repository
+  - packages/mock/parent/mock_financial_repository
+  - packages/mock/parent/mock_course_repository
+  - packages/mock/parent/mock_attendance_repository
+  - packages/mock/parent/mock_grade_repository
+  - packages/mock/parent/mock_communication_repository
 
 dependency_overrides:
   test_api: ^0.7.7

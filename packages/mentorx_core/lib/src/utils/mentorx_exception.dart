@@ -1,4 +1,4 @@
-part of '../../mentorx_core.dart';
+part of 'package:mentorx_core/mentorx_core.dart';
 
 abstract class MentorXException<T extends Enum> extends Equatable
     implements Exception {

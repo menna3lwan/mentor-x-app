@@ -1,13 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mentorx_core/mentorx_core.dart';
 
-import '../../core/blocs/app_authentication_cubit/app_authentication_cubit.dart';
-import '../../core/blocs/app_locale_cubit/app_locale_cubit.dart';
-import 'repositories_factory.dart';
-
-// ──────────────────────────────────────────────
-// AppBlocs — Container for all app-level cubits.
-// ──────────────────────────────────────────────
+import '../../core/core.dart';
 
 final class AppBlocs {
   final AppAuthenticationCubit appAuthenticationCubit;
@@ -18,49 +11,33 @@ final class AppBlocs {
     required this.appLocaleCubit,
   });
 
-  /// Convert to [BlocProvider] list for [MultiBlocProvider].
   List<BlocProvider> toProviders() {
     return [
-      BlocProvider<AppAuthenticationCubit>.value(
-        value: appAuthenticationCubit,
-      ),
-      BlocProvider<AppLocaleCubit>.value(
-        value: appLocaleCubit,
-      ),
+      BlocProvider<AppAuthenticationCubit>.value(value: appAuthenticationCubit),
+      BlocProvider<AppLocaleCubit>.value(value: appLocaleCubit),
     ];
   }
 }
 
-// ──────────────────────────────────────────────
-// BlocsFactory — Creates and wires all app-level cubits.
-// ──────────────────────────────────────────────
-
 final class BlocsFactory {
   BlocsFactory._();
-
-  static final MentorXLogger _logger = MentorXLogger('BlocsFactory');
 
   static Future<AppBlocs> initBlocs({
     required ParentEntity? user,
     required String languageCode,
-    required AppRepositories repositories,
+    required CacheRepository cacheRepository,
     required List<LocalizedClient> localizedClients,
   }) async {
-    _logger.info('Initializing app-level cubits...');
-
-    final appAuthenticationCubit = AppAuthenticationCubit(initialUser: user);
-
-    final appLocaleCubit = AppLocaleCubit(
+    final authenticationCubit = AppAuthenticationCubit(initialUser: user);
+    final localeCubit = AppLocaleCubit(
       initialLanguageCode: languageCode,
-      cacheRepository: repositories.cacheRepository,
+      cacheRepository: cacheRepository,
       localizedClients: localizedClients,
     );
 
-    _logger.info('App cubits initialized.');
-
     return AppBlocs._(
-      appAuthenticationCubit: appAuthenticationCubit,
-      appLocaleCubit: appLocaleCubit,
+      appAuthenticationCubit: authenticationCubit,
+      appLocaleCubit: localeCubit,
     );
   }
 }

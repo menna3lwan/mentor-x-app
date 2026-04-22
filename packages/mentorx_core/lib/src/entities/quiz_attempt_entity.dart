@@ -1,10 +1,12 @@
-part of '../../mentorx_core.dart';
+part of 'package:mentorx_core/mentorx_core.dart';
 
-enum QuizAttemptStatus { inProgress, submitted, timedOut }
+enum QuizAttemptStatus { notStarted, inProgress, submitted, graded, abandoned }
 
 base class QuizAttemptEntity extends Equatable {
   final String id;
   final String quizId;
+  final String? courseId;
+  final String? courseName;
   final int attemptNumber;
   final QuizAttemptStatus status;
   final int score;
@@ -18,6 +20,8 @@ base class QuizAttemptEntity extends Equatable {
   const QuizAttemptEntity({
     required this.id,
     required this.quizId,
+    this.courseId,
+    this.courseName,
     required this.attemptNumber,
     required this.status,
     required this.score,
@@ -28,7 +32,6 @@ base class QuizAttemptEntity extends Equatable {
     this.submittedAt,
     this.timeSpentSeconds = 0,
   });
-
 
   static final placeholder = QuizAttemptEntity(
     id: '',
@@ -41,10 +44,13 @@ base class QuizAttemptEntity extends Equatable {
     passed: false,
     startedAt: DateTime.fromMillisecondsSinceEpoch(0),
   );
+
   @override
   List<Object?> get props => [
         id,
         quizId,
+        courseId,
+        courseName,
         attemptNumber,
         status,
         score,
@@ -55,4 +61,36 @@ base class QuizAttemptEntity extends Equatable {
         submittedAt,
         timeSpentSeconds,
       ];
+
+  QuizAttemptEntity copyWith({
+    String? id,
+    String? quizId,
+    String? courseId,
+    String? courseName,
+    int? attemptNumber,
+    QuizAttemptStatus? status,
+    int? score,
+    int? totalMarks,
+    double? percentage,
+    bool? passed,
+    DateTime? startedAt,
+    DateTime? submittedAt,
+    int? timeSpentSeconds,
+  }) {
+    return QuizAttemptEntity(
+      id: id ?? this.id,
+      quizId: quizId ?? this.quizId,
+      courseId: courseId ?? this.courseId,
+      courseName: courseName ?? this.courseName,
+      attemptNumber: attemptNumber ?? this.attemptNumber,
+      status: status ?? this.status,
+      score: score ?? this.score,
+      totalMarks: totalMarks ?? this.totalMarks,
+      percentage: percentage ?? this.percentage,
+      passed: passed ?? this.passed,
+      startedAt: startedAt ?? this.startedAt,
+      submittedAt: submittedAt ?? this.submittedAt,
+      timeSpentSeconds: timeSpentSeconds ?? this.timeSpentSeconds,
+    );
+  }
 }

@@ -1,46 +1,34 @@
-part of '../../mentorx_core.dart';
+part of 'package:mentorx_core/mentorx_core.dart';
 
-enum ParentLookupType { phone, studentCode }
-
-enum ParentChildLinkStatus { verified, pending }
-
-final class ParentStudentLookupEntity extends Equatable {
+base class ParentStudentLookupEntity extends Equatable {
   final String studentId;
-  final String firstNameMasked;
-  final String lastNameMasked;
+  final String maskedName;
   final String gradeName;
-  final String tenantName;
-  final String tenantId;
+  final String centerName;
   final String? profilePhotoUrl;
   final bool canAutoVerify;
 
   const ParentStudentLookupEntity({
     required this.studentId,
-    required this.firstNameMasked,
-    required this.lastNameMasked,
+    required this.maskedName,
     required this.gradeName,
-    required this.tenantName,
-    required this.tenantId,
+    required this.centerName,
     this.profilePhotoUrl,
     required this.canAutoVerify,
   });
 
-  String get maskedFullName => '$firstNameMasked $lastNameMasked'.trim();
-
   @override
   List<Object?> get props => [
-    studentId,
-    firstNameMasked,
-    lastNameMasked,
-    gradeName,
-    tenantName,
-    tenantId,
-    profilePhotoUrl,
-    canAutoVerify,
-  ];
+        studentId,
+        maskedName,
+        gradeName,
+        centerName,
+        profilePhotoUrl,
+        canAutoVerify,
+      ];
 }
 
-final class ParentRegistrationResult extends Equatable {
+base class ParentRegistrationResult extends Equatable {
   final String userId;
   final String status;
   final ParentChildLinkStatus childLinkStatus;
@@ -57,10 +45,10 @@ final class ParentRegistrationResult extends Equatable {
 
   @override
   List<Object?> get props => [
-    userId,
-    status,
-    childLinkStatus,
-    otpExpiresInSeconds,
-    phone,
-  ];
+        userId,
+        status,
+        childLinkStatus,
+        otpExpiresInSeconds,
+        phone,
+      ];
 }

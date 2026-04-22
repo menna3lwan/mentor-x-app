@@ -1,77 +1,81 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mentorx_core/mentorx_core.dart';
 
-import '../../portal_data/portal_data.dart';
-import '../bloc/assessments_bloc.dart';
-
-final class AssignmentGradeDetailParentViewPage extends StatelessWidget {
-  final String assessmentId;
+class AssignmentGradeDetailParentViewPage extends StatelessWidget {
+  final QuizAttemptEntity attempt;
 
   const AssignmentGradeDetailParentViewPage({
     super.key,
-    required this.assessmentId,
+    required this.attempt,
   });
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AssessmentsBloc, AssessmentsState>(
-      builder: (context, state) {
-        ParentAssessmentRecord? assessment;
-        for (final item in state.assessments) {
-          if (item.id == assessmentId) {
-            assessment = item;
-            break;
-          }
-        }
-        if (assessment == null) {
-          return const Scaffold(
-            body: Center(child: Text('Assignment not found.')),
-          );
-        }
-
-        return Scaffold(
-          appBar: AppBar(title: const Text('Assignment Grade Detail')),
-          body: Padding(
-            padding: const EdgeInsets.all(16),
-            child: ListView(
-              children: [
-                Text(
-                  assessment.title,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
-                  ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Grade Details'),
+        elevation: 0,
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Quiz Info',
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    _InfoRow(label: 'Quiz ID', value: attempt.quizId),
+                    _InfoRow(label: 'Score', value: '${attempt.score}/${attempt.totalMarks}'),
+                    _InfoRow(label: 'Percentage', value: '${attempt.percentage.toStringAsFixed(1)}%'),
+                    _InfoRow(label: 'Status', value: _getStatusLabel(attempt.status)),
+                    if (attempt.submittedAt != null)
+                      _InfoRow(label: 'Submitted At', value: _formatDate(attempt.submittedAt!)),
+                  ],
                 ),
-                const SizedBox(height: 12),
-                Text('Course: ${assessment.courseName}'),
-                Text('Status: ${assessment.status}'),
-                Text('Score: ${assessment.score}/${assessment.totalScore}'),
-                Text(
-                  'Percentage: ${assessment.percentage.toStringAsFixed(1)}%',
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  'Teacher Feedback',
-                  style: TextStyle(fontWeight: FontWeight.w700),
-                ),
-                const SizedBox(height: 8),
-                const Text(
-                  'Great effort. Keep improving your solution explanation and structure.',
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  'Submitted Files',
-                  style: TextStyle(fontWeight: FontWeight.w700),
-                ),
-                const ListTile(
-                  leading: Icon(Icons.attach_file),
-                  title: Text('assignment_solution.pdf'),
-                ),
-              ],
+              ),
             ),
-          ),
-        );
-      },
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _getStatusLabel(QuizAttemptStatus status) {
+    return status.name.toUpperCase();
+  }
+
+  String _formatDate(DateTime date) {
+    return '${date.day}/${date.month}/${date.year}';
+  }
+}
+
+class _InfoRow extends StatelessWidget {
+  final String label;
+  final String value;
+
+  const _InfoRow({required this.label, required this.value});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(label, style: Theme.of(context).textTheme.bodyMedium),
+          Text(value, style: const TextStyle(fontWeight: FontWeight.bold)),
+        ],
+      ),
     );
   }
 }

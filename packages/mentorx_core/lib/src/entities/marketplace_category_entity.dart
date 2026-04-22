@@ -1,4 +1,4 @@
-part of '../../mentorx_core.dart';
+part of 'package:mentorx_core/mentorx_core.dart';
 
 base class MarketplaceCategoryEntity extends Equatable {
   final String id;
@@ -9,12 +9,21 @@ base class MarketplaceCategoryEntity extends Equatable {
     required this.name,
   });
 
-
-  static final placeholder = MarketplaceCategoryEntity(
+  static const placeholder = MarketplaceCategoryEntity(
     id: '',
     name: '',
   );
 
   @override
   List<Object?> get props => [id, name];
+
+  MarketplaceCategoryEntity copyWith({
+    String? id,
+    String? name,
+  }) {
+    return MarketplaceCategoryEntity(
+      id: id ?? this.id,
+      name: name ?? this.name,
+    );
+  }
 }

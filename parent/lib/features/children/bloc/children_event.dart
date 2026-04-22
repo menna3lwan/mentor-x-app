@@ -1,40 +1,30 @@
 part of 'children_bloc.dart';
 
-sealed class ChildrenEvent extends Equatable {
+abstract class ChildrenEvent extends Equatable {
   const ChildrenEvent();
 
   @override
   List<Object?> get props => [];
 }
 
-final class ChildrenStarted extends ChildrenEvent {
-  const ChildrenStarted();
-}
+class ChildrenStarted extends ChildrenEvent {}
 
-final class ChildrenSwitched extends ChildrenEvent {
-  final String childId;
-
-  const ChildrenSwitched(this.childId);
-
-  @override
-  List<Object?> get props => [childId];
-}
-
-final class ChildrenLinked extends ChildrenEvent {
+class ChildrenLookupRequested extends ChildrenEvent {
   final String query;
-  final String relationship;
-
-  const ChildrenLinked({required this.query, required this.relationship});
+  const ChildrenLookupRequested(this.query);
 
   @override
-  List<Object?> get props => [query, relationship];
+  List<Object?> get props => [query];
 }
 
-final class ChildrenUnlinked extends ChildrenEvent {
-  final String childId;
-
-  const ChildrenUnlinked(this.childId);
+class ChildLinkConfirmed extends ChildrenEvent {
+  final String studentId;
+  final String relationship;
+  const ChildLinkConfirmed({
+    required this.studentId,
+    required this.relationship,
+  });
 
   @override
-  List<Object?> get props => [childId];
+  List<Object?> get props => [studentId, relationship];
 }

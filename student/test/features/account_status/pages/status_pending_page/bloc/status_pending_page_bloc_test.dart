@@ -16,7 +16,8 @@ void main() {
 
   final pendingUser = StudentEntity(
     id: '1',
-    name: 'Pending Student',
+    firstName: 'Pending',
+    lastName: 'Student',
     phoneNumber: '01000000000',
     studentCode: 'ST-001',
     status: StudentStatus.pending,

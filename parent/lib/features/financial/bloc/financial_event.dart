@@ -24,3 +24,12 @@ final class FinancialFilterChanged extends FinancialEvent {
   @override
   List<Object?> get props => [filter];
 }
+
+final class FinancialRefreshRequested extends FinancialEvent {
+  final String? childId;
+
+  const FinancialRefreshRequested({this.childId});
+
+  @override
+  List<Object?> get props => [childId];
+}

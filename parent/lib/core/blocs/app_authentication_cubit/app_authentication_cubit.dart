@@ -13,7 +13,7 @@ final class AppAuthenticationCubit extends Cubit<AppAuthenticationState> {
 
   /// Called after a successful login to persist the authenticated user.
   void login(ParentEntity user) {
-    _logger.info('User logged in: ${user.name}');
+    _logger.info('User logged in: ${user.fullName}');
     emit(AppAuthenticationState(user: user));
     appEventBus.fire(AppRefreshEvent());
   }

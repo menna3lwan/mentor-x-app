@@ -1,4 +1,4 @@
-part of '../../mentorx_core.dart';
+part of 'package:mentorx_core/mentorx_core.dart';
 
 base class SessionEntity extends Equatable {
   final String id;
@@ -23,13 +23,13 @@ base class SessionEntity extends Equatable {
     this.itemCount = 0,
   });
 
-
-  static final placeholder = SessionEntity(
+  static const placeholder = SessionEntity(
     id: '',
     courseId: '',
     title: '',
     orderIndex: 0,
   );
+
   @override
   List<Object?> get props => [
         id,
@@ -42,4 +42,28 @@ base class SessionEntity extends Equatable {
         availableUntil,
         itemCount,
       ];
+
+  SessionEntity copyWith({
+    String? id,
+    String? courseId,
+    String? title,
+    int? orderIndex,
+    bool? isFree,
+    double? price,
+    DateTime? availableFrom,
+    DateTime? availableUntil,
+    int? itemCount,
+  }) {
+    return SessionEntity(
+      id: id ?? this.id,
+      courseId: courseId ?? this.courseId,
+      title: title ?? this.title,
+      orderIndex: orderIndex ?? this.orderIndex,
+      isFree: isFree ?? this.isFree,
+      price: price ?? this.price,
+      availableFrom: availableFrom ?? this.availableFrom,
+      availableUntil: availableUntil ?? this.availableUntil,
+      itemCount: itemCount ?? this.itemCount,
+    );
+  }
 }

@@ -46,12 +46,12 @@ abstract final class QuizQuestionModel {
   }
 
   static QuizQuestionType _parseQuestionType(dynamic value) {
-    if (value == null) return QuizQuestionType.mcqSingle;
+    if (value == null) return QuizQuestionType.multipleChoice;
     final str = value.toString().toLowerCase();
-    if (str == 'multiplechoice' || str == 'multiple_choice' || str == 'single') return QuizQuestionType.mcqSingle;
+    if (str == 'multiplechoice' || str == 'multiple_choice' || str == 'single') return QuizQuestionType.multipleChoice;
     return QuizQuestionType.values.firstWhere(
       (e) => e.name == str,
-      orElse: () => QuizQuestionType.mcqSingle,
+      orElse: () => QuizQuestionType.multipleChoice,
     );
   }
 }

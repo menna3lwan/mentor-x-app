@@ -1,103 +1,69 @@
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../portal_data/portal_data.dart';
+import 'package:mentorx_core/mentorx_core.dart';
 
 part 'children_event.dart';
 part 'children_state.dart';
 
-final class ChildrenBloc extends Bloc<ChildrenEvent, ChildrenState> {
-  final ParentPortalRepository _repository;
+class ChildrenBloc extends Bloc<ChildrenEvent, ChildrenState> {
+  final ParentChildrenRepository _childrenRepository;
 
-  ChildrenBloc({required ParentPortalRepository repository})
-    : _repository = repository,
-      super(const ChildrenState()) {
+  ChildrenBloc({
+    required ParentChildrenRepository childrenRepository,
+  })  : _childrenRepository = childrenRepository,
+        super(const ChildrenState()) {
     on<ChildrenStarted>(_onStarted);
-    on<ChildrenSwitched>(_onSwitched);
-    on<ChildrenLinked>(_onLinked);
-    on<ChildrenUnlinked>(_onUnlinked);
+    on<ChildrenLookupRequested>(_onLookupRequested);
+    on<ChildLinkConfirmed>(_onChildLinkConfirmed);
   }
 
-  Future<void> _onStarted(
-    ChildrenStarted event,
-    Emitter<ChildrenState> emit,
-  ) async {
-    emit(state.copyWith(isLoading: true, errorMessage: null));
+  Future<void> _onStarted(ChildrenStarted event, Emitter<ChildrenState> emit) async {
+    emit(state.copyWith(status: ChildrenStatus.loading));
     try {
-      final children = await _repository.getChildren();
-      emit(
-        state.copyWith(
-          isLoading: false,
-          children: children,
-          activeChildId: children.isEmpty ? null : children.first.id,
-        ),
-      );
-    } catch (error) {
-      emit(
-        state.copyWith(
-          isLoading: false,
-          errorMessage: error.toString(),
-        ),
-      );
+      final children = await _childrenRepository.getChildren();
+      emit(state.copyWith(status: ChildrenStatus.success, children: children));
+    } catch (e) {
+      emit(state.copyWith(status: ChildrenStatus.failure, errorMessage: e.toString()));
     }
   }
 
-  void _onSwitched(ChildrenSwitched event, Emitter<ChildrenState> emit) {
-    emit(state.copyWith(activeChildId: event.childId));
+  Future<void> _onLookupRequested(
+      ChildrenLookupRequested event, Emitter<ChildrenState> emit) async {
+    emit(state.copyWith(status: ChildrenStatus.loading));
+    try {
+      final student = await _childrenRepository.findStudentByChildQuery(
+        query: event.query,
+      );
+      emit(state.copyWith(
+        status: ChildrenStatus.success,
+        lookedUpStudent: student,
+      ));
+    } catch (e) {
+      emit(state.copyWith(
+        status: ChildrenStatus.failure,
+        errorMessage: e.toString(),
+      ));
+    }
   }
 
-  Future<void> _onLinked(
-    ChildrenLinked event,
-    Emitter<ChildrenState> emit,
-  ) async {
-    emit(state.copyWith(isSaving: true, errorMessage: null));
+  Future<void> _onChildLinkConfirmed(
+      ChildLinkConfirmed event, Emitter<ChildrenState> emit) async {
+    emit(state.copyWith(status: ChildrenStatus.loading));
     try {
-      final child = await _repository.linkChild(
-        query: event.query,
+      await _childrenRepository.linkChild(
+        studentId: event.studentId,
         relationship: event.relationship,
       );
-      final updated = List<ParentChild>.from(state.children)..add(child);
-      emit(
-        state.copyWith(
-          isSaving: false,
-          children: updated,
-          activeChildId: child.id,
-        ),
-      );
-    } catch (error) {
-      emit(
-        state.copyWith(
-          isSaving: false,
-          errorMessage: error.toString(),
-        ),
-      );
-    }
-  }
-
-  Future<void> _onUnlinked(
-    ChildrenUnlinked event,
-    Emitter<ChildrenState> emit,
-  ) async {
-    emit(state.copyWith(isSaving: true, errorMessage: null));
-    try {
-      await _repository.unlinkChild(event.childId);
-      final updated = state.children
-          .where((item) => item.id != event.childId)
-          .toList();
-      emit(
-        state.copyWith(
-          isSaving: false,
-          children: updated,
-          activeChildId: updated.isEmpty ? null : updated.first.id,
-        ),
-      );
-    } catch (error) {
-      emit(
-        state.copyWith(
-          isSaving: false,
-          errorMessage: error.toString(),
-        ),
-      );
+      final children = await _childrenRepository.getChildren();
+      emit(state.copyWith(
+        status: ChildrenStatus.success,
+        children: children,
+        lookedUpStudent: null,
+      ));
+    } catch (e) {
+      emit(state.copyWith(
+        status: ChildrenStatus.failure,
+        errorMessage: e.toString(),
+      ));
     }
   }
 }

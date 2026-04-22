@@ -1,4 +1,4 @@
-part of '../../mentorx_core.dart';
+part of 'package:mentorx_core/mentorx_core.dart';
 
 enum EditRequestStatus { pending, approved, rejected }
 
@@ -23,7 +23,6 @@ base class ProfileEditRequestEntity extends Equatable {
     this.reviewNotes,
   });
 
-
   static final placeholder = ProfileEditRequestEntity(
     id: '',
     fieldName: '',
@@ -44,4 +43,26 @@ base class ProfileEditRequestEntity extends Equatable {
         reviewNotes,
         createdAt,
       ];
+
+  ProfileEditRequestEntity copyWith({
+    String? id,
+    String? fieldName,
+    String? oldValue,
+    String? newValue,
+    String? reason,
+    EditRequestStatus? status,
+    String? reviewNotes,
+    DateTime? createdAt,
+  }) {
+    return ProfileEditRequestEntity(
+      id: id ?? this.id,
+      fieldName: fieldName ?? this.fieldName,
+      oldValue: oldValue ?? this.oldValue,
+      newValue: newValue ?? this.newValue,
+      reason: reason ?? this.reason,
+      status: status ?? this.status,
+      reviewNotes: reviewNotes ?? this.reviewNotes,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
 }

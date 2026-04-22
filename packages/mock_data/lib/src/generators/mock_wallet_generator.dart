@@ -20,7 +20,7 @@ final class MockWalletGenerator {
       ),
       WalletTransactionEntity(
         id: 'wt2',
-        transactionType: WalletTransactionType.purchase,
+        transactionType: WalletTransactionType.payment,
         amount: -300.0,
         balanceAfter: 740.50,
         description: 'Course purchase: Advanced Algebra',
@@ -44,7 +44,7 @@ final class MockWalletGenerator {
       ),
       WalletTransactionEntity(
         id: 'wt5',
-        transactionType: WalletTransactionType.admin,
+        transactionType: WalletTransactionType.refund,
         amount: 100.0,
         balanceAfter: 690.50,
         description: 'Admin credit: Refund adjustment',

@@ -1,27 +1,37 @@
-part of '../../mentorx_core.dart';
+part of 'package:mentorx_core/mentorx_core.dart';
 
 base class BannerEntity extends Equatable {
   final String id;
   final String imageUrl;
+  final String? deepLink;
   final String? title;
-  final String actionType;
-  final String actionValue;
 
   const BannerEntity({
     required this.id,
     required this.imageUrl,
-    required this.actionType,
-    required this.actionValue,
+    this.deepLink,
     this.title,
   });
 
-
-  static final placeholder = BannerEntity(
+  static const placeholder = BannerEntity(
     id: '',
     imageUrl: '',
-    actionType: '',
-    actionValue: '',
   );
+
   @override
-  List<Object?> get props => [id, imageUrl, title, actionType, actionValue];
+  List<Object?> get props => [id, imageUrl, deepLink, title];
+
+  BannerEntity copyWith({
+    String? id,
+    String? imageUrl,
+    String? deepLink,
+    String? title,
+  }) {
+    return BannerEntity(
+      id: id ?? this.id,
+      imageUrl: imageUrl ?? this.imageUrl,
+      deepLink: deepLink ?? this.deepLink,
+      title: title ?? this.title,
+    );
+  }
 }

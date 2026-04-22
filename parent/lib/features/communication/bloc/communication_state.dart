@@ -1,47 +1,46 @@
 part of 'communication_bloc.dart';
 
-final class CommunicationState extends Equatable {
-  final bool isLoading;
-  final List<ParentNotificationItem> notifications;
-  final List<ParentAnnouncementItem> announcements;
-  final List<ParentWhatsappGroup> whatsappGroups;
-  final String searchQuery;
+enum CommunicationStatus { initial, loading, success, failure }
+
+class CommunicationState extends Equatable {
+  final CommunicationStatus status;
+  final List<NotificationEntity> notifications;
+  final List<AnnouncementEntity> announcements;
+  final List<WhatsAppGroupEntity> whatsAppGroups;
   final String? errorMessage;
 
   const CommunicationState({
-    this.isLoading = false,
+    this.status = CommunicationStatus.initial,
     this.notifications = const [],
     this.announcements = const [],
-    this.whatsappGroups = const [],
-    this.searchQuery = '',
+    this.whatsAppGroups = const [],
     this.errorMessage,
   });
 
+  bool get isLoading => status == CommunicationStatus.loading;
+
   CommunicationState copyWith({
-    bool? isLoading,
-    List<ParentNotificationItem>? notifications,
-    List<ParentAnnouncementItem>? announcements,
-    List<ParentWhatsappGroup>? whatsappGroups,
-    String? searchQuery,
+    CommunicationStatus? status,
+    List<NotificationEntity>? notifications,
+    List<AnnouncementEntity>? announcements,
+    List<WhatsAppGroupEntity>? whatsAppGroups,
     String? errorMessage,
   }) {
     return CommunicationState(
-      isLoading: isLoading ?? this.isLoading,
+      status: status ?? this.status,
       notifications: notifications ?? this.notifications,
       announcements: announcements ?? this.announcements,
-      whatsappGroups: whatsappGroups ?? this.whatsappGroups,
-      searchQuery: searchQuery ?? this.searchQuery,
-      errorMessage: errorMessage,
+      whatsAppGroups: whatsAppGroups ?? this.whatsAppGroups,
+      errorMessage: errorMessage ?? this.errorMessage,
     );
   }
 
   @override
   List<Object?> get props => [
-    isLoading,
-    notifications,
-    announcements,
-    whatsappGroups,
-    searchQuery,
-    errorMessage,
-  ];
+        status,
+        notifications,
+        announcements,
+        whatsAppGroups,
+        errorMessage,
+      ];
 }

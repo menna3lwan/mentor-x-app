@@ -1,6 +1,7 @@
-part of '../../mentorx_core.dart';
+part of 'package:mentorx_core/mentorx_core.dart';
 
-enum SessionItemType { video, pdf, quiz, assignment, note, link, audio }
+enum SessionItemType { video, document, quiz, assignment, link }
+
 
 base class SessionItemEntity extends Equatable {
   final String id;
@@ -35,13 +36,13 @@ base class SessionItemEntity extends Equatable {
     this.fileSizeKb,
   });
 
-
-  static final placeholder = SessionItemEntity(
+  static const placeholder = SessionItemEntity(
     id: '',
     sessionId: '',
     title: '',
     itemType: SessionItemType.video,
   );
+
   @override
   List<Object?> get props => [
         id,
@@ -59,4 +60,38 @@ base class SessionItemEntity extends Equatable {
         pageCount,
         fileSizeKb,
       ];
+
+  SessionItemEntity copyWith({
+    String? id,
+    String? sessionId,
+    String? title,
+    SessionItemType? itemType,
+    String? contentUrl,
+    bool? isFree,
+    bool? isPreview,
+    bool? required,
+    bool? skippable,
+    bool? downloadable,
+    int? orderIndex,
+    int? durationSeconds,
+    int? pageCount,
+    int? fileSizeKb,
+  }) {
+    return SessionItemEntity(
+      id: id ?? this.id,
+      sessionId: sessionId ?? this.sessionId,
+      title: title ?? this.title,
+      itemType: itemType ?? this.itemType,
+      contentUrl: contentUrl ?? this.contentUrl,
+      isFree: isFree ?? this.isFree,
+      isPreview: isPreview ?? this.isPreview,
+      required: required ?? this.required,
+      skippable: skippable ?? this.skippable,
+      downloadable: downloadable ?? this.downloadable,
+      orderIndex: orderIndex ?? this.orderIndex,
+      durationSeconds: durationSeconds ?? this.durationSeconds,
+      pageCount: pageCount ?? this.pageCount,
+      fileSizeKb: fileSizeKb ?? this.fileSizeKb,
+    );
+  }
 }

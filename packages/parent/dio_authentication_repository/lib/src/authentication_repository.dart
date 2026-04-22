@@ -1,13 +1,14 @@
 import 'dart:convert';
 
-import 'package:mentorx_core/mentorx_core.dart';
+import 'package:mentorx_core/mentorx_core.dart' hide ParentModel;
+import 'models/parent_model.dart';
 
 typedef _Exception = AuthenticationException;
 typedef _ExceptionCode = AuthenticationExceptionCode;
 
 final class DioAuthenticationRepository
     extends HttpClientRepository<AuthenticationExceptionCode>
-    implements AuthenticationRepository {
+    implements AuthenticationRepository<ParentEntity> {
   static const String _hasLinkedChildrenCacheKey = 'parent_has_linked_children';
 
   @override
@@ -47,13 +48,24 @@ final class DioAuthenticationRepository
   Future<ParentEntity> login({
     required String phone,
     required String password,
+    String? deviceHash,
+    String? deviceName,
+    String? fcmToken,
+    String? appVersion,
   }) async {
     const defaultException = _ExceptionCode.invalidCredentials;
 
     Future<HttpClientResponse> tryLogin(String endpoint) {
       return httpClient.post(
         endpoint,
-        data: {'phone': phone, 'password': password},
+        data: {
+          'phone': phone,
+          'password': password,
+          if (deviceHash != null) 'device_hash': deviceHash,
+          if (deviceName != null) 'device_name': deviceName,
+          if (fcmToken != null) 'fcm_token': fcmToken,
+          if (appVersion != null) 'app_version': appVersion,
+        },
       );
     }
 
@@ -145,23 +157,17 @@ final class DioAuthenticationRepository
 
       return ParentStudentLookupEntity(
         studentId: studentId,
-        firstNameMasked:
-            _stringOrNull(
-              data['first_name_masked'] ?? data['firstNameMasked'],
-            ) ??
-            '**',
-        lastNameMasked:
-            _stringOrNull(
-              data['last_name_masked'] ?? data['lastNameMasked'],
-            ) ??
-            '**',
+        maskedName: (
+            _stringOrNull(data['first_name_masked'] ?? data['firstNameMasked']) ?? '**'
+        ) + ' ' + (
+            _stringOrNull(data['last_name_masked'] ?? data['lastNameMasked']) ?? '**'
+        ),
         gradeName:
             _stringOrNull(data['grade_name'] ?? data['gradeName']) ??
             'Unknown Grade',
-        tenantName:
+        centerName:
             _stringOrNull(data['tenant_name'] ?? data['tenantName']) ??
             'Unknown Tenant',
-        tenantId: _stringOrNull(data['tenant_id'] ?? data['tenantId']) ?? '',
         profilePhotoUrl: _stringOrNull(
           data['profile_photo_url'] ?? data['profilePhotoUrl'],
         ),
@@ -251,12 +257,12 @@ final class DioAuthenticationRepository
           _stringOrNull(data['child_link_status'] ?? data['childLinkStatus']) ??
           'pending';
       final childLinkStatus = rawChildLinkStatus.toLowerCase() == 'verified'
-          ? ParentChildLinkStatus.verified
+          ? ParentChildLinkStatus.linked
           : ParentChildLinkStatus.pending;
 
       await cacheRepository.put(
         _hasLinkedChildrenCacheKey,
-        (childLinkStatus == ParentChildLinkStatus.verified).toString(),
+        (childLinkStatus == ParentChildLinkStatus.linked).toString(),
       );
 
       return ParentRegistrationResult(

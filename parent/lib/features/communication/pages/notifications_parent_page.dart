@@ -1,41 +1,84 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
-
+import 'package:mentorx_core/mentorx_core.dart';
 import '../bloc/communication_bloc.dart';
 
-final class NotificationsParentPage extends StatelessWidget {
-  const NotificationsParentPage({super.key});
+class NotificationsParentPage extends StatelessWidget {
+  final String childId;
+
+  const NotificationsParentPage({
+    super.key,
+    required this.childId,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CommunicationBloc, CommunicationState>(
-      builder: (context, state) {
-        return Scaffold(
-          appBar: AppBar(title: const Text('Notifications')),
-          body: state.isLoading
-              ? const Center(child: CircularProgressIndicator())
-              : ListView.separated(
-                  itemCount: state.notifications.length,
-                  separatorBuilder: (_, _) => const Divider(height: 1),
-                  itemBuilder: (context, index) {
-                    final notification = state.notifications[index];
-                    return ListTile(
-                      leading: Icon(
-                        notification.isRead
-                            ? Icons.notifications_none
-                            : Icons.notifications_active,
-                      ),
-                      title: Text(notification.title),
-                      subtitle: Text(
-                        '${notification.studentName} • ${DateFormat('dd MMM, HH:mm').format(notification.createdAt)}\n${notification.body}',
-                      ),
-                      isThreeLine: true,
-                    );
-                  },
+    return BlocProvider(
+      create: (context) => CommunicationBloc(
+        repository: context.read<ParentCommunicationRepository>(),
+      )..add(CommunicationStarted(childId)),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Notifications'),
+          actions: [
+            Builder(
+              builder: (context) => IconButton(
+                icon: const Icon(Icons.refresh),
+                onPressed: () {
+                  context.read<CommunicationBloc>().add(CommunicationRefreshRequested(childId));
+                },
+              ),
+            ),
+          ],
+        ),
+        body: BlocBuilder<CommunicationBloc, CommunicationState>(
+          builder: (context, state) {
+            if (state.status == CommunicationStatus.loading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            if (state.status == CommunicationStatus.failure) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('Failed to load notifications: ${state.errorMessage}'),
+                    ElevatedButton(
+                      onPressed: () {
+                        context.read<CommunicationBloc>().add(CommunicationStarted(childId));
+                      },
+                      child: const Text('Retry'),
+                    ),
+                  ],
                 ),
-        );
-      },
+              );
+            }
+
+            if (state.notifications.isEmpty) {
+              return const Center(child: Text('No new notifications.'));
+            }
+
+            return RefreshIndicator(
+              onRefresh: () async {
+                context.read<CommunicationBloc>().add(CommunicationRefreshRequested(childId));
+              },
+              child: ListView.separated(
+                itemCount: state.notifications.length,
+                separatorBuilder: (_, _) => const Divider(),
+                itemBuilder: (context, index) {
+                  final notification = state.notifications[index];
+                  return ListTile(
+                    leading: const CircleAvatar(child: Icon(Icons.notifications_active)),
+                    title: Text(notification.title),
+                    subtitle: Text(notification.message),
+                    trailing: Text(notification.createdAt.toString().split(' ').first),
+                  );
+                },
+              ),
+            );
+          },
+        ),
+      ),
     );
   }
 }

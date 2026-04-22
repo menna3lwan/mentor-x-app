@@ -1,4 +1,4 @@
-part of '../../mentorx_core.dart';
+part of 'package:mentorx_core/mentorx_core.dart';
 
 /// A wrapper around the Logger class that provides convenience methods for logging
 /// and uses dart:developer log function for console output.

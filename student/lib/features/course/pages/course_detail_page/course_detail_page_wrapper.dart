@@ -75,7 +75,7 @@ final class _CourseDetailPageWrapperState
     switch (item.itemType) {
       case SessionItemType.video:
         VideoPlayerPageRoute(itemId: item.id, title: item.title).push(context);
-      case SessionItemType.pdf:
+      case SessionItemType.document:
         PdfViewerPageRoute(itemId: item.id, title: item.title).push(context);
       case SessionItemType.link:
         if (item.contentUrl != null) {
@@ -85,8 +85,6 @@ final class _CourseDetailPageWrapperState
         }
       case SessionItemType.quiz:
       case SessionItemType.assignment:
-      case SessionItemType.note:
-      case SessionItemType.audio:
         break;
     }
   }

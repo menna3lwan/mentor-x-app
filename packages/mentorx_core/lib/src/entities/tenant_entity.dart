@@ -1,23 +1,29 @@
-part of '../../mentorx_core.dart';
+part of 'package:mentorx_core/mentorx_core.dart';
 
 base class TenantEntity extends Equatable {
   final String id;
   final String name;
-  final String? logoUrl;
-  final String? whatsappNumber;
 
   const TenantEntity({
     required this.id,
     required this.name,
-    this.logoUrl,
-    this.whatsappNumber,
   });
 
-
-  static final placeholder = TenantEntity(
+  static const placeholder = TenantEntity(
     id: '',
     name: '',
   );
+
   @override
-  List<Object?> get props => [id, name, logoUrl, whatsappNumber];
+  List<Object?> get props => [id, name];
+
+  TenantEntity copyWith({
+    String? id,
+    String? name,
+  }) {
+    return TenantEntity(
+      id: id ?? this.id,
+      name: name ?? this.name,
+    );
+  }
 }

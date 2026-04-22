@@ -1,6 +1,12 @@
-part of '../../mentorx_core.dart';
+part of 'package:mentorx_core/mentorx_core.dart';
 
-enum CodeType { wallet, courseAccess, sessionAccess, discountPercent, discountAmount }
+enum CodeType {
+  wallet,
+  courseAccess,
+  sessionAccess,
+  discountPercent,
+  discountAmount
+}
 
 base class CodeRedemptionEntity extends Equatable {
   final String id;
@@ -19,7 +25,6 @@ base class CodeRedemptionEntity extends Equatable {
     this.resultType,
   });
 
-
   static final placeholder = CodeRedemptionEntity(
     id: '',
     code: '',
@@ -36,4 +41,22 @@ base class CodeRedemptionEntity extends Equatable {
         resultType,
         redeemedAt,
       ];
+
+  CodeRedemptionEntity copyWith({
+    String? id,
+    String? code,
+    CodeType? codeType,
+    double? valueReceived,
+    String? resultType,
+    DateTime? redeemedAt,
+  }) {
+    return CodeRedemptionEntity(
+      id: id ?? this.id,
+      code: code ?? this.code,
+      codeType: codeType ?? this.codeType,
+      valueReceived: valueReceived ?? this.valueReceived,
+      resultType: resultType ?? this.resultType,
+      redeemedAt: redeemedAt ?? this.redeemedAt,
+    );
+  }
 }

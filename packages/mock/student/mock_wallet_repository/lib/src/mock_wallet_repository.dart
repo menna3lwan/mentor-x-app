@@ -48,7 +48,7 @@ final class MockWalletRepository implements WalletRepository {
       amount: 500.0,
       method: PaymentMethod.vodafoneCash,
       paymentType: PaymentType.walletTopup,
-      status: PaymentStatus.completed,
+      status: PaymentStatus.success,
       reference: 'REF-MOCK-12345',
       createdAt: DateTime.now().subtract(const Duration(minutes: 5)),
     );

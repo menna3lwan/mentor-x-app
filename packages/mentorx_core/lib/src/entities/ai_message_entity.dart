@@ -1,4 +1,4 @@
-part of '../../mentorx_core.dart';
+part of 'package:mentorx_core/mentorx_core.dart';
 
 enum AIMessageRole { user, assistant, system }
 
@@ -25,7 +25,6 @@ base class AIMessageEntity extends Equatable {
     this.confidence,
   });
 
-
   static final placeholder = AIMessageEntity(
     id: '',
     conversationId: '',
@@ -46,4 +45,28 @@ base class AIMessageEntity extends Equatable {
         confidence,
         createdAt,
       ];
+
+  AIMessageEntity copyWith({
+    String? id,
+    String? conversationId,
+    AIMessageRole? role,
+    String? content,
+    int? userRating,
+    String? userFeedback,
+    List<String>? sources,
+    String? confidence,
+    DateTime? createdAt,
+  }) {
+    return AIMessageEntity(
+      id: id ?? this.id,
+      conversationId: conversationId ?? this.conversationId,
+      role: role ?? this.role,
+      content: content ?? this.content,
+      userRating: userRating ?? this.userRating,
+      userFeedback: userFeedback ?? this.userFeedback,
+      sources: sources ?? this.sources,
+      confidence: confidence ?? this.confidence,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
 }

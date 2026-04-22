@@ -1,4 +1,4 @@
-part of '../../mentorx_core.dart';
+part of 'package:mentorx_core/mentorx_core.dart';
 
 enum RewardClaimStatus { pending, approved, rejected, delivered }
 
@@ -19,7 +19,6 @@ base class RewardClaimEntity extends Equatable {
     this.rewardTitle,
   });
 
-
   static final placeholder = RewardClaimEntity(
     id: '',
     rewardItemId: '',
@@ -37,4 +36,22 @@ base class RewardClaimEntity extends Equatable {
         status,
         claimedAt,
       ];
+
+  RewardClaimEntity copyWith({
+    String? id,
+    String? rewardItemId,
+    String? rewardTitle,
+    int? pointsSpent,
+    RewardClaimStatus? status,
+    DateTime? claimedAt,
+  }) {
+    return RewardClaimEntity(
+      id: id ?? this.id,
+      rewardItemId: rewardItemId ?? this.rewardItemId,
+      rewardTitle: rewardTitle ?? this.rewardTitle,
+      pointsSpent: pointsSpent ?? this.pointsSpent,
+      status: status ?? this.status,
+      claimedAt: claimedAt ?? this.claimedAt,
+    );
+  }
 }

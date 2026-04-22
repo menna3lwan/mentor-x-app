@@ -1,4 +1,4 @@
-part of '../../mentorx_core.dart';
+part of 'package:mentorx_core/mentorx_core.dart';
 
 base class AIConversationEntity extends Equatable {
   final String id;
@@ -19,7 +19,6 @@ base class AIConversationEntity extends Equatable {
     this.isActive = true,
   });
 
-
   static final placeholder = AIConversationEntity(
     id: '',
     messageCount: 0,
@@ -37,4 +36,24 @@ base class AIConversationEntity extends Equatable {
         createdAt,
         updatedAt,
       ];
+
+  AIConversationEntity copyWith({
+    String? id,
+    String? title,
+    String? subject,
+    int? messageCount,
+    bool? isActive,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return AIConversationEntity(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      subject: subject ?? this.subject,
+      messageCount: messageCount ?? this.messageCount,
+      isActive: isActive ?? this.isActive,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
 }

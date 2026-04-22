@@ -1,71 +1,87 @@
-part of '../../mentorx_core.dart';
+part of 'package:mentorx_core/mentorx_core.dart';
 
-enum NotificationType {
-  announcement,
-  courseEnrolled,
-  sessionAvailable,
-  quizResult,
-  assignmentGraded,
-  attendanceMarked,
-  paymentSuccess,
-  paymentFailed,
-  walletUpdated,
-  pointsEarned,
-  rewardStatus,
-  profileApproved,
-  profileRejected,
-  system,
-}
+enum NotificationType { info, success, warning, error, course, quiz, announcement, system }
 
 base class NotificationEntity extends Equatable {
   final String id;
-  final NotificationType type;
   final String title;
-  final String body;
+  final String message;
+  final NotificationType type;
   final bool isRead;
-  final DateTime? readAt;
-  final String? imageUrl;
-  final Map<String, dynamic>? actionData;
   final DateTime createdAt;
-
-  /// Parent-only fields: which child this notification is about.
+  final DateTime? readAt;
+  final String? deepLink;
+  final String? imageUrl;
+  final Map<String, dynamic>? data;
   final String? studentId;
   final String? studentName;
 
   const NotificationEntity({
     required this.id,
-    required this.type,
     required this.title,
-    required this.body,
+    required this.message,
+    required this.type,
     required this.createdAt,
     this.isRead = false,
     this.readAt,
+    this.deepLink,
     this.imageUrl,
-    this.actionData,
+    this.data,
     this.studentId,
     this.studentName,
   });
 
-
   static final placeholder = NotificationEntity(
     id: '',
-    type: NotificationType.announcement,
     title: '',
-    body: '',
+    message: '',
+    type: NotificationType.info,
     createdAt: DateTime.fromMillisecondsSinceEpoch(0),
   );
+
   @override
   List<Object?> get props => [
         id,
-        type,
         title,
-        body,
+        message,
+        type,
         isRead,
         readAt,
-        imageUrl,
-        actionData,
         createdAt,
+        deepLink,
+        imageUrl,
+        data,
         studentId,
         studentName,
       ];
+
+  NotificationEntity copyWith({
+    String? id,
+    String? title,
+    String? message,
+    NotificationType? type,
+    bool? isRead,
+    DateTime? readAt,
+    DateTime? createdAt,
+    String? deepLink,
+    String? imageUrl,
+    Map<String, dynamic>? data,
+    String? studentId,
+    String? studentName,
+  }) {
+    return NotificationEntity(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      message: message ?? this.message,
+      type: type ?? this.type,
+      isRead: isRead ?? this.isRead,
+      readAt: readAt ?? this.readAt,
+      createdAt: createdAt ?? this.createdAt,
+      deepLink: deepLink ?? this.deepLink,
+      imageUrl: imageUrl ?? this.imageUrl,
+      data: data ?? this.data,
+      studentId: studentId ?? this.studentId,
+      studentName: studentName ?? this.studentName,
+    );
+  }
 }

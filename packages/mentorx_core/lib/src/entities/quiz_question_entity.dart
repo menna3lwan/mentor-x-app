@@ -1,6 +1,7 @@
-part of '../../mentorx_core.dart';
+part of 'package:mentorx_core/mentorx_core.dart';
 
-enum QuizQuestionType { mcqSingle, mcqMultiple, trueFalse, fillBlank, text }
+enum QuizQuestionType { multipleChoice, trueFalse, shortAnswer, essay, fillInTheBlank }
+
 
 base class QuizQuestionEntity extends Equatable {
   final String id;
@@ -25,13 +26,13 @@ base class QuizQuestionEntity extends Equatable {
     this.order = 0,
   });
 
-
-  static final placeholder = QuizQuestionEntity(
+  static const placeholder = QuizQuestionEntity(
     id: '',
     questionText: '',
-    questionType: QuizQuestionType.mcqSingle,
+    questionType: QuizQuestionType.multipleChoice,
     marks: 0,
   );
+
   @override
   List<Object?> get props => [
         id,
@@ -44,4 +45,28 @@ base class QuizQuestionEntity extends Equatable {
         explanation,
         order,
       ];
+
+  QuizQuestionEntity copyWith({
+    String? id,
+    String? questionText,
+    String? questionImageUrl,
+    QuizQuestionType? questionType,
+    List<String>? options,
+    int? marks,
+    int? negativeMarks,
+    String? explanation,
+    int? order,
+  }) {
+    return QuizQuestionEntity(
+      id: id ?? this.id,
+      questionText: questionText ?? this.questionText,
+      questionImageUrl: questionImageUrl ?? this.questionImageUrl,
+      questionType: questionType ?? this.questionType,
+      options: options ?? this.options,
+      marks: marks ?? this.marks,
+      negativeMarks: negativeMarks ?? this.negativeMarks,
+      explanation: explanation ?? this.explanation,
+      order: order ?? this.order,
+    );
+  }
 }

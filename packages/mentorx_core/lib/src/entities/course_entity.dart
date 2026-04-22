@@ -1,4 +1,4 @@
-part of '../../mentorx_core.dart';
+part of 'package:mentorx_core/mentorx_core.dart';
 
 enum CourseType { online, center, both }
 
@@ -49,13 +49,13 @@ base class CourseEntity extends Equatable {
     this.pinned = false,
   });
 
-
-  static final placeholder = CourseEntity(
+  static const placeholder = CourseEntity(
     id: '',
     title: '',
     price: 0.0,
     enrolledCount: 0,
   );
+
   @override
   List<Object?> get props => [
         id,
@@ -79,4 +79,50 @@ base class CourseEntity extends Equatable {
         featured,
         pinned,
       ];
+
+  CourseEntity copyWith({
+    String? id,
+    String? title,
+    String? subtitle,
+    String? imageUrl,
+    double? price,
+    double? oldPrice,
+    bool? isFree,
+    bool? isActive,
+    CourseType? type,
+    OrderingMode? orderingMode,
+    int? durationDays,
+    int? pointsReward,
+    String? gradeId,
+    String? categoryId,
+    int? totalSessions,
+    int? totalVideos,
+    int? totalDurationMinutes,
+    int? enrolledCount,
+    bool? featured,
+    bool? pinned,
+  }) {
+    return CourseEntity(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      subtitle: subtitle ?? this.subtitle,
+      imageUrl: imageUrl ?? this.imageUrl,
+      price: price ?? this.price,
+      oldPrice: oldPrice ?? this.oldPrice,
+      isFree: isFree ?? this.isFree,
+      isActive: isActive ?? this.isActive,
+      type: type ?? this.type,
+      orderingMode: orderingMode ?? this.orderingMode,
+      durationDays: durationDays ?? this.durationDays,
+      pointsReward: pointsReward ?? this.pointsReward,
+      gradeId: gradeId ?? this.gradeId,
+      categoryId: categoryId ?? this.categoryId,
+      totalSessions: totalSessions ?? this.totalSessions,
+      totalVideos: totalVideos ?? this.totalVideos,
+      totalDurationMinutes: totalDurationMinutes ?? this.totalDurationMinutes,
+      enrolledCount: enrolledCount ?? this.enrolledCount,
+      featured: featured ?? this.featured,
+      pinned: pinned ?? this.pinned,
+    );
+  }
 }

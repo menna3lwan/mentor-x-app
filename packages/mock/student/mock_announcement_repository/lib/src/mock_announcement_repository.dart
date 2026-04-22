@@ -30,7 +30,7 @@ final class MockAnnouncementRepository implements AnnouncementRepository {
               .where(
                 (a) =>
                     a.title.toLowerCase().contains(q) ||
-                    a.preview.toLowerCase().contains(q),
+                    (a.preview?.toLowerCase().contains(q) ?? false),
               )
               .toList();
     }

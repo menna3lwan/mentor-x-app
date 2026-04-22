@@ -4,15 +4,25 @@ import 'package:parent/core/blocs/app_authentication_cubit/app_authentication_cu
 import 'package:mentorx_core/mentorx_core.dart';
 
 void main() {
-  const tUser = ParentEntity(
+  final tUser = ParentEntity(
     id: 'user-1',
-    name: 'Test Parent',
+    firstName: 'Test',
+    lastName: 'Parent',
+    email: 'test@parent.com',
     phoneNumber: '01000000000',
+    status: ParentStatus.active,
+    createdAt: DateTime(2023),
+    updatedAt: DateTime(2023),
   );
-  const tUpdatedUser = ParentEntity(
+  final tUpdatedUser = ParentEntity(
     id: 'user-1',
-    name: 'Updated Name',
+    firstName: 'Updated',
+    lastName: 'Name',
+    email: 'test@parent.com',
     phoneNumber: '01000000000',
+    status: ParentStatus.active,
+    createdAt: DateTime(2023),
+    updatedAt: DateTime(2023),
   );
 
   group('AppAuthenticationCubit', () {

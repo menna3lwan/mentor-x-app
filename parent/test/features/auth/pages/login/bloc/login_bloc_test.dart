@@ -5,17 +5,22 @@ import 'package:mocktail/mocktail.dart';
 import 'package:parent/features/auth/pages/login/bloc/login_bloc.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 
-class MockAuthRepository extends Mock implements AuthenticationRepository {}
+class MockAuthRepository extends Mock implements AuthenticationRepository<ParentEntity> {}
 
 void main() {
   late MockAuthRepository authRepository;
 
   const tPhone = '01000000000';
   const tPassword = 'password123';
-  const tUser = ParentEntity(
+  final tUser = ParentEntity(
     id: 'user-1',
-    name: 'Test Parent',
+    firstName: 'Test',
+    lastName: 'Parent',
+    email: 'test@parent.com',
     phoneNumber: tPhone,
+    status: ParentStatus.active,
+    createdAt: DateTime(2023),
+    updatedAt: DateTime(2023),
   );
   const tAuthException = AuthenticationException(
     code: AuthenticationExceptionCode.invalidCredentials,

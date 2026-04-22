@@ -1,6 +1,6 @@
-part of '../../mentorx_core.dart';
+part of 'package:mentorx_core/mentorx_core.dart';
 
-class GovernorateEntity extends Equatable {
+base class GovernorateEntity extends Equatable {
   final String id;
   final String name;
 
@@ -9,11 +9,21 @@ class GovernorateEntity extends Equatable {
     required this.name,
   });
 
-  static final placeholder = GovernorateEntity(
+  static const placeholder = GovernorateEntity(
     id: '',
     name: '',
   );
 
   @override
   List<Object?> get props => [id, name];
+
+  GovernorateEntity copyWith({
+    String? id,
+    String? name,
+  }) {
+    return GovernorateEntity(
+      id: id ?? this.id,
+      name: name ?? this.name,
+    );
+  }
 }

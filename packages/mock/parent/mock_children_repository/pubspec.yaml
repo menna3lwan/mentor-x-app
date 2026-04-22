@@ -1,0 +1,15 @@
+name: parent_mock_children_repository
+description: Mock implementation of ParentChildrenRepository.
+version: 1.0.0
+publish_to: none
+
+environment:
+  sdk: ^3.11.4
+
+resolution: workspace
+
+dependencies:
+  mentorx_core:
+    path: ../../../mentorx_core
+  mock_data:
+    path: ../../../mock_data

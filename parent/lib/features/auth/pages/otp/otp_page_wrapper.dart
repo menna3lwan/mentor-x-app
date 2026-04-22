@@ -1,215 +1,41 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:bloc_presentation/bloc_presentation.dart';
-import 'package:go_router/go_router.dart';
-import 'package:parent/core/core.dart';
-import 'package:parent/features/features.dart';
-import 'package:mentorx_ui/mentorx_ui.dart';
+import 'package:mentorx_core/mentorx_core.dart';
+import '../../../../core/routing/app_routes.dart';
 
-final class OtpPageWrapper extends StatefulWidget {
-  final String phone;
-
-  const OtpPageWrapper({super.key, required this.phone});
-
-  @override
-  State<OtpPageWrapper> createState() => _OtpPageWrapperState();
-}
-
-class _OtpPageWrapperState extends State<OtpPageWrapper> {
-  final _formKey = GlobalKey<FormState>();
-  late final List<TextEditingController> controllers;
-  late final List<FocusNode> focusNodes;
-
-  @override
-  void initState() {
-    super.initState();
-    controllers = List.generate(6, (_) => TextEditingController());
-    focusNodes = List.generate(6, (_) => FocusNode());
-  }
-
-  @override
-  void dispose() {
-    for (var controller in controllers) {
-      controller.dispose();
-    }
-    for (var node in focusNodes) {
-      node.dispose();
-    }
-    super.dispose();
-  }
-
-  void moveToNext(int index, String value) {
-    if (value.length == 1 && index < 5) {
-      focusNodes[index + 1].requestFocus();
-    }
-    if (value.isEmpty && index > 0) {
-      focusNodes[index - 1].requestFocus();
-    }
-  }
+class OtpPageWrapper extends StatelessWidget {
+  final String phoneNumber;
+  const OtpPageWrapper({super.key, required this.phoneNumber});
 
   @override
   Widget build(BuildContext context) {
-    return BlocPresentationListener<OtpBloc, OtpPresentationEvent>(
-      listener: (context, event) {
-        switch (event) {
-          case OtpSuccessPresentationEvent(:final user):
-            context.read<AppAuthenticationCubit>().login(user);
-            unawaited(_routeAfterVerification());
-          case OtpFailurePresentationEvent(:final exception):
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(exception.message ?? 'Verification failed'),
-              ),
-            );
-        }
-      },
-      child: Builder(
-        builder: (context) {
-          final state = context.watch<OtpBloc>().state;
-          final isLoading = state.loadingState.isLoading;
-          final isResending = state.isResending;
-          final canResend = state.canResend;
-
-          final resendText = isResending
-              ? 'Resending...'
-              : canResend
-              ? "Didn't receive the code? Resend"
-              : 'Resend in ${state.formattedCountdown}';
-
-          return OtpPage(
-            backButton: IconButton(
-              onPressed: () => context.pop(),
-              icon: const Icon(Icons.arrow_back, color: Color(0xFF183764)),
+    return Scaffold(
+      appBar: AppBar(title: const Text('OTP Verification')),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('OTP for $phoneNumber'),
+            ElevatedButton(
+              onPressed: () async {
+                final childrenRepo = context.read<ParentChildrenRepository>();
+                try {
+                  final children = await childrenRepo.getChildren();
+                  if (!context.mounted) return;
+                  if (children.isEmpty) {
+                    const AddChildLinkRoute().go(context);
+                  } else {
+                    const HomePageRoute().go(context);
+                  }
+                } catch (e) {
+                  // Handle error
+                }
+              },
+              child: const Text('Verify OTP'),
             ),
-            title: const Text(
-              'Verify Code',
-              style: TextStyle(
-                fontSize: 26,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF183764),
-              ),
-            ),
-            subtitle: const Text(
-              'Enter the 6-digit code sent to your phone',
-              style: TextStyle(color: Colors.grey),
-            ),
-            otpFields: Form(
-              key: _formKey,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: List.generate(6, (index) {
-                  return SizedBox(
-                    width: 50,
-                    child: TextFormField(
-                      controller: controllers[index],
-                      focusNode: focusNodes[index],
-                      textAlign: TextAlign.center,
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly,
-                      ],
-                      maxLength: 1,
-                      style: const TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF183764),
-                      ),
-                      decoration: InputDecoration(
-                        counterText: '',
-                        filled: true,
-                        fillColor: Colors.white,
-                        contentPadding: const EdgeInsets.symmetric(
-                          vertical: 20,
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(18),
-                          borderSide: BorderSide(color: Colors.grey.shade400),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(18),
-                          borderSide: const BorderSide(
-                            color: Color(0xFF183764),
-                            width: 2,
-                          ),
-                        ),
-                      ),
-                      onChanged: (value) => moveToNext(index, value),
-                    ),
-                  );
-                }),
-              ),
-            ),
-            verifyButton: MentorXButton(
-              onPressed: isLoading
-                  ? null
-                  : () {
-                      final code = controllers.map((e) => e.text).join();
-                      if (code.length == 6) {
-                        context.read<OtpBloc>().add(
-                          OtpSubmittedEvent(
-                            phone: widget.phone,
-                            code: code,
-                          ),
-                        );
-                      }
-                    },
-              text: isLoading ? 'Verifying...' : 'Verify',
-            ),
-            resendButton: MentorXClickableText(
-              alignment: Alignment.center,
-              color: const Color(0xFF183764),
-              text: resendText,
-              onPressed: isLoading || isResending || !canResend
-                  ? null
-                  : () {
-                      context.read<OtpBloc>().add(
-                        OtpResendRequested(phone: widget.phone),
-                      );
-                    },
-            ),
-          );
-        },
+          ],
+        ),
       ),
     );
-  }
-
-  Future<void> _routeAfterVerification() async {
-    final cacheRepository = context.read<CacheRepository>();
-
-    try {
-      final children = await context
-          .read<ParentPortalRepository>()
-          .getChildren();
-
-      if (!mounted) {
-        return;
-      }
-
-      if (children.isEmpty) {
-        const AddChildLinkPageRoute().go(context);
-        return;
-      }
-
-      const HomePageRoute().go(context);
-      return;
-    } catch (_) {
-      final hasLinkedChildren = await cacheRepository.get(
-        'parent_has_linked_children',
-      );
-
-      if (!mounted) {
-        return;
-      }
-
-      if (hasLinkedChildren == 'false') {
-        const AddChildLinkPageRoute().go(context);
-        return;
-      }
-
-      const HomePageRoute().go(context);
-    }
   }
 }

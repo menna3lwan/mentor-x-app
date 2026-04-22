@@ -1,4 +1,4 @@
-part of '../../mentorx_core.dart';
+part of 'package:mentorx_core/mentorx_core.dart';
 
 /// Pagination parameters for list/paginated repository methods.
 final class MentorXPaginationInfo extends Equatable {

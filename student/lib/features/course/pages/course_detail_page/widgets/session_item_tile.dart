@@ -71,10 +71,10 @@ final class SessionItemTile extends StatelessWidget {
                   color: palette.statusSuccess.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(6),
                 ),
-                child: Text(
-                  context.t.course.detail.free,
+                child: const Text(
+                  'FREE',
                   style: TextStyle(
-                    color: palette.statusSuccess,
+                    color: Colors.green,
                     fontSize: 10,
                     fontWeight: FontWeight.w700,
                   ),
@@ -108,12 +108,10 @@ final class SessionItemTile extends StatelessWidget {
   static IconData _iconForType(SessionItemType type) {
     return switch (type) {
       SessionItemType.video => Icons.play_arrow_rounded,
-      SessionItemType.pdf => Icons.description_rounded,
+      SessionItemType.document => Icons.description_rounded,
       SessionItemType.quiz => Icons.quiz_rounded,
       SessionItemType.assignment => Icons.assignment_rounded,
-      SessionItemType.note => Icons.sticky_note_2_rounded,
       SessionItemType.link => Icons.link_rounded,
-      SessionItemType.audio => Icons.headset_rounded,
     };
   }
 
@@ -123,12 +121,10 @@ final class SessionItemTile extends StatelessWidget {
   ) {
     return switch (type) {
       SessionItemType.video => palette.brandPrimary,
-      SessionItemType.pdf => const Color(0xFFEF5350),
+      SessionItemType.document => const Color(0xFFEF5350),
       SessionItemType.quiz => const Color(0xFFFFA726),
       SessionItemType.assignment => const Color(0xFF26A69A),
-      SessionItemType.note => const Color(0xFF42A5F5),
       SessionItemType.link => const Color(0xFFAB47BC),
-      SessionItemType.audio => const Color(0xFF5C6BC0),
     };
   }
 }

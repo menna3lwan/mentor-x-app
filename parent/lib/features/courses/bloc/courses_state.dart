@@ -1,49 +1,44 @@
 part of 'courses_bloc.dart';
 
-final class CoursesState extends Equatable {
-  final bool isLoading;
-  final List<ParentCourseProgress> courses;
-  final String? selectedCourseId;
+enum CoursesStatus { initial, loading, success, failure }
+
+class CoursesState extends Equatable {
+  final CoursesStatus status;
+  final List<CourseEntity> courses;
+  final ParentGradeSummaryEntity? gradeSummary;
+  final ParentGradeTrendEntity? gradeTrend;
   final String? errorMessage;
 
   const CoursesState({
-    this.isLoading = false,
+    this.status = CoursesStatus.initial,
     this.courses = const [],
-    this.selectedCourseId,
+    this.gradeSummary,
+    this.gradeTrend,
     this.errorMessage,
   });
 
-  ParentCourseProgress? get selectedCourse {
-    if (selectedCourseId == null) {
-      return null;
-    }
-    for (final item in courses) {
-      if (item.id == selectedCourseId) {
-        return item;
-      }
-    }
-    return null;
-  }
-
   CoursesState copyWith({
-    bool? isLoading,
-    List<ParentCourseProgress>? courses,
-    String? selectedCourseId,
+    CoursesStatus? status,
+    List<CourseEntity>? courses,
+    ParentGradeSummaryEntity? gradeSummary,
+    ParentGradeTrendEntity? gradeTrend,
     String? errorMessage,
   }) {
     return CoursesState(
-      isLoading: isLoading ?? this.isLoading,
+      status: status ?? this.status,
       courses: courses ?? this.courses,
-      selectedCourseId: selectedCourseId ?? this.selectedCourseId,
-      errorMessage: errorMessage,
+      gradeSummary: gradeSummary ?? this.gradeSummary,
+      gradeTrend: gradeTrend ?? this.gradeTrend,
+      errorMessage: errorMessage ?? this.errorMessage,
     );
   }
 
   @override
   List<Object?> get props => [
-    isLoading,
-    courses,
-    selectedCourseId,
-    errorMessage,
-  ];
+        status,
+        courses,
+        gradeSummary,
+        gradeTrend,
+        errorMessage,
+      ];
 }

@@ -28,7 +28,8 @@ void main() {
     const tOtp = '123456';
     const tStudentData = {
       'id': '1',
-      'name': 'Test Student',
+      'firstName': 'Test',
+      'lastName': 'Student',
       'email': 'test@example.com',
       'phone': tPhone,
     };
@@ -310,7 +311,7 @@ void main() {
 
           // assert
           expect(result.id, '1');
-          expect(result.name, 'Test Student');
+          expect(result.firstName, 'Test');
           verify(
             () => httpClient.post(
               '/api/student/register/complete',

@@ -1,35 +1,49 @@
 part of 'financial_bloc.dart';
 
-final class FinancialState extends Equatable {
-  final bool isLoading;
-  final String filter;
-  final List<ParentFinancialTransaction> transactions;
+enum FinancialStatus { initial, loading, success, failure }
+
+class FinancialState extends Equatable {
+  final FinancialStatus status;
+  final List<WalletTransactionEntity> transactions;
+  final List<PaymentEntity> paymentMethods;
+  final WalletSummaryEntity? walletSummary;
+  final ParentWalletAnalyticsEntity? analytics;
   final String? errorMessage;
 
   const FinancialState({
-    this.isLoading = false,
-    this.filter = 'all',
+    this.status = FinancialStatus.initial,
     this.transactions = const [],
+    this.paymentMethods = const [],
+    this.walletSummary,
+    this.analytics,
     this.errorMessage,
   });
 
-  double get currentBalance =>
-      transactions.isEmpty ? 0.0 : transactions.first.balanceAfter;
-
   FinancialState copyWith({
-    bool? isLoading,
-    String? filter,
-    List<ParentFinancialTransaction>? transactions,
+    FinancialStatus? status,
+    List<WalletTransactionEntity>? transactions,
+    List<PaymentEntity>? paymentMethods,
+    WalletSummaryEntity? walletSummary,
+    ParentWalletAnalyticsEntity? analytics,
     String? errorMessage,
   }) {
     return FinancialState(
-      isLoading: isLoading ?? this.isLoading,
-      filter: filter ?? this.filter,
+      status: status ?? this.status,
       transactions: transactions ?? this.transactions,
-      errorMessage: errorMessage,
+      paymentMethods: paymentMethods ?? this.paymentMethods,
+      walletSummary: walletSummary ?? this.walletSummary,
+      analytics: analytics ?? this.analytics,
+      errorMessage: errorMessage ?? this.errorMessage,
     );
   }
 
   @override
-  List<Object?> get props => [isLoading, filter, transactions, errorMessage];
+  List<Object?> get props => [
+        status,
+        transactions,
+        paymentMethods,
+        walletSummary,
+        analytics,
+        errorMessage,
+      ];
 }

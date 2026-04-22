@@ -1,115 +1,140 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
-
-import '../../../core/core.dart';
+import 'package:mentorx_core/mentorx_core.dart';
 import '../bloc/assessments_bloc.dart';
 
-final class GradeMonitorPage extends StatelessWidget {
-  const GradeMonitorPage({super.key});
+class GradeMonitorPage extends StatelessWidget {
+  final String childId;
+
+  const GradeMonitorPage({
+    super.key,
+    required this.childId,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AssessmentsBloc, AssessmentsState>(
-      builder: (context, state) {
-        final assessments = state.assessments;
-        final graded = assessments
-            .where((item) => item.status == 'Graded')
-            .toList();
-        final avg = graded.isEmpty
-            ? 0.0
-            : graded.map((item) => item.percentage).reduce((a, b) => a + b) /
-                  graded.length;
+    return BlocProvider(
+      create: (context) => AssessmentsBloc(
+        repository: context.read<ParentGradeRepository>(),
+      )..add(AssessmentsStarted(childId)),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Grades & Assessments'),
+          actions: [
+            Builder(
+              builder: (context) => IconButton(
+                icon: const Icon(Icons.refresh),
+                onPressed: () {
+                  context.read<AssessmentsBloc>().add(AssessmentsRefreshRequested(childId));
+                },
+              ),
+            ),
+          ],
+        ),
+        body: BlocBuilder<AssessmentsBloc, AssessmentsState>(
+          builder: (context, state) {
+            if (state.status == AssessmentsStatus.loading) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-        return Scaffold(
-          appBar: AppBar(title: const Text('Grade Monitor')),
-          body: state.isLoading
-              ? const Center(child: CircularProgressIndicator())
-              : Column(
+            if (state.status == AssessmentsStatus.failure) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
-                      margin: const EdgeInsets.all(16),
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.green.shade50,
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              'Overall average ${avg.toStringAsFixed(1)}%\n${graded.length}/${assessments.length} graded',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Row(
-                        children: [
-                          for (final filter in const [
-                            'all',
-                            'quiz',
-                            'assignment',
-                          ])
-                            Padding(
-                              padding: const EdgeInsets.only(right: 8),
-                              child: ChoiceChip(
-                                label: Text(filter.toUpperCase()),
-                                selected: state.filter == filter,
-                                onSelected: (_) {
-                                  context.read<AssessmentsBloc>().add(
-                                    AssessmentsFilterChanged(filter),
-                                  );
-                                },
-                              ),
-                            ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Expanded(
-                      child: ListView.separated(
-                        itemCount: assessments.length,
-                        separatorBuilder: (_, _) => const Divider(height: 1),
-                        itemBuilder: (context, index) {
-                          final item = assessments[index];
-                          return ListTile(
-                            leading: Icon(
-                              item.type == 'quiz'
-                                  ? Icons.quiz_outlined
-                                  : Icons.assignment_outlined,
-                            ),
-                            title: Text(item.title),
-                            subtitle: Text(
-                              '${item.courseName} • ${item.score}/${item.totalScore} • ${DateFormat('dd MMM').format(item.date)}',
-                            ),
-                            trailing: Text(
-                              '${item.percentage.toStringAsFixed(0)}%',
-                            ),
-                            onTap: () {
-                              if (item.type == 'quiz') {
-                                QuizGradeDetailParentViewPageRoute(
-                                  assessmentId: item.id,
-                                ).push(context);
-                              } else {
-                                AssignmentGradeDetailParentViewPageRoute(
-                                  assessmentId: item.id,
-                                ).push(context);
-                              }
-                            },
-                          );
-                        },
-                      ),
+                    Text('Failed to load grades: ${state.errorMessage}'),
+                    ElevatedButton(
+                      onPressed: () {
+                        context.read<AssessmentsBloc>().add(AssessmentsStarted(childId));
+                      },
+                      child: const Text('Retry'),
                     ),
                   ],
                 ),
-        );
-      },
+              );
+            }
+
+            if (state.assessments.isEmpty) {
+              return const Center(child: Text('No assessment data available.'));
+            }
+
+            return RefreshIndicator(
+              onRefresh: () async {
+                context.read<AssessmentsBloc>().add(AssessmentsRefreshRequested(childId));
+              },
+              child: ListView(
+                padding: const EdgeInsets.all(16),
+                children: [
+                  if (state.gradeSummary != null) ...[
+                    Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          children: [
+                            Text(
+                              'Overall Grade',
+                              style: Theme.of(context).textTheme.titleSmall,
+                            ),
+                            Text(
+                              '${state.gradeSummary!.overallAverage.toStringAsFixed(1)}%',
+                              style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                                    color: Theme.of(context).primaryColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                            ),
+                            const SizedBox(height: 16),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: state.gradeSummary!.distribution.entries
+                                  .map((entry) => Column(
+                                        children: [
+                                          Text(
+                                            entry.key,
+                                            style: const TextStyle(fontWeight: FontWeight.bold),
+                                          ),
+                                          Text(entry.value.toString()),
+                                        ],
+                                      ))
+                                  .toList(),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                  ],
+                  Text(
+                    'Recent Assessments',
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                  const SizedBox(height: 16),
+                  ...state.assessments.map((assessment) => Card(
+                        margin: const EdgeInsets.only(bottom: 8),
+                        child: ListTile(
+                          title: Text('Quiz ID: ${assessment.quizId}'),
+                          subtitle: Text(
+                            'Score: ${assessment.score}/${assessment.totalMarks} • ${assessment.submittedAt?.toString().split(' ').first ?? 'In Progress'}',
+                          ),
+                          trailing: Text(
+                            '${assessment.percentage.toInt()}%',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: assessment.passed ? Colors.green : Colors.red,
+                            ),
+                          ),
+                          onTap: () {
+                            // Detail navigation
+                          },
+                        ),
+                      )),
+                ],
+              ),
+            );
+          },
+        ),
+      ),
     );
   }
 }

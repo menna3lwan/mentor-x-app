@@ -23,10 +23,24 @@ dependencies:
     path: ../packages/parent/dio_authentication_repository
   parent_dio_home_repository:
     path: ../packages/parent/dio_home_repository
+  dio_children_repository:
+    path: ../packages/parent/dio_children_repository
   parent_mock_authentication_repository:
     path: ../packages/mock/parent/mock_authentication_repository
   parent_mock_home_repository:
     path: ../packages/mock/parent/mock_home_repository
+  parent_mock_children_repository:
+    path: ../packages/mock/parent/mock_children_repository
+  parent_mock_financial_repository:
+    path: ../packages/mock/parent/mock_financial_repository
+  parent_mock_course_repository:
+    path: ../packages/mock/parent/mock_course_repository
+  parent_mock_attendance_repository:
+    path: ../packages/mock/parent/mock_attendance_repository
+  parent_mock_grade_repository:
+    path: ../packages/mock/parent/mock_grade_repository
+  parent_mock_communication_repository:
+    path: ../packages/mock/parent/mock_communication_repository
   flutter_secure_storage_cache_repository:
     path: ../packages/common/flutter_secure_storage_cache_repository
   dio_http_client:

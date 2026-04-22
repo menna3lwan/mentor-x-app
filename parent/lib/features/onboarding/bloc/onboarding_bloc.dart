@@ -1,7 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/core.dart';
-import '../../onboarding/repositories/onboarding_repository.dart';
 
 part 'onboarding_event.dart';
 part 'onboarding_state.dart';

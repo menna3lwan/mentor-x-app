@@ -1,4 +1,4 @@
-part of '../../mentorx_core.dart';
+part of 'package:mentorx_core/mentorx_core.dart';
 
 enum EnrollmentStatus { active, expired, completed }
 
@@ -39,12 +39,12 @@ base class EnrollmentEntity extends Equatable {
     return EnrollmentStatus.active;
   }
 
-
   static final placeholder = EnrollmentEntity(
     id: '',
     courseId: '',
     enrolledAt: DateTime.fromMillisecondsSinceEpoch(0),
   );
+
   @override
   List<Object?> get props => [
         id,
@@ -59,4 +59,32 @@ base class EnrollmentEntity extends Equatable {
         enrolledBy,
         certificateUrl,
       ];
+
+  EnrollmentEntity copyWith({
+    String? id,
+    String? courseId,
+    double? progressPercent,
+    int? completedSessions,
+    DateTime? enrolledAt,
+    DateTime? expiresAt,
+    DateTime? completedAt,
+    DateTime? lastAccessedAt,
+    String? lastItemId,
+    EnrolledBy? enrolledBy,
+    String? certificateUrl,
+  }) {
+    return EnrollmentEntity(
+      id: id ?? this.id,
+      courseId: courseId ?? this.courseId,
+      progressPercent: progressPercent ?? this.progressPercent,
+      completedSessions: completedSessions ?? this.completedSessions,
+      enrolledAt: enrolledAt ?? this.enrolledAt,
+      expiresAt: expiresAt ?? this.expiresAt,
+      completedAt: completedAt ?? this.completedAt,
+      lastAccessedAt: lastAccessedAt ?? this.lastAccessedAt,
+      lastItemId: lastItemId ?? this.lastItemId,
+      enrolledBy: enrolledBy ?? this.enrolledBy,
+      certificateUrl: certificateUrl ?? this.certificateUrl,
+    );
+  }
 }

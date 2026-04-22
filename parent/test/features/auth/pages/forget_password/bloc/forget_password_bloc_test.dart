@@ -5,7 +5,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:parent/features/auth/pages/forget_password/bloc/forget_password_bloc.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 
-class MockAuthRepository extends Mock implements AuthenticationRepository {}
+class MockAuthRepository extends Mock implements AuthenticationRepository<ParentEntity> {}
 
 void main() {
   late MockAuthRepository authRepository;

@@ -1,4 +1,4 @@
-part of '../../mentorx_core.dart';
+part of 'package:mentorx_core/mentorx_core.dart';
 
 // ——— Exception codes ———
 
@@ -27,9 +27,16 @@ final class AuthenticationException
 
 // ——— Repository interface ———
 
-abstract interface class AuthenticationRepository {
+abstract interface class AuthenticationRepository<T> {
   Future<void> initialize();
-  Future<ParentEntity> login({required String phone, required String password});
+  Future<T> login({
+    required String phone,
+    required String password,
+    String? deviceHash,
+    String? deviceName,
+    String? fcmToken,
+    String? appVersion,
+  });
   Future<ParentStudentLookupEntity> findStudentForParentRegistration({
     required ParentLookupType lookupType,
     required String value,
@@ -48,7 +55,7 @@ abstract interface class AuthenticationRepository {
     String? appVersion,
   });
   Future<void> logout();
-  Future<ParentEntity?> getCachedUser();
+  Future<T?> getCachedUser();
   Future<void> sendOtp(String phone);
   Future<Duration?> resendOtp(String phone);
   Future<void> requestPasswordReset(String phone);
@@ -57,5 +64,5 @@ abstract interface class AuthenticationRepository {
     required String otp,
     required String newPassword,
   });
-  Future<ParentEntity> verifyOtp(String phone, String code);
+  Future<T> verifyOtp(String phone, String code);
 }

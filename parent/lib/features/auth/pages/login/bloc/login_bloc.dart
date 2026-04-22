@@ -28,10 +28,10 @@ final class LoginOtpRequiredPresentationEvent extends LoginPresentationEvent {
 // ──── Bloc ────
 final class LoginBloc extends Bloc<LoginEvent, LoginState>
     with BlocPresentationMixin<LoginState, LoginPresentationEvent> {
-  final AuthenticationRepository _authenticationRepository;
+  final AuthenticationRepository<ParentEntity> _authenticationRepository;
   final MentorXLogger _logger = MentorXLogger('LoginBloc');
 
-  LoginBloc({required AuthenticationRepository authenticationRepository})
+  LoginBloc({required AuthenticationRepository<ParentEntity> authenticationRepository})
     : _authenticationRepository = authenticationRepository,
       super(LoginState.initial) {
     on<LoginSubmittedEvent>(_onLoginSubmitted);
@@ -46,6 +46,10 @@ final class LoginBloc extends Bloc<LoginEvent, LoginState>
       final user = await _authenticationRepository.login(
         phone: event.phoneNumber,
         password: event.password,
+        deviceHash: event.deviceHash,
+        deviceName: event.deviceName,
+        fcmToken: event.fcmToken,
+        appVersion: event.appVersion,
       );
       emit(state.copyWith(loadingState: LoginLoadingState.success));
       emitPresentation(LoginSuccessPresentationEvent(user: user));

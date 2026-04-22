@@ -113,7 +113,6 @@ final class DioStudentRegistrationRepository
           CenterEntity(
             id: id,
             name: name,
-            address: _stringOrNull(map['address'] ?? map['location']),
           ),
         );
       }
@@ -210,8 +209,6 @@ final class DioStudentRegistrationRepository
           GroupEntity(
             id: id,
             name: name,
-            currentSize: _intOrNull(map['current_size'] ?? map['currentSize']),
-            maxSize: _intOrNull(map['max_size'] ?? map['maxSize']),
           ),
         );
       }

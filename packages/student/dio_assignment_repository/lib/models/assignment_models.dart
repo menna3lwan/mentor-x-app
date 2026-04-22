@@ -40,7 +40,7 @@ abstract final class AssignmentSubmissionModel {
   static SubmissionStatus _parseStatus(dynamic value) {
     if (value == null) return SubmissionStatus.submitted;
     final str = value.toString().toLowerCase();
-    if (str == 'resubmit_requested' || str == 'resubmitrequested') return SubmissionStatus.resubmitRequested;
+    if (str == 'resubmit_requested' || str == 'resubmitrequested') return SubmissionStatus.rejected;
     return SubmissionStatus.values.firstWhere(
       (e) => e.name == str,
       orElse: () => SubmissionStatus.submitted,

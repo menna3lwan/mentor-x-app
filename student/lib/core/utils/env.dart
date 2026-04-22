@@ -179,9 +179,11 @@ final class Env {
 
   static StudentEntity get mockUser => StudentEntity(
     id: 'mockUserId',
-    name: mockUserName,
+    firstName: mockUserName,
+    lastName: '',
     email: 'mock@email.com',
     phoneNumber: mockPhoneNumber,
+    status: StudentStatus.active,
     createdAt: DateTime.now(),
     updatedAt: DateTime.now(),
   );

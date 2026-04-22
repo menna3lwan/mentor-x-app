@@ -1,81 +1,70 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
-
-import '../../../core/core.dart';
 import '../bloc/profile_bloc.dart';
 
-final class ParentProfilePage extends StatelessWidget {
+class ParentProfilePage extends StatelessWidget {
   const ParentProfilePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => ProfileBloc()..add(ProfileStarted()),
+      child: Scaffold(
+        appBar: AppBar(title: const Text('My Profile')),
+        body: const ParentProfileView(),
+      ),
+    );
+  }
+}
+
+class ParentProfileView extends StatelessWidget {
+  const ParentProfileView({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ProfileBloc, ProfileState>(
       builder: (context, state) {
-        final profile = state.profile;
-        if (state.isLoading || profile == null) {
-          return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
-          );
+        if (state.status == ProfileStatus.loading) {
+          return const Center(child: CircularProgressIndicator());
         }
-        return Scaffold(
-          appBar: AppBar(title: const Text('Parent Profile')),
-          body: ListView(
-            padding: const EdgeInsets.all(16),
-            children: [
-              CircleAvatar(
-                radius: 40,
-                child: Text(profile.fullName[0]),
-              ),
-              const SizedBox(height: 16),
-              Text(
-                profile.fullName,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              const SizedBox(height: 12),
-              Card(
-                child: ListTile(
-                  title: const Text('Phone'),
-                  subtitle: Text(profile.phone),
-                ),
-              ),
-              Card(
-                child: ListTile(
-                  title: const Text('Email'),
-                  subtitle: Text(profile.email),
-                ),
-              ),
-              Card(
-                child: ListTile(
-                  title: const Text('Member Since'),
-                  subtitle: Text(
-                    DateFormat('dd MMM yyyy').format(profile.createdAt),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 12),
-              const Text(
-                'Linked Relationships',
-                style: TextStyle(fontWeight: FontWeight.w700),
-              ),
-              ...profile.relationships.entries.map(
-                (entry) => ListTile(
-                  dense: true,
-                  title: Text(entry.key),
-                  trailing: Text(entry.value),
-                ),
-              ),
-              const SizedBox(height: 20),
-              FilledButton(
-                onPressed: () => const SettingsParentPageRoute().push(context),
-                child: const Text('Open Settings'),
-              ),
-            ],
-          ),
+
+        if (state.status == ProfileStatus.failure) {
+          return Center(child: Text('Error: ${state.errorMessage}'));
+        }
+
+        final profile = state.profileData;
+        if (profile == null) {
+          return const Center(child: Text('No profile data found.'));
+        }
+
+        return ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            const CircleAvatar(
+              radius: 50,
+              backgroundColor: Color(0xFF1E293B),
+              child: Icon(Icons.person, size: 50, color: Colors.white),
+            ),
+            const SizedBox(height: 24),
+            ListTile(
+              title: const Text('Full Name'),
+              subtitle: Text(profile.fullName),
+              leading: const Icon(Icons.person_outline),
+            ),
+            ListTile(
+              title: const Text('Phone Number'),
+              subtitle: Text(profile.phoneNumber),
+              leading: const Icon(Icons.phone_outlined),
+            ),
+            const Divider(),
+            ListTile(
+              title: const Text('Logout'),
+              leading: const Icon(Icons.logout, color: Colors.red),
+              onTap: () {
+                // Handle logout logic
+              },
+            ),
+          ],
         );
       },
     );

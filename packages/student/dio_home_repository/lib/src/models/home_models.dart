@@ -30,8 +30,7 @@ final class BannerModel extends BannerEntity {
     required super.id,
     required super.imageUrl,
     super.title,
-    required super.actionType,
-    required super.actionValue,
+    super.deepLink,
   });
 
   factory BannerModel.fromJson(Map<String, dynamic> json) {
@@ -39,10 +38,8 @@ final class BannerModel extends BannerEntity {
       id: json['id']?.toString() ?? '',
       imageUrl: (json['imageUrl'] ?? json['image_url'])?.toString() ?? '',
       title: (json['title'] ?? json['name'])?.toString(),
-      actionType:
-          (json['actionType'] ?? json['action_type'])?.toString() ?? 'internal',
-      actionValue:
-          (json['actionValue'] ?? json['action_value'])?.toString() ?? '',
+      deepLink: (json['deepLink'] ?? json['deep_link'])?.toString() ??
+          (json['actionValue'] ?? json['action_value'])?.toString(),
     );
   }
 }
@@ -51,15 +48,17 @@ final class AnnouncementModel extends AnnouncementEntity {
   const AnnouncementModel({
     required super.id,
     required super.title,
-    required super.preview,
+    required super.content,
+    super.preview,
     required super.createdAt,
-    required super.isPinned,
+    super.isPinned = false,
   });
 
   factory AnnouncementModel.fromJson(Map<String, dynamic> json) {
     return AnnouncementModel(
       id: json['id']?.toString() ?? '',
       title: json['title']?.toString() ?? '',
+      content: json['content']?.toString() ?? json['preview']?.toString() ?? '',
       preview: json['preview']?.toString() ?? json['content']?.toString() ?? '',
       createdAt:
           DateTime.tryParse(

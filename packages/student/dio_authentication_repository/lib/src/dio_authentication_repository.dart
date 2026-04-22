@@ -444,13 +444,22 @@ final class DioAuthenticationRepository
         return studentFromPayload;
       }
 
-      final accountStatus = _parseStatus(_stringOrNull(data['user_status']));
+      final String rawName = _stringOrNull(data['name']) ?? '';
+      final nameParts = rawName.split(' ');
+      final String fallbackFirstName = nameParts.isNotEmpty ? nameParts[0] : '';
+      final String fallbackLastName = nameParts.length > 1 ? nameParts.sublist(1).join(' ') : '';
+
+      final studentStatus = _parseStatus(
+        _stringOrNull(data['status'] ?? data['account_status']),
+      );
+
       final fallbackUser = StudentEntity(
         id: _stringOrNull(data['user_id']) ?? '',
-        name: _stringOrNull(data['name']) ?? '',
+        firstName: _stringOrNull(data['first_name']) ?? fallbackFirstName,
+        lastName: _stringOrNull(data['last_name']) ?? fallbackLastName,
         phoneNumber: phone,
         studentCode: _stringOrNull(data['student_code']),
-        status: accountStatus ?? StudentStatus.pending,
+        status: studentStatus ?? StudentStatus.pending,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       );

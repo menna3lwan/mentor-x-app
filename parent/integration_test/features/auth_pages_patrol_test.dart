@@ -13,7 +13,7 @@ void main() {
     final routes = <GoRouteData>[
       const LoginPageRoute(),
       const ForgetPasswordPageRoute(),
-      const OtpPageRoute(phone: '01000000000'),
+      const OtpPageRoute(phoneNumber: '01000000000'),
       const ParentRegistrationPageRoute(),
     ];
 

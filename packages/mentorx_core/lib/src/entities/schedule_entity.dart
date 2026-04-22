@@ -1,6 +1,6 @@
-part of '../../mentorx_core.dart';
+part of 'package:mentorx_core/mentorx_core.dart';
 
-class ScheduleEntity extends Equatable {
+base class ScheduleEntity extends Equatable {
   final String id;
   final String day;
   final String startTime;
@@ -15,7 +15,7 @@ class ScheduleEntity extends Equatable {
 
   String get displayName => '$day ($startTime - $endTime)';
 
-  static final placeholder = ScheduleEntity(
+  static const placeholder = ScheduleEntity(
     id: '',
     day: '',
     startTime: '',
@@ -24,4 +24,18 @@ class ScheduleEntity extends Equatable {
 
   @override
   List<Object?> get props => [id, day, startTime, endTime];
+
+  ScheduleEntity copyWith({
+    String? id,
+    String? day,
+    String? startTime,
+    String? endTime,
+  }) {
+    return ScheduleEntity(
+      id: id ?? this.id,
+      day: day ?? this.day,
+      startTime: startTime ?? this.startTime,
+      endTime: endTime ?? this.endTime,
+    );
+  }
 }

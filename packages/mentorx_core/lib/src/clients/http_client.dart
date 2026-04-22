@@ -1,4 +1,4 @@
-part of '../../mentorx_core.dart';
+part of 'package:mentorx_core/mentorx_core.dart';
 
 /// A client that supports locale updates when the app language changes.
 abstract interface class LocalizedClient {

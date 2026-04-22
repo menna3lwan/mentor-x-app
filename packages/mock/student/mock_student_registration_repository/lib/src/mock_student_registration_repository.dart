@@ -27,9 +27,9 @@ final class MockStudentRegistrationRepository
   Future<List<CenterEntity>> getCenters(String tenantId) async {
     await Future.delayed(const Duration(milliseconds: 400));
     return [
-      const CenterEntity(id: '1', name: 'Downtown Center', address: '123 Main St'),
-      const CenterEntity(id: '2', name: 'West Side Branch', address: '456 West Blvd'),
-      const CenterEntity(id: '3', name: 'Smart Village Lab', address: 'Building B4'),
+      const CenterEntity(id: '1', name: 'Downtown Center'),
+      const CenterEntity(id: '2', name: 'West Side Branch'),
+      const CenterEntity(id: '3', name: 'Smart Village Lab'),
     ];
   }
 
@@ -57,9 +57,9 @@ final class MockStudentRegistrationRepository
   }) async {
     await Future.delayed(const Duration(milliseconds: 300));
     return [
-      const GroupEntity(id: '1', name: 'Group A', currentSize: 15, maxSize: 30),
-      const GroupEntity(id: '2', name: 'Group B', currentSize: 28, maxSize: 30),
-      const GroupEntity(id: '3', name: 'Group C', currentSize: 5, maxSize: 30),
+      const GroupEntity(id: '1', name: 'Group A'),
+      const GroupEntity(id: '2', name: 'Group B'),
+      const GroupEntity(id: '3', name: 'Group C'),
     ];
   }
 

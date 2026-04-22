@@ -1,30 +1,48 @@
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../portal_data/portal_data.dart';
+import 'package:mentorx_core/mentorx_core.dart';
 
 part 'attendance_event.dart';
 part 'attendance_state.dart';
 
-final class AttendanceBloc extends Bloc<AttendanceEvent, AttendanceState> {
-  final ParentPortalRepository _repository;
+class AttendanceBloc extends Bloc<AttendanceEvent, AttendanceState> {
+  final ParentAttendanceRepository _repository;
 
-  AttendanceBloc({required ParentPortalRepository repository})
-    : _repository = repository,
-      super(const AttendanceState()) {
+  AttendanceBloc({
+    required ParentAttendanceRepository repository,
+  })  : _repository = repository,
+        super(const AttendanceState()) {
     on<AttendanceStarted>(_onStarted);
+    on<AttendanceRefreshRequested>(_onRefreshRequested);
+  }
+
+  Future<void> _onRefreshRequested(
+    AttendanceRefreshRequested event,
+    Emitter<AttendanceState> emit,
+  ) async {
+    add(AttendanceStarted(event.childId));
   }
 
   Future<void> _onStarted(
     AttendanceStarted event,
     Emitter<AttendanceState> emit,
   ) async {
-    emit(state.copyWith(isLoading: true, errorMessage: null));
+    emit(state.copyWith(status: AttendanceBlocStatus.loading));
     try {
-      final records = await _repository.getAttendance(childId: event.childId);
-      emit(state.copyWith(isLoading: false, records: records));
-    } catch (error) {
-      emit(state.copyWith(isLoading: false, errorMessage: error.toString()));
+      final results = await Future.wait([
+        _repository.getAttendance(event.childId),
+        _repository.getAttendanceSummary(event.childId),
+      ]);
+
+      emit(state.copyWith(
+        status: AttendanceBlocStatus.success,
+        attendanceRecords: results[0] as List<AttendanceRecordEntity>,
+        attendanceSummary: results[1] as AttendanceSummaryEntity,
+      ));
+    } catch (e) {
+      emit(state.copyWith(
+        status: AttendanceBlocStatus.failure,
+        errorMessage: e.toString(),
+      ));
     }
   }
 }

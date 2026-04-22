@@ -1,10 +1,10 @@
-part of '../../mentorx_core.dart';
+part of 'package:mentorx_core/mentorx_core.dart';
 
-enum PaymentMethod { vodafoneCash, instapay, fawry }
+enum PaymentMethod { vodafoneCash, fawry, instaPay, creditCard, wallet }
 
-enum PaymentType { walletTopup, coursePurchase, marketplace }
+enum PaymentType { courseEnrollment, walletTopup }
 
-enum PaymentStatus { pending, completed, failed, refunded }
+enum PaymentStatus { pending, success, failed, expired, processing }
 
 base class PaymentEntity extends Equatable {
   final String id;
@@ -29,7 +29,6 @@ base class PaymentEntity extends Equatable {
     this.expiresAt,
   });
 
-
   static final placeholder = PaymentEntity(
     id: '',
     amount: 0.0,
@@ -38,6 +37,7 @@ base class PaymentEntity extends Equatable {
     status: PaymentStatus.pending,
     createdAt: DateTime.fromMillisecondsSinceEpoch(0),
   );
+
   @override
   List<Object?> get props => [
         id,
@@ -50,4 +50,28 @@ base class PaymentEntity extends Equatable {
         expiresAt,
         createdAt,
       ];
+
+  PaymentEntity copyWith({
+    String? id,
+    double? amount,
+    String? currency,
+    PaymentMethod? method,
+    PaymentType? paymentType,
+    PaymentStatus? status,
+    String? reference,
+    DateTime? expiresAt,
+    DateTime? createdAt,
+  }) {
+    return PaymentEntity(
+      id: id ?? this.id,
+      amount: amount ?? this.amount,
+      currency: currency ?? this.currency,
+      method: method ?? this.method,
+      paymentType: paymentType ?? this.paymentType,
+      status: status ?? this.status,
+      reference: reference ?? this.reference,
+      expiresAt: expiresAt ?? this.expiresAt,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
 }

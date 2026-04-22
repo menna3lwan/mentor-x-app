@@ -1,0 +1,16 @@
+name: onboarding_repository
+description: Cache-based status of onboarding.
+version: 0.0.1
+publish_to: none
+
+environment:
+  sdk: ^3.11.4
+
+resolution: workspace
+
+dependencies:
+  mentorx_core:
+    path: ../../mentorx_core
+
+dev_dependencies:
+  lints: ^6.0.0

@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,98 +8,96 @@ import 'package:flutter/services.dart';
 import '../core/core.dart';
 import 'initializers/initializers.dart';
 
-// ──────────────────────────────────────────────────────────────────────────────
-// ParentRequirements — holds everything the root widget needs to start the app.
-// ──────────────────────────────────────────────────────────────────────────────
-
 final class ParentRequirements {
+  /// The application's current locale
   final Locale locale;
+
+  /// The application's current brightness theme setting
   final Brightness brightness;
+
+  /// List of BLoC providers for state management
   final AppBlocs blocs;
+
+  /// List of repository providers for data access
   final AppRepositories repositories;
-  final List<LocalizedClient> localizedClients;
+
+  /// Router configuration for navigation
   final RouterConfig<Object> routerConfig;
 
-  const ParentRequirements._({
-    required this.locale,
-    required this.brightness,
-    required this.blocs,
-    required this.repositories,
-    required this.localizedClients,
-    required this.routerConfig,
-  });
+  /// Clients that receive locale updates when the app language changes
+  final List<LocalizedClient> localizedClients;
 
   static final MentorXLogger _logger = MentorXLogger('ParentRequirements');
 
-  // ──────────────────────────────────────────────────────────────────────────
-  // Initialization pipeline (called once from main.dart)
-  // ──────────────────────────────────────────────────────────────────────────
+  ParentRequirements({
+    required this.blocs,
+    required this.locale,
+    required this.brightness,
+    required this.repositories,
+    required this.routerConfig,
+    required this.localizedClients,
+  });
 
   static Future<ParentRequirements> initialize() async {
     MentorXLogger.enabled = kDebugMode;
-
     await _initSystemUIStyle();
-
-    // 1. Initialize repositories in parallel
+    
     final (:repositories, :localizedClients) =
         await RepositoriesFactory.initRepositories();
+    
     final languageCode = RepositoriesFactory.initialLanguageCode;
-    _logger.info('Repositories initialized. Language: $languageCode');
+    final initalBrightness = await _initBrightness(
+      repositories.cacheRepository,
+    );
+    
+    _logger.info(
+      'Initializing the application with language $languageCode, brightness $initalBrightness',
+    );
+    
+    await LocaleSettings.setLocaleRaw(languageCode);
 
-    // 2. Load brightness from cache
-    final brightness = await _initBrightness(repositories.cacheRepository);
-    _logger.info('Brightness: $brightness');
-
-    // 3. Load cached user
     ParentEntity? user;
     try {
       user = await repositories.authenticationRepository.getCachedUser();
-      if (user != null) _logger.info('Cached user found: ${user.name}');
     } catch (e, s) {
-      _logger.error('Failed to load cached user', e, s);
+      _logger.error('Failed to get cached user: ', e, s);
     }
 
-    // 4. Initialize all app-level cubits
     final blocs = await BlocsFactory.initBlocs(
       user: user,
       languageCode: languageCode,
-      repositories: repositories,
+      cacheRepository: repositories.cacheRepository,
       localizedClients: localizedClients,
     );
 
-    // 5. Determine initial route
-    final initialRoute = await _determineInitialRoute();
-    _logger.info('Initial route: $initialRoute');
-
-    // 6. Build router
-    final routerConfig = AppRouter(
+    final AppRouter appRouter = AppRouter(
       navigatorKey: rootNavigatorKey,
-      initialLocation: initialRoute,
-    ).routes;
-
-    return ParentRequirements._(
-      locale: Locale(languageCode),
-      brightness: brightness,
+      initialLocation: '/',
+    );
+    
+    return ParentRequirements(
       blocs: blocs,
       repositories: repositories,
+      locale: Locale(languageCode),
+      brightness: initalBrightness,
+      routerConfig: appRouter.routes,
       localizedClients: localizedClients,
-      routerConfig: routerConfig,
     );
   }
 
-  // ──────────────────────────────────────────────────────────────────────────
-  // Private helpers
-  // ──────────────────────────────────────────────────────────────────────────
-
+  /// Loads the app's brightness setting from the cache.
   static Future<Brightness> _initBrightness(
     CacheRepository cacheRepository,
   ) async {
-    final cached = await cacheRepository.get(CacheKeys.brightness);
+    final String? brightness = await cacheRepository.get(
+      CacheKeys.brightness,
+    );
     final deviceBrightness = PlatformDispatcher.instance.platformBrightness;
-    if (cached == null) return deviceBrightness;
-    if (cached == Brightness.light.name) return Brightness.light;
-    if (cached == Brightness.dark.name) return Brightness.dark;
-    return deviceBrightness;
+    return (brightness == null)
+        ? deviceBrightness
+        : [Brightness.light.name, Brightness.dark.name].contains(brightness)
+        ? Brightness.values.byName(brightness)
+        : deviceBrightness;
   }
 
   static Future<void> _initSystemUIStyle() async {
@@ -113,13 +112,17 @@ final class ParentRequirements {
         systemNavigationBarDividerColor: Colors.transparent,
       ),
     );
-    await SystemChrome.setPreferredOrientations([
+
+    SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
-    ]);
-  }
-
-  static Future<String> _determineInitialRoute() async {
-    return const SplashScreenPageRoute().location;
+    ]).ignore();
+    
+    if (MentorXPlatformChecker.isIOS) {
+      SystemChrome.setEnabledSystemUIMode(
+        SystemUiMode.manual,
+        overlays: [SystemUiOverlay.top],
+      ).ignore();
+    }
   }
 }

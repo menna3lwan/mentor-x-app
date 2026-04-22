@@ -10,25 +10,25 @@ final class MockNotificationGenerator {
         id: 'n1',
         type: NotificationType.announcement,
         title: 'New Announcement',
-        body:
+        message:
             'Tomorrow Session Time Updated — The physics live class has been moved to 7:00 PM.',
         isRead: false,
         createdAt: now.subtract(const Duration(hours: 1)),
       ),
       NotificationEntity(
         id: 'n2',
-        type: NotificationType.quizResult,
+        type: NotificationType.quiz,
         title: 'New Quiz Available',
-        body:
+        message:
             'A new algebra quiz has been published. Complete it before the deadline.',
         isRead: false,
         createdAt: now.subtract(const Duration(hours: 3)),
       ),
       NotificationEntity(
         id: 'n3',
-        type: NotificationType.walletUpdated,
+        type: NotificationType.info,
         title: 'Wallet Topped Up',
-        body:
+        message:
             'Your wallet has been credited with 500.00 EGP via Vodafone Cash.',
         isRead: true,
         readAt: now.subtract(const Duration(hours: 4)),
@@ -36,27 +36,27 @@ final class MockNotificationGenerator {
       ),
       NotificationEntity(
         id: 'n4',
-        type: NotificationType.assignmentGraded,
+        type: NotificationType.info,
         title: 'Assignment Graded',
-        body:
+        message:
             'Your assignment "Linear Equations" has been graded. Score: 85/100.',
         isRead: false,
         createdAt: now.subtract(const Duration(days: 1)),
       ),
       NotificationEntity(
         id: 'n5',
-        type: NotificationType.courseEnrolled,
+        type: NotificationType.course,
         title: 'Course Enrollment Confirmed',
-        body: 'You have been enrolled in "Advanced Algebra for Grade 10".',
+        message: 'You have been enrolled in "Advanced Algebra for Grade 10".',
         isRead: true,
         readAt: now.subtract(const Duration(days: 1)),
         createdAt: now.subtract(const Duration(days: 2)),
       ),
       NotificationEntity(
         id: 'n6',
-        type: NotificationType.attendanceMarked,
+        type: NotificationType.info,
         title: 'Attendance Marked',
-        body:
+        message:
             "Your attendance has been marked as present for today's Physics class.",
         isRead: true,
         readAt: now.subtract(const Duration(days: 2)),
@@ -66,7 +66,7 @@ final class MockNotificationGenerator {
         id: 'n7',
         type: NotificationType.system,
         title: 'Welcome to MentorX',
-        body:
+        message:
             'Welcome! Start exploring courses and boost your learning journey.',
         isRead: true,
         readAt: now.subtract(const Duration(days: 5)),

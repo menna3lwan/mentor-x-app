@@ -126,7 +126,7 @@ class _ParentRegistrationPageWrapperState
               SnackBar(content: Text(message)),
             );
           case ParentRegistrationSuccessPresentationEvent(:final phone):
-            OtpPageRoute(phone: phone).go(context);
+            OtpPageRoute(phoneNumber: phone).go(context);
         }
       },
       child: Builder(
@@ -446,7 +446,7 @@ final class _StudentPreviewCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '${student.firstNameMasked} ${student.lastNameMasked}',
+            student.maskedName,
             style: const TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 16,
@@ -455,7 +455,7 @@ final class _StudentPreviewCard extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text('Grade: ${student.gradeName}'),
-          Text('Tenant: ${student.tenantName}'),
+          Text('Center: ${student.centerName}'),
           const SizedBox(height: 8),
           Row(
             children: [

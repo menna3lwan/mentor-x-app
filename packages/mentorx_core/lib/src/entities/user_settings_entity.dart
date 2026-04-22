@@ -1,4 +1,4 @@
-part of '../../mentorx_core.dart';
+part of 'package:mentorx_core/mentorx_core.dart';
 
 base class UserSettingsEntity extends Equatable {
   final String language;
@@ -21,11 +21,30 @@ base class UserSettingsEntity extends Equatable {
 
   @override
   List<Object?> get props => [
-    language,
-    theme,
-    pushNotifications,
-    notificationPreferences,
-    videoQualityDefault,
-    playbackSpeedDefault,
-  ];
+        language,
+        theme,
+        pushNotifications,
+        notificationPreferences,
+        videoQualityDefault,
+        playbackSpeedDefault,
+      ];
+
+  UserSettingsEntity copyWith({
+    String? language,
+    String? theme,
+    bool? pushNotifications,
+    Map<String, bool>? notificationPreferences,
+    String? videoQualityDefault,
+    double? playbackSpeedDefault,
+  }) {
+    return UserSettingsEntity(
+      language: language ?? this.language,
+      theme: theme ?? this.theme,
+      pushNotifications: pushNotifications ?? this.pushNotifications,
+      notificationPreferences:
+          notificationPreferences ?? this.notificationPreferences,
+      videoQualityDefault: videoQualityDefault ?? this.videoQualityDefault,
+      playbackSpeedDefault: playbackSpeedDefault ?? this.playbackSpeedDefault,
+    );
+  }
 }

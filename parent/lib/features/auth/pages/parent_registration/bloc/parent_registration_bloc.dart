@@ -223,6 +223,10 @@ final class ParentRegistrationBloc
         password: state.password,
         relationship: state.relationship,
         studentId: foundStudent.studentId,
+        // TODO(auth): Implement device_info_plus & fcm_token helpers
+        deviceHash: 'placeholder_hash',
+        deviceName: 'placeholder_device',
+        appVersion: '1.0.0',
       );
 
       emit(state.copyWith(loadingState: ParentRegistrationLoadingState.loaded));

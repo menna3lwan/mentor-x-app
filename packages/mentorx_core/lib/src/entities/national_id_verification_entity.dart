@@ -1,4 +1,4 @@
-part of '../../mentorx_core.dart';
+part of 'package:mentorx_core/mentorx_core.dart';
 
 enum VerificationStatus { pending, verified, rejected }
 
@@ -17,7 +17,6 @@ base class NationalIdVerificationEntity extends Equatable {
 
   bool get isVerified => status == VerificationStatus.verified;
 
-
   static final placeholder = NationalIdVerificationEntity(
     status: VerificationStatus.pending,
   );
@@ -29,4 +28,18 @@ base class NationalIdVerificationEntity extends Equatable {
         verifiedAt,
         rejectionReason,
       ];
+
+  NationalIdVerificationEntity copyWith({
+    VerificationStatus? status,
+    String? idCardPhotoUrl,
+    DateTime? verifiedAt,
+    String? rejectionReason,
+  }) {
+    return NationalIdVerificationEntity(
+      status: status ?? this.status,
+      idCardPhotoUrl: idCardPhotoUrl ?? this.idCardPhotoUrl,
+      verifiedAt: verifiedAt ?? this.verifiedAt,
+      rejectionReason: rejectionReason ?? this.rejectionReason,
+    );
+  }
 }

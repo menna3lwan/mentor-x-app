@@ -1,4 +1,4 @@
-part of '../../mentorx_core.dart';
+part of 'package:mentorx_core/mentorx_core.dart';
 
 abstract class HttpClientRepository<T extends Enum> {
   const HttpClientRepository();

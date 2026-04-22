@@ -1,42 +1,34 @@
 part of 'children_bloc.dart';
 
-final class ChildrenState extends Equatable {
-  final bool isLoading;
-  final bool isSaving;
-  final List<ParentChild> children;
-  final String? activeChildId;
+enum ChildrenStatus { initial, loading, success, failure }
+
+class ChildrenState extends Equatable {
+  final ChildrenStatus status;
+  final List<ParentChildEntity> children;
+  final ParentStudentLookupEntity? lookedUpStudent;
   final String? errorMessage;
 
   const ChildrenState({
-    this.isLoading = false,
-    this.isSaving = false,
+    this.status = ChildrenStatus.initial,
     this.children = const [],
-    this.activeChildId,
+    this.lookedUpStudent,
     this.errorMessage,
   });
 
   ChildrenState copyWith({
-    bool? isLoading,
-    bool? isSaving,
-    List<ParentChild>? children,
-    String? activeChildId,
+    ChildrenStatus? status,
+    List<ParentChildEntity>? children,
+    ParentStudentLookupEntity? lookedUpStudent,
     String? errorMessage,
   }) {
     return ChildrenState(
-      isLoading: isLoading ?? this.isLoading,
-      isSaving: isSaving ?? this.isSaving,
+      status: status ?? this.status,
       children: children ?? this.children,
-      activeChildId: activeChildId ?? this.activeChildId,
-      errorMessage: errorMessage,
+      lookedUpStudent: lookedUpStudent ?? this.lookedUpStudent,
+      errorMessage: errorMessage ?? this.errorMessage,
     );
   }
 
   @override
-  List<Object?> get props => [
-    isLoading,
-    isSaving,
-    children,
-    activeChildId,
-    errorMessage,
-  ];
+  List<Object?> get props => [status, children, lookedUpStudent, errorMessage];
 }

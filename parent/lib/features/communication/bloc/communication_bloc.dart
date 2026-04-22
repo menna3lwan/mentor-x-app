@@ -1,59 +1,50 @@
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../portal_data/portal_data.dart';
+import 'package:mentorx_core/mentorx_core.dart';
 
 part 'communication_event.dart';
 part 'communication_state.dart';
 
-final class CommunicationBloc
-    extends Bloc<CommunicationEvent, CommunicationState> {
-  final ParentPortalRepository _repository;
+class CommunicationBloc extends Bloc<CommunicationEvent, CommunicationState> {
+  final ParentCommunicationRepository _repository;
 
-  CommunicationBloc({required ParentPortalRepository repository})
-    : _repository = repository,
-      super(const CommunicationState()) {
+  CommunicationBloc({
+    required ParentCommunicationRepository repository,
+  })  : _repository = repository,
+        super(const CommunicationState()) {
     on<CommunicationStarted>(_onStarted);
-    on<AnnouncementsSearchChanged>(_onSearch);
+    on<CommunicationRefreshRequested>(_onRefreshRequested);
   }
 
   Future<void> _onStarted(
     CommunicationStarted event,
     Emitter<CommunicationState> emit,
   ) async {
-    emit(state.copyWith(isLoading: true, errorMessage: null));
+    emit(state.copyWith(status: CommunicationStatus.loading));
     try {
-      final notifications = await _repository.getNotifications(
-        childId: event.childId,
-      );
-      final announcements = await _repository.getAnnouncements(
-        childId: event.childId,
-      );
-      final groups = await _repository.getWhatsappGroups(
-        childId: event.childId,
-      );
-
-      emit(
-        state.copyWith(
-          isLoading: false,
-          notifications: notifications,
-          announcements: announcements,
-          whatsappGroups: groups,
-        ),
-      );
-    } catch (error) {
-      emit(state.copyWith(isLoading: false, errorMessage: error.toString()));
+      final results = await Future.wait([
+        _repository.getNotifications(event.childId),
+        _repository.getAnnouncements(event.childId),
+        _repository.getWhatsAppGroups(event.childId),
+      ]);
+      
+      emit(state.copyWith(
+        status: CommunicationStatus.success,
+        notifications: results[0] as List<NotificationEntity>,
+        announcements: results[1] as List<AnnouncementEntity>,
+        whatsAppGroups: results[2] as List<WhatsAppGroupEntity>,
+      ));
+    } catch (e) {
+      emit(state.copyWith(
+        status: CommunicationStatus.failure,
+        errorMessage: e.toString(),
+      ));
     }
   }
 
-  Future<void> _onSearch(
-    AnnouncementsSearchChanged event,
+  Future<void> _onRefreshRequested(
+    CommunicationRefreshRequested event,
     Emitter<CommunicationState> emit,
   ) async {
-    emit(state.copyWith(searchQuery: event.query));
-    final announcements = await _repository.getAnnouncements(
-      search: event.query,
-    );
-    emit(state.copyWith(announcements: announcements));
+    add(CommunicationStarted(event.childId));
   }
 }

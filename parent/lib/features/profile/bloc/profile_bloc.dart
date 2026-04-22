@@ -1,101 +1,37 @@
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../portal_data/portal_data.dart';
+import 'package:mentorx_core/mentorx_core.dart';
 
 part 'profile_event.dart';
 part 'profile_state.dart';
 
-final class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
-  final ParentPortalRepository _repository;
-
-  ProfileBloc({required ParentPortalRepository repository})
-    : _repository = repository,
-      super(const ProfileState()) {
+class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
+  ProfileBloc() : super(const ProfileState()) {
     on<ProfileStarted>(_onStarted);
-    on<SettingsLanguageChanged>(_onLanguageChanged);
-    on<SettingsThemeChanged>(_onThemeChanged);
-    on<SettingsPushToggleChanged>(_onPushChanged);
-    on<SettingsSaved>(_onSaved);
+    on<ProfileSettingsUpdated>(_onSettingsUpdated);
   }
 
-  Future<void> _onStarted(
-    ProfileStarted event,
-    Emitter<ProfileState> emit,
-  ) async {
-    emit(state.copyWith(isLoading: true, errorMessage: null));
+  Future<void> _onStarted(ProfileStarted event, Emitter<ProfileState> emit) async {
+    emit(state.copyWith(status: ProfileStatus.loading));
     try {
-      final profile = await _repository.getProfile();
-      final settings = await _repository.getSettings();
-      emit(
-        state.copyWith(
-          isLoading: false,
-          profile: profile,
-          settings: settings,
-        ),
+      // Mocking parent profile data for now
+      // In a real app, this would come from an AuthenticationRepository or ProfileRepository
+      final mockParent = ParentEntity(
+        id: 'parent_1',
+        firstName: 'Parent',
+        lastName: 'User',
+        email: 'parent@user.com',
+        phoneNumber: '+1234567890',
+        status: ParentStatus.active,
+        createdAt: DateTime(2023),
+        updatedAt: DateTime(2023),
       );
-    } catch (error) {
-      emit(state.copyWith(isLoading: false, errorMessage: error.toString()));
+      emit(state.copyWith(status: ProfileStatus.success, profileData: mockParent));
+    } catch (e) {
+      emit(state.copyWith(status: ProfileStatus.failure, errorMessage: e.toString()));
     }
   }
 
-  void _onLanguageChanged(
-    SettingsLanguageChanged event,
-    Emitter<ProfileState> emit,
-  ) {
-    final current = state.settings;
-    if (current == null) {
-      return;
-    }
-    emit(
-      state.copyWith(
-        settings: current.copyWith(languageCode: event.languageCode),
-      ),
-    );
-  }
-
-  void _onThemeChanged(
-    SettingsThemeChanged event,
-    Emitter<ProfileState> emit,
-  ) {
-    final current = state.settings;
-    if (current == null) {
-      return;
-    }
-    emit(
-      state.copyWith(settings: current.copyWith(themeMode: event.themeMode)),
-    );
-  }
-
-  void _onPushChanged(
-    SettingsPushToggleChanged event,
-    Emitter<ProfileState> emit,
-  ) {
-    final current = state.settings;
-    if (current == null) {
-      return;
-    }
-    emit(
-      state.copyWith(
-        settings: current.copyWith(
-          pushNotificationsEnabled: event.enabled,
-        ),
-      ),
-    );
-  }
-
-  Future<void> _onSaved(SettingsSaved event, Emitter<ProfileState> emit) async {
-    final settings = state.settings;
-    if (settings == null) {
-      return;
-    }
-    emit(state.copyWith(isSaving: true));
-    await _repository.updateSettings(settings);
-    emit(
-      state.copyWith(
-        isSaving: false,
-        saveSuccessTick: state.saveSuccessTick + 1,
-      ),
-    );
+  Future<void> _onSettingsUpdated(ProfileSettingsUpdated event, Emitter<ProfileState> emit) async {
+    // Handle settings update
   }
 }

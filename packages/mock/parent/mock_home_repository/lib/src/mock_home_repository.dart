@@ -5,39 +5,27 @@ final class MockParentHomeRepository implements ParentHomeRepository {
   const MockParentHomeRepository();
 
   @override
-  Future<
-    List<
-      ({
-        String title,
-        String value,
-        String subtitle,
-        int colorValue,
-        int iconCodePoint,
-      })
-    >
-  >
-  getStats() async {
+  Future<ParentHomeSummaryEntity> getSummary(String studentId) async {
     await Future.delayed(const Duration(milliseconds: 500));
-    return MockParentDashboardGenerator.stats();
+    return MockParentDashboardGenerator.homeSummary();
   }
 
   @override
-  Future<List<({String subject, double performance})>>
-  getSubjectPerformance() async {
+  Future<List<ParentRecentActivityEntity>> getRecentActivity(
+    String studentId, {
+    int limit = 10,
+    int page = 1,
+  }) async {
     await Future.delayed(const Duration(milliseconds: 500));
-    return MockParentDashboardGenerator.subjectPerformance();
+    return MockParentDashboardGenerator.recentActivity(studentId);
   }
 
   @override
-  Future<List<({String title, String date, int iconCodePoint})>>
-  getRecentAchievements() async {
+  Future<List<AnnouncementEntity>> getAnnouncements(
+    String studentId, {
+    int limit = 3,
+  }) async {
     await Future.delayed(const Duration(milliseconds: 500));
-    return MockParentDashboardGenerator.recentAchievements();
-  }
-
-  @override
-  Future<String> getAiInsight() async {
-    await Future.delayed(const Duration(milliseconds: 500));
-    return MockParentDashboardGenerator.aiInsight();
+    return MockParentDashboardGenerator.announcements();
   }
 }

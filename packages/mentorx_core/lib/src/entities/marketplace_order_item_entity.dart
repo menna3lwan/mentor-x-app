@@ -1,4 +1,4 @@
-part of '../../mentorx_core.dart';
+part of 'package:mentorx_core/mentorx_core.dart';
 
 base class MarketplaceOrderItemEntity extends Equatable {
   final String id;
@@ -19,8 +19,7 @@ base class MarketplaceOrderItemEntity extends Equatable {
     this.itemTitle,
   });
 
-
-  static final placeholder = MarketplaceOrderItemEntity(
+  static const placeholder = MarketplaceOrderItemEntity(
     id: '',
     orderId: '',
     itemId: '',
@@ -39,4 +38,24 @@ base class MarketplaceOrderItemEntity extends Equatable {
         unitPrice,
         totalPrice,
       ];
+
+  MarketplaceOrderItemEntity copyWith({
+    String? id,
+    String? orderId,
+    String? itemId,
+    String? itemTitle,
+    int? quantity,
+    double? unitPrice,
+    double? totalPrice,
+  }) {
+    return MarketplaceOrderItemEntity(
+      id: id ?? this.id,
+      orderId: orderId ?? this.orderId,
+      itemId: itemId ?? this.itemId,
+      itemTitle: itemTitle ?? this.itemTitle,
+      quantity: quantity ?? this.quantity,
+      unitPrice: unitPrice ?? this.unitPrice,
+      totalPrice: totalPrice ?? this.totalPrice,
+    );
+  }
 }
