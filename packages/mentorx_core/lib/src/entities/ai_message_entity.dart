@@ -2,7 +2,7 @@ part of 'package:mentorx_core/mentorx_core.dart';
 
 enum AIMessageRole { user, assistant, system }
 
-base class AIMessageEntity extends Equatable {
+class AIMessageEntity extends Equatable {
   final String id;
   final String conversationId;
   final AIMessageRole role;

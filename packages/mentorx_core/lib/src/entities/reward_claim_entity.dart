@@ -2,7 +2,7 @@ part of 'package:mentorx_core/mentorx_core.dart';
 
 enum RewardClaimStatus { pending, approved, rejected, delivered }
 
-base class RewardClaimEntity extends Equatable {
+class RewardClaimEntity extends Equatable {
   final String id;
   final String rewardItemId;
   final String? rewardTitle;

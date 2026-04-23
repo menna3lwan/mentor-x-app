@@ -1,6 +1,6 @@
 part of 'package:mentorx_core/mentorx_core.dart';
 
-base class MarketplaceItemEntity extends Equatable {
+class MarketplaceItemEntity extends Equatable {
   final String id;
   final String title;
   final String? description;

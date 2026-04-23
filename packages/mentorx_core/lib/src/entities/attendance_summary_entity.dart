@@ -1,7 +1,7 @@
 part of 'package:mentorx_core/mentorx_core.dart';
 
 
-base class AttendanceSummaryEntity extends Equatable {
+class AttendanceSummaryEntity extends Equatable {
   final int totalSessions;
   final int present;
   final int absent;

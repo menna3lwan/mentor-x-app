@@ -202,7 +202,7 @@ final class RepositoriesFactory {
         return MockHomeRepository(delay: Env.mockDelayDuration);
       case RepositoryMode.prod:
         final httpClient = await _initHttpClient();
-        return DioHomeRepository(httpClient: httpClient);
+        return DioStudentHomeRepository(httpClient: httpClient);
     }
   }
 

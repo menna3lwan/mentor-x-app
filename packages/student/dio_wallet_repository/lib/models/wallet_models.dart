@@ -4,12 +4,40 @@ final class WalletSummaryModel extends WalletSummaryEntity {
   const WalletSummaryModel({
     required super.walletBalance,
     required super.points,
+    super.spentThisMonth = 0,
+    super.totalCreditsThisMonth = 0,
+    super.totalTransactions = 0,
   });
 
   factory WalletSummaryModel.fromJson(Map<String, dynamic> json) {
     return WalletSummaryModel(
       walletBalance: _toDouble(json['walletBalance'] ?? json['wallet_balance']),
-      points: _toInt(json['totalPoints'] ?? json['total_points']),
+      points: _toInt(json['totalPoints'] ?? json['total_points'] ?? json['points']),
+      spentThisMonth: _toDouble(json['spentThisMonth'] ?? json['spent_this_month']),
+      totalCreditsThisMonth: _toDouble(
+        json['totalCreditsThisMonth'] ?? json['total_credits_this_month'],
+      ),
+      totalTransactions: _toInt(
+        json['totalTransactions'] ?? json['total_transactions'],
+      ),
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'wallet_balance': walletBalance,
+        'total_points': points,
+        'spent_this_month': spentThisMonth,
+        'total_credits_this_month': totalCreditsThisMonth,
+        'total_transactions': totalTransactions,
+      };
+
+  factory WalletSummaryModel.fromEntity(WalletSummaryEntity entity) {
+    return WalletSummaryModel(
+      walletBalance: entity.walletBalance,
+      points: entity.points,
+      spentThisMonth: entity.spentThisMonth,
+      totalCreditsThisMonth: entity.totalCreditsThisMonth,
+      totalTransactions: entity.totalTransactions,
     );
   }
 }
@@ -33,11 +61,30 @@ final class WalletTransactionModel extends WalletTransactionEntity {
       amount: _toDouble(json['amount']),
       balanceAfter: _toDouble(json['balanceAfter'] ?? json['balance_after']),
       description: (json['description'] ?? json['reason'] ?? '') as String,
-      createdAt:
-          DateTime.tryParse(
+      createdAt: DateTime.tryParse(
             (json['createdAt'] ?? json['created_at'])?.toString() ?? '',
           ) ??
           DateTime.now(),
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'type': transactionType.name,
+        'amount': amount,
+        'balance_after': balanceAfter,
+        'description': description,
+        'created_at': createdAt.toIso8601String(),
+      };
+
+  factory WalletTransactionModel.fromEntity(WalletTransactionEntity entity) {
+    return WalletTransactionModel(
+      id: entity.id,
+      transactionType: entity.transactionType,
+      amount: entity.amount,
+      balanceAfter: entity.balanceAfter,
+      description: entity.description,
+      createdAt: entity.createdAt,
     );
   }
 
@@ -81,11 +128,36 @@ final class PaymentModel extends PaymentEntity {
       expiresAt: DateTime.tryParse(
         (json['expiresAt'] ?? json['expires_at'])?.toString() ?? '',
       ),
-      createdAt:
-          DateTime.tryParse(
+      createdAt: DateTime.tryParse(
             (json['createdAt'] ?? json['created_at'])?.toString() ?? '',
           ) ??
           DateTime.now(),
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'amount': amount,
+        'currency': currency,
+        'method': method.name,
+        'type': paymentType.name,
+        'status': status.name,
+        'reference': reference,
+        'expires_at': expiresAt?.toIso8601String(),
+        'created_at': createdAt.toIso8601String(),
+      };
+
+  factory PaymentModel.fromEntity(PaymentEntity entity) {
+    return PaymentModel(
+      id: entity.id,
+      amount: entity.amount,
+      currency: entity.currency,
+      method: entity.method,
+      paymentType: entity.paymentType,
+      status: entity.status,
+      reference: entity.reference,
+      expiresAt: entity.expiresAt,
+      createdAt: entity.createdAt,
     );
   }
 
@@ -137,6 +209,26 @@ final class PointsTransactionModel extends PointsTransactionEntity {
           DateTime.now(),
       typeBadge:
           (json['typeBadge'] ?? json['type_badge'] ?? json['type'])?.toString(),
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'amount': amount,
+        'balance_after': balanceAfter,
+        'description': description,
+        'created_at': createdAt.toIso8601String(),
+        'type_badge': typeBadge,
+      };
+
+  factory PointsTransactionModel.fromEntity(PointsTransactionEntity entity) {
+    return PointsTransactionModel(
+      id: entity.id,
+      amount: entity.amount,
+      balanceAfter: entity.balanceAfter,
+      description: entity.description,
+      createdAt: entity.createdAt,
+      typeBadge: entity.typeBadge,
     );
   }
 }

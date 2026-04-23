@@ -1,6 +1,6 @@
 part of 'package:mentorx_core/mentorx_core.dart';
 
-base class GovernorateEntity extends Equatable {
+class GovernorateEntity extends Equatable {
   final String id;
   final String name;
 

@@ -11,6 +11,7 @@ final class MentorXTextFormField extends StatefulWidget {
   final void Function(String)? onChanged;
   final void Function(String)? onFieldSubmitted;
   final int? maxLength;
+  final int? maxLines;
 
   const MentorXTextFormField({
     super.key,
@@ -24,6 +25,7 @@ final class MentorXTextFormField extends StatefulWidget {
     this.onChanged,
     this.onFieldSubmitted,
     this.maxLength,
+    this.maxLines = 1,
   });
 
   @override
@@ -49,6 +51,7 @@ class _MentorXTextFormFieldState extends State<MentorXTextFormField> {
       onChanged: widget.onChanged,
       onFieldSubmitted: widget.onFieldSubmitted,
       maxLength: widget.maxLength,
+      maxLines: widget.maxLines,
       obscureText: widget.isPassword ? obscure : false,
       cursorColor: brandPrimary,
       style: TextStyle(

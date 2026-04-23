@@ -1,6 +1,6 @@
 part of 'package:mentorx_core/mentorx_core.dart';
 
-base class AIConversationEntity extends Equatable {
+class AIConversationEntity extends Equatable {
   final String id;
   final String? title;
   final String? subject;

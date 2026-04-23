@@ -2,7 +2,7 @@ part of 'package:mentorx_core/mentorx_core.dart';
 
 enum QuizAttemptStatus { notStarted, inProgress, submitted, graded, abandoned }
 
-base class QuizAttemptEntity extends Equatable {
+class QuizAttemptEntity extends Equatable {
   final String id;
   final String quizId;
   final String? courseId;

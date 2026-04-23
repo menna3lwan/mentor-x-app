@@ -1,6 +1,6 @@
 part of 'package:mentorx_core/mentorx_core.dart';
 
-base class ParentHomeSummaryEntity extends Equatable {
+class ParentHomeSummaryEntity extends Equatable {
   final ParentHomeOverviewEntity overview;
   final List<SessionEntity> upcomingSessions;
   final List<QuizAttemptEntity> recentGrades;
@@ -49,7 +49,7 @@ base class ParentHomeSummaryEntity extends Equatable {
   }
 }
 
-base class ParentHomeOverviewEntity extends Equatable {
+class ParentHomeOverviewEntity extends Equatable {
   final int unpaidInvoicesCount;
   final double avgAttendanceRate;
   final double avgGrade;
@@ -92,7 +92,7 @@ base class ParentHomeOverviewEntity extends Equatable {
   }
 }
 
-base class ParentChildSummaryEntity extends Equatable {
+class ParentChildSummaryEntity extends Equatable {
   final String childId;
   final String name;
   final String? profileImageUrl;
@@ -150,7 +150,7 @@ base class ParentChildSummaryEntity extends Equatable {
     );
   }
 }
-base class ParentChildDashboardSummaryEntity extends Equatable {
+class ParentChildDashboardSummaryEntity extends Equatable {
   final ParentChildEntity child;
   final ParentHomeAttendanceSummary attendance;
   final ParentHomeAcademicSummary academics;
@@ -201,7 +201,7 @@ base class ParentChildDashboardSummaryEntity extends Equatable {
   }
 }
 
-base class ParentHomeAttendanceSummary extends Equatable {
+class ParentHomeAttendanceSummary extends Equatable {
   final double attendanceRate;
   final int totalDays;
   final int attendedDays;
@@ -244,7 +244,7 @@ base class ParentHomeAttendanceSummary extends Equatable {
   }
 }
 
-base class ParentHomeAcademicSummary extends Equatable {
+class ParentHomeAcademicSummary extends Equatable {
   final double averageGrade;
   final double gradeTrend;
   final int enrolledCoursesCount;
@@ -293,7 +293,7 @@ base class ParentHomeAcademicSummary extends Equatable {
   }
 }
 
-base class ParentHomeFinancialSummary extends Equatable {
+class ParentHomeFinancialSummary extends Equatable {
   final double walletBalance;
   final double spentThisMonth;
   final String currency;
@@ -331,7 +331,7 @@ base class ParentHomeFinancialSummary extends Equatable {
   }
 }
 
-base class ParentRecentActivityEntity extends Equatable {
+class ParentRecentActivityEntity extends Equatable {
   final String id;
   final String type;
   final String title;

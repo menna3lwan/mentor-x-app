@@ -3,7 +3,7 @@ part of 'package:mentorx_core/mentorx_core.dart';
 enum QuizQuestionType { multipleChoice, trueFalse, shortAnswer, essay, fillInTheBlank }
 
 
-base class QuizQuestionEntity extends Equatable {
+class QuizQuestionEntity extends Equatable {
   final String id;
   final String questionText;
   final String? questionImageUrl;

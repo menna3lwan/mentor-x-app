@@ -8,7 +8,7 @@ enum CodeType {
   discountAmount
 }
 
-base class CodeRedemptionEntity extends Equatable {
+class CodeRedemptionEntity extends Equatable {
   final String id;
   final String code;
   final CodeType codeType;

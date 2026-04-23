@@ -66,21 +66,37 @@ final class ParentModel extends ParentEntity {
     );
   }
 
-  static Map<String, dynamic> toJson(ParentEntity entity) {
-    return {
-      'id': entity.id,
-      'firstName': entity.firstName,
-      'lastName': entity.lastName,
-      'email': entity.email,
-      'phoneNumber': entity.phoneNumber,
-      'profileImageUrl': entity.profileImageUrl,
-      'status': entity.status.name,
-      'childrenCount': entity.childrenCount,
-      'walletBalance': entity.walletBalance,
-      'totalPoints': entity.totalPoints,
-      'metadata': entity.metadata,
-      'createdAt': entity.createdAt.toIso8601String(),
-      'updatedAt': entity.updatedAt.toIso8601String(),
-    };
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'first_name': firstName,
+        'last_name': lastName,
+        'email': email,
+        'phone_number': phoneNumber,
+        'profile_image_url': profileImageUrl,
+        'status': status.name,
+        'children_count': childrenCount,
+        'wallet_balance': walletBalance,
+        'total_points': totalPoints,
+        'metadata': metadata,
+        'created_at': createdAt.toIso8601String(),
+        'updated_at': updatedAt.toIso8601String(),
+      };
+
+  factory ParentModel.fromEntity(ParentEntity entity) {
+    return ParentModel(
+      id: entity.id,
+      firstName: entity.firstName,
+      lastName: entity.lastName,
+      email: entity.email,
+      phoneNumber: entity.phoneNumber,
+      status: entity.status,
+      createdAt: entity.createdAt,
+      updatedAt: entity.updatedAt,
+      profileImageUrl: entity.profileImageUrl,
+      childrenCount: entity.childrenCount,
+      walletBalance: entity.walletBalance,
+      totalPoints: entity.totalPoints,
+      metadata: entity.metadata,
+    );
   }
 }

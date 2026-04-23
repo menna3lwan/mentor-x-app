@@ -3,7 +3,7 @@ part of 'package:mentorx_core/mentorx_core.dart';
 enum PointsTransactionType { earned, redeemed, expired, deducted }
 
 
-base class PointsTransactionEntity extends Equatable {
+class PointsTransactionEntity extends Equatable {
   final String id;
   final int amount;
   final int balanceAfter;

@@ -2,7 +2,7 @@ part of 'package:mentorx_core/mentorx_core.dart';
 
 enum ParentStatus { active, inactive, pending, suspended }
 
-base class ParentEntity extends Equatable {
+class ParentEntity extends Equatable {
   final String id;
   final String firstName;
   final String lastName;

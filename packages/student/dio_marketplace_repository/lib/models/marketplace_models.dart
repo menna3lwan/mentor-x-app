@@ -12,6 +12,18 @@ final class MarketplaceCategoryModel extends MarketplaceCategoryEntity {
       name: json['name'] ?? '',
     );
   }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'name': name,
+      };
+
+  factory MarketplaceCategoryModel.fromEntity(MarketplaceCategoryEntity entity) {
+    return MarketplaceCategoryModel(
+      id: entity.id,
+      name: entity.name,
+    );
+  }
 }
 
 final class MarketplaceItemModel extends MarketplaceItemEntity {
@@ -45,6 +57,34 @@ final class MarketplaceItemModel extends MarketplaceItemEntity {
       categoryId: json['category_id']?.toString(),
     );
   }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'title': title,
+        'price': price,
+        'description': description,
+        'old_price': oldPrice,
+        'image_urls': imageUrls,
+        'is_active': isActive,
+        'is_featured': isFeatured,
+        'stock_quantity': stockQuantity,
+        'category_id': categoryId,
+      };
+
+  factory MarketplaceItemModel.fromEntity(MarketplaceItemEntity entity) {
+    return MarketplaceItemModel(
+      id: entity.id,
+      title: entity.title,
+      price: entity.price,
+      description: entity.description,
+      oldPrice: entity.oldPrice,
+      imageUrls: entity.imageUrls,
+      isActive: entity.isActive,
+      isFeatured: entity.isFeatured,
+      stockQuantity: entity.stockQuantity,
+      categoryId: entity.categoryId,
+    );
+  }
 }
 
 final class MarketplaceOrderModel extends MarketplaceOrderEntity {
@@ -74,6 +114,32 @@ final class MarketplaceOrderModel extends MarketplaceOrderEntity {
       deliveryAddress: json['delivery_address'],
       deliveryPhone: json['delivery_phone'],
       deliveryNotes: json['delivery_notes'],
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'order_number': orderNumber,
+        'total_amount': totalAmount,
+        'status': status.name,
+        'created_at': createdAt.toIso8601String(),
+        'item_count': itemCount,
+        'delivery_address': deliveryAddress,
+        'delivery_phone': deliveryPhone,
+        'delivery_notes': deliveryNotes,
+      };
+
+  factory MarketplaceOrderModel.fromEntity(MarketplaceOrderEntity entity) {
+    return MarketplaceOrderModel(
+      id: entity.id,
+      orderNumber: entity.orderNumber,
+      totalAmount: entity.totalAmount,
+      status: entity.status,
+      createdAt: entity.createdAt,
+      itemCount: entity.itemCount,
+      deliveryAddress: entity.deliveryAddress,
+      deliveryPhone: entity.deliveryPhone,
+      deliveryNotes: entity.deliveryNotes,
     );
   }
 }

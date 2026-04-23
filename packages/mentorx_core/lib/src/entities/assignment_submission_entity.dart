@@ -3,7 +3,7 @@ part of 'package:mentorx_core/mentorx_core.dart';
 enum SubmissionStatus { pending, submitted, graded, late, rejected }
 
 
-base class AssignmentSubmissionEntity extends Equatable {
+class AssignmentSubmissionEntity extends Equatable {
   final String id;
   final String assignmentId;
   final String? assignmentTitle;

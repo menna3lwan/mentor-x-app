@@ -2,7 +2,7 @@ part of 'package:mentorx_core/mentorx_core.dart';
 
 enum WalletTransactionType { deposit, withdrawal, payment, refund, reward }
 
-base class WalletTransactionEntity extends Equatable {
+class WalletTransactionEntity extends Equatable {
   final String id;
   final WalletTransactionType transactionType;
   final double amount;

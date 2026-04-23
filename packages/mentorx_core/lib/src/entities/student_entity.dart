@@ -6,7 +6,7 @@ enum Gender { male, female }
 
 enum StudyType { center, online, hybrid }
 
-base class StudentEntity extends Equatable {
+class StudentEntity extends Equatable {
   final String id;
   final String firstName;
   final String lastName;

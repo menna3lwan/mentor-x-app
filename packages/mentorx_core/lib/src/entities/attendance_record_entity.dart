@@ -4,7 +4,7 @@ enum AttendanceStatus { present, absent, late, excused }
 
 enum CheckInMethod { manual, qr, nfc, biometric }
 
-base class AttendanceRecordEntity extends Equatable {
+class AttendanceRecordEntity extends Equatable {
   final String id;
   final AttendanceStatus status;
   final DateTime date;

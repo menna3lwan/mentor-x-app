@@ -3,7 +3,7 @@ part of 'package:mentorx_core/mentorx_core.dart';
 enum ParentChildLinkStatus { pending, linked, rejected, unlinked }
 
 
-base class ParentChildEntity extends Equatable {
+class ParentChildEntity extends Equatable {
   final String id;
   final String name;
   final String? studentCode;

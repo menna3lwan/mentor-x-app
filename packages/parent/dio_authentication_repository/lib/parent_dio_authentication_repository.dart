@@ -259,7 +259,7 @@ final class DioAuthenticationRepository
 
   Future<void> _cacheUser(ParentEntity user) async {
     try {
-      final jsonData = json.encode(ParentModel.toJson(user));
+      final jsonData = json.encode(ParentModel.fromEntity(user).toJson());
       await cacheRepository.put(CacheKeys.user, jsonData);
     } catch (e, s) {
       _logger.error('Failed to cache user', e, s);

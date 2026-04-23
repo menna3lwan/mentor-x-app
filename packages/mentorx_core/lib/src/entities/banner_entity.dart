@@ -1,6 +1,6 @@
 part of 'package:mentorx_core/mentorx_core.dart';
 
-base class BannerEntity extends Equatable {
+class BannerEntity extends Equatable {
   final String id;
   final String imageUrl;
   final String? deepLink;

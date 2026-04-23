@@ -1,6 +1,6 @@
 part of 'package:mentorx_core/mentorx_core.dart';
 
-base class CenterEntity extends Equatable {
+class CenterEntity extends Equatable {
   final String id;
   final String name;
 

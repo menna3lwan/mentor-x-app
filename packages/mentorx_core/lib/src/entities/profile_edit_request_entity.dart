@@ -2,7 +2,7 @@ part of 'package:mentorx_core/mentorx_core.dart';
 
 enum EditRequestStatus { pending, approved, rejected }
 
-base class ProfileEditRequestEntity extends Equatable {
+class ProfileEditRequestEntity extends Equatable {
   final String id;
   final String fieldName;
   final String oldValue;

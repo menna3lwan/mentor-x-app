@@ -1,6 +1,6 @@
 part of 'package:mentorx_core/mentorx_core.dart';
 
-base class WalletSummaryEntity extends Equatable {
+class WalletSummaryEntity extends Equatable {
   final double walletBalance;
   final int points;
   final double spentThisMonth;

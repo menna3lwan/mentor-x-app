@@ -31,20 +31,33 @@ final class ShoppingCartPageBloc
           ShoppingCartPageState,
           ShoppingCartPagePresentationEvent
         > {
-  ShoppingCartPageBloc({required this.marketplaceRepository})
-    : super(ShoppingCartPageState.initial) {
+  ShoppingCartPageBloc({
+    required this.marketplaceRepository,
+    required this.walletRepository,
+  }) : super(ShoppingCartPageState.initial) {
     on<ShoppingCartPageLoadEvent>(_onLoad);
     on<ShoppingCartPagePlaceOrderEvent>(_onPlaceOrder);
   }
 
   final MarketplaceRepository marketplaceRepository;
+  final WalletRepository walletRepository;
 
   Future<void> _onLoad(
     ShoppingCartPageLoadEvent event,
     Emitter<ShoppingCartPageState> emit,
   ) async {
     emit(state.copyWith(loadingState: LoadingState.loading));
-    emit(state.copyWith(loadingState: LoadingState.loaded));
+    try {
+      final walletSummary = await walletRepository.getSummary();
+      emit(
+        state.copyWith(
+          loadingState: LoadingState.loaded,
+          walletSummary: walletSummary,
+        ),
+      );
+    } catch (e) {
+      emit(state.copyWith(loadingState: LoadingState.error));
+    }
   }
 
   Future<void> _onPlaceOrder(

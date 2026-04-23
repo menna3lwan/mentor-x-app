@@ -1,6 +1,6 @@
 part of 'package:mentorx_core/mentorx_core.dart';
 
-base class ParentStudentLookupEntity extends Equatable {
+class ParentStudentLookupEntity extends Equatable {
   final String studentId;
   final String maskedName;
   final String gradeName;
@@ -28,7 +28,7 @@ base class ParentStudentLookupEntity extends Equatable {
       ];
 }
 
-base class ParentRegistrationResult extends Equatable {
+class ParentRegistrationResult extends Equatable {
   final String userId;
   final String status;
   final ParentChildLinkStatus childLinkStatus;

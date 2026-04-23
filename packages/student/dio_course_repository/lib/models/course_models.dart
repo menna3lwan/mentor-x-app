@@ -23,6 +23,26 @@ final class CourseSummaryModel extends CourseSummaryEntity {
       price: _toDoubleOrNull(json['price']),
     );
   }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'title': title,
+        'thumbnail_url': thumbnailUrl,
+        'enrolled_count': enrolledCount,
+        'progress_percent': progressPercent,
+        'price': price,
+      };
+
+  factory CourseSummaryModel.fromEntity(CourseSummaryEntity entity) {
+    return CourseSummaryModel(
+      id: entity.id,
+      title: entity.title,
+      thumbnailUrl: entity.thumbnailUrl,
+      enrolledCount: entity.enrolledCount,
+      progressPercent: entity.progressPercent,
+      price: entity.price,
+    );
+  }
 }
 
 final class CourseModel extends CourseEntity {
@@ -82,6 +102,54 @@ final class CourseModel extends CourseEntity {
     );
   }
 
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'title': title,
+        'subtitle': subtitle,
+        'image_url': imageUrl,
+        'price': price,
+        'old_price': oldPrice,
+        'is_free': isFree,
+        'is_active': isActive,
+        'enrolled_count': enrolledCount,
+        'type': type.name,
+        'ordering_mode': orderingMode.name,
+        'duration_days': durationDays,
+        'points_reward': pointsReward,
+        'grade_id': gradeId,
+        'category_id': categoryId,
+        'total_sessions': totalSessions,
+        'total_videos': totalVideos,
+        'total_duration_minutes': totalDurationMinutes,
+        'featured': featured,
+        'pinned': pinned,
+      };
+
+  factory CourseModel.fromEntity(CourseEntity entity) {
+    return CourseModel(
+      id: entity.id,
+      title: entity.title,
+      subtitle: entity.subtitle,
+      imageUrl: entity.imageUrl,
+      price: entity.price,
+      oldPrice: entity.oldPrice,
+      isFree: entity.isFree,
+      isActive: entity.isActive,
+      enrolledCount: entity.enrolledCount,
+      type: entity.type,
+      orderingMode: entity.orderingMode,
+      durationDays: entity.durationDays,
+      pointsReward: entity.pointsReward,
+      gradeId: entity.gradeId,
+      categoryId: entity.categoryId,
+      totalSessions: entity.totalSessions,
+      totalVideos: entity.totalVideos,
+      totalDurationMinutes: entity.totalDurationMinutes,
+      featured: entity.featured,
+      pinned: entity.pinned,
+    );
+  }
+
   static CourseType _parseCourseType(dynamic value) {
     final str = value?.toString().toLowerCase();
     return CourseType.values.firstWhere(
@@ -97,6 +165,36 @@ final class CourseModel extends CourseEntity {
     return OrderingMode.values.firstWhere(
       (e) => e.name == str,
       orElse: () => OrderingMode.free,
+    );
+  }
+}
+
+final class CategoryModel extends CategoryEntity {
+  const CategoryModel({
+    required super.id,
+    required super.name,
+    super.gradeId,
+  });
+
+  factory CategoryModel.fromJson(Map<String, dynamic> json) {
+    return CategoryModel(
+      id: json['id']?.toString() ?? '',
+      name: json['name'] as String? ?? '',
+      gradeId: json['gradeId']?.toString() ?? json['grade_id']?.toString(),
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'name': name,
+        'grade_id': gradeId,
+      };
+
+  factory CategoryModel.fromEntity(CategoryEntity entity) {
+    return CategoryModel(
+      id: entity.id,
+      name: entity.name,
+      gradeId: entity.gradeId,
     );
   }
 }
@@ -126,20 +224,4 @@ bool _toBool(dynamic value, {bool defaultValue = false}) {
   if (normalized == 'true' || normalized == '1') return true;
   if (normalized == 'false' || normalized == '0') return false;
   return defaultValue;
-}
-
-final class CategoryModel extends CategoryEntity {
-  const CategoryModel({
-    required super.id,
-    required super.name,
-    super.gradeId,
-  });
-
-  factory CategoryModel.fromJson(Map<String, dynamic> json) {
-    return CategoryModel(
-      id: json['id']?.toString() ?? '',
-      name: json['name'] as String? ?? '',
-      gradeId: json['gradeId']?.toString() ?? json['grade_id']?.toString(),
-    );
-  }
 }

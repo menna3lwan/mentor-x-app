@@ -23,6 +23,26 @@ final class CourseModel extends CourseSummaryEntity {
       enrolledCount: _toInt(json['enrolledCount'] ?? json['enrolled_count']),
     );
   }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'title': title,
+        'thumbnail_url': thumbnailUrl,
+        'progress_percent': progressPercent,
+        'price': price,
+        'enrolled_count': enrolledCount,
+      };
+
+  factory CourseModel.fromEntity(CourseSummaryEntity entity) {
+    return CourseModel(
+      id: entity.id,
+      title: entity.title,
+      thumbnailUrl: entity.thumbnailUrl,
+      progressPercent: entity.progressPercent,
+      price: entity.price,
+      enrolledCount: entity.enrolledCount,
+    );
+  }
 }
 
 final class BannerModel extends BannerEntity {
@@ -40,6 +60,22 @@ final class BannerModel extends BannerEntity {
       title: (json['title'] ?? json['name'])?.toString(),
       deepLink: (json['deepLink'] ?? json['deep_link'])?.toString() ??
           (json['actionValue'] ?? json['action_value'])?.toString(),
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'image_url': imageUrl,
+        'title': title,
+        'deep_link': deepLink,
+      };
+
+  factory BannerModel.fromEntity(BannerEntity entity) {
+    return BannerModel(
+      id: entity.id,
+      imageUrl: entity.imageUrl,
+      title: entity.title,
+      deepLink: entity.deepLink,
     );
   }
 }
@@ -60,12 +96,31 @@ final class AnnouncementModel extends AnnouncementEntity {
       title: json['title']?.toString() ?? '',
       content: json['content']?.toString() ?? json['preview']?.toString() ?? '',
       preview: json['preview']?.toString() ?? json['content']?.toString() ?? '',
-      createdAt:
-          DateTime.tryParse(
+      createdAt: DateTime.tryParse(
             (json['createdAt'] ?? json['created_at'])?.toString() ?? '',
           ) ??
           DateTime.now(),
       isPinned: _toBool(json['isPinned'] ?? json['is_pinned']),
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'title': title,
+        'content': content,
+        'preview': preview,
+        'created_at': createdAt.toIso8601String(),
+        'is_pinned': isPinned,
+      };
+
+  factory AnnouncementModel.fromEntity(AnnouncementEntity entity) {
+    return AnnouncementModel(
+      id: entity.id,
+      title: entity.title,
+      content: entity.content,
+      preview: entity.preview,
+      createdAt: entity.createdAt,
+      isPinned: entity.isPinned,
     );
   }
 }
@@ -74,14 +129,40 @@ final class WalletSummaryModel extends WalletSummaryEntity {
   const WalletSummaryModel({
     required super.walletBalance,
     required super.points,
+    super.spentThisMonth = 0,
+    super.totalCreditsThisMonth = 0,
+    super.totalTransactions = 0,
   });
 
   factory WalletSummaryModel.fromJson(Map<String, dynamic> json) {
-    final balance = _toDouble(json['walletBalance'] ?? json['wallet_balance']);
-    final points = _toInt(json['totalPoints'] ?? json['total_points']);
     return WalletSummaryModel(
-      walletBalance: balance,
-      points: points,
+      walletBalance: _toDouble(json['walletBalance'] ?? json['wallet_balance']),
+      points: _toInt(json['totalPoints'] ?? json['total_points'] ?? json['points']),
+      spentThisMonth: _toDouble(json['spentThisMonth'] ?? json['spent_this_month']),
+      totalCreditsThisMonth: _toDouble(
+        json['totalCreditsThisMonth'] ?? json['total_credits_this_month'],
+      ),
+      totalTransactions: _toInt(
+        json['totalTransactions'] ?? json['total_transactions'],
+      ),
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'wallet_balance': walletBalance,
+        'total_points': points,
+        'spent_this_month': spentThisMonth,
+        'total_credits_this_month': totalCreditsThisMonth,
+        'total_transactions': totalTransactions,
+      };
+
+  factory WalletSummaryModel.fromEntity(WalletSummaryEntity entity) {
+    return WalletSummaryModel(
+      walletBalance: entity.walletBalance,
+      points: entity.points,
+      spentThisMonth: entity.spentThisMonth,
+      totalCreditsThisMonth: entity.totalCreditsThisMonth,
+      totalTransactions: entity.totalTransactions,
     );
   }
 }
@@ -95,7 +176,7 @@ int _toInt(dynamic value) {
 double _toDouble(dynamic value) {
   if (value is double) return value;
   if (value is num) return value.toDouble();
-  return double.tryParse(value?.toString() ?? '') ?? 0;
+  return double.tryParse(value?.toString() ?? '') ?? 0.0;
 }
 
 double? _toDoubleOrNull(dynamic value) {

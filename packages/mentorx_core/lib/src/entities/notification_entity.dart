@@ -2,7 +2,7 @@ part of 'package:mentorx_core/mentorx_core.dart';
 
 enum NotificationType { info, success, warning, error, course, quiz, announcement, system }
 
-base class NotificationEntity extends Equatable {
+class NotificationEntity extends Equatable {
   final String id;
   final String title;
   final String message;

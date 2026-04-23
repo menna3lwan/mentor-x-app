@@ -2,7 +2,7 @@ part of 'package:mentorx_core/mentorx_core.dart';
 
 enum VerificationStatus { pending, verified, rejected }
 
-base class NationalIdVerificationEntity extends Equatable {
+class NationalIdVerificationEntity extends Equatable {
   final VerificationStatus status;
   final String? idCardPhotoUrl;
   final DateTime? verifiedAt;

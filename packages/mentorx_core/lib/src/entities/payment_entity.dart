@@ -6,7 +6,7 @@ enum PaymentType { courseEnrollment, walletTopup }
 
 enum PaymentStatus { pending, success, failed, expired, processing }
 
-base class PaymentEntity extends Equatable {
+class PaymentEntity extends Equatable {
   final String id;
   final double amount;
   final String currency;

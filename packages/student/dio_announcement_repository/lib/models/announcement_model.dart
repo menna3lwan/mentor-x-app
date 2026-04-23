@@ -34,4 +34,38 @@ final class AnnouncementModel extends AnnouncementEntity {
       preview: json['preview'] ?? json['summary'],
     );
   }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'title': title,
+        'content': content,
+        'created_at': createdAt.toIso8601String(),
+        'image_url': imageUrl,
+        'action_url': actionUrl,
+        'action_text': actionText,
+        'is_featured': isFeatured,
+        'is_pinned': isPinned,
+        'priority': priority,
+        'expire_at': expireAt?.toIso8601String(),
+        'tenant_name': tenantName,
+        'preview': preview,
+      };
+
+  factory AnnouncementModel.fromEntity(AnnouncementEntity entity) {
+    return AnnouncementModel(
+      id: entity.id,
+      title: entity.title,
+      content: entity.content,
+      createdAt: entity.createdAt,
+      imageUrl: entity.imageUrl,
+      actionUrl: entity.actionUrl,
+      actionText: entity.actionText,
+      isFeatured: entity.isFeatured,
+      isPinned: entity.isPinned,
+      priority: entity.priority,
+      expireAt: entity.expireAt,
+      tenantName: entity.tenantName,
+      preview: entity.preview,
+    );
+  }
 }

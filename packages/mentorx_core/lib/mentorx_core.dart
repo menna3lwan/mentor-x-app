@@ -15,8 +15,8 @@ part 'src/utils/mentorx_pagination_info.dart';
 part 'src/utils/parent_exception.dart';
 part 'src/utils/auth_rate_limiter.dart';
 part 'src/utils/security_validator.dart';
-part 'src/utils/data_parsing_mixin.dart';
 part 'src/utils/repository_mode.dart';
+part 'src/utils/data_parsing_mixin.dart';
 
 // ——— Clients ———
 part 'src/clients/http_client.dart';
@@ -44,12 +44,12 @@ part 'src/entities/parent_registration_entities.dart';
 
 // Learning
 part 'src/entities/grade_entity.dart';
-part 'src/entities/category_entity.dart'; // This entity's class should be 'base class CategoryEntity'
+part 'src/entities/category_entity.dart';
 part 'src/entities/course_entity.dart';
-part 'src/entities/course_summary_entity.dart'; // This entity's class should be 'base class CourseSummaryEntity'
-part 'src/entities/session_entity.dart'; // This entity's class should be 'base class SessionEntity'
-part 'src/entities/session_item_entity.dart'; // This entity's class should be 'base class SessionItemEntity'
-part 'src/entities/enrollment_entity.dart'; // This entity's class should be 'base class EnrollmentEntity'
+part 'src/entities/course_summary_entity.dart';
+part 'src/entities/session_entity.dart';
+part 'src/entities/session_item_entity.dart';
+part 'src/entities/enrollment_entity.dart';
 
 // Home / Dashboard
 part 'src/entities/banner_entity.dart';

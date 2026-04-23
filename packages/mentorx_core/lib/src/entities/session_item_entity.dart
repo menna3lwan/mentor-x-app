@@ -3,7 +3,7 @@ part of 'package:mentorx_core/mentorx_core.dart';
 enum SessionItemType { video, document, quiz, assignment, link }
 
 
-base class SessionItemEntity extends Equatable {
+class SessionItemEntity extends Equatable {
   final String id;
   final String sessionId;
   final String title;
