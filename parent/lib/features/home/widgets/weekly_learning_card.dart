@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mentorx_ui/mentorx_ui.dart';
 
 class WeeklyLearningCard extends StatelessWidget {
   const WeeklyLearningCard({super.key});
@@ -8,7 +9,7 @@ class WeeklyLearningCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.backgroundSecondaryColor,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -28,7 +29,7 @@ class WeeklyLearningCard extends StatelessWidget {
                 width: 25,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: Colors.blue,
+                  color: context.brandPrimaryColor,
                   borderRadius: BorderRadius.circular(6),
                 ),
               ),

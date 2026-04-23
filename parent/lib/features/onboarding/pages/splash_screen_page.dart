@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/blocs/app_authentication_cubit/app_authentication_cubit.dart';
 import '../../../core/routing/app_routes.dart';
@@ -31,15 +32,15 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: Colors.white,
+    return Scaffold(
+      backgroundColor: context.backgroundSecondaryColor,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.school_rounded, size: 100, color: Color(0xFF1E293B)),
+            Icon(Icons.school_rounded, size: 100, color: context.textPrimaryColor),
             SizedBox(height: 24),
-            CircularProgressIndicator(color: Color(0xFF1E293B)),
+            CircularProgressIndicator(color: context.textPrimaryColor),
           ],
         ),
       ),

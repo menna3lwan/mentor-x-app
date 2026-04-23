@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mentorx_ui/mentorx_ui.dart';
 
 class StudentDataCard extends StatelessWidget {
   const StudentDataCard({super.key});
@@ -10,21 +11,21 @@ class StudentDataCard extends StatelessWidget {
       color: Colors.transparent,
       child: ListTile(
         trailing: CircleAvatar(
-          backgroundColor: Colors.green,
-          child: const Icon(Icons.person, color: Colors.white),
+          backgroundColor: context.statusSuccessColor,
+          child: Icon(Icons.person, color: context.backgroundSecondaryColor),
         ),
-        title: const Text(
+        title: Text(
           "Student's Name 📊",
           style: TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.bold,
-            color: Colors.black,
+            color: context.textPrimaryColor,
           ),
         ),
 
-        subtitle: const Text(
+        subtitle: Text(
           "Weekly Report - Oct 5, 2025",
-          style: TextStyle(color: Colors.grey),
+          style: TextStyle(color: context.textTertiaryColor),
         ),
       ),
     );

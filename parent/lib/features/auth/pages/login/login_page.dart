@@ -16,7 +16,6 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
-  bool _obscurePassword = true;
 
   @override
   void dispose() {
@@ -25,15 +24,12 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  void _onLoginSubmitted() {
+  void _onLoginSubmitted() async {
     if (_formKey.currentState?.validate() ?? false) {
       context.read<LoginBloc>().add(
             LoginSubmittedEvent(
               phoneNumber: _phoneController.text,
               password: _passwordController.text,
-              deviceHash: 'device_hash_placeholder',
-              deviceName: 'device_name_placeholder',
-              appVersion: '1.0.0',
             ),
           );
     }
@@ -41,8 +37,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final palette = MentorXThemeColorPalette.light;
-
     return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) {
         if (state.loadingState == LoginLoadingState.success) {
@@ -51,13 +45,13 @@ class _LoginPageState extends State<LoginPage> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.exception?.message ?? 'Login failed. Please try again.'),
-              backgroundColor: palette.statusDanger,
+              backgroundColor: context.statusDangerColor,
             ),
           );
         }
       },
       child: Scaffold(
-        backgroundColor: palette.backgroundPrimary,
+        backgroundColor: context.backgroundPrimaryColor,
         body: SafeArea(
           child: Center(
             child: SingleChildScrollView(
@@ -66,8 +60,8 @@ class _LoginPageState extends State<LoginPage> {
                 constraints: const BoxConstraints(maxWidth: 400),
                 child: GradientCard(
                   colors: [
-                    palette.backgroundSecondary,
-                    palette.backgroundSecondary.withValues(alpha: 0.95),
+                    context.backgroundSecondaryColor,
+                    context.backgroundSecondaryColor.withValues(alpha: 0.95),
                   ],
                   padding: const EdgeInsets.all(24),
                   child: Form(
@@ -76,63 +70,29 @@ class _LoginPageState extends State<LoginPage> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Container(
-                          width: 80,
-                          height: 80,
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                palette.brandPrimary,
-                                palette.brandSecondary,
-                              ],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                            ),
-                            borderRadius: BorderRadius.circular(24),
-                            boxShadow: [
-                              BoxShadow(
-                                color: palette.brandPrimary.withValues(alpha: 0.3),
-                                blurRadius: 12,
-                                offset: const Offset(0, 6),
-                              ),
-                            ],
-                          ),
-                          child: Icon(
-                            Icons.family_restroom,
-                            color: palette.textForeground,
-                            size: 38,
-                          ),
-                        ),
+                        const AppLogoDisplay(icon: Icons.family_restroom),
                         const SizedBox(height: 16),
                         Text(
                           'MentorX Parent',
                           style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                                 fontWeight: FontWeight.w800,
-                                color: palette.textPrimary,
+                                color: context.textPrimaryColor,
                               ),
                         ),
                         const SizedBox(height: 8),
                         Text(
                           'Welcome back! Sign in to monitor your child\'s progress.',
                           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                color: palette.textSecondary,
+                                color: context.textSecondaryColor,
                               ),
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 32),
-                        TextFormField(
+                        MentorXTextFormField(
+                          label: 'Phone Number',
+                          icon: Icons.phone_android,
                           controller: _phoneController,
                           keyboardType: TextInputType.phone,
-                          textDirection: TextDirection.ltr,
-                          textAlign: TextAlign.left,
-                          decoration: const InputDecoration(
-                            labelText: 'Phone Number',
-                            hintText: '01xxxxxxxxx',
-                            prefixIcon: Icon(Icons.phone_android),
-                            prefixText: '+20 ',
-                          ),
-                          autofillHints: const [AutofillHints.telephoneNumber],
-                          textInputAction: TextInputAction.next,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Please enter your phone number';
@@ -141,27 +101,11 @@ class _LoginPageState extends State<LoginPage> {
                           },
                         ),
                         const SizedBox(height: 16),
-                        TextFormField(
+                        MentorXTextFormField(
+                          label: 'Password',
+                          icon: Icons.lock_outline,
                           controller: _passwordController,
-                          obscureText: _obscurePassword,
-                          decoration: InputDecoration(
-                            labelText: 'Password',
-                            hintText: '********',
-                            prefixIcon: const Icon(Icons.lock_outline),
-                            suffixIcon: IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  _obscurePassword = !_obscurePassword;
-                                });
-                              },
-                              icon: Icon(
-                                _obscurePassword
-                                    ? Icons.visibility_outlined
-                                    : Icons.visibility_off_outlined,
-                              ),
-                            ),
-                          ),
-                          textInputAction: TextInputAction.done,
+                          isPassword: true,
                           onFieldSubmitted: (_) => _onLoginSubmitted(),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
@@ -183,19 +127,10 @@ class _LoginPageState extends State<LoginPage> {
                         const SizedBox(height: 24),
                         BlocBuilder<LoginBloc, LoginState>(
                           builder: (context, state) {
-                            final isLoading = state.loadingState == LoginLoadingState.loading;
-                            return SizedBox(
-                              width: double.infinity,
-                              child: ElevatedButton(
-                                onPressed: isLoading ? null : _onLoginSubmitted,
-                                child: isLoading
-                                    ? const SizedBox(
-                                        width: 20,
-                                        height: 20,
-                                        child: CircularProgressIndicator(strokeWidth: 2),
-                                      )
-                                    : const Text('Sign In'),
-                              ),
+                            return MentorXButton(
+                              onPressed: _onLoginSubmitted,
+                              loading: state.loadingState == LoginLoadingState.loading,
+                              text: 'Sign In',
                             );
                           },
                         ),
@@ -224,4 +159,3 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
-

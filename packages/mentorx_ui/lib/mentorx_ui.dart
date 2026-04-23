@@ -44,6 +44,24 @@ part 'widgets/mentorx_logo.dart';
 part 'widgets/mentorx_clickable_text.dart';
 part 'widgets/mentorx_skeleton.dart';
 part 'widgets/mentorx_shimmer.dart';
+part 'widgets/quick_action_item.dart';
+part 'widgets/avatar_switcher_item.dart';
+part 'widgets/app_logo_display.dart';
+part 'widgets/app_hero_card.dart';
+part 'widgets/announcement_card.dart';
+part 'widgets/activity_list_tile.dart';
+part 'widgets/auth_scaffold.dart';
+part 'widgets/step_progress_indicator.dart';
+part 'widgets/announcement_scroll_view.dart';
+part 'widgets/app_dashboard_scaffold.dart';
+part 'widgets/app_error_view.dart';
+part 'widgets/app_empty_view.dart';
+part 'widgets/announcement_list_item.dart';
+part 'widgets/transaction_list_tile.dart';
+part 'widgets/app_summary_card.dart';
+part 'widgets/attendance_rate_card.dart';
+part 'widgets/status_badge.dart';
+part 'widgets/generic_list_tile.dart';
 
 final class MentorXUI {
   MentorXUI._();

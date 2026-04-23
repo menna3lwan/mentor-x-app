@@ -27,6 +27,9 @@ final class ParentRequirements {
   /// Clients that receive locale updates when the app language changes
   final List<LocalizedClient> localizedClients;
 
+  /// List of services for shared functionality
+  final AppServices services;
+
   static final MentorXLogger _logger = MentorXLogger('ParentRequirements');
 
   ParentRequirements({
@@ -36,12 +39,15 @@ final class ParentRequirements {
     required this.repositories,
     required this.routerConfig,
     required this.localizedClients,
+    required this.services,
   });
 
   static Future<ParentRequirements> initialize() async {
     MentorXLogger.enabled = kDebugMode;
     await _initSystemUIStyle();
     
+    final services = await ServicesFactory.initServices();
+
     final (:repositories, :localizedClients) =
         await RepositoriesFactory.initRepositories();
     
@@ -78,6 +84,7 @@ final class ParentRequirements {
     return ParentRequirements(
       blocs: blocs,
       repositories: repositories,
+      services: services,
       locale: Locale(languageCode),
       brightness: initalBrightness,
       routerConfig: appRouter.routes,

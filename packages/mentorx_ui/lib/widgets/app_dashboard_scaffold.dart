@@ -1,0 +1,45 @@
+part of '../mentorx_ui.dart';
+
+class AppDashboardScaffold extends StatelessWidget {
+  const AppDashboardScaffold({
+    super.key,
+    required this.title,
+    this.actions,
+    required this.body,
+    this.onRefresh,
+    this.backgroundColor,
+  });
+
+  final String title;
+  final List<Widget>? actions;
+  final Widget body;
+  final Future<void> Function()? onRefresh;
+  final Color? backgroundColor;
+
+  @override
+  Widget build(BuildContext context) {
+    final scaffold = Scaffold(
+      backgroundColor: backgroundColor ?? context.backgroundPrimaryColor,
+      appBar: AppBar(
+        title: Text(
+          title,
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.w800,
+                color: context.brandPrimaryColor,
+              ),
+        ),
+        backgroundColor: context.backgroundSecondaryColor,
+        elevation: 0,
+        actions: actions,
+      ),
+      body: onRefresh != null
+          ? RefreshIndicator(
+              onRefresh: onRefresh!,
+              child: body,
+            )
+          : body,
+    );
+
+    return scaffold;
+  }
+}

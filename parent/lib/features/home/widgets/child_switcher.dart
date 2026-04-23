@@ -10,8 +10,6 @@ class ChildSwitcher extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = MentorXThemeColorPalette.light;
-
     return BlocBuilder<HomeBloc, HomeState>(
       builder: (context, state) {
         if (state.children.isEmpty || state.selectedChild == null) {
@@ -27,62 +25,21 @@ class ChildSwitcher extends StatelessWidget {
             itemCount: state.children.length + 1,
             itemBuilder: (context, index) {
               if (index == state.children.length) {
-                return _AddChildButton(palette: palette);
+                return const _AddChildButton();
               }
 
               final child = state.children[index];
               final isSelected = child.id == state.selectedChild!.id;
               
-              return GestureDetector(
-                onTap: () {
-                  context.read<HomeBloc>().add(HomeChildSwitched(child));
-                },
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 16),
-                  child: Column(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(3),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: isSelected 
-                                ? palette.brandPrimary
-                                : Colors.transparent,
-                            width: 2,
-                          ),
-                        ),
-                        child: CircleAvatar(
-                          radius: 28,
-                          backgroundColor: isSelected 
-                              ? palette.brandPrimary.withValues(alpha: 0.1)
-                              : palette.backgroundSecondary,
-                          backgroundImage: child.profileImageUrl != null 
-                              ? NetworkImage(child.profileImageUrl!) 
-                              : null,
-                          child: child.profileImageUrl == null 
-                              ? Text(
-                                  child.name.isNotEmpty ? child.name[0] : '?',
-                                  style: TextStyle(
-                                    color: isSelected ? palette.brandPrimary : palette.textSecondary,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20,
-                                  ),
-                                )
-                              : null,
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                        child.name.split(' ').first,
-                        style: TextStyle(
-                          fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                          fontSize: 13,
-                          color: isSelected ? palette.brandPrimary : palette.textPrimary,
-                        ),
-                      ),
-                    ],
-                  ),
+              return Padding(
+                padding: const EdgeInsets.only(right: 16),
+                child: AvatarSwitcherItem(
+                  name: child.name.split(' ').first,
+                  imageUrl: child.profileImageUrl,
+                  isSelected: isSelected,
+                  onTap: () {
+                    context.read<HomeBloc>().add(HomeChildSwitched(child));
+                  },
                 ),
               );
             },
@@ -94,9 +51,7 @@ class ChildSwitcher extends StatelessWidget {
 }
 
 class _AddChildButton extends StatelessWidget {
-  final MentorXThemeColorPalette palette;
-
-  const _AddChildButton({required this.palette});
+  const _AddChildButton();
 
   @override
   Widget build(BuildContext context) {
@@ -111,18 +66,18 @@ class _AddChildButton extends StatelessWidget {
             ),
             child: CircleAvatar(
               radius: 28,
-              backgroundColor: palette.backgroundPrimary,
+              backgroundColor: context.backgroundPrimaryColor,
               child: Container(
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: palette.textTertiary.withValues(alpha: 0.5),
+                    color: context.textTertiaryColor.withValues(alpha: 0.5),
                     width: 1,
                     style: BorderStyle.solid,
                   ),
                 ),
                 child: Center(
-                  child: Icon(Icons.add, color: palette.textTertiary, size: 28),
+                  child: Icon(Icons.add, color: context.textTertiaryColor, size: 28),
                 ),
               ),
             ),
@@ -133,7 +88,7 @@ class _AddChildButton extends StatelessWidget {
             style: TextStyle(
               fontWeight: FontWeight.w500,
               fontSize: 13,
-              color: palette.textTertiary,
+              color: context.textTertiaryColor,
             ),
           ),
         ],

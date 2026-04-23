@@ -51,19 +51,19 @@ class _OtpPageWrapperState extends State<OtpPageWrapper> {
             return OtpPage(
               backButton: IconButton(
                 onPressed: () => context.pop(),
-                icon: const Icon(Icons.arrow_back, color: Color(0xFF183764)),
+                icon: Icon(Icons.arrow_back, color: context.brandPrimaryColor),
               ),
               title: Text(
                 'Verify Your Number',
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.w800,
-                      color: const Color(0xFF183764),
+                      color: context.brandPrimaryColor,
                     ),
               ),
               subtitle: Text(
                 'Enter the 6-digit code sent to ${widget.phoneNumber}',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.black54,
+                      color: context.textSecondaryColor,
                     ),
               ),
               otpFields: MentorXTextFormField(

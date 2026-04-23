@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -19,15 +20,15 @@ class WhatsAppGroupsParentPage extends StatelessWidget {
         repository: context.read<ParentCommunicationRepository>(),
       )..add(CommunicationStarted(childId)),
       child: Scaffold(
-        backgroundColor: const Color(0xFFF8FAFC),
+        backgroundColor: context.backgroundPrimaryColor,
         appBar: AppBar(
           title: const Text(
             'WhatsApp Groups',
             style: TextStyle(fontWeight: FontWeight.w700),
           ),
           elevation: 0,
-          backgroundColor: Colors.white,
-          foregroundColor: const Color(0xFF1E293B),
+          backgroundColor: context.backgroundSecondaryColor,
+          foregroundColor: context.textPrimaryColor,
           actions: [
             Builder(
               builder: (context) => IconButton(
@@ -44,8 +45,8 @@ class WhatsAppGroupsParentPage extends StatelessWidget {
         body: BlocBuilder<CommunicationBloc, CommunicationState>(
           builder: (context, state) {
             if (state.status == CommunicationStatus.loading) {
-              return const Center(
-                child: CircularProgressIndicator(color: Color(0xFF25D366)),
+              return Center(
+                child: CircularProgressIndicator(color: context.statusSuccessColor),
               );
             }
 
@@ -56,13 +57,13 @@ class WhatsAppGroupsParentPage extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(Icons.error_outline_rounded,
-                          size: 64, color: Color(0xFFEF4444)),
+                      Icon(Icons.error_outline_rounded,
+                          size: 64, color: context.statusDangerColor),
                       const SizedBox(height: 16),
                       Text(
                         'Failed to load groups',
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                              color: const Color(0xFF1E293B),
+                              color: context.textPrimaryColor,
                               fontWeight: FontWeight.w600,
                             ),
                       ),
@@ -70,7 +71,7 @@ class WhatsAppGroupsParentPage extends StatelessWidget {
                       Text(
                         state.errorMessage ?? 'Please check your connection',
                         textAlign: TextAlign.center,
-                        style: const TextStyle(color: Color(0xFF64748B)),
+                        style: TextStyle(color: context.textSecondaryColor),
                       ),
                       const SizedBox(height: 24),
                       ElevatedButton(
@@ -80,8 +81,8 @@ class WhatsAppGroupsParentPage extends StatelessWidget {
                               .add(CommunicationStarted(childId));
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF25D366),
-                          foregroundColor: Colors.white,
+                          backgroundColor: context.statusSuccessColor,
+                          foregroundColor: context.backgroundSecondaryColor,
                           padding: const EdgeInsets.symmetric(
                               horizontal: 32, vertical: 12),
                           shape: RoundedRectangleBorder(
@@ -102,13 +103,13 @@ class WhatsAppGroupsParentPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(Icons.forum_outlined,
-                        size: 80, color: Colors.grey.withOpacity(0.3)),
+                        size: 80, color: context.textTertiaryColor.withOpacity(0.3)),
                     const SizedBox(height: 24),
-                    const Text(
+                    Text(
                       'No WhatsApp groups available.',
                       style: TextStyle(
                         fontSize: 16,
-                        color: Color(0xFF64748B),
+                        color: context.textSecondaryColor,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -131,11 +132,11 @@ class WhatsAppGroupsParentPage extends StatelessWidget {
                   final group = state.whatsAppGroups[index];
                   return Container(
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: context.backgroundSecondaryColor,
                       borderRadius: BorderRadius.circular(16),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.03),
+                          color: context.textPrimaryColor.withOpacity(0.03),
                           blurRadius: 10,
                           offset: const Offset(0, 4),
                         ),
@@ -147,33 +148,33 @@ class WhatsAppGroupsParentPage extends StatelessWidget {
                       leading: Container(
                         padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF25D366).withOpacity(0.1),
+                          color: context.statusSuccessColor.withOpacity(0.1),
                           shape: BoxShape.circle,
                         ),
-                        child: const Icon(
+                        child: Icon(
                           Icons.chat_rounded,
-                          color: Color(0xFF25D366),
+                          color: context.statusSuccessColor,
                           size: 28,
                         ),
                       ),
                       title: Text(
                         group.name,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontWeight: FontWeight.w600,
-                          color: Color(0xFF1E293B),
+                          color: context.textPrimaryColor,
                           fontSize: 16,
                         ),
                       ),
-                      subtitle: const Text(
+                      subtitle: Text(
                         'Join to get the latest updates',
                         style: TextStyle(
-                          color: Color(0xFF64748B),
+                          color: context.textSecondaryColor,
                           fontSize: 13,
                         ),
                       ),
-                      trailing: const Icon(
+                      trailing: Icon(
                         Icons.chevron_right_rounded,
-                        color: Color(0xFF94A3B8),
+                        color: context.textTertiaryColor,
                       ),
                       onTap: () async {
                         final url = Uri.parse(group.url);

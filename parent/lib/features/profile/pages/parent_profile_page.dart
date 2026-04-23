@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/profile_bloc.dart';
 
@@ -40,10 +41,10 @@ class ParentProfileView extends StatelessWidget {
         return ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            const CircleAvatar(
+            CircleAvatar(
               radius: 50,
-              backgroundColor: Color(0xFF1E293B),
-              child: Icon(Icons.person, size: 50, color: Colors.white),
+              backgroundColor: context.textPrimaryColor,
+              child: Icon(Icons.person, size: 50, color: context.backgroundSecondaryColor),
             ),
             const SizedBox(height: 24),
             ListTile(
@@ -59,7 +60,7 @@ class ParentProfileView extends StatelessWidget {
             const Divider(),
             ListTile(
               title: const Text('Logout'),
-              leading: const Icon(Icons.logout, color: Colors.red),
+              leading: Icon(Icons.logout, color: context.statusDangerColor),
               onTap: () {
                 // Handle logout logic
               },

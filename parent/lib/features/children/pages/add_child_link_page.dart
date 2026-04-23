@@ -34,7 +34,7 @@ class _AddChildLinkPageState extends State<AddChildLinkPage> {
           backgroundColor: Colors.transparent,
           elevation: 0,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Color(0xFF183764)),
+            icon: Icon(Icons.arrow_back, color: context.brandPrimaryColor),
             onPressed: () => context.pop(),
           ),
         ),
@@ -62,13 +62,13 @@ class _AddChildLinkPageState extends State<AddChildLinkPage> {
                     'Link Your Child',
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                           fontWeight: FontWeight.w800,
-                          color: const Color(0xFF183764),
+                          color: context.brandPrimaryColor,
                         ),
                   ),
                   const SizedBox(height: 8),
-                  const Text(
+                  Text(
                     'Enter your child\'s admission number or registered phone number to link their account.',
-                    style: TextStyle(color: Colors.black54),
+                    style: TextStyle(color: context.textSecondaryColor),
                   ),
                   const SizedBox(height: 32),
                   Row(
@@ -83,17 +83,17 @@ class _AddChildLinkPageState extends State<AddChildLinkPage> {
                       const SizedBox(width: 8),
                       IconButton.filled(
                         style: IconButton.styleFrom(
-                          backgroundColor: const Color(0xFF183764),
+                          backgroundColor: context.brandPrimaryColor,
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                           padding: const EdgeInsets.all(16),
                         ),
                         icon: state.status == ChildrenStatus.loading
-                            ? const SizedBox(
+                            ? SizedBox(
                                 width: 24,
                                 height: 24,
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2,
-                                  valueColor: AlwaysStoppedAnimation(Colors.white),
+                                  valueColor: AlwaysStoppedAnimation(context.backgroundSecondaryColor),
                                 ),
                               )
                             : const Icon(Icons.arrow_forward),
@@ -160,7 +160,7 @@ class _StudentPreviewCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GradientCard(
-      colors: [Colors.white, Colors.white.withValues(alpha: 0.9)],
+      colors: [context.backgroundSecondaryColor, context.backgroundSecondaryColor.withValues(alpha: 0.9)],
       padding: const EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -169,8 +169,8 @@ class _StudentPreviewCard extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 30,
-                backgroundColor: const Color(0xFF183764).withValues(alpha: 0.1),
-                child: const Icon(Icons.person, color: Color(0xFF183764), size: 30),
+                backgroundColor: context.brandPrimaryColor.withValues(alpha: 0.1),
+                child: Icon(Icons.person, color: context.brandPrimaryColor, size: 30),
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -179,15 +179,15 @@ class _StudentPreviewCard extends StatelessWidget {
                   children: [
                     Text(
                       student.maskedName,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
-                        color: Color(0xFF183764),
+                        color: context.brandPrimaryColor,
                       ),
                     ),
                     Text(
                       'Grade: ${student.gradeName}',
-                      style: const TextStyle(color: Colors.black54),
+                      style: TextStyle(color: context.textSecondaryColor),
                     ),
                   ],
                 ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mentorx_ui/mentorx_ui.dart';
 
 class SubjectPerformanceCard extends StatelessWidget {
   const SubjectPerformanceCard({
@@ -20,7 +21,7 @@ class SubjectPerformanceCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.backgroundSecondaryColor,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -39,8 +40,8 @@ class SubjectPerformanceCard extends StatelessWidget {
               const SizedBox(height: 6),
               LinearProgressIndicator(
                 value: item.performance.clamp(0.0, 1.0),
-                backgroundColor: Colors.grey[300],
-                color: Colors.black,
+                backgroundColor: context.textTertiaryColor,
+                color: context.textPrimaryColor,
                 minHeight: 8,
               ),
               const SizedBox(height: 10),

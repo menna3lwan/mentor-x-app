@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mentorx_core/mentorx_core.dart';
+import 'package:mentorx_ui/mentorx_ui.dart';
 
 class ParentActivityFeed extends StatelessWidget {
   final List<ParentRecentActivityEntity> activities;
@@ -27,14 +28,11 @@ class ParentActivityFeed extends StatelessWidget {
       separatorBuilder: (_, _) => const Divider(),
       itemBuilder: (context, index) {
         final activity = activities[index];
-        return ListTile(
-          leading: const CircleAvatar(child: Icon(Icons.notifications_outlined)),
-          title: Text(activity.title),
-          subtitle: Text(activity.description),
-          trailing: Text(
-            activity.timestamp.toIso8601String().split('T').first,
-            style: Theme.of(context).textTheme.bodySmall,
-          ),
+        return ActivityListTile(
+          title: activity.title,
+          description: activity.description,
+          date: activity.timestamp.toIso8601String().split('T').first,
+          onTap: () {},
         );
       },
     );

@@ -56,17 +56,17 @@ class _ForgetPasswordPageWrapperState extends State<ForgetPasswordPageWrapper> {
           return Form(
             key: _formKey,
             child: ForgetPasswordPage(
-              title: const Text(
+              title: Text(
                 'Forgot Password?',
                 style: TextStyle(
-                  color: Color(0xFF183764),
+                  color: context.brandPrimaryColor,
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              subtitle: const Text(
+              subtitle: Text(
                 "Don't worry! Enter your phone number and we'll send you a verification code.",
-                style: TextStyle(color: Color(0xFF183764), fontSize: 14),
+                style: TextStyle(color: context.brandPrimaryColor, fontSize: 14),
               ),
               phoneField: MentorXTextFormField(
                 label: 'Phone',
@@ -93,7 +93,7 @@ class _ForgetPasswordPageWrapperState extends State<ForgetPasswordPageWrapper> {
               backToLoginButton: MentorXClickableText(
                 alignment: Alignment.centerLeft,
                 text: 'Back To Login',
-                color: const Color(0xFF183764),
+                color: context.brandPrimaryColor,
                 onPressed: () => const LoginPageRoute().go(context),
               ),
             ),

@@ -1,6 +1,7 @@
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/core.dart';
+import 'package:device_info_service/device_info_service.dart';
 
 part 'parent_registration_event.dart';
 part 'parent_registration_state.dart';
@@ -31,11 +32,14 @@ final class ParentRegistrationBloc
           ParentRegistrationPresentationEvent
         > {
   final AuthenticationRepository _authenticationRepository;
+  final DeviceInfoService _deviceInfoService;
   final MentorXLogger _logger = MentorXLogger('ParentRegistrationBloc');
 
   ParentRegistrationBloc({
     required AuthenticationRepository authenticationRepository,
+    required DeviceInfoService deviceInfoService,
   }) : _authenticationRepository = authenticationRepository,
+       _deviceInfoService = deviceInfoService,
        super(const ParentRegistrationState()) {
     on<ParentRegistrationStepChanged>(_onStepChanged);
     on<ParentRegistrationLookupTypeChanged>(_onLookupTypeChanged);
@@ -215,6 +219,10 @@ final class ParentRegistrationBloc
     emit(state.copyWith(loadingState: ParentRegistrationLoadingState.loading));
 
     try {
+      final deviceName = await _deviceInfoService.getDeviceName();
+      final deviceHash = await _deviceInfoService.getDeviceHash();
+      final appVersion = await _deviceInfoService.getAppVersion();
+
       final result = await _authenticationRepository.registerParent(
         firstName: state.firstName.trim(),
         lastName: state.lastName.trim(),
@@ -223,10 +231,9 @@ final class ParentRegistrationBloc
         password: state.password,
         relationship: state.relationship,
         studentId: foundStudent.studentId,
-        // TODO(auth): Implement device_info_plus & fcm_token helpers
-        deviceHash: 'placeholder_hash',
-        deviceName: 'placeholder_device',
-        appVersion: '1.0.0',
+        deviceHash: deviceHash,
+        deviceName: deviceName,
+        appVersion: appVersion,
       );
 
       emit(state.copyWith(loadingState: ParentRegistrationLoadingState.loaded));

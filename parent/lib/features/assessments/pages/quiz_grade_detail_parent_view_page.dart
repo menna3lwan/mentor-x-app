@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 import '../bloc/assessments_bloc.dart';
@@ -59,7 +60,7 @@ final class QuizGradeDetailParentViewPage extends StatelessWidget {
                       dense: true,
                       leading: Icon(
                         index.isEven ? Icons.check_circle : Icons.cancel,
-                        color: index.isEven ? Colors.green : Colors.red,
+                        color: index.isEven ? context.statusSuccessColor : context.statusDangerColor,
                       ),
                       title: Text('Question ${index + 1}'),
                       subtitle: Text(index.isEven ? 'Correct' : 'Incorrect'),

@@ -1,6 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:mentorx_core/mentorx_core.dart';
+import 'package:device_info_service/device_info_service.dart';
+
 
 part 'login_event.dart';
 part 'login_state.dart';
@@ -29,11 +31,15 @@ final class LoginOtpRequiredPresentationEvent extends LoginPresentationEvent {
 final class LoginBloc extends Bloc<LoginEvent, LoginState>
     with BlocPresentationMixin<LoginState, LoginPresentationEvent> {
   final AuthenticationRepository<ParentEntity> _authenticationRepository;
+  final DeviceInfoService _deviceInfoService;
   final MentorXLogger _logger = MentorXLogger('LoginBloc');
 
-  LoginBloc({required AuthenticationRepository<ParentEntity> authenticationRepository})
-    : _authenticationRepository = authenticationRepository,
-      super(LoginState.initial) {
+  LoginBloc({
+    required AuthenticationRepository<ParentEntity> authenticationRepository,
+    required DeviceInfoService deviceInfoService,
+  }) : _authenticationRepository = authenticationRepository,
+       _deviceInfoService = deviceInfoService,
+       super(LoginState.initial) {
     on<LoginSubmittedEvent>(_onLoginSubmitted);
   }
 
@@ -43,13 +49,17 @@ final class LoginBloc extends Bloc<LoginEvent, LoginState>
   ) async {
     emit(state.copyWith(loadingState: LoginLoadingState.loading));
     try {
+      final deviceName = await _deviceInfoService.getDeviceName();
+      final deviceHash = await _deviceInfoService.getDeviceHash();
+      final appVersion = await _deviceInfoService.getAppVersion();
+
       final user = await _authenticationRepository.login(
         phone: event.phoneNumber,
         password: event.password,
-        deviceHash: event.deviceHash,
-        deviceName: event.deviceName,
+        deviceHash: deviceHash,
+        deviceName: deviceName,
         fcmToken: event.fcmToken,
-        appVersion: event.appVersion,
+        appVersion: appVersion,
       );
       emit(state.copyWith(loadingState: LoginLoadingState.success));
       emitPresentation(LoginSuccessPresentationEvent(user: user));

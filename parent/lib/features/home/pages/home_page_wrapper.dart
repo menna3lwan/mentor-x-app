@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_core/mentorx_core.dart';
+import 'package:mentorx_ui/mentorx_ui.dart';
 import '../bloc/home_bloc.dart';
 import 'home_page.dart';
 
@@ -21,7 +22,7 @@ class HomePageWrapper extends StatelessWidget {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.errorMessage!),
-                backgroundColor: Colors.red,
+                backgroundColor: MentorXThemeColorPalette.light.statusDanger,
               ),
             );
           }

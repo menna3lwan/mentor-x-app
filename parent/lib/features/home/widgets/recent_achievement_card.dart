@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mentorx_ui/mentorx_ui.dart';
 import 'achievement_icon.dart';
 
 class RecentAchievementsCard extends StatelessWidget {
@@ -15,7 +16,7 @@ class RecentAchievementsCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.backgroundSecondaryColor,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -31,7 +32,7 @@ class RecentAchievementsCard extends StatelessWidget {
           else ...[
             for (final achievement in recentAchievements) ...[
               AchievementIcon(
-                color: Colors.blue,
+                color: context.brandPrimaryColor,
                 title: achievement.title,
                 subtitle: achievement.date,
                 iconCodePoint: achievement.iconCodePoint,

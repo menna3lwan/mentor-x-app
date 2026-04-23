@@ -19,7 +19,10 @@ final class ParentApp extends StatelessWidget {
     final lightMixTheme = MentorXThemes.light;
 
     return MultiRepositoryProvider(
-      providers: requirements.repositories.toProviders(),
+      providers: [
+        ...requirements.services.toProviders(),
+        ...requirements.repositories.toProviders(),
+      ],
       child: MultiBlocProvider(
         providers: requirements.blocs.toProviders(),
         child: MentorXTranslationProvider(

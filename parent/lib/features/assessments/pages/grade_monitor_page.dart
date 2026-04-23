@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 import '../bloc/assessments_bloc.dart';
@@ -121,7 +122,7 @@ class GradeMonitorPage extends StatelessWidget {
                             '${assessment.percentage.toInt()}%',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              color: assessment.passed ? Colors.green : Colors.red,
+                              color: assessment.passed ? context.statusSuccessColor : context.statusDangerColor,
                             ),
                           ),
                           onTap: () {
