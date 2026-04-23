@@ -1,57 +1,118 @@
 import 'package:mentorx_core/mentorx_core.dart';
 
-abstract final class QuizAttemptModel {
-  static QuizAttemptEntity fromJson(Map<String, dynamic> json) {
-    return QuizAttemptEntity(
-      id: json['id']?.toString() ?? '',
-      quizId: json['quizId']?.toString() ?? json['quiz_id']?.toString() ?? '',
-      attemptNumber: (json['attemptNumber'] ?? json['attempt_number'] as num?)?.toInt() ?? 1,
-      status: _parseStatus(json['status']),
-      score: (json['score'] as num?)?.toInt() ?? 0,
-      totalMarks: (json['totalMarks'] ?? json['total_marks'] as num?)?.toInt() ?? 0,
-      percentage: (json['percentage'] as num?)?.toDouble() ?? 0.0,
-      passed: json['passed'] as bool? ?? json['is_passed'] as bool? ?? false,
-      startedAt: DateTime.parse(json['startedAt'] as String? ?? json['started_at'] as String? ?? DateTime.now().toIso8601String()),
-      submittedAt: (json['submittedAt'] ?? json['submitted_at']) != null 
-          ? DateTime.parse((json['submittedAt'] ?? json['submitted_at']) as String) 
-          : null,
-      timeSpentSeconds: (json['timeSpentSeconds'] ?? json['time_spent_seconds'] as num?)?.toInt() ?? 0,
-    );
-  }
+final class QuizModel extends QuizEntity {
+  const QuizModel({
+    required super.id,
+    required super.title,
+    required super.durationMinutes,
+    required super.totalMarks,
+    super.maxAttempts = 1,
+    super.passPercentage = 50,
+    super.shuffleQuestions = false,
+    super.shuffleOptions = false,
+    super.questionsPerAttempt,
+    super.showCorrectAnswers = true,
+    super.showExplanations = true,
+    super.showScoreImmediately = true,
+    super.availableFrom,
+    super.availableUntil,
+  });
 
-  static QuizAttemptStatus _parseStatus(dynamic value) {
-    if (value == null) return QuizAttemptStatus.inProgress;
-    final str = value.toString().toLowerCase();
-    if (str == 'in_progress' || str == 'inprogress') return QuizAttemptStatus.inProgress;
-    return QuizAttemptStatus.values.firstWhere(
-      (e) => e.name == str,
-      orElse: () => QuizAttemptStatus.submitted,
+  factory QuizModel.fromJson(Map<String, dynamic> json) {
+    return QuizModel(
+      id: json['id']?.toString() ?? '',
+      title: json['title'] ?? '',
+      durationMinutes: (json['duration_minutes'] ?? 0).toInt(),
+      totalMarks: (json['total_marks'] ?? 0).toInt(),
+      maxAttempts: (json['max_attempts'] ?? 1).toInt(),
+      passPercentage: (json['pass_percentage'] ?? 50.0).toDouble(),
+      shuffleQuestions: json['shuffle_questions'] ?? false,
+      shuffleOptions: json['shuffle_options'] ?? false,
+      questionsPerAttempt: json['questions_per_attempt']?.toInt(),
+      showCorrectAnswers: json['show_correct_answers'] ?? true,
+      showExplanations: json['show_explanations'] ?? true,
+      showScoreImmediately: json['show_score_immediately'] ?? true,
+      availableFrom: json['available_from'] != null
+          ? DateTime.tryParse(json['available_from'])
+          : null,
+      availableUntil: json['available_until'] != null
+          ? DateTime.tryParse(json['available_until'])
+          : null,
     );
   }
 }
 
-abstract final class QuizQuestionModel {
-  static QuizQuestionEntity fromJson(Map<String, dynamic> json) {
-    return QuizQuestionEntity(
+final class QuizQuestionModel extends QuizQuestionEntity {
+  const QuizQuestionModel({
+    required super.id,
+    required super.questionText,
+    required super.questionType,
+    required super.marks,
+    super.questionImageUrl,
+    super.options = const [],
+    super.negativeMarks = 0,
+    super.explanation,
+    super.order = 0,
+  });
+
+  factory QuizQuestionModel.fromJson(Map<String, dynamic> json) {
+    return QuizQuestionModel(
       id: json['id']?.toString() ?? '',
-      questionText: (json['questionText'] ?? json['question_text'] ?? json['text']) as String? ?? '',
-      questionImageUrl: (json['questionImageUrl'] ?? json['question_image_url']) as String?,
-      questionType: _parseQuestionType(json['questionType'] ?? json['type']),
-      options: (json['options'] as List?)?.map((e) => e.toString()).toList() ?? const [],
-      marks: (json['marks'] ?? json['points'] as num?)?.toInt() ?? 1,
-      negativeMarks: (json['negativeMarks'] ?? json['negative_marks'] as num?)?.toInt() ?? 0,
-      explanation: (json['explanation'] ?? json['review_notes']) as String?,
-      order: (json['order'] ?? json['orderIndex'] ?? json['order_index'] as num?)?.toInt() ?? 0,
+      questionText: json['question_text'] ?? '',
+      questionImageUrl: json['question_image_url'],
+      questionType: QuizQuestionType.values.firstWhere(
+        (e) => e.name == (json['question_type'] ?? 'mcqSingle'),
+        orElse: () => QuizQuestionType.multipleChoice,
+      ),
+      marks: (json['marks'] ?? 0).toInt(),
+      negativeMarks: (json['negative_marks'] ?? 0).toInt(),
+      explanation: json['explanation'],
+      order: (json['order'] ?? 0).toInt(),
+      options: (json['options'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          const [],
     );
   }
+}
 
-  static QuizQuestionType _parseQuestionType(dynamic value) {
-    if (value == null) return QuizQuestionType.multipleChoice;
-    final str = value.toString().toLowerCase();
-    if (str == 'multiplechoice' || str == 'multiple_choice' || str == 'single') return QuizQuestionType.multipleChoice;
-    return QuizQuestionType.values.firstWhere(
-      (e) => e.name == str,
-      orElse: () => QuizQuestionType.multipleChoice,
+final class QuizAttemptModel extends QuizAttemptEntity {
+  const QuizAttemptModel({
+    required super.id,
+    required super.quizId,
+    super.courseId,
+    super.courseName,
+    required super.attemptNumber,
+    required super.status,
+    required super.score,
+    required super.totalMarks,
+    required super.percentage,
+    required super.passed,
+    required super.startedAt,
+    super.submittedAt,
+    super.timeSpentSeconds = 0,
+  });
+
+  factory QuizAttemptModel.fromJson(Map<String, dynamic> json) {
+    return QuizAttemptModel(
+      id: json['id']?.toString() ?? '',
+      quizId: json['quiz_id']?.toString() ?? '',
+      courseId: json['course_id']?.toString(),
+      courseName: json['course_name']?.toString(),
+      attemptNumber: (json['attempt_number'] ?? 0).toInt(),
+      status: QuizAttemptStatus.values.firstWhere(
+        (e) => e.name == (json['status'] ?? 'inProgress'),
+        orElse: () => QuizAttemptStatus.inProgress,
+      ),
+      score: (json['score'] ?? 0).toInt(),
+      totalMarks: (json['total_marks'] ?? 0).toInt(),
+      percentage: (json['percentage'] ?? 0.0).toDouble(),
+      passed: json['passed'] ?? false,
+      startedAt: DateTime.tryParse(json['started_at'] ?? '') ?? DateTime.now(),
+      submittedAt: json['submitted_at'] != null
+          ? DateTime.tryParse(json['submitted_at'])
+          : null,
+      timeSpentSeconds: (json['time_spent_seconds'] ?? 0).toInt(),
     );
   }
 }

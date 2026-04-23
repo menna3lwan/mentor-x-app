@@ -1,8 +1,31 @@
 import 'package:mentorx_core/mentorx_core.dart';
 
-abstract final class WalletTransactionModel {
-  static WalletTransactionEntity fromJson(Map<String, dynamic> json) {
-    return WalletTransactionEntity(
+final class WalletSummaryModel extends WalletSummaryEntity {
+  const WalletSummaryModel({
+    required super.walletBalance,
+    required super.points,
+  });
+
+  factory WalletSummaryModel.fromJson(Map<String, dynamic> json) {
+    return WalletSummaryModel(
+      walletBalance: _toDouble(json['walletBalance'] ?? json['wallet_balance']),
+      points: _toInt(json['totalPoints'] ?? json['total_points']),
+    );
+  }
+}
+
+final class WalletTransactionModel extends WalletTransactionEntity {
+  const WalletTransactionModel({
+    required super.id,
+    required super.transactionType,
+    required super.amount,
+    required super.balanceAfter,
+    required super.description,
+    required super.createdAt,
+  });
+
+  factory WalletTransactionModel.fromJson(Map<String, dynamic> json) {
+    return WalletTransactionModel(
       id: json['id']?.toString() ?? '',
       transactionType: _parseType(
         json['transactionType'] ?? json['type'] ?? json['transaction_type'],
@@ -27,9 +50,21 @@ abstract final class WalletTransactionModel {
   }
 }
 
-abstract final class PaymentModel {
-  static PaymentEntity fromJson(Map<String, dynamic> json) {
-    return PaymentEntity(
+final class PaymentModel extends PaymentEntity {
+  const PaymentModel({
+    required super.id,
+    required super.amount,
+    required super.currency,
+    required super.method,
+    required super.paymentType,
+    required super.status,
+    super.reference,
+    super.expiresAt,
+    required super.createdAt,
+  });
+
+  factory PaymentModel.fromJson(Map<String, dynamic> json) {
+    return PaymentModel(
       id: json['id']?.toString() ?? '',
       amount: _toDouble(json['amount']),
       currency: json['currency'] as String? ?? 'EGP',
@@ -78,6 +113,38 @@ abstract final class PaymentModel {
       orElse: () => PaymentType.walletTopup,
     );
   }
+}
+
+final class PointsTransactionModel extends PointsTransactionEntity {
+  const PointsTransactionModel({
+    required super.id,
+    required super.amount,
+    required super.balanceAfter,
+    required super.description,
+    required super.createdAt,
+    super.typeBadge,
+  });
+
+  factory PointsTransactionModel.fromJson(Map<String, dynamic> json) {
+    return PointsTransactionModel(
+      id: json['id']?.toString() ?? '',
+      amount: _toInt(json['amount']),
+      balanceAfter: _toInt(json['balanceAfter'] ?? json['balance_after']),
+      description: (json['description'] ?? json['reason'] ?? '') as String,
+      createdAt: DateTime.tryParse(
+            (json['createdAt'] ?? json['created_at'])?.toString() ?? '',
+          ) ??
+          DateTime.now(),
+      typeBadge:
+          (json['typeBadge'] ?? json['type_badge'] ?? json['type'])?.toString(),
+    );
+  }
+}
+
+int _toInt(dynamic value) {
+  if (value is int) return value;
+  if (value is num) return value.toInt();
+  return int.tryParse(value?.toString() ?? '') ?? 0;
 }
 
 double _toDouble(dynamic value) {

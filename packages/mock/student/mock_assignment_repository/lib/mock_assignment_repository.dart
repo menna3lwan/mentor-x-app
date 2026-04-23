@@ -1,3 +1,55 @@
-library;
+import 'dart:async';
 
-export 'src/mock_assignment_repository.dart';
+import 'package:mock_data/mock_data.dart';
+import 'package:mentorx_core/mentorx_core.dart';
+
+final class MockAssignmentRepository implements AssignmentRepository {
+  final Duration delay;
+
+  const MockAssignmentRepository({required this.delay});
+
+  @override
+  Future<void> initialize() async {}
+
+  @override
+  Future<AssignmentEntity> getAssignment(String assignmentId) async {
+    await Future<void>.delayed(delay);
+    return MockAssignmentGenerator.assignment(assignmentId);
+  }
+
+  @override
+  Future<AssignmentSubmissionEntity?> getSubmission(
+    String assignmentId,
+  ) async {
+    await Future<void>.delayed(delay);
+    return MockAssignmentGenerator.submission(assignmentId);
+  }
+
+  @override
+  Future<List<String>> uploadFiles(List<String> localFilePaths) async {
+    await Future<void>.delayed(delay);
+    return localFilePaths
+        .map(
+          (path) =>
+              'https://storage.example.com/uploads/${path.split('/').last}',
+        )
+        .toList();
+  }
+
+  @override
+  Future<AssignmentSubmissionEntity> submitAssignment(
+    String assignmentId, {
+    required List<String> fileUrls,
+    String? notes,
+  }) async {
+    await Future<void>.delayed(delay);
+    return AssignmentSubmissionEntity(
+      id: 'sub-1',
+      assignmentId: assignmentId,
+      fileUrls: fileUrls,
+      notes: notes,
+      status: SubmissionStatus.submitted,
+      submittedAt: DateTime.now(),
+    );
+  }
+}
