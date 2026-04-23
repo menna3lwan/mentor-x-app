@@ -176,8 +176,8 @@ flutter:
   #       - asset: packages/mentorx_ui/assets/fonts/HT-Mosafer-Rounded-English/HT-Mosafer-Rounded-English-Bold.otf
   #         weight: 700
 
-# Install the package globally: dart pub global activate flutter_gen
-# Run with: dart run build_runner build
+  # Install the package globally: dart pub global activate flutter_gen
+  # Run with: dart run build_runner build
 flutter_gen:
   output: lib/core/constants/gen/
   line_length: 80

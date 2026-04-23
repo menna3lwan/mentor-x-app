@@ -16,6 +16,7 @@ part 'src/utils/parent_exception.dart';
 part 'src/utils/auth_rate_limiter.dart';
 part 'src/utils/security_validator.dart';
 part 'src/utils/data_parsing_mixin.dart';
+part 'src/utils/repository_mode.dart';
 
 // ——— Clients ———
 part 'src/clients/http_client.dart';

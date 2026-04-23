@@ -1,5 +1,5 @@
 
-enum RepositoryMode { mock, prod }
+import 'package:mentorx_core/mentorx_core.dart';
 
 final class Env {
   Env._();
@@ -11,15 +11,61 @@ final class Env {
 
   static const bool hasMentorXBaseUrl = mentorXBaseUrl != '';
 
-  static const RepositoryMode authenticationRepositoryMode =
-      RepositoryMode.mock; // Default to mock for now
-  static const RepositoryMode homeRepositoryMode = RepositoryMode.mock;
-  static const RepositoryMode childrenRepositoryMode = RepositoryMode.mock;
-  static const RepositoryMode financialRepositoryMode = RepositoryMode.mock;
-  static const RepositoryMode courseRepositoryMode = RepositoryMode.mock;
-  static const RepositoryMode attendanceRepositoryMode = RepositoryMode.mock;
-  static const RepositoryMode gradeRepositoryMode = RepositoryMode.mock;
-  static const RepositoryMode communicationRepositoryMode = RepositoryMode.mock;
+  static final authenticationRepositoryMode = RepositoryMode.fromString(
+    const String.fromEnvironment(
+      'AUTHENTICATION_REPOSITORY_MODE',
+      defaultValue: 'mock',
+    ),
+  );
+
+  static final homeRepositoryMode = RepositoryMode.fromString(
+    const String.fromEnvironment(
+      'HOME_REPOSITORY_MODE',
+      defaultValue: 'mock',
+    ),
+  );
+
+  static final childrenRepositoryMode = RepositoryMode.fromString(
+    const String.fromEnvironment(
+      'CHILDREN_REPOSITORY_MODE',
+      defaultValue: 'mock',
+    ),
+  );
+
+  static final financialRepositoryMode = RepositoryMode.fromString(
+    const String.fromEnvironment(
+      'FINANCIAL_REPOSITORY_MODE',
+      defaultValue: 'mock',
+    ),
+  );
+
+  static final courseRepositoryMode = RepositoryMode.fromString(
+    const String.fromEnvironment(
+      'COURSE_REPOSITORY_MODE',
+      defaultValue: 'mock',
+    ),
+  );
+
+  static final attendanceRepositoryMode = RepositoryMode.fromString(
+    const String.fromEnvironment(
+      'ATTENDANCE_REPOSITORY_MODE',
+      defaultValue: 'mock',
+    ),
+  );
+
+  static final gradeRepositoryMode = RepositoryMode.fromString(
+    const String.fromEnvironment(
+      'GRADE_REPOSITORY_MODE',
+      defaultValue: 'mock',
+    ),
+  );
+
+  static final communicationRepositoryMode = RepositoryMode.fromString(
+    const String.fromEnvironment(
+      'COMMUNICATION_REPOSITORY_MODE',
+      defaultValue: 'mock',
+    ),
+  );
 
   static const Duration mockDelayDuration = Duration(milliseconds: 800);
 

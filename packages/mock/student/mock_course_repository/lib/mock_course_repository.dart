@@ -20,7 +20,7 @@ final class MockCourseRepository implements CourseRepository {
     await Future<void>.delayed(delay);
     final courses = MockCourseGenerator.enrolledCourses(
       status: status,
-      languageCode: 'eg',
+      languageCode: 'ar',
     );
     if (search != null && search.isNotEmpty) {
       final query = search.toLowerCase();
