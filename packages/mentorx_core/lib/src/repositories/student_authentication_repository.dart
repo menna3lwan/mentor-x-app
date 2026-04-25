@@ -13,7 +13,9 @@ enum AuthenticationRepositoryExceptionCode {
   failedToVerifyOtp,
   failedToGetCurrentUser,
   failedToResendOtp,
-  failedToSignOut,
+  failedToLogout,
+  sessionAlreadyActive,
+  failedToRefreshToken,
 }
 
 final class AuthenticationRepositoryException
@@ -74,7 +76,8 @@ abstract interface class StudentAuthenticationRepository {
     required String password,
   });
   Future<StudentEntity> verifyOtp(String otp);
-  Future<void> signOut();
+  Future<void> logout();
+  Future<void> refreshToken();
   Future<StudentEntity?> getCurrentUser();
   Future<Duration?> resendOtp(String phoneNumber);
   Future<StudentEntity?> getCachedUser();

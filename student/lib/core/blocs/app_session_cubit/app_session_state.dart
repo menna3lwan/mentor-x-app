@@ -2,20 +2,20 @@ part of 'app_session_cubit.dart';
 
 final class AppSessionState extends Equatable {
   const AppSessionState({
-    this.studentName = 'Ahmed Mohamed Hassan',
-    this.studentNameAr = 'أحمد محمد حسن',
-    this.studentCode = 'STU-2025-0042',
-    this.phone = '01012345678',
-    this.grade = 'Third Secondary',
-    this.gradeAr = 'تالتة ثانوي',
-    this.center = 'Smart',
-    this.centerAr = 'سمارت',
-    this.school = 'Al-Nile School',
-    this.schoolAr = 'مدرسة النيل',
-    this.walletBalance = 350.0,
-    this.attendancePercent = 85.0,
-    this.averageScore = 78.5,
-    this.pendingAssignments = 3,
+    this.studentName = '',
+    this.studentNameAr = '',
+    this.studentCode = '',
+    this.phone = '',
+    this.grade = '',
+    this.gradeAr = '',
+    this.center = '',
+    this.centerAr = '',
+    this.school = '',
+    this.schoolAr = '',
+    this.walletBalance = 0.0,
+    this.attendancePercent = 0.0,
+    this.averageScore = 0.0,
+    this.pendingAssignments = 0,
   });
 
   final String studentName;

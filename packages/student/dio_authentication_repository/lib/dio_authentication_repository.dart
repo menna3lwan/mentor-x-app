@@ -101,9 +101,9 @@ final class DioAuthenticationRepository
       final response = await _getCurrentUserResponse();
       final user = _extractStudentFromResponse(response.data);
       if (user == null) {
-        throw _Exception(
-          code: _ExceptionCode.failedToGetCurrentUser,
-          message: 'User payload was missing from response.',
+        throw AuthenticationRepositoryException(
+          code: AuthenticationRepositoryExceptionCode.failedToGetCurrentUser,
+          message: 'User payload was missing from /api/auth/me response.',
         );
       }
 
@@ -161,7 +161,7 @@ final class DioAuthenticationRepository
   Future<void> requestPasswordReset(String phoneNumber) async {
     try {
       await httpClient.post(
-        '/api/v1/auth/forgot-password',
+        '/api/auth/forgot-password',
         data: {'phone': phoneNumber},
       );
       setOtpVerificationContext(
@@ -169,24 +169,6 @@ final class DioAuthenticationRepository
         purpose: OtpVerificationPurpose.passwordReset,
       );
     } on HttpClientResponse catch (e) {
-      if (e.statusCode == 404) {
-        try {
-          await httpClient.post(
-            '/api/auth/forgot-password',
-            data: {'phone': phoneNumber},
-          );
-          setOtpVerificationContext(
-            phoneNumber: phoneNumber,
-            purpose: OtpVerificationPurpose.passwordReset,
-          );
-          return;
-        } on HttpClientResponse catch (fallbackE) {
-          handleHttpClientErrorResponse(
-            fallbackE,
-            defaultCode: _ExceptionCode.failedToRequestPasswordReset,
-          );
-        }
-      }
       handleHttpClientErrorResponse(
         e,
         defaultCode: _ExceptionCode.failedToRequestPasswordReset,
@@ -200,57 +182,16 @@ final class DioAuthenticationRepository
     required String otp,
     required String newPassword,
   }) async {
-    final primaryPayload = {
+    final payload = {
       'phone': phoneNumber,
       'otp': otp,
       'new_password': newPassword,
     };
-    final secondaryPayload = {
-      'phone': phoneNumber,
-      'otp_code': otp,
-      'password': newPassword,
-    };
 
     try {
-      await httpClient.post('/api/v1/auth/reset-password', data: primaryPayload);
+      await httpClient.post('/api/auth/reset-password', data: payload);
       await _clearLocalAuthSession();
     } on HttpClientResponse catch (e) {
-      if (e.statusCode == 400 || e.statusCode == 422) {
-        try {
-          await httpClient.post(
-            '/api/v1/auth/reset-password',
-            data: secondaryPayload,
-          );
-          await _clearLocalAuthSession();
-          return;
-        } catch (_) {}
-      }
-
-      if (e.statusCode == 404) {
-        try {
-          await httpClient.post(
-            '/api/auth/reset-password',
-            data: primaryPayload,
-          );
-          await _clearLocalAuthSession();
-          return;
-        } on HttpClientResponse catch (_) {
-          try {
-            await httpClient.post(
-              '/api/auth/reset-password',
-              data: secondaryPayload,
-            );
-            await _clearLocalAuthSession();
-            return;
-          } on HttpClientResponse catch (fallbackE) {
-            handleHttpClientErrorResponse(
-              fallbackE,
-              defaultCode: _ExceptionCode.failedToResetPassword,
-            );
-          }
-        }
-      }
-
       handleHttpClientErrorResponse(
         e,
         defaultCode: _ExceptionCode.failedToResetPassword,
@@ -298,11 +239,13 @@ final class DioAuthenticationRepository
 
       _setTokensIfPresent(data);
 
-      final user = _extractStudentFromResponse(response.data);
+      var user = _extractStudentFromResponse(response.data);
+      user ??= await getCurrentUser();
+
       if (user == null) {
         throw _Exception(
           code: _ExceptionCode.failedToGetCurrentUser,
-          message: 'Login response did not include user details.',
+          message: 'Login succeeded but could not retrieve user details.',
         );
       }
 
@@ -316,6 +259,13 @@ final class DioAuthenticationRepository
           message: stringOrNull(error['message']) ?? 'Maximum devices reached.',
           maxDevices: intOrNull(error['max_devices']) ?? 1,
           activeDevices: _parseActiveDevices(error['active_devices']),
+        );
+      }
+      if (_isSessionAlreadyActiveError(e)) {
+        final data = asMap(e.data);
+        throw AuthenticationRepositoryException(
+          code: AuthenticationRepositoryExceptionCode.sessionAlreadyActive,
+          message: stringOrNull(data['error']) ?? 'Session already active on another device.',
         );
       }
       handleHttpClientErrorResponse(
@@ -405,13 +355,41 @@ final class DioAuthenticationRepository
   }
 
   @override
-  Future<void> signOut() async {
+  Future<void> refreshToken() async {
+    try {
+      final currentRefreshToken = httpClient.getRefreshToken();
+      if (currentRefreshToken == null || currentRefreshToken.isEmpty) {
+        throw AuthenticationRepositoryException(
+          code: AuthenticationRepositoryExceptionCode.failedToRefreshToken,
+          message: 'No refresh token available.',
+        );
+      }
+
+      // According to Swagger, it takes Authorization header.
+      // Usually this means the refresh token is passed in the header.
+      final response = await httpClient.post(
+        '/api/auth/refresh',
+        headers: {'Authorization': 'Bearer $currentRefreshToken'},
+      );
+
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      _setTokensIfPresent(data);
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: _ExceptionCode.failedToRefreshToken,
+      );
+    }
+  }
+
+  @override
+  Future<void> logout() async {
     try {
       try {
         await httpClient.post('/api/auth/student/logout');
       } on HttpClientResponse catch (e) {
         if (e.statusCode == 404) {
-          await httpClient.post('/api/v1/auth/logout');
+          await httpClient.post('/api/auth/logout');
         } else {
           rethrow;
         }
@@ -426,13 +404,7 @@ final class DioAuthenticationRepository
   @override
   Future<StudentEntity> getAccountStatus() async {
     try {
-      HttpClientResponse response;
-      try {
-        response = await httpClient.get('/api/v1/auth/account-status');
-      } on HttpClientResponse catch (e) {
-        if (e.statusCode != 404) rethrow;
-        response = await httpClient.get('/api/auth/student/account-status');
-      }
+      final response = await httpClient.get('/api/auth/session-status');
 
       final user = _extractStudentFromResponse(response.data);
       if (user == null) {
@@ -454,12 +426,12 @@ final class DioAuthenticationRepository
 
   Future<HttpClientResponse> _getCurrentUserResponse() async {
     try {
-      return await httpClient.get('/api/auth/student/me');
+      return await httpClient.get('/api/auth/me');
     } on HttpClientResponse catch (errorResponse) {
       if (errorResponse.statusCode != 404) {
         rethrow;
       }
-      return httpClient.get('/api/v1/auth/me');
+      return httpClient.get('/api/auth/student/me');
     }
   }
 
@@ -474,7 +446,7 @@ final class DioAuthenticationRepository
         rethrow;
       }
       return httpClient.post(
-        '/api/v1/auth/resend-otp',
+        '/api/auth/resend-otp',
         data: {
           'phone': phoneNumber,
           'purpose': OtpVerificationPurpose.registration.name,
@@ -486,7 +458,7 @@ final class DioAuthenticationRepository
   Future<HttpClientResponse> _resendOtpResponse(String phoneNumber) async {
     try {
       return await httpClient.post(
-        '/api/v1/auth/resend-otp',
+        '/api/auth/resend-otp',
         data: {'phone': phoneNumber, 'purpose': _pendingOtpPurpose.name},
       );
     } on HttpClientResponse catch (errorResponse) {
@@ -503,14 +475,7 @@ final class DioAuthenticationRepository
   Future<HttpClientResponse> _loginResponse(
     Map<String, dynamic> payload,
   ) async {
-    try {
-      return await httpClient.post('/api/v1/auth/login', data: payload);
-    } on HttpClientResponse catch (errorResponse) {
-      if (errorResponse.statusCode != 404) {
-        rethrow;
-      }
-      return httpClient.post('/api/auth/login', data: payload);
-    }
+    return httpClient.post('/api/auth/student/login', data: payload);
   }
 
   Future<HttpClientResponse> _verifyOtpResponse(
@@ -523,35 +488,19 @@ final class DioAuthenticationRepository
           '/api/student/register/complete',
           data: {'phone': phone, 'otp': otp},
         );
-      } on HttpClientResponse catch (errorResponse) {
-        if (errorResponse.statusCode != 404) {
-          rethrow;
-        }
+      } on HttpClientResponse catch (e) {
+        if (e.statusCode != 404) rethrow;
       }
     }
 
-    try {
-      return await httpClient.post(
-        '/api/v1/auth/verify-otp',
-        data: {
-          'phone': phone,
-          'otp_code': otp,
-          'purpose': _pendingOtpPurpose.name,
-        },
-      );
-    } on HttpClientResponse catch (errorResponse) {
-      if (errorResponse.statusCode != 404) {
-        rethrow;
-      }
-      return httpClient.post(
-        '/api/auth/verify-otp',
-        data: {
-          'phone': phone,
-          'otp_code': otp,
-          'purpose': _pendingOtpPurpose.name,
-        },
-      );
-    }
+    return httpClient.post(
+      '/api/auth/verify-otp',
+      data: {
+        'phone': phone,
+        'otp_code': otp,
+        'purpose': _pendingOtpPurpose.name,
+      },
+    );
   }
 
   Future<Map<String, dynamic>> _buildLoginPayload({
@@ -578,10 +527,14 @@ final class DioAuthenticationRepository
   }
 
   void _setTokensIfPresent(Map<String, dynamic> data) {
-    final accessToken = stringOrNull(data['access_token'] ?? data['accessToken']);
+    final accessToken = stringOrNull(
+      data['token'] ?? data['access_token'] ?? data['accessToken'],
+    );
     if (accessToken == null) return;
 
-    final refreshToken = stringOrNull(data['refresh_token'] ?? data['refreshToken']);
+    final refreshToken = stringOrNull(
+      data['refresh_token'] ?? data['refreshToken'],
+    );
     httpClient.setBearerToken(accessToken, refreshToken: refreshToken);
   }
 
@@ -589,7 +542,11 @@ final class DioAuthenticationRepository
     final root = asMap(rawResponse);
     final data = asMap(root['data'] ?? root);
 
-    if (data['user'] is Map || data['id'] != null || data['name'] != null) {
+    if (data['user'] is Map ||
+        data['id'] != null ||
+        data['name'] != null ||
+        data['userId'] != null ||
+        data['fullName'] != null) {
       return StudentModel.fromJson(data);
     }
 
@@ -604,6 +561,13 @@ final class DioAuthenticationRepository
     final error = _extractErrorMap(response.data);
     final code = stringOrNull(error['code'])?.toUpperCase();
     return response.statusCode == 403 && code == 'DEVICE_LIMIT_REACHED';
+  }
+
+  bool _isSessionAlreadyActiveError(HttpClientResponse response) {
+    final data = asMap(response.data);
+    final error = stringOrNull(data['error']) ?? '';
+    return response.statusCode == 400 &&
+        (error.contains('تسجيل الخروج أولاً') || error.contains('logout first'));
   }
 
   List<DeviceEntity> _parseActiveDevices(dynamic rawDevices) {

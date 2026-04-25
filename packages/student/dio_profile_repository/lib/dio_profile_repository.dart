@@ -105,7 +105,7 @@ final class DioStudentProfileRepository
   @override
   Future<StudentEntity> getProfile() async {
     try {
-      final response = await httpClient.get('/api/student/profile');
+      final response = await httpClient.get('/api/auth/me');
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return StudentProfileModel.fromJson(data);
     } on HttpClientResponse catch (e) {
@@ -119,8 +119,12 @@ final class DioStudentProfileRepository
   @override
   Future<List<DeviceEntity>> getDevices() async {
     try {
-      final response = await httpClient.get('/api/student/profile/devices');
-      return asList(response.data)
+      final response = await httpClient.get('/api/auth/session-status');
+      final data = asList(asMap(response.data)['content'] ??
+          asMap(response.data)['data'] ??
+          response.data);
+
+      return data
           .map(asMap)
           .map(DeviceModel.fromJson)
           .toList();

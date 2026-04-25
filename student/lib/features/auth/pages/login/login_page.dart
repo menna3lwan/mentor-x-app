@@ -140,7 +140,7 @@ final class LoginPage extends StatelessWidget {
                         textInputAction: TextInputAction.done,
                         onChanged: onPasswordChanged,
                         onFieldSubmitted: (_) => onSubmit(),
-                        validator: passwordValidator,
+                        // validator: passwordValidator,
                       ),
                       const SizedBox(height: 8),
                       Row(

@@ -17,19 +17,19 @@ final class RegistrationPageWrapper extends StatelessWidget {
     >(
       listener: (context, event) {
         if (event is StudentRegistrationSuccessPresentationEvent) {
-          final registrationBloc = context.read<StudentRegistrationBloc>();
-          context
-              .read<StudentAuthenticationRepository>()
-              .setOtpVerificationContext(
-                phoneNumber: registrationBloc.state.phone,
-                purpose: OtpVerificationPurpose.registration,
-              );
-
-          OtpPageRoute(
-            phoneNumber: registrationBloc.state.phone,
-            otpLength: 6, // Default or from result
-            otpDurationSeconds: event.otpExpiresInSeconds,
-          ).go(context);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Registration completed successfully! Please login.'),
+              backgroundColor: Colors.green,
+            ),
+          );
+          const LoginPageRoute().go(context);
+        } else if (event is StudentRegistrationOtpSentPresentationEvent) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Verification code sent to your phone.'),
+            ),
+          );
         } else if (event is StudentRegistrationFailurePresentationEvent) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(

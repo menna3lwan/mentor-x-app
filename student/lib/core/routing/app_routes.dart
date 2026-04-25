@@ -5,8 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/features.dart';
-import '../../features/auth/pages/registration/bloc/student_registration_bloc.dart';
-import '../../features/auth/pages/registration/registration_page_wrapper.dart';
 import '../core.dart';
 
 part 'app_routes.g.dart';
@@ -35,6 +33,8 @@ part '../../features/products/pages/products_grid_page/products_grid_page_route.
 part '../../features/auth/pages/registration/registration_page_route.dart';
 part '../../features/auth/pages/otp/otp_page_route.dart';
 part '../../features/auth/pages/login/login_page_route.dart';
+part '../../features/auth/pages/forgot_password/forgot_password_page_route.dart';
+part '../../features/auth/pages/reset_password/reset_password_page_route.dart';
 part '../../features/shell/pages/shell_page/shell_page_route.dart';
 part '../../features/rewards/pages/rewards_history_page/rewards_history_page_route.dart';
 part '../../features/rewards/pages/rewards_catalog_page/rewards_catalog_page_route.dart';

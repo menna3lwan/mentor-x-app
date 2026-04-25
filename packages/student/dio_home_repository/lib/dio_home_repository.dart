@@ -20,7 +20,7 @@ final class DioStudentHomeRepository
   @override
   Future<WalletSummaryEntity> getWalletSummary() async {
     try {
-      final response = await httpClient.get('/api/student/wallet/summary');
+      final response = await httpClient.get('/api/payment/wallet/balance');
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return WalletSummaryModel.fromJson(data);
     } on HttpClientResponse catch (e) {
@@ -57,7 +57,9 @@ final class DioStudentHomeRepository
         },
       );
 
-      final list = asList(response.data);
+      final list = asList(asMap(response.data)['content'] ??
+          asMap(response.data)['data'] ??
+          response.data);
       return list
           .map(asMap)
           .map(BannerModel.fromJson)
@@ -75,15 +77,17 @@ final class DioStudentHomeRepository
   Future<List<CourseSummaryEntity>> getContinueLearningCourses() async {
     try {
       final response = await httpClient.get(
-        '/api/student/courses',
+        '/api/enrollments/my-enrollments',
         queryParameters: {
-          'status': 'in_progress',
-          'sort': 'last_accessed',
-          'limit': 5,
+          'size': 5,
+          'sort': 'lastAccessedAt,desc',
         },
       );
 
-      return asList(response.data)
+      final content = asList(asMap(response.data)['content'] ??
+          asMap(response.data)['data'] ??
+          response.data);
+      return content
           .map(asMap)
           .map(CourseModel.fromJson)
           .toList();
@@ -105,11 +109,14 @@ final class DioStudentHomeRepository
         queryParameters: {
           'featured': true,
           if (gradeId != null) 'grade_id': gradeId,
-          'limit': 6,
+          'size': 6,
         },
       );
 
-      return asList(response.data)
+      final content = asList(asMap(response.data)['content'] ??
+          asMap(response.data)['data'] ??
+          response.data);
+      return content
           .map(asMap)
           .map(CourseModel.fromJson)
           .toList();
@@ -129,7 +136,11 @@ final class DioStudentHomeRepository
         queryParameters: {'limit': 3},
       );
 
-      return asList(response.data)
+      final list = asList(asMap(response.data)['content'] ??
+          asMap(response.data)['data'] ??
+          response.data);
+
+      return list
           .map(asMap)
           .map(AnnouncementModel.fromJson)
           .toList();

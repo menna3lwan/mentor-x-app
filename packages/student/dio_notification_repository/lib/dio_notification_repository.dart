@@ -29,8 +29,10 @@ final class DioNotificationRepository
         },
       );
 
-      final data = asList(response.data);
-      return data.map((e) => NotificationModel.fromJson(asMap(e))).toList();
+      final list = asList(asMap(response.data)['content'] ??
+          asMap(response.data)['data'] ??
+          response.data);
+      return list.map((e) => NotificationModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
       handleHttpClientErrorResponse(
         e,

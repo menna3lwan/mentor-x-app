@@ -66,58 +66,59 @@ final class StudentProfileModel extends StudentEntity {
   factory StudentProfileModel.fromJson(Map<String, dynamic> json) {
     final user = json['data'] ?? json;
 
-    final String name = user['name'] as String? ?? '';
-    final nameParts = name.trim().split(' ');
-    final String fallbackFirst = nameParts.first;
+    final String fullName = (user['fullName'] ?? user['name'] ?? '')?.toString() ?? '';
+    final nameParts = fullName.trim().split(' ');
+    final String fallbackFirst = nameParts.isNotEmpty ? nameParts.first : '';
     final String fallbackLast = nameParts.length > 1 ? nameParts.sublist(1).join(' ') : '';
 
+    DateTime _parseDate(dynamic value) {
+      if (value == null) return DateTime.now();
+      return DateTime.tryParse(value.toString()) ?? DateTime.now();
+    }
+
+    double _parseDouble(dynamic value, double fallback) {
+      if (value == null) return fallback;
+      if (value is num) return value.toDouble();
+      return double.tryParse(value.toString()) ?? fallback;
+    }
+
+    int _parseInt(dynamic value, int fallback) {
+      if (value == null) return fallback;
+      if (value is num) return value.toInt();
+      return int.tryParse(value.toString()) ?? fallback;
+    }
+
     return StudentProfileModel(
-      id: (user['id'] ?? user['userId'])?.toString() ?? '',
-      firstName: user['firstName'] as String? ??
-          user['first_name'] as String? ??
-          fallbackFirst,
-      lastName: user['lastName'] as String? ??
-          user['last_name'] as String? ??
-          fallbackLast,
-      email: user['email'] as String?,
-      phoneNumber: (user['phone'] ?? user['phoneNumber'] ?? user['phone_number'])
-              ?.toString() ??
-          '',
-      profileImageUrl: (user['profileImageUrl'] ??
-              user['profileImage'] ??
-              user['avatarUrl'] ??
-              user['profile_photo_url'])
-          ?.toString(),
+      id: (user['userId'] ?? user['id'] ?? user['studentCode'] ?? '')?.toString() ?? '',
+      firstName: (user['firstName'] ?? user['first_name'] ?? fallbackFirst)?.toString() ?? '',
+      lastName: (user['lastName'] ?? user['last_name'] ?? fallbackLast)?.toString() ?? '',
+      email: user['email']?.toString(),
+      phoneNumber: (user['phone'] ?? user['phoneNumber'] ?? user['phone_number'] ?? '')?.toString() ?? '',
+      profileImageUrl: (user['profileImageUrl'] ?? user['profileImage'] ?? user['avatarUrl'] ?? user['profile_photo_url'])?.toString(),
       gender: _parseGender(user['gender']),
-      status: _parseStatus(user['status']),
+      status: _parseStatus(user['status'] ?? user['accountStatus'] ?? user['account_status']),
       gradeId: (user['gradeId'] ?? user['grade_id'])?.toString(),
       gradeName: (user['gradeName'] ?? user['grade_name'] ?? user['grade'])?.toString(),
       studentCode: (user['studentCode'] ?? user['student_code'])?.toString(),
       studyType: (user['studyType'] ?? user['study_type'])?.toString(),
-      walletBalance: (user['walletBalance'] ?? user['wallet_balance'] ?? 0.0)
-          .toDouble(),
-      totalPoints: (user['totalPoints'] ?? user['total_points'] ?? 0).toInt(),
+      walletBalance: _parseDouble(user['walletBalance'] ?? user['wallet_balance'], 0.0),
+      totalPoints: _parseInt(user['totalPoints'] ?? user['total_points'], 0),
       schoolName: (user['schoolName'] ?? user['school_name'])?.toString(),
       centerId: (user['centerId'] ?? user['center_id'])?.toString(),
       centerName: (user['centerName'] ?? user['center_name'] ?? user['center'])?.toString(),
       parentName: (user['parentName'] ?? user['parent_name'])?.toString(),
       parentPhone: (user['parentPhone'] ?? user['parent_phone'])?.toString(),
       academicLevel: (user['academicLevel'] ?? user['academic_level'])?.toString(),
-      dateOfBirth: DateTime.tryParse(
-          (user['dateOfBirth'] ?? user['date_of_birth'])?.toString() ?? ''),
+      dateOfBirth: DateTime.tryParse((user['dateOfBirth'] ?? user['date_of_birth'])?.toString() ?? ''),
       address: user['address']?.toString(),
       city: user['city']?.toString(),
       governorate: user['governorate']?.toString(),
-      enrolledCourseIds: (user['enrolledCourseIds'] ?? user['enrolled_course_ids'] as List?)
-          ?.map((e) => e.toString())
-          .toList(),
-      metadata: user['metadata'] as Map<String, dynamic>?,
-      createdAt: DateTime.tryParse(
-              (user['createdAt'] ?? user['created_at'])?.toString() ?? '') ??
-          DateTime.now(),
-      updatedAt: DateTime.tryParse(
-              (user['updatedAt'] ?? user['updated_at'])?.toString() ?? '') ??
-          DateTime.now(),
+      enrolledCourseIds: (user['enrolledCourseIds'] ?? user['enrolled_course_ids']) is List
+          ? (user['enrolledCourseIds'] ?? user['enrolled_course_ids'] as List).map((e) => e.toString()).toList()
+          : null,
+      metadata: user['metadata'] is Map ? Map<String, dynamic>.from(user['metadata'] as Map) : null,
+      createdAt: _parseDate(user['createdAt'] ?? user['created_at']),
+      updatedAt: _parseDate(user['updatedAt'] ?? user['updated_at']),
     );
   }
 

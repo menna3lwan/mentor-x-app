@@ -35,10 +35,14 @@ final class BlocsFactory {
     required String languageCode,
     required Brightness brightness,
     required CacheRepository cacheRepository,
+    required StudentAuthenticationRepository authenticationRepository,
     required List<LocalizedClient> localizedClients,
   }) async {
-    final authenticationCubit = AppAuthenticationCubit(initialUser: user);
-    final sessionCubit = AppSessionCubit();
+    final authenticationCubit = AppAuthenticationCubit(
+      authRepository: authenticationRepository,
+      initialUser: user,
+    );
+    final sessionCubit = AppSessionCubit(initialUser: user);
     final localeCubit = AppLocaleCubit(
       initialLanguageCode: languageCode,
       cacheRepository: cacheRepository,

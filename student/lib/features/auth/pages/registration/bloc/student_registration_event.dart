@@ -13,10 +13,14 @@ final class StudentRegistrationBootstrapRequested
 }
 
 final class StudentRegistrationNextStepRequested
-    extends StudentRegistrationEvent {}
+    extends StudentRegistrationEvent {
+  const StudentRegistrationNextStepRequested();
+}
 
 final class StudentRegistrationPreviousStepRequested
-    extends StudentRegistrationEvent {}
+    extends StudentRegistrationEvent {
+  const StudentRegistrationPreviousStepRequested();
+}
 
 final class StudentRegistrationStepChanged extends StudentRegistrationEvent {
   final int step;
@@ -25,17 +29,11 @@ final class StudentRegistrationStepChanged extends StudentRegistrationEvent {
   List<Object?> get props => [step];
 }
 
-// Step 1: Personal
+// Step 0: Start
 final class StudentRegistrationFirstNameChanged
     extends StudentRegistrationEvent {
   final String value;
   const StudentRegistrationFirstNameChanged(this.value);
-}
-
-final class StudentRegistrationLastNameChanged
-    extends StudentRegistrationEvent {
-  final String value;
-  const StudentRegistrationLastNameChanged(this.value);
 }
 
 final class StudentRegistrationPhoneChanged extends StudentRegistrationEvent {
@@ -43,34 +41,49 @@ final class StudentRegistrationPhoneChanged extends StudentRegistrationEvent {
   const StudentRegistrationPhoneChanged(this.value);
 }
 
-final class StudentRegistrationPhoneUniquenessChecked
+final class StudentRegistrationParentPhoneChanged
     extends StudentRegistrationEvent {
-  final String phone;
-  final bool isUnique;
-
-  const StudentRegistrationPhoneUniquenessChecked({
-    required this.phone,
-    required this.isUnique,
-  });
-
-  @override
-  List<Object?> get props => [phone, isUnique];
-}
-
-final class StudentRegistrationEmailChanged extends StudentRegistrationEvent {
   final String value;
-  const StudentRegistrationEmailChanged(this.value);
+  const StudentRegistrationParentPhoneChanged(this.value);
 }
 
-final class StudentRegistrationGenderChanged extends StudentRegistrationEvent {
-  final Gender value;
-  const StudentRegistrationGenderChanged(this.value);
+final class StudentRegistrationStartRequested extends StudentRegistrationEvent {
+  const StudentRegistrationStartRequested();
 }
 
-final class StudentRegistrationDateOfBirthChanged
+final class StudentRegistrationCheckPhoneRequested extends StudentRegistrationEvent {
+  final String phone;
+  const StudentRegistrationCheckPhoneRequested(this.phone);
+}
+
+// Step 1: OTP
+final class StudentRegistrationOtpChanged extends StudentRegistrationEvent {
+  final String value;
+  const StudentRegistrationOtpChanged(this.value);
+}
+
+final class StudentRegistrationResendOtpRequested
     extends StudentRegistrationEvent {
-  final DateTime value;
-  const StudentRegistrationDateOfBirthChanged(this.value);
+  const StudentRegistrationResendOtpRequested();
+}
+
+// Step 2: Full Personal
+final class StudentRegistrationSecondNameChanged
+    extends StudentRegistrationEvent {
+  final String value;
+  const StudentRegistrationSecondNameChanged(this.value);
+}
+
+final class StudentRegistrationThirdNameChanged
+    extends StudentRegistrationEvent {
+  final String value;
+  const StudentRegistrationThirdNameChanged(this.value);
+}
+
+final class StudentRegistrationFourthNameChanged
+    extends StudentRegistrationEvent {
+  final String value;
+  const StudentRegistrationFourthNameChanged(this.value);
 }
 
 final class StudentRegistrationProfilePhotoChanged
@@ -79,7 +92,7 @@ final class StudentRegistrationProfilePhotoChanged
   const StudentRegistrationProfilePhotoChanged(this.path);
 }
 
-// Step 2: Academic
+// Step 3: Academic
 final class StudentRegistrationGradeChanged extends StudentRegistrationEvent {
   final GradeEntity? value;
   const StudentRegistrationGradeChanged(this.value);
@@ -91,52 +104,34 @@ final class StudentRegistrationSchoolNameChanged
   const StudentRegistrationSchoolNameChanged(this.value);
 }
 
-final class StudentRegistrationStudyTypeChanged
+final class StudentRegistrationOnlineToggleChanged
     extends StudentRegistrationEvent {
-  final StudyType value;
-  const StudentRegistrationStudyTypeChanged(this.value);
+  final bool value;
+  const StudentRegistrationOnlineToggleChanged(this.value);
 }
 
-final class StudentRegistrationCenterChanged extends StudentRegistrationEvent {
-  final CenterEntity? value;
-  const StudentRegistrationCenterChanged(this.value);
-}
-
-final class StudentRegistrationScheduleChanged
+final class StudentRegistrationCenterNameChanged
     extends StudentRegistrationEvent {
-  final ScheduleEntity? value;
-  const StudentRegistrationScheduleChanged(this.value);
+  final String value;
+  const StudentRegistrationCenterNameChanged(this.value);
 }
 
-final class StudentRegistrationGroupChanged extends StudentRegistrationEvent {
-  final GroupEntity? value;
-  const StudentRegistrationGroupChanged(this.value);
+final class StudentRegistrationEducationDepartmentChanged
+    extends StudentRegistrationEvent {
+  final String value;
+  const StudentRegistrationEducationDepartmentChanged(this.value);
 }
 
-// Step 3: Location
+// Step 4: Location
 final class StudentRegistrationGovernorateChanged
     extends StudentRegistrationEvent {
   final GovernorateEntity? value;
   const StudentRegistrationGovernorateChanged(this.value);
 }
 
-final class StudentRegistrationDistrictChanged
-    extends StudentRegistrationEvent {
-  final DistrictEntity? value;
-  const StudentRegistrationDistrictChanged(this.value);
-}
-
-// Step 4: Parent
-final class StudentRegistrationParentNameChanged
-    extends StudentRegistrationEvent {
-  final String value;
-  const StudentRegistrationParentNameChanged(this.value);
-}
-
-final class StudentRegistrationParentPhoneChanged
-    extends StudentRegistrationEvent {
-  final String value;
-  const StudentRegistrationParentPhoneChanged(this.value);
+final class StudentRegistrationAreaChanged extends StudentRegistrationEvent {
+  final String? value;
+  const StudentRegistrationAreaChanged(this.value);
 }
 
 // Step 5: Security
@@ -158,4 +153,24 @@ final class StudentRegistrationIdCardPhotoChanged
   const StudentRegistrationIdCardPhotoChanged(this.path);
 }
 
-final class StudentRegistrationSubmitted extends StudentRegistrationEvent {}
+final class StudentRegistrationSubmitted extends StudentRegistrationEvent {
+  const StudentRegistrationSubmitted();
+}
+
+@Deprecated('Use individual name parts')
+final class StudentRegistrationLastNameChanged extends StudentRegistrationEvent {
+  final String value;
+  const StudentRegistrationLastNameChanged(this.value);
+}
+
+@Deprecated('Use areas strings')
+final class StudentRegistrationDistrictChanged extends StudentRegistrationEvent {
+  final DistrictEntity? value;
+  const StudentRegistrationDistrictChanged(this.value);
+}
+
+@Deprecated('Use individual center/online fields')
+final class StudentRegistrationStudyTypeChanged extends StudentRegistrationEvent {
+  final StudyType value;
+  const StudentRegistrationStudyTypeChanged(this.value);
+}

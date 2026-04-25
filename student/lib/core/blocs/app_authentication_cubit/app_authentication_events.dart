@@ -9,3 +9,7 @@ final class AppAuthenticationUpdateEvent extends AppAuthenticationEvent {
 
   AppAuthenticationUpdateEvent({required this.user});
 }
+
+final class AppAuthenticationLogoutEvent extends AppAuthenticationEvent {
+  const AppAuthenticationLogoutEvent();
+}

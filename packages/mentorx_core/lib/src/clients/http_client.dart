@@ -119,6 +119,9 @@ abstract class HttpClient {
   /// Gets the current bearer token (without 'Bearer ' prefix)
   String? getBearerToken();
 
+  /// Gets the current refresh token if available
+  String? getRefreshToken();
+
   /// Checks if the client is authenticated (has a valid token)
   Future<bool> isAuthenticated();
 

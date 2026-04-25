@@ -26,7 +26,7 @@ final class DioCourseRepository
   }) async {
     try {
       final response = await httpClient.get(
-        '/api/student/courses',
+        '/api/enrollments/my-enrollments',
         queryParameters: {
           if (status != null) 'status': status,
           if (search != null) 'search': search,
@@ -34,7 +34,11 @@ final class DioCourseRepository
         },
       );
 
-      return asList(response.data)
+      final list = asList(asMap(response.data)['content'] ??
+          asMap(response.data)['data'] ??
+          response.data);
+
+      return list
           .map(asMap)
           .map(CourseSummaryModel.fromJson)
           .toList();
@@ -68,7 +72,11 @@ final class DioCourseRepository
         },
       );
 
-      return asList(response.data)
+      final list = asList(asMap(response.data)['content'] ??
+          asMap(response.data)['data'] ??
+          response.data);
+
+      return list
           .map(asMap)
           .map(CourseSummaryModel.fromJson)
           .toList();
@@ -88,7 +96,11 @@ final class DioCourseRepository
         queryParameters: {if (gradeId != null) 'grade_id': gradeId},
       );
 
-      return asList(response.data)
+      final list = asList(asMap(response.data)['content'] ??
+          asMap(response.data)['data'] ??
+          response.data);
+
+      return list
           .map(asMap)
           .map(CategoryModel.fromJson)
           .toList();
@@ -118,9 +130,13 @@ final class DioCourseRepository
   @override
   Future<List<SessionEntity>> getCourseSessions(String courseId) async {
     try {
-      final response = await httpClient.get('/api/courses/$courseId/sessions');
+      final response = await httpClient.get('/api/sessions/course/$courseId');
 
-      return asList(response.data)
+      final list = asList(asMap(response.data)['content'] ??
+          asMap(response.data)['data'] ??
+          response.data);
+
+      return list
           .map(asMap)
           .map(SessionModel.fromJson)
           .toList();
@@ -135,9 +151,13 @@ final class DioCourseRepository
   @override
   Future<List<SessionItemEntity>> getSessionItems(String sessionId) async {
     try {
-      final response = await httpClient.get('/api/sessions/$sessionId/items');
+      final response = await httpClient.get('/api/weeks/session/$sessionId');
 
-      return asList(response.data)
+      final list = asList(asMap(response.data)['content'] ??
+          asMap(response.data)['data'] ??
+          response.data);
+
+      return list
           .map(asMap)
           .map(SessionItemModel.fromJson)
           .toList();
@@ -152,7 +172,7 @@ final class DioCourseRepository
   @override
   Future<EnrollmentEntity?> getCourseProgress(String courseId) async {
     try {
-      final response = await httpClient.get('/api/student/enrollments/$courseId');
+      final response = await httpClient.get('/api/enrollments/check/$courseId');
 
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return EnrollmentModel.fromJson(data);
@@ -186,10 +206,10 @@ final class DioCourseRepository
   @override
   Future<String> getStreamUrl(String itemId) async {
     try {
-      final response = await httpClient.get('/api/sessions/items/$itemId/stream');
+      final response = await httpClient.get('/api/materials/$itemId');
 
       final data = asMap(response.data)['data'] ?? asMap(response.data);
-      return data['url']?.toString() ?? '';
+      return data['stream_url']?.toString() ?? data['url']?.toString() ?? '';
     } on HttpClientResponse catch (e) {
       handleHttpClientErrorResponse(
         e,
@@ -201,10 +221,10 @@ final class DioCourseRepository
   @override
   Future<String> getContentUrl(String itemId) async {
     try {
-      final response = await httpClient.get('/api/sessions/items/$itemId/content');
+      final response = await httpClient.get('/api/materials/$itemId');
 
       final data = asMap(response.data)['data'] ?? asMap(response.data);
-      return data['url']?.toString() ?? '';
+      return data['content_url']?.toString() ?? data['url']?.toString() ?? '';
     } on HttpClientResponse catch (e) {
       handleHttpClientErrorResponse(
         e,
@@ -222,7 +242,7 @@ final class DioCourseRepository
   }) async {
     try {
       await httpClient.post(
-        '/api/sessions/items/$itemId/progress',
+        '/api/enrollments/$itemId/progress',
         data: {
           if (watchTimeSeconds != null) 'watch_time_seconds': watchTimeSeconds,
           if (lastPositionSeconds != null) 'last_position_seconds': lastPositionSeconds,
@@ -240,7 +260,7 @@ final class DioCourseRepository
   @override
   Future<void> markItemComplete(String itemId) async {
     try {
-      await httpClient.post('/api/sessions/items/$itemId/complete');
+      await httpClient.post('/api/enrollments/$itemId/complete');
     } on HttpClientResponse catch (e) {
       handleHttpClientErrorResponse(
         e,

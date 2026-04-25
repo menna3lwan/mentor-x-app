@@ -9,7 +9,7 @@ environment:
   sdk: ^3.11.4
 
 dependencies:
-  dio: ^5.9.0
+  dio: ^5.9.2
 
   mentorx_core:
     path: ../../mentorx_core

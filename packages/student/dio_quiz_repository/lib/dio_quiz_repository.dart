@@ -23,7 +23,10 @@ final class DioQuizRepository
       final response = await httpClient.post('/api/quizzes/$quizId/start');
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       final attempt = QuizAttemptModel.fromJson(asMap(data['attempt']));
-      final questions = asList(data['questions'])
+      final questions = asList(data['questions'] ??
+              asMap(response.data)['content'] ??
+              asMap(response.data)['data'] ??
+              response.data)
           .map((e) => QuizQuestionModel.fromJson(asMap(e)))
           .toList();
 
@@ -77,7 +80,7 @@ final class DioQuizRepository
   @override
   Future<QuizAttemptEntity> getResults(String attemptId) async {
     try {
-      final response = await httpClient.get('/api/quiz-attempts/$attemptId/results');
+      final response = await httpClient.get('/api/quiz-attempts/$attemptId');
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return QuizAttemptModel.fromJson(data);
     } on HttpClientResponse catch (e) {

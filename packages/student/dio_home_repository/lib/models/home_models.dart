@@ -12,12 +12,15 @@ final class CourseModel extends CourseSummaryEntity {
 
   factory CourseModel.fromJson(Map<String, dynamic> json) {
     return CourseModel(
-      id: json['id']?.toString() ?? '',
-      title: json['title']?.toString() ?? '',
-      thumbnailUrl:
-          (json['thumbnailUrl'] ?? json['thumbnail_url'])?.toString() ?? '',
+      id: (json['courseId'] ?? json['id'])?.toString() ?? '',
+      title: (json['courseTitle'] ?? json['title'])?.toString() ?? '',
+      thumbnailUrl: (json['courseThumbnailUrl'] ??
+              json['thumbnailUrl'] ??
+              json['thumbnail_url'])
+          ?.toString() ??
+          '',
       progressPercent: _toDoubleOrNull(
-        json['progressPercent'] ?? json['progress_percent'],
+        json['progress'] ?? json['progressPercent'] ?? json['progress_percent'],
       ),
       price: _toDoubleOrNull(json['price']),
       enrolledCount: _toInt(json['enrolledCount'] ?? json['enrolled_count']),
@@ -136,7 +139,9 @@ final class WalletSummaryModel extends WalletSummaryEntity {
 
   factory WalletSummaryModel.fromJson(Map<String, dynamic> json) {
     return WalletSummaryModel(
-      walletBalance: _toDouble(json['walletBalance'] ?? json['wallet_balance']),
+      walletBalance: _toDouble(
+        json['walletBalance'] ?? json['wallet_balance'] ?? json['balance'],
+      ),
       points: _toInt(json['totalPoints'] ?? json['total_points'] ?? json['points']),
       spentThisMonth: _toDouble(json['spentThisMonth'] ?? json['spent_this_month']),
       totalCreditsThisMonth: _toDouble(

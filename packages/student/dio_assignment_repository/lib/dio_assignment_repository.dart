@@ -34,7 +34,7 @@ final class DioAssignmentRepository
   @override
   Future<AssignmentSubmissionEntity?> getSubmission(String assignmentId) async {
     try {
-      final response = await httpClient.get('/api/assignments/$assignmentId/submission');
+      final response = await httpClient.get('/api/assignment-attempts/student/me/assignment/$assignmentId');
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return AssignmentSubmissionModel.fromJson(data);
     } on HttpClientResponse catch (e) {
@@ -54,8 +54,10 @@ final class DioAssignmentRepository
         files: {'files': localFilePaths},
       );
 
-      final data = asList(response.data);
-      return data.map((e) => asMap(e)['url'].toString()).toList();
+      final list = asList(asMap(response.data)['content'] ??
+          asMap(response.data)['data'] ??
+          response.data);
+      return list.map((e) => asMap(e)['url'].toString()).toList();
     } on HttpClientResponse catch (e) {
       handleHttpClientErrorResponse(
         e,

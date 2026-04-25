@@ -16,6 +16,23 @@ class SecurityStep extends StatefulWidget {
 
 class _SecurityStepState extends State<SecurityStep> {
   final ImagePicker _imagePicker = ImagePicker();
+  late final TextEditingController _passwordController;
+  late final TextEditingController _confirmPasswordController;
+
+  @override
+  void initState() {
+    super.initState();
+    final state = context.read<StudentRegistrationBloc>().state;
+    _passwordController = TextEditingController(text: state.password);
+    _confirmPasswordController = TextEditingController(text: state.confirmPassword);
+  }
+
+  @override
+  void dispose() {
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,33 +57,29 @@ class _SecurityStepState extends State<SecurityStep> {
               ),
             ),
             const Gap(24),
-            TextFormField(
-              decoration: const InputDecoration(
-                labelText: 'Password',
-                hintText: 'Create a password',
-              ),
-              obscureText: true,
+            MentorXTextFormField(
+              label: 'Password',
+              icon: Icons.lock_outline,
+              controller: _passwordController,
+              isPassword: true,
               onChanged: (value) =>
                   bloc.add(StudentRegistrationPasswordChanged(value)),
-              initialValue: state.password,
             ),
             const Gap(8),
             _buildPasswordStrength(context, state.password),
             const Gap(16),
-            TextFormField(
-              decoration: InputDecoration(
-                labelText: 'Confirm Password',
-                hintText: 'Re-enter your password',
-                errorText:
-                    state.password != state.confirmPassword &&
-                        state.confirmPassword.isNotEmpty
-                    ? 'Passwords do not match'
-                    : null,
-              ),
-              obscureText: true,
+            MentorXTextFormField(
+              label: 'Confirm Password',
+              icon: Icons.lock_clock_outlined,
+              controller: _confirmPasswordController,
+              isPassword: true,
+              errorText:
+                  state.password != state.confirmPassword &&
+                      state.confirmPassword.isNotEmpty
+                  ? 'Passwords do not match'
+                  : null,
               onChanged: (value) =>
                   bloc.add(StudentRegistrationConfirmPasswordChanged(value)),
-              initialValue: state.confirmPassword,
             ),
             const Gap(24),
             _buildIdCardUpload(context, state, bloc),

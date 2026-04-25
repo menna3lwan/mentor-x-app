@@ -31,7 +31,7 @@ class LocationStep extends StatelessWidget {
             const Gap(24),
             _buildGovernoratePicker(context, state, bloc),
             const Gap(16),
-            _buildDistrictPicker(context, state, bloc),
+            _buildAreaPicker(context, state, bloc),
           ],
         );
       },
@@ -68,15 +68,15 @@ class LocationStep extends StatelessWidget {
     );
   }
 
-  Widget _buildDistrictPicker(BuildContext context, StudentRegistrationState state, StudentRegistrationBloc bloc) {
+  Widget _buildAreaPicker(BuildContext context, StudentRegistrationState state, StudentRegistrationBloc bloc) {
     final palette = MentorXThemeColorPalette.light;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('District', style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold)),
+        Text('Area', style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold)),
         const Gap(8),
-        DropdownButtonFormField<DistrictEntity>(
-          value: state.selectedDistrict,
+        DropdownButtonFormField<String>(
+          value: state.selectedArea,
           decoration: InputDecoration(
             filled: true,
             fillColor: palette.backgroundSecondary,
@@ -85,14 +85,14 @@ class LocationStep extends StatelessWidget {
               borderSide: BorderSide(color: palette.textTertiary),
             ),
           ),
-          hint: const Text('Select District'),
-          items: state.districts.map((district) {
+          hint: const Text('Select Area'),
+          items: state.areas.map((area) {
             return DropdownMenuItem(
-              value: district,
-              child: Text(district.name),
+              value: area,
+              child: Text(area),
             );
           }).toList(),
-          onChanged: (value) => bloc.add(StudentRegistrationDistrictChanged(value)),
+          onChanged: (value) => bloc.add(StudentRegistrationAreaChanged(value)),
         ),
       ],
     );

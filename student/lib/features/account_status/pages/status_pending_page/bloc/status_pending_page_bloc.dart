@@ -107,7 +107,7 @@ final class StatusPendingPageBloc
   ) async {
     emit(state.copyWith(isRefreshing: true));
     try {
-      await _authRepository.signOut();
+      await _authRepository.logout();
       emit(state.copyWith(isRefreshing: false));
       emitPresentation(const StatusPendingPageLoggedOutPresentationEvent());
     } on MentorXException catch (exception) {

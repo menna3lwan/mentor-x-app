@@ -65,6 +65,7 @@ final class StudentRequirements {
       languageCode: languageCode,
       brightness: initalBrightness,
       cacheRepository: repositories.cacheRepository,
+      authenticationRepository: repositories.authenticationRepository,
       localizedClients: localizedClients,
     );
 

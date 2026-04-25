@@ -1,7 +1,7 @@
 name: mentorx_student
 description: "A new Flutter project."
 publish_to: "none"
-version: 1.0.0+4
+version: 1.0.0+5
 resolution: workspace
 
 environment:
@@ -139,6 +139,7 @@ dependencies:
     path: ../packages/student/dio_settings_repository
   dio_student_registration_repository:
     path: ../packages/student/dio_student_registration_repository
+  dio: ^5.9.2
 
 dev_dependencies:
   # Testing

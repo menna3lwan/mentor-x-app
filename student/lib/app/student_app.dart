@@ -39,21 +39,21 @@ final class StudentApp extends StatelessWidget {
                 ).flutterLocale.languageCode;
                 final appKey = ValueKey(currentLanguageCode);
                 return MaterialApp.router(
-                  key: appKey,
-                  debugShowCheckedModeBanner: false,
-                  routerConfig: requirements.routerConfig,
-                  locale: TranslationProvider.of(context).flutterLocale,
-                  supportedLocales: LocaleSettings.instance.supportedLocales,
-                  localizationsDelegates: [
-                    ...GlobalMaterialLocalizations.delegates,
-                  ],
-                  theme: MentorXThemes.materialThemeDataFromTheme(
-                    lightMixTheme,
-                    context,
-                  ),
-                  darkTheme: MentorXThemes.materialThemeDataFromTheme(
-                    darkMixTheme,
-                    context,
+                    key: appKey,
+                    debugShowCheckedModeBanner: false,
+                    routerConfig: requirements.routerConfig,
+                    locale: TranslationProvider.of(context).flutterLocale,
+                    supportedLocales: LocaleSettings.instance.supportedLocales,
+                    localizationsDelegates: [
+                      ...GlobalMaterialLocalizations.delegates,
+                    ],
+                    theme: MentorXThemes.materialThemeDataFromTheme(
+                      lightMixTheme,
+                      context,
+                    ),
+                    darkTheme: MentorXThemes.materialThemeDataFromTheme(
+                      darkMixTheme,
+                      context,
                   ),
                 );
               },

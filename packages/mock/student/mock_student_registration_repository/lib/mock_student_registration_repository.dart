@@ -4,63 +4,56 @@ import 'package:mentorx_core/mentorx_core.dart';
 final class MockStudentRegistrationRepository
     implements StudentRegistrationRepository {
   @override
-  Future<bool> checkPhoneUniqueness(String phone) async {
-    await Future.delayed(const Duration(milliseconds: 500));
-    // Simulate uniqueness (except for a specific testing number)
-    return phone != '01000000000';
-  }
-
-  @override
-  Future<List<GradeEntity>> getGrades(String tenantId) async {
-    await Future.delayed(const Duration(milliseconds: 400));
-    return [
-      const GradeEntity(id: '1', name: 'Primary 1'),
-      const GradeEntity(id: '2', name: 'Primary 2'),
-      const GradeEntity(id: '3', name: 'Primary 3'),
-      const GradeEntity(id: '4', name: 'Secondary 1'),
-      const GradeEntity(id: '5', name: 'Secondary 2'),
-      const GradeEntity(id: '6', name: 'Secondary 3'),
-    ];
-  }
-
-  @override
-  Future<List<CenterEntity>> getCenters(String tenantId) async {
-    await Future.delayed(const Duration(milliseconds: 400));
-    return [
-      const CenterEntity(id: '1', name: 'Downtown Center'),
-      const CenterEntity(id: '2', name: 'West Side Branch'),
-      const CenterEntity(id: '3', name: 'Smart Village Lab'),
-    ];
-  }
-
-  @override
-  Future<List<ScheduleEntity>> getSchedules({
-    required String centerId,
-    required String gradeId,
+  Future<void> startRegistration({
+    required String firstName,
+    required String phone,
+    required String parentPhone,
   }) async {
-    await Future.delayed(const Duration(milliseconds: 300));
-    return [
-      const ScheduleEntity(
-          id: '1', day: 'Saturday', startTime: '10:00 AM', endTime: '12:00 PM'),
-      const ScheduleEntity(
-          id: '2', day: 'Monday', startTime: '04:00 PM', endTime: '06:00 PM'),
-      const ScheduleEntity(
-          id: '3', day: 'Wednesday', startTime: '06:00 PM', endTime: '08:00 PM'),
-    ];
+    await Future.delayed(const Duration(seconds: 1));
+    // Simulate phone already exists for a specific number
+    if (phone == '01000000000') {
+      throw StudentRegistrationException(
+        code: StudentRegistrationExceptionCode.phoneAlreadyExists,
+        message: 'This phone number is already registered.',
+      );
+    }
   }
 
   @override
-  Future<List<GroupEntity>> getGroups({
-    required String centerId,
-    required String gradeId,
-    required String scheduleId,
+  Future<void> resendOtp(String phone) async {
+    await Future.delayed(const Duration(seconds: 1));
+  }
+
+  @override
+  Future<void> completeRegistration({
+    required String firstName,
+    required String secondName,
+    required String thirdName,
+    required String fourthName,
+    required String governorate,
+    required String area,
+    required String grade,
+    required bool online,
+    required String otp,
+    required String parentPhone,
+    required String phone,
+    required String password,
+    required String confirmPassword,
+    String? schoolName,
+    String? educationDepartment,
+    String? centerName,
+    String? profileImagePath,
+    String? identityDocumentPath,
   }) async {
-    await Future.delayed(const Duration(milliseconds: 300));
-    return [
-      const GroupEntity(id: '1', name: 'Group A'),
-      const GroupEntity(id: '2', name: 'Group B'),
-      const GroupEntity(id: '3', name: 'Group C'),
-    ];
+    await Future.delayed(const Duration(seconds: 2));
+    
+    // Simulate OTP verification
+    if (otp != '123456') {
+      throw StudentRegistrationException(
+        code: StudentRegistrationExceptionCode.invalidOtp,
+        message: 'Invalid verification code. Please use 123456 for testing.',
+      );
+    }
   }
 
   @override
@@ -74,58 +67,36 @@ final class MockStudentRegistrationRepository
   }
 
   @override
-  Future<List<DistrictEntity>> getDistricts(String governorateId) async {
+  Future<List<String>> getAreas(String governorate) async {
     await Future.delayed(const Duration(milliseconds: 300));
-    if (governorateId == '1') {
-      return [
-        const DistrictEntity(id: '1', name: 'Maadi', governorateId: '1'),
-        const DistrictEntity(id: '2', name: 'Nasr City', governorateId: '1'),
-      ];
-    } else if (governorateId == '2') {
-      return [
-        const DistrictEntity(id: '3', name: '6th of October', governorateId: '2'),
-        const DistrictEntity(id: '4', name: 'Dokki', governorateId: '2'),
-      ];
+    if (governorate == 'Cairo') {
+      return ['Maadi', 'Nasr City', 'Heliopolis', 'Zamalek'];
+    } else if (governorate == 'Giza') {
+      return ['6th of October', 'Dokki', 'Mohandessin', 'Sheikh Zayed'];
     }
-    return [
-      DistrictEntity(id: '5', name: 'Other District', governorateId: governorateId),
-    ];
+    return ['Sidi Gaber', 'Stanley', 'Montaza', 'Smouha'];
   }
 
   @override
-  Future<String> uploadImage(String filePath) async {
-    await Future.delayed(const Duration(seconds: 1));
-    return 'https://mock-cdn.mentorx.com/uploads/${filePath.split('/').last}';
+  Future<Map<String, dynamic>> getApplicationInfo() async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    return {
+      'grades': [
+        {'id': '1', 'name': 'Primary 1'},
+        {'id': '2', 'name': 'Primary 2'},
+        {'id': '3', 'name': 'Primary 3'},
+        {'id': '4', 'name': 'Secondary 1'},
+        {'id': '5', 'name': 'Secondary 2'},
+        {'id': '6', 'name': 'Secondary 3'},
+      ],
+      'studyModes': ['Online', 'Center'],
+    };
   }
 
   @override
-  Future<({String studentCode, int? otpExpiresInSeconds})> register({
-    required String tenantId,
-    required String firstName,
-    required String lastName,
-    required String phone,
-    String? email,
-    required String gender,
-    required DateTime dateOfBirth,
-    String? profilePhotoUrl,
-    required String gradeId,
-    String? schoolName,
-    required String studyType,
-    String? centerId,
-    String? scheduleId,
-    String? centerGroupId,
-    required String governorateId,
-    required String districtId,
-    required String parentName,
-    required String parentPhone,
-    required String password,
-    String? idCardPhotoUrl,
-    required String deviceHash,
-  }) async {
-    await Future.delayed(const Duration(seconds: 2));
-    return (
-      studentCode: 'MX-${DateTime.now().year}-0042',
-      otpExpiresInSeconds: 300,
-    );
+  Future<bool> checkPhone(String phone) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    // Simulate uniqueness (except for a specific testing number)
+    return phone != '01000000000';
   }
 }

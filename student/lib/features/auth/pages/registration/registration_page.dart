@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
+import 'steps/start_step.dart';
+import 'steps/otp_step.dart';
 import 'steps/personal_info_step.dart';
 import 'steps/academic_info_step.dart';
 import 'steps/location_step.dart';
-import 'steps/parent_info_step.dart';
 import 'steps/security_step.dart';
 
 class RegistrationPage extends StatelessWidget {
@@ -27,10 +28,11 @@ class RegistrationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final steps = [
+      'Start',
+      'OTP',
       'Personal',
       'Academic',
       'Location',
-      'Parent',
       'Security',
     ];
 
@@ -131,14 +133,16 @@ class RegistrationPage extends StatelessWidget {
   Widget _buildCurrentStep(BuildContext context) {
     switch (currentStep) {
       case 0:
-        return const PersonalInfoStep();
+        return const StartStep();
       case 1:
-        return const AcademicInfoStep();
+        return const OtpStep();
       case 2:
-        return const LocationStep();
+        return const PersonalInfoStep();
       case 3:
-        return const ParentInfoStep();
+        return const AcademicInfoStep();
       case 4:
+        return const LocationStep();
+      case 5:
         return const SecurityStep();
       default:
         return const SizedBox.shrink();
@@ -159,7 +163,7 @@ class RegistrationPage extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: isLoading
                     ? null
-                    : (currentStep == 4 ? onSubmit : onNext),
+                    : (currentStep == 5 ? onSubmit : onNext),
                 child: isLoading
                     ? const SizedBox(
                         width: 20,
@@ -167,9 +171,9 @@ class RegistrationPage extends StatelessWidget {
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
                     : Text(
-                        currentStep == 4
+                        currentStep == 5
                             ? 'Complete Registration'
-                            : 'Next Step',
+                            : (currentStep == 0 ? 'Verify & Continue' : 'Next Step'),
                       ),
               ),
             ),

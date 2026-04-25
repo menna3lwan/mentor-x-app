@@ -33,6 +33,7 @@ final class CacheKeys {
   static const String tenantAccentColor = 'tenant_accent_color';
   static const String rememberedPhone = 'remembered_phone';
   static const String isFirstTimeOpened = 'isFirstTimeOpened';
+  static const String deviceId = 'deviceId';
 }
 
 abstract interface class CacheRepository {

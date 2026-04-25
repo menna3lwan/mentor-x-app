@@ -60,8 +60,10 @@ final class DioAttendanceRepository
         },
       );
 
-      final data = asList(response.data);
-      return data.map((e) => AttendanceRecordModel.fromJson(asMap(e))).toList();
+      final list = asList(asMap(response.data)['content'] ??
+          asMap(response.data)['data'] ??
+          response.data);
+      return list.map((e) => AttendanceRecordModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
       handleHttpClientErrorResponse(
         e,

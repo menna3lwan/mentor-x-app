@@ -19,7 +19,7 @@ final class DioWalletRepository
   @override
   Future<WalletSummaryEntity> getSummary() async {
     try {
-      final response = await httpClient.get('/api/student/wallet/summary');
+      final response = await httpClient.get('/api/payment/wallet/balance');
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return WalletSummaryModel.fromJson(data);
     } on HttpClientResponse catch (e) {
@@ -37,14 +37,18 @@ final class DioWalletRepository
   }) async {
     try {
       final response = await httpClient.get(
-        '/api/student/wallet/transactions',
+        '/api/payment/wallet/transactions',
         queryParameters: {
           if (type != null) 'type': type,
           if (paginationInfo != null) ...paginationInfo.toJson(),
         },
       );
-      final data = asList(response.data);
-      return data
+
+      final list = asList(asMap(response.data)['content'] ??
+          asMap(response.data)['data'] ??
+          response.data);
+
+      return list
           .map((e) => WalletTransactionModel.fromJson(asMap(e)))
           .toList();
     } on HttpClientResponse catch (e) {
@@ -63,7 +67,7 @@ final class DioWalletRepository
   }) async {
     try {
       final response = await httpClient.post(
-        '/api/student/payments/initiate',
+        '/api/payment/process',
         data: {
           'amount': amount,
           'method': method.name,
@@ -102,7 +106,7 @@ final class DioWalletRepository
   Future<Map<String, dynamic>> redeemCode(String code) async {
     try {
       final response = await httpClient.post(
-        '/api/student/wallet/redeem',
+        '/api/v1/access-codes/redeem',
         data: {'code': code},
       );
       return asMap(response.data)['data'] ?? asMap(response.data);
@@ -120,12 +124,17 @@ final class DioWalletRepository
   }) async {
     try {
       final response = await httpClient.get(
-        '/api/student/wallet/redemptions',
+        '/api/v1/access-codes/my-codes',
         queryParameters: {
           if (paginationInfo != null) ...paginationInfo.toJson(),
         },
       );
-      return asList(response.data).map((e) => asMap(e)).toList();
+
+      final list = asList(asMap(response.data)['content'] ??
+          asMap(response.data)['data'] ??
+          response.data);
+
+      return list.map((e) => asMap(e)).toList();
     } on HttpClientResponse catch (e) {
       handleHttpClientErrorResponse(
         e,

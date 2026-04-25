@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
-import 'package:mentorx_core/mentorx_core.dart';
 import '../bloc/student_registration_bloc.dart';
 
 class PersonalInfoStep extends StatefulWidget {
@@ -17,6 +16,26 @@ class PersonalInfoStep extends StatefulWidget {
 
 class _PersonalInfoStepState extends State<PersonalInfoStep> {
   final ImagePicker _imagePicker = ImagePicker();
+  late final TextEditingController _secondNameController;
+  late final TextEditingController _thirdNameController;
+  late final TextEditingController _fourthNameController;
+
+  @override
+  void initState() {
+    super.initState();
+    final state = context.read<StudentRegistrationBloc>().state;
+    _secondNameController = TextEditingController(text: state.secondName);
+    _thirdNameController = TextEditingController(text: state.thirdName);
+    _fourthNameController = TextEditingController(text: state.fourthName);
+  }
+
+  @override
+  void dispose() {
+    _secondNameController.dispose();
+    _thirdNameController.dispose();
+    _fourthNameController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,14 +47,14 @@ class _PersonalInfoStepState extends State<PersonalInfoStep> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Personal Information',
+              'Complete Your Profile',
               style: Theme.of(
                 context,
               ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
             ),
             const Gap(8),
             Text(
-              'Please provide your basic details to get started.',
+              'Please provide your full name as it appears in your documents.',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: palette.textSecondary,
               ),
@@ -43,56 +62,29 @@ class _PersonalInfoStepState extends State<PersonalInfoStep> {
             const Gap(24),
             _buildPhotoPicker(context, state, bloc),
             const Gap(24),
-            TextFormField(
-              decoration: const InputDecoration(
-                labelText: 'First Name',
-                hintText: 'Enter your first name',
-              ),
+            MentorXTextFormField(
+              label: 'Second Name',
+              icon: Icons.person_outline,
+              controller: _secondNameController,
               onChanged: (value) =>
-                  bloc.add(StudentRegistrationFirstNameChanged(value)),
-              initialValue: state.firstName,
+                  bloc.add(StudentRegistrationSecondNameChanged(value)),
             ),
             const Gap(16),
-            TextFormField(
-              decoration: const InputDecoration(
-                labelText: 'Last Name',
-                hintText: 'Enter your last name',
-              ),
+            MentorXTextFormField(
+              label: 'Third Name',
+              icon: Icons.person_outline,
+              controller: _thirdNameController,
               onChanged: (value) =>
-                  bloc.add(StudentRegistrationLastNameChanged(value)),
-              initialValue: state.lastName,
+                  bloc.add(StudentRegistrationThirdNameChanged(value)),
             ),
             const Gap(16),
-            TextFormField(
-              decoration: InputDecoration(
-                labelText: 'Phone Number',
-                hintText: '01xxxxxxxxx',
-                prefixIcon: const Icon(Icons.phone),
-                errorText: !state.isPhoneUnique
-                    ? 'Phone number already registered'
-                    : null,
-              ),
+            MentorXTextFormField(
+              label: 'Fourth Name (Last Name)',
+              icon: Icons.person_outline,
+              controller: _fourthNameController,
               onChanged: (value) =>
-                  bloc.add(StudentRegistrationPhoneChanged(value)),
-              initialValue: state.phone,
-              keyboardType: TextInputType.phone,
+                  bloc.add(StudentRegistrationFourthNameChanged(value)),
             ),
-            const Gap(16),
-            TextFormField(
-              decoration: const InputDecoration(
-                labelText: 'Email (Optional)',
-                hintText: 'example@email.com',
-                prefixIcon: Icon(Icons.email),
-              ),
-              onChanged: (value) =>
-                  bloc.add(StudentRegistrationEmailChanged(value)),
-              initialValue: state.email,
-              keyboardType: TextInputType.emailAddress,
-            ),
-            const Gap(16),
-            _buildGenderPicker(context, state, bloc),
-            const Gap(16),
-            _buildDatePicker(context, state, bloc),
           ],
         );
       },
@@ -184,141 +176,5 @@ class _PersonalInfoStepState extends State<PersonalInfoStep> {
 
     if (!mounted) return;
     bloc.add(StudentRegistrationProfilePhotoChanged(image.path));
-  }
-
-  Widget _buildGenderPicker(
-    BuildContext context,
-    StudentRegistrationState state,
-    StudentRegistrationBloc bloc,
-  ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Gender',
-          style: Theme.of(
-            context,
-          ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
-        ),
-        const Gap(8),
-        Row(
-          children: [
-            Expanded(
-              child: _buildGenderOption(
-                context,
-                'Male',
-                Gender.male,
-                state.gender == Gender.male,
-                () => bloc.add(
-                  const StudentRegistrationGenderChanged(Gender.male),
-                ),
-              ),
-            ),
-            const Gap(12),
-            Expanded(
-              child: _buildGenderOption(
-                context,
-                'Female',
-                Gender.female,
-                state.gender == Gender.female,
-                () => bloc.add(
-                  const StudentRegistrationGenderChanged(Gender.female),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildGenderOption(
-    BuildContext context,
-    String label,
-    Gender gender,
-    bool isSelected,
-    VoidCallback onTap,
-  ) {
-    final palette = MentorXThemeColorPalette.light;
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        decoration: BoxDecoration(
-          color: isSelected
-              ? palette.brandPrimary
-              : palette.backgroundSecondary,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: isSelected ? palette.brandPrimary : palette.textTertiary,
-          ),
-        ),
-        child: Center(
-          child: Text(
-            label,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: isSelected ? palette.textForeground : palette.textPrimary,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDatePicker(
-    BuildContext context,
-    StudentRegistrationState state,
-    StudentRegistrationBloc bloc,
-  ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Date of Birth',
-          style: Theme.of(
-            context,
-          ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
-        ),
-        const Gap(8),
-        GestureDetector(
-          onTap: () async {
-            final date = await showDatePicker(
-              context: context,
-              initialDate: DateTime.now().subtract(
-                const Duration(days: 365 * 15),
-              ),
-              firstDate: DateTime(1900),
-              lastDate: DateTime.now(),
-            );
-            if (date != null) {
-              bloc.add(StudentRegistrationDateOfBirthChanged(date));
-            }
-          },
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: MentorXThemeColorPalette.light.backgroundSecondary,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: MentorXThemeColorPalette.light.textTertiary,
-              ),
-            ),
-            child: Row(
-              children: [
-                const Icon(Icons.calendar_today, size: 20),
-                const Gap(12),
-                Text(
-                  state.dateOfBirth != null
-                      ? '${state.dateOfBirth!.year}-${state.dateOfBirth!.month}-${state.dateOfBirth!.day}'
-                      : 'Select Date',
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
   }
 }

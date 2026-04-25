@@ -3,14 +3,13 @@ part of 'package:mentorx_core/mentorx_core.dart';
 enum StudentRegistrationExceptionCode {
   unknown,
   phoneAlreadyExists,
-  failedToLoadGrades,
-  failedToLoadCenters,
-  failedToLoadSchedules,
-  failedToLoadGroups,
   failedToLoadGovernorates,
-  failedToLoadDistricts,
-  failedToRegister,
-  failedToUploadImage,
+  failedToLoadAreas,
+  failedToLoadApplicationInfo,
+  failedToStartRegistration,
+  failedToResendOtp,
+  failedToCompleteRegistration,
+  invalidOtp,
 }
 
 final class StudentRegistrationException
@@ -19,50 +18,43 @@ final class StudentRegistrationException
 }
 
 abstract interface class StudentRegistrationRepository {
-  Future<bool> checkPhoneUniqueness(String phone);
-
-  Future<List<GradeEntity>> getGrades(String tenantId);
-
-  Future<List<CenterEntity>> getCenters(String tenantId);
-
-  Future<List<ScheduleEntity>> getSchedules({
-    required String centerId,
-    required String gradeId,
-  });
-
-  Future<List<GroupEntity>> getGroups({
-    required String centerId,
-    required String gradeId,
-    required String scheduleId,
-  });
-
-  Future<List<GovernorateEntity>> getGovernorates();
-
-  Future<List<DistrictEntity>> getDistricts(String governorateId);
-
-  Future<String> uploadImage(String filePath);
-
-  Future<({String studentCode, int? otpExpiresInSeconds})> register({
-    required String tenantId,
+  /// Step 1: Start registration by sending basic info.
+  /// Triggers OTP.
+  Future<void> startRegistration({
     required String firstName,
-    required String lastName,
     required String phone,
-    String? email,
-    required String gender,
-    required DateTime dateOfBirth,
-    String? profilePhotoUrl,
-    required String gradeId,
-    String? schoolName,
-    required String studyType,
-    String? centerId,
-    String? scheduleId,
-    String? centerGroupId,
-    required String governorateId,
-    required String districtId,
-    required String parentName,
     required String parentPhone,
-    required String password,
-    String? idCardPhotoUrl,
-    required String deviceHash,
   });
+
+  /// Resend OTP if needed.
+  Future<void> resendOtp(String phone);
+
+  /// Step 3: Complete registration with all details and OTP.
+  /// Uses multipart/form-data for images and query parameters for other fields as per API spec.
+  Future<void> completeRegistration({
+    required String firstName,
+    required String secondName,
+    required String thirdName,
+    required String fourthName,
+    required String governorate,
+    required String area,
+    required String grade,
+    required bool online,
+    required String otp,
+    required String parentPhone,
+    required String phone,
+    required String password,
+    required String confirmPassword,
+    String? schoolName,
+    String? educationDepartment,
+    String? centerName,
+    String? profileImagePath,
+    String? identityDocumentPath,
+  });
+
+  /// Lookups
+  Future<List<GovernorateEntity>> getGovernorates();
+  Future<List<String>> getAreas(String governorate);
+  Future<Map<String, dynamic>> getApplicationInfo();
+  Future<bool> checkPhone(String phone);
 }

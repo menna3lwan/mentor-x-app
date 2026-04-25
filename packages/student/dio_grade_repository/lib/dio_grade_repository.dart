@@ -23,15 +23,18 @@ final class DioGradeRepository
   }) async {
     try {
       final response = await httpClient.get(
-        '/api/student/grades/quizzes',
+        '/api/quiz-attempts/student/me',
         queryParameters: {
           if (courseId != null) 'course_id': courseId,
           if (paginationInfo != null) ...paginationInfo.toJson(),
         },
       );
 
-      final data = asList(response.data);
-      return data.map((e) => QuizAttemptModel.fromJson(asMap(e))).toList();
+      final list = asList(asMap(response.data)['content'] ??
+          asMap(response.data)['data'] ??
+          response.data);
+
+      return list.map((e) => QuizAttemptModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
       handleHttpClientErrorResponse(
         e,
@@ -47,15 +50,18 @@ final class DioGradeRepository
   }) async {
     try {
       final response = await httpClient.get(
-        '/api/student/grades/assignments',
+        '/api/assignment-attempts/student/me',
         queryParameters: {
           if (courseId != null) 'course_id': courseId,
           if (paginationInfo != null) ...paginationInfo.toJson(),
         },
       );
 
-      final data = asList(response.data);
-      return data.map((e) => AssignmentSubmissionModel.fromJson(asMap(e))).toList();
+      final list = asList(asMap(response.data)['content'] ??
+          asMap(response.data)['data'] ??
+          response.data);
+
+      return list.map((e) => AssignmentSubmissionModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
       handleHttpClientErrorResponse(
         e,

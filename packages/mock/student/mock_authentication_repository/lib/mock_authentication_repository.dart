@@ -249,7 +249,7 @@ final class MockAuthenticationRepository
   }
 
   @override
-  Future<void> signOut() async {
+  Future<void> logout() async {
     await _delay;
 
     if (!_isInitialized) {
@@ -261,7 +261,7 @@ final class MockAuthenticationRepository
 
     if (_currentUser == null) {
       throw AuthenticationRepositoryException(
-        code: AuthenticationRepositoryExceptionCode.failedToSignOut,
+        code: AuthenticationRepositoryExceptionCode.failedToLogout,
         message: 'No user is currently signed in',
       );
     }
@@ -269,6 +269,17 @@ final class MockAuthenticationRepository
     _currentUser = null;
     clearOtpVerificationContext();
     _validOtp = null;
+  }
+
+  @override
+  Future<void> refreshToken() async {
+    await _delay;
+    if (!_isInitialized) {
+      throw AuthenticationRepositoryException(
+        code: AuthenticationRepositoryExceptionCode.failedToRefreshToken,
+        message: 'Repository not initialized',
+      );
+    }
   }
 
   @override

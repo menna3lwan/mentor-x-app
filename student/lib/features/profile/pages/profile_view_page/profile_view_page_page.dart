@@ -404,24 +404,72 @@ class _ActionButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Row(
+      child: Column(
         children: [
-          Expanded(
-            child: _PremiumButton(
-              label: t['editRequest'] ?? 'Edit Profile',
-              icon: Icons.edit_outlined,
-              onTap: () => context.push('/edit-profile'),
-              isPrimary: true,
+          Row(
+            children: [
+              Expanded(
+                child: _PremiumButton(
+                  label: t['editRequest'] ?? 'Edit Profile',
+                  icon: Icons.edit_outlined,
+                  onTap: () => context.push('/edit-profile'),
+                  isPrimary: true,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _PremiumButton(
+                  label: t['settingsTitle'] ?? 'Settings',
+                  icon: Icons.settings_outlined,
+                  onTap: () => context.push('/settings'),
+                  isPrimary: false,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+        ],
+      ),
+    );
+  }
+
+  void _showLogoutDialog(BuildContext context) {
+    final t = context.t.student;
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Text(
+          t['logoutConfirmTitle'] ?? 'Log Out',
+          style: const TextStyle(
+            fontWeight: FontWeight.w700,
+            color: AppColors.primary,
+          ),
+        ),
+        content: Text(
+          t['logoutConfirmDesc'] ?? 'Are you sure you want to log out?',
+          style: const TextStyle(color: AppColors.greyDark),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: Text(
+              t['cancel'] ?? 'Cancel',
+              style: const TextStyle(color: AppColors.greyDark),
             ),
           ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: _PremiumButton(
-              label: t['settingsTitle'] ?? 'Settings',
-              icon: Icons.settings_outlined,
-              onTap: () => context.push('/settings'),
-              isPrimary: false,
+          FilledButton(
+            onPressed: () {
+              Navigator.pop(ctx);
+              context.read<AppAuthenticationCubit>().logout();
+            },
+            style: FilledButton.styleFrom(
+              backgroundColor: AppColors.red,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
             ),
+            child: Text(t['logoutSetting'] ?? 'Log Out'),
           ),
         ],
       ),
@@ -435,11 +483,13 @@ class _PremiumButton extends StatelessWidget {
     required this.icon,
     required this.onTap,
     required this.isPrimary,
+    this.isDanger = false,
   });
   final String label;
   final IconData icon;
   final VoidCallback onTap;
   final bool isPrimary;
+  final bool isDanger;
 
   @override
   Widget build(BuildContext context) {
@@ -455,31 +505,39 @@ class _PremiumButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(14),
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 14),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(14),
-            border: isPrimary
-                ? null
-                : Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                icon,
-                size: 18,
-                color: isPrimary ? Colors.white : AppColors.primary,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                label,
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: isPrimary ? Colors.white : AppColors.primary,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(14),
+              border: isPrimary
+                  ? null
+                  : Border.all(
+                      color: isDanger
+                          ? Colors.red.withValues(alpha: 0.2)
+                          : AppColors.primary.withValues(alpha: 0.2),
+                    ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  icon,
+                  size: 18,
+                  color: isPrimary
+                      ? Colors.white
+                      : (isDanger ? Colors.red : AppColors.primary),
                 ),
-              ),
-            ],
-          ),
+                const SizedBox(width: 8),
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: isPrimary
+                        ? Colors.white
+                        : (isDanger ? Colors.red : AppColors.primary),
+                  ),
+                ),
+              ],
+            ),
         ),
       ),
     );

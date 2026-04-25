@@ -161,7 +161,7 @@ class AppDrawer extends StatelessWidget {
                   color: AppColors.red,
                   onTap: () {
                     Navigator.pop(context);
-                    context.go('/login');
+                    context.read<AppAuthenticationCubit>().logout();
                   },
                 ),
               ],
