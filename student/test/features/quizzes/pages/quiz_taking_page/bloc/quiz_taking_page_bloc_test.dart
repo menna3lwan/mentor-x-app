@@ -7,6 +7,7 @@ import 'package:mentorx_student/features/quizzes/pages/quiz_taking_page/bloc/qui
 
 void main() {
   late MockQuizRepository quizRepository;
+  const testId = 'quiz-123';
 
   setUp(() {
     quizRepository = const MockQuizRepository(delay: Duration.zero);
@@ -14,15 +15,21 @@ void main() {
 
   group('QuizTakingPageBloc', () {
     test('initial state is correct', () {
-      final bloc = QuizTakingPageBloc(quizRepository: quizRepository);
-      expect(bloc.state, QuizTakingPageState.initial);
+      final bloc = QuizTakingPageBloc(
+        quizRepository: quizRepository,
+        quizId: testId,
+      );
+      expect(bloc.state.quizId, testId);
       expect(bloc.state.loadingState, LoadingState.initial);
       bloc.close();
     });
 
     blocTest<QuizTakingPageBloc, QuizTakingPageState>(
       'emits [loading, loaded] when QuizTakingPageLoadEvent is added',
-      build: () => QuizTakingPageBloc(quizRepository: quizRepository),
+      build: () => QuizTakingPageBloc(
+        quizRepository: quizRepository,
+        quizId: testId,
+      ),
       act: (bloc) => bloc.add(const QuizTakingPageLoadEvent()),
       expect: () => [
         isA<QuizTakingPageState>().having(

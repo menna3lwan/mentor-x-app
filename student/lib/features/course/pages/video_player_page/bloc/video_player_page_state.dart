@@ -10,9 +10,16 @@ final class VideoPlayerPageState extends Equatable {
   final bool isCompleted;
   final String? errorMessage;
 
+  final String? enrollmentId;
+  final int completedLessons;
+  final int totalLessons;
+
   const VideoPlayerPageState({
     required this.itemId,
     required this.title,
+    this.enrollmentId,
+    this.completedLessons = 0,
+    this.totalLessons = 0,
     this.loadingState = LoadingState.initial,
     this.streamUrl,
     this.currentPositionSeconds = 0,
@@ -29,6 +36,9 @@ final class VideoPlayerPageState extends Equatable {
   VideoPlayerPageState copyWith({
     String? itemId,
     String? title,
+    String? enrollmentId,
+    int? completedLessons,
+    int? totalLessons,
     LoadingState? loadingState,
     String? streamUrl,
     int? currentPositionSeconds,
@@ -39,6 +49,9 @@ final class VideoPlayerPageState extends Equatable {
     return VideoPlayerPageState(
       itemId: itemId ?? this.itemId,
       title: title ?? this.title,
+      enrollmentId: enrollmentId ?? this.enrollmentId,
+      completedLessons: completedLessons ?? this.completedLessons,
+      totalLessons: totalLessons ?? this.totalLessons,
       loadingState: loadingState ?? this.loadingState,
       streamUrl: streamUrl ?? this.streamUrl,
       currentPositionSeconds:
@@ -53,6 +66,9 @@ final class VideoPlayerPageState extends Equatable {
   List<Object?> get props => [
     itemId,
     title,
+    enrollmentId,
+    completedLessons,
+    totalLessons,
     loadingState,
     streamUrl,
     currentPositionSeconds,

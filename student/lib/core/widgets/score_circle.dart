@@ -10,6 +10,8 @@ class ScoreCircle extends StatelessWidget {
     this.radius = 80,
     this.lineWidth = 8,
     this.showPercentage = false,
+    this.activeColor,
+    this.backgroundColor,
   });
 
   final int score;
@@ -17,40 +19,37 @@ class ScoreCircle extends StatelessWidget {
   final double radius;
   final double lineWidth;
   final bool showPercentage;
+  final Color? activeColor;
+  final Color? backgroundColor;
 
   @override
   Widget build(BuildContext context) {
     final t = context.t.student;
-    final isAr = Localizations.localeOf(context).languageCode == 'ar';
+    final palette = MentorXThemeColorPalette.light;
+    final isAr = context.isArabic;
     final percent = total > 0 ? score / total : 0.0;
     final percentage = (percent * 100).toInt();
 
-    Color progressColor;
-    Color bgColor;
-    String statusText;
+    Color progressColor = activeColor ?? palette.brandPrimary;
+    Color centerBgColor = backgroundColor ?? palette.brandPrimary.withOpacity(0.05);
+    String statusText = '';
 
     if (percentage >= 85) {
-      progressColor = AppColors.green;
-      bgColor = AppColors.greenLight;
-      statusText = t['excellent']!;
+      statusText = t['excellent'] ?? 'Excellent';
     } else if (percentage >= 60) {
-      progressColor = AppColors.accent;
-      bgColor = AppColors.beige;
-      statusText = t['veryGood']!;
+      statusText = t['veryGood'] ?? 'Very Good';
     } else {
-      progressColor = AppColors.red;
-      bgColor = AppColors.redLight;
-      statusText = t['fail']!;
+      statusText = t['fail'] ?? 'Needs Work';
     }
 
-    final ofLabel = isAr ? '\u0645\u0646 $total' : 'of $total';
+    final ofLabel = isAr ? 'من $total' : 'of $total';
 
     return CircularPercentIndicator(
       radius: radius,
       lineWidth: lineWidth,
       percent: percent.clamp(0.0, 1.0),
       progressColor: progressColor,
-      backgroundColor: AppColors.greyLight,
+      backgroundColor: palette.textTertiary.withOpacity(0.1),
       circularStrokeCap: CircularStrokeCap.round,
       animationDuration: 800,
       animation: true,
@@ -58,7 +57,7 @@ class ScoreCircle extends StatelessWidget {
         width: radius * 2 - lineWidth * 2 - 8,
         height: radius * 2 - lineWidth * 2 - 8,
         decoration: BoxDecoration(
-          color: bgColor,
+          color: centerBgColor,
           shape: BoxShape.circle,
         ),
         child: Column(
@@ -68,7 +67,7 @@ class ScoreCircle extends StatelessWidget {
               showPercentage ? '$percentage%' : '$score',
               style: TextStyle(
                 fontSize: radius * 0.45,
-                fontWeight: FontWeight.w800,
+                fontWeight: FontWeight.w900,
                 color: progressColor,
               ),
             ),
@@ -76,16 +75,16 @@ class ScoreCircle extends StatelessWidget {
               Text(
                 ofLabel,
                 style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.greyDark,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                  color: palette.textTertiary,
                 ),
               ),
             Text(
               statusText,
               style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w700,
+                fontSize: 10,
+                fontWeight: FontWeight.w800,
                 color: progressColor,
               ),
             ),
@@ -95,3 +94,4 @@ class ScoreCircle extends StatelessWidget {
     );
   }
 }
+

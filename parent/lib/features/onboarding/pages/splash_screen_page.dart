@@ -26,21 +26,65 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
     if (authState.isAuthenticated) {
       const HomePageRoute().go(context);
     } else {
-      const LoginPageRoute().go(context);
+      const OnboardingRoute().go(context);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final palette = MentorXThemeColorPalette.light;
+
     return Scaffold(
-      backgroundColor: context.backgroundSecondaryColor,
-      body: Center(
+      body: Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [palette.brandPrimary, palette.brandPrimary.withOpacity(0.8)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.school_rounded, size: 100, color: context.textPrimaryColor),
-            SizedBox(height: 24),
-            CircularProgressIndicator(color: context.textPrimaryColor),
+            Container(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.15),
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.white.withOpacity(0.2)),
+              ),
+              child: const Icon(Icons.family_restroom_rounded, size: 80, color: Colors.white),
+            ),
+            const SizedBox(height: 32),
+            const Text(
+              'MENTORX',
+              style: TextStyle(
+                fontSize: 32,
+                fontWeight: FontWeight.w900,
+                color: Colors.white,
+                letterSpacing: 4,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'PARENT PORTAL',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: Colors.white.withOpacity(0.7),
+                letterSpacing: 2,
+              ),
+            ),
+            const SizedBox(height: 64),
+            SizedBox(
+              width: 40,
+              height: 40,
+              child: CircularProgressIndicator(
+                color: Colors.white.withOpacity(0.5),
+                strokeWidth: 3,
+              ),
+            ),
           ],
         ),
       ),

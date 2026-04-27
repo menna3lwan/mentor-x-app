@@ -8,5 +8,9 @@ sealed class AssignmentDetailPageEvent extends Equatable {
 }
 
 final class AssignmentDetailPageLoadEvent extends AssignmentDetailPageEvent {
-  const AssignmentDetailPageLoadEvent();
+  final String assignmentId;
+  const AssignmentDetailPageLoadEvent({required this.assignmentId});
+
+  @override
+  List<Object?> get props => [assignmentId];
 }

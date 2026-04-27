@@ -17,12 +17,17 @@ class EnrollmentEntity extends Equatable {
   final EnrolledBy enrolledBy;
   final String? certificateUrl;
 
+  final int completedLessons;
+  final int totalLessons;
+
   const EnrollmentEntity({
     required this.id,
     required this.courseId,
     required this.enrolledAt,
     this.progressPercent = 0,
     this.completedSessions = 0,
+    this.completedLessons = 0,
+    this.totalLessons = 0,
     this.expiresAt,
     this.completedAt,
     this.lastAccessedAt,
@@ -51,6 +56,8 @@ class EnrollmentEntity extends Equatable {
         courseId,
         progressPercent,
         completedSessions,
+        completedLessons,
+        totalLessons,
         enrolledAt,
         expiresAt,
         completedAt,
@@ -65,6 +72,8 @@ class EnrollmentEntity extends Equatable {
     String? courseId,
     double? progressPercent,
     int? completedSessions,
+    int? completedLessons,
+    int? totalLessons,
     DateTime? enrolledAt,
     DateTime? expiresAt,
     DateTime? completedAt,
@@ -78,6 +87,8 @@ class EnrollmentEntity extends Equatable {
       courseId: courseId ?? this.courseId,
       progressPercent: progressPercent ?? this.progressPercent,
       completedSessions: completedSessions ?? this.completedSessions,
+      completedLessons: completedLessons ?? this.completedLessons,
+      totalLessons: totalLessons ?? this.totalLessons,
       enrolledAt: enrolledAt ?? this.enrolledAt,
       expiresAt: expiresAt ?? this.expiresAt,
       completedAt: completedAt ?? this.completedAt,

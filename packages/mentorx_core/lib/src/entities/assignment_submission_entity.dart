@@ -8,7 +8,9 @@ class AssignmentSubmissionEntity extends Equatable {
   final String assignmentId;
   final String? assignmentTitle;
   final String? courseName;
+  final Map<String, String> answers;
   final List<String> fileUrls;
+  final String? contentText;
   final String? notes;
   final int? score;
   final int? totalMarks;
@@ -25,7 +27,9 @@ class AssignmentSubmissionEntity extends Equatable {
     this.courseName,
     required this.status,
     required this.submittedAt,
+    this.answers = const {},
     this.fileUrls = const [],
+    this.contentText,
     this.notes,
     this.score,
     this.totalMarks,
@@ -52,7 +56,9 @@ class AssignmentSubmissionEntity extends Equatable {
         assignmentId,
         assignmentTitle,
         courseName,
+        answers,
         fileUrls,
+        contentText,
         notes,
         score,
         totalMarks,
@@ -68,7 +74,9 @@ class AssignmentSubmissionEntity extends Equatable {
     String? assignmentId,
     String? assignmentTitle,
     String? courseName,
+    Map<String, String>? answers,
     List<String>? fileUrls,
+    String? contentText,
     String? notes,
     int? score,
     int? totalMarks,
@@ -83,7 +91,9 @@ class AssignmentSubmissionEntity extends Equatable {
       assignmentId: assignmentId ?? this.assignmentId,
       assignmentTitle: assignmentTitle ?? this.assignmentTitle,
       courseName: courseName ?? this.courseName,
+      answers: answers ?? this.answers,
       fileUrls: fileUrls ?? this.fileUrls,
+      contentText: contentText ?? this.contentText,
       notes: notes ?? this.notes,
       score: score ?? this.score,
       totalMarks: totalMarks ?? this.totalMarks,

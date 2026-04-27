@@ -19,6 +19,8 @@ final class MentorXThemeColorPalette {
   final Color statusDanger;
   final Color statusSuccess;
   final Color statusWarning;
+  final Color borderPrimary;
+  final Color borderSecondary;
 
   const MentorXThemeColorPalette({
     required this.textTertiary,
@@ -39,6 +41,8 @@ final class MentorXThemeColorPalette {
     required this.statusDanger,
     required this.statusSuccess,
     required this.statusWarning,
+    required this.borderPrimary,
+    required this.borderSecondary,
   });
 
   /// Light theme using official MentorX brand colors:
@@ -84,6 +88,10 @@ final class MentorXThemeColorPalette {
     statusSuccess: Color(0xFF4BBBA0),
     // Pumpkin Orange - Warning states
     statusWarning: Color(0xFFF59239),
+    // Ash Grey - Standard border
+    borderPrimary: Color(0xFFE5E6E7),
+    // Ash Grey lighter - Soft border
+    borderSecondary: Color(0xFFF1F2F3),
   );
 
   /// Dark theme adapted from the official MentorX brand colors
@@ -124,5 +132,9 @@ final class MentorXThemeColorPalette {
     statusSuccess: Color(0xFF6DD4BE),
     // Pumpkin Orange lighter for dark
     statusWarning: Color(0xFFF7A85C),
+    // Dark border
+    borderPrimary: Color(0xFF3A3F48),
+    // Softer dark border
+    borderSecondary: Color(0xFF2C3138),
   );
 }

@@ -1,3 +1,4 @@
+import 'package:dio_quiz_repository/dio_quiz_repository.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 
 final class AssignmentModel extends AssignmentEntity {
@@ -7,12 +8,8 @@ final class AssignmentModel extends AssignmentEntity {
     required super.description,
     required super.dueDate,
     required super.totalMarks,
-    super.allowLateSubmission = false,
-    super.latePenaltyPercent,
-    super.attachmentUrls = const [],
-    super.allowedFileTypes = const [],
-    super.maxFileSizeMb = 10,
-    super.maxFiles = 3,
+    super.questions = const [],
+    super.questionsCount,
   });
 
   factory AssignmentModel.fromJson(Map<String, dynamic> json) {
@@ -20,20 +17,15 @@ final class AssignmentModel extends AssignmentEntity {
       id: json['id']?.toString() ?? '',
       title: json['title'] ?? '',
       description: json['description'] ?? '',
-      dueDate: DateTime.tryParse(json['due_date'] ?? '') ?? DateTime.now(),
-      totalMarks: (json['total_marks'] ?? 0).toInt(),
-      allowLateSubmission: json['allow_late_submission'] ?? false,
-      latePenaltyPercent: json['late_penalty_percent']?.toInt(),
-      attachmentUrls: (json['attachment_urls'] as List<dynamic>?)
-              ?.map((e) => e.toString())
+      dueDate: DateTime.tryParse(json['deadline'] ?? json['due_date'] ?? '') ??
+          DateTime.now(),
+      totalMarks: (json['totalMarks'] ?? json['total_marks'] ?? 0).toInt(),
+      questionsCount:
+          (json['questionsCount'] ?? json['questions_count'] ?? 0).toInt(),
+      questions: (json['questions'] as List<dynamic>?)
+              ?.map((e) => QuizQuestionModel.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
-      allowedFileTypes: (json['allowed_file_types'] as List<dynamic>?)
-              ?.map((e) => e.toString())
-              .toList() ??
-          const [],
-      maxFileSizeMb: (json['max_file_size_mb'] ?? 10).toInt(),
-      maxFiles: (json['max_files'] ?? 3).toInt(),
     );
   }
 }
@@ -46,7 +38,9 @@ final class AssignmentSubmissionModel extends AssignmentSubmissionEntity {
     super.courseName,
     required super.status,
     required super.submittedAt,
+    super.answers = const {},
     super.fileUrls = const [],
+    super.contentText,
     super.notes,
     super.score,
     super.totalMarks,
@@ -58,26 +52,32 @@ final class AssignmentSubmissionModel extends AssignmentSubmissionEntity {
   factory AssignmentSubmissionModel.fromJson(Map<String, dynamic> json) {
     return AssignmentSubmissionModel(
       id: json['id']?.toString() ?? '',
-      assignmentId: json['assignment_id']?.toString() ?? '',
-      assignmentTitle: json['assignment_title']?.toString(),
-      courseName: json['course_name']?.toString(),
+      assignmentId: (json['assignmentId'] ?? json['assignment_id'])?.toString() ?? '',
+      assignmentTitle: (json['assignmentTitle'] ?? json['assignment_title'])?.toString(),
+      courseName: (json['courseName'] ?? json['course_name'])?.toString(),
       status: SubmissionStatus.values.firstWhere(
         (e) => e.name == (json['status'] ?? 'submitted'),
         orElse: () => SubmissionStatus.submitted,
       ),
-      submittedAt:
-          DateTime.tryParse(json['submitted_at'] ?? '') ?? DateTime.now(),
-      fileUrls: (json['file_urls'] as List<dynamic>?)
+      submittedAt: DateTime.tryParse(json['submittedAt'] ?? json['submitted_at'] ?? '') ??
+          DateTime.now(),
+      answers: (json['answers'] as Map<String, dynamic>?)?.map(
+            (k, v) => MapEntry(k, v.toString()),
+          ) ??
+          const {},
+      fileUrls: (json['fileUrls'] ?? json['file_urls'] as List<dynamic>?)
               ?.map((e) => e.toString())
               .toList() ??
           const [],
+      contentText: json['contentText'] ?? json['content_text'],
       notes: json['notes'],
-      score: json['score']?.toInt(),
-      totalMarks: json['total_marks']?.toInt(),
+      score: (json['score'] ?? json['marks_attained'])?.toInt(),
+      totalMarks: (json['totalMarks'] ?? json['total_marks'])?.toInt(),
       feedback: json['feedback'],
-      isLate: json['is_late'] ?? false,
-      gradedAt:
-          json['graded_at'] != null ? DateTime.tryParse(json['graded_at']) : null,
+      isLate: json['isLate'] ?? json['is_late'] ?? false,
+      gradedAt: (json['gradedAt'] ?? json['graded_at']) != null
+          ? DateTime.tryParse(json['gradedAt'] ?? json['graded_at'])
+          : null,
     );
   }
 }

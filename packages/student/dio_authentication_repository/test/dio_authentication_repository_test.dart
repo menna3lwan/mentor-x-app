@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:flutter_test/flutter_test.dart';
+import 'package:test/test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 import 'package:dio_authentication_repository/dio_authentication_repository.dart';

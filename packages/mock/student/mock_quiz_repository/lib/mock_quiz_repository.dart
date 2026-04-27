@@ -12,28 +12,40 @@ final class MockQuizRepository implements QuizRepository {
   Future<void> initialize() async {}
 
   @override
-  Future<({QuizAttemptEntity attempt, List<QuizQuestionEntity> questions})>
-  startQuiz(String quizId) async {
+  Future<List<QuizEntity>> getQuizzes() async {
     await Future<void>.delayed(delay);
-    final attempt = MockQuizGenerator.startAttempt(quizId);
+    return List.generate(
+      5,
+      (index) => QuizEntity(
+        id: 'q_$index',
+        title: 'Mock Quiz $index',
+        questions: const [],
+        durationMinutes: 30,
+        totalMarks: 100,
+      ),
+    );
+  }
+
+  @override
+  Future<QuizEntity> getQuiz(String quizId) async {
+    await Future<void>.delayed(delay);
     final questions = MockQuizGenerator.questions(quizId);
-    return (attempt: attempt, questions: questions);
+    return QuizEntity(
+      id: quizId,
+      title: 'Mock Quiz $quizId',
+      questions: questions,
+      durationMinutes: 30,
+      totalMarks: 100,
+    );
   }
 
   @override
-  Future<void> saveAnswer(
-    String attemptId, {
-    required String questionId,
-    List<String>? selectedOptions,
-    String? textAnswer,
+  Future<QuizAttemptEntity> submitQuiz(
+    String quizId, {
+    required Map<String, String> answers,
   }) async {
-    await Future<void>.delayed(delay ~/ 2);
-  }
-
-  @override
-  Future<QuizAttemptEntity> submitQuiz(String attemptId) async {
     await Future<void>.delayed(delay);
-    return MockQuizGenerator.submitResult(attemptId);
+    return MockQuizGenerator.submitResult(quizId);
   }
 
   @override

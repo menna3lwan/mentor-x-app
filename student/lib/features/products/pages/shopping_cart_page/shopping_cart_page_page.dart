@@ -2,6 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
+import 'package:animate_do/animate_do.dart';
+import 'package:gap/gap.dart';
 
 import '../../../../core/core.dart';
 import '../../cubit/cart_cubit.dart';
@@ -13,56 +15,111 @@ class ShoppingCartPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = context.t.student;
+    final palette = MentorXThemeColorPalette.light;
     final cartState = context.watch<CartCubit>().state;
 
     return Scaffold(
-      backgroundColor: AppColors.backgroundLight,
-      appBar: AppBar(
-        backgroundColor: AppColors.primary,
-        foregroundColor: Colors.white,
-        title: Text(t['shoppingCart']!, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+      backgroundColor: palette.backgroundSecondary,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(70),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [palette.brandPrimary, palette.brandPrimary.withValues(alpha: 0.8)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
+            boxShadow: [
+              BoxShadow(color: palette.brandPrimary.withValues(alpha: 0.3), blurRadius: 15, offset: const Offset(0, 4)),
+            ],
+          ),
+          child: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            foregroundColor: Colors.white,
+            centerTitle: true,
+            title: Text(
+              t['shoppingCart']!,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900, letterSpacing: -0.5),
+            ),
+          ),
+        ),
       ),
       body: cartState.items.isEmpty
           ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.shopping_cart_outlined, size: 64, color: Colors.grey[400]),
-                  const SizedBox(height: 16),
-                  Text(
-                    t['cartEmpty']!,
-                    style: TextStyle(fontSize: 18, color: Colors.grey[600]),
+              child: FadeInUp(
+                child: Padding(
+                  padding: const EdgeInsets.all(32),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(32),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 20),
+                          ],
+                        ),
+                        child: Icon(Icons.shopping_bag_outlined, size: 80, color: palette.textTertiary.withValues(alpha: 0.2)),
+                      ),
+                      const Gap(32),
+                      Text(
+                        t['cartEmpty']!,
+                        style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: palette.textPrimary),
+                      ),
+                      const Gap(12),
+                      Text(
+                        'Looks like you haven\'t added anything yet.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 14, color: palette.textSecondary, fontWeight: FontWeight.w500),
+                      ),
+                      const Gap(40),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 40),
+                        child: MentorXButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          text: t['startShopping']!,
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 24),
-                  MentorXButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    text: t['startShopping']!,
-                  ),
-                ],
+                ),
               ),
             )
           : Column(
               children: [
                 Expanded(
-                  child: ListView.builder(
-                    padding: const EdgeInsets.all(16),
+                  child: ListView.separated(
+                    padding: const EdgeInsets.all(20),
                     itemCount: cartState.items.length,
+                    separatorBuilder: (context, index) => const Gap(12),
                     itemBuilder: (context, index) {
                       final cartItem = cartState.items[index];
-                      return _CartItemTile(cartItem: cartItem);
+                      return FadeInUp(
+                        duration: const Duration(milliseconds: 500),
+                        delay: Duration(milliseconds: 50 * index),
+                        child: _CartItemTile(cartItem: cartItem, palette: palette),
+                      );
                     },
                   ),
                 ),
-                _OrderSummary(
-                  subtotal: cartState.subtotal,
-                  onCheckout: () => _showCheckoutSheet(context),
+                FadeInUp(
+                  duration: const Duration(milliseconds: 600),
+                  child: _OrderSummary(
+                    subtotal: cartState.subtotal,
+                    palette: palette,
+                    onCheckout: () => _showCheckoutSheet(context, palette),
+                  ),
                 ),
               ],
             ),
     );
   }
 
-  void _showCheckoutSheet(BuildContext context) {
+  void _showCheckoutSheet(BuildContext context, MentorXThemeColorPalette palette) {
     final user = context.read<AppAuthenticationCubit>().state;
     final addressController = TextEditingController(text: user?.address ?? '');
     final phoneController = TextEditingController(text: user?.phoneNumber ?? '');
@@ -75,13 +132,13 @@ class ShoppingCartPage extends StatelessWidget {
       builder: (context) => Container(
         decoration: const BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
         ),
         padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom + 20,
-          left: 20,
-          right: 20,
-          top: 20,
+          bottom: MediaQuery.of(context).viewInsets.bottom + 32,
+          left: 24,
+          right: 24,
+          top: 12,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -92,46 +149,47 @@ class ShoppingCartPage extends StatelessWidget {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: Colors.grey[300],
+                  color: palette.textTertiary.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
             ),
-            const SizedBox(height: 20),
-            const Text(
+            const Gap(32),
+            Text(
               'Delivery Details',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900, color: palette.textPrimary),
             ),
-            const SizedBox(height: 20),
+            const Gap(24),
             MentorXTextFormField(
-              controller: addressController,
               label: 'Delivery Address',
-              icon: Icons.location_on_outlined,
+              controller: addressController,
+              hint: 'Delivery Address',
+              icon: Icons.location_on_rounded,
             ),
-            const SizedBox(height: 16),
+            const Gap(16),
             MentorXTextFormField(
-              controller: phoneController,
               label: 'Phone Number',
-              icon: Icons.phone_outlined,
+              controller: phoneController,
+              hint: 'Phone Number',
+              icon: Icons.phone_rounded,
               keyboardType: TextInputType.phone,
             ),
-            const SizedBox(height: 16),
+            const Gap(16),
             MentorXTextFormField(
+              label: 'Delivery Notes',
               controller: notesController,
-              label: 'Delivery Notes (Optional)',
-              icon: Icons.note_outlined,
+              hint: 'Delivery Notes (Optional)',
+              icon: Icons.note_rounded,
               maxLines: 2,
             ),
-            const SizedBox(height: 32),
+            const Gap(32),
             BlocBuilder<ShoppingCartPageBloc, ShoppingCartPageState>(
               builder: (context, state) {
                 return MentorXButton(
                   loading: state.loadingState == LoadingState.loading,
                   onPressed: () {
                     if (addressController.text.isEmpty || phoneController.text.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Please fill all required fields')),
-                      );
+                      MentorXUI.showToast(message: 'Please fill all required fields');
                       return;
                     }
                     Navigator.pop(context);
@@ -163,7 +221,6 @@ class ShoppingCartPage extends StatelessWidget {
             items: items,
             address: address,
             phone: phone,
-            // notes: notes, // TODO: Add notes to event if needed
           ),
         );
   }
@@ -171,23 +228,23 @@ class ShoppingCartPage extends StatelessWidget {
 
 class _CartItemTile extends StatelessWidget {
   final CartItem cartItem;
+  final MentorXThemeColorPalette palette;
 
-  const _CartItemTile({required this.cartItem});
+  const _CartItemTile({required this.cartItem, required this.palette});
 
   @override
   Widget build(BuildContext context) {
     final item = cartItem.item;
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 12,
+            color: Colors.black.withValues(alpha: 0.03),
+            blurRadius: 10,
             offset: const Offset(0, 4),
           ),
         ],
@@ -195,63 +252,61 @@ class _CartItemTile extends StatelessWidget {
       child: Row(
         children: [
           ClipRRect(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(16),
             child: CachedNetworkImage(
               imageUrl: item.imageUrls.isNotEmpty ? item.imageUrls.first : '',
-              width: 70,
-              height: 70,
+              width: 80,
+              height: 80,
               fit: BoxFit.cover,
+              placeholder: (context, url) => Container(color: palette.backgroundSecondary),
               errorWidget: (context, url, error) => Container(
-                color: Colors.grey[100],
-                child: const Icon(Icons.image, color: Colors.grey),
+                color: palette.backgroundSecondary,
+                child: const Icon(Icons.image_rounded, color: Colors.grey),
               ),
             ),
           ),
-          const SizedBox(width: 16),
+          const Gap(16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   item.title,
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                  style: TextStyle(fontWeight: FontWeight.w900, fontSize: 14, color: palette.textPrimary),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 6),
+                const Gap(8),
                 Text(
-                  '${item.price} EGP',
+                  '${item.price.toStringAsFixed(0)} EGP',
                   style: TextStyle(
-                    color: AppColors.primary,
-                    fontWeight: FontWeight.w800,
-                    fontSize: 15,
+                    color: palette.brandPrimary,
+                    fontWeight: FontWeight.w900,
+                    fontSize: 16,
                   ),
                 ),
               ],
             ),
           ),
+          const Gap(8),
           Container(
             decoration: BoxDecoration(
-              color: Colors.grey[50],
-              borderRadius: BorderRadius.circular(12),
+              color: palette.backgroundSecondary,
+              borderRadius: BorderRadius.circular(14),
             ),
             child: Row(
               children: [
-                IconButton(
+                _IconButton(
+                  icon: Icons.remove_rounded,
                   onPressed: () => context.read<CartCubit>().updateQuantity(item.id, cartItem.quantity - 1),
-                  icon: const Icon(Icons.remove, size: 18),
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
                 ),
                 Text(
                   '${cartItem.quantity}',
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                  style: TextStyle(fontWeight: FontWeight.w900, fontSize: 14, color: palette.textPrimary),
                 ),
-                IconButton(
+                _IconButton(
+                  icon: Icons.add_rounded,
                   onPressed: () => context.read<CartCubit>().updateQuantity(item.id, cartItem.quantity + 1),
-                  icon: const Icon(Icons.add, size: 18),
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
                 ),
               ],
             ),
@@ -262,11 +317,30 @@ class _CartItemTile extends StatelessWidget {
   }
 }
 
+class _IconButton extends StatelessWidget {
+  final IconData icon;
+  final VoidCallback onPressed;
+
+  const _IconButton({required this.icon, required this.onPressed});
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      onPressed: onPressed,
+      icon: Icon(icon, size: 18),
+      padding: EdgeInsets.zero,
+      constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
+      splashRadius: 18,
+    );
+  }
+}
+
 class _OrderSummary extends StatelessWidget {
   final double subtotal;
+  final MentorXThemeColorPalette palette;
   final VoidCallback onCheckout;
 
-  const _OrderSummary({required this.subtotal, required this.onCheckout});
+  const _OrderSummary({required this.subtotal, required this.palette, required this.onCheckout});
 
   @override
   Widget build(BuildContext context) {
@@ -280,12 +354,12 @@ class _OrderSummary extends StatelessWidget {
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.06),
                 blurRadius: 20,
-                offset: const Offset(0, -8),
+                offset: const Offset(0, -10),
               ),
             ],
           ),
@@ -293,78 +367,91 @@ class _OrderSummary extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                _SummaryRow(
+                  label: 'Wallet Balance',
+                  value: '${walletBalance.toStringAsFixed(2)} EGP',
+                  valueColor: isBalanceSufficient ? palette.statusSuccess : palette.statusDanger,
+                  isBold: true,
+                ),
+                const Gap(12),
+                _SummaryRow(label: 'Subtotal', value: '${subtotal.toStringAsFixed(2)} EGP'),
+                const Gap(8),
+                _SummaryRow(label: 'Delivery', value: 'Free', valueColor: palette.statusSuccess),
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 16),
+                  child: Divider(height: 1),
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      'Wallet Balance',
-                      style: TextStyle(color: Colors.grey, fontSize: 13),
-                    ),
                     Text(
-                      '${walletBalance.toStringAsFixed(2)} EGP',
-                      style: TextStyle(
-                        color: isBalanceSufficient ? AppColors.success : AppColors.red,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 13,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text('Subtotal', style: TextStyle(fontSize: 14)),
-                    Text('${subtotal.toStringAsFixed(2)} EGP', style: const TextStyle(fontSize: 14)),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text('Delivery', style: TextStyle(fontSize: 14)),
-                    const Text('Free', style: TextStyle(color: AppColors.success, fontSize: 14, fontWeight: FontWeight.w600)),
-                  ],
-                ),
-                const Divider(height: 32),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
                       'Total',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900),
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: palette.textPrimary),
                     ),
                     Text(
                       '${subtotal.toStringAsFixed(2)} EGP',
                       style: TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.w900,
-                        color: AppColors.primary,
+                        color: palette.brandPrimary,
                       ),
                     ),
                   ],
                 ),
                 if (!isBalanceSufficient) ...[
-                  const SizedBox(height: 12),
-                  Text(
-                    'Insufficient balance. Top up ${deficit.toStringAsFixed(2)} EGP to place order.',
-                    style: const TextStyle(color: AppColors.red, fontSize: 12, fontWeight: FontWeight.w500),
-                    textAlign: TextAlign.center,
+                  const Gap(16),
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: palette.statusDanger.withValues(alpha: 0.05),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      'Insufficient balance. Top up ${deficit.toStringAsFixed(2)} EGP to place order.',
+                      style: TextStyle(color: palette.statusDanger, fontSize: 12, fontWeight: FontWeight.w700),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 ],
-                const SizedBox(height: 24),
+                const Gap(24),
                 MentorXButton(
                   onPressed: isBalanceSufficient ? onCheckout : null,
                   text: isBalanceSufficient 
                       ? context.t.student['checkout']!
                       : 'Insufficient Balance',
-                  // Use a different color or style if disabled? MentorXButton should handle null onPressed.
                 ),
               ],
             ),
           ),
         );
       },
+    );
+  }
+}
+
+class _SummaryRow extends StatelessWidget {
+  final String label;
+  final String value;
+  final Color? valueColor;
+  final bool isBold;
+
+  const _SummaryRow({required this.label, required this.value, this.valueColor, this.isBold = false});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(label, style: const TextStyle(color: Colors.grey, fontSize: 14, fontWeight: FontWeight.w600)),
+        Text(
+          value,
+          style: TextStyle(
+            color: valueColor ?? Colors.black,
+            fontWeight: isBold ? FontWeight.w900 : FontWeight.w700,
+            fontSize: 14,
+          ),
+        ),
+      ],
     );
   }
 }

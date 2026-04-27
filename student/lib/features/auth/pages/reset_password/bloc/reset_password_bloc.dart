@@ -46,9 +46,12 @@ final class ResetPasswordBloc extends Bloc<ResetPasswordEvent, ResetPasswordStat
     emit(state.copyWith(loadingState: LoadingState.loading));
 
     try {
+      // Step 1: Verify OTP to acquire authorization token
+      await _authRepository.verifyOtp(state.otp.trim());
+
+      // Step 2: Reset password using the acquired token
       await _authRepository.resetPassword(
         phoneNumber: state.phoneNumber,
-        otp: state.otp.trim(),
         newPassword: state.newPassword,
       );
 

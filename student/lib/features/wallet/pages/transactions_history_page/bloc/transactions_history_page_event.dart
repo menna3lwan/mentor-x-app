@@ -7,7 +7,10 @@ sealed class TransactionsHistoryPageEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-final class TransactionsHistoryPageLoadEvent
-    extends TransactionsHistoryPageEvent {
+final class TransactionsHistoryPageLoadEvent extends TransactionsHistoryPageEvent {
   const TransactionsHistoryPageLoadEvent();
+}
+
+final class TransactionsHistoryPageLoadMoreEvent extends TransactionsHistoryPageEvent {
+  const TransactionsHistoryPageLoadMoreEvent();
 }

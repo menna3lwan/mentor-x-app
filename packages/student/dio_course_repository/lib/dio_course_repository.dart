@@ -234,37 +234,27 @@ final class DioCourseRepository
   }
 
   @override
-  Future<void> updateProgress(
-    String itemId, {
-    int? watchTimeSeconds,
-    int? lastPositionSeconds,
-    double? progressPercent,
+  Future<void> updateEnrollmentProgress(
+    String enrollmentId, {
+    required double progress,
+    required int watchTimeSeconds,
+    required int completedLessons,
+    required int totalLessons,
   }) async {
     try {
-      await httpClient.post(
-        '/api/enrollments/$itemId/progress',
+      await httpClient.patch(
+        '/api/enrollments/$enrollmentId/progress',
         data: {
-          if (watchTimeSeconds != null) 'watch_time_seconds': watchTimeSeconds,
-          if (lastPositionSeconds != null) 'last_position_seconds': lastPositionSeconds,
-          if (progressPercent != null) 'progress_percent': progressPercent,
+          'progress': progress,
+          'watchTimeSeconds': watchTimeSeconds,
+          'completedLessons': completedLessons,
+          'totalLessons': totalLessons,
         },
       );
     } on HttpClientResponse catch (e) {
       handleHttpClientErrorResponse(
         e,
         defaultCode: CourseRepositoryExceptionCode.failedToUpdateProgress,
-      );
-    }
-  }
-
-  @override
-  Future<void> markItemComplete(String itemId) async {
-    try {
-      await httpClient.post('/api/enrollments/$itemId/complete');
-    } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
-        e,
-        defaultCode: CourseRepositoryExceptionCode.failedToMarkComplete,
       );
     }
   }

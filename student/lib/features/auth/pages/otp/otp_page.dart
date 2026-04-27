@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:pinput/pinput.dart';
+import 'package:animate_do/animate_do.dart';
+import 'package:gap/gap.dart';
 
 final class OtpPage extends StatelessWidget {
   final String phoneNumber;
@@ -41,185 +43,229 @@ final class OtpPage extends StatelessWidget {
     final palette = MentorXThemeColorPalette.light;
 
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: onEditPhone,
+      backgroundColor: palette.backgroundPrimary,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(70),
+        child: FadeInDown(
+          duration: const Duration(milliseconds: 500),
+          child: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back_ios_new_rounded, color: palette.textPrimary, size: 20),
+              onPressed: onEditPhone,
+            ),
+          ),
         ),
       ),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 400),
-              child: GradientCard(
-                colors: [
-                  palette.backgroundSecondary,
-                  palette.backgroundSecondary.withValues(alpha: 0.95),
-                ],
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: 80,
-                      height: 80,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            palette.statusSuccess,
-                            palette.statusSuccess.withValues(alpha: 0.7),
-                          ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: palette.statusSuccess.withValues(alpha: 0.3),
-                            blurRadius: 12,
-                            offset: const Offset(0, 6),
+              constraints: const BoxConstraints(maxWidth: 420),
+              child: FadeInUp(
+                duration: const Duration(milliseconds: 600),
+                child: GradientCard(
+                  colors: [
+                    palette.backgroundPrimary,
+                    palette.backgroundPrimary.withValues(alpha: 0.95),
+                  ],
+                  padding: const EdgeInsets.all(32),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ZoomIn(
+                        duration: const Duration(milliseconds: 600),
+                        child: Container(
+                          width: 90,
+                          height: 90,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                palette.statusSuccess,
+                                palette.statusSuccess.withValues(alpha: 0.7),
+                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: palette.statusSuccess.withValues(alpha: 0.2),
+                                blurRadius: 16,
+                                offset: const Offset(0, 8),
+                              ),
+                            ],
                           ),
-                        ],
+                          alignment: Alignment.center,
+                          child: Icon(
+                            Icons.mark_email_read_rounded,
+                            color: palette.textForeground,
+                            size: 44,
+                          ),
+                        ),
                       ),
-                      alignment: Alignment.center,
-                      child: Icon(
-                        Icons.chat_bubble_outline,
-                        color: palette.textForeground,
-                        size: 38,
+                      const Gap(24),
+                      Text(
+                        'Verify OTP',
+                        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                              fontWeight: FontWeight.w900,
+                              letterSpacing: -0.5,
+                            ),
                       ),
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      'Verify OTP',
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Enter the code sent to your phone',
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: palette.textSecondary,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Directionality(
-                      textDirection: TextDirection.ltr,
-                      child: Text(
-                        phoneNumber,
+                      const Gap(10),
+                      Text(
+                        'Enter the code sent to your phone',
                         textAlign: TextAlign.center,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.w700,
-                          color: palette.brandPrimary,
-                        ),
+                              color: palette.textSecondary,
+                              fontWeight: FontWeight.w500,
+                            ),
                       ),
-                    ),
-                    const SizedBox(height: 24),
-                    Directionality(
-                      textDirection: TextDirection.ltr,
-                      child: Pinput(
-                        length: otpLength,
-                        autofocus: true,
-                        onChanged: onOtpChanged,
-                        onCompleted: (_) => onSubmit(),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    if (errorMessage != null) ...[
-                      Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: palette.statusDanger.withAlpha(20),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: palette.statusDanger.withAlpha(80),
-                            width: 0.8,
-                          ),
-                        ),
+                      const Gap(4),
+                      Directionality(
+                        textDirection: TextDirection.ltr,
                         child: Text(
-                          errorMessage!,
-                          style: Theme.of(context).textTheme.bodySmall
-                              ?.copyWith(
-                                color: palette.statusDanger,
-                              ),
+                          phoneNumber,
                           textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                fontWeight: FontWeight.w900,
+                                color: palette.brandPrimary,
+                              ),
                         ),
                       ),
-                      const SizedBox(height: 12),
-                    ],
-                    AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 200),
-                      child: canResend
-                          ? Column(
-                              key: const ValueKey('resend'),
-                              children: [
-                                TextButton(
-                                  onPressed: isResending ? null : onResend,
-                                  child: isResending
-                                      ? const SizedBox(
-                                          width: 16,
-                                          height: 16,
-                                          child: CircularProgressIndicator(
-                                            strokeWidth: 2,
-                                          ),
-                                        )
-                                      : const Text('Resend Code'),
-                                ),
-                                TextButton(
-                                  onPressed: isResendingWhatsapp
-                                      ? null
-                                      : onResendViaWhatsapp,
-                                  child: isResendingWhatsapp
-                                      ? const SizedBox(
-                                          width: 16,
-                                          height: 16,
-                                          child: CircularProgressIndicator(
-                                            strokeWidth: 2,
-                                          ),
-                                        )
-                                      : const Text('Resend via WhatsApp'),
+                      const Gap(32),
+                      Directionality(
+                        textDirection: TextDirection.ltr,
+                        child: Pinput(
+                          length: otpLength,
+                          autofocus: true,
+                          onChanged: onOtpChanged,
+                          onCompleted: (_) => onSubmit(),
+                          defaultPinTheme: PinTheme(
+                            width: 56,
+                            height: 60,
+                            textStyle: TextStyle(
+                              fontSize: 22,
+                              color: palette.textPrimary,
+                              fontWeight: FontWeight.w900,
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(color: palette.textTertiary.withValues(alpha: 0.2), width: 2),
+                              color: palette.backgroundSecondary.withValues(alpha: 0.3),
+                            ),
+                          ),
+                          focusedPinTheme: PinTheme(
+                            width: 60,
+                            height: 64,
+                            textStyle: TextStyle(
+                              fontSize: 24,
+                              color: palette.brandPrimary,
+                              fontWeight: FontWeight.w900,
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(color: palette.brandPrimary, width: 2.5),
+                              color: palette.backgroundPrimary,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: palette.brandPrimary.withValues(alpha: 0.1),
+                                  blurRadius: 12,
+                                  offset: const Offset(0, 6),
                                 ),
                               ],
-                            )
-                          : Padding(
-                              key: const ValueKey('countdown'),
-                              padding: const EdgeInsets.symmetric(vertical: 12),
-                              child: Text(
-                                'Resend in $formattedCountdown',
-                                style: Theme.of(context).textTheme.bodySmall
-                                    ?.copyWith(color: palette.textSecondary),
-                              ),
                             ),
-                    ),
-                    if (showEditPhone) ...[
-                      TextButton.icon(
-                        onPressed: onEditPhone,
-                        icon: const Icon(Icons.edit_outlined, size: 18),
-                        label: const Text('Edit Number'),
+                          ),
+                        ),
                       ),
-                      const SizedBox(height: 20),
-                    ],
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: isLoading ? null : onSubmit,
-                        child: isLoading
-                            ? const SizedBox(
-                                width: 20,
-                                height: 20,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                ),
+                      const Gap(24),
+                      if (errorMessage != null) ...[
+                        FadeIn(
+                          child: StatusBadge(
+                            message: errorMessage!,
+                            status: StatusBadgeType.danger,
+                          ),
+                        ),
+                        const Gap(20),
+                      ],
+                      AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 300),
+                        child: canResend
+                            ? Column(
+                                key: const ValueKey('resend'),
+                                children: [
+                                  TextButton.icon(
+                                    onPressed: isResending ? null : onResend,
+                                    icon: isResending
+                                        ? const SizedBox(
+                                            width: 16,
+                                            height: 16,
+                                            child: CircularProgressIndicator(strokeWidth: 2, color: Colors.blue),
+                                          )
+                                        : Icon(Icons.refresh_rounded, size: 20, color: palette.brandPrimary),
+                                    label: Text(
+                                      'Resend Code',
+                                      style: TextStyle(fontWeight: FontWeight.w800, color: palette.brandPrimary),
+                                    ),
+                                  ),
+                                  TextButton.icon(
+                                    onPressed: isResendingWhatsapp ? null : onResendViaWhatsapp,
+                                    icon: isResendingWhatsapp
+                                        ? const SizedBox(
+                                            width: 16,
+                                            height: 16,
+                                            child: CircularProgressIndicator(strokeWidth: 2, color: Colors.green),
+                                          )
+                                        : const Icon(Icons.chat_rounded, size: 20, color: Colors.green),
+                                    label: const Text(
+                                      'Resend via WhatsApp',
+                                      style: TextStyle(fontWeight: FontWeight.w800, color: Colors.green),
+                                    ),
+                                  ),
+                                ],
                               )
-                            : const Text('Confirm'),
+                            : Padding(
+                                key: const ValueKey('countdown'),
+                                padding: const EdgeInsets.symmetric(vertical: 12),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.timer_outlined, size: 18, color: palette.textTertiary),
+                                    const Gap(8),
+                                    Text(
+                                      'Resend in $formattedCountdown',
+                                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                            color: palette.textSecondary,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                    ),
+                                  ],
+                                ),
+                              ),
                       ),
-                    ),
-                    const SizedBox(height: 12),
-                  ],
+                      if (showEditPhone) ...[
+                        const Gap(12),
+                        TextButton.icon(
+                          onPressed: onEditPhone,
+                          icon: const Icon(Icons.edit_outlined, size: 18),
+                          label: const Text('Edit Phone Number'),
+                          style: TextButton.styleFrom(
+                            foregroundColor: palette.textTertiary,
+                            textStyle: const TextStyle(fontWeight: FontWeight.w700),
+                          ),
+                        ),
+                      ],
+                      const Gap(32),
+                      MentorXButton(
+                        onPressed: isLoading ? null : onSubmit,
+                        label: 'Verify & Confirm',
+                        loading: isLoading,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

@@ -255,6 +255,21 @@ mixin $VideoPlayerPageRoute on GoRouteData {
       VideoPlayerPageRoute(
         itemId: state.pathParameters['itemId']!,
         title: state.uri.queryParameters['title']!,
+        enrollmentId: state.uri.queryParameters['enrollment-id'],
+        completedLessons:
+            _$convertMapValue(
+              'completed-lessons',
+              state.uri.queryParameters,
+              int.parse,
+            ) ??
+            0,
+        totalLessons:
+            _$convertMapValue(
+              'total-lessons',
+              state.uri.queryParameters,
+              int.parse,
+            ) ??
+            0,
       );
 
   VideoPlayerPageRoute get _self => this as VideoPlayerPageRoute;
@@ -262,7 +277,14 @@ mixin $VideoPlayerPageRoute on GoRouteData {
   @override
   String get location => GoRouteData.$location(
     '/video-player/${Uri.encodeComponent(_self.itemId)}',
-    queryParams: {'title': _self.title},
+    queryParams: {
+      'title': _self.title,
+      if (_self.enrollmentId != null) 'enrollment-id': _self.enrollmentId,
+      if (_self.completedLessons != 0)
+        'completed-lessons': _self.completedLessons.toString(),
+      if (_self.totalLessons != 0)
+        'total-lessons': _self.totalLessons.toString(),
+    },
   );
 
   @override
@@ -279,6 +301,15 @@ mixin $VideoPlayerPageRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
+T? _$convertMapValue<T>(
+  String key,
+  Map<String, String> map,
+  T? Function(String) converter,
+) {
+  final value = map[key];
+  return value == null ? null : converter(value);
+}
+
 RouteBase get $pdfViewerPageRoute => GoRouteData.$route(
   path: '/pdf-viewer/:itemId',
   name: 'pdfViewer',
@@ -290,6 +321,21 @@ mixin $PdfViewerPageRoute on GoRouteData {
       PdfViewerPageRoute(
         itemId: state.pathParameters['itemId']!,
         title: state.uri.queryParameters['title']!,
+        enrollmentId: state.uri.queryParameters['enrollment-id'],
+        completedLessons:
+            _$convertMapValue(
+              'completed-lessons',
+              state.uri.queryParameters,
+              int.parse,
+            ) ??
+            0,
+        totalLessons:
+            _$convertMapValue(
+              'total-lessons',
+              state.uri.queryParameters,
+              int.parse,
+            ) ??
+            0,
       );
 
   PdfViewerPageRoute get _self => this as PdfViewerPageRoute;
@@ -297,7 +343,14 @@ mixin $PdfViewerPageRoute on GoRouteData {
   @override
   String get location => GoRouteData.$location(
     '/pdf-viewer/${Uri.encodeComponent(_self.itemId)}',
-    queryParams: {'title': _self.title},
+    queryParams: {
+      'title': _self.title,
+      if (_self.enrollmentId != null) 'enrollment-id': _self.enrollmentId,
+      if (_self.completedLessons != 0)
+        'completed-lessons': _self.completedLessons.toString(),
+      if (_self.totalLessons != 0)
+        'total-lessons': _self.totalLessons.toString(),
+    },
   );
 
   @override
@@ -427,17 +480,23 @@ mixin $AssignmentResultPageRoute on GoRouteData {
 }
 
 RouteBase get $assignmentDetailPageRoute => GoRouteData.$route(
-  path: '/assignment-detail',
+  path: '/assignment-detail/:assignmentId',
   name: 'assignmentDetail',
   factory: $AssignmentDetailPageRoute._fromState,
 );
 
 mixin $AssignmentDetailPageRoute on GoRouteData {
   static AssignmentDetailPageRoute _fromState(GoRouterState state) =>
-      const AssignmentDetailPageRoute();
+      AssignmentDetailPageRoute(
+        assignmentId: state.pathParameters['assignmentId']!,
+      );
+
+  AssignmentDetailPageRoute get _self => this as AssignmentDetailPageRoute;
 
   @override
-  String get location => GoRouteData.$location('/assignment-detail');
+  String get location => GoRouteData.$location(
+    '/assignment-detail/${Uri.encodeComponent(_self.assignmentId)}',
+  );
 
   @override
   void go(BuildContext context) => context.go(location);
@@ -454,17 +513,23 @@ mixin $AssignmentDetailPageRoute on GoRouteData {
 }
 
 RouteBase get $assignmentSubmitPageRoute => GoRouteData.$route(
-  path: '/assignment-submit',
+  path: '/assignment-submit/:assignmentId',
   name: 'assignmentSubmit',
   factory: $AssignmentSubmitPageRoute._fromState,
 );
 
 mixin $AssignmentSubmitPageRoute on GoRouteData {
   static AssignmentSubmitPageRoute _fromState(GoRouterState state) =>
-      const AssignmentSubmitPageRoute();
+      AssignmentSubmitPageRoute(
+        assignmentId: state.pathParameters['assignmentId']!,
+      );
+
+  AssignmentSubmitPageRoute get _self => this as AssignmentSubmitPageRoute;
 
   @override
-  String get location => GoRouteData.$location('/assignment-submit');
+  String get location => GoRouteData.$location(
+    '/assignment-submit/${Uri.encodeComponent(_self.assignmentId)}',
+  );
 
   @override
   void go(BuildContext context) => context.go(location);
@@ -665,15 +730,6 @@ mixin $OtpPageRoute on GoRouteData {
 
   @override
   void replace(BuildContext context) => context.replace(location);
-}
-
-T? _$convertMapValue<T>(
-  String key,
-  Map<String, String> map,
-  T? Function(String) converter,
-) {
-  final value = map[key];
-  return value == null ? null : converter(value);
 }
 
 RouteBase get $loginPageRoute => GoRouteData.$route(
@@ -1105,17 +1161,21 @@ mixin $AddBalancePageRoute on GoRouteData {
 }
 
 RouteBase get $purchaseConfirmPageRoute => GoRouteData.$route(
-  path: '/purchase-confirm',
+  path: '/purchase-confirm/:paymentId',
   name: 'purchaseConfirm',
   factory: $PurchaseConfirmPageRoute._fromState,
 );
 
 mixin $PurchaseConfirmPageRoute on GoRouteData {
   static PurchaseConfirmPageRoute _fromState(GoRouterState state) =>
-      const PurchaseConfirmPageRoute();
+      PurchaseConfirmPageRoute(paymentId: state.pathParameters['paymentId']!);
+
+  PurchaseConfirmPageRoute get _self => this as PurchaseConfirmPageRoute;
 
   @override
-  String get location => GoRouteData.$location('/purchase-confirm');
+  String get location => GoRouteData.$location(
+    '/purchase-confirm/${Uri.encodeComponent(_self.paymentId)}',
+  );
 
   @override
   void go(BuildContext context) => context.go(location);
@@ -1186,17 +1246,21 @@ mixin $TransactionsHistoryPageRoute on GoRouteData {
 }
 
 RouteBase get $quizTakingPageRoute => GoRouteData.$route(
-  path: '/quiz-taking',
+  path: '/quiz-taking/:quizId',
   name: 'quizTaking',
   factory: $QuizTakingPageRoute._fromState,
 );
 
 mixin $QuizTakingPageRoute on GoRouteData {
   static QuizTakingPageRoute _fromState(GoRouterState state) =>
-      const QuizTakingPageRoute();
+      QuizTakingPageRoute(quizId: state.pathParameters['quizId']!);
+
+  QuizTakingPageRoute get _self => this as QuizTakingPageRoute;
 
   @override
-  String get location => GoRouteData.$location('/quiz-taking');
+  String get location => GoRouteData.$location(
+    '/quiz-taking/${Uri.encodeComponent(_self.quizId)}',
+  );
 
   @override
   void go(BuildContext context) => context.go(location);
@@ -1213,17 +1277,21 @@ mixin $QuizTakingPageRoute on GoRouteData {
 }
 
 RouteBase get $quizResultPageRoute => GoRouteData.$route(
-  path: '/quiz-result',
+  path: '/quiz-result/:attemptId',
   name: 'quizResult',
   factory: $QuizResultPageRoute._fromState,
 );
 
 mixin $QuizResultPageRoute on GoRouteData {
   static QuizResultPageRoute _fromState(GoRouterState state) =>
-      const QuizResultPageRoute();
+      QuizResultPageRoute(attemptId: state.pathParameters['attemptId']!);
+
+  QuizResultPageRoute get _self => this as QuizResultPageRoute;
 
   @override
-  String get location => GoRouteData.$location('/quiz-result');
+  String get location => GoRouteData.$location(
+    '/quiz-result/${Uri.encodeComponent(_self.attemptId)}',
+  );
 
   @override
   void go(BuildContext context) => context.go(location);

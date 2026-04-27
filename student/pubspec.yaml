@@ -57,6 +57,7 @@ dependencies:
   percent_indicator: ^4.2.5
   qr_flutter: ^4.1.0
   url_launcher: ^6.3.2
+  file_picker: ^8.3.4
 
   # MentorX Packages:
   mentorx_core:
@@ -140,6 +141,8 @@ dependencies:
   dio_student_registration_repository:
     path: ../packages/student/dio_student_registration_repository
   dio: ^5.9.2
+  flutter_markdown: ^0.7.7+1
+  animate_do: ^5.1.0
 
 dev_dependencies:
   # Testing

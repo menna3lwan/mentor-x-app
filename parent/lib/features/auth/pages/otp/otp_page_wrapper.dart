@@ -48,30 +48,40 @@ class _OtpPageWrapperState extends State<OtpPageWrapper> {
             final state = context.watch<OtpBloc>().state;
             final bloc = context.read<OtpBloc>();
 
+            final palette = MentorXThemeColorPalette.light;
+
             return OtpPage(
               backButton: IconButton(
                 onPressed: () => context.pop(),
-                icon: Icon(Icons.arrow_back, color: context.brandPrimaryColor),
+                icon: Icon(Icons.arrow_back_ios_new_rounded, color: palette.textPrimary, size: 20),
               ),
               title: Text(
                 'Verify Your Number',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.w800,
-                      color: context.brandPrimaryColor,
-                    ),
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.w900,
+                  color: palette.textPrimary,
+                  letterSpacing: -0.5,
+                ),
               ),
               subtitle: Text(
-                'Enter the 6-digit code sent to ${widget.phoneNumber}',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: context.textSecondaryColor,
-                    ),
+                'Enter the 6-digit code sent to\n${widget.phoneNumber}',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 15,
+                  color: palette.textSecondary,
+                  fontWeight: FontWeight.w500,
+                  height: 1.5,
+                ),
               ),
               otpFields: MentorXTextFormField(
                 controller: _otpController,
-                label: 'OTP Code',
+                label: 'Verification Code',
+                hintText: '000000',
                 keyboardType: TextInputType.number,
                 maxLength: 6,
-                icon: Icons.lock_clock_outlined,
+                icon: Icons.lock_clock_rounded,
                 onChanged: (value) {
                   if (value.length == 6) {
                     bloc.add(OtpSubmittedEvent(
@@ -82,7 +92,7 @@ class _OtpPageWrapperState extends State<OtpPageWrapper> {
                 },
               ),
               verifyButton: MentorXButton(
-                text: 'Verify',
+                label: 'Verify & Continue',
                 onPressed: state.loadingState.isLoading || _otpController.text.length < 6
                     ? null
                     : () {
@@ -103,6 +113,11 @@ class _OtpPageWrapperState extends State<OtpPageWrapper> {
                       : state.canResend
                           ? 'Resend Code'
                           : 'Resend in ${state.resendCountdown}s',
+                  style: TextStyle(
+                    color: state.canResend ? palette.brandPrimary : palette.textTertiary,
+                    fontWeight: FontWeight.w800,
+                    fontSize: 14,
+                  ),
                 ),
               ),
             );

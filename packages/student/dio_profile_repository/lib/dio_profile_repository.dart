@@ -148,5 +148,41 @@ final class DioStudentProfileRepository
     }
   }
 
+  @override
+  Future<void> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) async {
+    try {
+      await httpClient.post(
+        '/api/auth/change-password',
+        data: {
+          'currentPassword': currentPassword,
+          'newPassword': newPassword,
+        },
+      );
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: StudentProfileRepositoryExceptionCode.failedToUpdateProfile,
+      );
+    }
+  }
 
+  @override
+  Future<StudentEntity> updateProfile(StudentEntity profile) async {
+    try {
+      final response = await httpClient.put(
+        '/api/auth/me',
+        data: StudentProfileModel.fromEntity(profile).toJson(),
+      );
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      return StudentProfileModel.fromJson(data);
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: StudentProfileRepositoryExceptionCode.failedToUpdateProfile,
+      );
+    }
+  }
 }

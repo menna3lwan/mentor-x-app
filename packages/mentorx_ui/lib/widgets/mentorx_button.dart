@@ -1,55 +1,132 @@
 part of '../mentorx_ui.dart';
 
+enum MentorXButtonVariant { filled, outline, text, ghost }
+
+enum MentorXButtonSize { small, medium, large }
+
 class MentorXButton extends StatelessWidget {
   const MentorXButton({
     super.key,
-    required this.text,
+    this.text,
+    this.label,
     this.onPressed,
     this.style,
     this.loading = false,
+    this.icon,
+    this.color,
+    this.variant = MentorXButtonVariant.filled,
+    this.size = MentorXButtonSize.medium,
+    this.width,
   });
 
-  final String text;
+  final String? text;
+  final String? label;
   final void Function()? onPressed;
   final Style? style;
   final bool loading;
+  final IconData? icon;
+  final Color? color;
+  final MentorXButtonVariant variant;
+  final MentorXButtonSize size;
+  final double? width;
 
-  Style _defaultStyle() {
+  String get _displayText => label ?? text ?? '';
+
+  Style _variantStyle(MentorXThemeColorPalette palette) {
+    final baseColor = color ?? palette.brandPrimary;
+    
+    return switch (variant) {
+      MentorXButtonVariant.filled => Style(
+          $box.color(baseColor),
+          $text.style.color(Colors.white),
+          $on.hover($box.color(baseColor.withValues(alpha: 0.9))),
+        ),
+      MentorXButtonVariant.outline => Style(
+          $box.color(Colors.transparent),
+          $box.border.all.color(baseColor),
+          $box.border.all.width(1.5),
+          $text.style.color(baseColor),
+          $on.hover($box.color(baseColor.withValues(alpha: 0.05))),
+        ),
+      MentorXButtonVariant.text || MentorXButtonVariant.ghost => Style(
+          $box.color(Colors.transparent),
+          $text.style.color(baseColor),
+          $on.hover($box.color(baseColor.withValues(alpha: 0.05))),
+        ),
+    };
+  }
+
+  Style _sizeStyle() {
+    return switch (size) {
+      MentorXButtonSize.small => Style(
+          $box.padding.vertical(10),
+          $box.padding.horizontal(16),
+          $text.style.fontSize(13),
+          $text.style.fontWeight.w700(),
+        ),
+      MentorXButtonSize.medium => Style(
+          $box.padding.vertical(16),
+          $box.padding.horizontal(24),
+          $text.style.fontSize(15),
+          $text.style.fontWeight.w800(),
+        ),
+      MentorXButtonSize.large => Style(
+          $box.padding.vertical(20),
+          $box.padding.horizontal(32),
+          $text.style.fontSize(17),
+          $text.style.fontWeight.w900(),
+        ),
+    };
+  }
+
+  Style _defaultStyle(MentorXThemeColorPalette palette) {
     return Style(
-      $box.width.infinity(),
-      $box.padding.vertical(18),
-      $box.borderRadius(14),
+      $box.width(width ?? double.infinity),
+      $box.borderRadius(16),
       $box.alignment.center(),
-      $box.color.ref($mentorxToken.color.brandPrimary),
       $text.style.ref($mentorxToken.textStyle.bodyPrimary),
-      $text.style.color.ref($mentorxToken.color.textForeground),
-      $text.style.fontWeight.w800(),
-      $text.style.fontSize(16),
-      $on.hover(
-        $box.color.ref($mentorxToken.color.brandPressed),
-      ),
+      $text.style.letterSpacing(-0.2),
       $on.disabled(
-        $box.color.grey.shade300(),
-        $text.style.color.grey.shade500(),
+        $box.color(palette.backgroundSecondary),
+        $text.style.color(palette.textTertiary),
+        $box.border.all.color(Colors.transparent),
       ),
-    );
+    ).merge(_variantStyle(palette)).merge(_sizeStyle());
   }
 
   @override
   Widget build(BuildContext context) {
+    final palette = MentorXThemeColorPalette.light;
+
     return PressableBox(
       onPress: loading ? null : onPressed,
-      style: _defaultStyle().merge(style),
+      style: _defaultStyle(palette).merge(style),
       child: loading
-          ? const SizedBox(
+          ? SizedBox(
               height: 20,
               width: 20,
               child: CircularProgressIndicator(
-                strokeWidth: 2,
-                valueColor: AlwaysStoppedAnimation(Colors.white),
+                strokeWidth: 2.5,
+                valueColor: AlwaysStoppedAnimation(
+                  variant == MentorXButtonVariant.filled ? Colors.white : (color ?? palette.brandPrimary),
+                ),
               ),
             )
-          : TextSpecWidget(text),
+          : Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (icon != null) ...[
+                  Icon(
+                    icon,
+                    size: size == MentorXButtonSize.small ? 16 : 20,
+                    color: variant == MentorXButtonVariant.filled ? Colors.white : (color ?? palette.brandPrimary),
+                  ),
+                  const Gap(10),
+                ],
+                TextSpecWidget(_displayText),
+              ],
+            ),
     );
   }
 }

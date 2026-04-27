@@ -16,6 +16,9 @@ dependencies:
   dio_http_client:
     path: ../../clients/dio_http_client
 
+  dio_quiz_repository:
+    path: ../dio_quiz_repository
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

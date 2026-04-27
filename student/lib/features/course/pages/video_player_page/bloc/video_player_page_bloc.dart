@@ -30,8 +30,17 @@ final class VideoPlayerPageBloc
     required CourseRepository courseRepository,
     required String itemId,
     required String title,
+    String? enrollmentId,
+    int completedLessons = 0,
+    int totalLessons = 0,
   }) : _courseRepository = courseRepository,
-       super(VideoPlayerPageState(itemId: itemId, title: title)) {
+       super(VideoPlayerPageState(
+         itemId: itemId,
+         title: title,
+         enrollmentId: enrollmentId,
+         completedLessons: completedLessons,
+         totalLessons: totalLessons,
+       )) {
     on<VideoPlayerPageInitialized>(_onInitialized);
     on<VideoPlayerPageProgressUpdated>(_onProgressUpdated);
     on<VideoPlayerPageCompleted>(_onCompleted);
@@ -84,14 +93,19 @@ final class VideoPlayerPageBloc
       ),
     );
 
+    if (state.enrollmentId == null) return;
+
     try {
-      await _courseRepository.updateProgress(
-        state.itemId,
-        lastPositionSeconds: event.positionSeconds,
+      final progressPercent = event.totalSeconds > 0
+          ? (event.positionSeconds / event.totalSeconds) * 100
+          : 0.0;
+
+      await _courseRepository.updateEnrollmentProgress(
+        state.enrollmentId!,
+        progress: progressPercent,
         watchTimeSeconds: event.positionSeconds,
-        progressPercent: event.totalSeconds > 0
-            ? (event.positionSeconds / event.totalSeconds) * 100
-            : 0,
+        completedLessons: state.completedLessons,
+        totalLessons: state.totalLessons,
       );
     } catch (_) {
       // Silently fail — progress saving is best-effort
@@ -102,9 +116,18 @@ final class VideoPlayerPageBloc
     VideoPlayerPageCompleted event,
     Emitter<VideoPlayerPageState> emit,
   ) async {
+    emit(state.copyWith(isCompleted: true));
+    
+    if (state.enrollmentId == null) return;
+
     try {
-      await _courseRepository.markItemComplete(state.itemId);
-      emit(state.copyWith(isCompleted: true));
+      await _courseRepository.updateEnrollmentProgress(
+        state.enrollmentId!,
+        progress: 100.0,
+        watchTimeSeconds: state.totalDurationSeconds,
+        completedLessons: state.completedLessons + 1,
+        totalLessons: state.totalLessons,
+      );
     } catch (_) {
       // Silently fail
     }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
+import 'package:animate_do/animate_do.dart';
+import 'package:gap/gap.dart';
 
 final class OtpPage extends StatelessWidget {
   final Widget? backButton;
@@ -21,13 +23,83 @@ final class OtpPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AuthScaffold(
-      appBarLeading: backButton,
-      title: title,
-      subtitle: subtitle,
-      body: Center(child: otpFields),
-      primaryButton: verifyButton,
-      secondaryButton: resendButton,
+    final palette = MentorXThemeColorPalette.light;
+
+    return Scaffold(
+      backgroundColor: palette.backgroundPrimary,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: backButton,
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Column(
+            children: [
+              const Gap(20),
+              // Glassmorphic Logo/Icon
+              FadeInDown(
+                duration: const Duration(milliseconds: 600),
+                child: Container(
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: palette.brandPrimary.withValues(alpha: 0.1),
+                        blurRadius: 30,
+                        offset: const Offset(0, 10),
+                      ),
+                    ],
+                  ),
+                  child: Icon(
+                    Icons.security_rounded,
+                    color: palette.brandPrimary,
+                    size: 48,
+                  ),
+                ),
+              ),
+              const Gap(40),
+              if (title != null) 
+                FadeInDown(
+                  duration: const Duration(milliseconds: 500),
+                  delay: const Duration(milliseconds: 200),
+                  child: title!,
+                ),
+              const Gap(12),
+              if (subtitle != null)
+                FadeInDown(
+                  duration: const Duration(milliseconds: 500),
+                  delay: const Duration(milliseconds: 300),
+                  child: subtitle!,
+                ),
+              const Gap(56),
+              FadeInUp(
+                duration: const Duration(milliseconds: 500),
+                delay: const Duration(milliseconds: 400),
+                child: otpFields,
+              ),
+              const Gap(56),
+              FadeInUp(
+                duration: const Duration(milliseconds: 500),
+                delay: const Duration(milliseconds: 500),
+                child: verifyButton,
+              ),
+              const Gap(24),
+              if (resendButton != null)
+                FadeInUp(
+                  duration: const Duration(milliseconds: 500),
+                  delay: const Duration(milliseconds: 600),
+                  child: resendButton!,
+                ),
+              const Gap(40),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

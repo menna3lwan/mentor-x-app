@@ -114,17 +114,13 @@ final class MockCourseRepository implements CourseRepository {
   }
 
   @override
-  Future<void> updateProgress(
-    String itemId, {
-    int? watchTimeSeconds,
-    int? lastPositionSeconds,
-    double? progressPercent,
+  Future<void> updateEnrollmentProgress(
+    String enrollmentId, {
+    required double progress,
+    required int watchTimeSeconds,
+    required int completedLessons,
+    required int totalLessons,
   }) async {
-    await Future<void>.delayed(delay ~/ 2);
-  }
-
-  @override
-  Future<void> markItemComplete(String itemId) async {
     await Future<void>.delayed(delay ~/ 2);
   }
 }

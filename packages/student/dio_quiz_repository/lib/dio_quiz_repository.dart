@@ -17,20 +17,25 @@ final class DioQuizRepository
   Future<void> initialize() async {}
 
   @override
-  Future<({QuizAttemptEntity attempt, List<QuizQuestionEntity> questions})>
-  startQuiz(String quizId) async {
+  Future<List<QuizEntity>> getQuizzes() async {
     try {
-      final response = await httpClient.post('/api/quizzes/$quizId/start');
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
-      final attempt = QuizAttemptModel.fromJson(asMap(data['attempt']));
-      final questions = asList(data['questions'] ??
-              asMap(response.data)['content'] ??
-              asMap(response.data)['data'] ??
-              response.data)
-          .map((e) => QuizQuestionModel.fromJson(asMap(e)))
-          .toList();
+      final response = await httpClient.get('/api/quizzes');
+      final data = asList(response.data);
+      return data.map((e) => QuizModel.fromJson(asMap(e))).toList();
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: QuizRepositoryExceptionCode.unknown,
+      );
+    }
+  }
 
-      return (attempt: attempt, questions: questions);
+  @override
+  Future<QuizEntity> getQuiz(String quizId) async {
+    try {
+      final response = await httpClient.get('/api/quizzes/$quizId');
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      return QuizModel.fromJson(data);
     } on HttpClientResponse catch (e) {
       handleHttpClientErrorResponse(
         e,
@@ -39,34 +44,26 @@ final class DioQuizRepository
     }
   }
 
-  @override
-  Future<void> saveAnswer(
-    String attemptId, {
-    required String questionId,
-    List<String>? selectedOptions,
-    String? textAnswer,
-  }) async {
-    try {
-      await httpClient.post(
-        '/api/quiz-attempts/$attemptId/answers',
-        data: {
-          'question_id': questionId,
-          if (selectedOptions != null) 'selected_options': selectedOptions,
-          if (textAnswer != null) 'text_answer': textAnswer,
-        },
-      );
-    } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
-        e,
-        defaultCode: QuizRepositoryExceptionCode.failedToSaveAnswer,
-      );
-    }
-  }
 
   @override
-  Future<QuizAttemptEntity> submitQuiz(String attemptId) async {
+  Future<QuizAttemptEntity> submitQuiz(
+    String quizId, {
+    required Map<String, String> answers,
+  }) async {
     try {
-      final response = await httpClient.post('/api/quiz-attempts/$attemptId/submit');
+      final response = await httpClient.post(
+        '/api/quizzes/$quizId/submit',
+        data: {
+          'quizId': quizId,
+          'answers': answers.entries
+              .map((e) => {
+                    'questionId': e.key,
+                    'selectedAnswer': e.value,
+                  })
+              .toList(),
+        },
+      );
+
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return QuizAttemptModel.fromJson(data);
     } on HttpClientResponse catch (e) {
@@ -78,7 +75,7 @@ final class DioQuizRepository
   }
 
   @override
-  Future<QuizAttemptEntity> getResults(String attemptId) async {
+  Future<QuizAttemptModel> getResults(String attemptId) async {
     try {
       final response = await httpClient.get('/api/quiz-attempts/$attemptId');
       final data = asMap(response.data)['data'] ?? asMap(response.data);

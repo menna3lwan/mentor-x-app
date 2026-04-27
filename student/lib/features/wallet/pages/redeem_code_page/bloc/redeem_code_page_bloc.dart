@@ -23,6 +23,7 @@ final class RedeemCodePageBloc
   RedeemCodePageBloc({required this.walletRepository})
     : super(RedeemCodePageState.initial) {
     on<RedeemCodePageLoadEvent>(_onLoad);
+    on<RedeemCodePageSubmitEvent>(_onSubmit);
   }
 
   final WalletRepository walletRepository;
@@ -31,7 +32,23 @@ final class RedeemCodePageBloc
     RedeemCodePageLoadEvent event,
     Emitter<RedeemCodePageState> emit,
   ) async {
-    emit(state.copyWith(loadingState: LoadingState.loading));
     emit(state.copyWith(loadingState: LoadingState.loaded));
+  }
+
+  Future<void> _onSubmit(
+    RedeemCodePageSubmitEvent event,
+    Emitter<RedeemCodePageState> emit,
+  ) async {
+    emit(state.copyWith(loadingState: LoadingState.loading));
+    try {
+      await walletRepository.redeemCode(event.code);
+      emit(state.copyWith(loadingState: LoadingState.loaded));
+      emitPresentation(const RedeemCodePageNavigateBack());
+    } catch (e) {
+      emit(state.copyWith(
+        loadingState: LoadingState.error,
+        errorMessage: e.toString(),
+      ));
+    }
   }
 }

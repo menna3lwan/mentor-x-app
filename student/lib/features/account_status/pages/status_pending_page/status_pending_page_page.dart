@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
-
+import 'package:animate_do/animate_do.dart';
+import 'package:gap/gap.dart';
 import '../../widgets/status_layout.dart';
 
 final class StatusPendingPagePage extends StatelessWidget {
@@ -24,72 +25,113 @@ final class StatusPendingPagePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final palette = MentorXThemeColorPalette.light;
+    final t = context.t.accountStatus;
 
     return StatusLayout(
-      icon: Icons.hourglass_top_outlined,
-      iconBackground: palette.backgroundSecondary,
-      title: context.t.accountStatus.pendingTitle,
-      description: context.t.accountStatus.pendingDescription,
+      icon: Icons.hourglass_top_rounded,
+      iconBackground: palette.brandSecondary,
+      title: t.pendingTitle,
+      description: t.pendingDescription,
       extra: Column(
         children: [
           if (studentCode != null && studentCode!.trim().isNotEmpty) ...[
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: palette.backgroundSecondary,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Column(
-                children: [
-                  Text(
-                    'Student Code',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: palette.textSecondary,
+            FadeInUp(
+              duration: const Duration(milliseconds: 600),
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 24),
+                decoration: BoxDecoration(
+                  color: palette.backgroundSecondary,
+                  borderRadius: BorderRadius.circular(28),
+                  border: Border.all(color: palette.brandPrimary.withValues(alpha: 0.1)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: palette.brandPrimary.withValues(alpha: 0.03),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
                     ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    studentCode!,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w700,
+                  ],
+                ),
+                child: Column(
+                  children: [
+                    Text(
+                      context.t.student['studentCodeLabel'] ?? 'STUDENT CODE',
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w900,
+                        color: palette.textTertiary,
+                        letterSpacing: 1.2,
+                      ),
                     ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
+                    const Gap(10),
+                    Text(
+                      studentCode!,
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w900,
+                        color: palette.brandPrimary,
+                        letterSpacing: 3,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
               ),
             ),
-            const SizedBox(height: 12),
+            const Gap(24),
           ],
-          const SizedBox(height: 8),
-          Text(
-            context.t.accountStatus.pendingSupportInfo,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: palette.textSecondary,
+          FadeInUp(
+            duration: const Duration(milliseconds: 600),
+            delay: const Duration(milliseconds: 200),
+            child: Text(
+              t.pendingSupportInfo,
+              style: TextStyle(
+                fontSize: 14,
+                color: palette.textTertiary,
+                fontWeight: FontWeight.w600,
+                height: 1.5,
+              ),
+              textAlign: TextAlign.center,
             ),
-            textAlign: TextAlign.center,
           ),
         ],
       ),
       actions: [
-        OutlinedButton(
-          onPressed: isRefreshing ? null : onRefresh,
-          child: isRefreshing
-              ? const SizedBox(
-                  width: 16,
-                  height: 16,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                )
-              : const Text('Refresh Status'),
-        ),
-        if (showContactTeacher)
-          OutlinedButton(
-            onPressed: onContactTeacher,
-            child: const Text('Contact Teacher'),
+        FadeInUp(
+          duration: const Duration(milliseconds: 500),
+          delay: const Duration(milliseconds: 300),
+          child: MentorXButton(
+            onPressed: onRefresh,
+            loading: isRefreshing,
+            label: 'Refresh Status',
           ),
-        TextButton(
-          onPressed: isRefreshing ? null : onLogout,
-          child: const Text('Logout'),
+        ),
+        if (showContactTeacher) ...[
+          const Gap(12),
+          FadeInUp(
+            duration: const Duration(milliseconds: 500),
+            delay: const Duration(milliseconds: 400),
+            child: MentorXButton(
+              onPressed: onContactTeacher,
+              label: 'Contact Teacher',
+              variant: MentorXButtonVariant.outline,
+            ),
+          ),
+        ],
+        const Gap(20),
+        FadeInUp(
+          duration: const Duration(milliseconds: 500),
+          delay: const Duration(milliseconds: 500),
+          child: TextButton(
+            onPressed: isRefreshing ? null : onLogout,
+            child: Text(
+              context.t.student['logoutSetting'] ?? 'Logout',
+              style: TextStyle(
+                color: palette.textTertiary,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+          ),
         ),
       ],
     );

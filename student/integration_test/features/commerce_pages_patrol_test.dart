@@ -12,7 +12,7 @@ void main() {
     (name: 'order_history', route: const OrderHistoryPageRoute()),
     (name: 'wallet_add_balance', route: const AddBalancePageRoute()),
     (name: 'wallet_redeem_code', route: const RedeemCodePageRoute()),
-    (name: 'wallet_purchase_confirm', route: const PurchaseConfirmPageRoute()),
+    (name: 'wallet_purchase_confirm', route: const PurchaseConfirmPageRoute(paymentId: '1')),
     (name: 'wallet_payment_success', route: const PaymentSuccessPageRoute()),
     (
       name: 'wallet_transactions_history',

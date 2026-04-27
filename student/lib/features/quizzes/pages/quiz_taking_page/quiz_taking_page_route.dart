@@ -1,14 +1,17 @@
 part of '../../../../core/routing/app_routes.dart';
 
-@TypedGoRoute<QuizTakingPageRoute>(path: '/quiz-taking', name: 'quizTaking')
+@TypedGoRoute<QuizTakingPageRoute>(path: '/quiz-taking/:quizId', name: 'quizTaking')
 final class QuizTakingPageRoute extends GoRouteData with $QuizTakingPageRoute {
-  const QuizTakingPageRoute();
+  final String quizId;
+
+  const QuizTakingPageRoute({required this.quizId});
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return BlocProvider<QuizTakingPageBloc>(
       create: (context) => QuizTakingPageBloc(
         quizRepository: context.read<QuizRepository>(),
+        quizId: quizId,
       )..add(const QuizTakingPageLoadEvent()),
       child: const QuizTakingPageWrapper(),
     );

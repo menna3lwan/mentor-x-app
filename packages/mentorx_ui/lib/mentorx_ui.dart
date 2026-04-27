@@ -1,6 +1,7 @@
 import 'dart:ui' as ui;
 
 // import 'package:mentorx_ui/assets/gen/assets.gen.dart';
+import 'package:gap/gap.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -66,7 +67,11 @@ part 'widgets/generic_list_tile.dart';
 final class MentorXUI {
   MentorXUI._();
 
-  static void showToast({required String message}) {
-    Fluttertoast.showToast(msg: message);
+  static void showToast({required String message, bool isError = false}) {
+    Fluttertoast.showToast(
+      msg: message,
+      backgroundColor: isError ? Colors.red : Colors.green,
+      textColor: Colors.white,
+    );
   }
 }

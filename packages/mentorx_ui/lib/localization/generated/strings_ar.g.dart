@@ -687,6 +687,7 @@ class TranslationsAr with BaseTranslations<AppLocale, Translations> implements T
 		'today': 'اليوم',
 		'yesterday': 'أمس',
 	};
+	@override late final _TranslationsParentAr parent = _TranslationsParentAr._(_root);
 }
 
 // Path: ui
@@ -920,6 +921,40 @@ class _TranslationsCourseAr implements TranslationsCourseEn {
 	@override late final _TranslationsCoursePdfAr pdf = _TranslationsCoursePdfAr._(_root);
 	@override late final _TranslationsCourseEmptyAr empty = _TranslationsCourseEmptyAr._(_root);
 	@override late final _TranslationsCourseErrorsAr errors = _TranslationsCourseErrorsAr._(_root);
+}
+
+// Path: parent
+class _TranslationsParentAr implements TranslationsParentEn {
+	_TranslationsParentAr._(this._root);
+
+	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
+	@override String get dashboardTitle => 'بوابة ولي الأمر';
+	@override String get welcomeBack => 'أهلاً بعودتك،';
+	@override String get services => 'الخدمات';
+	@override String get recentActivity => 'آخر النشاطات';
+	@override String get viewAll => 'عرض الكل';
+	@override String get retry => 'إعادة المحاولة';
+	@override String get unableToLoad => 'غير قادر على تحميل لوحة التحكم';
+	@override String get myProfile => 'ملفي الشخصي';
+	@override String get signOut => 'تسجيل الخروج';
+	@override String get accountInfo => 'معلومات الحساب';
+	@override String get appSettings => 'إعدادات التطبيق';
+	@override String get notifications => 'الإشعارات';
+	@override String get security => 'الأمان';
+	@override String get childSwitcher => 'تبديل الأبناء';
+	@override String get noData => 'لا توجد بيانات';
+	@override String get announcements => 'الإعلانات';
+	@override String get academicMonitor => 'المتابعة الأكاديمية';
+	@override String get financialMonitor => 'المتابعة المالية';
+	@override String get attendanceMonitor => 'متابعة الغياب';
+	@override String get overallAverage => 'المعدل العام';
+	@override String get enrolledCourses => 'الدورات المسجل بها';
+	@override String get childWalletBalance => 'رصيد محفظة الابن';
+	@override String get spentThisMonth => 'المنفق هذا الشهر';
+	@override String get transactionHistory => 'سجل المعاملات';
+	@override String get pointsEarned => 'النقاط المكتسبة';
 }
 
 // Path: ui.common
@@ -2152,6 +2187,31 @@ extension on TranslationsAr {
 			'student.purchaseBook' => 'شراء - كتاب',
 			'student.today' => 'اليوم',
 			'student.yesterday' => 'أمس',
+			'parent.dashboardTitle' => 'بوابة ولي الأمر',
+			'parent.welcomeBack' => 'أهلاً بعودتك،',
+			'parent.services' => 'الخدمات',
+			'parent.recentActivity' => 'آخر النشاطات',
+			'parent.viewAll' => 'عرض الكل',
+			'parent.retry' => 'إعادة المحاولة',
+			'parent.unableToLoad' => 'غير قادر على تحميل لوحة التحكم',
+			'parent.myProfile' => 'ملفي الشخصي',
+			'parent.signOut' => 'تسجيل الخروج',
+			'parent.accountInfo' => 'معلومات الحساب',
+			'parent.appSettings' => 'إعدادات التطبيق',
+			'parent.notifications' => 'الإشعارات',
+			'parent.security' => 'الأمان',
+			'parent.childSwitcher' => 'تبديل الأبناء',
+			'parent.noData' => 'لا توجد بيانات',
+			'parent.announcements' => 'الإعلانات',
+			'parent.academicMonitor' => 'المتابعة الأكاديمية',
+			'parent.financialMonitor' => 'المتابعة المالية',
+			'parent.attendanceMonitor' => 'متابعة الغياب',
+			'parent.overallAverage' => 'المعدل العام',
+			'parent.enrolledCourses' => 'الدورات المسجل بها',
+			'parent.childWalletBalance' => 'رصيد محفظة الابن',
+			'parent.spentThisMonth' => 'المنفق هذا الشهر',
+			'parent.transactionHistory' => 'سجل المعاملات',
+			'parent.pointsEarned' => 'النقاط المكتسبة',
 			_ => null,
 		};
 	}

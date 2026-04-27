@@ -71,18 +71,18 @@ final class StudentProfileModel extends StudentEntity {
     final String fallbackFirst = nameParts.isNotEmpty ? nameParts.first : '';
     final String fallbackLast = nameParts.length > 1 ? nameParts.sublist(1).join(' ') : '';
 
-    DateTime _parseDate(dynamic value) {
+    DateTime parseDate(dynamic value) {
       if (value == null) return DateTime.now();
       return DateTime.tryParse(value.toString()) ?? DateTime.now();
     }
 
-    double _parseDouble(dynamic value, double fallback) {
+    double parseDouble(dynamic value, double fallback) {
       if (value == null) return fallback;
       if (value is num) return value.toDouble();
       return double.tryParse(value.toString()) ?? fallback;
     }
 
-    int _parseInt(dynamic value, int fallback) {
+    int parseInt(dynamic value, int fallback) {
       if (value == null) return fallback;
       if (value is num) return value.toInt();
       return int.tryParse(value.toString()) ?? fallback;
@@ -101,8 +101,8 @@ final class StudentProfileModel extends StudentEntity {
       gradeName: (user['gradeName'] ?? user['grade_name'] ?? user['grade'])?.toString(),
       studentCode: (user['studentCode'] ?? user['student_code'])?.toString(),
       studyType: (user['studyType'] ?? user['study_type'])?.toString(),
-      walletBalance: _parseDouble(user['walletBalance'] ?? user['wallet_balance'], 0.0),
-      totalPoints: _parseInt(user['totalPoints'] ?? user['total_points'], 0),
+      walletBalance: parseDouble(user['walletBalance'] ?? user['wallet_balance'], 0.0),
+      totalPoints: parseInt(user['totalPoints'] ?? user['total_points'], 0),
       schoolName: (user['schoolName'] ?? user['school_name'])?.toString(),
       centerId: (user['centerId'] ?? user['center_id'])?.toString(),
       centerName: (user['centerName'] ?? user['center_name'] ?? user['center'])?.toString(),
@@ -117,8 +117,63 @@ final class StudentProfileModel extends StudentEntity {
           ? (user['enrolledCourseIds'] ?? user['enrolled_course_ids'] as List).map((e) => e.toString()).toList()
           : null,
       metadata: user['metadata'] is Map ? Map<String, dynamic>.from(user['metadata'] as Map) : null,
-      createdAt: _parseDate(user['createdAt'] ?? user['created_at']),
-      updatedAt: _parseDate(user['updatedAt'] ?? user['updated_at']),
+      createdAt: parseDate(user['createdAt'] ?? user['created_at']),
+      updatedAt: parseDate(user['updatedAt'] ?? user['updated_at']),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'firstName': firstName,
+      'lastName': lastName,
+      'email': email,
+      'phoneNumber': phoneNumber,
+      'gender': gender.name,
+      'gradeId': gradeId,
+      'schoolName': schoolName,
+      'centerId': centerId,
+      'parentName': parentName,
+      'parentPhone': parentPhone,
+      'academicLevel': academicLevel,
+      'dateOfBirth': dateOfBirth?.toIso8601String(),
+      'address': address,
+      'city': city,
+      'governorate': governorate,
+      'metadata': metadata,
+    };
+  }
+
+  factory StudentProfileModel.fromEntity(StudentEntity entity) {
+    return StudentProfileModel(
+      id: entity.id,
+      firstName: entity.firstName,
+      lastName: entity.lastName,
+      email: entity.email,
+      phoneNumber: entity.phoneNumber,
+      profileImageUrl: entity.profileImageUrl,
+      gender: entity.gender,
+      status: entity.status,
+      gradeId: entity.gradeId,
+      gradeName: entity.gradeName,
+      studentCode: entity.studentCode,
+      studyType: entity.studyType,
+      walletBalance: entity.walletBalance,
+      totalPoints: entity.totalPoints,
+      schoolName: entity.schoolName,
+      centerId: entity.centerId,
+      centerName: entity.centerName,
+      parentName: entity.parentName,
+      parentPhone: entity.parentPhone,
+      academicLevel: entity.academicLevel,
+      dateOfBirth: entity.dateOfBirth,
+      address: entity.address,
+      city: entity.city,
+      governorate: entity.governorate,
+      enrolledCourseIds: entity.enrolledCourseIds,
+      metadata: entity.metadata,
+      createdAt: entity.createdAt,
+      updatedAt: entity.updatedAt,
     );
   }
 

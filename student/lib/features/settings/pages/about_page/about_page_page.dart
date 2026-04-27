@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
+import 'package:animate_do/animate_do.dart';
+import 'package:gap/gap.dart';
 
 class AboutPage extends StatelessWidget {
   const AboutPage({super.key});
@@ -7,139 +9,188 @@ class AboutPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = context.t.student;
+    final palette = MentorXThemeColorPalette.light;
     return Scaffold(
-      backgroundColor: AppColors.backgroundLight,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        foregroundColor: AppColors.primary,
-        title: Text(
-          t['aboutTitle'] ?? 'About',
-          style: const TextStyle(
-            fontSize: 17,
-            fontWeight: FontWeight.w700,
-            color: AppColors.primary,
+      backgroundColor: palette.backgroundSecondary,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(70),
+        child: FadeInDown(
+          duration: const Duration(milliseconds: 500),
+          child: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            foregroundColor: palette.brandPrimary,
+            title: Text(
+              t['aboutTitle'] ?? 'About',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w900,
+                color: palette.textPrimary,
+                letterSpacing: -0.5,
+              ),
+            ),
+            centerTitle: true,
           ),
         ),
-        centerTitle: true,
       ),
       body: Center(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(32),
+          physics: const BouncingScrollPhysics(),
+          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               // App logo with gradient ring
-              Container(
-                padding: const EdgeInsets.all(3),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: const LinearGradient(
-                    colors: [AppColors.accent, AppColors.primary],
-                  ),
-                ),
+              ZoomIn(
+                duration: const Duration(milliseconds: 600),
                 child: Container(
-                  padding: const EdgeInsets.all(22),
-                  decoration: const BoxDecoration(
-                    color: AppColors.backgroundLight,
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.school_rounded,
-                    size: 44,
-                    color: AppColors.primary,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                'MentorX',
-                style: TextStyle(
-                  fontSize: 26,
-                  fontWeight: FontWeight.w800,
-                  color: AppColors.primary,
-                  letterSpacing: 0.5,
-                ),
-              ),
-              const SizedBox(height: 6),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                decoration: BoxDecoration(
-                  color: AppColors.accent.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: const Text(
-                  'Student Edition',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.accent,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              Text(
-                t['aboutDesc'] ?? 'Your learning companion',
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: AppColors.greyDark,
-                  height: 1.5,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 28),
-
-              // Info card
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.04),
-                      blurRadius: 12,
-                      offset: const Offset(0, 4),
+                    gradient: LinearGradient(
+                      colors: [palette.brandSecondary, palette.brandPrimary],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
                     ),
-                  ],
+                    boxShadow: [
+                      BoxShadow(
+                        color: palette.brandPrimary.withValues(alpha: 0.2),
+                        blurRadius: 20,
+                        offset: const Offset(0, 10),
+                      ),
+                    ],
+                  ),
+                  child: Container(
+                    padding: const EdgeInsets.all(28),
+                    decoration: BoxDecoration(
+                      color: palette.backgroundPrimary,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.school_rounded,
+                      size: 56,
+                      color: palette.brandPrimary,
+                    ),
+                  ),
                 ),
+              ),
+              const Gap(24),
+              FadeInUp(
+                duration: const Duration(milliseconds: 500),
+                delay: const Duration(milliseconds: 200),
                 child: Column(
                   children: [
-                    _InfoRow(
-                      icon: Icons.tag_rounded,
-                      label: t['version'] ?? 'Version',
-                      value: '1.0.0',
+                    Text(
+                      'MentorX',
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.w900,
+                        color: palette.textPrimary,
+                        letterSpacing: -0.8,
+                      ),
                     ),
-                    Divider(
-                      height: 24,
-                      color: AppColors.greyLight.withValues(alpha: 0.5),
-                    ),
-                    _InfoRow(
-                      icon: Icons.update_rounded,
-                      label: t['lastUpdate'] ?? 'Last Update',
-                      value: 'Mar 2025',
-                    ),
-                    Divider(
-                      height: 24,
-                      color: AppColors.greyLight.withValues(alpha: 0.5),
-                    ),
-                    _InfoRow(
-                      icon: Icons.verified_rounded,
-                      label: 'Build',
-                      value: '2025.03.19',
+                    const Gap(8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: palette.brandPrimary.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(color: palette.brandPrimary.withValues(alpha: 0.2)),
+                      ),
+                      child: Text(
+                        'Student Edition',
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w800,
+                          color: palette.brandPrimary,
+                        ),
+                      ),
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: 28),
-              Text(
-                '© 2025 MentorX. All rights reserved.',
-                style: TextStyle(
-                  fontSize: 11,
-                  color: AppColors.grey.withValues(alpha: 0.7),
+              const Gap(20),
+              FadeInUp(
+                duration: const Duration(milliseconds: 500),
+                delay: const Duration(milliseconds: 300),
+                child: Text(
+                  t['aboutDesc'] ?? 'Your learning companion',
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: palette.textSecondary,
+                    height: 1.6,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                textDirection: TextDirection.ltr,
+              ),
+              const Gap(32),
+
+              // Info card
+              FadeInUp(
+                duration: const Duration(milliseconds: 600),
+                delay: const Duration(milliseconds: 400),
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    color: palette.backgroundPrimary,
+                    borderRadius: BorderRadius.circular(28),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.03),
+                        blurRadius: 16,
+                        offset: const Offset(0, 8),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      _InfoRow(
+                        icon: Icons.tag_rounded,
+                        label: t['version'] ?? 'Version',
+                        value: '1.0.0',
+                        palette: palette,
+                      ),
+                      Divider(
+                        height: 32,
+                        color: palette.backgroundSecondary,
+                        thickness: 1.5,
+                      ),
+                      _InfoRow(
+                        icon: Icons.update_rounded,
+                        label: t['lastUpdate'] ?? 'Last Update',
+                        value: 'April 2025',
+                        palette: palette,
+                      ),
+                      Divider(
+                        height: 32,
+                        color: palette.backgroundSecondary,
+                        thickness: 1.5,
+                      ),
+                      _InfoRow(
+                        icon: Icons.verified_user_rounded,
+                        label: 'Build',
+                        value: '2025.04.27',
+                        palette: palette,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const Gap(40),
+              FadeInUp(
+                duration: const Duration(milliseconds: 500),
+                delay: const Duration(milliseconds: 500),
+                child: Text(
+                  '© 2025 MentorX. All rights reserved.',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: palette.textTertiary.withValues(alpha: 0.8),
+                    fontWeight: FontWeight.w600,
+                  ),
+                  textDirection: TextDirection.ltr,
+                ),
               ),
             ],
           ),
@@ -154,32 +205,42 @@ class _InfoRow extends StatelessWidget {
     required this.icon,
     required this.label,
     required this.value,
+    required this.palette,
   });
   final IconData icon;
   final String label;
   final String value;
+  final MentorXThemeColorPalette palette;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(icon, size: 18, color: AppColors.primary.withValues(alpha: 0.5)),
-        const SizedBox(width: 10),
+        Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: palette.brandPrimary.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Icon(icon, size: 18, color: palette.brandPrimary),
+        ),
+        const Gap(14),
         Expanded(
           child: Text(
             label,
-            style: const TextStyle(
-              fontSize: 13,
-              color: AppColors.greyDark,
+            style: TextStyle(
+              fontSize: 14,
+              color: palette.textSecondary,
+              fontWeight: FontWeight.w700,
             ),
           ),
         ),
         Text(
           value,
-          style: const TextStyle(
-            fontSize: 13,
-            fontWeight: FontWeight.w700,
-            color: AppColors.primary,
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w900,
+            color: palette.textPrimary,
           ),
           textDirection: TextDirection.ltr,
         ),

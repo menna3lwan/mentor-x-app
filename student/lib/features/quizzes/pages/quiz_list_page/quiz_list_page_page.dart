@@ -1,191 +1,233 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
-import '../../widgets/quiz_ui.dart';
-
-class _QuizItem {
-  final String titleEn, titleAr, unitEn, unitAr;
-  final int questionCount, durationMin;
-  final bool isCompleted;
-  final int? score;
-  _QuizItem({
-    required this.titleEn,
-    required this.titleAr,
-    required this.unitEn,
-    required this.unitAr,
-    required this.questionCount,
-    required this.durationMin,
-    this.isCompleted = false,
-    this.score,
-  });
-}
+import 'package:animate_do/animate_do.dart';
+import 'package:gap/gap.dart';
+import 'package:mentorx_student/core/core.dart';
+import 'bloc/quiz_list_page_bloc.dart';
 
 class QuizListPage extends StatelessWidget {
   const QuizListPage({super.key});
 
-  List<_QuizItem> get _quizzes => [
-    _QuizItem(
-      titleEn: 'Mechanics Quiz',
-      titleAr:
-          '\u0643\u0648\u064A\u0632 \u0627\u0644\u0645\u064A\u0643\u0627\u0646\u064A\u0643\u0627',
-      unitEn: 'Unit 1',
-      unitAr: '\u0627\u0644\u0648\u062D\u062F\u0629 1',
-      questionCount: 20,
-      durationMin: 30,
-      isCompleted: true,
-      score: 85,
-    ),
-    _QuizItem(
-      titleEn: 'Electricity Quiz',
-      titleAr:
-          '\u0643\u0648\u064A\u0632 \u0627\u0644\u0643\u0647\u0631\u0628\u064A\u0629',
-      unitEn: 'Unit 2',
-      unitAr: '\u0627\u0644\u0648\u062D\u062F\u0629 2',
-      questionCount: 20,
-      durationMin: 30,
-      isCompleted: true,
-      score: 70,
-    ),
-    _QuizItem(
-      titleEn: 'Waves Quiz',
-      titleAr:
-          '\u0643\u0648\u064A\u0632 \u0627\u0644\u0645\u0648\u062C\u0627\u062A',
-      unitEn: 'Unit 3',
-      unitAr: '\u0627\u0644\u0648\u062D\u062F\u0629 3',
-      questionCount: 20,
-      durationMin: 30,
-    ),
-    _QuizItem(
-      titleEn: 'Dynamics Quiz',
-      titleAr:
-          '\u0643\u0648\u064A\u0632 \u0627\u0644\u062F\u064A\u0646\u0627\u0645\u064A\u0643\u0627',
-      unitEn: 'Unit 4',
-      unitAr: '\u0627\u0644\u0648\u062D\u062F\u0629 4',
-      questionCount: 20,
-      durationMin: 30,
-    ),
-  ];
-
   @override
   Widget build(BuildContext context) {
     final t = context.t.student;
-    final isAr = Localizations.localeOf(context).languageCode == 'ar';
+    final palette = MentorXThemeColorPalette.light;
 
-    return Column(
-      children: [
-        QuizHeader(
-          title: t['navQuizzes']!,
-          showBack: false,
-          centerTitle: true,
-        ),
-        Expanded(
-          child: ListView.builder(
-            padding: const EdgeInsets.all(16),
-            itemCount: _quizzes.length,
-            itemBuilder: (context, index) {
-              final quiz = _quizzes[index];
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    onTap: () {
-                      if (quiz.isCompleted) {
-                        context.push('/quiz-result');
-                      } else {
-                        context.push('/quiz-intro');
-                      }
-                    },
-                    borderRadius: BorderRadius.circular(QuizUi.radiusLg),
-                    child: Ink(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(QuizUi.radiusLg),
-                        boxShadow: QuizUi.shadowSm,
-                      ),
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 46,
-                            height: 46,
-                            decoration: BoxDecoration(
-                              color: quiz.isCompleted
-                                  ? AppColors.greenLight
-                                  : AppColors.accent.withValues(alpha: 0.12),
-                              borderRadius: BorderRadius.circular(
-                                QuizUi.radiusMd,
-                              ),
-                            ),
-                            child: Icon(
-                              quiz.isCompleted
-                                  ? Icons.check_circle
-                                  : Icons.quiz_outlined,
-                              color: quiz.isCompleted
-                                  ? AppColors.green
-                                  : AppColors.accent,
-                              size: 22,
-                            ),
-                          ),
-                          const SizedBox(width: 14),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  isAr ? quiz.titleAr : quiz.titleEn,
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w700,
-                                    color: AppColors.primary,
-                                  ),
-                                ),
-                                const SizedBox(height: 3),
-                                Text(
-                                  '${isAr ? quiz.unitAr : quiz.unitEn} - ${quiz.questionCount} ${t['questions']!} - ${quiz.durationMin} ${t['minutesShort']!}',
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    color: AppColors.greyDark,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          if (quiz.isCompleted && quiz.score != null)
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                                vertical: 4,
-                              ),
-                              decoration: BoxDecoration(
-                                color: quiz.score! >= 60
-                                    ? AppColors.greenLight
-                                    : AppColors.redLight,
-                                borderRadius: BorderRadius.circular(
-                                  QuizUi.radiusSm,
-                                ),
-                              ),
-                              child: Text(
-                                '${quiz.score}%',
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w700,
-                                  color: quiz.score! >= 60
-                                      ? AppColors.green
-                                      : AppColors.red,
-                                ),
-                              ),
-                            ),
-                        ],
-                      ),
-                    ),
-                  ),
+    return BlocBuilder<QuizListPageBloc, QuizListPageState>(
+      builder: (context, state) {
+        return Scaffold(
+          backgroundColor: palette.backgroundSecondary,
+          appBar: PreferredSize(
+            preferredSize: const Size.fromHeight(70),
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [palette.brandPrimary, palette.brandPrimary.withValues(alpha: 0.8)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                 ),
-              );
+                borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
+                boxShadow: [
+                  BoxShadow(color: palette.brandPrimary.withValues(alpha: 0.3), blurRadius: 15, offset: const Offset(0, 4)),
+                ],
+              ),
+              child: AppBar(
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                foregroundColor: Colors.white,
+                centerTitle: true,
+                title: Text(
+                  t['navQuizzes']!,
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900, letterSpacing: -0.5),
+                ),
+              ),
+            ),
+          ),
+          body: _buildBody(context, state, palette, t),
+        );
+      },
+    );
+  }
+
+  Widget _buildBody(
+    BuildContext context,
+    QuizListPageState state,
+    MentorXThemeColorPalette palette,
+    dynamic t,
+  ) {
+    if (state.loadingState == LoadingState.loading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (state.quizzes.isEmpty) {
+      return FadeInUp(child: _EmptyQuizzes(t: t, palette: palette));
+    }
+
+    return ListView.builder(
+      physics: const BouncingScrollPhysics(),
+      padding: const EdgeInsets.fromLTRB(20, 24, 20, 100),
+      itemCount: state.quizzes.length,
+      itemBuilder: (context, index) {
+        final quiz = state.quizzes[index];
+        return FadeInUp(
+          duration: const Duration(milliseconds: 500),
+          delay: Duration(milliseconds: 100 * index),
+          child: _QuizItemCard(
+            quiz: quiz,
+            palette: palette,
+            t: t,
+            onTap: () {
+              context.push('/quiz-intro'); 
             },
           ),
+        );
+      },
+    );
+  }
+}
+
+class _QuizItemCard extends StatelessWidget {
+  final QuizEntity quiz;
+  final MentorXThemeColorPalette palette;
+  final dynamic t;
+  final VoidCallback onTap;
+
+  const _QuizItemCard({
+    required this.quiz,
+    required this.palette,
+    required this.t,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.03),
+            blurRadius: 15,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(24),
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: palette.brandPrimary.withValues(alpha: 0.08),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Icon(Icons.quiz_rounded, size: 28, color: palette.brandPrimary),
+                ),
+                const Gap(16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        quiz.title,
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w900,
+                          color: palette.textPrimary,
+                          letterSpacing: -0.3,
+                        ),
+                      ),
+                      const Gap(6),
+                      Row(
+                        children: [
+                          Icon(Icons.help_outline_rounded, size: 12, color: palette.textTertiary),
+                          const Gap(4),
+                          Text(
+                            '${quiz.questionsCount ?? 0} ${t['questions']!}',
+                            style: TextStyle(fontSize: 11, color: palette.textTertiary, fontWeight: FontWeight.w700),
+                          ),
+                          const Gap(12),
+                          Icon(Icons.access_time_rounded, size: 12, color: palette.textTertiary),
+                          const Gap(4),
+                          Text(
+                            '${quiz.durationMinutes} ${t['minutesShort']!}',
+                            style: TextStyle(fontSize: 11, color: palette.textTertiary, fontWeight: FontWeight.w700),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                const Gap(8),
+                Icon(
+                  Icons.chevron_right_rounded,
+                  color: palette.textTertiary.withValues(alpha: 0.5),
+                ),
+              ],
+            ),
+          ),
         ),
-      ],
+      ),
+    );
+  }
+}
+
+class _EmptyQuizzes extends StatelessWidget {
+  const _EmptyQuizzes({required this.t, required this.palette});
+  final dynamic t;
+  final MentorXThemeColorPalette palette;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(32),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 20),
+              ],
+            ),
+            child: Icon(
+              Icons.assignment_turned_in_rounded,
+              size: 80,
+              color: palette.textTertiary.withValues(alpha: 0.2),
+            ),
+          ),
+          const Gap(32),
+          Text(
+            t['noQuizzes'] ?? 'No quizzes available',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w900,
+              color: palette.textPrimary,
+            ),
+          ),
+          const Gap(10),
+          Text(
+            t['noQuizzesDesc'] ?? 'Check back later for new quizzes.',
+            style: TextStyle(
+              fontSize: 15,
+              color: palette.textSecondary,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

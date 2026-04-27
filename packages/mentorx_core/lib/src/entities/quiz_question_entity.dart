@@ -5,67 +5,61 @@ enum QuizQuestionType { multipleChoice, trueFalse, shortAnswer, essay, fillInThe
 
 class QuizQuestionEntity extends Equatable {
   final String id;
-  final String questionText;
-  final String? questionImageUrl;
-  final QuizQuestionType questionType;
+  final String text;
+  final String? imageUrl;
+  final QuizQuestionType type;
   final List<String> options;
-  final int marks;
-  final int negativeMarks;
-  final String? explanation;
+  final int mark;
+  final int? optionsCount;
   final int order;
 
   const QuizQuestionEntity({
     required this.id,
-    required this.questionText,
-    required this.questionType,
-    required this.marks,
-    this.questionImageUrl,
+    required this.text,
+    required this.type,
+    this.imageUrl,
     this.options = const [],
-    this.negativeMarks = 0,
-    this.explanation,
+    this.mark = 0,
+    this.optionsCount,
     this.order = 0,
   });
 
   static const placeholder = QuizQuestionEntity(
     id: '',
-    questionText: '',
-    questionType: QuizQuestionType.multipleChoice,
-    marks: 0,
+    text: '',
+    type: QuizQuestionType.multipleChoice,
   );
 
   @override
   List<Object?> get props => [
         id,
-        questionText,
-        questionImageUrl,
-        questionType,
+        text,
+        type,
+        imageUrl,
         options,
-        marks,
-        negativeMarks,
-        explanation,
+        mark,
+        optionsCount,
         order,
       ];
 
   QuizQuestionEntity copyWith({
     String? id,
-    String? questionText,
-    String? questionImageUrl,
-    QuizQuestionType? questionType,
+    String? text,
+    QuizQuestionType? type,
+    String? imageUrl,
     List<String>? options,
-    int? marks,
-    int? negativeMarks,
-    String? explanation,
+    int? mark,
+    int? optionsCount,
     int? order,
   }) {
     return QuizQuestionEntity(
       id: id ?? this.id,
-      questionText: questionText ?? this.questionText,
-      questionImageUrl: questionImageUrl ?? this.questionImageUrl,
-      questionType: questionType ?? this.questionType,
+      text: text ?? this.text,
+      type: type ?? this.type,
+      imageUrl: imageUrl ?? this.imageUrl,
       options: options ?? this.options,
-      marks: marks ?? this.marks,
-      negativeMarks: negativeMarks ?? this.negativeMarks,
-      explanation: explanation ?? this.explanation,
+      mark: mark ?? this.mark,
+      optionsCount: optionsCount ?? this.optionsCount,
       order: order ?? this.order,
     );
   }

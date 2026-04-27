@@ -54,9 +54,9 @@ void main() {
     blocTest<ResetPasswordBloc, ResetPasswordState>(
       'emits success when ResetPasswordSubmitted is successful',
       build: () {
+        when(() => authRepository.verifyOtp(any())).thenAnswer((_) async => StudentEntity.placeholder);
         when(() => authRepository.resetPassword(
               phoneNumber: any(named: 'phoneNumber'),
-              otp: any(named: 'otp'),
               newPassword: any(named: 'newPassword'),
             )).thenAnswer((_) async {});
         return ResetPasswordBloc(
@@ -106,9 +106,9 @@ void main() {
     blocTest<ResetPasswordBloc, ResetPasswordState>(
       'emits failure when repository throws exception',
       build: () {
+        when(() => authRepository.verifyOtp(any())).thenAnswer((_) async => StudentEntity.placeholder);
         when(() => authRepository.resetPassword(
               phoneNumber: any(named: 'phoneNumber'),
-              otp: any(named: 'otp'),
               newPassword: any(named: 'newPassword'),
             )).thenThrow(AuthenticationRepositoryException(
           code: AuthenticationRepositoryExceptionCode.unknown,

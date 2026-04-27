@@ -9,6 +9,7 @@ class QuizAttemptEntity extends Equatable {
   final String? courseName;
   final int attemptNumber;
   final QuizAttemptStatus status;
+  final Map<String, String> answers;
   final int score;
   final int totalMarks;
   final double percentage;
@@ -24,6 +25,7 @@ class QuizAttemptEntity extends Equatable {
     this.courseName,
     required this.attemptNumber,
     required this.status,
+    this.answers = const {},
     required this.score,
     required this.totalMarks,
     required this.percentage,
@@ -53,6 +55,7 @@ class QuizAttemptEntity extends Equatable {
         courseName,
         attemptNumber,
         status,
+        answers,
         score,
         totalMarks,
         percentage,
@@ -69,6 +72,7 @@ class QuizAttemptEntity extends Equatable {
     String? courseName,
     int? attemptNumber,
     QuizAttemptStatus? status,
+    Map<String, String>? answers,
     int? score,
     int? totalMarks,
     double? percentage,
@@ -84,6 +88,7 @@ class QuizAttemptEntity extends Equatable {
       courseName: courseName ?? this.courseName,
       attemptNumber: attemptNumber ?? this.attemptNumber,
       status: status ?? this.status,
+      answers: answers ?? this.answers,
       score: score ?? this.score,
       totalMarks: totalMarks ?? this.totalMarks,
       percentage: percentage ?? this.percentage,

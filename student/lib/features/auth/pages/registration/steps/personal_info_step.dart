@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
+import 'package:animate_do/animate_do.dart';
 import '../bloc/student_registration_bloc.dart';
 
 class PersonalInfoStep extends StatefulWidget {
@@ -46,44 +47,61 @@ class _PersonalInfoStepState extends State<PersonalInfoStep> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Complete Your Profile',
-              style: Theme.of(
-                context,
-              ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
-            ),
-            const Gap(8),
-            Text(
-              'Please provide your full name as it appears in your documents.',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: palette.textSecondary,
+            FadeInDown(
+              duration: const Duration(milliseconds: 400),
+              child: Text(
+                'Complete Your Profile',
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.w900,
+                      color: palette.textPrimary,
+                    ),
               ),
             ),
-            const Gap(24),
-            _buildPhotoPicker(context, state, bloc),
-            const Gap(24),
-            MentorXTextFormField(
-              label: 'Second Name',
-              icon: Icons.person_outline,
-              controller: _secondNameController,
-              onChanged: (value) =>
-                  bloc.add(StudentRegistrationSecondNameChanged(value)),
+            const Gap(8),
+            FadeInDown(
+              duration: const Duration(milliseconds: 500),
+              child: Text(
+                'Please provide your full name as it appears in your official documents.',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: palette.textSecondary,
+                      height: 1.5,
+                    ),
+              ),
+            ),
+            const Gap(32),
+            ZoomIn(
+              duration: const Duration(milliseconds: 500),
+              child: _buildPhotoPicker(context, state, bloc),
+            ),
+            const Gap(32),
+            FadeInUp(
+              duration: const Duration(milliseconds: 400),
+              child: MentorXTextFormField(
+                label: 'Father\'s Name',
+                icon: Icons.person_outline_rounded,
+                controller: _secondNameController,
+                onChanged: (value) => bloc.add(StudentRegistrationSecondNameChanged(value)),
+              ),
             ),
             const Gap(16),
-            MentorXTextFormField(
-              label: 'Third Name',
-              icon: Icons.person_outline,
-              controller: _thirdNameController,
-              onChanged: (value) =>
-                  bloc.add(StudentRegistrationThirdNameChanged(value)),
+            FadeInUp(
+              duration: const Duration(milliseconds: 500),
+              child: MentorXTextFormField(
+                label: 'Grandfather\'s Name',
+                icon: Icons.person_outline_rounded,
+                controller: _thirdNameController,
+                onChanged: (value) => bloc.add(StudentRegistrationThirdNameChanged(value)),
+              ),
             ),
             const Gap(16),
-            MentorXTextFormField(
-              label: 'Fourth Name (Last Name)',
-              icon: Icons.person_outline,
-              controller: _fourthNameController,
-              onChanged: (value) =>
-                  bloc.add(StudentRegistrationFourthNameChanged(value)),
+            FadeInUp(
+              duration: const Duration(milliseconds: 600),
+              child: MentorXTextFormField(
+                label: 'Family Name (Last Name)',
+                icon: Icons.people_outline_rounded,
+                controller: _fourthNameController,
+                onChanged: (value) => bloc.add(StudentRegistrationFourthNameChanged(value)),
+              ),
             ),
           ],
         );
@@ -101,11 +119,19 @@ class _PersonalInfoStepState extends State<PersonalInfoStep> {
       child: Stack(
         children: [
           Container(
-            width: 100,
-            height: 100,
+            width: 110,
+            height: 110,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: palette.backgroundTertiary,
+              color: palette.backgroundSecondary,
+              border: Border.all(color: palette.brandPrimary.withValues(alpha: 0.2), width: 3),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.05),
+                  blurRadius: 20,
+                  offset: const Offset(0, 10),
+                ),
+              ],
               image: state.profilePhotoPath != null
                   ? DecorationImage(
                       image: FileImage(File(state.profilePhotoPath!)),
@@ -114,22 +140,33 @@ class _PersonalInfoStepState extends State<PersonalInfoStep> {
                   : null,
             ),
             child: state.profilePhotoPath == null
-                ? Icon(Icons.person, size: 50, color: palette.textTertiary)
+                ? Icon(Icons.person_add_rounded, size: 40, color: palette.brandPrimary.withValues(alpha: 0.5))
                 : null,
           ),
           Positioned(
             bottom: 0,
             right: 0,
-            child: CircleAvatar(
-              backgroundColor: palette.brandPrimary,
-              radius: 18,
-              child: IconButton(
-                icon: Icon(
-                  Icons.camera_alt,
-                  size: 20,
+            child: GestureDetector(
+              onTap: () => _showPhotoSourcePicker(context, bloc),
+              child: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: palette.brandPrimary,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.white, width: 2.5),
+                  boxShadow: [
+                    BoxShadow(
+                      color: palette.brandPrimary.withValues(alpha: 0.3),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Icon(
+                  Icons.camera_alt_rounded,
+                  size: 18,
                   color: palette.textForeground,
                 ),
-                onPressed: () => _showPhotoSourcePicker(context, bloc),
               ),
             ),
           ),
@@ -142,21 +179,45 @@ class _PersonalInfoStepState extends State<PersonalInfoStep> {
     BuildContext context,
     StudentRegistrationBloc bloc,
   ) async {
+    final palette = MentorXThemeColorPalette.light;
     final source = await showModalBottomSheet<ImageSource>(
       context: context,
+      backgroundColor: Colors.transparent,
       builder: (context) {
-        return SafeArea(
-          child: Wrap(
+        return Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
+          ),
+          padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              ListTile(
-                leading: const Icon(Icons.photo_library_outlined),
-                title: const Text('Choose from gallery'),
-                onTap: () => Navigator.of(context).pop(ImageSource.gallery),
+              Text(
+                'Profile Photo',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w900,
+                  color: palette.textPrimary,
+                ),
               ),
-              ListTile(
-                leading: const Icon(Icons.camera_alt_outlined),
-                title: const Text('Take photo'),
-                onTap: () => Navigator.of(context).pop(ImageSource.camera),
+              const Gap(24),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _PhotoSourceOption(
+                    icon: Icons.photo_library_outlined,
+                    label: 'Gallery',
+                    onTap: () => Navigator.of(context).pop(ImageSource.gallery),
+                    palette: palette,
+                  ),
+                  _PhotoSourceOption(
+                    icon: Icons.camera_alt_outlined,
+                    label: 'Camera',
+                    onTap: () => Navigator.of(context).pop(ImageSource.camera),
+                    palette: palette,
+                  ),
+                ],
               ),
             ],
           ),
@@ -176,5 +237,46 @@ class _PersonalInfoStepState extends State<PersonalInfoStep> {
 
     if (!mounted) return;
     bloc.add(StudentRegistrationProfilePhotoChanged(image.path));
+  }
+}
+
+class _PhotoSourceOption extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+  final MentorXThemeColorPalette palette;
+
+  const _PhotoSourceOption({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+    required this.palette,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: palette.brandPrimary.withValues(alpha: 0.1),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, color: palette.brandPrimary, size: 32),
+          ),
+          const Gap(12),
+          Text(
+            label,
+            style: TextStyle(
+              fontWeight: FontWeight.w800,
+              color: palette.textPrimary,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

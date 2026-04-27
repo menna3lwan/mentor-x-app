@@ -2,9 +2,12 @@ part of 'package:mentorx_core/mentorx_core.dart';
 
 enum WalletTransactionType { deposit, withdrawal, payment, refund, reward }
 
+enum TransactionStatus { pending, success, failed }
+
 class WalletTransactionEntity extends Equatable {
   final String id;
   final WalletTransactionType transactionType;
+  final TransactionStatus? status;
   final double amount;
   final double balanceAfter;
   final String description;
@@ -16,6 +19,7 @@ class WalletTransactionEntity extends Equatable {
   const WalletTransactionEntity({
     required this.id,
     required this.transactionType,
+    this.status,
     required this.amount,
     required this.balanceAfter,
     required this.description,
@@ -39,6 +43,7 @@ class WalletTransactionEntity extends Equatable {
   List<Object?> get props => [
         id,
         transactionType,
+        status,
         amount,
         balanceAfter,
         description,
@@ -50,6 +55,7 @@ class WalletTransactionEntity extends Equatable {
   WalletTransactionEntity copyWith({
     String? id,
     WalletTransactionType? transactionType,
+    TransactionStatus? status,
     double? amount,
     double? balanceAfter,
     String? description,
@@ -60,6 +66,7 @@ class WalletTransactionEntity extends Equatable {
     return WalletTransactionEntity(
       id: id ?? this.id,
       transactionType: transactionType ?? this.transactionType,
+      status: status ?? this.status,
       amount: amount ?? this.amount,
       balanceAfter: balanceAfter ?? this.balanceAfter,
       description: description ?? this.description,

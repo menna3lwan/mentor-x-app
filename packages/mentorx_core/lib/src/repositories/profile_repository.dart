@@ -24,4 +24,13 @@ abstract interface class ProfileRepository {
 
   /// Deactivate a device by ID.
   Future<void> deactivateDevice(String deviceId);
+
+  /// Change user password.
+  Future<void> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  });
+
+  /// Update user profile.
+  Future<StudentEntity> updateProfile(StudentEntity profile);
 }

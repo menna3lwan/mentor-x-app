@@ -1,123 +1,267 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
+import 'package:mentorx_student/core/core.dart';
+import 'package:animate_do/animate_do.dart';
+import 'dart:ui';
+import 'bloc/transactions_history_page_bloc.dart';
 
-class TransactionsHistoryPage extends StatelessWidget {
+class TransactionsHistoryPage extends StatefulWidget {
   const TransactionsHistoryPage({super.key});
+
+  @override
+  State<TransactionsHistoryPage> createState() => _TransactionsHistoryPageState();
+}
+
+class _TransactionsHistoryPageState extends State<TransactionsHistoryPage> {
+  final _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
+      context.read<TransactionsHistoryPageBloc>().add(const TransactionsHistoryPageLoadMoreEvent());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final t = context.t.student;
-    final transactions = [
-      (
-        t['chargeBalance']!,
-        t['vodafoneCash']!,
-        '+200',
-        true,
-        '${t['today']!} 2:30 PM',
-      ),
-      (
-        t['purchaseCourse']!,
-        '',
-        '-50',
-        false,
-        '${t['today']!} 10:15 AM',
-      ),
-      (
-        t['discountCode']!,
-        '',
-        '+100',
-        true,
-        '${t['yesterday']!} 4:00 PM',
-      ),
-      (
-        t['chargeBalance']!,
-        t['instaPay']!,
-        '+150',
-        true,
-        '${t['yesterday']!} 9:00 AM',
-      ),
-      (t['purchaseBook']!, '', '-75', false, '3 Mar 2025'),
-      (t['chargeBalance']!, t['fawry']!, '+300', true, '1 Mar 2025'),
-      (t['purchaseCourse']!, '', '-100', false, '28 Feb 2025'),
-      (t['discountCode']!, '', '+50', true, '25 Feb 2025'),
-    ];
+    final palette = MentorXThemeColorPalette.light;
 
-    return Scaffold(
-      backgroundColor: AppColors.backgroundLight,
-      appBar: AppBar(
-        backgroundColor: AppColors.primary,
-        foregroundColor: Colors.white,
-        title: Text(
-          t['transactionsTitle']!,
-          style: const TextStyle(fontSize: 15),
-        ),
-      ),
-      body: ListView.builder(
-        padding: const EdgeInsets.all(16),
-        itemCount: transactions.length,
-        itemBuilder: (context, i) {
-          final (title, subtitle, amount, isCredit, date) = transactions[i];
-          return Container(
-            margin: const EdgeInsets.only(bottom: 8),
-            padding: const EdgeInsets.all(14),
+    return BlocBuilder<TransactionsHistoryPageBloc, TransactionsHistoryPageState>(
+      builder: (context, state) {
+        final transactions = state.transactions;
+        final isLoading = state.loadingState == LoadingState.loading;
+        final isInitialLoading = isLoading && transactions.isEmpty;
+
+        return Scaffold(
+          backgroundColor: palette.backgroundSecondary,
+          appBar: PreferredSize(
+            preferredSize: const Size.fromHeight(70),
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [palette.brandPrimary, palette.brandPrimary.withOpacity(0.8)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
+                boxShadow: [
+                  BoxShadow(color: palette.brandPrimary.withOpacity(0.3), blurRadius: 15, offset: const Offset(0, 4)),
+                ],
+              ),
+              child: AppBar(
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                foregroundColor: Colors.white,
+                centerTitle: true,
+                title: Text(
+                  t['transactionsTitle']!,
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+                ),
+              ),
+            ),
+          ),
+          body: isInitialLoading
+              ? const Center(child: CircularProgressIndicator())
+              : transactions.isEmpty
+                  ? _EmptyHistory(t: t, palette: palette)
+                  : RefreshIndicator(
+                      color: palette.brandPrimary,
+                      onRefresh: () async {
+                        context.read<TransactionsHistoryPageBloc>().add(const TransactionsHistoryPageLoadEvent());
+                      },
+                      child: ListView.separated(
+                        controller: _scrollController,
+                        padding: const EdgeInsets.all(20),
+                        itemCount: transactions.length + (state.hasMore ? 1 : 0),
+                        separatorBuilder: (context, index) => const SizedBox(height: 12),
+                        itemBuilder: (context, i) {
+                          if (i == transactions.length) {
+                            return const Center(
+                              child: Padding(
+                                padding: EdgeInsets.all(16.0),
+                                child: CircularProgressIndicator(strokeWidth: 2),
+                              ),
+                            );
+                          }
+                          final tx = transactions[i];
+                          final isCredit = tx.isCredit;
+                          final formattedDate = DateFormat('dd MMM yyyy, hh:mm a').format(tx.createdAt);
+
+                          return FadeInLeft(
+                            duration: Duration(milliseconds: 300 + (i % 5) * 100),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(24),
+                              child: BackdropFilter(
+                                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                                child: Container(
+                                  padding: const EdgeInsets.all(16),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.8),
+                                    borderRadius: BorderRadius.circular(24),
+                                    border: Border.all(color: Colors.white.withOpacity(0.5)),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.02),
+                                        blurRadius: 10,
+                                        offset: const Offset(0, 4),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.all(12),
+                                        decoration: BoxDecoration(
+                                          color: isCredit
+                                              ? Colors.green.withOpacity(0.1)
+                                              : Colors.red.withOpacity(0.1),
+                                          borderRadius: BorderRadius.circular(16),
+                                        ),
+                                        child: Icon(
+                                          isCredit
+                                              ? Icons.add_rounded
+                                              : Icons.remove_rounded,
+                                          size: 20,
+                                          color: isCredit ? Colors.green : Colors.red,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 16),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Expanded(
+                                                  child: Text(
+                                                    tx.typeBadge ?? tx.transactionType.name.toUpperCase(),
+                                                    style: TextStyle(
+                                                      fontSize: 14,
+                                                      fontWeight: FontWeight.w800,
+                                                      color: palette.textPrimary,
+                                                    ),
+                                                  ),
+                                                ),
+                                                StatusBadge(
+                                                  message: tx.status?.name ?? 'Success',
+                                                  status: tx.status == TransactionStatus.failed 
+                                                    ? StatusBadgeType.danger 
+                                                    : tx.status == TransactionStatus.pending 
+                                                      ? StatusBadgeType.warning 
+                                                      : StatusBadgeType.success,
+                                                  isSmall: true,
+                                                ),
+                                              ],
+                                            ),
+                                            const SizedBox(height: 4),
+                                            Text(
+                                              formattedDate,
+                                              style: TextStyle(
+                                                fontSize: 11,
+                                                color: palette.textTertiary,
+                                              ),
+                                            ),
+                                            if (tx.description.isNotEmpty) ...[
+                                              const SizedBox(height: 6),
+                                              Text(
+                                                tx.description,
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: palette.textSecondary,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ],
+                                          ],
+                                        ),
+                                      ),
+                                      const SizedBox(width: 16),
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.end,
+                                        children: [
+                                          Text(
+                                            '${isCredit ? '+' : '-'}${tx.amount.toStringAsFixed(0)}',
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w900,
+                                              color: isCredit ? Colors.green : Colors.red,
+                                              letterSpacing: -0.5,
+                                            ),
+                                          ),
+                                          Text(
+                                            t['egp']!,
+                                            style: TextStyle(
+                                              fontSize: 10,
+                                              fontWeight: FontWeight.w800,
+                                              color: (isCredit ? Colors.green : Colors.red).withOpacity(0.7),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+        );
+      },
+    );
+  }
+}
+
+class _EmptyHistory extends StatelessWidget {
+  const _EmptyHistory({required this.t, required this.palette});
+  final Map<String, String> t;
+  final MentorXThemeColorPalette palette;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(32),
             decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.04),
-                  blurRadius: 4,
-                ),
-              ],
+              color: palette.backgroundPrimary,
+              shape: BoxShape.circle,
             ),
-            child: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: isCredit ? AppColors.greenLight : AppColors.redLight,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Icon(
-                    isCredit ? Icons.arrow_downward : Icons.arrow_upward,
-                    size: 18,
-                    color: isCredit ? AppColors.green : AppColors.red,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title,
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.primary,
-                        ),
-                      ),
-                      Text(
-                        subtitle.isNotEmpty ? '$subtitle - $date' : date,
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: AppColors.greyDark,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Text(
-                  '$amount ${t['egp']!}',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700,
-                    color: isCredit ? AppColors.green : AppColors.red,
-                  ),
-                ),
-              ],
+            child: Icon(
+              Icons.history_rounded,
+              size: 64,
+              color: palette.textTertiary.withOpacity(0.2),
             ),
-          );
-        },
+          ),
+          const SizedBox(height: 24),
+          Text(
+            t['noTransactions'] ?? 'No transactions found',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w800,
+              color: palette.textSecondary,
+            ),
+          ),
+        ],
       ),
     );
   }

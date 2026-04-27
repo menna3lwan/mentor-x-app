@@ -7,6 +7,7 @@ import 'package:mentorx_student/features/assignments/pages/assignment_submit_pag
 
 void main() {
   late MockAssignmentRepository assignmentRepository;
+  const testId = 'assignment-123';
 
   setUp(() {
     assignmentRepository = const MockAssignmentRepository(delay: Duration.zero);
@@ -17,6 +18,7 @@ void main() {
       'emits [loading, loaded] when load event is added',
       build: () => AssignmentSubmitPageBloc(
         assignmentRepository: assignmentRepository,
+        assignmentId: testId,
       ),
       act: (bloc) => bloc.add(const AssignmentSubmitPageLoadEvent()),
       expect: () => [
@@ -34,12 +36,13 @@ void main() {
     );
 
     blocTest<AssignmentSubmitPageBloc, AssignmentSubmitPageState>(
-      'initial state has LoadingState.initial',
+      'initial state is correct',
       build: () => AssignmentSubmitPageBloc(
         assignmentRepository: assignmentRepository,
+        assignmentId: testId,
       ),
       verify: (bloc) {
-        expect(bloc.state, AssignmentSubmitPageState.initial);
+        expect(bloc.state.assignmentId, testId);
         expect(bloc.state.loadingState, LoadingState.initial);
       },
     );

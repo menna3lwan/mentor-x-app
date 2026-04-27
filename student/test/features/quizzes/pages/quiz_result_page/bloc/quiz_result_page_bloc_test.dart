@@ -23,7 +23,7 @@ void main() {
     blocTest<QuizResultPageBloc, QuizResultPageState>(
       'emits [loading, loaded] when QuizResultPageLoadEvent is added',
       build: () => QuizResultPageBloc(quizRepository: quizRepository),
-      act: (bloc) => bloc.add(const QuizResultPageLoadEvent()),
+      act: (bloc) => bloc.add(const QuizResultPageLoadEvent(attemptId: '1')),
       expect: () => [
         isA<QuizResultPageState>().having(
           (s) => s.loadingState,

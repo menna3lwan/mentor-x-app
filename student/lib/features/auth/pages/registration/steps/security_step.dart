@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
+import 'package:animate_do/animate_do.dart';
 import '../bloc/student_registration_bloc.dart';
 
 class SecurityStep extends StatefulWidget {
@@ -43,46 +44,62 @@ class _SecurityStepState extends State<SecurityStep> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Security & Verification',
-              style: Theme.of(
-                context,
-              ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
-            ),
-            const Gap(8),
-            Text(
-              'Secure your account and verify your identity.',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: palette.textSecondary,
+            FadeInDown(
+              duration: const Duration(milliseconds: 400),
+              child: Text(
+                'Security & Identity',
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.w900,
+                      color: palette.textPrimary,
+                    ),
               ),
             ),
-            const Gap(24),
-            MentorXTextFormField(
-              label: 'Password',
-              icon: Icons.lock_outline,
-              controller: _passwordController,
-              isPassword: true,
-              onChanged: (value) =>
-                  bloc.add(StudentRegistrationPasswordChanged(value)),
-            ),
             const Gap(8),
-            _buildPasswordStrength(context, state.password),
-            const Gap(16),
-            MentorXTextFormField(
-              label: 'Confirm Password',
-              icon: Icons.lock_clock_outlined,
-              controller: _confirmPasswordController,
-              isPassword: true,
-              errorText:
-                  state.password != state.confirmPassword &&
-                      state.confirmPassword.isNotEmpty
-                  ? 'Passwords do not match'
-                  : null,
-              onChanged: (value) =>
-                  bloc.add(StudentRegistrationConfirmPasswordChanged(value)),
+            FadeInDown(
+              duration: const Duration(milliseconds: 500),
+              child: Text(
+                'Protect your account with a strong password and verify your identity with your National ID.',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: palette.textSecondary,
+                      height: 1.5,
+                    ),
+              ),
+            ),
+            const Gap(32),
+            FadeInUp(
+              duration: const Duration(milliseconds: 400),
+              child: MentorXTextFormField(
+                label: 'Password',
+                icon: Icons.lock_outline_rounded,
+                controller: _passwordController,
+                isPassword: true,
+                onChanged: (value) => bloc.add(StudentRegistrationPasswordChanged(value)),
+              ),
+            ),
+            const Gap(12),
+            FadeInUp(
+              duration: const Duration(milliseconds: 500),
+              child: _buildPasswordStrength(context, state.password),
             ),
             const Gap(24),
-            _buildIdCardUpload(context, state, bloc),
+            FadeInUp(
+              duration: const Duration(milliseconds: 600),
+              child: MentorXTextFormField(
+                label: 'Confirm Password',
+                icon: Icons.lock_reset_rounded,
+                controller: _confirmPasswordController,
+                isPassword: true,
+                errorText: state.password != state.confirmPassword && state.confirmPassword.isNotEmpty
+                    ? 'Passwords do not match'
+                    : null,
+                onChanged: (value) => bloc.add(StudentRegistrationConfirmPasswordChanged(value)),
+              ),
+            ),
+            const Gap(32),
+            FadeInUp(
+              duration: const Duration(milliseconds: 700),
+              child: _buildIdCardUpload(context, state, bloc),
+            ),
           ],
         );
       },
@@ -96,12 +113,15 @@ class _SecurityStepState extends State<SecurityStep> {
     final String label;
     final Color color;
     switch (score) {
-      case <= 0.33:
+      case <= 0.25:
         label = 'Weak';
         color = palette.statusDanger;
-      case <= 0.66:
-        label = 'Medium';
+      case <= 0.50:
+        label = 'Fair';
         color = palette.statusWarning;
+      case <= 0.75:
+        label = 'Good';
+        color = Colors.orangeAccent;
       default:
         label = 'Strong';
         color = palette.statusSuccess;
@@ -110,37 +130,41 @@ class _SecurityStepState extends State<SecurityStep> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(8),
-          child: LinearProgressIndicator(
-            value: score,
-            minHeight: 6,
-            color: color,
-            backgroundColor: palette.backgroundTertiary,
-          ),
-        ),
-        const Gap(6),
-        Text(
-          'Password strength: $label',
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(color: color),
+        Row(
+          children: [
+            Expanded(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: LinearProgressIndicator(
+                  value: score == 0 ? 0.05 : score,
+                  minHeight: 6,
+                  color: color,
+                  backgroundColor: palette.backgroundSecondary,
+                ),
+              ),
+            ),
+            const Gap(12),
+            Text(
+              label,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: color,
+                    fontWeight: FontWeight.w900,
+                  ),
+            ),
+          ],
         ),
       ],
     );
   }
 
   double _passwordStrengthScore(String value) {
-    if (value.isEmpty) {
-      return 0;
-    }
-
+    if (value.isEmpty) return 0;
     var points = 0;
     if (value.length >= 8) points += 1;
     if (RegExp(r'[A-Z]').hasMatch(value)) points += 1;
-    if (RegExp(r'[a-z]').hasMatch(value)) points += 1;
     if (RegExp(r'[0-9]').hasMatch(value)) points += 1;
     if (RegExp(r'[!@#\$%^&*(),.?":{}|<>]').hasMatch(value)) points += 1;
-
-    return points / 5;
+    return points / 4;
   }
 
   Widget _buildIdCardUpload(
@@ -154,50 +178,79 @@ class _SecurityStepState extends State<SecurityStep> {
       children: [
         Text(
           'National ID Card Photo',
-          style: Theme.of(
-            context,
-          ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
-        ),
-        const Gap(8),
-        InkWell(
-          onTap: () => _pickIdCardPhoto(bloc),
-          borderRadius: BorderRadius.circular(12),
-          child: Container(
-            height: 150,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: palette.backgroundSecondary,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: palette.textTertiary,
-                style: BorderStyle.solid,
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.w800,
+                color: palette.textPrimary,
               ),
-            ),
-            child: state.idCardPhotoPath == null
-                ? Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.add_a_photo,
-                        size: 40,
-                        color: palette.textTertiary,
-                      ),
-                      const Gap(8),
-                      Text(
-                        'Upload ID Card',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: palette.textSecondary,
+        ),
+        const Gap(12),
+        Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: () => _pickIdCardPhoto(bloc),
+            borderRadius: BorderRadius.circular(20),
+            child: Container(
+              height: 180,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: palette.backgroundSecondary,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: palette.brandPrimary.withValues(alpha: 0.1),
+                  width: 2,
+                ),
+              ),
+              child: state.idCardPhotoPath == null
+                  ? Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: palette.brandPrimary.withValues(alpha: 0.1),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            Icons.add_a_photo_rounded,
+                            size: 32,
+                            color: palette.brandPrimary,
+                          ),
                         ),
-                      ),
-                    ],
-                  )
-                : ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child: Image.file(
-                      File(state.idCardPhotoPath!),
-                      fit: BoxFit.cover,
+                        const Gap(16),
+                        Text(
+                          'Upload Front Side of ID Card',
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: palette.textSecondary,
+                                fontWeight: FontWeight.w700,
+                              ),
+                        ),
+                      ],
+                    )
+                  : Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(18),
+                          child: Image.file(
+                            File(state.idCardPhotoPath!),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        Positioned(
+                          top: 12,
+                          right: 12,
+                          child: Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: const BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(Icons.edit_rounded, size: 16, color: palette.brandPrimary),
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
+            ),
           ),
         ),
       ],

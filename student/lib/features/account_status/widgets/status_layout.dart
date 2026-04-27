@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mentorx_ui/mentorx_ui.dart';
+import 'package:animate_do/animate_do.dart';
+import 'package:gap/gap.dart';
 
 final class StatusLayout extends StatelessWidget {
   const StatusLayout({
@@ -20,95 +23,129 @@ final class StatusLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final palette = MentorXThemeColorPalette.light;
+
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: Center(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 32,
-                  ),
-                  child: Column(
-                    children: [
-                      Container(
-                        width: 140,
-                        height: 140,
-                        decoration: BoxDecoration(
-                          gradient: RadialGradient(
-                            colors: [
-                              iconBackground.withValues(alpha: 0.15),
-                              iconBackground.withValues(alpha: 0.0),
-                            ],
-                          ),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Center(
-                          child: Container(
-                            width: 80,
-                            height: 80,
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [iconBackground, iconBackground.withValues(alpha: 0.7)],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                              ),
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: iconBackground.withValues(alpha: 0.3),
-                                  blurRadius: 15,
-                                  offset: const Offset(0, 8),
-                                ),
-                              ],
-                            ),
-                            child: Icon(
-                              icon,
-                              size: 40,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 32),
-                      Text(
-                        title,
-                        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.w800,
-                          color: Theme.of(context).colorScheme.onSurface,
-                          letterSpacing: -0.5,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        description,
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                          height: 1.5,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      if (extra != null) ...[
-                        const SizedBox(height: 32),
-                        extra!,
-                      ],
-                    ],
-                  ),
+      backgroundColor: palette.backgroundPrimary,
+      body: Stack(
+        children: [
+          Positioned(
+            top: -100,
+            right: -100,
+            child: FadeIn(
+              duration: const Duration(seconds: 2),
+              child: Container(
+                width: 300,
+                height: 300,
+                decoration: BoxDecoration(
+                  color: iconBackground.withValues(alpha: 0.05),
+                  shape: BoxShape.circle,
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(24, 0, 24, 32),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: actions,
-              ),
+          ),
+          SafeArea(
+            child: Column(
+              children: [
+                Expanded(
+                  child: Center(
+                    child: SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 40),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ZoomIn(
+                            duration: const Duration(milliseconds: 600),
+                            child: Container(
+                              width: 160,
+                              height: 160,
+                              decoration: BoxDecoration(
+                                color: iconBackground.withValues(alpha: 0.05),
+                                shape: BoxShape.circle,
+                              ),
+                              padding: const EdgeInsets.all(20),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [iconBackground, iconBackground.withValues(alpha: 0.8)],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                  ),
+                                  shape: BoxShape.circle,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: iconBackground.withValues(alpha: 0.3),
+                                      blurRadius: 25,
+                                      offset: const Offset(0, 12),
+                                    ),
+                                  ],
+                                ),
+                                child: Icon(
+                                  icon,
+                                  size: 56,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const Gap(48),
+                          FadeInUp(
+                            duration: const Duration(milliseconds: 500),
+                            child: Text(
+                              title,
+                              style: const TextStyle(
+                                fontSize: 28,
+                                fontWeight: FontWeight.w900,
+                                color: Colors.black,
+                                letterSpacing: -1.0,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          const Gap(16),
+                          FadeInUp(
+                            duration: const Duration(milliseconds: 500),
+                            delay: const Duration(milliseconds: 100),
+                            child: Text(
+                              description,
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: palette.textSecondary,
+                                height: 1.6,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          if (extra != null) ...[
+                            const Gap(32),
+                            FadeInUp(
+                              duration: const Duration(milliseconds: 500),
+                              delay: const Duration(milliseconds: 200),
+                              child: extra!,
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(32, 0, 32, 40),
+                  child: FadeInUp(
+                    duration: const Duration(milliseconds: 500),
+                    delay: const Duration(milliseconds: 300),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: actions,
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

@@ -950,5 +950,32 @@
         "purchaseBook": "شراء - كتاب",
         "today": "اليوم",
         "yesterday": "أمس"
+    },
+    "parent": {
+        "dashboardTitle": "بوابة ولي الأمر",
+        "welcomeBack": "أهلاً بعودتك،",
+        "services": "الخدمات",
+        "recentActivity": "آخر النشاطات",
+        "viewAll": "عرض الكل",
+        "retry": "إعادة المحاولة",
+        "unableToLoad": "غير قادر على تحميل لوحة التحكم",
+        "myProfile": "ملفي الشخصي",
+        "signOut": "تسجيل الخروج",
+        "accountInfo": "معلومات الحساب",
+        "appSettings": "إعدادات التطبيق",
+        "notifications": "الإشعارات",
+        "security": "الأمان",
+        "childSwitcher": "تبديل الأبناء",
+        "noData": "لا توجد بيانات",
+        "announcements": "الإعلانات",
+        "academicMonitor": "المتابعة الأكاديمية",
+        "financialMonitor": "المتابعة المالية",
+        "attendanceMonitor": "متابعة الغياب",
+        "overallAverage": "المعدل العام",
+        "enrolledCourses": "الدورات المسجل بها",
+        "childWalletBalance": "رصيد محفظة الابن",
+        "spentThisMonth": "المنفق هذا الشهر",
+        "transactionHistory": "سجل المعاملات",
+        "pointsEarned": "النقاط المكتسبة"
     }
 }

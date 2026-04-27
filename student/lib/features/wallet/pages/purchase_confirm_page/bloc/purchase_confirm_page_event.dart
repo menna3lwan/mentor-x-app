@@ -8,5 +8,9 @@ sealed class PurchaseConfirmPageEvent extends Equatable {
 }
 
 final class PurchaseConfirmPageLoadEvent extends PurchaseConfirmPageEvent {
-  const PurchaseConfirmPageLoadEvent();
+  final String paymentId;
+  const PurchaseConfirmPageLoadEvent({required this.paymentId});
+
+  @override
+  List<Object?> get props => [paymentId];
 }

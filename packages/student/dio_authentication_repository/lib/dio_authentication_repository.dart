@@ -179,13 +179,11 @@ final class DioAuthenticationRepository
   @override
   Future<void> resetPassword({
     required String phoneNumber,
-    required String otp,
     required String newPassword,
   }) async {
     final payload = {
       'phone': phoneNumber,
-      'otp': otp,
-      'new_password': newPassword,
+      'newPassword': newPassword, // Matches Postman CamelCase
     };
 
     try {
@@ -449,7 +447,6 @@ final class DioAuthenticationRepository
         '/api/auth/resend-otp',
         data: {
           'phone': phoneNumber,
-          'purpose': OtpVerificationPurpose.registration.name,
         },
       );
     }
@@ -459,7 +456,7 @@ final class DioAuthenticationRepository
     try {
       return await httpClient.post(
         '/api/auth/resend-otp',
-        data: {'phone': phoneNumber, 'purpose': _pendingOtpPurpose.name},
+        data: {'phone': phoneNumber},
       );
     } on HttpClientResponse catch (errorResponse) {
       if (errorResponse.statusCode != 404) {
@@ -497,8 +494,7 @@ final class DioAuthenticationRepository
       '/api/auth/verify-otp',
       data: {
         'phone': phone,
-        'otp_code': otp,
-        'purpose': _pendingOtpPurpose.name,
+        'otp': otp, // Matches Postman field name "otp"
       },
     );
   }

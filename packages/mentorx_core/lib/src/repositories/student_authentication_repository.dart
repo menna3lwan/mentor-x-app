@@ -68,7 +68,6 @@ abstract interface class StudentAuthenticationRepository {
   Future<void> requestPasswordReset(String phoneNumber);
   Future<void> resetPassword({
     required String phoneNumber,
-    required String otp,
     required String newPassword,
   });
   Future<StudentEntity> loginWithPassword({

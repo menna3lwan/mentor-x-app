@@ -2,7 +2,8 @@ part of '../mentorx_ui.dart';
 
 final class MentorXTextFormField extends StatefulWidget {
   final String label;
-  final IconData icon;
+  final IconData? icon;
+  final IconData? prefixIcon;
   final bool isPassword;
   final TextEditingController controller;
   final TextInputType keyboardType;
@@ -13,11 +14,18 @@ final class MentorXTextFormField extends StatefulWidget {
   final int? maxLength;
   final int? maxLines;
   final String? errorText;
+  final String? hint;
+  final String? hintText;
+  final bool? obscurePassword;
+  final VoidCallback? onObscureTextToggled;
+  final bool enabled;
+  final bool readOnly;
 
   const MentorXTextFormField({
     super.key,
     required this.label,
-    required this.icon,
+    this.icon,
+    this.prefixIcon,
     required this.controller,
     this.isPassword = false,
     this.keyboardType = TextInputType.text,
@@ -28,6 +36,12 @@ final class MentorXTextFormField extends StatefulWidget {
     this.maxLength,
     this.maxLines = 1,
     this.errorText,
+    this.hint,
+    this.hintText,
+    this.obscurePassword,
+    this.onObscureTextToggled,
+    this.enabled = true,
+    this.readOnly = false,
   });
 
   @override
@@ -45,6 +59,8 @@ class _MentorXTextFormFieldState extends State<MentorXTextFormField> {
     final textSecondary = theme.colors[$mentorxToken.color.textSecondary]!;
     final backgroundSecondary = theme.colors[$mentorxToken.color.backgroundSecondary]!;
 
+    final effectiveObscure = widget.obscurePassword ?? obscure;
+
     return TextFormField(
       controller: widget.controller,
       keyboardType: widget.keyboardType,
@@ -54,7 +70,9 @@ class _MentorXTextFormFieldState extends State<MentorXTextFormField> {
       onFieldSubmitted: widget.onFieldSubmitted,
       maxLength: widget.maxLength,
       maxLines: widget.maxLines,
-      obscureText: widget.isPassword ? obscure : false,
+      enabled: widget.enabled,
+      readOnly: widget.readOnly,
+      obscureText: widget.isPassword ? effectiveObscure : false,
       cursorColor: brandPrimary,
       style: TextStyle(
         fontSize: 16,
@@ -63,6 +81,7 @@ class _MentorXTextFormFieldState extends State<MentorXTextFormField> {
       ),
       decoration: InputDecoration(
         labelText: widget.label,
+        hintText: widget.hintText ?? widget.hint,
         errorText: widget.errorText,
         hintStyle: TextStyle(
           color: textSecondary,
@@ -74,14 +93,22 @@ class _MentorXTextFormFieldState extends State<MentorXTextFormField> {
           horizontal: 16,
           vertical: 18,
         ),
-        prefixIcon: Icon(widget.icon, color: textSecondary),
+        prefixIcon: (widget.prefixIcon ?? widget.icon) != null
+            ? Icon(widget.prefixIcon ?? widget.icon, color: textSecondary)
+            : null,
         suffixIcon: widget.isPassword
             ? IconButton(
                 icon: Icon(
-                  obscure ? Icons.visibility_off : Icons.visibility,
+                  effectiveObscure ? Icons.visibility_off : Icons.visibility,
                   color: textSecondary,
                 ),
-                onPressed: () => setState(() => obscure = !obscure),
+                onPressed: () {
+                  if (widget.onObscureTextToggled != null) {
+                    widget.onObscureTextToggled!();
+                  } else {
+                    setState(() => obscure = !obscure);
+                  }
+                },
               )
             : null,
         enabledBorder: OutlineInputBorder(

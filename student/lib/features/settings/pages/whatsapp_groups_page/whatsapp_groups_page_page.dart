@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
+import 'package:animate_do/animate_do.dart';
+import 'package:gap/gap.dart';
 
 import 'bloc/whatsapp_groups_page_bloc.dart';
 
@@ -21,41 +23,78 @@ final class WhatsappGroupsPagePage extends StatelessWidget {
     final palette = MentorXThemeColorPalette.light;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('WhatsApp Groups')),
+      backgroundColor: palette.backgroundSecondary,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(70),
+        child: FadeInDown(
+          duration: const Duration(milliseconds: 500),
+          child: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            foregroundColor: palette.textPrimary,
+            centerTitle: true,
+            title: const Text(
+              'WhatsApp Groups',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, letterSpacing: -0.5),
+            ),
+          ),
+        ),
+      ),
       body: RefreshIndicator(
         onRefresh: () async => onRefresh(),
         child: state.isLoading
             ? const Center(child: CircularProgressIndicator())
             : ListView(
-                padding: const EdgeInsets.all(16),
+                physics: const BouncingScrollPhysics(),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                 children: [
-                  Container(
-                    padding: const EdgeInsets.all(14),
-                    decoration: BoxDecoration(
-                      color: palette.brandTertiary,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      'Join your official study groups to receive updates and reminders.',
-                      style: TextStyle(color: palette.brandPrimary),
-                    ),
-                  ),
-                  const SizedBox(height: 14),
-                  ...state.groups.map(
-                    (group) => Padding(
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: _GroupCard(
-                        group: group,
-                        isJoined: state.joinedGroupId == group.id,
-                        onJoin: () async {
-                          await Clipboard.setData(
-                            ClipboardData(text: group.inviteLink),
-                          );
-                          onJoinGroup(group.id);
-                        },
+                  FadeInUp(
+                    duration: const Duration(milliseconds: 500),
+                    child: Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: palette.brandPrimary.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(color: palette.brandPrimary.withValues(alpha: 0.2)),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(Icons.info_outline_rounded, color: palette.brandPrimary, size: 20),
+                          const Gap(12),
+                          Expanded(
+                            child: Text(
+                              'Join official study groups to receive instant updates.',
+                              style: TextStyle(
+                                color: palette.brandPrimary,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 13,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
+                  const Gap(20),
+                  ...state.groups.asMap().entries.map(
+                        (entry) => FadeInUp(
+                          duration: const Duration(milliseconds: 500),
+                          delay: Duration(milliseconds: 100 * entry.key),
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: 16),
+                            child: _GroupCard(
+                              group: entry.value,
+                              isJoined: state.joinedGroupId == entry.value.id,
+                              onJoin: () async {
+                                await Clipboard.setData(
+                                  ClipboardData(text: entry.value.inviteLink),
+                                );
+                                onJoinGroup(entry.value.id);
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
                 ],
               ),
       ),
@@ -79,64 +118,81 @@ final class _GroupCard extends StatelessWidget {
     final palette = MentorXThemeColorPalette.light;
 
     return Container(
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: palette.backgroundPrimary,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.02),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: Colors.green.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: const Icon(Icons.groups_2_outlined, color: Colors.green),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Text(
-                  group.title,
-                  style: const TextStyle(fontWeight: FontWeight.w700),
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 4,
-                ),
-                decoration: BoxDecoration(
-                  color: palette.backgroundSecondary,
-                  borderRadius: BorderRadius.circular(999),
-                ),
-                child: Text(
-                  '${group.participantsCount} members',
-                  style: TextStyle(
-                    color: palette.textSecondary,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
+              ZoomIn(
+                duration: const Duration(milliseconds: 400),
+                child: Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF25D366).withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(16),
                   ),
+                  child: const Icon(Icons.chat_rounded, color: Color(0xFF25D366), size: 28),
+                ),
+              ),
+              const Gap(14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      group.title,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w900,
+                        fontSize: 16,
+                        color: palette.textPrimary,
+                        letterSpacing: -0.5,
+                      ),
+                    ),
+                    const Gap(2),
+                    Text(
+                      '${group.participantsCount} members active',
+                      style: TextStyle(
+                        color: palette.textSecondary,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 10),
+          const Gap(16),
           Text(
             group.description,
-            style: TextStyle(color: palette.textSecondary),
+            style: TextStyle(
+              color: palette.textSecondary,
+              fontSize: 14,
+              height: 1.5,
+              fontWeight: FontWeight.w500,
+            ),
           ),
-          const SizedBox(height: 12),
+          const Gap(20),
           SizedBox(
             width: double.infinity,
-            child: FilledButton.icon(
+            child: MentorXButton(
               onPressed: onJoin,
-              icon: Icon(isJoined ? Icons.check_circle_outline : Icons.link),
-              label: Text(isJoined ? 'Invite Link Copied' : 'Copy Invite Link'),
+              label: isJoined ? 'Link Copied' : 'Copy Invite Link',
+              color: isJoined ? palette.statusSuccess : const Color(0xFF25D366),
+              icon: isJoined ? Icons.check_circle_rounded : Icons.content_copy_rounded,
             ),
           ),
         ],

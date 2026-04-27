@@ -8,5 +8,9 @@ sealed class QuizResultPageEvent extends Equatable {
 }
 
 final class QuizResultPageLoadEvent extends QuizResultPageEvent {
-  const QuizResultPageLoadEvent();
+  final String attemptId;
+  const QuizResultPageLoadEvent({required this.attemptId});
+
+  @override
+  List<Object?> get props => [attemptId];
 }

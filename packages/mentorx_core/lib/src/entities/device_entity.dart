@@ -4,6 +4,7 @@ class DeviceEntity extends Equatable {
   final String id;
   final String deviceName;
   final String deviceModel;
+  final String? deviceType;
   final String? osVersion;
   final String? appVersion;
   final bool isActive;
@@ -15,6 +16,7 @@ class DeviceEntity extends Equatable {
     required this.deviceModel,
     required this.isActive,
     required this.lastUsedAt,
+    this.deviceType,
     this.osVersion,
     this.appVersion,
   });
@@ -32,6 +34,7 @@ class DeviceEntity extends Equatable {
         id,
         deviceName,
         deviceModel,
+        deviceType,
         osVersion,
         appVersion,
         isActive,
@@ -42,6 +45,7 @@ class DeviceEntity extends Equatable {
     String? id,
     String? deviceName,
     String? deviceModel,
+    String? deviceType,
     String? osVersion,
     String? appVersion,
     bool? isActive,
@@ -51,6 +55,7 @@ class DeviceEntity extends Equatable {
       id: id ?? this.id,
       deviceName: deviceName ?? this.deviceName,
       deviceModel: deviceModel ?? this.deviceModel,
+      deviceType: deviceType ?? this.deviceType,
       osVersion: osVersion ?? this.osVersion,
       appVersion: appVersion ?? this.appVersion,
       isActive: isActive ?? this.isActive,

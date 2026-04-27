@@ -31,7 +31,15 @@ final class QuizResultPageBloc
     QuizResultPageLoadEvent event,
     Emitter<QuizResultPageState> emit,
   ) async {
-    emit(state.copyWith(loadingState: LoadingState.loading));
-    emit(state.copyWith(loadingState: LoadingState.loaded));
+    emit(state.copyWith(loadingState: LoadingState.loading, errorMessage: null));
+    try {
+      final result = await quizRepository.getResults(event.attemptId);
+      emit(state.copyWith(loadingState: LoadingState.loaded, result: result));
+    } catch (e) {
+      emit(state.copyWith(
+        loadingState: LoadingState.error,
+        errorMessage: e.toString(),
+      ));
+    }
   }
 }

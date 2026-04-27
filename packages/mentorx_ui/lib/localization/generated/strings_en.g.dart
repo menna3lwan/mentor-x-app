@@ -689,6 +689,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 		'today': 'Today',
 		'yesterday': 'Yesterday',
 	};
+	late final TranslationsParentEn parent = TranslationsParentEn._(_root);
 }
 
 // Path: ui
@@ -1100,6 +1101,90 @@ class TranslationsCourseEn {
 	late final TranslationsCoursePdfEn pdf = TranslationsCoursePdfEn._(_root);
 	late final TranslationsCourseEmptyEn empty = TranslationsCourseEmptyEn._(_root);
 	late final TranslationsCourseErrorsEn errors = TranslationsCourseErrorsEn._(_root);
+}
+
+// Path: parent
+class TranslationsParentEn {
+	TranslationsParentEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Parent Portal'
+	String get dashboardTitle => 'Parent Portal';
+
+	/// en: 'Welcome back,'
+	String get welcomeBack => 'Welcome back,';
+
+	/// en: 'Services'
+	String get services => 'Services';
+
+	/// en: 'Recent Activity'
+	String get recentActivity => 'Recent Activity';
+
+	/// en: 'View All'
+	String get viewAll => 'View All';
+
+	/// en: 'Retry'
+	String get retry => 'Retry';
+
+	/// en: 'Unable to load dashboard'
+	String get unableToLoad => 'Unable to load dashboard';
+
+	/// en: 'My Profile'
+	String get myProfile => 'My Profile';
+
+	/// en: 'Sign Out'
+	String get signOut => 'Sign Out';
+
+	/// en: 'Account Information'
+	String get accountInfo => 'Account Information';
+
+	/// en: 'App Settings'
+	String get appSettings => 'App Settings';
+
+	/// en: 'Notifications'
+	String get notifications => 'Notifications';
+
+	/// en: 'Security'
+	String get security => 'Security';
+
+	/// en: 'Child Switcher'
+	String get childSwitcher => 'Child Switcher';
+
+	/// en: 'No data found'
+	String get noData => 'No data found';
+
+	/// en: 'Announcements'
+	String get announcements => 'Announcements';
+
+	/// en: 'Academic Monitor'
+	String get academicMonitor => 'Academic Monitor';
+
+	/// en: 'Financial Monitor'
+	String get financialMonitor => 'Financial Monitor';
+
+	/// en: 'Attendance Monitor'
+	String get attendanceMonitor => 'Attendance Monitor';
+
+	/// en: 'Overall Average'
+	String get overallAverage => 'Overall Average';
+
+	/// en: 'Enrolled Courses'
+	String get enrolledCourses => 'Enrolled Courses';
+
+	/// en: 'Child Wallet Balance'
+	String get childWalletBalance => 'Child Wallet Balance';
+
+	/// en: 'Spent This Month'
+	String get spentThisMonth => 'Spent This Month';
+
+	/// en: 'Transaction History'
+	String get transactionHistory => 'Transaction History';
+
+	/// en: 'Points Earned'
+	String get pointsEarned => 'Points Earned';
 }
 
 // Path: ui.common
@@ -2607,6 +2692,31 @@ extension on Translations {
 			'student.purchaseBook' => 'Purchase - Book',
 			'student.today' => 'Today',
 			'student.yesterday' => 'Yesterday',
+			'parent.dashboardTitle' => 'Parent Portal',
+			'parent.welcomeBack' => 'Welcome back,',
+			'parent.services' => 'Services',
+			'parent.recentActivity' => 'Recent Activity',
+			'parent.viewAll' => 'View All',
+			'parent.retry' => 'Retry',
+			'parent.unableToLoad' => 'Unable to load dashboard',
+			'parent.myProfile' => 'My Profile',
+			'parent.signOut' => 'Sign Out',
+			'parent.accountInfo' => 'Account Information',
+			'parent.appSettings' => 'App Settings',
+			'parent.notifications' => 'Notifications',
+			'parent.security' => 'Security',
+			'parent.childSwitcher' => 'Child Switcher',
+			'parent.noData' => 'No data found',
+			'parent.announcements' => 'Announcements',
+			'parent.academicMonitor' => 'Academic Monitor',
+			'parent.financialMonitor' => 'Financial Monitor',
+			'parent.attendanceMonitor' => 'Attendance Monitor',
+			'parent.overallAverage' => 'Overall Average',
+			'parent.enrolledCourses' => 'Enrolled Courses',
+			'parent.childWalletBalance' => 'Child Wallet Balance',
+			'parent.spentThisMonth' => 'Spent This Month',
+			'parent.transactionHistory' => 'Transaction History',
+			'parent.pointsEarned' => 'Points Earned',
 			_ => null,
 		};
 	}

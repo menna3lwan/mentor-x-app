@@ -65,14 +65,12 @@ abstract interface class CourseRepository {
   /// Get a signed content URL (PDF, etc.).
   Future<String> getContentUrl(String itemId);
 
-  /// Update watch/read progress for a session item.
-  Future<void> updateProgress(
-    String itemId, {
-    int? watchTimeSeconds,
-    int? lastPositionSeconds,
-    double? progressPercent,
+  /// Update course-wide enrollment progress.
+  Future<void> updateEnrollmentProgress(
+    String enrollmentId, {
+    required double progress,
+    required int watchTimeSeconds,
+    required int completedLessons,
+    required int totalLessons,
   });
-
-  /// Mark a session item as complete.
-  Future<void> markItemComplete(String itemId);
 }

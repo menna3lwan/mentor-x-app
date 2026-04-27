@@ -1,4 +1,3 @@
-import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -15,21 +14,10 @@ final class AddBalancePageWrapper extends StatefulWidget {
 class _AddBalancePageWrapperState extends State<AddBalancePageWrapper> {
   @override
   Widget build(BuildContext context) {
-    return BlocPresentationListener<
-      AddBalancePageBloc,
-      AddBalancePagePresentationEvent
-    >(
-      listener: (context, event) {
-        switch (event) {
-          case AddBalancePageNavigateBack():
-            Navigator.of(context).pop();
-        }
-      },
-      child: BlocBuilder<AddBalancePageBloc, AddBalancePageState>(
+    return BlocBuilder<AddBalancePageBloc, AddBalancePageState>(
         builder: (context, state) {
           return const AddBalancePage();
         },
-      ),
-    );
+      );
   }
 }

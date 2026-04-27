@@ -1,6 +1,8 @@
 part of '../mentorx_ui.dart';
 
 extension ContextExtensions on BuildContext {
+  bool get isArabic => LocaleSettings.currentLocale.languageCode == 'ar';
+
   String get locale => Localizations.localeOf(this).toString();
   ui.TextDirection get directionality => Directionality.of(this);
 

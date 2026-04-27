@@ -949,5 +949,32 @@
         "purchaseBook": "Purchase - Book",
         "today": "Today",
         "yesterday": "Yesterday"
+    },
+    "parent": {
+        "dashboardTitle": "Parent Portal",
+        "welcomeBack": "Welcome back,",
+        "services": "Services",
+        "recentActivity": "Recent Activity",
+        "viewAll": "View All",
+        "retry": "Retry",
+        "unableToLoad": "Unable to load dashboard",
+        "myProfile": "My Profile",
+        "signOut": "Sign Out",
+        "accountInfo": "Account Information",
+        "appSettings": "App Settings",
+        "notifications": "Notifications",
+        "security": "Security",
+        "childSwitcher": "Child Switcher",
+        "noData": "No data found",
+        "announcements": "Announcements",
+        "academicMonitor": "Academic Monitor",
+        "financialMonitor": "Financial Monitor",
+        "attendanceMonitor": "Attendance Monitor",
+        "overallAverage": "Overall Average",
+        "enrolledCourses": "Enrolled Courses",
+        "childWalletBalance": "Child Wallet Balance",
+        "spentThisMonth": "Spent This Month",
+        "transactionHistory": "Transaction History",
+        "pointsEarned": "Points Earned"
     }
 }

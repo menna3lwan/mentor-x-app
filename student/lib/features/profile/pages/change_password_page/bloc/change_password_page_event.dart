@@ -10,3 +10,16 @@ sealed class ChangePasswordPageEvent extends Equatable {
 final class ChangePasswordPageLoadEvent extends ChangePasswordPageEvent {
   const ChangePasswordPageLoadEvent();
 }
+
+final class ChangePasswordPageSubmitEvent extends ChangePasswordPageEvent {
+  final String currentPassword;
+  final String newPassword;
+
+  const ChangePasswordPageSubmitEvent({
+    required this.currentPassword,
+    required this.newPassword,
+  });
+
+  @override
+  List<Object?> get props => [currentPassword, newPassword];
+}

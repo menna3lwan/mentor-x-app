@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:animate_do/animate_do.dart';
+import 'package:gap/gap.dart';
 
 enum _SupportChannelType { whatsapp, phone, email }
 
@@ -10,190 +12,224 @@ class SupportPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = context.t.student;
+    final palette = MentorXThemeColorPalette.light;
     final channels = [
       (
         _SupportChannelType.whatsapp,
         Icons.chat_rounded,
         t['whatsapp'] ?? 'WhatsApp',
         '01012345678',
-        AppColors.whatsAppGreen,
+        const Color(0xFF25D366),
       ),
       (
         _SupportChannelType.phone,
         Icons.phone_rounded,
         t['phoneCall'] ?? 'Phone Call',
         '01012345678',
-        AppColors.primary,
+        palette.brandPrimary,
       ),
       (
         _SupportChannelType.email,
         Icons.email_outlined,
         t['email'] ?? 'Email',
         'support@mentorx.com',
-        AppColors.accent,
+        palette.brandSecondary,
       ),
     ];
 
     return Scaffold(
-      backgroundColor: AppColors.backgroundLight,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        foregroundColor: AppColors.primary,
-        title: Text(
-          t['supportTitle'] ?? 'Support',
-          style: const TextStyle(
-            fontSize: 17,
-            fontWeight: FontWeight.w700,
-            color: AppColors.primary,
+      backgroundColor: palette.backgroundSecondary,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(70),
+        child: FadeInDown(
+          duration: const Duration(milliseconds: 500),
+          child: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            foregroundColor: palette.brandPrimary,
+            title: Text(
+              t['supportTitle'] ?? 'Support',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w900,
+                color: palette.textPrimary,
+                letterSpacing: -0.5,
+              ),
+            ),
+            centerTitle: true,
           ),
         ),
-        centerTitle: true,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         child: Column(
           children: [
-            const SizedBox(height: 12),
+            const Gap(12),
 
             // Support icon with ring
-            Container(
-              padding: const EdgeInsets.all(3),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: LinearGradient(
-                  colors: [
-                    AppColors.success,
-                    AppColors.teal,
+            ZoomIn(
+              duration: const Duration(milliseconds: 600),
+              child: Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: LinearGradient(
+                    colors: [
+                      palette.statusSuccess,
+                      palette.brandPrimary,
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: palette.brandPrimary.withValues(alpha: 0.15),
+                      blurRadius: 20,
+                      offset: const Offset(0, 10),
+                    ),
                   ],
                 ),
-              ),
-              child: Container(
-                padding: const EdgeInsets.all(20),
-                decoration: const BoxDecoration(
-                  color: AppColors.backgroundLight,
-                  shape: BoxShape.circle,
+                child: Container(
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    color: palette.backgroundPrimary,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.headset_mic_rounded,
+                    size: 52,
+                    color: palette.statusSuccess,
+                  ),
                 ),
-                child: const Icon(
-                  Icons.headset_mic_rounded,
-                  size: 40,
-                  color: AppColors.success,
-                ),
               ),
             ),
-            const SizedBox(height: 18),
-            Text(
-              t['supportTitle'] ?? 'Support',
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w700,
-                color: AppColors.primary,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              t['supportDesc'] ?? 'We are here to help you',
-              style: const TextStyle(
-                fontSize: 14,
-                color: AppColors.greyDark,
-                height: 1.5,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 28),
-
-            // Contact channels
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.04),
-                    blurRadius: 12,
-                    offset: const Offset(0, 4),
+            const Gap(24),
+            FadeInUp(
+              duration: const Duration(milliseconds: 500),
+              delay: const Duration(milliseconds: 200),
+              child: Column(
+                children: [
+                  Text(
+                    t['supportTitle'] ?? 'Support Center',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w900,
+                      color: palette.textPrimary,
+                      letterSpacing: -0.8,
+                    ),
+                  ),
+                  const Gap(10),
+                  Text(
+                    t['supportDesc'] ?? 'We are here to help you around the clock',
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: palette.textSecondary,
+                      height: 1.5,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
                 ],
               ),
-              child: Column(
-                children: List.generate(channels.length, (i) {
-                  final (type, icon, label, value, color) = channels[i];
-                  final isLast = i == channels.length - 1;
-                  return Column(
-                    children: [
-                      Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          onTap: () async {
-                            await _openSupportChannel(
-                              context: context,
-                              type: type,
-                              value: value,
-                            );
-                          },
-                          borderRadius: BorderRadius.circular(20),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 16,
-                            ),
-                            child: Row(
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    color: color.withValues(alpha: 0.1),
-                                    borderRadius: BorderRadius.circular(12),
+            ),
+            const Gap(32),
+
+            // Contact channels
+            FadeInUp(
+              duration: const Duration(milliseconds: 600),
+              delay: const Duration(milliseconds: 400),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: palette.backgroundPrimary,
+                  borderRadius: BorderRadius.circular(28),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.03),
+                      blurRadius: 16,
+                      offset: const Offset(0, 8),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  children: List.generate(channels.length, (i) {
+                    final (type, icon, label, value, color) = channels[i];
+                    final isLast = i == channels.length - 1;
+                    return Column(
+                      children: [
+                        Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            onTap: () async {
+                              await _openSupportChannel(
+                                context: context,
+                                type: type,
+                                value: value,
+                              );
+                            },
+                            borderRadius: BorderRadius.circular(28),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 20,
+                                vertical: 20,
+                              ),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(12),
+                                    decoration: BoxDecoration(
+                                      color: color.withValues(alpha: 0.1),
+                                      borderRadius: BorderRadius.circular(16),
+                                    ),
+                                    child: Icon(icon, size: 24, color: color),
                                   ),
-                                  child: Icon(icon, size: 22, color: color),
-                                ),
-                                const SizedBox(width: 14),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        label,
-                                        style: const TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600,
-                                          color: AppColors.primary,
+                                  const Gap(16),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          label,
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w800,
+                                            color: palette.textPrimary,
+                                          ),
                                         ),
-                                      ),
-                                      const SizedBox(height: 2),
-                                      Text(
-                                        value,
-                                        style: const TextStyle(
-                                          fontSize: 12,
-                                          color: AppColors.greyDark,
+                                        const Gap(4),
+                                        Text(
+                                          value,
+                                          style: TextStyle(
+                                            fontSize: 13,
+                                            color: palette.textSecondary,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                          textDirection: TextDirection.ltr,
                                         ),
-                                        textDirection: TextDirection.ltr,
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
-                                ),
-                                Icon(
-                                  Icons.arrow_forward_ios_rounded,
-                                  size: 14,
-                                  color: AppColors.greyDark.withValues(
-                                    alpha: 0.4,
+                                  Icon(
+                                    Icons.arrow_forward_ios_rounded,
+                                    size: 16,
+                                    color: palette.textTertiary.withValues(alpha: 0.4),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      if (!isLast)
-                        Divider(
-                          height: 0.8,
-                          indent: 64,
-                          color: AppColors.greyLight.withValues(alpha: 0.5),
-                        ),
-                    ],
-                  );
-                }),
+                        if (!isLast)
+                          Divider(
+                            height: 1.5,
+                            indent: 72,
+                            endIndent: 20,
+                            color: palette.backgroundSecondary,
+                          ),
+                      ],
+                    );
+                  }),
+                ),
               ),
             ),
           ],
@@ -209,17 +245,17 @@ class SupportPage extends StatelessWidget {
   }) async {
     final uri = switch (type) {
       _SupportChannelType.whatsapp => Uri.parse(
-        'https://wa.me/${value.replaceAll(RegExp(r'[^0-9]'), '')}',
-      ),
+          'https://wa.me/${value.replaceAll(RegExp(r'[^0-9]'), '')}',
+        ),
       _SupportChannelType.phone => Uri(
-        scheme: 'tel',
-        path: value.replaceAll(RegExp(r'[^0-9+]'), ''),
-      ),
+          scheme: 'tel',
+          path: value.replaceAll(RegExp(r'[^0-9+]'), ''),
+        ),
       _SupportChannelType.email => Uri(
-        scheme: 'mailto',
-        path: value,
-        queryParameters: {'subject': 'MentorX Support'},
-      ),
+          scheme: 'mailto',
+          path: value,
+          queryParameters: {'subject': 'MentorX Support'},
+        ),
     };
 
     final launched = await launchUrl(
@@ -229,7 +265,10 @@ class SupportPage extends StatelessWidget {
 
     if (!launched && context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Unable to open support channel.')),
+        const SnackBar(
+          content: Text('Unable to open support channel.'),
+          behavior: SnackBarBehavior.floating,
+        ),
       );
     }
   }

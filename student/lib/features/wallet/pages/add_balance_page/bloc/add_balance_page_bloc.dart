@@ -9,8 +9,9 @@ sealed class AddBalancePagePresentationEvent {
   const AddBalancePagePresentationEvent();
 }
 
-final class AddBalancePageNavigateBack extends AddBalancePagePresentationEvent {
-  const AddBalancePageNavigateBack();
+final class AddBalancePageSuccess extends AddBalancePagePresentationEvent {
+  final PaymentEntity payment;
+  const AddBalancePageSuccess(this.payment);
 }
 
 final class AddBalancePageBloc
@@ -23,6 +24,7 @@ final class AddBalancePageBloc
   AddBalancePageBloc({required this.walletRepository})
     : super(AddBalancePageState.initial) {
     on<AddBalancePageLoadEvent>(_onLoad);
+    on<AddBalancePageSubmitEvent>(_onSubmit);
   }
 
   final WalletRepository walletRepository;
@@ -31,7 +33,33 @@ final class AddBalancePageBloc
     AddBalancePageLoadEvent event,
     Emitter<AddBalancePageState> emit,
   ) async {
-    emit(state.copyWith(loadingState: LoadingState.loading));
+    emit(state.copyWith(loadingState: LoadingState.loading, errorMessage: null));
     emit(state.copyWith(loadingState: LoadingState.loaded));
+  }
+
+  Future<void> _onSubmit(
+    AddBalancePageSubmitEvent event,
+    Emitter<AddBalancePageState> emit,
+  ) async {
+    emit(state.copyWith(loadingState: LoadingState.loading, errorMessage: null));
+    try {
+      final payment = await walletRepository.initiatePayment(
+        amount: event.amount,
+        method: event.method,
+        paymentType: PaymentType.walletTopup,
+      );
+      
+      emit(state.copyWith(
+        loadingState: LoadingState.loaded,
+        payment: payment,
+      ));
+      
+      emitPresentation(AddBalancePageSuccess(payment));
+    } catch (e) {
+      emit(state.copyWith(
+        loadingState: LoadingState.error,
+        errorMessage: e.toString(),
+      ));
+    }
   }
 }

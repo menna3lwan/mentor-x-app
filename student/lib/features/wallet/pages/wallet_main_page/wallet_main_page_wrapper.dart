@@ -1,6 +1,7 @@
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mentorx_student/core/core.dart';
 
 import 'bloc/wallet_main_page_bloc.dart';
 import 'wallet_main_page_page.dart';
@@ -15,20 +16,21 @@ final class WalletMainPageWrapper extends StatefulWidget {
 class _WalletMainPageWrapperState extends State<WalletMainPageWrapper> {
   @override
   Widget build(BuildContext context) {
-    return BlocPresentationListener<
-      WalletMainPageBloc,
-      WalletMainPagePresentationEvent
-    >(
-      listener: (context, event) {
-        switch (event) {
-          case WalletMainPageNavigateBack():
-            Navigator.of(context).pop();
-        }
-      },
-      child: BlocBuilder<WalletMainPageBloc, WalletMainPageState>(
-        builder: (context, state) {
-          return const WalletMainPage();
+    return BlocProvider(
+      create: (context) => WalletMainPageBloc(
+        walletRepository: context.read<WalletRepository>(),
+      )..add(const WalletMainPageLoadEvent()),
+      child: BlocPresentationListener<
+        WalletMainPageBloc,
+        WalletMainPagePresentationEvent
+      >(
+        listener: (context, event) {
+          switch (event) {
+            case WalletMainPageNavigateBack():
+              Navigator.of(context).pop();
+          }
         },
+        child: const WalletMainPage(),
       ),
     );
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
+import 'package:animate_do/animate_do.dart';
 
 final class CourseInfoHeader extends StatelessWidget {
   final CourseEntity course;
@@ -20,132 +21,150 @@ final class CourseInfoHeader extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (course.imageUrl != null)
-          Stack(
-            children: [
-              AspectRatio(
-                aspectRatio: 16 / 9,
-                child: Hero(
-                  tag: 'catalog_course_${course.id}',
-                  child: Image.network(
-                    course.imageUrl!,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) => Container(
-                      color: palette.backgroundSecondary,
-                      child: Icon(
-                        Icons.school_outlined,
-                        size: 64,
-                        color: palette.textTertiary,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              Positioned.fill(
-                child: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Colors.transparent,
-                        Colors.black.withOpacity(0.6),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              Positioned(
-                bottom: 16,
-                left: 16,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: palette.brandPrimary,
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: [
-                      BoxShadow(
-                        color: palette.brandPrimary.withOpacity(0.3),
-                        blurRadius: 10,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.play_arrow_rounded, color: Colors.white, size: 18),
-                      const SizedBox(width: 4),
-                      Text(
-                        'Introduction Video',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w700,
+          FadeInDown(
+            duration: const Duration(milliseconds: 600),
+            child: Stack(
+              children: [
+                AspectRatio(
+                  aspectRatio: 16 / 9,
+                  child: Hero(
+                    tag: 'catalog_course_${course.id}',
+                    child: Image.network(
+                      course.imageUrl!,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) => Container(
+                        color: palette.backgroundSecondary,
+                        child: Icon(
+                          Icons.school_outlined,
+                          size: 64,
+                          color: palette.textTertiary,
                         ),
                       ),
-                    ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+                Positioned.fill(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.transparent,
+                          Colors.black.withOpacity(0.6),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  bottom: 16,
+                  left: 16,
+                  child: FadeInLeft(
+                    delay: const Duration(milliseconds: 400),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: palette.brandPrimary,
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: palette.brandPrimary.withOpacity(0.3),
+                            blurRadius: 10,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.play_arrow_rounded, color: Colors.white, size: 18),
+                          const SizedBox(width: 4),
+                          Text(
+                            'Introduction Video',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         Padding(
           padding: const EdgeInsets.all(20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                course.title,
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w800,
-                  color: palette.textPrimary,
-                  letterSpacing: -0.5,
-                  height: 1.2,
+              FadeInUp(
+                duration: const Duration(milliseconds: 500),
+                child: Text(
+                  course.title,
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w800,
+                    color: palette.textPrimary,
+                    letterSpacing: -0.5,
+                    height: 1.2,
+                  ),
                 ),
               ),
               if (course.subtitle != null) ...[
                 const SizedBox(height: 10),
-                Text(
-                  course.subtitle!,
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: palette.textSecondary,
-                    height: 1.5,
+                FadeInUp(
+                  delay: const Duration(milliseconds: 200),
+                  child: Text(
+                    course.subtitle!,
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: palette.textSecondary,
+                      height: 1.5,
+                    ),
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
                 ),
               ],
               const SizedBox(height: 24),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    _StatChip(
-                      icon: Icons.people_alt_rounded,
-                      label: '${course.enrolledCount} Students',
-                      palette: palette,
-                    ),
-                    const SizedBox(width: 12),
-                    _StatChip(
-                      icon: Icons.play_circle_filled_rounded,
-                      label: '${course.totalVideos} Lessons',
-                      palette: palette,
-                    ),
-                    const SizedBox(width: 12),
-                    _StatChip(
-                      icon: Icons.access_time_filled_rounded,
-                      label: _formatDuration(context, course.totalDurationMinutes),
-                      palette: palette,
-                    ),
-                  ],
+              FadeInUp(
+                delay: const Duration(milliseconds: 400),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      _StatChip(
+                        icon: Icons.people_alt_rounded,
+                        label: '${course.enrolledCount} Students',
+                        palette: palette,
+                      ),
+                      const SizedBox(width: 12),
+                      _StatChip(
+                        icon: Icons.play_circle_filled_rounded,
+                        label: '${course.totalVideos} Lessons',
+                        palette: palette,
+                      ),
+                      const SizedBox(width: 12),
+                      _StatChip(
+                        icon: Icons.access_time_filled_rounded,
+                        label: _formatDuration(context, course.totalDurationMinutes),
+                        palette: palette,
+                      ),
+                    ],
+                  ),
                 ),
               ),
               if (enrollment != null) ...[
                 const SizedBox(height: 24),
-                _ProgressBar(
-                  progressPercent: enrollment!.progressPercent,
-                  palette: palette,
+                FadeInUp(
+                  delay: const Duration(milliseconds: 600),
+                  child: _ProgressBar(
+                    progressPercent: enrollment!.progressPercent,
+                    palette: palette,
+                  ),
                 ),
               ],
             ],

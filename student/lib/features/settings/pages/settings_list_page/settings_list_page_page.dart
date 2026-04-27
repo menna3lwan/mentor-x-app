@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
+import 'package:animate_do/animate_do.dart';
+import 'package:gap/gap.dart';
 
 class SettingsListPage extends StatelessWidget {
   const SettingsListPage({super.key});
@@ -8,111 +10,174 @@ class SettingsListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = context.t.student;
-    final isAr = Localizations.localeOf(context).languageCode == 'ar';
+    final isAr = context.isArabic;
+    final palette = MentorXThemeColorPalette.light;
 
     return Scaffold(
-      backgroundColor: AppColors.backgroundLight,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        foregroundColor: AppColors.primary,
-        title: Text(
-          t['settingsTitle'] ?? 'Settings',
-          style: const TextStyle(
-            fontSize: 17,
-            fontWeight: FontWeight.w700,
-            color: AppColors.primary,
+      backgroundColor: palette.backgroundSecondary,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(70),
+        child: FadeInDown(
+          duration: const Duration(milliseconds: 500),
+          child: Container(
+            decoration: BoxDecoration(
+              color: palette.backgroundPrimary,
+              borderRadius: const BorderRadius.vertical(bottom: Radius.circular(28)),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.03),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              foregroundColor: palette.textPrimary,
+              centerTitle: true,
+              title: Text(
+                t['settingsTitle'] ?? 'Settings',
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w900, letterSpacing: -0.5),
+              ),
+            ),
           ),
         ),
-        centerTitle: true,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.fromLTRB(20, 24, 20, 40),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // ── Language Section ─────────────────────────────────────────
-            _SectionHeader(title: t['language'] ?? 'Language'),
-            const SizedBox(height: 8),
-            _LanguageSwitcher(isAr: isAr),
-            const SizedBox(height: 24),
+            FadeInUp(
+              duration: const Duration(milliseconds: 500),
+              child: _SectionTitle(title: t['language'] ?? 'Language', palette: palette),
+            ),
+            const Gap(12),
+            FadeInUp(
+              duration: const Duration(milliseconds: 500),
+              delay: const Duration(milliseconds: 100),
+              child: _LanguageSwitcher(isAr: isAr, palette: palette),
+            ),
+            const Gap(32),
 
             // ── Account Section ─────────────────────────────────────────
-            _SectionHeader(title: t['account'] ?? 'Account'),
-            const SizedBox(height: 8),
-            _SettingsCard(
-              children: [
-                _SettingsItem(
-                  icon: Icons.lock_outline_rounded,
-                  label: t['changePasswordSetting'] ?? 'Change Password',
-                  color: AppColors.primary,
-                  onTap: () => context.push('/change-password'),
-                ),
-                _SettingsItem(
-                  icon: Icons.devices_outlined,
-                  label: t['deviceManagement'] ?? 'Device Management',
-                  color: AppColors.teal,
-                  onTap: () => context.push('/device-management'),
-                ),
-              ],
+            FadeInUp(
+              duration: const Duration(milliseconds: 500),
+              delay: const Duration(milliseconds: 200),
+              child: _SectionTitle(title: t['account'] ?? 'Account', palette: palette),
             ),
-            const SizedBox(height: 24),
+            const Gap(12),
+            FadeInUp(
+              duration: const Duration(milliseconds: 500),
+              delay: const Duration(milliseconds: 300),
+              child: _SettingsGroup(
+                palette: palette,
+                children: [
+                  _SettingsItem(
+                    icon: Icons.lock_person_rounded,
+                    label: t['changePasswordSetting'] ?? 'Change Password',
+                    color: palette.brandPrimary,
+                    onTap: () => context.push('/change-password'),
+                    palette: palette,
+                  ),
+                  _SettingsItem(
+                    icon: Icons.devices_other_rounded,
+                    label: t['deviceManagement'] ?? 'Device Management',
+                    color: palette.brandSecondary,
+                    onTap: () => context.push('/device-management'),
+                    palette: palette,
+                  ),
+                ],
+              ),
+            ),
+            const Gap(32),
 
             // ── Communication Section ───────────────────────────────────
-            _SectionHeader(title: t['communication'] ?? 'Communication'),
-            const SizedBox(height: 8),
-            _SettingsCard(
-              children: [
-                _SettingsItem(
-                  icon: Icons.notifications_outlined,
-                  label: t['notificationsSetting'] ?? 'Notifications',
-                  color: AppColors.accent,
-                  onTap: () => context.push('/notifications'),
-                ),
-                _SettingsItem(
-                  icon: Icons.groups_outlined,
-                  label: t['whatsappGroups'] ?? 'WhatsApp Groups',
-                  color: AppColors.whatsAppGreen,
-                  onTap: () => context.push('/whatsapp-groups'),
-                ),
-              ],
+            FadeInUp(
+              duration: const Duration(milliseconds: 500),
+              delay: const Duration(milliseconds: 400),
+              child: _SectionTitle(title: t['communication'] ?? 'Communication', palette: palette),
             ),
-            const SizedBox(height: 24),
+            const Gap(12),
+            FadeInUp(
+              duration: const Duration(milliseconds: 500),
+              delay: const Duration(milliseconds: 500),
+              child: _SettingsGroup(
+                palette: palette,
+                children: [
+                  _SettingsItem(
+                    icon: Icons.notifications_active_rounded,
+                    label: t['notificationsSetting'] ?? 'Notifications',
+                    color: Colors.orange,
+                    onTap: () => context.push('/notifications'),
+                    palette: palette,
+                  ),
+                  _SettingsItem(
+                    icon: Icons.groups_rounded,
+                    label: t['whatsappGroups'] ?? 'WhatsApp Groups',
+                    color: const Color(0xFF25D366),
+                    onTap: () => context.push('/whatsapp-groups'),
+                    palette: palette,
+                  ),
+                ],
+              ),
+            ),
+            const Gap(32),
 
             // ── Help & Info Section ─────────────────────────────────────
-            _SectionHeader(title: t['helpAndInfo'] ?? 'Help & Info'),
-            const SizedBox(height: 8),
-            _SettingsCard(
-              children: [
-                _SettingsItem(
-                  icon: Icons.headset_mic_outlined,
-                  label: t['supportSetting'] ?? 'Support',
-                  color: AppColors.success,
-                  onTap: () => context.push('/support'),
-                ),
-                _SettingsItem(
-                  icon: Icons.info_outline_rounded,
-                  label: t['aboutSetting'] ?? 'About',
-                  color: AppColors.primary,
-                  onTap: () => context.push('/about'),
-                ),
-              ],
+            FadeInUp(
+              duration: const Duration(milliseconds: 500),
+              delay: const Duration(milliseconds: 600),
+              child: _SectionTitle(title: t['helpAndInfo'] ?? 'Help & Info', palette: palette),
             ),
-            const SizedBox(height: 24),
+            const Gap(12),
+            FadeInUp(
+              duration: const Duration(milliseconds: 500),
+              delay: const Duration(milliseconds: 700),
+              child: _SettingsGroup(
+                palette: palette,
+                children: [
+                  _SettingsItem(
+                    icon: Icons.support_agent_rounded,
+                    label: t['supportSetting'] ?? 'Support',
+                    color: palette.brandPrimary,
+                    onTap: () => context.push('/support'),
+                    palette: palette,
+                  ),
+                  _SettingsItem(
+                    icon: Icons.info_rounded,
+                    label: t['aboutSetting'] ?? 'About',
+                    color: palette.textTertiary,
+                    onTap: () => context.push('/about'),
+                    palette: palette,
+                  ),
+                ],
+              ),
+            ),
+            const Gap(40),
 
-            // ── Danger Zone ─────────────────────────────────────────────
-            _SettingsCard(
-              children: [
-                _SettingsItem(
-                  icon: Icons.logout_rounded,
-                  label: t['logoutSetting'] ?? 'Log Out',
-                  color: AppColors.red,
-                  isDestructive: true,
-                  onTap: () => _showLogoutDialog(context, t),
-                ),
-              ],
+            // ── Logout ──────────────────────────────────────────────────
+            FadeInUp(
+              duration: const Duration(milliseconds: 500),
+              delay: const Duration(milliseconds: 800),
+              child: _SettingsGroup(
+                palette: palette,
+                children: [
+                  _SettingsItem(
+                    icon: Icons.logout_rounded,
+                    label: t['logoutSetting'] ?? 'Log Out',
+                    color: palette.statusDanger,
+                    onTap: () => _showLogoutDialog(context, t),
+                    palette: palette,
+                    isLast: true,
+                    isDestructive: true,
+                  ),
+                ],
+              ),
             ),
-            const SizedBox(height: 32),
           ],
         ),
       ),
@@ -122,72 +187,75 @@ class SettingsListPage extends StatelessWidget {
   void _showLogoutDialog(BuildContext context, Map<String, String> t) {
     showDialog(
       context: context,
-      builder: (ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: Text(
-          t['logoutConfirmTitle'] ?? 'Log Out',
-          style: const TextStyle(
-            fontWeight: FontWeight.w700,
-            color: AppColors.primary,
+      builder: (ctx) => ZoomIn(
+        duration: const Duration(milliseconds: 300),
+        child: AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+          backgroundColor: MentorXThemeColorPalette.light.backgroundPrimary,
+          title: Text(
+            t['logoutConfirmTitle'] ?? 'Log Out',
+            style: const TextStyle(fontWeight: FontWeight.w900, letterSpacing: -0.5),
           ),
-        ),
-        content: Text(
-          t['logoutConfirmDesc'] ?? 'Are you sure you want to log out?',
-          style: const TextStyle(color: AppColors.greyDark),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: Text(
-              t['cancel'] ?? 'Cancel',
-              style: const TextStyle(color: AppColors.greyDark),
-            ),
+          content: Text(
+            t['logoutConfirmDesc'] ?? 'Are you sure you want to log out?',
+            style: TextStyle(color: MentorXThemeColorPalette.light.textSecondary, fontWeight: FontWeight.w500),
           ),
-          FilledButton(
-            onPressed: () {
-              Navigator.pop(ctx);
-              context.go('/login');
-            },
-            style: FilledButton.styleFrom(
-              backgroundColor: AppColors.red,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: Text(
+                t['cancel'] ?? 'Cancel',
+                style: TextStyle(color: MentorXThemeColorPalette.light.textTertiary, fontWeight: FontWeight.w800),
               ),
             ),
-            child: Text(t['logoutSetting'] ?? 'Log Out'),
-          ),
-        ],
+            SizedBox(
+              width: 130,
+              child: MentorXButton(
+                onPressed: () {
+                  Navigator.pop(ctx);
+                  context.go('/login');
+                },
+                label: t['logoutSetting'] ?? 'Log Out',
+                color: MentorXThemeColorPalette.light.statusDanger,
+              ),
+            ),
+          ],
+          actionsPadding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+        ),
       ),
     );
   }
 }
 
-// ── Section Header ──────────────────────────────────────────────────────────
-
-class _SectionHeader extends StatelessWidget {
-  const _SectionHeader({required this.title});
+class _SectionTitle extends StatelessWidget {
   final String title;
+  final MentorXThemeColorPalette palette;
+  const _SectionTitle({required this.title, required this.palette});
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         Container(
-          width: 4,
-          height: 16,
+          width: 6,
+          height: 20,
           decoration: BoxDecoration(
-            color: AppColors.accent,
-            borderRadius: BorderRadius.circular(2),
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [palette.brandPrimary, palette.brandPrimary.withValues(alpha: 0.7)],
+            ),
+            borderRadius: BorderRadius.circular(3),
           ),
         ),
-        const SizedBox(width: 8),
+        const Gap(12),
         Text(
           title,
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w700,
-            color: AppColors.primary,
-            letterSpacing: 0.3,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w900,
+            color: palette.textPrimary,
+            letterSpacing: -0.3,
           ),
         ),
       ],
@@ -195,50 +263,49 @@ class _SectionHeader extends StatelessWidget {
   }
 }
 
-// ── Language Switcher ─────────────────────────────────────────────────────────
-
 class _LanguageSwitcher extends StatelessWidget {
-  const _LanguageSwitcher({required this.isAr});
+  const _LanguageSwitcher({required this.isAr, required this.palette});
   final bool isAr;
+  final MentorXThemeColorPalette palette;
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        color: palette.backgroundPrimary,
+        borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
+            color: Colors.black.withValues(alpha: 0.02),
             blurRadius: 10,
-            offset: const Offset(0, 2),
           ),
         ],
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(4),
-        child: Row(
-          children: [
-            Expanded(
-              child: _LanguageOption(
-                label: 'العربية',
-                isSelected: isAr,
-                onTap: () {
-                  if (!isAr) LocaleSettings.setLocaleRaw('ar');
-                },
-              ),
+      child: Row(
+        children: [
+          Expanded(
+            child: _LanguageOption(
+              label: 'العربية',
+              isSelected: isAr,
+              onTap: () {
+                if (!isAr) LocaleSettings.setLocaleRaw('ar');
+              },
+              palette: palette,
             ),
-            Expanded(
-              child: _LanguageOption(
-                label: 'English',
-                isSelected: !isAr,
-                onTap: () {
-                  if (isAr) LocaleSettings.setLocaleRaw('en');
-                },
-              ),
+          ),
+          const Gap(10),
+          Expanded(
+            child: _LanguageOption(
+              label: 'English',
+              isSelected: !isAr,
+              onTap: () {
+                if (isAr) LocaleSettings.setLocaleRaw('en');
+              },
+              palette: palette,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -249,27 +316,37 @@ class _LanguageOption extends StatelessWidget {
     required this.label,
     required this.isSelected,
     required this.onTap,
+    required this.palette,
   });
   final String label;
   final bool isSelected;
   final VoidCallback onTap;
+  final MentorXThemeColorPalette palette;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(vertical: 12),
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+        padding: const EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primary : Colors.transparent,
-          borderRadius: BorderRadius.circular(12),
+          gradient: isSelected
+              ? LinearGradient(
+                  colors: [palette.brandPrimary, palette.brandPrimary.withValues(alpha: 0.8)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                )
+              : null,
+          color: isSelected ? null : Colors.transparent,
+          borderRadius: BorderRadius.circular(18),
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                    color: AppColors.primary.withValues(alpha: 0.25),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
+                    color: palette.brandPrimary.withValues(alpha: 0.25),
+                    blurRadius: 12,
+                    offset: const Offset(0, 6),
                   ),
                 ]
               : null,
@@ -278,9 +355,9 @@ class _LanguageOption extends StatelessWidget {
           child: Text(
             label,
             style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: isSelected ? Colors.white : AppColors.greyDark,
+              fontSize: 15,
+              fontWeight: FontWeight.w900,
+              color: isSelected ? palette.textForeground : palette.textTertiary,
             ),
           ),
         ),
@@ -289,40 +366,26 @@ class _LanguageOption extends StatelessWidget {
   }
 }
 
-// ── Settings Card & Item ─────────────────────────────────────────────────────
-
-class _SettingsCard extends StatelessWidget {
-  const _SettingsCard({required this.children});
+class _SettingsGroup extends StatelessWidget {
   final List<_SettingsItem> children;
+  final MentorXThemeColorPalette palette;
+  const _SettingsGroup({required this.children, required this.palette});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        color: palette.backgroundPrimary,
+        borderRadius: BorderRadius.circular(28),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
+            color: Colors.black.withValues(alpha: 0.02),
+            blurRadius: 12,
           ),
         ],
       ),
       child: Column(
-        children: List.generate(children.length, (i) {
-          return Column(
-            children: [
-              children[i],
-              if (i < children.length - 1)
-                Divider(
-                  height: 0.8,
-                  indent: 56,
-                  color: AppColors.greyLight.withValues(alpha: 0.5),
-                ),
-            ],
-          );
-        }),
+        children: children,
       ),
     );
   }
@@ -334,12 +397,16 @@ class _SettingsItem extends StatelessWidget {
     required this.label,
     required this.color,
     required this.onTap,
+    required this.palette,
+    this.isLast = false,
     this.isDestructive = false,
   });
   final IconData icon;
   final String label;
   final Color color;
   final VoidCallback onTap;
+  final MentorXThemeColorPalette palette;
+  final bool isLast;
   final bool isDestructive;
 
   @override
@@ -348,36 +415,37 @@ class _SettingsItem extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        borderRadius: BorderRadius.circular(28),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+          decoration: BoxDecoration(
+            border: isLast ? null : Border(bottom: BorderSide(color: palette.backgroundSecondary, width: 1.5)),
+          ),
           child: Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: color.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(16),
                 ),
-                child: Icon(icon, size: 20, color: color),
+                child: Icon(icon, size: 22, color: color),
               ),
-              const SizedBox(width: 14),
+              const Gap(16),
               Expanded(
                 child: Text(
                   label,
                   style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: isDestructive ? AppColors.red : AppColors.primary,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w800,
+                    color: isDestructive ? palette.statusDanger : palette.textPrimary,
                   ),
                 ),
               ),
               Icon(
-                Icons.arrow_forward_ios_rounded,
-                size: 14,
-                color: isDestructive
-                    ? AppColors.red.withValues(alpha: 0.5)
-                    : AppColors.greyDark.withValues(alpha: 0.4),
+                Icons.chevron_right_rounded,
+                size: 20,
+                color: palette.textTertiary.withOpacity(0.5),
               ),
             ],
           ),

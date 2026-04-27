@@ -16,15 +16,11 @@ void main() {
   });
 
   group('DioQuizRepository', () {
-    group('startQuiz', () {
-      test('returns attempt and questions on success', () async {
+    group('getQuiz', () {
+      test('returns QuizEntity on success', () async {
         final mockData = {
-          'attempt': {
-            'id': 'a1',
-            'status': 'inProgress',
-            'quiz_id': 'q1',
-            'started_at': DateTime.now().toIso8601String(),
-          },
+          'id': 'q1',
+          'title': 'Test Quiz',
           'questions': [
             {
               'id': 'q1',
@@ -39,15 +35,15 @@ void main() {
           ]
         };
 
-        when(() => httpClient.post('/api/quizzes/q1/start')).thenAnswer((_) async => HttpClientResponse(
-          data: mockData,
+        when(() => httpClient.get('/api/quizzes/q1')).thenAnswer((_) async => HttpClientResponse(
+          data: {'data': mockData},
           statusCode: 200,
         ));
 
-        final result = await repository.startQuiz('q1');
-        expect(result.attempt.id, 'a1');
+        final result = await repository.getQuiz('q1');
+        expect(result.id, 'q1');
         expect(result.questions.length, 1);
-        expect(result.questions[0].questionText, 'Question 1');
+        expect(result.questions[0].text, 'Question 1');
       });
     });
 
@@ -61,12 +57,15 @@ void main() {
           'started_at': DateTime.now().toIso8601String(),
         };
 
-        when(() => httpClient.post('/api/quiz-attempts/a1/submit')).thenAnswer((_) async => HttpClientResponse(
-          data: mockData,
+        when(() => httpClient.post(
+          '/api/quizzes/q1/submit',
+          data: any(named: 'data'),
+        )).thenAnswer((_) async => HttpClientResponse(
+          data: {'data': mockData},
           statusCode: 200,
         ));
 
-        final result = await repository.submitQuiz('a1');
+        final result = await repository.submitQuiz('q1', answers: {'q1': 'Option 1'});
         expect(result.id, 'a1');
         expect(result.status, QuizAttemptStatus.submitted);
       });
@@ -83,7 +82,7 @@ void main() {
         };
 
         when(() => httpClient.get('/api/quiz-attempts/a1')).thenAnswer((_) async => HttpClientResponse(
-          data: mockData,
+          data: {'data': mockData},
           statusCode: 200,
         ));
 

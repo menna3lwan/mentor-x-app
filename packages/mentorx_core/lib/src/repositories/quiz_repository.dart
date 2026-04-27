@@ -16,21 +16,18 @@ final class QuizRepositoryException
 abstract interface class QuizRepository {
   Future<void> initialize();
 
-  /// Start a quiz attempt and receive questions.
-  Future<({QuizAttemptEntity attempt, List<QuizQuestionEntity> questions})>
-  startQuiz(String quizId);
+  /// Fetch all available quizzes.
+  Future<List<QuizEntity>> getQuizzes();
 
-  /// Save an answer for a question in an active attempt.
-  Future<void> saveAnswer(
-    String attemptId, {
-    required String questionId,
-    List<String>? selectedOptions,
-    String? textAnswer,
+  /// Fetch quiz details with questions.
+  Future<QuizEntity> getQuiz(String quizId);
+
+  /// Submit the quiz with all answers.
+  Future<QuizAttemptEntity> submitQuiz(
+    String quizId, {
+    required Map<String, String> answers,
   });
 
-  /// Submit the entire quiz attempt.
-  Future<QuizAttemptEntity> submitQuiz(String attemptId);
-
-  /// Fetch detailed quiz results.
+  /// Fetch detailed quiz results for an attempt.
   Future<QuizAttemptEntity> getResults(String attemptId);
 }

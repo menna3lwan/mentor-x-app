@@ -36,10 +36,10 @@ final class _MyGradesPageWrapperState extends State<MyGradesPageWrapper> {
             onCourseFilterChanged: (courseId) {
               bloc.add(MyGradesPageCourseFilterChanged(courseId: courseId));
             },
-            onQuizTap: () {
-              const QuizResultPageRoute().push(context);
+            onQuizTap: (attemptId) {
+              QuizResultPageRoute(attemptId: attemptId).push(context);
             },
-            onAssignmentTap: () {
+            onAssignmentTap: (assignmentId) {
               const AssignmentResultPageRoute().push(context);
             },
           );

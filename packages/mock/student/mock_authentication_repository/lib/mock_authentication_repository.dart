@@ -105,7 +105,6 @@ final class MockAuthenticationRepository
   @override
   Future<void> resetPassword({
     required String phoneNumber,
-    required String otp,
     required String newPassword,
   }) async {
     await _delay;
@@ -128,13 +127,6 @@ final class MockAuthenticationRepository
       throw AuthenticationRepositoryException(
         code: AuthenticationRepositoryExceptionCode.invalidPhoneNumber,
         message: 'Phone number does not match the reset request',
-      );
-    }
-
-    if (otp != _validOtp) {
-      throw AuthenticationRepositoryException(
-        code: AuthenticationRepositoryExceptionCode.invalidOtp,
-        message: 'Invalid OTP provided',
       );
     }
 

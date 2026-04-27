@@ -32,7 +32,21 @@ final class AssignmentDetailPageBloc
     AssignmentDetailPageLoadEvent event,
     Emitter<AssignmentDetailPageState> emit,
   ) async {
-    emit(state.copyWith(loadingState: LoadingState.loading));
-    emit(state.copyWith(loadingState: LoadingState.loaded));
+    emit(state.copyWith(loadingState: LoadingState.loading, errorMessage: null));
+    try {
+      final assignment = await assignmentRepository.getAssignment(event.assignmentId);
+      final submission = await assignmentRepository.getSubmission(event.assignmentId);
+      
+      emit(state.copyWith(
+        loadingState: LoadingState.loaded,
+        assignment: assignment,
+        submission: submission,
+      ));
+    } catch (e) {
+      emit(state.copyWith(
+        loadingState: LoadingState.error,
+        errorMessage: e.toString(),
+      ));
+    }
   }
 }

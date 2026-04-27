@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
+import 'package:animate_do/animate_do.dart';
+import 'package:gap/gap.dart';
 
 import '../../../../../core/core.dart';
 import 'bloc/ai_conversations_page_bloc.dart';
@@ -30,41 +32,66 @@ final class AiConversationsPagePage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: palette.backgroundSecondary,
-      appBar: AppBar(
-        title: const Text(
-          'AI Tutor History',
-          style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
-        ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        centerTitle: false,
-      ),
-      floatingActionButton: Container(
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: palette.brandPrimary.withOpacity(0.3),
-              blurRadius: 12,
-              offset: const Offset(0, 4),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(70),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [palette.brandPrimary, palette.brandPrimary.withValues(alpha: 0.8)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
-          ],
-        ),
-        child: FloatingActionButton.extended(
-          onPressed: onCreateConversationTapped,
-          backgroundColor: palette.brandPrimary,
-          foregroundColor: Colors.white,
-          elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
+            boxShadow: [
+              BoxShadow(
+                color: palette.brandPrimary.withValues(alpha: 0.3),
+                blurRadius: 15,
+                offset: const Offset(0, 4),
+              ),
+            ],
           ),
-          icon: const Icon(Icons.add_comment_rounded),
-          label: const Text(
-            'New Chat',
-            style: TextStyle(fontWeight: FontWeight.w700, letterSpacing: 0.5),
+          child: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            foregroundColor: Colors.white,
+            centerTitle: true,
+            title: const Text(
+              'AI Tutor History',
+              style: TextStyle(fontWeight: FontWeight.w900, fontSize: 18, letterSpacing: -0.5),
+            ),
+          ),
+        ),
+      ),
+      floatingActionButton: FadeInRight(
+        duration: const Duration(milliseconds: 600),
+        child: Container(
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: palette.brandPrimary.withValues(alpha: 0.3),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: FloatingActionButton.extended(
+            onPressed: onCreateConversationTapped,
+            backgroundColor: palette.brandPrimary,
+            foregroundColor: Colors.white,
+            elevation: 0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            icon: const Icon(Icons.add_comment_rounded),
+            label: const Text(
+              'New Chat',
+              style: TextStyle(fontWeight: FontWeight.w900, letterSpacing: 0.5),
+            ),
           ),
         ),
       ),
       body: RefreshIndicator(
+        color: palette.brandPrimary,
         onRefresh: () async => onRefresh(),
         child: _buildBody(context, palette),
       ),
@@ -94,19 +121,24 @@ final class AiConversationsPagePage extends StatelessWidget {
     return ListView(
       physics: const AlwaysScrollableScrollPhysics(),
       children: [
-        SizedBox(height: MediaQuery.of(context).size.height * 0.2),
-        Icon(
-          Icons.error_outline_rounded,
-          size: 60,
-          color: palette.statusDanger,
-        ),
-        const SizedBox(height: 16),
-        Text(
-          state.errorMessage ?? 'Unable to load conversations.',
-          textAlign: TextAlign.center,
-          style: TextStyle(
+        Gap(MediaQuery.of(context).size.height * 0.2),
+        FadeInDown(
+          child: Icon(
+            Icons.error_outline_rounded,
+            size: 64,
             color: palette.statusDanger,
-            fontWeight: FontWeight.w600,
+          ),
+        ),
+        const Gap(16),
+        FadeInUp(
+          child: Text(
+            state.errorMessage ?? 'Unable to load conversations.',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: palette.statusDanger,
+              fontWeight: FontWeight.w800,
+              fontSize: 16,
+            ),
           ),
         ),
       ],
@@ -120,34 +152,52 @@ final class AiConversationsPagePage extends StatelessWidget {
     return ListView(
       physics: const AlwaysScrollableScrollPhysics(),
       children: [
-        SizedBox(height: MediaQuery.of(context).size.height * 0.2),
-        Container(
-          padding: const EdgeInsets.all(32),
-          decoration: BoxDecoration(
-            color: palette.brandPrimary.withOpacity(0.05),
-            shape: BoxShape.circle,
-          ),
-          child: Icon(
-            Icons.forum_rounded,
-            size: 80,
-            color: palette.brandPrimary.withOpacity(0.2),
-          ),
-        ),
-        const SizedBox(height: 24),
-        Text(
-          'No conversations yet',
-          textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.w800,
+        Gap(MediaQuery.of(context).size.height * 0.15),
+        FadeInDown(
+          child: Container(
+            padding: const EdgeInsets.all(32),
+            margin: const EdgeInsets.symmetric(horizontal: 100),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 20),
+              ],
+            ),
+            child: Icon(
+              Icons.forum_rounded,
+              size: 80,
+              color: palette.brandPrimary.withValues(alpha: 0.2),
+            ),
           ),
         ),
-        const SizedBox(height: 12),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 48),
-          child: Text(
-            'Start a conversation with your AI tutor to get help with your studies.',
-            textAlign: TextAlign.center,
-            style: TextStyle(color: palette.textSecondary, height: 1.5),
+        const Gap(24),
+        FadeInUp(
+          child: Column(
+            children: [
+              Text(
+                'No conversations yet',
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.w900,
+                  fontSize: 22,
+                ),
+              ),
+              const Gap(12),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 48),
+                child: Text(
+                  'Start a conversation with your AI tutor to get help with your studies.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: palette.textSecondary,
+                    height: 1.5,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ],
@@ -156,170 +206,179 @@ final class AiConversationsPagePage extends StatelessWidget {
 
   Widget _buildList(BuildContext context, MentorXThemeColorPalette palette) {
     return ListView.separated(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
+      physics: const BouncingScrollPhysics(),
+      padding: const EdgeInsets.fromLTRB(16, 20, 16, 100),
       itemCount: state.conversations.length,
-      separatorBuilder: (_, _) => const SizedBox(height: 12),
+      separatorBuilder: (_, _) => const Gap(12),
       itemBuilder: (context, index) {
         final conversation = state.conversations[index];
         final isProcessing = state.processingConversationIds.contains(
           conversation.id,
         );
 
-        return Container(
-          decoration: BoxDecoration(
-            color: palette.backgroundPrimary,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.04),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: () => onConversationTapped(conversation.id),
-              borderRadius: BorderRadius.circular(20),
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 52,
-                      height: 52,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            palette.brandPrimary.withOpacity(0.15),
-                            palette.brandPrimary.withOpacity(0.05),
-                          ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Icon(
-                        Icons.psychology_rounded,
-                        color: palette.brandPrimary,
-                        size: 28,
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            _conversationTitle(conversation),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w800,
-                              fontSize: 15,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.chat_bubble_outline_rounded,
-                                size: 12,
-                                color: palette.textTertiary,
-                              ),
-                              const SizedBox(width: 4),
-                              Text(
-                                '${conversation.messageCount} messages',
-                                style: TextStyle(
-                                  color: palette.textSecondary,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                '•',
-                                style: TextStyle(color: palette.textTertiary),
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                _formatDate(conversation.updatedAt),
-                                style: TextStyle(
-                                  color: palette.textSecondary,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
+        return FadeInUp(
+          duration: const Duration(milliseconds: 500),
+          delay: Duration(milliseconds: 50 * index),
+          child: Container(
+            decoration: BoxDecoration(
+              color: palette.backgroundPrimary,
+              borderRadius: BorderRadius.circular(24),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.04),
+                  blurRadius: 12,
+                  offset: const Offset(0, 6),
+                ),
+              ],
+            ),
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: () => onConversationTapped(conversation.id),
+                borderRadius: BorderRadius.circular(24),
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 56,
+                        height: 56,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              palette.brandPrimary.withValues(alpha: 0.15),
+                              palette.brandPrimary.withValues(alpha: 0.05),
                             ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
                           ),
-                        ],
+                          borderRadius: BorderRadius.circular(18),
+                        ),
+                        child: Icon(
+                          Icons.psychology_rounded,
+                          color: palette.brandPrimary,
+                          size: 32,
+                        ),
                       ),
-                    ),
-                    if (isProcessing)
-                      const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2.5),
-                      )
-                    else
-                      PopupMenuButton<_ConversationAction>(
-                        icon: Icon(
-                          Icons.more_vert_rounded,
-                          color: palette.textTertiary,
-                        ),
-                        offset: const Offset(0, 40),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        onSelected: (action) async {
-                          switch (action) {
-                            case _ConversationAction.rename:
-                              final value = await _showRenameDialog(
-                                context,
-                                conversation.title,
-                              );
-                              if (value != null && value.trim().isNotEmpty) {
-                                onRenameConversationSubmitted(
-                                  conversation.id,
-                                  value,
-                                );
-                              }
-                            case _ConversationAction.delete:
-                              onDeleteConversationTapped(conversation.id);
-                          }
-                        },
-                        itemBuilder: (_) => [
-                          const PopupMenuItem(
-                            value: _ConversationAction.rename,
-                            child: Row(
-                              children: [
-                                Icon(Icons.edit_outlined, size: 18),
-                                SizedBox(width: 10),
-                                Text('Rename'),
-                              ],
+                      const Gap(16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              _conversationTitle(conversation),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w900,
+                                fontSize: 16,
+                                letterSpacing: -0.3,
+                              ),
                             ),
-                          ),
-                          PopupMenuItem(
-                            value: _ConversationAction.delete,
-                            child: Row(
+                            const Gap(6),
+                            Row(
                               children: [
                                 Icon(
-                                  Icons.delete_outline_rounded,
-                                  size: 18,
-                                  color: palette.statusDanger,
+                                  Icons.chat_bubble_outline_rounded,
+                                  size: 14,
+                                  color: palette.textTertiary,
                                 ),
-                                const SizedBox(width: 10),
+                                const Gap(6),
                                 Text(
-                                  'Delete',
-                                  style: TextStyle(color: palette.statusDanger),
+                                  '${conversation.messageCount} messages',
+                                  style: TextStyle(
+                                    color: palette.textSecondary,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                const Gap(8),
+                                Text(
+                                  '•',
+                                  style: TextStyle(color: palette.textTertiary, fontSize: 12),
+                                ),
+                                const Gap(8),
+                                Text(
+                                  _formatDate(conversation.updatedAt),
+                                  style: TextStyle(
+                                    color: palette.textTertiary,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                               ],
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                  ],
+                      if (isProcessing)
+                        const SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator(strokeWidth: 3),
+                        )
+                      else
+                        PopupMenuButton<_ConversationAction>(
+                          icon: Icon(
+                            Icons.more_vert_rounded,
+                            color: palette.textTertiary,
+                          ),
+                          offset: const Offset(0, 40),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          onSelected: (action) async {
+                            switch (action) {
+                              case _ConversationAction.rename:
+                                final value = await _showRenameDialog(
+                                  context,
+                                  conversation.title,
+                                );
+                                if (value != null && value.trim().isNotEmpty) {
+                                  onRenameConversationSubmitted(
+                                    conversation.id,
+                                    value,
+                                  );
+                                }
+                              case _ConversationAction.delete:
+                                onDeleteConversationTapped(conversation.id);
+                            }
+                          },
+                          itemBuilder: (_) => [
+                            const PopupMenuItem(
+                              value: _ConversationAction.rename,
+                              child: Row(
+                                children: [
+                                  Icon(Icons.edit_outlined, size: 20),
+                                  Gap(12),
+                                  Text('Rename', style: TextStyle(fontWeight: FontWeight.w600)),
+                                ],
+                              ),
+                            ),
+                            PopupMenuItem(
+                              value: _ConversationAction.delete,
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.delete_outline_rounded,
+                                    size: 20,
+                                    color: palette.statusDanger,
+                                  ),
+                                  const Gap(12),
+                                  Text(
+                                    'Delete',
+                                    style: TextStyle(
+                                      color: palette.statusDanger,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -357,21 +416,23 @@ final class AiConversationsPagePage extends StatelessWidget {
       builder: (dialogContext) {
         return AlertDialog(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(24),
           ),
           title: const Text(
             'Rename Chat',
-            style: TextStyle(fontWeight: FontWeight.w800),
+            style: TextStyle(fontWeight: FontWeight.w900, fontSize: 20),
           ),
           content: TextField(
             controller: controller,
             autofocus: true,
+            style: const TextStyle(fontWeight: FontWeight.w600),
             decoration: InputDecoration(
               hintText: 'Enter new title',
               filled: true,
               fillColor: palette.backgroundSecondary,
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(16),
                 borderSide: BorderSide.none,
               ),
             ),
@@ -381,19 +442,16 @@ final class AiConversationsPagePage extends StatelessWidget {
               onPressed: () => Navigator.of(dialogContext).pop(),
               child: Text(
                 'Cancel',
-                style: TextStyle(color: palette.textSecondary),
+                style: TextStyle(color: palette.textSecondary, fontWeight: FontWeight.w700),
               ),
             ),
-            FilledButton(
-              onPressed: () =>
-                  Navigator.of(dialogContext).pop(controller.text.trim()),
-              style: FilledButton.styleFrom(
-                backgroundColor: palette.brandPrimary,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
+            Padding(
+              padding: const EdgeInsets.only(right: 8, bottom: 4),
+              child: MentorXButton(
+                onPressed: () => Navigator.of(dialogContext).pop(controller.text.trim()),
+                label: 'Save',
+                size: MentorXButtonSize.small,
               ),
-              child: const Text('Save'),
             ),
           ],
         );

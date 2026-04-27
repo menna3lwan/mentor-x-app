@@ -27,7 +27,10 @@ class _RedeemCodePageWrapperState extends State<RedeemCodePageWrapper> {
       },
       child: BlocBuilder<RedeemCodePageBloc, RedeemCodePageState>(
         builder: (context, state) {
-          return const RedeemCodePage();
+          return RedeemCodePagePage(
+            state: state,
+            onSubmit: (code) => context.read<RedeemCodePageBloc>().add(RedeemCodePageSubmitEvent(code)),
+          );
         },
       ),
     );

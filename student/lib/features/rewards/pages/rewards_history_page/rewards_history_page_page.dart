@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
+import 'package:animate_do/animate_do.dart';
+import 'package:gap/gap.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 import 'package:mentorx_student/core/core.dart';
 import '../rewards_catalog_page/bloc/rewards_page_bloc.dart';
@@ -12,19 +14,39 @@ class RewardsHistoryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final palette = MentorXThemeColorPalette.light;
+    final t = context.t.student;
+
     return BlocBuilder<RewardsPageBloc, RewardsPageState>(
       builder: (context, state) {
         return Scaffold(
           backgroundColor: palette.backgroundSecondary,
-          appBar: AppBar(
-            title: const Text(
-              'Points History',
-              style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
+          appBar: PreferredSize(
+            preferredSize: const Size.fromHeight(70),
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [palette.brandPrimary, palette.brandPrimary.withValues(alpha: 0.8)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
+                boxShadow: [
+                  BoxShadow(color: palette.brandPrimary.withValues(alpha: 0.3), blurRadius: 15, offset: const Offset(0, 4)),
+                ],
+              ),
+              child: AppBar(
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                foregroundColor: Colors.white,
+                centerTitle: true,
+                title: Text(
+                  t['rewardsHistoryTitle'] ?? 'Points History',
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900, letterSpacing: -0.5),
+                ),
+              ),
             ),
-            backgroundColor: Colors.transparent,
-            elevation: 0,
           ),
-          body: _buildBody(context, state, palette),
+          body: _buildBody(context, state, palette, t),
         );
       },
     );
@@ -34,6 +56,7 @@ class RewardsHistoryPage extends StatelessWidget {
     BuildContext context,
     RewardsPageState state,
     MentorXThemeColorPalette palette,
+    dynamic t,
   ) {
     if (state.historySection.isLoading) {
       return const Center(child: CircularProgressIndicator());
@@ -46,11 +69,34 @@ class RewardsHistoryPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.history_rounded, size: 64, color: palette.textTertiary),
-            const SizedBox(height: 16),
-            Text(
-              'No points history yet',
-              style: TextStyle(color: palette.textSecondary, fontSize: 16),
+            FadeInDown(
+              child: Container(
+                padding: const EdgeInsets.all(32),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 20),
+                  ],
+                ),
+                child: Icon(
+                  Icons.history_rounded,
+                  size: 80,
+                  color: palette.textTertiary.withValues(alpha: 0.2),
+                ),
+              ),
+            ),
+            const Gap(24),
+            FadeInUp(
+              child: Text(
+                t['noHistory'] ?? 'No points history yet',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w900,
+                  color: palette.textSecondary,
+                  letterSpacing: -0.5,
+                ),
+              ),
             ),
           ],
         ),
@@ -58,12 +104,17 @@ class RewardsHistoryPage extends StatelessWidget {
     }
 
     return ListView.separated(
-      padding: const EdgeInsets.all(16),
+      physics: const BouncingScrollPhysics(),
+      padding: const EdgeInsets.fromLTRB(20, 24, 20, 100),
       itemCount: transactions.length,
-      separatorBuilder: (_, _) => const SizedBox(height: 12),
+      separatorBuilder: (_, _) => const Gap(12),
       itemBuilder: (context, index) {
         final tx = transactions[index];
-        return _PointsTransactionTile(tx: tx, palette: palette);
+        return FadeInUp(
+          duration: const Duration(milliseconds: 500),
+          delay: Duration(milliseconds: 50 * index),
+          child: _PointsTransactionTile(tx: tx, palette: palette, t: t),
+        );
       },
     );
   }
@@ -72,22 +123,28 @@ class RewardsHistoryPage extends StatelessWidget {
 class _PointsTransactionTile extends StatelessWidget {
   final PointsTransactionEntity tx;
   final MentorXThemeColorPalette palette;
+  final dynamic t;
 
-  const _PointsTransactionTile({required this.tx, required this.palette});
+  const _PointsTransactionTile({
+    required this.tx,
+    required this.palette,
+    required this.t,
+  });
 
   @override
   Widget build(BuildContext context) {
     final isEarned = tx.isCredit;
     final color = isEarned ? palette.statusSuccess : palette.brandPrimary;
+    final formattedDate = DateFormat('dd MMM, hh:mm a').format(tx.createdAt);
 
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: palette.backgroundPrimary,
-        borderRadius: BorderRadius.circular(16),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.02),
+            color: Colors.black.withValues(alpha: 0.02),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -96,36 +153,40 @@ class _PointsTransactionTile extends StatelessWidget {
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
-              shape: BoxShape.circle,
+              color: color.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(16),
             ),
             child: Icon(
-              isEarned ? Icons.add_circle_rounded : Icons.remove_circle_rounded,
+              isEarned ? Icons.add_rounded : Icons.remove_rounded,
               color: color,
               size: 20,
             ),
           ),
-          const SizedBox(width: 16),
+          const Gap(16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   tx.description,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w700,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w900,
                     fontSize: 14,
+                    color: palette.textPrimary,
+                    letterSpacing: -0.3,
                   ),
                 ),
+                const Gap(4),
                 Text(
-                  DateFormat('MMM dd, yyyy • hh:mm a').format(tx.createdAt),
-                  style: TextStyle(color: palette.textTertiary, fontSize: 11),
+                  formattedDate,
+                  style: TextStyle(color: palette.textTertiary, fontSize: 11, fontWeight: FontWeight.w600),
                 ),
               ],
             ),
           ),
+          const Gap(12),
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
@@ -134,12 +195,16 @@ class _PointsTransactionTile extends StatelessWidget {
                 style: TextStyle(
                   color: color,
                   fontWeight: FontWeight.w900,
-                  fontSize: 16,
+                  fontSize: 20,
                 ),
               ),
               Text(
                 'Balance: ${tx.balanceAfter}',
-                style: TextStyle(color: palette.textSecondary, fontSize: 10),
+                style: TextStyle(
+                  color: palette.textTertiary,
+                  fontSize: 10,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ],
           ),

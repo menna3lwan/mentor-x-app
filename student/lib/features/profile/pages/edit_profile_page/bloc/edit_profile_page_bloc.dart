@@ -14,6 +14,11 @@ final class EditProfilePageNavigateBack
   const EditProfilePageNavigateBack();
 }
 
+final class EditProfilePageSuccess
+    extends EditProfilePagePresentationEvent {
+  const EditProfilePageSuccess();
+}
+
 final class EditProfilePageBloc
     extends Bloc<EditProfilePageEvent, EditProfilePageState>
     with
@@ -24,6 +29,7 @@ final class EditProfilePageBloc
   EditProfilePageBloc({required this.profileRepository})
     : super(EditProfilePageState.initial) {
     on<EditProfilePageLoadEvent>(_onLoad);
+    on<EditProfilePageSubmitRequestEvent>(_onSubmitRequest);
   }
 
   final ProfileRepository profileRepository;
@@ -34,5 +40,45 @@ final class EditProfilePageBloc
   ) async {
     emit(state.copyWith(loadingState: LoadingState.loading));
     emit(state.copyWith(loadingState: LoadingState.loaded));
+  }
+
+  Future<void> _onSubmitRequest(
+    EditProfilePageSubmitRequestEvent event,
+    Emitter<EditProfilePageState> emit,
+  ) async {
+    if (profileRepository is! StudentProfileRepository) {
+      emit(state.copyWith(
+        loadingState: LoadingState.error,
+        errorMessage: const MentorXNullableValue('Invalid repository type'),
+      ));
+      return;
+    }
+
+    final studentRepo = profileRepository as StudentProfileRepository;
+
+    emit(state.copyWith(
+      loadingState: LoadingState.loading,
+      errorMessage: const MentorXNullableValue(null),
+    ));
+
+    try {
+      await studentRepo.submitEditRequest(
+        fieldName: event.fieldName,
+        newValue: event.newValue,
+        reason: event.reason,
+      );
+      emit(state.copyWith(loadingState: LoadingState.loaded));
+      emitPresentation(const EditProfilePageSuccess());
+    } on MentorXException catch (e) {
+      emit(state.copyWith(
+        loadingState: LoadingState.error,
+        errorMessage: MentorXNullableValue(e.message),
+      ));
+    } catch (e) {
+      emit(state.copyWith(
+        loadingState: LoadingState.error,
+        errorMessage: MentorXNullableValue(e.toString()),
+      ));
+    }
   }
 }

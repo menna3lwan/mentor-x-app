@@ -26,28 +26,19 @@ final class MockAssignmentRepository implements AssignmentRepository {
   }
 
   @override
-  Future<List<String>> uploadFiles(List<String> localFilePaths) async {
-    await Future<void>.delayed(delay);
-    return localFilePaths
-        .map(
-          (path) =>
-              'https://storage.example.com/uploads/${path.split('/').last}',
-        )
-        .toList();
-  }
-
-  @override
   Future<AssignmentSubmissionEntity> submitAssignment(
     String assignmentId, {
-    required List<String> fileUrls,
-    String? notes,
+    Map<String, String> answers = const {},
+    List<String> filePaths = const [],
+    String? contentText,
   }) async {
     await Future<void>.delayed(delay);
     return AssignmentSubmissionEntity(
       id: 'sub-1',
       assignmentId: assignmentId,
-      fileUrls: fileUrls,
-      notes: notes,
+      answers: answers,
+      fileUrls: filePaths,
+      contentText: contentText,
       status: SubmissionStatus.submitted,
       submittedAt: DateTime.now(),
     );

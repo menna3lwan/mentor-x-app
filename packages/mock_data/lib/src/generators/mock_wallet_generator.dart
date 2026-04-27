@@ -13,6 +13,7 @@ final class MockWalletGenerator {
       WalletTransactionEntity(
         id: 'wt1',
         transactionType: WalletTransactionType.deposit,
+        status: TransactionStatus.success,
         amount: 500.0,
         balanceAfter: 1240.50,
         description: 'Wallet top-up via Vodafone Cash',
@@ -21,6 +22,7 @@ final class MockWalletGenerator {
       WalletTransactionEntity(
         id: 'wt2',
         transactionType: WalletTransactionType.payment,
+        status: TransactionStatus.success,
         amount: -300.0,
         balanceAfter: 740.50,
         description: 'Course purchase: Advanced Algebra',
@@ -29,6 +31,7 @@ final class MockWalletGenerator {
       WalletTransactionEntity(
         id: 'wt3',
         transactionType: WalletTransactionType.refund,
+        status: TransactionStatus.success,
         amount: 150.0,
         balanceAfter: 1040.50,
         description: 'Refund for cancelled course',
@@ -37,6 +40,7 @@ final class MockWalletGenerator {
       WalletTransactionEntity(
         id: 'wt4',
         transactionType: WalletTransactionType.deposit,
+        status: TransactionStatus.success,
         amount: 200.0,
         balanceAfter: 890.50,
         description: 'Wallet top-up via InstaPay',
@@ -45,6 +49,7 @@ final class MockWalletGenerator {
       WalletTransactionEntity(
         id: 'wt5',
         transactionType: WalletTransactionType.refund,
+        status: TransactionStatus.success,
         amount: 100.0,
         balanceAfter: 690.50,
         description: 'Admin credit: Refund adjustment',

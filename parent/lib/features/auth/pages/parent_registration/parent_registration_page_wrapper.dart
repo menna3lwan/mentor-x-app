@@ -5,8 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:parent/core/core.dart';
 
+import 'package:gap/gap.dart';
 import 'bloc/parent_registration_bloc.dart';
 import 'parent_registration_page.dart';
+
 
 final class ParentRegistrationPageWrapper extends StatelessWidget {
   const ParentRegistrationPageWrapper({super.key});
@@ -103,6 +105,8 @@ class __ParentRegistrationPageContentState
 
   @override
   Widget build(BuildContext context) {
+    final palette = MentorXThemeColorPalette.light;
+
     return BlocPresentationListener<
       ParentRegistrationBloc,
       ParentRegistrationPresentationEvent
@@ -110,9 +114,7 @@ class __ParentRegistrationPageContentState
       listener: (context, event) {
         switch (event) {
           case ParentRegistrationFailurePresentationEvent(:final message):
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(message)),
-            );
+            MentorXUI.showToast(message: message, isError: true);
           case ParentRegistrationSuccessPresentationEvent(:final phone):
             OtpPageRoute(phoneNumber: phone).go(context);
         }
@@ -139,12 +141,13 @@ class __ParentRegistrationPageContentState
                 }
                 bloc.add(const ParentRegistrationBackStepRequested());
               },
-              icon: Icon(Icons.arrow_back, color: context.brandPrimaryColor),
+              icon: Icon(Icons.arrow_back_ios_new_rounded, color: palette.textPrimary, size: 20),
             ),
             title: _titleForStep(state.currentStep),
             currentStep: state.currentStep,
             body: _StepBody(
               state: state,
+              palette: palette,
               lookupController: _lookupController,
               firstNameController: _firstNameController,
               lastNameController: _lastNameController,
@@ -177,13 +180,20 @@ class __ParentRegistrationPageContentState
 
                       bloc.add(const ParentRegistrationSubmitted());
                     },
-              text: state.loadingState.isLoading
+              label: state.loadingState.isLoading
                   ? 'Please wait...'
                   : _primaryButtonLabel(state),
             ),
             secondaryButton: TextButton(
               onPressed: () => const LoginPageRoute().go(context),
-              child: const Text('Already have an account? Login'),
+              child: Text(
+                'Already have an account? Login',
+                style: TextStyle(
+                  color: palette.brandPrimary,
+                  fontWeight: FontWeight.w800,
+                  fontSize: 14,
+                ),
+              ),
             ),
           );
         },
@@ -202,8 +212,8 @@ class __ParentRegistrationPageContentState
 
   String _titleForStep(int step) {
     switch (step) {
-      case 0: return 'Link To Your Child';
-      case 1: return 'Parent Information';
+      case 0: return 'Link Your Child';
+      case 1: return 'Personal Info';
       case 2: return 'Security';
       default: return 'Register';
     }
@@ -211,14 +221,15 @@ class __ParentRegistrationPageContentState
 
   String _primaryButtonLabel(ParentRegistrationState state) {
     if (state.currentStep == 0 && state.foundStudent == null) return 'Find Student';
-    if (state.currentStep == 0 && !state.isStudentConfirmed) return 'Confirm This Is My Child';
-    if (state.currentStep < 2) return 'Next';
-    return 'Submit';
+    if (state.currentStep == 0 && !state.isStudentConfirmed) return 'Confirm Child';
+    if (state.currentStep < 2) return 'Continue';
+    return 'Create Account';
   }
 }
 
 final class _StepBody extends StatelessWidget {
   final ParentRegistrationState state;
+  final MentorXThemeColorPalette palette;
   final TextEditingController lookupController;
   final TextEditingController firstNameController;
   final TextEditingController lastNameController;
@@ -229,6 +240,7 @@ final class _StepBody extends StatelessWidget {
 
   const _StepBody({
     required this.state,
+    required this.palette,
     required this.lookupController,
     required this.firstNameController,
     required this.lastNameController,
@@ -244,118 +256,392 @@ final class _StepBody extends StatelessWidget {
 
     switch (state.currentStep) {
       case 0:
-        return SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SegmentedButton<ParentLookupType>(
-                segments: const [
-                  ButtonSegment(
-                    value: ParentLookupType.phone,
-                    label: Text('Phone Number'),
-                    icon: Icon(Icons.phone_outlined),
-                  ),
-                  ButtonSegment(
-                    value: ParentLookupType.studentCode,
-                    label: Text('Student Code'),
-                    icon: Icon(Icons.badge_outlined),
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.03),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
                   ),
                 ],
-                selected: {state.lookupType},
-                onSelectionChanged: (selection) {
-                  bloc.add(ParentRegistrationLookupTypeChanged(lookupType: selection.first));
-                },
               ),
-              const SizedBox(height: 16),
-              MentorXTextFormField(
-                label: state.lookupType == ParentLookupType.phone ? 'Child Phone Number' : 'Student Code',
-                icon: state.lookupType == ParentLookupType.phone ? Icons.phone : Icons.perm_identity,
-                controller: lookupController,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: _TabButton(
+                      label: 'Phone',
+                      icon: Icons.phone_rounded,
+                      isActive: state.lookupType == ParentLookupType.phone,
+                      onTap: () => bloc.add(const ParentRegistrationLookupTypeChanged(lookupType: ParentLookupType.phone)),
+                    ),
+                  ),
+                  Expanded(
+                    child: _TabButton(
+                      label: 'Student Code',
+                      icon: Icons.badge_rounded,
+                      isActive: state.lookupType == ParentLookupType.studentCode,
+                      onTap: () => bloc.add(const ParentRegistrationLookupTypeChanged(lookupType: ParentLookupType.studentCode)),
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(height: 16),
-              if (state.foundStudent != null)
-                _StudentPreviewCard(
+            ),
+            const Gap(32),
+            MentorXTextFormField(
+              label: state.lookupType == ParentLookupType.phone ? 'Child Phone' : 'Student Code',
+              hintText: state.lookupType == ParentLookupType.phone ? 'Enter registered phone' : 'Enter unique code',
+              icon: state.lookupType == ParentLookupType.phone ? Icons.phone_android_rounded : Icons.numbers_rounded,
+              controller: lookupController,
+              keyboardType: state.lookupType == ParentLookupType.phone ? TextInputType.phone : TextInputType.text,
+            ),
+            const Gap(24),
+            if (state.foundStudent != null)
+              FadeInScale(
+                child: _StudentPreviewCard(
                   student: state.foundStudent!,
                   isConfirmed: state.isStudentConfirmed,
+                  palette: palette,
                 ),
-            ],
-          ),
+              ),
+          ],
         );
       case 1:
-        return SingleChildScrollView(
-          child: Column(
-            children: [
-              MentorXTextFormField(label: 'First Name', icon: Icons.person_outline, controller: firstNameController),
-              const SizedBox(height: 12),
-              MentorXTextFormField(label: 'Last Name', icon: Icons.person_outline, controller: lastNameController),
-              const SizedBox(height: 12),
-              MentorXTextFormField(label: 'Phone Number', icon: Icons.phone_outlined, controller: phoneController),
-              const SizedBox(height: 12),
-              MentorXTextFormField(label: 'Email (Optional)', icon: Icons.email_outlined, controller: emailController),
-              const SizedBox(height: 12),
-              DropdownButtonFormField<String>(
-                value: state.relationship.isEmpty ? null : state.relationship,
-                decoration: const InputDecoration(labelText: 'Relationship', border: OutlineInputBorder()),
-                items: const [
-                  DropdownMenuItem(value: 'father', child: Text('Father')),
-                  DropdownMenuItem(value: 'mother', child: Text('Mother')),
-                  DropdownMenuItem(value: 'guardian', child: Text('Guardian')),
-                  DropdownMenuItem(value: 'other', child: Text('Other')),
-                ],
-                onChanged: (value) {
-                  if (value != null) bloc.add(ParentRegistrationRelationshipChanged(value: value));
-                },
-              ),
-            ],
-          ),
+        return Column(
+          children: [
+            MentorXTextFormField(
+              label: 'First Name', 
+              hintText: 'e.g. John', 
+              icon: Icons.person_rounded, 
+              controller: firstNameController,
+            ),
+            const Gap(20),
+            MentorXTextFormField(
+              label: 'Last Name', 
+              hintText: 'e.g. Doe', 
+              icon: Icons.person_rounded, 
+              controller: lastNameController,
+            ),
+            const Gap(20),
+            MentorXTextFormField(
+              label: 'Phone Number', 
+              hintText: 'Your phone number', 
+              icon: Icons.phone_android_rounded, 
+              controller: phoneController, 
+              keyboardType: TextInputType.phone,
+            ),
+            const Gap(20),
+            MentorXTextFormField(
+              label: 'Email', 
+              hintText: 'Optional email', 
+              icon: Icons.email_rounded, 
+              controller: emailController, 
+              keyboardType: TextInputType.emailAddress,
+            ),
+            const Gap(20),
+            _RelationshipDropdown(state: state, bloc: bloc, palette: palette),
+          ],
         );
       case 2:
       default:
-        return SingleChildScrollView(
-          child: Column(
-            children: [
-              MentorXTextFormField(label: 'Password', icon: Icons.lock_outline, isPassword: true, controller: passwordController),
-              const SizedBox(height: 12),
-              MentorXTextFormField(label: 'Confirm Password', icon: Icons.lock_reset_outlined, isPassword: true, controller: confirmPasswordController),
-            ],
-          ),
+        return Column(
+          children: [
+            Text(
+              'Set a secure password to protect your account access.',
+              style: TextStyle(
+                fontSize: 14,
+                color: palette.textSecondary,
+                height: 1.5,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const Gap(32),
+            MentorXTextFormField(
+              label: 'Password', 
+              hintText: '••••••••', 
+              icon: Icons.lock_rounded, 
+              isPassword: true, 
+              controller: passwordController,
+            ),
+            const Gap(20),
+            MentorXTextFormField(
+              label: 'Confirm Password', 
+              hintText: '••••••••', 
+              icon: Icons.lock_reset_rounded, 
+              isPassword: true, 
+              controller: confirmPasswordController,
+            ),
+          ],
         );
     }
+  }
+}
+
+class _RelationshipDropdown extends StatelessWidget {
+  const _RelationshipDropdown({
+    required this.state,
+    required this.bloc,
+    required this.palette,
+  });
+
+  final ParentRegistrationState state;
+  final ParentRegistrationBloc bloc;
+  final MentorXThemeColorPalette palette;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: palette.borderPrimary.withValues(alpha: 0.5)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.02),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButtonFormField<String>(
+          value: state.relationship.isEmpty ? null : state.relationship,
+          style: TextStyle(
+            color: palette.textPrimary,
+            fontSize: 15,
+            fontWeight: FontWeight.w600,
+          ),
+          decoration: InputDecoration(
+            labelText: 'Relationship to Child',
+            labelStyle: TextStyle(
+              color: palette.textTertiary,
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+            ),
+            border: InputBorder.none,
+            prefixIcon: Icon(Icons.people_alt_rounded, color: palette.brandPrimary, size: 20),
+          ),
+          items: const [
+            DropdownMenuItem(value: 'father', child: Text('Father')),
+            DropdownMenuItem(value: 'mother', child: Text('Mother')),
+            DropdownMenuItem(value: 'guardian', child: Text('Guardian')),
+            DropdownMenuItem(value: 'other', child: Text('Other')),
+          ],
+          onChanged: (value) {
+            if (value != null) bloc.add(ParentRegistrationRelationshipChanged(value: value));
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class _TabButton extends StatelessWidget {
+  final String label;
+  final IconData icon;
+  final bool isActive;
+  final VoidCallback onTap;
+
+  const _TabButton({required this.label, required this.icon, required this.isActive, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = MentorXThemeColorPalette.light;
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        padding: const EdgeInsets.symmetric(vertical: 14),
+        decoration: BoxDecoration(
+          color: isActive ? palette.brandPrimary : Colors.transparent,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: isActive ? [
+            BoxShadow(
+              color: palette.brandPrimary.withValues(alpha: 0.2),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            ),
+          ] : null,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              icon, 
+              color: isActive ? Colors.white : palette.textTertiary, 
+              size: 18,
+            ),
+            const Gap(10),
+            Text(
+              label,
+              style: TextStyle(
+                color: isActive ? Colors.white : palette.textTertiary,
+                fontWeight: FontWeight.w800,
+                fontSize: 14,
+                letterSpacing: 0.2,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 
 final class _StudentPreviewCard extends StatelessWidget {
   final ParentStudentLookupEntity student;
   final bool isConfirmed;
+  final MentorXThemeColorPalette palette;
 
-  const _StudentPreviewCard({required this.student, required this.isConfirmed});
+  const _StudentPreviewCard({required this.student, required this.isConfirmed, required this.palette});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: context.backgroundSecondaryColor,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: context.brandPrimaryColor.withOpacity(0.2)),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(28),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(student.maskedName, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: context.brandPrimaryColor)),
-          const SizedBox(height: 4),
-          Text('Grade: ${student.gradeName}'),
-          Text('Center: ${student.centerName}'),
-          const SizedBox(height: 8),
           Row(
             children: [
-              Icon(isConfirmed ? Icons.verified : Icons.pending, color: isConfirmed ? context.statusSuccessColor : context.statusWarningColor),
-              const SizedBox(width: 8),
-              Text(isConfirmed ? 'Child confirmed' : 'Please confirm your child'),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: palette.brandPrimary.withValues(alpha: 0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(Icons.person_rounded, color: palette.brandPrimary, size: 28),
+              ),
+              const Gap(16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      student.maskedName,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w900, 
+                        fontSize: 18, 
+                        color: palette.textPrimary,
+                        letterSpacing: -0.5,
+                      ),
+                    ),
+                    const Gap(4),
+                    Text(
+                      '${student.gradeName} • ${student.centerName}',
+                      style: TextStyle(
+                        fontSize: 13, 
+                        color: palette.textSecondary,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
+          const Gap(24),
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 400),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              color: isConfirmed 
+                  ? palette.statusSuccess.withValues(alpha: 0.1) 
+                  : palette.statusWarning.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: isConfirmed 
+                    ? palette.statusSuccess.withValues(alpha: 0.2) 
+                    : palette.statusWarning.withValues(alpha: 0.2),
+              ),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  isConfirmed ? Icons.check_circle_rounded : Icons.info_outline_rounded,
+                  color: isConfirmed ? palette.statusSuccess : palette.statusWarning,
+                  size: 20,
+                ),
+                const Gap(12),
+                Expanded(
+                  child: Text(
+                    isConfirmed ? 'Child confirmed successfully' : 'Confirm if this is your child',
+                    style: TextStyle(
+                      color: isConfirmed ? palette.statusSuccess : palette.statusWarning,
+                      fontWeight: FontWeight.w800,
+                      fontSize: 13,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
+      ),
+    );
+  }
+}
+
+class FadeInScale extends StatefulWidget {
+  final Widget child;
+  const FadeInScale({super.key, required this.child});
+
+  @override
+  State<FadeInScale> createState() => _FadeInScaleState();
+}
+
+class _FadeInScaleState extends State<FadeInScale> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _fadeAnimation;
+  late Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    );
+    _fadeAnimation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
+    _scaleAnimation = Tween<double>(begin: 0.9, end: 1.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeOutBack),
+    );
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeTransition(
+      opacity: _fadeAnimation,
+      child: ScaleTransition(
+        scale: _scaleAnimation,
+        child: widget.child,
       ),
     );
   }

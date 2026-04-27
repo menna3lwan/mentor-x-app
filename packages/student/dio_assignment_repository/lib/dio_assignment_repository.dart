@@ -47,42 +47,25 @@ final class DioAssignmentRepository
   }
 
   @override
-  Future<List<String>> uploadFiles(List<String> localFilePaths) async {
-    try {
-      final response = await httpClient.postMultipart(
-        '/api/uploads/assignment-files',
-        files: {'files': localFilePaths},
-      );
-
-      final list = asList(asMap(response.data)['content'] ??
-          asMap(response.data)['data'] ??
-          response.data);
-      return list.map((e) => asMap(e)['url'].toString()).toList();
-    } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
-        e,
-        defaultCode: AssignmentRepositoryExceptionCode.failedToUploadFiles,
-      );
-    } catch (e) {
-      throwException(
-        AssignmentRepositoryExceptionCode.failedToUploadFiles,
-        message: e.toString(),
-      );
-    }
-  }
-
-  @override
   Future<AssignmentSubmissionEntity> submitAssignment(
     String assignmentId, {
-    required List<String> fileUrls,
-    String? notes,
+    Map<String, String> answers = const {},
+    List<String> filePaths = const [],
+    String? contentText,
   }) async {
     try {
       final response = await httpClient.post(
         '/api/assignments/$assignmentId/submit',
         data: {
-          'file_urls': fileUrls,
-          if (notes != null) 'student_notes': notes,
+          'assignmentId': assignmentId,
+          'answers': answers.entries
+              .map((e) => {
+                    'questionId': e.key,
+                    'selectedAnswer': e.value,
+                  })
+              .toList(),
+          'fileUrls': filePaths,
+          'contentText': contentText,
         },
       );
 

@@ -26,7 +26,7 @@ void main() {
         };
 
         when(() => httpClient.get('/api/assignments/as1')).thenAnswer((_) async => HttpClientResponse(
-          data: mockData,
+          data: {'data': mockData},
           statusCode: 200,
         ));
 
@@ -46,7 +46,7 @@ void main() {
         };
 
         when(() => httpClient.get('/api/assignment-attempts/student/me/assignment/as1')).thenAnswer((_) async => HttpClientResponse(
-          data: mockData,
+          data: {'data': mockData},
           statusCode: 200,
         ));
 
@@ -60,17 +60,18 @@ void main() {
         final mockData = {
           'id': 'sub2',
           'status': 'submitted',
+          'submittedAt': DateTime.now().toIso8601String(),
         };
 
         when(() => httpClient.post(
           '/api/assignments/as1/submit',
           data: any(named: 'data'),
         )).thenAnswer((_) async => HttpClientResponse(
-          data: mockData,
+          data: {'data': mockData},
           statusCode: 200,
         ));
 
-        final result = await repository.submitAssignment('as1', fileUrls: ['url1']);
+        final result = await repository.submitAssignment('as1', answers: {'q1': 'answer'});
         expect(result.id, 'sub2');
         expect(result.status, SubmissionStatus.submitted);
       });

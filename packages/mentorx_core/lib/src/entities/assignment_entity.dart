@@ -6,12 +6,12 @@ class AssignmentEntity extends Equatable {
   final String description;
   final DateTime dueDate;
   final int totalMarks;
-  final bool allowLateSubmission;
-  final int? latePenaltyPercent;
-  final List<String> attachmentUrls;
-  final List<String> allowedFileTypes;
-  final int maxFileSizeMb;
-  final int maxFiles;
+  final List<QuizQuestionEntity> questions;
+  final int? questionsCount;
+  final String? instructions;
+  final String? fileUrl;
+  final String? fileName;
+
 
   const AssignmentEntity({
     required this.id,
@@ -19,15 +19,17 @@ class AssignmentEntity extends Equatable {
     required this.description,
     required this.dueDate,
     required this.totalMarks,
-    this.allowLateSubmission = false,
-    this.latePenaltyPercent,
-    this.attachmentUrls = const [],
-    this.allowedFileTypes = const [],
-    this.maxFileSizeMb = 10,
-    this.maxFiles = 3,
+    this.questions = const [],
+    this.questionsCount,
+    this.instructions,
+    this.fileUrl,
+    this.fileName,
   });
 
   bool get isOverdue => DateTime.now().isAfter(dueDate);
+  DateTime get deadlineAt => dueDate;
+  int get maxScore => totalMarks;
+
 
   static final placeholder = AssignmentEntity(
     id: '',
@@ -44,12 +46,11 @@ class AssignmentEntity extends Equatable {
         description,
         dueDate,
         totalMarks,
-        allowLateSubmission,
-        latePenaltyPercent,
-        attachmentUrls,
-        allowedFileTypes,
-        maxFileSizeMb,
-        maxFiles,
+        questions,
+        questionsCount,
+        instructions,
+        fileUrl,
+        fileName,
       ];
 
   AssignmentEntity copyWith({
@@ -58,12 +59,11 @@ class AssignmentEntity extends Equatable {
     String? description,
     DateTime? dueDate,
     int? totalMarks,
-    bool? allowLateSubmission,
-    int? latePenaltyPercent,
-    List<String>? attachmentUrls,
-    List<String>? allowedFileTypes,
-    int? maxFileSizeMb,
-    int? maxFiles,
+    List<QuizQuestionEntity>? questions,
+    int? questionsCount,
+    String? instructions,
+    String? fileUrl,
+    String? fileName,
   }) {
     return AssignmentEntity(
       id: id ?? this.id,
@@ -71,12 +71,11 @@ class AssignmentEntity extends Equatable {
       description: description ?? this.description,
       dueDate: dueDate ?? this.dueDate,
       totalMarks: totalMarks ?? this.totalMarks,
-      allowLateSubmission: allowLateSubmission ?? this.allowLateSubmission,
-      latePenaltyPercent: latePenaltyPercent ?? this.latePenaltyPercent,
-      attachmentUrls: attachmentUrls ?? this.attachmentUrls,
-      allowedFileTypes: allowedFileTypes ?? this.allowedFileTypes,
-      maxFileSizeMb: maxFileSizeMb ?? this.maxFileSizeMb,
-      maxFiles: maxFiles ?? this.maxFiles,
+      questions: questions ?? this.questions,
+      questionsCount: questionsCount ?? this.questionsCount,
+      instructions: instructions ?? this.instructions,
+      fileUrl: fileUrl ?? this.fileUrl,
+      fileName: fileName ?? this.fileName,
     );
   }
 }

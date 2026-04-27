@@ -10,3 +10,18 @@ sealed class EditProfilePageEvent extends Equatable {
 final class EditProfilePageLoadEvent extends EditProfilePageEvent {
   const EditProfilePageLoadEvent();
 }
+
+final class EditProfilePageSubmitRequestEvent extends EditProfilePageEvent {
+  final String fieldName;
+  final String newValue;
+  final String reason;
+
+  const EditProfilePageSubmitRequestEvent({
+    required this.fieldName,
+    required this.newValue,
+    required this.reason,
+  });
+
+  @override
+  List<Object?> get props => [fieldName, newValue, reason];
+}

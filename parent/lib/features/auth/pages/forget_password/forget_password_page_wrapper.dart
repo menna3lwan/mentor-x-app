@@ -5,6 +5,7 @@ import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:parent/core/core.dart';
 import 'package:parent/features/features.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
+import 'package:gap/gap.dart';
 
 final class ForgetPasswordPageWrapper extends StatefulWidget {
   const ForgetPasswordPageWrapper({super.key});
@@ -32,6 +33,8 @@ class _ForgetPasswordPageWrapperState extends State<ForgetPasswordPageWrapper> {
 
   @override
   Widget build(BuildContext context) {
+    final palette = MentorXThemeColorPalette.light;
+
     return BlocPresentationListener<
       ForgetPasswordBloc,
       ForgetPasswordPresentationEvent
@@ -39,13 +42,9 @@ class _ForgetPasswordPageWrapperState extends State<ForgetPasswordPageWrapper> {
       listener: (context, event) {
         switch (event) {
           case ForgetPasswordSuccessPresentationEvent(:final phone):
-            _openResetPasswordDialog(phone);
+            _openResetPasswordBottomSheet(phone, palette);
           case ForgetPasswordFailurePresentationEvent(:final exception):
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(exception.message ?? 'Failed to send code'),
-              ),
-            );
+            MentorXUI.showToast(message: exception.message ?? 'Failed to send code', isError: true);
         }
       },
       child: Builder(
@@ -56,25 +55,19 @@ class _ForgetPasswordPageWrapperState extends State<ForgetPasswordPageWrapper> {
           return Form(
             key: _formKey,
             child: ForgetPasswordPage(
-              title: Text(
-                'Forgot Password?',
-                style: TextStyle(
-                  color: context.brandPrimaryColor,
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              subtitle: Text(
-                "Don't worry! Enter your phone number and we'll send you a verification code.",
-                style: TextStyle(color: context.brandPrimaryColor, fontSize: 14),
-              ),
+              title: 'Forgot Password?',
+              subtitle: "Don't worry! Enter your registered phone number and we'll send you a verification code to reset your account safely.",
               phoneField: MentorXTextFormField(
-                label: 'Phone',
-                icon: Icons.phone_outlined,
+                label: 'Phone Number',
+                hintText: 'Enter your phone number',
+                icon: Icons.phone_android_rounded,
                 controller: _phoneController,
                 keyboardType: TextInputType.phone,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                validator: Validator.validatePhoneNumber,
+                validator: (value) {
+                  if (value == null || value.isEmpty) return 'Phone number is required';
+                  return null;
+                },
               ),
               sendCodeButton: MentorXButton(
                 onPressed: isLoading
@@ -88,13 +81,19 @@ class _ForgetPasswordPageWrapperState extends State<ForgetPasswordPageWrapper> {
                           );
                         }
                       },
-                text: isLoading ? 'Sending...' : 'Send Code',
+                label: 'Send Verification Code',
+                loading: isLoading,
               ),
-              backToLoginButton: MentorXClickableText(
-                alignment: Alignment.centerLeft,
-                text: 'Back To Login',
-                color: context.brandPrimaryColor,
+              backToLoginButton: TextButton(
                 onPressed: () => const LoginPageRoute().go(context),
+                child: Text(
+                  'Back to Login',
+                  style: TextStyle(
+                    color: palette.brandPrimary,
+                    fontWeight: FontWeight.w800,
+                    fontSize: 14,
+                  ),
+                ),
               ),
             ),
           );
@@ -103,157 +102,130 @@ class _ForgetPasswordPageWrapperState extends State<ForgetPasswordPageWrapper> {
     );
   }
 
-  Future<void> _openResetPasswordDialog(String phone) async {
+  Future<void> _openResetPasswordBottomSheet(String phone, MentorXThemeColorPalette palette) async {
     final otpController = TextEditingController();
     final newPasswordController = TextEditingController();
     final confirmPasswordController = TextEditingController();
     bool isSubmitting = false;
 
-    try {
-      if (!mounted) return;
+    final result = await showModalBottomSheet<bool>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return Container(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+              ),
+              decoration: BoxDecoration(
+                color: palette.backgroundPrimary,
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(32.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 48,
+                      height: 5,
+                      decoration: BoxDecoration(
+                        color: palette.textTertiary.withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    const Gap(32),
+                    Text(
+                      'Reset Your Password',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w900,
+                        color: palette.textPrimary,
+                        letterSpacing: -0.5,
+                      ),
+                    ),
+                    const Gap(12),
+                    Text(
+                      'Enter the 6-digit code sent to\n$phone',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 14, 
+                        color: palette.textSecondary,
+                        fontWeight: FontWeight.w500,
+                        height: 1.5,
+                      ),
+                    ),
+                    const Gap(40),
+                    MentorXTextFormField(
+                      label: 'OTP Code',
+                      hintText: '000000',
+                      icon: Icons.verified_rounded,
+                      controller: otpController,
+                      keyboardType: TextInputType.number,
+                      maxLength: 6,
+                    ),
+                    const Gap(20),
+                    MentorXTextFormField(
+                      label: 'New Password',
+                      hintText: '••••••••',
+                      icon: Icons.lock_rounded,
+                      controller: newPasswordController,
+                      isPassword: true,
+                    ),
+                    const Gap(20),
+                    MentorXTextFormField(
+                      label: 'Confirm New Password',
+                      hintText: '••••••••',
+                      icon: Icons.lock_reset_rounded,
+                      controller: confirmPasswordController,
+                      isPassword: true,
+                    ),
+                    const Gap(40),
+                    MentorXButton(
+                      onPressed: isSubmitting ? null : () async {
+                        final otp = otpController.text.trim();
+                        final newPassword = newPasswordController.text;
+                        final confirmPassword = confirmPasswordController.text;
 
-      final result = await showDialog<bool>(
-        context: context,
-        barrierDismissible: false,
-        builder: (dialogContext) {
-          return StatefulBuilder(
-            builder: (context, setState) {
-              return AlertDialog(
-                title: const Text('Reset Password'),
-                content: SingleChildScrollView(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      MentorXTextFormField(
-                        label: 'OTP Code',
-                        icon: Icons.verified_outlined,
-                        controller: otpController,
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                      MentorXTextFormField(
-                        label: 'New Password',
-                        icon: Icons.lock_outline,
-                        controller: newPasswordController,
-                        isPassword: true,
-                      ),
-                      const SizedBox(height: 12),
-                      MentorXTextFormField(
-                        label: 'Confirm Password',
-                        icon: Icons.lock_reset_outlined,
-                        controller: confirmPasswordController,
-                        isPassword: true,
-                      ),
-                    ],
-                  ),
+                        if (otp.length < 4 || newPassword.length < 8 || newPassword != confirmPassword) {
+                          MentorXUI.showToast(message: 'Please check your inputs and try again', isError: true);
+                          return;
+                        }
+
+                        setModalState(() => isSubmitting = true);
+                        try {
+                          await this.context.read<AuthenticationRepository>().resetPassword(
+                            phone: phone,
+                            otp: otp,
+                            newPassword: newPassword,
+                          );
+                          if (!context.mounted) return;
+                          Navigator.pop(context, true);
+                        } catch (e) {
+                          MentorXUI.showToast(message: e.toString(), isError: true);
+                        } finally {
+                          setModalState(() => isSubmitting = false);
+                        }
+                      },
+                      label: 'Update Password Now',
+                      loading: isSubmitting,
+                    ),
+                    const Gap(16),
+                  ],
                 ),
-                actions: [
-                  TextButton(
-                    onPressed: isSubmitting
-                        ? null
-                        : () {
-                            Navigator.of(dialogContext).pop(false);
-                          },
-                    child: const Text('Cancel'),
-                  ),
-                  TextButton(
-                    onPressed: isSubmitting
-                        ? null
-                        : () async {
-                            final otp = otpController.text.trim();
-                            final newPassword = newPasswordController.text;
-                            final confirmPassword =
-                                confirmPasswordController.text;
-
-                            if (otp.length < 4) {
-                              if (!context.mounted) return;
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                    'Please enter a valid OTP code.',
-                                  ),
-                                ),
-                              );
-                              return;
-                            }
-
-                            if (newPassword.length < 8) {
-                              if (!context.mounted) return;
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                    'Password must be at least 8 characters.',
-                                  ),
-                                ),
-                              );
-                              return;
-                            }
-
-                            if (newPassword != confirmPassword) {
-                              if (!context.mounted) return;
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Passwords do not match.'),
-                                ),
-                              );
-                              return;
-                            }
-
-                            setState(() => isSubmitting = true);
-                            try {
-                              await this.context
-                                  .read<AuthenticationRepository>()
-                                  .resetPassword(
-                                    phone: phone,
-                                    otp: otp,
-                                    newPassword: newPassword,
-                                  );
-                              if (!dialogContext.mounted) return;
-                              Navigator.of(dialogContext).pop(true);
-                            } on AuthenticationException catch (e) {
-                              if (!context.mounted) return;
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    e.message ?? 'Failed to reset password.',
-                                  ),
-                                ),
-                              );
-                            } finally {
-                              if (context.mounted) {
-                                setState(() => isSubmitting = false);
-                              }
-                            }
-                          },
-                    child: isSubmitting
-                        ? const SizedBox(
-                            width: 16,
-                            height: 16,
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          )
-                        : const Text('Reset Password'),
-                  ),
-                ],
-              );
-            },
-          );
-        },
-      );
-
-      if (!mounted) return;
-      if (result == true) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Password reset successfully.')),
+              ),
+            );
+          },
         );
-        const LoginPageRoute().go(context);
-      }
-    } finally {
-      otpController.dispose();
-      newPasswordController.dispose();
-      confirmPasswordController.dispose();
+      },
+    );
+
+    if (result == true) {
+      MentorXUI.showToast(message: 'Password reset successfully');
+      if (!mounted) return;
+      const LoginPageRoute().go(context);
     }
   }
 }

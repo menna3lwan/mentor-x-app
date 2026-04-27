@@ -1,0 +1,21 @@
+{
+    "name": "EduCore - Pro Environment",
+    "values": [
+        {
+            "key": "base_url",
+            "value": "http://98.94.45.209:8080",
+            "enabled": true
+        },
+        {
+            "key": "bearer_token",
+            "value": "",
+            "enabled": true
+        },
+        {
+            "key": "X-Device-Id",
+            "value": "postman-pro-client",
+            "enabled": true
+        }
+    ],
+    "_postman_variable_scope": "environment"
+}

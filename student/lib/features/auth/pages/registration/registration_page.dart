@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
+import 'package:animate_do/animate_do.dart';
+import 'package:gap/gap.dart';
 import 'steps/start_step.dart';
 import 'steps/otp_step.dart';
 import 'steps/personal_info_step.dart';
@@ -28,9 +30,9 @@ class RegistrationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final steps = [
-      'Start',
-      'OTP',
-      'Personal',
+      'Welcome',
+      'Verify',
+      'Profile',
       'Academic',
       'Location',
       'Security',
@@ -40,23 +42,47 @@ class RegistrationPage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: palette.backgroundPrimary,
-      appBar: AppBar(
-        title: Text(steps[currentStep]),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: onBack,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(70),
+        child: FadeInDown(
+          duration: const Duration(milliseconds: 500),
+          child: AppBar(
+            backgroundColor: palette.backgroundPrimary,
+            elevation: 0,
+            title: Text(
+              steps[currentStep],
+              style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 20, letterSpacing: -0.5),
+            ),
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back_ios_new_rounded, color: palette.textPrimary, size: 20),
+              onPressed: onBack,
+            ),
+            centerTitle: true,
+          ),
         ),
       ),
       body: Column(
         children: [
-          _buildStepper(context, steps),
+          FadeInDown(
+            duration: const Duration(milliseconds: 500),
+            delay: const Duration(milliseconds: 100),
+            child: _buildStepper(context, steps),
+          ),
           Expanded(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.all(20),
-              child: _buildCurrentStep(context),
+              physics: const BouncingScrollPhysics(),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+              child: FadeInRight(
+                key: ValueKey(currentStep),
+                duration: const Duration(milliseconds: 500),
+                child: _buildCurrentStep(context),
+              ),
             ),
           ),
-          _buildBottomActions(context),
+          FadeInUp(
+            duration: const Duration(milliseconds: 500),
+            child: _buildBottomActions(context),
+          ),
         ],
       ),
     );
@@ -65,8 +91,7 @@ class RegistrationPage extends StatelessWidget {
   Widget _buildStepper(BuildContext context, List<String> steps) {
     final palette = MentorXThemeColorPalette.light;
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
-      color: palette.backgroundSecondary,
+      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
       child: Row(
         children: List.generate(steps.length, (index) {
           final isCompleted = index < currentStep;
@@ -77,12 +102,19 @@ class RegistrationPage extends StatelessWidget {
                 _buildStepCircle(context, index + 1, isActive, isCompleted),
                 if (index < steps.length - 1)
                   Expanded(
-                    child: Container(
-                      height: 2,
-                      margin: const EdgeInsets.symmetric(horizontal: 8),
-                      color: isCompleted
-                          ? palette.brandPrimary
-                          : palette.textTertiary,
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 500),
+                      height: 4,
+                      margin: const EdgeInsets.symmetric(horizontal: 6),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(2),
+                        color: isCompleted
+                            ? palette.brandPrimary
+                            : palette.brandPrimary.withValues(alpha: 0.1),
+                        boxShadow: isCompleted 
+                          ? [BoxShadow(color: palette.brandPrimary.withValues(alpha: 0.2), blurRadius: 4)]
+                          : null,
+                      ),
                     ),
                   ),
               ],
@@ -100,30 +132,41 @@ class RegistrationPage extends StatelessWidget {
     bool isCompleted,
   ) {
     final palette = MentorXThemeColorPalette.light;
-    return Container(
-      width: 24,
-      height: 24,
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      width: isActive ? 36 : 32,
+      height: isActive ? 36 : 32,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: isCompleted
             ? palette.brandPrimary
             : isActive
-            ? palette.brandPrimary.withValues(alpha: 0.1)
-            : palette.textTertiary,
+                ? palette.brandPrimary.withValues(alpha: 0.15)
+                : palette.backgroundSecondary,
         border: isActive
-            ? Border.all(color: palette.brandPrimary, width: 2)
+            ? Border.all(color: palette.brandPrimary, width: 3)
+            : isCompleted
+                ? null
+                : Border.all(color: palette.textTertiary.withValues(alpha: 0.3), width: 1.5),
+        boxShadow: isActive
+            ? [
+                BoxShadow(
+                  color: palette.brandPrimary.withValues(alpha: 0.3),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                )
+              ]
             : null,
       ),
       child: Center(
         child: isCompleted
-            ? Icon(Icons.check, size: 14, color: palette.textForeground)
+            ? Icon(Icons.check_rounded, size: 20, color: palette.textForeground)
             : Text(
                 step.toString(),
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: isActive
-                      ? palette.brandPrimary
-                      : palette.textSecondary,
-                  fontWeight: FontWeight.bold,
+                style: TextStyle(
+                  fontSize: isActive ? 16 : 14,
+                  color: isActive ? palette.brandPrimary : palette.textSecondary,
+                  fontWeight: FontWeight.w900,
                 ),
               ),
       ),
@@ -152,38 +195,57 @@ class RegistrationPage extends StatelessWidget {
   Widget _buildBottomActions(BuildContext context) {
     final palette = MentorXThemeColorPalette.light;
     return Container(
-      padding: const EdgeInsets.all(20),
-      color: palette.backgroundSecondary,
-      child: SizedBox(
-        width: double.infinity,
-        child: Column(
-          children: [
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: isLoading
-                    ? null
-                    : (currentStep == 5 ? onSubmit : onNext),
-                child: isLoading
-                    ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : Text(
-                        currentStep == 5
-                            ? 'Complete Registration'
-                            : (currentStep == 0 ? 'Verify & Continue' : 'Next Step'),
-                      ),
-              ),
+      padding: EdgeInsets.only(
+        left: 24,
+        right: 24,
+        top: 24,
+        bottom: MediaQuery.of(context).padding.bottom + 24,
+      ),
+      decoration: BoxDecoration(
+        color: palette.backgroundPrimary,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.06),
+            blurRadius: 24,
+            offset: const Offset(0, -12),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          MentorXButton(
+            onPressed: isLoading ? null : (currentStep == 5 ? onSubmit : onNext),
+            label: currentStep == 5
+                ? 'Complete Registration'
+                : (currentStep == 0 ? 'Verify & Continue' : 'Continue'),
+            loading: isLoading,
+          ),
+          if (currentStep == 0) ...[
+            const Gap(16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Already have an account?',
+                  style: TextStyle(color: palette.textSecondary, fontWeight: FontWeight.w600),
+                ),
+                TextButton(
+                  onPressed: isLoading ? null : onLogin,
+                  style: TextButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 8)),
+                  child: Text(
+                    'Sign In',
+                    style: TextStyle(
+                      color: palette.brandPrimary,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                ),
+              ],
             ),
-            if (currentStep == 0)
-              TextButton(
-                onPressed: isLoading ? null : onLogin,
-                child: const Text('Already have an account? Login'),
-              ),
           ],
-        ),
+        ],
       ),
     );
   }

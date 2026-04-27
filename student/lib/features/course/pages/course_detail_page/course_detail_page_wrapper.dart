@@ -72,11 +72,26 @@ final class _CourseDetailPageWrapperState
   }
 
   void _handleItemTap(BuildContext context, SessionItemEntity item) {
+    final state = context.read<CourseDetailPageBloc>().state;
+    final enrollment = state.enrollment;
+
     switch (item.itemType) {
       case SessionItemType.video:
-        VideoPlayerPageRoute(itemId: item.id, title: item.title).push(context);
+        VideoPlayerPageRoute(
+          itemId: item.id,
+          title: item.title,
+          enrollmentId: enrollment?.id,
+          completedLessons: enrollment?.completedLessons ?? 0,
+          totalLessons: enrollment?.totalLessons ?? 0,
+        ).push(context);
       case SessionItemType.document:
-        PdfViewerPageRoute(itemId: item.id, title: item.title).push(context);
+        PdfViewerPageRoute(
+          itemId: item.id,
+          title: item.title,
+          enrollmentId: enrollment?.id,
+          completedLessons: enrollment?.completedLessons ?? 0,
+          totalLessons: enrollment?.totalLessons ?? 0,
+        ).push(context);
       case SessionItemType.link:
         if (item.contentUrl != null) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -84,7 +99,10 @@ final class _CourseDetailPageWrapperState
           );
         }
       case SessionItemType.quiz:
+        QuizTakingPageRoute(quizId: item.id).push(context);
+        break;
       case SessionItemType.assignment:
+        AssignmentSubmitPageRoute(assignmentId: item.id).push(context);
         break;
     }
   }

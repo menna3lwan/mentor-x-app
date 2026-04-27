@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
+import 'package:animate_do/animate_do.dart';
 
 import '../../../../core/core.dart';
 import 'bloc/home_page_bloc.dart';
@@ -48,10 +49,13 @@ final class _HomePageWrapperState extends State<HomePageWrapper> {
             onRefresh: () async {
               bloc.add(const HomePageRefreshedEvent());
             },
-            appBar: HomeHeader(
-              studentName: state.studentName,
-              greetingText: greeting,
-              unreadCount: state.unreadCountSection.data ?? 0,
+            appBar: FadeInDown(
+              duration: const Duration(milliseconds: 600),
+              child: HomeHeader(
+                studentName: state.studentName,
+                greetingText: greeting,
+                unreadCount: state.unreadCountSection.data ?? 0,
+              ),
             ),
             content: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -66,114 +70,157 @@ final class _HomePageWrapperState extends State<HomePageWrapper> {
                       style: TextStyle(color: palette.textSecondary),
                     ),
                   ),
-                if (state.walletSection.isFailure &&
-                    state.walletSection.data == null)
-                  InlineSectionError(
-                    onRetry: () => bloc.add(
-                      const HomePageRetrySectionEvent(HomeSection.wallet),
-                    ),
-                  )
-                else
-                  WalletQuickViewCard(
-                    walletSummary: state.walletSection.data,
-                    isLoading:
-                        isInitialLoading || state.walletSection.isLoading,
-                  ),
+                FadeInUp(
+                  duration: const Duration(milliseconds: 500),
+                  child: state.walletSection.isFailure &&
+                          state.walletSection.data == null
+                      ? InlineSectionError(
+                          onRetry: () => bloc.add(
+                            const HomePageRetrySectionEvent(HomeSection.wallet),
+                          ),
+                        )
+                      : WalletQuickViewCard(
+                          walletSummary: state.walletSection.data,
+                          isLoading:
+                              isInitialLoading || state.walletSection.isLoading,
+                        ),
+                ),
                 const Gap(16),
-                if (state.bannersSection.isFailure &&
-                    state.bannersSection.data == null)
-                  InlineSectionError(
-                    onRetry: () => bloc.add(
-                      const HomePageRetrySectionEvent(HomeSection.banners),
-                    ),
-                  )
-                else
-                  BannersCarousel(
-                    banners: state.bannersSection.data ?? const [],
-                    isLoading:
-                        isInitialLoading || state.bannersSection.isLoading,
-                    onTapBanner: (bannerId) =>
-                        bloc.add(HomePageBannerClickedEvent(bannerId)),
-                  ),
-                const Gap(20),
-                SectionHeader(
-                  title: context.t.home.dashboard.continueLearning,
-                  onSeeAll: () => const MyCoursesPageRoute().push(context),
+                FadeInUp(
+                  duration: const Duration(milliseconds: 500),
+                  delay: const Duration(milliseconds: 100),
+                  child: state.bannersSection.isFailure &&
+                          state.bannersSection.data == null
+                      ? InlineSectionError(
+                          onRetry: () => bloc.add(
+                            const HomePageRetrySectionEvent(HomeSection.banners),
+                          ),
+                        )
+                      : BannersCarousel(
+                          banners: state.bannersSection.data ?? const [],
+                          isLoading:
+                              isInitialLoading || state.bannersSection.isLoading,
+                          onTapBanner: (bannerId) =>
+                              bloc.add(HomePageBannerClickedEvent(bannerId)),
+                        ),
                 ),
-                const Gap(8),
-                ContinueLearningSection(
-                  section: state.continueLearningSection,
-                  onTapCourse: (courseId) =>
-                      CourseDetailPageRoute(courseId: courseId).push(context),
-                  onRetry: () => bloc.add(
-                    const HomePageRetrySectionEvent(
-                      HomeSection.continueLearning,
-                    ),
-                  ),
-                ),
-                const Gap(20),
-                SectionHeader(
-                  title: context.t.home.dashboard.featuredCourses,
-                  onSeeAll: () => const CourseCatalogPageRoute().push(context),
-                ),
-                const Gap(8),
-                FeaturedCoursesSection(
-                  section: state.featuredCoursesSection,
-                  onTapCourse: (courseId) =>
-                      CourseDetailPageRoute(courseId: courseId).push(context),
-                  onRetry: () => bloc.add(
-                    const HomePageRetrySectionEvent(
-                      HomeSection.featuredCourses,
-                    ),
+                const Gap(24),
+                FadeInUp(
+                  duration: const Duration(milliseconds: 500),
+                  delay: const Duration(milliseconds: 200),
+                  child: Column(
+                    children: [
+                      SectionHeader(
+                        title: context.t.home.dashboard.continueLearning,
+                        onSeeAll: () => const MyCoursesPageRoute().push(context),
+                      ),
+                      const Gap(12),
+                      ContinueLearningSection(
+                        section: state.continueLearningSection,
+                        onTapCourse: (courseId) =>
+                            CourseDetailPageRoute(courseId: courseId)
+                                .push(context),
+                        onRetry: () => bloc.add(
+                          const HomePageRetrySectionEvent(
+                            HomeSection.continueLearning,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                const Gap(20),
+                const Gap(24),
+                FadeInUp(
+                  duration: const Duration(milliseconds: 500),
+                  delay: const Duration(milliseconds: 300),
+                  child: Column(
+                    children: [
+                      SectionHeader(
+                        title: context.t.home.dashboard.featuredCourses,
+                        onSeeAll: () =>
+                            const CourseCatalogPageRoute().push(context),
+                      ),
+                      const Gap(12),
+                      FeaturedCoursesSection(
+                        section: state.featuredCoursesSection,
+                        onTapCourse: (courseId) =>
+                            CourseDetailPageRoute(courseId: courseId)
+                                .push(context),
+                        onRetry: () => bloc.add(
+                          const HomePageRetrySectionEvent(
+                            HomeSection.featuredCourses,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const Gap(24),
                 if ((state.announcementsSection.data?.isNotEmpty ?? false) ||
                     state.announcementsSection.isLoading ||
                     state.announcementsSection.isFailure) ...[
-                  SectionHeader(
-                    title: context.t.home.dashboard.announcements,
-                    onSeeAll: () {},
-                  ),
-                  const Gap(8),
-                  AnnouncementsSection(
-                    section: state.announcementsSection,
-                    onRetry: () => bloc.add(
-                      const HomePageRetrySectionEvent(
-                        HomeSection.announcements,
-                      ),
+                  FadeInUp(
+                    duration: const Duration(milliseconds: 500),
+                    delay: const Duration(milliseconds: 400),
+                    child: Column(
+                      children: [
+                        SectionHeader(
+                          title: context.t.home.dashboard.announcements,
+                          onSeeAll: () {},
+                        ),
+                        const Gap(12),
+                        AnnouncementsSection(
+                          section: state.announcementsSection,
+                          onRetry: () => bloc.add(
+                            const HomePageRetrySectionEvent(
+                              HomeSection.announcements,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  const Gap(20),
+                  const Gap(24),
                 ],
-                SectionHeader(title: context.t.home.dashboard.quickActions),
-                const Gap(8),
-                QuickActionsGrid(
-                  onActionTap: (index) {
-                    switch (index) {
-                      case 0:
-                        const MyCoursesPageRoute().push(context);
-                        return;
-                      case 1:
-                        const AttendanceHistoryPageRoute().push(context);
-                        return;
-                      case 2:
-                        const MyGradesPageRoute().push(context);
-                        return;
-                      case 3:
-                        const AiConversationsPageRoute().push(context);
-                        return;
-                      case 4:
-                        const RewardsCatalogPageRoute().push(context);
-                        return;
-                      case 5:
-                        const ProductsGridPageRoute().push(context);
-                        return;
-                      default:
-                        return;
-                    }
-                  },
+                FadeInUp(
+                  duration: const Duration(milliseconds: 500),
+                  delay: const Duration(milliseconds: 500),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SectionHeader(
+                          title: context.t.home.dashboard.quickActions),
+                      const Gap(12),
+                      QuickActionsGrid(
+                        onActionTap: (index) {
+                          switch (index) {
+                            case 0:
+                              const MyCoursesPageRoute().push(context);
+                              return;
+                            case 1:
+                              const AttendanceHistoryPageRoute().push(context);
+                              return;
+                            case 2:
+                              const MyGradesPageRoute().push(context);
+                              return;
+                            case 3:
+                              const AiConversationsPageRoute().push(context);
+                              return;
+                            case 4:
+                              const RewardsCatalogPageRoute().push(context);
+                              return;
+                            case 5:
+                              const ProductsGridPageRoute().push(context);
+                              return;
+                            default:
+                              return;
+                          }
+                        },
+                      ),
+                    ],
+                  ),
                 ),
+                const Gap(40),
               ],
             ),
           );

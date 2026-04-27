@@ -57,6 +57,11 @@ class _ResetPasswordPageWrapperState extends State<ResetPasswordPageWrapper> {
               confirmPasswordController: _confirmPasswordController,
               isLoading: state.loadingState.isLoading,
               errorMessage: state.errorMessage,
+              onOtpChanged: (value) => bloc.add(ResetPasswordOtpChanged(value)),
+              onPasswordChanged: (value) =>
+                  bloc.add(ResetPasswordNewPasswordChanged(value)),
+              onConfirmPasswordChanged: (value) =>
+                  bloc.add(ResetPasswordConfirmPasswordChanged(value)),
               onSubmit: () {
                 if (_formKey.currentState?.validate() ?? false) {
                   bloc.add(const ResetPasswordSubmitted());

@@ -30,8 +30,17 @@ final class PdfViewerPageBloc
     required CourseRepository courseRepository,
     required String itemId,
     required String title,
+    String? enrollmentId,
+    int completedLessons = 0,
+    int totalLessons = 0,
   }) : _courseRepository = courseRepository,
-       super(PdfViewerPageState(itemId: itemId, title: title)) {
+       super(PdfViewerPageState(
+         itemId: itemId,
+         title: title,
+         enrollmentId: enrollmentId,
+         completedLessons: completedLessons,
+         totalLessons: totalLessons,
+       )) {
     on<PdfViewerPageInitialized>(_onInitialized);
     on<PdfViewerPageCompleted>(_onCompleted);
   }
@@ -76,9 +85,18 @@ final class PdfViewerPageBloc
     PdfViewerPageCompleted event,
     Emitter<PdfViewerPageState> emit,
   ) async {
+    emit(state.copyWith(isCompleted: true));
+
+    if (state.enrollmentId == null) return;
+
     try {
-      await _courseRepository.markItemComplete(state.itemId);
-      emit(state.copyWith(isCompleted: true));
+      await _courseRepository.updateEnrollmentProgress(
+        state.enrollmentId!,
+        progress: 100.0,
+        watchTimeSeconds: 0,
+        completedLessons: state.completedLessons + 1,
+        totalLessons: state.totalLessons,
+      );
     } catch (_) {
       // Silently fail
     }

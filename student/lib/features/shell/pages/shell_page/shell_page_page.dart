@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
+import 'package:animate_do/animate_do.dart';
+import 'package:gap/gap.dart';
 import '../../widgets/ai_fab_button.dart';
 import '../../widgets/app_drawer.dart';
 
@@ -21,61 +23,65 @@ class ShellPage extends StatelessWidget {
           PositionedDirectional(
             bottom: 90,
             start: 20,
-            child: const AiFabButton(),
+            child: ZoomIn(
+              duration: const Duration(milliseconds: 600),
+              child: const AiFabButton(),
+            ),
           ),
         ],
       ),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border(
-            top: BorderSide(color: Colors.black.withValues(alpha: 0.06)),
+      bottomNavigationBar: FadeInUp(
+        duration: const Duration(milliseconds: 500),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.05),
+                blurRadius: 20,
+                offset: const Offset(0, -4),
+              ),
+            ],
           ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.03),
-              blurRadius: 10,
-              offset: const Offset(0, -2),
-            ),
-          ],
-        ),
-        child: SafeArea(
-          child: SizedBox(
-            height: 70,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _buildNavItem(
-                  Icons.home_outlined,
-                  Icons.home,
-                  t['navHome']!,
-                  0,
-                ),
-                _buildNavItem(
-                  Icons.menu_book_outlined,
-                  Icons.menu_book,
-                  t['navCourses']!,
-                  1,
-                ),
-                _buildNavItem(
-                  Icons.quiz_outlined,
-                  Icons.quiz,
-                  t['navQuizzes']!,
-                  2,
-                ),
-                _buildNavItem(
-                  Icons.account_balance_wallet_outlined,
-                  Icons.account_balance_wallet,
-                  t['navWallet']!,
-                  3,
-                ),
-                _buildNavItem(
-                  Icons.person_outline,
-                  Icons.person,
-                  t['navAccount']!,
-                  4,
-                ),
-              ],
+          child: SafeArea(
+            child: SizedBox(
+              height: 74,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _buildNavItem(
+                    Icons.home_outlined,
+                    Icons.home_rounded,
+                    t['navHome'] ?? 'Home',
+                    0,
+                  ),
+                  _buildNavItem(
+                    Icons.menu_book_outlined,
+                    Icons.menu_book_rounded,
+                    t['navCourses'] ?? 'Courses',
+                    1,
+                  ),
+                  _buildNavItem(
+                    Icons.quiz_outlined,
+                    Icons.quiz_rounded,
+                    t['navQuizzes'] ?? 'Quizzes',
+                    2,
+                  ),
+                  _buildNavItem(
+                    Icons.account_balance_wallet_outlined,
+                    Icons.account_balance_wallet_rounded,
+                    t['navWallet'] ?? 'Wallet',
+                    3,
+                  ),
+                  _buildNavItem(
+                    Icons.person_outline_rounded,
+                    Icons.person_rounded,
+                    t['navAccount'] ?? 'Account',
+                    4,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -98,18 +104,23 @@ class ShellPage extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              isActive ? activeIcon : icon,
-              size: 22,
-              color: isActive ? AppColors.accent : AppColors.grey,
+            AnimatedScale(
+              scale: isActive ? 1.1 : 1.0,
+              duration: const Duration(milliseconds: 200),
+              child: Icon(
+                isActive ? activeIcon : icon,
+                size: 24,
+                color: isActive ? AppColors.accent : AppColors.grey,
+              ),
             ),
-            const SizedBox(height: 2),
+            const Gap(4),
             Text(
               label,
               style: TextStyle(
                 fontSize: 10,
-                fontWeight: FontWeight.w600,
+                fontWeight: isActive ? FontWeight.w900 : FontWeight.w600,
                 color: isActive ? AppColors.accent : AppColors.grey,
+                letterSpacing: 0.2,
               ),
             ),
           ],
