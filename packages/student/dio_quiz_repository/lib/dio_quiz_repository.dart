@@ -88,4 +88,106 @@ final class DioQuizRepository
     }
   }
 
+  @override
+  Future<QuizEntity> createQuiz(Map<String, dynamic> data) async {
+    try {
+      final response = await httpClient.post('/api/quizzes', data: data);
+      final responseData = asMap(response.data)['data'] ?? asMap(response.data);
+      return QuizModel.fromJson(responseData);
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(e, defaultCode: QuizRepositoryExceptionCode.unknown);
+    }
+  }
+
+  @override
+  Future<void> startQuiz(String quizId) async {
+    try {
+      await httpClient.post('/api/quizzes/$quizId/start');
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(e, defaultCode: QuizRepositoryExceptionCode.failedToStartQuiz);
+    }
+  }
+
+  @override
+  Future<List<QuizEntity>> getQuizzesByWeek(String weekId) async {
+    try {
+      final response = await httpClient.get('/api/quizzes/week/$weekId');
+      final data = asList(asMap(response.data)['data'] ?? response.data);
+      return data.map((e) => QuizModel.fromJson(asMap(e))).toList();
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(e, defaultCode: QuizRepositoryExceptionCode.unknown);
+    }
+  }
+
+  @override
+  Future<void> deleteQuiz(String quizId) async {
+    try {
+      await httpClient.delete('/api/quizzes/$quizId');
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(e, defaultCode: QuizRepositoryExceptionCode.unknown);
+    }
+  }
+
+  @override
+  Future<void> deleteAttempt(String attemptId) async {
+    try {
+      await httpClient.delete('/api/quiz-attempts/$attemptId');
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(e, defaultCode: QuizRepositoryExceptionCode.unknown);
+    }
+  }
+
+  @override
+  Future<List<QuizAttemptEntity>> getStudentAttempts(String studentId) async {
+    try {
+      final response = await httpClient.get('/api/quiz-attempts/student/$studentId');
+      final data = asList(asMap(response.data)['data'] ?? response.data);
+      return data.map((e) => QuizAttemptModel.fromJson(asMap(e))).toList();
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(e, defaultCode: QuizRepositoryExceptionCode.unknown);
+    }
+  }
+
+  @override
+  Future<Map<String, dynamic>> getStudentQuizStatus(String studentId) async {
+    try {
+      final response = await httpClient.get('/api/quiz-attempts/student/$studentId/status');
+      return asMap(response.data);
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(e, defaultCode: QuizRepositoryExceptionCode.unknown);
+    }
+  }
+
+  @override
+  Future<QuizAttemptEntity?> getStudentAttemptForQuiz(String studentId, String quizId) async {
+    try {
+      final response = await httpClient.get('/api/quiz-attempts/student/$studentId/quiz/$quizId');
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      return QuizAttemptModel.fromJson(data);
+    } on HttpClientResponse catch (e) {
+      if (e.statusCode == 404) return null;
+      handleHttpClientErrorResponse(e, defaultCode: QuizRepositoryExceptionCode.unknown);
+    }
+  }
+
+  @override
+  Future<List<QuizAttemptEntity>> getAttemptsForQuiz(String quizId) async {
+    try {
+      final response = await httpClient.get('/api/quiz-attempts/quiz/$quizId');
+      final data = asList(asMap(response.data)['data'] ?? response.data);
+      return data.map((e) => QuizAttemptModel.fromJson(asMap(e))).toList();
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(e, defaultCode: QuizRepositoryExceptionCode.unknown);
+    }
+  }
+
+  @override
+  Future<Map<String, dynamic>> getQuizStatistics(String quizId) async {
+    try {
+      final response = await httpClient.get('/api/quiz-attempts/quiz/$quizId/statistics');
+      return asMap(response.data);
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(e, defaultCode: QuizRepositoryExceptionCode.unknown);
+    }
+  }
 }

@@ -30,4 +30,16 @@ abstract interface class QuizRepository {
 
   /// Fetch detailed quiz results for an attempt.
   Future<QuizAttemptEntity> getResults(String attemptId);
+
+  // Pro Features
+  Future<QuizEntity> createQuiz(Map<String, dynamic> data);
+  Future<void> startQuiz(String quizId);
+  Future<List<QuizEntity>> getQuizzesByWeek(String weekId);
+  Future<void> deleteQuiz(String quizId);
+  Future<void> deleteAttempt(String attemptId);
+  Future<List<QuizAttemptEntity>> getStudentAttempts(String studentId);
+  Future<Map<String, dynamic>> getStudentQuizStatus(String studentId);
+  Future<QuizAttemptEntity?> getStudentAttemptForQuiz(String studentId, String quizId);
+  Future<List<QuizAttemptEntity>> getAttemptsForQuiz(String quizId);
+  Future<Map<String, dynamic>> getQuizStatistics(String quizId);
 }

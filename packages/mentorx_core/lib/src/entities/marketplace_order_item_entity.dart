@@ -2,60 +2,64 @@ part of 'package:mentorx_core/mentorx_core.dart';
 
 class MarketplaceOrderItemEntity extends Equatable {
   final String id;
-  final String orderId;
-  final String itemId;
-  final String? itemTitle;
+  final String? orderId;
+  final String? productType;
+  final String productId;
+  final String? productName;
   final int quantity;
   final double unitPrice;
-  final double totalPrice;
+  final double subtotal;
 
   const MarketplaceOrderItemEntity({
     required this.id,
-    required this.orderId,
-    required this.itemId,
+    this.orderId,
+    this.productType,
+    required this.productId,
+    this.productName,
     required this.quantity,
     required this.unitPrice,
-    required this.totalPrice,
-    this.itemTitle,
+    required this.subtotal,
   });
 
   static const placeholder = MarketplaceOrderItemEntity(
     id: '',
-    orderId: '',
-    itemId: '',
+    productId: '',
     quantity: 0,
     unitPrice: 0.0,
-    totalPrice: 0.0,
+    subtotal: 0.0,
   );
 
   @override
   List<Object?> get props => [
         id,
         orderId,
-        itemId,
-        itemTitle,
+        productType,
+        productId,
+        productName,
         quantity,
         unitPrice,
-        totalPrice,
+        subtotal,
       ];
 
   MarketplaceOrderItemEntity copyWith({
     String? id,
     String? orderId,
-    String? itemId,
-    String? itemTitle,
+    String? productType,
+    String? productId,
+    String? productName,
     int? quantity,
     double? unitPrice,
-    double? totalPrice,
+    double? subtotal,
   }) {
     return MarketplaceOrderItemEntity(
       id: id ?? this.id,
       orderId: orderId ?? this.orderId,
-      itemId: itemId ?? this.itemId,
-      itemTitle: itemTitle ?? this.itemTitle,
+      productType: productType ?? this.productType,
+      productId: productId ?? this.productId,
+      productName: productName ?? this.productName,
       quantity: quantity ?? this.quantity,
       unitPrice: unitPrice ?? this.unitPrice,
-      totalPrice: totalPrice ?? this.totalPrice,
+      subtotal: subtotal ?? this.subtotal,
     );
   }
 }

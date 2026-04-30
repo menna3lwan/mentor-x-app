@@ -51,4 +51,8 @@ abstract interface class AIRepository {
     int? rating,
     String? feedback,
   });
+
+  // Pro Features
+  Future<Map<String, dynamic>> getStats();
+  Future<void> clearHistory();
 }

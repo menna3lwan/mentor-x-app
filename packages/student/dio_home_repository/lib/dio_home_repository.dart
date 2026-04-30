@@ -151,7 +151,6 @@ final class DioStudentHomeRepository
       );
     }
   }
-
   @override
   Future<void> trackBannerClick(String bannerId) async {
     try {
@@ -161,6 +160,35 @@ final class DioStudentHomeRepository
         e,
         defaultCode: StudentHomeRepositoryExceptionCode.failedToTrackBannerClick,
       );
+    }
+  }
+
+  @override
+  Future<BannerEntity> createBanner(Map<String, dynamic> data) async {
+    try {
+      final response = await httpClient.post('/api/banners', data: data);
+      final responseData = asMap(response.data)['data'] ?? asMap(response.data);
+      return BannerModel.fromJson(responseData);
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(e, defaultCode: StudentHomeRepositoryExceptionCode.unknown);
+    }
+  }
+
+  @override
+  Future<void> updateBanner(String bannerId, Map<String, dynamic> data) async {
+    try {
+      await httpClient.patch('/api/banners/$bannerId', data: data);
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(e, defaultCode: StudentHomeRepositoryExceptionCode.unknown);
+    }
+  }
+
+  @override
+  Future<void> deleteBanner(String bannerId) async {
+    try {
+      await httpClient.delete('/api/banners/$bannerId');
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(e, defaultCode: StudentHomeRepositoryExceptionCode.unknown);
     }
   }
 }

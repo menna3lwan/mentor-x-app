@@ -29,4 +29,10 @@ abstract interface class AssignmentRepository {
     List<String> filePaths = const [],
     String? contentText,
   });
+
+  // Pro Features
+  Future<void> deleteAttempt(String attemptId);
+  Future<List<AssignmentSubmissionEntity>> getStudentAttempts(String studentId);
+  Future<List<AssignmentSubmissionEntity>> getAttemptsForAssignment(String assignmentId);
+  Future<Map<String, dynamic>> getAssignmentStatistics(String assignmentId);
 }

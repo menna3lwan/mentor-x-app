@@ -43,4 +43,27 @@ final class MockAssignmentRepository implements AssignmentRepository {
       submittedAt: DateTime.now(),
     );
   }
+
+  @override
+  Future<void> deleteAttempt(String attemptId) async {
+    await Future<void>.delayed(delay);
+  }
+
+  @override
+  Future<List<AssignmentSubmissionEntity>> getStudentAttempts(String studentId) async {
+    await Future<void>.delayed(delay);
+    return [MockAssignmentGenerator.submission('assignment_1')!];
+  }
+
+  @override
+  Future<List<AssignmentSubmissionEntity>> getAttemptsForAssignment(String assignmentId) async {
+    await Future<void>.delayed(delay);
+    return [MockAssignmentGenerator.submission(assignmentId)!];
+  }
+
+  @override
+  Future<Map<String, dynamic>> getAssignmentStatistics(String assignmentId) async {
+    await Future<void>.delayed(delay);
+    return {'average_score': 90.0};
+  }
 }

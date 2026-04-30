@@ -16,23 +16,57 @@ final class TransactionsHistoryPageWrapper extends StatefulWidget {
 
 class _TransactionsHistoryPageWrapperState
     extends State<TransactionsHistoryPageWrapper> {
+  final _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
+      context.read<TransactionsHistoryPageBloc>().add(const TransactionsHistoryPageLoadMoreEvent());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => TransactionsHistoryPageBloc(
-        walletRepository: context.read<WalletRepository>(),
-      )..add(const TransactionsHistoryPageLoadEvent()),
-      child: BlocPresentationListener<
-        TransactionsHistoryPageBloc,
-        TransactionsHistoryPagePresentationEvent
-      >(
-        listener: (context, event) {
-          switch (event) {
-            case TransactionsHistoryPageNavigateBack():
-              Navigator.of(context).pop();
-          }
+    return BlocPresentationListener<
+      TransactionsHistoryPageBloc,
+      TransactionsHistoryPagePresentationEvent
+    >(
+      listener: (context, event) {
+        switch (event) {
+          case TransactionsHistoryPageNavigateBack():
+            Navigator.of(context).pop();
+        }
+      },
+      child: BlocBuilder<TransactionsHistoryPageBloc, TransactionsHistoryPageState>(
+        builder: (context, state) {
+          final bloc = context.read<TransactionsHistoryPageBloc>();
+          final transactions = state.transactions;
+          final isLoading = state.loadingState == LoadingState.loading;
+          final isInitialLoading = isLoading && transactions.isEmpty;
+
+          return TransactionsHistoryPage(
+            transactions: transactions,
+            hasMore: state.hasMore,
+            isLoading: isLoading,
+            isInitialLoading: isInitialLoading,
+            scrollController: _scrollController,
+            onRefresh: () async {
+              bloc.add(const TransactionsHistoryPageLoadEvent());
+            },
+          );
         },
-        child: const TransactionsHistoryPage(),
       ),
     );
   }

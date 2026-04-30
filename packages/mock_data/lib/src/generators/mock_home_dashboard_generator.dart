@@ -16,19 +16,19 @@ final class MockHomeDashboardGenerator {
         id: 'b1',
         imageUrl: 'https://picsum.photos/800/450?1',
         title: 'New Revision Marathon',
-        deepLink: 'mentorx://course/course_1',
+        linkUrl: 'mentorx://course/course_1',
       ),
       BannerEntity(
         id: 'b2',
         imageUrl: 'https://picsum.photos/800/450?2',
         title: 'Limited Offer for New Courses',
-        deepLink: 'mentorx://catalog',
+        linkUrl: 'mentorx://catalog',
       ),
       BannerEntity(
         id: 'b3',
         imageUrl: 'https://picsum.photos/800/450?3',
         title: 'Attendance Rewards Week',
-        deepLink: 'mentorx://rewards',
+        linkUrl: 'mentorx://rewards',
       ),
     ];
   }

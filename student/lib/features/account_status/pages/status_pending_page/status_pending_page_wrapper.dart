@@ -36,6 +36,7 @@ final class _StatusPendingPageWrapperState
               case StudentStatus.pending:
                 break;
               case StudentStatus.suspended:
+              case StudentStatus.rejected:
               case StudentStatus.inactive:
                 const StatusRejectedPageRoute().go(context);
             }

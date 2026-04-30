@@ -16,18 +16,18 @@ final class ParentGradeSummaryModel extends ParentGradeSummaryEntity {
 
   factory ParentGradeSummaryModel.fromJson(Map<String, dynamic> json) {
     return ParentGradeSummaryModel(
-      overallAverage: (json['overall_average'] ?? 0.0).toDouble(),
-      trend: json['trend'] ?? 'stable',
-      trendChange: (json['trend_change'] ?? 0.0).toDouble(),
-      totalAssessments: (json['total_assessments'] ?? 0).toInt(),
-      graded: (json['graded'] ?? 0).toInt(),
-      pending: (json['pending'] ?? 0).toInt(),
-      passed: (json['passed'] ?? 0).toInt(),
-      failed: (json['failed'] ?? 0).toInt(),
-      distribution: (json['distribution'] as Map? ?? {})
-          .map((k, v) => MapEntry(k.toString(), (v ?? 0).toInt())),
-      byCourse: (json['by_course'] as List? ?? [])
-          .map((e) => ParentCourseGradeSummaryModel.fromJson(e as Map<String, dynamic>))
+      overallAverage: ModelParser.asDouble(json['overall_average'] ?? json['overallAverage']),
+      trend: ModelParser.asString(json['trend'], fallback: 'stable'),
+      trendChange: ModelParser.asDouble(json['trend_change'] ?? json['trendChange']),
+      totalAssessments: ModelParser.asInt(json['total_assessments'] ?? json['totalAssessments']),
+      graded: ModelParser.asInt(json['graded']),
+      pending: ModelParser.asInt(json['pending']),
+      passed: ModelParser.asInt(json['passed']),
+      failed: ModelParser.asInt(json['failed']),
+      distribution: ModelParser.asMap(json['distribution'] ?? json['distribution_range'])
+          .map((k, v) => MapEntry(k.toString(), ModelParser.asInt(v))),
+      byCourse: ModelParser.asList(json['by_course'] ?? json['byCourse'])
+          .map((e) => ParentCourseGradeSummaryModel.fromJson(ModelParser.asMap(e)))
           .toList(),
     );
   }
@@ -43,10 +43,10 @@ final class ParentCourseGradeSummaryModel extends ParentCourseGradeSummary {
 
   factory ParentCourseGradeSummaryModel.fromJson(Map<String, dynamic> json) {
     return ParentCourseGradeSummaryModel(
-      courseId: json['course_id']?.toString() ?? '',
-      courseTitle: json['course_title'] ?? '',
-      average: (json['average'] ?? 0.0).toDouble(),
-      assessmentsCount: (json['assessments_count'] ?? 0).toInt(),
+      courseId: ModelParser.asString(json['course_id'] ?? json['courseId']),
+      courseTitle: ModelParser.asString(json['course_title'] ?? json['courseTitle']),
+      average: ModelParser.asDouble(json['average']),
+      assessmentsCount: ModelParser.asInt(json['assessments_count'] ?? json['assessmentsCount']),
     );
   }
 }
@@ -58,8 +58,8 @@ final class ParentGradeTrendModel extends ParentGradeTrendEntity {
 
   factory ParentGradeTrendModel.fromJson(Map<String, dynamic> json) {
     return ParentGradeTrendModel(
-      months: (json['months'] as List? ?? [])
-          .map((e) => MonthlyGradeModel.fromJson(e as Map<String, dynamic>))
+      months: ModelParser.asList(json['months'])
+          .map((e) => MonthlyGradeModel.fromJson(ModelParser.asMap(e)))
           .toList(),
     );
   }
@@ -73,8 +73,8 @@ final class MonthlyGradeModel extends MonthlyGradeEntry {
 
   factory MonthlyGradeModel.fromJson(Map<String, dynamic> json) {
     return MonthlyGradeModel(
-      month: json['month'] ?? '',
-      average: (json['average'] ?? 0.0).toDouble(),
+      month: ModelParser.asString(json['month']),
+      average: ModelParser.asDouble(json['average']),
     );
   }
 }
@@ -98,24 +98,22 @@ final class QuizAttemptModel extends QuizAttemptEntity {
 
   factory QuizAttemptModel.fromJson(Map<String, dynamic> json) {
     return QuizAttemptModel(
-      id: json['id']?.toString() ?? '',
-      quizId: json['quiz_id']?.toString() ?? '',
-      courseId: json['course_id']?.toString(),
-      courseName: json['course_name'],
-      attemptNumber: (json['attempt_number'] ?? 1).toInt(),
+      id: ModelParser.asString(json['id']),
+      quizId: ModelParser.asString(json['quiz_id'] ?? json['quizId']),
+      courseId: ModelParser.asString(json['course_id'] ?? json['courseId']),
+      courseName: ModelParser.asString(json['course_name'] ?? json['courseName']),
+      attemptNumber: ModelParser.asInt(json['attempt_number'] ?? json['attemptNumber'], fallback: 1),
       status: QuizAttemptStatus.values.firstWhere(
-        (e) => e.name == (json['status'] ?? 'submitted'),
+        (e) => e.name == ModelParser.asString(json['status'], fallback: 'submitted'),
         orElse: () => QuizAttemptStatus.submitted,
       ),
-      score: (json['score'] ?? 0).toInt(),
-      totalMarks: (json['total_marks'] ?? json['max_score'] ?? 100).toInt(),
-      percentage: (json['percentage'] ?? 0.0).toDouble(),
-      passed: json['passed'] ?? json['is_passed'] ?? false,
-      startedAt: json['started_at'] != null
-          ? DateTime.tryParse(json['started_at']) ?? DateTime.now()
-          : DateTime.now(),
-      submittedAt: json['submitted_at'] != null ? DateTime.tryParse(json['submitted_at']) : null,
-      timeSpentSeconds: (json['time_spent_seconds'] ?? 0).toInt(),
+      score: ModelParser.asInt(json['score']),
+      totalMarks: ModelParser.asInt(json['total_marks'] ?? json['totalMarks'] ?? json['max_score'], fallback: 100),
+      percentage: ModelParser.asDouble(json['percentage']),
+      passed: ModelParser.asBool(json['passed'] ?? json['is_passed'] ?? json['isPassed']),
+      startedAt: ModelParser.asDateTime(json['started_at'] ?? json['startedAt']) ?? DateTime.now(),
+      submittedAt: ModelParser.asDateTime(json['submitted_at'] ?? json['submittedAt']),
+      timeSpentSeconds: ModelParser.asInt(json['time_spent_seconds'] ?? json['timeSpentSeconds']),
     );
   }
 }

@@ -149,4 +149,22 @@ final class DioAiRepository
     }
   }
 
+  @override
+  Future<Map<String, dynamic>> getStats() async {
+    try {
+      final response = await httpClient.get('/api/ai/stats');
+      return asMap(response.data);
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(e, defaultCode: AIRepositoryExceptionCode.unknown);
+    }
+  }
+
+  @override
+  Future<void> clearHistory() async {
+    try {
+      await httpClient.post('/api/ai/clear-history');
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(e, defaultCode: AIRepositoryExceptionCode.unknown);
+    }
+  }
 }

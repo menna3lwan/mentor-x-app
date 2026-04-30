@@ -53,4 +53,67 @@ final class MockQuizRepository implements QuizRepository {
     await Future<void>.delayed(delay);
     return MockQuizGenerator.submitResult(attemptId);
   }
+
+  @override
+  Future<QuizEntity> createQuiz(Map<String, dynamic> data) async {
+    await Future<void>.delayed(delay);
+    return QuizEntity(
+      id: 'new_quiz',
+      title: data['title'] ?? 'New Quiz',
+      questions: const [],
+      durationMinutes: 30,
+      totalMarks: 100,
+    );
+  }
+
+  @override
+  Future<void> startQuiz(String quizId) async {
+    await Future<void>.delayed(delay);
+  }
+
+  @override
+  Future<List<QuizEntity>> getQuizzesByWeek(String weekId) async {
+    await Future<void>.delayed(delay);
+    return getQuizzes();
+  }
+
+  @override
+  Future<void> deleteQuiz(String quizId) async {
+    await Future<void>.delayed(delay);
+  }
+
+  @override
+  Future<void> deleteAttempt(String attemptId) async {
+    await Future<void>.delayed(delay);
+  }
+
+  @override
+  Future<List<QuizAttemptEntity>> getStudentAttempts(String studentId) async {
+    await Future<void>.delayed(delay);
+    return [MockQuizGenerator.submitResult('attempt_1')];
+  }
+
+  @override
+  Future<Map<String, dynamic>> getStudentQuizStatus(String studentId) async {
+    await Future<void>.delayed(delay);
+    return {'status': 'eligible'};
+  }
+
+  @override
+  Future<QuizAttemptEntity?> getStudentAttemptForQuiz(String studentId, String quizId) async {
+    await Future<void>.delayed(delay);
+    return MockQuizGenerator.submitResult(quizId);
+  }
+
+  @override
+  Future<List<QuizAttemptEntity>> getAttemptsForQuiz(String quizId) async {
+    await Future<void>.delayed(delay);
+    return [MockQuizGenerator.submitResult('attempt_1')];
+  }
+
+  @override
+  Future<Map<String, dynamic>> getQuizStatistics(String quizId) async {
+    await Future<void>.delayed(delay);
+    return {'average_score': 85.0};
+  }
 }

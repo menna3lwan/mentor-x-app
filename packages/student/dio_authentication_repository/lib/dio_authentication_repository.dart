@@ -266,6 +266,27 @@ final class DioAuthenticationRepository
           message: stringOrNull(data['error']) ?? 'Session already active on another device.',
         );
       }
+      if (_isAccountPendingError(e)) {
+        final data = asMap(e.data);
+        throw AccountPendingException(
+          message: stringOrNull(data['error'] ?? data['message']),
+          supportWhatsApp: stringOrNull(data['supportWhatsApp']),
+        );
+      }
+      if (_isAccountRejectedError(e)) {
+        final data = asMap(e.data);
+        throw AccountRejectedException(
+          message: stringOrNull(data['error'] ?? data['message']),
+          rejectionReason: stringOrNull(data['rejectionReason']),
+          supportWhatsApp: stringOrNull(data['supportWhatsApp']),
+        );
+      }
+      if (_isInvalidCredentialsError(e)) {
+        handleHttpClientErrorResponse(
+          e,
+          defaultCode: AuthenticationRepositoryExceptionCode.invalidCredentials,
+        );
+      }
       handleHttpClientErrorResponse(
         e,
         defaultCode: _ExceptionCode.failedToGetCurrentUser,
@@ -566,6 +587,27 @@ final class DioAuthenticationRepository
         (error.contains('تسجيل الخروج أولاً') || error.contains('logout first'));
   }
 
+  bool _isInvalidCredentialsError(HttpClientResponse response) {
+    final data = asMap(response.data);
+    final error = stringOrNull(data['error'] ?? data['message']) ?? '';
+    return response.statusCode == 401 ||
+        error.contains('كلمة المرور غير صحيحة') ||
+        error.contains('رقم الهاتف غير موجود') ||
+        error.contains('رقم الهاتف أو كلمة المرور غير صحيحة');
+  }
+
+  bool _isAccountPendingError(HttpClientResponse response) {
+    final data = asMap(response.data);
+    final status = stringOrNull(data['status'])?.toUpperCase();
+    return status == 'PENDING';
+  }
+
+  bool _isAccountRejectedError(HttpClientResponse response) {
+    final data = asMap(response.data);
+    final status = stringOrNull(data['status'])?.toUpperCase();
+    return status == 'REJECTED';
+  }
+
   List<DeviceEntity> _parseActiveDevices(dynamic rawDevices) {
     if (rawDevices is! List) return const [];
 
@@ -632,6 +674,71 @@ final class DioAuthenticationRepository
     if (Platform.isAndroid) return 'Android';
     if (Platform.isIOS) return 'iOS';
     return Platform.operatingSystem;
+  }
+
+  @override
+  Future<void> forceLogoutAll() async {
+    try {
+      await httpClient.post('/api/auth/force-logout-all');
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: _ExceptionCode.failedToLogout,
+      );
+    }
+  }
+
+  @override
+  Future<Map<String, dynamic>> getPendingStatus() async {
+    try {
+      final response = await httpClient.get('/api/auth/pending-status');
+      return asMap(response.data);
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: _ExceptionCode.unknown,
+      );
+    }
+  }
+
+  @override
+  Future<String> getEntryPoint() async {
+    try {
+      final response = await httpClient.get('/api/auth/entry-point');
+      final data = asMap(response.data);
+      return stringOrEmpty(data['entry_point'] ?? data['entryPoint']);
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: _ExceptionCode.unknown,
+      );
+    }
+  }
+
+  @override
+  Future<bool> checkPhone(String phone) async {
+    try {
+      final response = await httpClient.get('/api/auth/check-phone/$phone');
+      final data = asMap(response.data);
+      return boolOrNull(data['available'] ?? data['exists']) ?? true;
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: _ExceptionCode.unknown,
+      );
+    }
+  }
+
+  @override
+  Future<void> testMultiDevice() async {
+    try {
+      await httpClient.post('/api/auth/student/test-multi-device');
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: _ExceptionCode.unknown,
+      );
+    }
   }
 }
 

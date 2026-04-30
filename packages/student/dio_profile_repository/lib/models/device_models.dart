@@ -13,20 +13,13 @@ final class DeviceModel extends DeviceEntity {
 
   factory DeviceModel.fromJson(Map<String, dynamic> json) {
     return DeviceModel(
-      id: json['id']?.toString() ?? '',
-      deviceName:
-          json['deviceName']?.toString() ?? json['device_name']?.toString() ?? '',
-      deviceModel:
-          json['deviceModel']?.toString() ?? json['device_model']?.toString() ?? '',
-      isActive: json['isActive'] ?? json['is_active'] ?? false,
-      lastUsedAt: json['lastUsedAt'] != null
-          ? DateTime.parse(json['lastUsedAt'].toString())
-          : (json['last_used_at'] != null
-              ? DateTime.parse(json['last_used_at'].toString())
-              : DateTime.now()),
-      osVersion: json['osVersion']?.toString() ?? json['os_version']?.toString(),
-      appVersion:
-          json['appVersion']?.toString() ?? json['app_version']?.toString(),
+      id: ModelParser.asString(json['id']),
+      deviceName: ModelParser.asString(json['deviceName'] ?? json['device_name']),
+      deviceModel: ModelParser.asString(json['deviceModel'] ?? json['device_model']),
+      isActive: ModelParser.asBool(json['isActive'] ?? json['is_active']),
+      lastUsedAt: ModelParser.asDateTime(json['lastUsedAt'] ?? json['last_used_at']) ?? DateTime.now(),
+      osVersion: ModelParser.asString(json['osVersion'] ?? json['os_version']),
+      appVersion: ModelParser.asString(json['appVersion'] ?? json['app_version']),
     );
   }
 }
@@ -64,61 +57,44 @@ final class StudentProfileModel extends StudentEntity {
   });
 
   factory StudentProfileModel.fromJson(Map<String, dynamic> json) {
-    final user = json['data'] ?? json;
+    final user = ModelParser.asMap(json['data'] ?? json);
 
-    final String fullName = (user['fullName'] ?? user['name'] ?? '')?.toString() ?? '';
+    final String fullName = ModelParser.asString(user['fullName'] ?? user['name']);
     final nameParts = fullName.trim().split(' ');
     final String fallbackFirst = nameParts.isNotEmpty ? nameParts.first : '';
     final String fallbackLast = nameParts.length > 1 ? nameParts.sublist(1).join(' ') : '';
 
-    DateTime parseDate(dynamic value) {
-      if (value == null) return DateTime.now();
-      return DateTime.tryParse(value.toString()) ?? DateTime.now();
-    }
-
-    double parseDouble(dynamic value, double fallback) {
-      if (value == null) return fallback;
-      if (value is num) return value.toDouble();
-      return double.tryParse(value.toString()) ?? fallback;
-    }
-
-    int parseInt(dynamic value, int fallback) {
-      if (value == null) return fallback;
-      if (value is num) return value.toInt();
-      return int.tryParse(value.toString()) ?? fallback;
-    }
-
     return StudentProfileModel(
-      id: (user['userId'] ?? user['id'] ?? user['studentCode'] ?? '')?.toString() ?? '',
-      firstName: (user['firstName'] ?? user['first_name'] ?? fallbackFirst)?.toString() ?? '',
-      lastName: (user['lastName'] ?? user['last_name'] ?? fallbackLast)?.toString() ?? '',
-      email: user['email']?.toString(),
-      phoneNumber: (user['phone'] ?? user['phoneNumber'] ?? user['phone_number'] ?? '')?.toString() ?? '',
-      profileImageUrl: (user['profileImageUrl'] ?? user['profileImage'] ?? user['avatarUrl'] ?? user['profile_photo_url'])?.toString(),
+      id: ModelParser.asString(user['userId'] ?? user['id'] ?? user['studentCode']),
+      firstName: ModelParser.asString(user['firstName'] ?? user['first_name'], fallback: fallbackFirst),
+      lastName: ModelParser.asString(user['lastName'] ?? user['last_name'], fallback: fallbackLast),
+      email: ModelParser.asString(user['email']),
+      phoneNumber: ModelParser.asString(user['phone'] ?? user['phoneNumber'] ?? user['phone_number']),
+      profileImageUrl: ModelParser.asString(user['profileImageUrl'] ?? user['profileImage'] ?? user['avatarUrl'] ?? user['profile_photo_url']),
       gender: _parseGender(user['gender']),
       status: _parseStatus(user['status'] ?? user['accountStatus'] ?? user['account_status']),
-      gradeId: (user['gradeId'] ?? user['grade_id'])?.toString(),
-      gradeName: (user['gradeName'] ?? user['grade_name'] ?? user['grade'])?.toString(),
-      studentCode: (user['studentCode'] ?? user['student_code'])?.toString(),
-      studyType: (user['studyType'] ?? user['study_type'])?.toString(),
-      walletBalance: parseDouble(user['walletBalance'] ?? user['wallet_balance'], 0.0),
-      totalPoints: parseInt(user['totalPoints'] ?? user['total_points'], 0),
-      schoolName: (user['schoolName'] ?? user['school_name'])?.toString(),
-      centerId: (user['centerId'] ?? user['center_id'])?.toString(),
-      centerName: (user['centerName'] ?? user['center_name'] ?? user['center'])?.toString(),
-      parentName: (user['parentName'] ?? user['parent_name'])?.toString(),
-      parentPhone: (user['parentPhone'] ?? user['parent_phone'])?.toString(),
-      academicLevel: (user['academicLevel'] ?? user['academic_level'])?.toString(),
-      dateOfBirth: DateTime.tryParse((user['dateOfBirth'] ?? user['date_of_birth'])?.toString() ?? ''),
-      address: user['address']?.toString(),
-      city: user['city']?.toString(),
-      governorate: user['governorate']?.toString(),
-      enrolledCourseIds: (user['enrolledCourseIds'] ?? user['enrolled_course_ids']) is List
-          ? (user['enrolledCourseIds'] ?? user['enrolled_course_ids'] as List).map((e) => e.toString()).toList()
-          : null,
-      metadata: user['metadata'] is Map ? Map<String, dynamic>.from(user['metadata'] as Map) : null,
-      createdAt: parseDate(user['createdAt'] ?? user['created_at']),
-      updatedAt: parseDate(user['updatedAt'] ?? user['updated_at']),
+      gradeId: ModelParser.asString(user['gradeId'] ?? user['grade_id']),
+      gradeName: ModelParser.asString(user['gradeName'] ?? user['grade_name'] ?? user['grade']),
+      studentCode: ModelParser.asString(user['studentCode'] ?? user['student_code']),
+      studyType: ModelParser.asString(user['studyType'] ?? user['study_type']),
+      walletBalance: ModelParser.asDouble(user['walletBalance'] ?? user['wallet_balance']),
+      totalPoints: ModelParser.asInt(user['totalPoints'] ?? user['total_points']),
+      schoolName: ModelParser.asString(user['schoolName'] ?? user['school_name']),
+      centerId: ModelParser.asString(user['centerId'] ?? user['center_id']),
+      centerName: ModelParser.asString(user['centerName'] ?? user['center_name'] ?? user['center']),
+      parentName: ModelParser.asString(user['parentName'] ?? user['parent_name']),
+      parentPhone: ModelParser.asString(user['parentPhone'] ?? user['parent_phone']),
+      academicLevel: ModelParser.asString(user['academicLevel'] ?? user['academic_level']),
+      dateOfBirth: ModelParser.asDateTime(user['dateOfBirth'] ?? user['date_of_birth']),
+      address: ModelParser.asString(user['address']),
+      city: ModelParser.asString(user['city']),
+      governorate: ModelParser.asString(user['governorate']),
+      enrolledCourseIds: ModelParser.asList(user['enrolledCourseIds'] ?? user['enrolled_course_ids'])
+          .map((e) => e.toString())
+          .toList(),
+      metadata: ModelParser.asMap(user['metadata']),
+      createdAt: ModelParser.asDateTime(user['createdAt'] ?? user['created_at']) ?? DateTime.now(),
+      updatedAt: ModelParser.asDateTime(user['updatedAt'] ?? user['updated_at']) ?? DateTime.now(),
     );
   }
 
@@ -178,8 +154,7 @@ final class StudentProfileModel extends StudentEntity {
   }
 
   static Gender _parseGender(dynamic value) {
-    if (value == null) return Gender.male;
-    final str = value.toString().toLowerCase();
+    final str = ModelParser.asString(value).toLowerCase();
     return Gender.values.firstWhere(
       (e) => e.name == str,
       orElse: () => Gender.male,
@@ -187,8 +162,7 @@ final class StudentProfileModel extends StudentEntity {
   }
 
   static StudentStatus _parseStatus(dynamic value) {
-    if (value == null) return StudentStatus.pending;
-    final str = value.toString().toLowerCase();
+    final str = ModelParser.asString(value).toLowerCase();
     return StudentStatus.values.firstWhere(
       (e) => e.name == str,
       orElse: () => StudentStatus.pending,

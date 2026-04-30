@@ -9,7 +9,7 @@ final class MockAssignmentGenerator {
       title: 'Linear Equations Problem Set',
       description:
           'Solve the following 10 problems involving linear equations in two variables. Show your work for each solution.',
-      dueDate: DateTime.now().add(const Duration(days: 3)),
+      deadline: DateTime.now().add(const Duration(days: 3)),
       totalMarks: 100,
     );
   }

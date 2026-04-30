@@ -19,19 +19,19 @@ final class AnnouncementModel extends AnnouncementEntity {
 
   factory AnnouncementModel.fromJson(Map<String, dynamic> json) {
     return AnnouncementModel(
-      id: json['id']?.toString() ?? '',
-      title: json['title'] ?? '',
-      content: json['content'] ?? json['preview'] ?? json['body'] ?? '',
-      createdAt: DateTime.tryParse(json['created_at'] ?? json['createdAt'] ?? '') ?? DateTime.now(),
-      imageUrl: json['image_url'] ?? json['imageUrl'],
-      actionUrl: json['action_url'] ?? json['actionUrl'] ?? json['url'],
-      actionText: json['action_text'] ?? json['actionText'],
-      isFeatured: json['is_featured'] ?? json['isFeatured'] ?? json['is_pinned'] ?? false,
-      isPinned: json['is_pinned'] ?? json['isPinned'] ?? json['pinned'] ?? false,
-      priority: json['priority'] ?? 'normal',
-      expireAt: json['expire_at'] != null ? DateTime.tryParse(json['expire_at']) : null,
-      tenantName: json['tenant_name'] ?? json['tenantName'],
-      preview: json['preview'] ?? json['summary'],
+      id: ModelParser.asString(json['id']),
+      title: ModelParser.asString(json['title']),
+      content: ModelParser.asString(json['content'] ?? json['preview'] ?? json['body']),
+      createdAt: ModelParser.asDateTime(json['created_at'] ?? json['createdAt']) ?? DateTime.now(),
+      imageUrl: ModelParser.asString(json['image_url'] ?? json['imageUrl']),
+      actionUrl: ModelParser.asString(json['action_url'] ?? json['actionUrl'] ?? json['url']),
+      actionText: ModelParser.asString(json['action_text'] ?? json['actionText']),
+      isFeatured: ModelParser.asBool(json['is_featured'] ?? json['isFeatured'] ?? json['is_pinned']),
+      isPinned: ModelParser.asBool(json['is_pinned'] ?? json['isPinned'] ?? json['pinned']),
+      priority: ModelParser.asString(json['priority'], fallback: 'normal'),
+      expireAt: ModelParser.asDateTime(json['expire_at'] ?? json['expireAt']),
+      tenantName: ModelParser.asString(json['tenant_name'] ?? json['tenantName']),
+      preview: ModelParser.asString(json['preview'] ?? json['summary']),
     );
   }
 }

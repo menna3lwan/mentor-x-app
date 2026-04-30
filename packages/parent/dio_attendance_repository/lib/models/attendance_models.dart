@@ -19,29 +19,25 @@ final class AttendanceRecordModel extends AttendanceRecordEntity {
 
   factory AttendanceRecordModel.fromJson(Map<String, dynamic> json) {
     return AttendanceRecordModel(
-      id: json['id']?.toString() ?? '',
+      id: ModelParser.asString(json['id']),
       status: AttendanceStatus.values.firstWhere(
-        (e) => e.name == (json['status'] ?? 'absent'),
+        (e) => e.name == ModelParser.asString(json['status'], fallback: 'absent'),
         orElse: () => AttendanceStatus.absent,
       ),
-      date: json['date'] != null
-          ? DateTime.tryParse(json['date']) ?? DateTime.now()
-          : DateTime.now(),
-      courseId: json['course_id']?.toString(),
-      courseName: json['course_name'],
-      sessionTitle: json['session_title'],
+      date: ModelParser.asDateTime(json['date']) ?? DateTime.now(),
+      courseId: ModelParser.asString(json['course_id'] ?? json['courseId']),
+      courseName: ModelParser.asString(json['course_name'] ?? json['courseName']),
+      sessionTitle: ModelParser.asString(json['session_title'] ?? json['sessionTitle']),
       checkInMethod: CheckInMethod.values.firstWhere(
-        (e) => e.name == (json['check_in_method'] ?? 'manual'),
+        (e) => e.name == ModelParser.asString(json['check_in_method'] ?? json['checkInMethod'], fallback: 'manual'),
         orElse: () => CheckInMethod.manual,
       ),
-      checkInTime: json['check_in_time'] != null
-          ? DateTime.tryParse(json['check_in_time'])
-          : null,
-      teacherNotes: json['teacher_notes'],
-      centerName: json['center_name'],
-      startTime: json['start_time'],
-      endTime: json['end_time'],
-      isOnline: json['is_online'] ?? false,
+      checkInTime: ModelParser.asDateTime(json['check_in_time'] ?? json['checkInTime']),
+      teacherNotes: ModelParser.asString(json['teacher_notes'] ?? json['teacherNotes']),
+      centerName: ModelParser.asString(json['center_name'] ?? json['centerName']),
+      startTime: ModelParser.asString(json['start_time'] ?? json['startTime']),
+      endTime: ModelParser.asString(json['end_time'] ?? json['endTime']),
+      isOnline: ModelParser.asBool(json['is_online'] ?? json['isOnline']),
     );
   }
 }
@@ -62,20 +58,16 @@ final class AttendanceSummaryModel extends AttendanceSummaryEntity {
 
   factory AttendanceSummaryModel.fromJson(Map<String, dynamic> json) {
     return AttendanceSummaryModel(
-      totalSessions: (json['total_sessions'] ?? 0).toInt(),
-      present: (json['present'] ?? 0).toInt(),
-      late: (json['late'] ?? 0).toInt(),
-      absent: (json['absent'] ?? 0).toInt(),
-      excused: (json['excused'] ?? 0).toInt(),
-      online: (json['online'] ?? 0).toInt(),
-      attendanceRate: (json['attendance_rate'] ?? 0.0).toDouble(),
-      punctualityRate: (json['punctuality_rate'] ?? 0.0).toDouble(),
-      periodFrom: json['period_from'] != null
-          ? DateTime.tryParse(json['period_from'])
-          : null,
-      periodTo: json['period_to'] != null
-          ? DateTime.tryParse(json['period_to'])
-          : null,
+      totalSessions: ModelParser.asInt(json['total_sessions'] ?? json['totalSessions']),
+      present: ModelParser.asInt(json['present']),
+      late: ModelParser.asInt(json['late']),
+      absent: ModelParser.asInt(json['absent']),
+      excused: ModelParser.asInt(json['excused']),
+      online: ModelParser.asInt(json['online']),
+      attendanceRate: ModelParser.asDouble(json['attendance_rate'] ?? json['attendanceRate']),
+      punctualityRate: ModelParser.asDouble(json['punctuality_rate'] ?? json['punctualityRate']),
+      periodFrom: ModelParser.asDateTime(json['period_from'] ?? json['periodFrom']),
+      periodTo: ModelParser.asDateTime(json['period_to'] ?? json['periodTo']),
     );
   }
 }

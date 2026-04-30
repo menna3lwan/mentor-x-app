@@ -7,6 +7,8 @@ enum AuthenticationRepositoryExceptionCode {
   userNotFound,
   requiresOtp,
   deviceLimitReached,
+  accountPending,
+  accountRejected,
   failedToSendOtp,
   failedToRequestPasswordReset,
   failedToResetPassword,
@@ -16,6 +18,7 @@ enum AuthenticationRepositoryExceptionCode {
   failedToLogout,
   sessionAlreadyActive,
   failedToRefreshToken,
+  invalidCredentials,
 }
 
 final class AuthenticationRepositoryException
@@ -45,6 +48,26 @@ final class DeviceLimitReachedException
     required this.maxDevices,
     required this.activeDevices,
   }) : super(code: AuthenticationRepositoryExceptionCode.deviceLimitReached);
+}
+
+final class AccountPendingException extends AuthenticationRepositoryException {
+  final String? supportWhatsApp;
+
+  AccountPendingException({
+    super.message,
+    this.supportWhatsApp,
+  }) : super(code: AuthenticationRepositoryExceptionCode.accountPending);
+}
+
+final class AccountRejectedException extends AuthenticationRepositoryException {
+  final String? rejectionReason;
+  final String? supportWhatsApp;
+
+  AccountRejectedException({
+    super.message,
+    this.rejectionReason,
+    this.supportWhatsApp,
+  }) : super(code: AuthenticationRepositoryExceptionCode.accountRejected);
 }
 
 enum OtpVerificationPurpose { registration, login, passwordReset }
@@ -81,4 +104,9 @@ abstract interface class StudentAuthenticationRepository {
   Future<Duration?> resendOtp(String phoneNumber);
   Future<StudentEntity?> getCachedUser();
   Future<StudentEntity> getAccountStatus();
+  Future<void> forceLogoutAll();
+  Future<Map<String, dynamic>> getPendingStatus();
+  Future<String> getEntryPoint();
+  Future<bool> checkPhone(String phone);
+  Future<void> testMultiDevice();
 }

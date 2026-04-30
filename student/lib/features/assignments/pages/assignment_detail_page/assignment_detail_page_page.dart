@@ -119,9 +119,9 @@ class AssignmentDetailPage extends StatelessWidget {
                         ),
                       ),
                       const Gap(8),
-                      if (assignment.description.isNotEmpty)
+                      if ((assignment.description ?? '').isNotEmpty)
                         Text(
-                          assignment.description,
+                          assignment.description!,
                           style: TextStyle(fontSize: 15, color: palette.textSecondary, height: 1.6, fontWeight: FontWeight.w500),
                         ),
                     ],

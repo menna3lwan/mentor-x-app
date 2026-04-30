@@ -109,15 +109,19 @@ final class LoginPage extends StatelessWidget {
                               Text(
                                 'Welcome Back',
                                 style: Theme.of(context).textTheme.headlineSmall
-                                    ?.copyWith(fontWeight: FontWeight.w900, letterSpacing: -0.5),
+                                    ?.copyWith(
+                                      fontWeight: FontWeight.w900,
+                                      letterSpacing: -0.5,
+                                    ),
                               ),
                               const Gap(8),
                               Text(
                                 'Sign in to continue your learning journey',
-                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                  color: palette.textSecondary,
-                                  fontWeight: FontWeight.w500,
-                                ),
+                                style: Theme.of(context).textTheme.bodyMedium
+                                    ?.copyWith(
+                                      color: palette.textSecondary,
+                                      fontWeight: FontWeight.w500,
+                                    ),
                               ),
                               const Gap(32),
                               MentorXTextFormField(
@@ -140,7 +144,8 @@ final class LoginPage extends StatelessWidget {
                                 obscurePassword: obscurePassword,
                                 onObscureTextToggled: onObscurePasswordToggled,
                                 onChanged: onPasswordChanged,
-                                validator: passwordValidator,
+                                // i will uncomment this manua\lly.
+                                // validator: passwordValidator,
                               ),
                               const Gap(16),
                               Row(
@@ -160,10 +165,11 @@ final class LoginPage extends StatelessWidget {
                                   const Gap(10),
                                   Text(
                                     'Remember me',
-                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                      fontWeight: FontWeight.w700,
-                                      color: palette.textPrimary,
-                                    ),
+                                    style: Theme.of(context).textTheme.bodySmall
+                                        ?.copyWith(
+                                          fontWeight: FontWeight.w700,
+                                          color: palette.textPrimary,
+                                        ),
                                   ),
                                   const Spacer(),
                                   TextButton(
@@ -171,7 +177,8 @@ final class LoginPage extends StatelessWidget {
                                     style: TextButton.styleFrom(
                                       padding: EdgeInsets.zero,
                                       minimumSize: Size.zero,
-                                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                      tapTargetSize:
+                                          MaterialTapTargetSize.shrinkWrap,
                                     ),
                                     child: Text(
                                       'Forgot password?',
@@ -216,12 +223,25 @@ final class LoginPage extends StatelessWidget {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(16),
                               ),
-                              side: BorderSide(color: palette.brandPrimary.withValues(alpha: 0.3), width: 2),
+                              side: BorderSide(
+                                color: palette.brandPrimary.withValues(
+                                  alpha: 0.3,
+                                ),
+                                width: 2,
+                              ),
                             ),
-                            icon: Icon(Icons.fingerprint_rounded, color: palette.brandPrimary, size: 24),
+                            icon: Icon(
+                              Icons.fingerprint_rounded,
+                              color: palette.brandPrimary,
+                              size: 24,
+                            ),
                             label: Text(
                               'Login with biometrics',
-                              style: TextStyle(color: palette.brandPrimary, fontWeight: FontWeight.w800, fontSize: 15),
+                              style: TextStyle(
+                                color: palette.brandPrimary,
+                                fontWeight: FontWeight.w800,
+                                fontSize: 15,
+                              ),
                             ),
                           ),
                         ),
@@ -238,7 +258,10 @@ final class LoginPage extends StatelessWidget {
                             children: [
                               Text(
                                 "Don't have an account?",
-                                style: TextStyle(color: palette.textSecondary, fontWeight: FontWeight.w600),
+                                style: TextStyle(
+                                  color: palette.textSecondary,
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
                               TextButton(
                                 onPressed: onRegister,
@@ -255,11 +278,16 @@ final class LoginPage extends StatelessWidget {
                           const Gap(8),
                           TextButton.icon(
                             onPressed: onChangeTeacher,
-                            icon: const Icon(Icons.swap_horiz_rounded, size: 22),
+                            icon: const Icon(
+                              Icons.swap_horiz_rounded,
+                              size: 22,
+                            ),
                             label: const Text('Change Teacher / School'),
                             style: TextButton.styleFrom(
                               foregroundColor: palette.textTertiary,
-                              textStyle: const TextStyle(fontWeight: FontWeight.w700),
+                              textStyle: const TextStyle(
+                                fontWeight: FontWeight.w700,
+                              ),
                             ),
                           ),
                         ],
@@ -339,10 +367,10 @@ final class _TenantHeader extends StatelessWidget {
           Text(
             tenantName!,
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.w900,
-                  letterSpacing: -0.8,
-                  color: palette.textPrimary,
-                ),
+              fontWeight: FontWeight.w900,
+              letterSpacing: -0.8,
+              color: palette.textPrimary,
+            ),
             textAlign: TextAlign.center,
           ),
         ],

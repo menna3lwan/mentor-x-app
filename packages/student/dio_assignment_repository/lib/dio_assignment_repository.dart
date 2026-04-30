@@ -79,4 +79,44 @@ final class DioAssignmentRepository
     }
   }
 
+  @override
+  Future<void> deleteAttempt(String attemptId) async {
+    try {
+      await httpClient.delete('/api/assignment-attempts/$attemptId');
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(e, defaultCode: AssignmentRepositoryExceptionCode.unknown);
+    }
+  }
+
+  @override
+  Future<List<AssignmentSubmissionEntity>> getStudentAttempts(String studentId) async {
+    try {
+      final response = await httpClient.get('/api/assignment-attempts/student/$studentId');
+      final data = asList(asMap(response.data)['data'] ?? response.data);
+      return data.map((e) => AssignmentSubmissionModel.fromJson(asMap(e))).toList();
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(e, defaultCode: AssignmentRepositoryExceptionCode.unknown);
+    }
+  }
+
+  @override
+  Future<List<AssignmentSubmissionEntity>> getAttemptsForAssignment(String assignmentId) async {
+    try {
+      final response = await httpClient.get('/api/assignment-attempts/assignment/$assignmentId');
+      final data = asList(asMap(response.data)['data'] ?? response.data);
+      return data.map((e) => AssignmentSubmissionModel.fromJson(asMap(e))).toList();
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(e, defaultCode: AssignmentRepositoryExceptionCode.unknown);
+    }
+  }
+
+  @override
+  Future<Map<String, dynamic>> getAssignmentStatistics(String assignmentId) async {
+    try {
+      final response = await httpClient.get('/api/assignment-attempts/assignment/$assignmentId/statistics');
+      return asMap(response.data);
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(e, defaultCode: AssignmentRepositoryExceptionCode.unknown);
+    }
+  }
 }

@@ -14,19 +14,17 @@ final class WalletTransactionModel extends WalletTransactionEntity {
 
   factory WalletTransactionModel.fromJson(Map<String, dynamic> json) {
     return WalletTransactionModel(
-      id: json['id']?.toString() ?? '',
+      id: ModelParser.asString(json['id']),
       transactionType: WalletTransactionType.values.firstWhere(
-        (e) => e.name == (json['type'] ?? 'deposit'),
+        (e) => e.name == ModelParser.asString(json['type'] ?? json['transaction_type'], fallback: 'deposit'),
         orElse: () => WalletTransactionType.deposit,
       ),
-      amount: (json['amount'] ?? 0.0).toDouble(),
-      balanceAfter: (json['balance_after'] ?? 0.0).toDouble(),
-      description: json['description'] ?? '',
-      createdAt: json['created_at'] != null
-          ? DateTime.tryParse(json['created_at']) ?? DateTime.now()
-          : DateTime.now(),
-      typeBadge: json['type_badge'],
-      paymentMethod: json['payment_method'],
+      amount: ModelParser.asDouble(json['amount']),
+      balanceAfter: ModelParser.asDouble(json['balance_after'] ?? json['balanceAfter']),
+      description: ModelParser.asString(json['description']),
+      createdAt: ModelParser.asDateTime(json['created_at'] ?? json['createdAt']) ?? DateTime.now(),
+      typeBadge: ModelParser.asString(json['type_badge'] ?? json['typeBadge']),
+      paymentMethod: ModelParser.asString(json['payment_method'] ?? json['paymentMethod']),
     );
   }
 }
@@ -42,11 +40,11 @@ final class WalletSummaryModel extends WalletSummaryEntity {
 
   factory WalletSummaryModel.fromJson(Map<String, dynamic> json) {
     return WalletSummaryModel(
-      walletBalance: (json['wallet_balance'] ?? json['balance'] ?? 0.0).toDouble(),
-      points: (json['points'] ?? json['total_points'] ?? 0).toInt(),
-      spentThisMonth: (json['spent_this_month'] ?? 0.0).toDouble(),
-      totalCreditsThisMonth: (json['total_credits_this_month'] ?? 0.0).toDouble(),
-      totalTransactions: (json['total_transactions'] ?? 0).toInt(),
+      walletBalance: ModelParser.asDouble(json['wallet_balance'] ?? json['balance'] ?? json['walletBalance']),
+      points: ModelParser.asInt(json['points'] ?? json['total_points'] ?? json['totalPoints']),
+      spentThisMonth: ModelParser.asDouble(json['spent_this_month'] ?? json['spentThisMonth']),
+      totalCreditsThisMonth: ModelParser.asDouble(json['total_credits_this_month'] ?? json['totalCreditsThisMonth']),
+      totalTransactions: ModelParser.asInt(json['total_transactions'] ?? json['totalTransactions']),
     );
   }
 }
@@ -59,11 +57,11 @@ final class ParentWalletAnalyticsModel extends ParentWalletAnalyticsEntity {
 
   factory ParentWalletAnalyticsModel.fromJson(Map<String, dynamic> json) {
     return ParentWalletAnalyticsModel(
-      monthlySpending: (json['monthly_spending'] as List? ?? [])
-          .map((e) => MonthlySpendingModel.fromJson(e as Map<String, dynamic>))
+      monthlySpending: ModelParser.asList(json['monthly_spending'] ?? json['monthlySpending'])
+          .map((e) => MonthlySpendingModel.fromJson(ModelParser.asMap(e)))
           .toList(),
-      categoryBreakdown: (json['category_breakdown'] as Map? ?? {})
-          .map((k, v) => MapEntry(k.toString(), (v ?? 0.0).toDouble())),
+      categoryBreakdown: ModelParser.asMap(json['category_breakdown'] ?? json['categoryBreakdown'])
+          .map((k, v) => MapEntry(k.toString(), ModelParser.asDouble(v))),
     );
   }
 }
@@ -76,8 +74,8 @@ final class MonthlySpendingModel extends MonthlySpendingEntry {
 
   factory MonthlySpendingModel.fromJson(Map<String, dynamic> json) {
     return MonthlySpendingModel(
-      month: json['month'] ?? '',
-      amount: (json['amount'] ?? 0.0).toDouble(),
+      month: ModelParser.asString(json['month']),
+      amount: ModelParser.asDouble(json['amount']),
     );
   }
 }
@@ -97,26 +95,24 @@ final class PaymentModel extends PaymentEntity {
 
   factory PaymentModel.fromJson(Map<String, dynamic> json) {
     return PaymentModel(
-      id: json['id']?.toString() ?? '',
-      amount: (json['amount'] ?? 0.0).toDouble(),
-      currency: json['currency'] ?? 'EGP',
+      id: ModelParser.asString(json['id']),
+      amount: ModelParser.asDouble(json['amount']),
+      currency: ModelParser.asString(json['currency'], fallback: 'EGP'),
       status: PaymentStatus.values.firstWhere(
-        (e) => e.name == (json['status'] ?? 'pending'),
+        (e) => e.name == ModelParser.asString(json['status'], fallback: 'pending'),
         orElse: () => PaymentStatus.pending,
       ),
       method: PaymentMethod.values.firstWhere(
-        (e) => e.name == (json['method'] ?? 'vodafoneCash'),
+        (e) => e.name == ModelParser.asString(json['method'] ?? json['payment_method'], fallback: 'vodafoneCash'),
         orElse: () => PaymentMethod.vodafoneCash,
       ),
       paymentType: PaymentType.values.firstWhere(
-        (e) => e.name == (json['payment_type'] ?? 'walletTopup'),
+        (e) => e.name == ModelParser.asString(json['payment_type'] ?? json['paymentType'], fallback: 'walletTopup'),
         orElse: () => PaymentType.walletTopup,
       ),
-      createdAt: json['created_at'] != null
-          ? DateTime.tryParse(json['created_at']) ?? DateTime.now()
-          : DateTime.now(),
-      reference: json['reference'] ?? json['transaction_id'],
-      expiresAt: json['expires_at'] != null ? DateTime.tryParse(json['expires_at']) : null,
+      createdAt: ModelParser.asDateTime(json['created_at'] ?? json['createdAt']) ?? DateTime.now(),
+      reference: ModelParser.asString(json['reference'] ?? json['transaction_id']),
+      expiresAt: ModelParser.asDateTime(json['expires_at'] ?? json['expiresAt']),
     );
   }
 }

@@ -44,4 +44,10 @@ abstract interface class WalletRepository {
   Future<List<Map<String, dynamic>>> getRedemptionHistory({
     MentorXPaginationInfo? paginationInfo,
   });
+
+  // Pro Features
+  Future<void> transferFunds(String recipientPhone, double amount);
+  Future<void> creditWallet(String studentId, double amount, String reason);
+  Future<void> debitWallet(String studentId, double amount, String reason);
+  Future<WalletSummaryEntity> getStudentWalletSummary(String studentId);
 }

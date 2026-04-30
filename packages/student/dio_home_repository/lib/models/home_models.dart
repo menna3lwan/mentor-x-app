@@ -4,6 +4,7 @@ final class CourseModel extends CourseSummaryEntity {
   const CourseModel({
     required super.id,
     required super.title,
+    super.description,
     required super.thumbnailUrl,
     super.progressPercent,
     super.price,
@@ -12,24 +13,20 @@ final class CourseModel extends CourseSummaryEntity {
 
   factory CourseModel.fromJson(Map<String, dynamic> json) {
     return CourseModel(
-      id: (json['courseId'] ?? json['id'])?.toString() ?? '',
-      title: (json['courseTitle'] ?? json['title'])?.toString() ?? '',
-      thumbnailUrl: (json['courseThumbnailUrl'] ??
-              json['thumbnailUrl'] ??
-              json['thumbnail_url'])
-          ?.toString() ??
-          '',
-      progressPercent: _toDoubleOrNull(
-        json['progress'] ?? json['progressPercent'] ?? json['progress_percent'],
-      ),
-      price: _toDoubleOrNull(json['price']),
-      enrolledCount: _toInt(json['enrolledCount'] ?? json['enrolled_count']),
+      id: ModelParser.asString(json['courseId'] ?? json['id']),
+      title: ModelParser.asString(json['courseTitle'] ?? json['title']),
+      description: ModelParser.asString(json['description'] ?? json['courseDescription']),
+      thumbnailUrl: ModelParser.asString(json['courseThumbnailUrl'] ?? json['thumbnailUrl'] ?? json['thumbnail_url']),
+      progressPercent: ModelParser.asDouble(json['progress'] ?? json['progressPercent'] ?? json['progress_percent']),
+      price: ModelParser.asDouble(json['price']),
+      enrolledCount: ModelParser.asInt(json['enrolledCount'] ?? json['enrolled_count']),
     );
   }
 
   Map<String, dynamic> toJson() => {
         'id': id,
         'title': title,
+        'description': description,
         'thumbnail_url': thumbnailUrl,
         'progress_percent': progressPercent,
         'price': price,
@@ -40,6 +37,7 @@ final class CourseModel extends CourseSummaryEntity {
     return CourseModel(
       id: entity.id,
       title: entity.title,
+      description: entity.description,
       thumbnailUrl: entity.thumbnailUrl,
       progressPercent: entity.progressPercent,
       price: entity.price,
@@ -53,24 +51,41 @@ final class BannerModel extends BannerEntity {
     required super.id,
     required super.imageUrl,
     super.title,
-    super.deepLink,
+    super.description,
+    super.linkUrl,
+    super.displayOrder,
+    super.active = true,
+    super.startDate,
+    super.endDate,
+    super.createdAt,
   });
 
   factory BannerModel.fromJson(Map<String, dynamic> json) {
     return BannerModel(
-      id: json['id']?.toString() ?? '',
-      imageUrl: (json['imageUrl'] ?? json['image_url'])?.toString() ?? '',
-      title: (json['title'] ?? json['name'])?.toString(),
-      deepLink: (json['deepLink'] ?? json['deep_link'])?.toString() ??
-          (json['actionValue'] ?? json['action_value'])?.toString(),
+      id: ModelParser.asString(json['id']),
+      imageUrl: ModelParser.asString(json['imageUrl'] ?? json['image_url']),
+      title: ModelParser.asString(json['title'] ?? json['name']),
+      description: ModelParser.asString(json['description']),
+      linkUrl: ModelParser.asString(json['linkUrl'] ?? json['link_url'] ?? json['deepLink'] ?? json['deep_link'] ?? json['actionValue'] ?? json['action_value']),
+      displayOrder: ModelParser.asInt(json['displayOrder'] ?? json['display_order']),
+      active: ModelParser.asBool(json['active'], fallback: true),
+      startDate: ModelParser.asDateTime(json['startDate'] ?? json['start_date']),
+      endDate: ModelParser.asDateTime(json['endDate'] ?? json['end_date']),
+      createdAt: ModelParser.asDateTime(json['createdAt'] ?? json['created_at']),
     );
   }
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        'image_url': imageUrl,
+        'imageUrl': imageUrl,
         'title': title,
-        'deep_link': deepLink,
+        'description': description,
+        'linkUrl': linkUrl,
+        'displayOrder': displayOrder,
+        'active': active,
+        'startDate': startDate?.toIso8601String(),
+        'endDate': endDate?.toIso8601String(),
+        'createdAt': createdAt?.toIso8601String(),
       };
 
   factory BannerModel.fromEntity(BannerEntity entity) {
@@ -78,7 +93,13 @@ final class BannerModel extends BannerEntity {
       id: entity.id,
       imageUrl: entity.imageUrl,
       title: entity.title,
-      deepLink: entity.deepLink,
+      description: entity.description,
+      linkUrl: entity.linkUrl,
+      displayOrder: entity.displayOrder,
+      active: entity.active,
+      startDate: entity.startDate,
+      endDate: entity.endDate,
+      createdAt: entity.createdAt,
     );
   }
 }
@@ -95,15 +116,12 @@ final class AnnouncementModel extends AnnouncementEntity {
 
   factory AnnouncementModel.fromJson(Map<String, dynamic> json) {
     return AnnouncementModel(
-      id: json['id']?.toString() ?? '',
-      title: json['title']?.toString() ?? '',
-      content: json['content']?.toString() ?? json['preview']?.toString() ?? '',
-      preview: json['preview']?.toString() ?? json['content']?.toString() ?? '',
-      createdAt: DateTime.tryParse(
-            (json['createdAt'] ?? json['created_at'])?.toString() ?? '',
-          ) ??
-          DateTime.now(),
-      isPinned: _toBool(json['isPinned'] ?? json['is_pinned']),
+      id: ModelParser.asString(json['id']),
+      title: ModelParser.asString(json['title']),
+      content: ModelParser.asString(json['content'] ?? json['preview'] ?? json['body']),
+      preview: ModelParser.asString(json['preview'] ?? json['content'] ?? json['summary']),
+      createdAt: ModelParser.asDateTime(json['createdAt'] ?? json['created_at']) ?? DateTime.now(),
+      isPinned: ModelParser.asBool(json['isPinned'] ?? json['is_pinned']),
     );
   }
 
@@ -130,31 +148,48 @@ final class AnnouncementModel extends AnnouncementEntity {
 
 final class WalletSummaryModel extends WalletSummaryEntity {
   const WalletSummaryModel({
+    super.walletId,
+    super.studentId,
+    super.studentName,
     required super.walletBalance,
-    required super.points,
+    super.totalDeposited = 0,
+    super.totalSpent = 0,
+    super.totalRefunded = 0,
+    super.isActive = true,
+    super.isVerified = false,
+    super.formattedBalance,
+    super.points = 0,
     super.spentThisMonth = 0,
     super.totalCreditsThisMonth = 0,
     super.totalTransactions = 0,
+    super.createdAt,
+    super.updatedAt,
   });
 
   factory WalletSummaryModel.fromJson(Map<String, dynamic> json) {
     return WalletSummaryModel(
-      walletBalance: _toDouble(
-        json['walletBalance'] ?? json['wallet_balance'] ?? json['balance'],
-      ),
-      points: _toInt(json['totalPoints'] ?? json['total_points'] ?? json['points']),
-      spentThisMonth: _toDouble(json['spentThisMonth'] ?? json['spent_this_month']),
-      totalCreditsThisMonth: _toDouble(
-        json['totalCreditsThisMonth'] ?? json['total_credits_this_month'],
-      ),
-      totalTransactions: _toInt(
-        json['totalTransactions'] ?? json['total_transactions'],
-      ),
+      walletId: ModelParser.asString(json['id']),
+      studentId: ModelParser.asString(json['studentId'] ?? json['student_id']),
+      studentName: ModelParser.asString(json['studentName'] ?? json['student_name']),
+      walletBalance: ModelParser.asDouble(json['balance'] ?? json['walletBalance'] ?? json['wallet_balance']),
+      totalDeposited: ModelParser.asDouble(json['totalDeposited'] ?? json['total_deposited']),
+      totalSpent: ModelParser.asDouble(json['totalSpent'] ?? json['total_spent']),
+      totalRefunded: ModelParser.asDouble(json['totalRefunded'] ?? json['total_refunded']),
+      isActive: ModelParser.asBool(json['isActive'] ?? json['is_active'], fallback: true),
+      isVerified: ModelParser.asBool(json['isVerified'] ?? json['is_verified']),
+      formattedBalance: ModelParser.asString(json['formattedBalance'] ?? json['formatted_balance']),
+      points: ModelParser.asInt(json['totalPoints'] ?? json['total_points'] ?? json['points']),
+      spentThisMonth: ModelParser.asDouble(json['spentThisMonth'] ?? json['spent_this_month']),
+      totalCreditsThisMonth: ModelParser.asDouble(json['totalCreditsThisMonth'] ?? json['total_credits_this_month']),
+      totalTransactions: ModelParser.asInt(json['totalTransactions'] ?? json['total_transactions']),
+      createdAt: ModelParser.asDateTime(json['createdAt'] ?? json['created_at']),
+      updatedAt: ModelParser.asDateTime(json['updatedAt'] ?? json['updated_at']),
     );
   }
 
   Map<String, dynamic> toJson() => {
-        'wallet_balance': walletBalance,
+        'id': walletId,
+        'balance': walletBalance,
         'total_points': points,
         'spent_this_month': spentThisMonth,
         'total_credits_this_month': totalCreditsThisMonth,
@@ -163,6 +198,7 @@ final class WalletSummaryModel extends WalletSummaryEntity {
 
   factory WalletSummaryModel.fromEntity(WalletSummaryEntity entity) {
     return WalletSummaryModel(
+      walletId: entity.walletId,
       walletBalance: entity.walletBalance,
       points: entity.points,
       spentThisMonth: entity.spentThisMonth,
@@ -170,27 +206,4 @@ final class WalletSummaryModel extends WalletSummaryEntity {
       totalTransactions: entity.totalTransactions,
     );
   }
-}
-
-int _toInt(dynamic value) {
-  if (value is int) return value;
-  if (value is num) return value.toInt();
-  return int.tryParse(value?.toString() ?? '') ?? 0;
-}
-
-double _toDouble(dynamic value) {
-  if (value is double) return value;
-  if (value is num) return value.toDouble();
-  return double.tryParse(value?.toString() ?? '') ?? 0.0;
-}
-
-double? _toDoubleOrNull(dynamic value) {
-  if (value == null) return null;
-  return _toDouble(value);
-}
-
-bool _toBool(dynamic value) {
-  if (value is bool) return value;
-  final normalized = value?.toString().toLowerCase();
-  return normalized == 'true' || normalized == '1';
 }

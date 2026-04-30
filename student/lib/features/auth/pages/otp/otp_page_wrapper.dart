@@ -75,6 +75,7 @@ final class _OtpPageWrapperState extends State<OtpPageWrapper> {
         const StatusPendingPageRoute().go(context);
       case StudentStatus.suspended:
         const StatusBlockedPageRoute().go(context);
+      case StudentStatus.rejected:
       case StudentStatus.inactive:
         const StatusRejectedPageRoute().go(context);
     }

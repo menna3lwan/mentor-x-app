@@ -1,76 +1,79 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:gap/gap.dart';
 import '../../../../core/core.dart';
-import 'bloc/wallet_main_page_bloc.dart';
 
 class WalletMainPage extends StatelessWidget {
-  const WalletMainPage({super.key});
+  final double balance;
+  final int points;
+  final List<WalletTransactionEntity> transactions;
+  final bool isLoading;
+  final VoidCallback onRefresh;
+
+  const WalletMainPage({
+    super.key,
+    required this.balance,
+    required this.points,
+    required this.transactions,
+    required this.isLoading,
+    required this.onRefresh,
+  });
 
   @override
   Widget build(BuildContext context) {
     final t = context.t.student;
     final palette = MentorXThemeColorPalette.light;
 
-    return BlocBuilder<WalletMainPageBloc, WalletMainPageState>(
-      builder: (context, state) {
-        final balance = state.summary?.walletBalance ?? 0.0;
-        final transactions = state.transactions;
-        final isLoading = state.loadingState == LoadingState.loading;
-
-        return Scaffold(
-          backgroundColor: palette.backgroundSecondary,
-          appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(70),
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [palette.brandPrimary, palette.brandPrimary.withValues(alpha: 0.8)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
-                boxShadow: [
-                  BoxShadow(color: palette.brandPrimary.withValues(alpha: 0.3), blurRadius: 15, offset: const Offset(0, 4)),
-                ],
-              ),
-              child: AppBar(
-                backgroundColor: Colors.transparent,
-                elevation: 0,
-                foregroundColor: Colors.white,
-                centerTitle: true,
-                title: Text(
-                  t['walletTitle'] ?? 'Wallet',
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900, letterSpacing: -0.5),
-                ),
-              ),
+    return Scaffold(
+      backgroundColor: palette.backgroundSecondary,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(70),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [palette.brandPrimary, palette.brandPrimary.withValues(alpha: 0.8)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
+            boxShadow: [
+              BoxShadow(color: palette.brandPrimary.withValues(alpha: 0.3), blurRadius: 15, offset: const Offset(0, 4)),
+            ],
+          ),
+          child: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            foregroundColor: Colors.white,
+            centerTitle: true,
+            title: Text(
+              t['walletTitle'] ?? 'Wallet',
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900, letterSpacing: -0.5),
             ),
           ),
-          body: RefreshIndicator(
-            color: palette.brandPrimary,
-            onRefresh: () async {
-              context.read<WalletMainPageBloc>().add(const WalletMainPageLoadEvent());
-            },
-            child: CustomScrollView(
-              physics: const BouncingScrollPhysics(),
-              slivers: [
-                SliverToBoxAdapter(
-                  child: Column(
-                    children: [
-                      // Balance Card
-                      FadeInDown(
-                        duration: const Duration(milliseconds: 600),
-                        child: _BalanceCard(
-                          balance: balance,
-                          points: state.summary?.points ?? 0,
-                          t: t,
-                          palette: palette,
-                        ),
-                      ),
+        ),
+      ),
+      body: RefreshIndicator(
+        color: palette.brandPrimary,
+        onRefresh: () async => onRefresh(),
+        child: CustomScrollView(
+          physics: const BouncingScrollPhysics(),
+          slivers: [
+            SliverToBoxAdapter(
+              child: Column(
+                children: [
+                  // Balance Card
+                  FadeInDown(
+                    duration: const Duration(milliseconds: 600),
+                    child: _BalanceCard(
+                      balance: balance,
+                      points: points,
+                      t: t,
+                      palette: palette,
+                    ),
+                  ),
 
                       // Action Buttons
                       Padding(
@@ -190,8 +193,6 @@ class WalletMainPage extends StatelessWidget {
             ),
           ),
         );
-      },
-    );
   }
 }
 

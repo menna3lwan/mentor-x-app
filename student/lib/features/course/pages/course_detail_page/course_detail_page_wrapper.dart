@@ -104,6 +104,11 @@ final class _CourseDetailPageWrapperState
       case SessionItemType.assignment:
         AssignmentSubmitPageRoute(assignmentId: item.id).push(context);
         break;
+      case SessionItemType.audio:
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Audio player coming soon')),
+        );
+        break;
     }
   }
 }

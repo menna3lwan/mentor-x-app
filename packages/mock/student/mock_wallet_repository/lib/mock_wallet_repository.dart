@@ -85,4 +85,25 @@ final class MockWalletRepository implements WalletRepository {
       },
     ];
   }
+
+  @override
+  Future<void> transferFunds(String recipientPhone, double amount) async {
+    await Future<void>.delayed(delay);
+  }
+
+  @override
+  Future<void> creditWallet(String studentId, double amount, String reason) async {
+    await Future<void>.delayed(delay);
+  }
+
+  @override
+  Future<void> debitWallet(String studentId, double amount, String reason) async {
+    await Future<void>.delayed(delay);
+  }
+
+  @override
+  Future<WalletSummaryEntity> getStudentWalletSummary(String studentId) async {
+    await Future<void>.delayed(delay);
+    return MockWalletGenerator.summary();
+  }
 }

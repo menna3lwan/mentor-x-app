@@ -363,4 +363,34 @@ final class MockAuthenticationRepository
         return StudentStatus.active;
     }
   }
+
+  @override
+  Future<void> forceLogoutAll() async {
+    await _delay;
+    _currentUser = null;
+    clearOtpVerificationContext();
+  }
+
+  @override
+  Future<Map<String, dynamic>> getPendingStatus() async {
+    await _delay;
+    return {'status': 'none'};
+  }
+
+  @override
+  Future<String> getEntryPoint() async {
+    await _delay;
+    return 'student_home';
+  }
+
+  @override
+  Future<bool> checkPhone(String phone) async {
+    await _delay;
+    return true;
+  }
+
+  @override
+  Future<void> testMultiDevice() async {
+    await _delay;
+  }
 }

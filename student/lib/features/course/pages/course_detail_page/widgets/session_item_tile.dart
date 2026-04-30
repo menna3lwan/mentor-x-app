@@ -112,6 +112,7 @@ final class SessionItemTile extends StatelessWidget {
       SessionItemType.quiz => Icons.quiz_rounded,
       SessionItemType.assignment => Icons.assignment_rounded,
       SessionItemType.link => Icons.link_rounded,
+      SessionItemType.audio => Icons.headset_rounded,
     };
   }
 
@@ -125,6 +126,7 @@ final class SessionItemTile extends StatelessWidget {
       SessionItemType.quiz => const Color(0xFFFFA726),
       SessionItemType.assignment => const Color(0xFF26A69A),
       SessionItemType.link => const Color(0xFFAB47BC),
+      SessionItemType.audio => const Color(0xFF42A5F5),
     };
   }
 }

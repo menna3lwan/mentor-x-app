@@ -93,6 +93,7 @@ final class SplashPageBloc extends Bloc<SplashPageEvent, SplashPageState>
         StudentStatus.active => '/',
         StudentStatus.pending => '/status-pending',
         StudentStatus.suspended => '/status-blocked',
+        StudentStatus.rejected => '/status-rejected',
         StudentStatus.inactive => '/status-rejected',
       };
     }

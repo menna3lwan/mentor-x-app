@@ -30,7 +30,6 @@ import 'package:mock_attendance_repository/mock_attendance_repository.dart';
 import 'package:mock_wallet_repository/mock_wallet_repository.dart';
 import 'package:mock_notification_repository/mock_notification_repository.dart';
 import 'package:mock_settings_repository/mock_settings_repository.dart';
-import 'package:mock_profile_repository/mock_profile_repository.dart';
 import 'package:mock_quiz_repository/mock_quiz_repository.dart';
 import 'package:mock_assignment_repository/mock_assignment_repository.dart';
 import 'package:mock_ai_repository/mock_ai_repository.dart';
@@ -39,6 +38,7 @@ import 'package:mock_announcement_repository/mock_announcement_repository.dart';
 import 'package:mock_rewards_repository/mock_rewards_repository.dart';
 import 'package:mock_grade_repository/mock_grade_repository.dart';
 import 'package:mock_student_registration_repository/mock_student_registration_repository.dart';
+import 'package:mock_profile_repository/mock_profile_repository.dart';
 
 import '../../core/utils/env.dart';
 

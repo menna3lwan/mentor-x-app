@@ -143,4 +143,41 @@ final class DioWalletRepository
     }
   }
 
+  @override
+  Future<void> transferFunds(String recipientPhone, double amount) async {
+    try {
+      await httpClient.post('/api/wallet/transfer', data: {'recipientPhone': recipientPhone, 'amount': amount});
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(e, defaultCode: WalletRepositoryExceptionCode.unknown);
+    }
+  }
+
+  @override
+  Future<void> creditWallet(String studentId, double amount, String reason) async {
+    try {
+      await httpClient.post('/api/wallet/admin/credit', data: {'studentId': studentId, 'amount': amount, 'reason': reason});
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(e, defaultCode: WalletRepositoryExceptionCode.unknown);
+    }
+  }
+
+  @override
+  Future<void> debitWallet(String studentId, double amount, String reason) async {
+    try {
+      await httpClient.post('/api/wallet/admin/debit', data: {'studentId': studentId, 'amount': amount, 'reason': reason});
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(e, defaultCode: WalletRepositoryExceptionCode.unknown);
+    }
+  }
+
+  @override
+  Future<WalletSummaryEntity> getStudentWalletSummary(String studentId) async {
+    try {
+      final response = await httpClient.get('/api/wallet/admin/student/$studentId');
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      return WalletSummaryModel.fromJson(data);
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(e, defaultCode: WalletRepositoryExceptionCode.unknown);
+    }
+  }
 }

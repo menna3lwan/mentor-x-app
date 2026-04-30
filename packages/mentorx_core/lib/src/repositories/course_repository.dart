@@ -73,4 +73,19 @@ abstract interface class CourseRepository {
     required int completedLessons,
     required int totalLessons,
   });
+
+  // Pro Features
+  Future<void> updateCourse(String courseId, Map<String, dynamic> data);
+  Future<void> deleteCourse(String courseId);
+  Future<CourseEntity> createCourse(Map<String, dynamic> data);
+  Future<void> toggleCourseStatus(String courseId);
+  Future<void> completeEnrollment(String enrollmentId);
+  Future<void> grantEnrollmentAccess(String enrollmentId);
+  Future<void> expireOldEnrollments();
+  Future<void> extendEnrollment(String enrollmentId, int days);
+  Future<Map<String, dynamic>> getMyEnrollmentStats();
+  Future<List<EnrollmentEntity>> getStudentEnrollments(String studentId);
+  Future<List<EnrollmentEntity>> getCourseEnrollments(String courseId);
+  Future<void> deleteEnrollment(String enrollmentId);
+  Future<void> cancelAllStudentEnrollments(String studentId);
 }
