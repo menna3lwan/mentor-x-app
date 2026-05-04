@@ -24,7 +24,7 @@ final class DioStudentHomeRepository
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return WalletSummaryModel.fromJson(data);
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: StudentHomeRepositoryExceptionCode.failedToLoadWalletSummary,
       );
@@ -38,7 +38,7 @@ final class DioStudentHomeRepository
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return intOrNull(data['count']) ?? 0;
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode:
             StudentHomeRepositoryExceptionCode.failedToLoadUnreadNotificationsCount,
@@ -66,7 +66,7 @@ final class DioStudentHomeRepository
           .where((banner) => banner.id.isNotEmpty && banner.imageUrl.isNotEmpty)
           .toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: StudentHomeRepositoryExceptionCode.failedToLoadBanners,
       );
@@ -92,7 +92,7 @@ final class DioStudentHomeRepository
           .map(CourseModel.fromJson)
           .toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode:
             StudentHomeRepositoryExceptionCode.failedToLoadContinueLearning,
@@ -121,7 +121,7 @@ final class DioStudentHomeRepository
           .map(CourseModel.fromJson)
           .toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: StudentHomeRepositoryExceptionCode.failedToLoadFeaturedCourses,
       );
@@ -145,7 +145,7 @@ final class DioStudentHomeRepository
           .map(AnnouncementModel.fromJson)
           .toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: StudentHomeRepositoryExceptionCode.failedToLoadAnnouncements,
       );
@@ -170,7 +170,7 @@ final class DioStudentHomeRepository
       final responseData = asMap(response.data)['data'] ?? asMap(response.data);
       return BannerModel.fromJson(responseData);
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(e, defaultCode: StudentHomeRepositoryExceptionCode.unknown);
+      return handleHttpClientErrorResponse(e, defaultCode: StudentHomeRepositoryExceptionCode.unknown);
     }
   }
 

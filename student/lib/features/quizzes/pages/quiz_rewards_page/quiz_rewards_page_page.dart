@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:mentorx_ui/mentorx_ui.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mentorx_student/core/core.dart';
+import 'bloc/quiz_rewards_page_bloc.dart';
 import '../../widgets/quiz_ui.dart';
 
 class QuizRewardsPage extends StatelessWidget {
@@ -12,36 +15,50 @@ class QuizRewardsPage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.backgroundLight,
-      body: Column(
-        children: [
-          QuizHeader(
-            title: t['gamificationTitle']!,
-            showBack: true,
-            centerTitle: true,
-          ),
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                children: [
-                  const SizedBox(height: 16),
-                  _HeaderProfileCard(t: t),
-                  const SizedBox(height: 16),
-                  _XpProgressSection(t: t),
-                  const SizedBox(height: 16),
-                  _StatsGrid(t: t),
-                  const SizedBox(height: 16),
-                  _DailyStreakSection(t: t),
-                  const SizedBox(height: 16),
-                  _BadgesSection(t: t),
-                  const SizedBox(height: 16),
-                  _LeaderboardSection(t: t),
-                  const SizedBox(height: 24),
-                ],
+      body: BlocBuilder<QuizRewardsPageBloc, QuizRewardsPageState>(
+        builder: (context, state) {
+          if (state.loadingState == LoadingState.loading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (state.loadingState == LoadingState.error) {
+            return const Center(child: Text('Failed to load rewards'));
+          }
+
+          return Column(
+            children: [
+              QuizHeader(
+                title: t['gamificationTitle']!,
+                showBack: true,
+                centerTitle: true,
               ),
-            ),
-          ),
-        ],
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 16),
+                      _HeaderProfileCard(t: t),
+                      const SizedBox(height: 16),
+                      _XpProgressSection(t: t),
+                      const SizedBox(height: 16),
+                      _StatsGrid(t: t),
+                      const SizedBox(height: 16),
+                      _DailyStreakSection(t: t),
+                      const SizedBox(height: 16),
+                      _BadgesSection(t: t),
+                      const SizedBox(height: 16),
+                      _LeaderboardSection(
+                        t: t,
+                        entries: state.leaderboardEntries,
+                      ),
+                      const SizedBox(height: 24),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
@@ -597,54 +614,12 @@ class _BadgeCard extends StatelessWidget {
 // 6. Leaderboard Section
 // ---------------------------------------------------------------------------
 class _LeaderboardSection extends StatelessWidget {
-  const _LeaderboardSection({required this.t});
+  const _LeaderboardSection({required this.t, required this.entries});
   final Map<String, String> t;
+  final List<LeaderboardEntryEntity> entries;
 
   @override
   Widget build(BuildContext context) {
-    final entries = [
-      _LeaderEntry(
-        rank: 1,
-        name: '\u0645\u062D\u0645\u062F \u0639\u0644\u064A',
-        quizCount: 22,
-        percent: 98,
-        points: 3200,
-        isCurrentUser: false,
-      ),
-      _LeaderEntry(
-        rank: 2,
-        name: '\u0633\u0627\u0631\u0629 \u0623\u062D\u0645\u062F',
-        quizCount: 20,
-        percent: 95,
-        points: 2900,
-        isCurrentUser: false,
-      ),
-      _LeaderEntry(
-        rank: 3,
-        name: '\u0623\u062D\u0645\u062F \u0645\u062D\u0645\u062F',
-        quizCount: 18,
-        percent: 90,
-        points: 2450,
-        isCurrentUser: true,
-      ),
-      _LeaderEntry(
-        rank: 4,
-        name: '\u0641\u0627\u0637\u0645\u0629 \u062D\u0633\u0646',
-        quizCount: 16,
-        percent: 88,
-        points: 2100,
-        isCurrentUser: false,
-      ),
-      _LeaderEntry(
-        rank: 5,
-        name: '\u0639\u0645\u0631 \u062E\u0627\u0644\u062F',
-        quizCount: 15,
-        percent: 85,
-        points: 1800,
-        isCurrentUser: false,
-      ),
-    ];
-
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
@@ -675,33 +650,20 @@ class _LeaderboardSection extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 12),
-          ...entries.map((e) => _LeaderboardRow(entry: e, t: t)),
+          if (entries.isEmpty)
+            const Center(child: Text('No entries found'))
+          else
+            ...entries.map((e) => _LeaderboardRow(entry: e, t: t)),
         ],
       ),
     );
   }
 }
 
-class _LeaderEntry {
-  const _LeaderEntry({
-    required this.rank,
-    required this.name,
-    required this.quizCount,
-    required this.percent,
-    required this.points,
-    required this.isCurrentUser,
-  });
-  final int rank;
-  final String name;
-  final int quizCount;
-  final int percent;
-  final int points;
-  final bool isCurrentUser;
-}
 
 class _LeaderboardRow extends StatelessWidget {
   const _LeaderboardRow({required this.entry, required this.t});
-  final _LeaderEntry entry;
+  final LeaderboardEntryEntity entry;
   final Map<String, String> t;
 
   Color _medalColor() {
@@ -778,7 +740,7 @@ class _LeaderboardRow extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  entry.name,
+                  entry.studentName,
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: entry.isCurrentUser
@@ -791,7 +753,7 @@ class _LeaderboardRow extends StatelessWidget {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  '${entry.quizCount} ${t['quiz']!} . ${entry.percent}%',
+                  '${entry.quizCount ?? 0} ${t['quiz']!} . ${entry.score.toStringAsFixed(0)}%',
                   style: const TextStyle(
                     fontSize: 11,
                     color: AppColors.greyDark,

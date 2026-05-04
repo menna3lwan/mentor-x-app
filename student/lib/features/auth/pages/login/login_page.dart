@@ -21,7 +21,6 @@ final class LoginPage extends StatelessWidget {
   final VoidCallback onRememberMeToggled;
   final VoidCallback onForgotPassword;
   final VoidCallback onRegister;
-  final VoidCallback onChangeTeacher;
   final VoidCallback onSubmit;
   final String? tenantName;
   final String? tenantLogoUrl;
@@ -46,7 +45,6 @@ final class LoginPage extends StatelessWidget {
     required this.onRememberMeToggled,
     required this.onForgotPassword,
     required this.onRegister,
-    required this.onChangeTeacher,
     required this.onSubmit,
     this.tenantName,
     this.tenantLogoUrl,
@@ -274,21 +272,6 @@ final class LoginPage extends StatelessWidget {
                                 ),
                               ),
                             ],
-                          ),
-                          const Gap(8),
-                          TextButton.icon(
-                            onPressed: onChangeTeacher,
-                            icon: const Icon(
-                              Icons.swap_horiz_rounded,
-                              size: 22,
-                            ),
-                            label: const Text('Change Teacher / School'),
-                            style: TextButton.styleFrom(
-                              foregroundColor: palette.textTertiary,
-                              textStyle: const TextStyle(
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
                           ),
                         ],
                       ),

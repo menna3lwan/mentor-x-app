@@ -21,18 +21,31 @@ final class QuizRewardsPageBloc
           QuizRewardsPageState,
           QuizRewardsPagePresentationEvent
         > {
-  QuizRewardsPageBloc({required this.quizRepository})
-    : super(QuizRewardsPageState.initial) {
+  QuizRewardsPageBloc({
+    required this.quizRepository,
+    required this.leaderboardRepository,
+  }) : super(QuizRewardsPageState.initial) {
     on<QuizRewardsPageLoadEvent>(_onLoad);
   }
 
   final QuizRepository quizRepository;
+  final LeaderboardRepository leaderboardRepository;
 
   Future<void> _onLoad(
     QuizRewardsPageLoadEvent event,
     Emitter<QuizRewardsPageState> emit,
   ) async {
     emit(state.copyWith(loadingState: LoadingState.loading));
-    emit(state.copyWith(loadingState: LoadingState.loaded));
+    try {
+      final entries = await leaderboardRepository.getGlobalLeaderboard();
+      emit(
+        state.copyWith(
+          loadingState: LoadingState.loaded,
+          leaderboardEntries: entries,
+        ),
+      );
+    } catch (e) {
+      emit(state.copyWith(loadingState: LoadingState.error));
+    }
   }
 }

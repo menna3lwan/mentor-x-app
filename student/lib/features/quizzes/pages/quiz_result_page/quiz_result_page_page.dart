@@ -153,7 +153,7 @@ class QuizResultPage extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            const Gap(12),
+                            const SizedBox(width: 12),
                             Expanded(
                               child: FadeInUp(
                                 duration: const Duration(milliseconds: 500),
@@ -166,7 +166,7 @@ class QuizResultPage extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            const Gap(12),
+                            const SizedBox(width: 12),
                             Expanded(
                               child: FadeInUp(
                                 duration: const Duration(milliseconds: 500),
@@ -185,6 +185,17 @@ class QuizResultPage extends StatelessWidget {
                         FadeInUp(
                           duration: const Duration(milliseconds: 600),
                           delay: const Duration(milliseconds: 700),
+                          child: _BuildLeaderboard(
+                            leaderboard: state.leaderboard,
+                            myRank: state.myRank,
+                            palette: palette,
+                            t: t,
+                          ),
+                        ),
+                        const Gap(40),
+                        FadeInUp(
+                          duration: const Duration(milliseconds: 600),
+                          delay: const Duration(milliseconds: 800),
                           child: MentorXButton(
                             label: t['reviewAnswers']!,
                             onPressed: () => context.push('/quiz-answers-review', extra: result),
@@ -194,7 +205,7 @@ class QuizResultPage extends StatelessWidget {
                           const Gap(12),
                           FadeInUp(
                             duration: const Duration(milliseconds: 600),
-                            delay: const Duration(milliseconds: 800),
+                            delay: const Duration(milliseconds: 900),
                             child: MentorXButton(
                               label: t['claimReward']!,
                               onPressed: () => context.push('/quiz-rewards', extra: result),
@@ -204,7 +215,7 @@ class QuizResultPage extends StatelessWidget {
                         const Gap(24),
                         FadeInUp(
                           duration: const Duration(milliseconds: 600),
-                          delay: const Duration(milliseconds: 900),
+                          delay: const Duration(milliseconds: 1000),
                           child: TextButton(
                             onPressed: () => context.go('/'),
                             child: Text(
@@ -356,6 +367,144 @@ class _BuildResultCircle extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class _BuildLeaderboard extends StatelessWidget {
+  final List<LeaderboardEntryEntity> leaderboard;
+  final LeaderboardEntryEntity? myRank;
+  final MentorXThemeColorPalette palette;
+  final dynamic t;
+
+  const _BuildLeaderboard({
+    required this.leaderboard,
+    this.myRank,
+    required this.palette,
+    required this.t,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (leaderboard.isEmpty && myRank == null) return const SizedBox.shrink();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(Icons.emoji_events_outlined, color: palette.brandSecondary, size: 24),
+            const Gap(8),
+            Text(
+              t['leaderboard'] ?? 'Leaderboard',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w900,
+                color: palette.textPrimary,
+                letterSpacing: -0.5,
+              ),
+            ),
+          ],
+        ),
+        const Gap(16),
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(24),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.03),
+                blurRadius: 20,
+                offset: const Offset(0, 8),
+              ),
+            ],
+          ),
+          child: Column(
+            children: [
+              ...leaderboard.take(3).map((entry) => _LeaderboardTile(
+                    entry: entry,
+                    palette: palette,
+                  )),
+              if (myRank != null && leaderboard.indexWhere((e) => e.studentId == myRank!.studentId) >= 3) ...[
+                const Divider(height: 1, indent: 24, endIndent: 24),
+                _LeaderboardTile(
+                  entry: myRank!,
+                  palette: palette,
+                  isHighlighted: true,
+                ),
+              ],
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _LeaderboardTile extends StatelessWidget {
+  final LeaderboardEntryEntity entry;
+  final MentorXThemeColorPalette palette;
+  final bool isHighlighted;
+
+  const _LeaderboardTile({
+    required this.entry,
+    required this.palette,
+    this.isHighlighted = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final color = entry.rank == 1
+        ? const Color(0xFFFFD700)
+        : (entry.rank == 2 ? const Color(0xFFC0C0C0) : (entry.rank == 3 ? const Color(0xFFCD7F32) : palette.brandSecondary));
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      decoration: BoxDecoration(
+        color: isHighlighted ? palette.brandPrimary.withValues(alpha: 0.05) : null,
+        borderRadius: BorderRadius.circular(24),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 32,
+            height: 32,
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.1),
+              shape: BoxShape.circle,
+            ),
+            child: Center(
+              child: Text(
+                '${entry.rank}',
+                style: TextStyle(
+                  color: color,
+                  fontWeight: FontWeight.w900,
+                  fontSize: 14,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Text(
+              entry.studentName,
+              style: TextStyle(
+                color: palette.textPrimary,
+                fontWeight: isHighlighted ? FontWeight.w900 : FontWeight.w700,
+                fontSize: 15,
+              ),
+            ),
+          ),
+          Text(
+            '${entry.score}%',
+            style: TextStyle(
+              color: palette.brandPrimary,
+              fontWeight: FontWeight.w900,
+              fontSize: 15,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

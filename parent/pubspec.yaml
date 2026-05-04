@@ -90,6 +90,7 @@ dev_dependencies:
   bloc_test: ^10.0.0
   mocktail: ^1.0.4
   bloc_presentation_test: ^1.2.0
+  test_api: ^0.7.12
 
 flutter:
   uses-material-design: true

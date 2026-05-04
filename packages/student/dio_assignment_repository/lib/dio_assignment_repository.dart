@@ -1,4 +1,5 @@
 import 'package:mentorx_core/mentorx_core.dart';
+import 'package:dio_quiz_repository/dio_quiz_repository.dart';
 import 'models/assignment_models.dart';
 export 'models/assignment_models.dart';
 
@@ -6,9 +7,10 @@ final class DioAssignmentRepository
     extends HttpClientRepository<AssignmentRepositoryExceptionCode>
     implements AssignmentRepository {
   @override
-  Never throwException(AssignmentRepositoryExceptionCode code,
-          {String? message}) =>
-      throw AssignmentRepositoryException(code: code, message: message);
+  Never throwException(
+    AssignmentRepositoryExceptionCode code, {
+    String? message,
+  }) => throw AssignmentRepositoryException(code: code, message: message);
 
   final HttpClient httpClient;
 
@@ -24,7 +26,7 @@ final class DioAssignmentRepository
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return AssignmentModel.fromJson(data);
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: AssignmentRepositoryExceptionCode.failedToLoadAssignment,
       );
@@ -32,14 +34,48 @@ final class DioAssignmentRepository
   }
 
   @override
+  Future<List<AssignmentEntity>> getAssignments() async {
+    try {
+      final response = await httpClient.get('/api/assignments');
+      final list = asList(asMap(response.data)['data'] ?? response.data);
+      return list.map((e) => AssignmentModel.fromJson(asMap(e))).toList();
+    } on HttpClientResponse catch (e) {
+      return handleHttpClientErrorResponse(
+        e,
+        defaultCode: AssignmentRepositoryExceptionCode.failedToLoadAssignment,
+      );
+    }
+  }
+
+  @override
+  Future<List<QuizQuestionEntity>> getAssignmentQuestions(
+    String assignmentId,
+  ) async {
+    try {
+      final response = await httpClient.get(
+        '/api/assignment-questions/assignment/$assignmentId',
+      );
+      final data = asList(asMap(response.data)['data'] ?? response.data);
+      return data.map((e) => QuizQuestionModel.fromJson(asMap(e))).toList();
+    } on HttpClientResponse catch (e) {
+      return handleHttpClientErrorResponse(
+        e,
+        defaultCode: AssignmentRepositoryExceptionCode.unknown,
+      );
+    }
+  }
+
+  @override
   Future<AssignmentSubmissionEntity?> getSubmission(String assignmentId) async {
     try {
-      final response = await httpClient.get('/api/assignment-attempts/student/me/assignment/$assignmentId');
+      final response = await httpClient.get(
+        '/api/assignment-attempts/student/me/assignment/$assignmentId',
+      );
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return AssignmentSubmissionModel.fromJson(data);
     } on HttpClientResponse catch (e) {
       if (e.statusCode == 404) return null;
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: AssignmentRepositoryExceptionCode.failedToLoadSubmission,
       );
@@ -59,10 +95,12 @@ final class DioAssignmentRepository
         data: {
           'assignmentId': assignmentId,
           'answers': answers.entries
-              .map((e) => {
-                    'questionId': e.key,
-                    'selectedAnswer': e.value,
-                  })
+              .map(
+                (e) => {
+                  'questionId': e.key,
+                  'selectedAnswer': e.value,
+                },
+              )
               .toList(),
           'fileUrls': filePaths,
           'contentText': contentText,
@@ -72,7 +110,7 @@ final class DioAssignmentRepository
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return AssignmentSubmissionModel.fromJson(data);
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: AssignmentRepositoryExceptionCode.failedToSubmitAssignment,
       );
@@ -84,39 +122,67 @@ final class DioAssignmentRepository
     try {
       await httpClient.delete('/api/assignment-attempts/$attemptId');
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(e, defaultCode: AssignmentRepositoryExceptionCode.unknown);
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: AssignmentRepositoryExceptionCode.unknown,
+      );
     }
   }
 
   @override
-  Future<List<AssignmentSubmissionEntity>> getStudentAttempts(String studentId) async {
+  Future<List<AssignmentSubmissionEntity>> getStudentAttempts(
+    String studentId,
+  ) async {
     try {
-      final response = await httpClient.get('/api/assignment-attempts/student/$studentId');
+      final response = await httpClient.get(
+        '/api/assignment-attempts/student/$studentId',
+      );
       final data = asList(asMap(response.data)['data'] ?? response.data);
-      return data.map((e) => AssignmentSubmissionModel.fromJson(asMap(e))).toList();
+      return data
+          .map((e) => AssignmentSubmissionModel.fromJson(asMap(e)))
+          .toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(e, defaultCode: AssignmentRepositoryExceptionCode.unknown);
+      return handleHttpClientErrorResponse(
+        e,
+        defaultCode: AssignmentRepositoryExceptionCode.unknown,
+      );
     }
   }
 
   @override
-  Future<List<AssignmentSubmissionEntity>> getAttemptsForAssignment(String assignmentId) async {
+  Future<List<AssignmentSubmissionEntity>> getAttemptsForAssignment(
+    String assignmentId,
+  ) async {
     try {
-      final response = await httpClient.get('/api/assignment-attempts/assignment/$assignmentId');
+      final response = await httpClient.get(
+        '/api/assignment-attempts/assignment/$assignmentId',
+      );
       final data = asList(asMap(response.data)['data'] ?? response.data);
-      return data.map((e) => AssignmentSubmissionModel.fromJson(asMap(e))).toList();
+      return data
+          .map((e) => AssignmentSubmissionModel.fromJson(asMap(e)))
+          .toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(e, defaultCode: AssignmentRepositoryExceptionCode.unknown);
+      return handleHttpClientErrorResponse(
+        e,
+        defaultCode: AssignmentRepositoryExceptionCode.unknown,
+      );
     }
   }
 
   @override
-  Future<Map<String, dynamic>> getAssignmentStatistics(String assignmentId) async {
+  Future<Map<String, dynamic>> getAssignmentStatistics(
+    String assignmentId,
+  ) async {
     try {
-      final response = await httpClient.get('/api/assignment-attempts/assignment/$assignmentId/statistics');
+      final response = await httpClient.get(
+        '/api/assignment-attempts/assignment/$assignmentId/statistics',
+      );
       return asMap(response.data);
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(e, defaultCode: AssignmentRepositoryExceptionCode.unknown);
+      return handleHttpClientErrorResponse(
+        e,
+        defaultCode: AssignmentRepositoryExceptionCode.unknown,
+      );
     }
   }
 }

@@ -36,7 +36,7 @@ final class DioGradeRepository
 
       return list.map((e) => QuizAttemptModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: GradeRepositoryExceptionCode.failedToLoadQuizResults,
       );
@@ -63,7 +63,7 @@ final class DioGradeRepository
 
       return list.map((e) => AssignmentSubmissionModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: GradeRepositoryExceptionCode.failedToLoadAssignmentResults,
       );

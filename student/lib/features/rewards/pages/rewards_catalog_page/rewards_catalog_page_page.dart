@@ -47,7 +47,7 @@ class RewardsCatalogPage extends StatelessWidget {
                     icon: const Icon(Icons.history_rounded),
                     onPressed: () => const RewardsHistoryPageRoute().push(context),
                   ),
-                  const Gap(8),
+                  const SizedBox(width: 8),
                 ],
               ),
             ),

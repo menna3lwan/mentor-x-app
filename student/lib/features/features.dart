@@ -7,7 +7,7 @@ export 'course/course.dart';
 export 'home/home.dart';
 export 'notifications/notifications.dart';
 export 'onboarding/onboarding.dart';
-export 'products/products.dart';
+export 'marketplace/marketplace.dart';
 export 'profile/profile.dart';
 export 'quizzes/quizzes.dart';
 export 'rewards/rewards.dart';

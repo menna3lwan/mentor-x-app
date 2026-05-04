@@ -18,6 +18,17 @@ final class MockProfileRepository implements StudentProfileRepository {
   }
 
   @override
+  Future<Map<String, dynamic>> getSummary() async {
+    await Future<void>.delayed(delay);
+    return {
+      'points': 2450,
+      'rank': 3,
+      'quizzesCompleted': 18,
+      'badgesEarned': 4,
+    };
+  }
+
+  @override
   Future<List<DeviceEntity>> getDevices() async {
     await Future<void>.delayed(delay);
     return MockProfileGenerator.devices();

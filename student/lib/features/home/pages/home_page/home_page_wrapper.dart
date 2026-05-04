@@ -210,7 +210,7 @@ final class _HomePageWrapperState extends State<HomePageWrapper> {
                               const RewardsCatalogPageRoute().push(context);
                               return;
                             case 5:
-                              const ProductsGridPageRoute().push(context);
+                              const MarketplaceGridPageRoute().push(context);
                               return;
                             default:
                               return;

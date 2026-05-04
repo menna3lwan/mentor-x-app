@@ -5,12 +5,15 @@ import 'package:mentorx_core/mentorx_core.dart';
 import 'integration_config.dart';
 import 'memory_cache_repository.dart';
 
+final _log = MentorXLogger('BannersDiscoveryTest');
+
 void main() {
   late StudentHomeRepository repository;
   late DioHttpClient httpClient;
   late MemoryCacheRepository cacheRepository;
 
   setUp(() async {
+    MentorXLogger.enabled = true;
     cacheRepository = MemoryCacheRepository();
     httpClient = DioHttpClient(
       baseUrl: IntegrationConfig.baseUrl,
@@ -23,14 +26,14 @@ void main() {
     test('Get Home Banners', () async {
       try {
         final banners = await repository.getHomeBanners();
-        print('Banners count: ${banners.length}');
+        _log.info('Banners count: ${banners.length}');
         for (var b in banners) {
-          print('Banner: ${b.id} - ${b.title}');
+          _log.info('Banner: ${b.id} - ${b.title}');
         }
       } on HttpClientResponse catch (e) {
-        print('Error: ${e.statusCode} ${e.data}');
+        _log.error('Error: ${e.statusCode} ${e.data}');
       } catch (e) {
-        print('Failed to get banners: $e');
+        _log.error('Failed to get banners: $e');
       }
     });
   });

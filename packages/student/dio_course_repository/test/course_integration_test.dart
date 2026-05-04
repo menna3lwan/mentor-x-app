@@ -5,12 +5,15 @@ import 'package:mentorx_core/mentorx_core.dart';
 import 'integration_config.dart';
 import 'memory_cache_repository.dart';
 
+final _log = MentorXLogger('CourseIntegrationTest');
+
 void main() {
   late CourseRepository repository;
   late DioHttpClient httpClient;
   late MemoryCacheRepository cacheRepository;
 
   setUp(() async {
+    MentorXLogger.enabled = true;
     cacheRepository = MemoryCacheRepository();
     httpClient = DioHttpClient(
       baseUrl: IntegrationConfig.baseUrl,
@@ -23,28 +26,28 @@ void main() {
     test('Get Course Catalog (Discovery)', () async {
       try {
         final catalog = await repository.getCourseCatalog();
-        print('Catalog loaded: ${catalog.length} courses');
+        _log.info('Catalog loaded: ${catalog.length} courses');
         for (var course in catalog.take(3)) {
-          print(' - ${course.title} (ID: ${course.id})');
+          _log.info(' - ${course.title} (ID: ${course.id})');
         }
       } on CourseRepositoryException catch (e) {
-        print('Failed to load catalog: ${e.code} - ${e.message}');
+        _log.error('Failed to load catalog: ${e.code} - ${e.message}');
       } catch (e) {
-        print('Unexpected error: $e');
+        _log.error('Unexpected error: $e');
       }
     });
 
     test('Get Categories (Discovery)', () async {
       try {
         final categories = await repository.getCategories();
-        print('Categories loaded: ${categories.length}');
+        _log.info('Categories loaded: ${categories.length}');
         for (var cat in categories.take(5)) {
-          print(' - ${cat.name} (ID: ${cat.id})');
+          _log.info(' - ${cat.name} (ID: ${cat.id})');
         }
       } on CourseRepositoryException catch (e) {
-        print('Failed to load categories: ${e.code} - ${e.message}');
+        _log.error('Failed to load categories: ${e.code} - ${e.message}');
       } catch (e) {
-        print('Unexpected error: $e');
+        _log.error('Unexpected error: $e');
       }
     });
 
@@ -52,11 +55,11 @@ void main() {
       // Trying ID 1 just in case
       try {
         final detail = await repository.getCourseDetail('1');
-        print('Course 1 Detail: ${detail.title}');
+        _log.info('Course 1 Detail: ${detail.title}');
       } on CourseRepositoryException catch (e) {
-        print('Failed to load detail: ${e.code} - ${e.message}');
+        _log.error('Failed to load detail: ${e.code} - ${e.message}');
       } catch (e) {
-        print('Unexpected error: $e');
+        _log.error('Unexpected error: $e');
       }
     });
   });

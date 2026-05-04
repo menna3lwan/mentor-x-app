@@ -18,6 +18,12 @@ final class MockAssignmentRepository implements AssignmentRepository {
   }
 
   @override
+  Future<List<QuizQuestionEntity>> getAssignmentQuestions(String assignmentId) async {
+    await Future<void>.delayed(delay);
+    return MockAssignmentGenerator.assignment(assignmentId).questions;
+  }
+
+  @override
   Future<AssignmentSubmissionEntity?> getSubmission(
     String assignmentId,
   ) async {

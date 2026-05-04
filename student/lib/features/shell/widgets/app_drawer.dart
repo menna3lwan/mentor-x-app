@@ -127,7 +127,7 @@ class AppDrawer extends StatelessWidget {
                   label: t['store']!,
                   onTap: () {
                     Navigator.pop(context);
-                    context.push('/products');
+                    context.push('/marketplace');
                   },
                 ),
                 _DrawerItem(

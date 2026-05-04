@@ -6,10 +6,10 @@ import '../helpers/student_patrol_harness.dart';
 
 void main() {
   final routes = <({String name, GoRouteData route})>[
-    (name: 'products_grid', route: const ProductsGridPageRoute()),
-    (name: 'product_detail', route: const ProductDetailPageRoute(itemId: '1')),
-    (name: 'shopping_cart', route: const ShoppingCartPageRoute()),
-    (name: 'order_history', route: const OrderHistoryPageRoute()),
+    (name: 'products_grid', route: const MarketplaceGridPageRoute()),
+    (name: 'product_detail', route: const MarketplaceDetailPageRoute(itemId: '1')),
+    (name: 'shopping_cart', route: const MarketplaceCartPageRoute()),
+    (name: 'order_history', route: const MarketplaceOrdersPageRoute()),
     (name: 'wallet_add_balance', route: const AddBalancePageRoute()),
     (name: 'wallet_redeem_code', route: const RedeemCodePageRoute()),
     (name: 'wallet_purchase_confirm', route: const PurchaseConfirmPageRoute(paymentId: '1')),

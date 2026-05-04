@@ -1,6 +1,11 @@
 part of '../../../../core/routing/app_routes.dart';
 
-final class ForgotPasswordPageRoute extends GoRouteData {
+@TypedGoRoute<ForgotPasswordPageRoute>(
+  path: '/forgot-password',
+  name: 'forgotPassword',
+)
+final class ForgotPasswordPageRoute extends GoRouteData
+    with $ForgotPasswordPageRoute {
   final String? phoneNumber;
 
   const ForgotPasswordPageRoute({this.phoneNumber});

@@ -38,7 +38,7 @@ final class DioAnnouncementRepository
           response.data);
       return data.map((e) => AnnouncementModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: AnnouncementRepositoryExceptionCode.failedToLoadAnnouncements,
       );
@@ -52,7 +52,7 @@ final class DioAnnouncementRepository
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return AnnouncementModel.fromJson(data);
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: AnnouncementRepositoryExceptionCode.failedToLoadAnnouncementDetail,
       );

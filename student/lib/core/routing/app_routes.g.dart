@@ -11,7 +11,6 @@ List<RouteBase> get $appRoutes => [
   $attendanceHistoryPageRoute,
   $deviceManagementPageRoute,
   $aboutPageRoute,
-  $supportPageRoute,
   $whatsappGroupsPageRoute,
   $settingsListPageRoute,
   $videoPlayerPageRoute,
@@ -22,13 +21,15 @@ List<RouteBase> get $appRoutes => [
   $assignmentResultPageRoute,
   $assignmentDetailPageRoute,
   $assignmentSubmitPageRoute,
-  $productDetailPageRoute,
-  $shoppingCartPageRoute,
-  $orderHistoryPageRoute,
-  $productsGridPageRoute,
+  $marketplaceDetailPageRoute,
+  $marketplaceCartPageRoute,
+  $marketplaceOrdersPageRoute,
+  $marketplaceGridPageRoute,
   $registrationPageRoute,
   $otpPageRoute,
   $loginPageRoute,
+  $forgotPasswordPageRoute,
+  $resetPasswordPageRoute,
   $shellPageRoute,
   $rewardsHistoryPageRoute,
   $rewardsCatalogPageRoute,
@@ -37,11 +38,13 @@ List<RouteBase> get $appRoutes => [
   $statusBlockedPageRoute,
   $editProfilePageRoute,
   $changePasswordPageRoute,
+  $verifyIdentityPageRoute,
   $redeemCodePageRoute,
   $addBalancePageRoute,
   $purchaseConfirmPageRoute,
   $paymentSuccessPageRoute,
   $transactionsHistoryPageRoute,
+  $walletOrdersPageRoute,
   $quizTakingPageRoute,
   $quizResultPageRoute,
   $quizRewardsPageRoute,
@@ -148,33 +151,6 @@ mixin $AboutPageRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/about');
-
-  @override
-  void go(BuildContext context) => context.go(location);
-
-  @override
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  @override
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  @override
-  void replace(BuildContext context) => context.replace(location);
-}
-
-RouteBase get $supportPageRoute => GoRouteData.$route(
-  path: '/support',
-  name: 'support',
-  factory: $SupportPageRoute._fromState,
-);
-
-mixin $SupportPageRoute on GoRouteData {
-  static SupportPageRoute _fromState(GoRouterState state) =>
-      const SupportPageRoute();
-
-  @override
-  String get location => GoRouteData.$location('/support');
 
   @override
   void go(BuildContext context) => context.go(location);
@@ -545,21 +521,21 @@ mixin $AssignmentSubmitPageRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-RouteBase get $productDetailPageRoute => GoRouteData.$route(
-  path: '/product-detail/:itemId',
-  name: 'productDetail',
-  factory: $ProductDetailPageRoute._fromState,
+RouteBase get $marketplaceDetailPageRoute => GoRouteData.$route(
+  path: '/marketplace-detail/:itemId',
+  name: 'marketplaceDetail',
+  factory: $MarketplaceDetailPageRoute._fromState,
 );
 
-mixin $ProductDetailPageRoute on GoRouteData {
-  static ProductDetailPageRoute _fromState(GoRouterState state) =>
-      ProductDetailPageRoute(itemId: state.pathParameters['itemId']!);
+mixin $MarketplaceDetailPageRoute on GoRouteData {
+  static MarketplaceDetailPageRoute _fromState(GoRouterState state) =>
+      MarketplaceDetailPageRoute(itemId: state.pathParameters['itemId']!);
 
-  ProductDetailPageRoute get _self => this as ProductDetailPageRoute;
+  MarketplaceDetailPageRoute get _self => this as MarketplaceDetailPageRoute;
 
   @override
   String get location => GoRouteData.$location(
-    '/product-detail/${Uri.encodeComponent(_self.itemId)}',
+    '/marketplace-detail/${Uri.encodeComponent(_self.itemId)}',
   );
 
   @override
@@ -576,18 +552,18 @@ mixin $ProductDetailPageRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-RouteBase get $shoppingCartPageRoute => GoRouteData.$route(
-  path: '/shopping-cart',
-  name: 'shoppingCart',
-  factory: $ShoppingCartPageRoute._fromState,
+RouteBase get $marketplaceCartPageRoute => GoRouteData.$route(
+  path: '/marketplace-cart',
+  name: 'marketplaceCart',
+  factory: $MarketplaceCartPageRoute._fromState,
 );
 
-mixin $ShoppingCartPageRoute on GoRouteData {
-  static ShoppingCartPageRoute _fromState(GoRouterState state) =>
-      const ShoppingCartPageRoute();
+mixin $MarketplaceCartPageRoute on GoRouteData {
+  static MarketplaceCartPageRoute _fromState(GoRouterState state) =>
+      const MarketplaceCartPageRoute();
 
   @override
-  String get location => GoRouteData.$location('/shopping-cart');
+  String get location => GoRouteData.$location('/marketplace-cart');
 
   @override
   void go(BuildContext context) => context.go(location);
@@ -603,18 +579,18 @@ mixin $ShoppingCartPageRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-RouteBase get $orderHistoryPageRoute => GoRouteData.$route(
-  path: '/order-history',
-  name: 'orderHistory',
-  factory: $OrderHistoryPageRoute._fromState,
+RouteBase get $marketplaceOrdersPageRoute => GoRouteData.$route(
+  path: '/marketplace-orders',
+  name: 'marketplaceOrders',
+  factory: $MarketplaceOrdersPageRoute._fromState,
 );
 
-mixin $OrderHistoryPageRoute on GoRouteData {
-  static OrderHistoryPageRoute _fromState(GoRouterState state) =>
-      const OrderHistoryPageRoute();
+mixin $MarketplaceOrdersPageRoute on GoRouteData {
+  static MarketplaceOrdersPageRoute _fromState(GoRouterState state) =>
+      const MarketplaceOrdersPageRoute();
 
   @override
-  String get location => GoRouteData.$location('/order-history');
+  String get location => GoRouteData.$location('/marketplace-orders');
 
   @override
   void go(BuildContext context) => context.go(location);
@@ -630,18 +606,18 @@ mixin $OrderHistoryPageRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-RouteBase get $productsGridPageRoute => GoRouteData.$route(
-  path: '/products',
-  name: 'productsGrid',
-  factory: $ProductsGridPageRoute._fromState,
+RouteBase get $marketplaceGridPageRoute => GoRouteData.$route(
+  path: '/marketplace',
+  name: 'marketplaceGrid',
+  factory: $MarketplaceGridPageRoute._fromState,
 );
 
-mixin $ProductsGridPageRoute on GoRouteData {
-  static ProductsGridPageRoute _fromState(GoRouterState state) =>
-      const ProductsGridPageRoute();
+mixin $MarketplaceGridPageRoute on GoRouteData {
+  static MarketplaceGridPageRoute _fromState(GoRouterState state) =>
+      const MarketplaceGridPageRoute();
 
   @override
-  String get location => GoRouteData.$location('/products');
+  String get location => GoRouteData.$location('/marketplace');
 
   @override
   void go(BuildContext context) => context.go(location);
@@ -744,6 +720,76 @@ mixin $LoginPageRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/login');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $forgotPasswordPageRoute => GoRouteData.$route(
+  path: '/forgot-password',
+  name: 'forgotPassword',
+  factory: $ForgotPasswordPageRoute._fromState,
+);
+
+mixin $ForgotPasswordPageRoute on GoRouteData {
+  static ForgotPasswordPageRoute _fromState(GoRouterState state) =>
+      ForgotPasswordPageRoute(
+        phoneNumber: state.uri.queryParameters['phone-number'],
+      );
+
+  ForgotPasswordPageRoute get _self => this as ForgotPasswordPageRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/forgot-password',
+    queryParams: {
+      if (_self.phoneNumber != null) 'phone-number': _self.phoneNumber,
+    },
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $resetPasswordPageRoute => GoRouteData.$route(
+  path: '/reset-password',
+  name: 'resetPassword',
+  factory: $ResetPasswordPageRoute._fromState,
+);
+
+mixin $ResetPasswordPageRoute on GoRouteData {
+  static ResetPasswordPageRoute _fromState(GoRouterState state) =>
+      ResetPasswordPageRoute(
+        phoneNumber: state.uri.queryParameters['phone-number']!,
+      );
+
+  ResetPasswordPageRoute get _self => this as ResetPasswordPageRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/reset-password',
+    queryParams: {'phone-number': _self.phoneNumber},
+  );
 
   @override
   void go(BuildContext context) => context.go(location);
@@ -1106,6 +1152,32 @@ mixin $ChangePasswordPageRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
+RouteBase get $verifyIdentityPageRoute => GoRouteData.$route(
+  path: '/verify-identity',
+  factory: $VerifyIdentityPageRoute._fromState,
+);
+
+mixin $VerifyIdentityPageRoute on GoRouteData {
+  static VerifyIdentityPageRoute _fromState(GoRouterState state) =>
+      const VerifyIdentityPageRoute();
+
+  @override
+  String get location => GoRouteData.$location('/verify-identity');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
 RouteBase get $redeemCodePageRoute => GoRouteData.$route(
   path: '/redeem-code',
   name: 'redeemCode',
@@ -1230,6 +1302,33 @@ mixin $TransactionsHistoryPageRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/transactions-history');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $walletOrdersPageRoute => GoRouteData.$route(
+  path: '/wallet/orders',
+  name: 'walletOrders',
+  factory: $WalletOrdersPageRoute._fromState,
+);
+
+mixin $WalletOrdersPageRoute on GoRouteData {
+  static WalletOrdersPageRoute _fromState(GoRouterState state) =>
+      const WalletOrdersPageRoute();
+
+  @override
+  String get location => GoRouteData.$location('/wallet/orders');
 
   @override
   void go(BuildContext context) => context.go(location);

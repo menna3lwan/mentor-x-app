@@ -84,7 +84,7 @@ class AssignmentResultPage extends StatelessWidget {
                     duration: const Duration(milliseconds: 600),
                     delay: const Duration(milliseconds: 200),
                     child: _InfoSection(
-                      title: t['teacherFeedback']!,
+                      title: t['instructorFeedback']!,
                       icon: Icons.chat_bubble_rounded,
                       palette: palette,
                       child: Text(

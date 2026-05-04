@@ -35,7 +35,7 @@ final class DioAttendanceRepository
       final data = asMap(response.data['data'] ?? response.data);
       return AttendanceSummaryModel.fromJson(data);
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: AttendanceRepositoryExceptionCode.failedToLoadSummary,
       );
@@ -65,7 +65,7 @@ final class DioAttendanceRepository
           response.data);
       return list.map((e) => AttendanceRecordModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: AttendanceRepositoryExceptionCode.failedToLoadRecords,
       );
@@ -83,7 +83,7 @@ final class DioAttendanceRepository
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return AttendanceRecordModel.fromJson(data);
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: AttendanceRepositoryExceptionCode.failedToCheckIn,
       );

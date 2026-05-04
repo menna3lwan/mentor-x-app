@@ -19,8 +19,10 @@ abstract interface class QuizRepository {
   /// Fetch all available quizzes.
   Future<List<QuizEntity>> getQuizzes();
 
-  /// Fetch quiz details with questions.
   Future<QuizEntity> getQuiz(String quizId);
+
+  /// Fetch quiz questions.
+  Future<List<QuizQuestionEntity>> getQuizQuestions(String quizId);
 
   /// Submit the quiz with all answers.
   Future<QuizAttemptEntity> submitQuiz(

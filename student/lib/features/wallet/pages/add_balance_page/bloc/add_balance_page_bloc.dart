@@ -43,10 +43,9 @@ final class AddBalancePageBloc
   ) async {
     emit(state.copyWith(loadingState: LoadingState.loading, errorMessage: null));
     try {
-      final payment = await walletRepository.initiatePayment(
+      final payment = await walletRepository.depositFunds(
         amount: event.amount,
         method: event.method,
-        paymentType: PaymentType.walletTopup,
       );
       
       emit(state.copyWith(

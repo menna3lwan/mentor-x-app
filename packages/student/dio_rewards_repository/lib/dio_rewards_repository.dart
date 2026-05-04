@@ -28,10 +28,10 @@ final class DioRewardsRepository
         },
       );
 
-      final data = asList(response.data);
+      final data = asList(asMap(response.data)['data'] ?? asMap(response.data)['content'] ?? response.data);
       return data.map((e) => PointsTransactionModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: RewardsRepositoryExceptionCode.failedToLoadPointsHistory,
       );
@@ -50,10 +50,10 @@ final class DioRewardsRepository
         },
       );
 
-      final data = asList(response.data);
+      final data = asList(asMap(response.data)['data'] ?? asMap(response.data)['content'] ?? response.data);
       return data.map((e) => RewardItemModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: RewardsRepositoryExceptionCode.failedToLoadRewardItems,
       );
@@ -72,10 +72,10 @@ final class DioRewardsRepository
         },
       );
 
-      final data = asList(response.data);
+      final data = asList(asMap(response.data)['data'] ?? asMap(response.data)['content'] ?? response.data);
       return data.map((e) => RewardClaimModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: RewardsRepositoryExceptionCode.failedToLoadClaims,
       );
@@ -93,7 +93,7 @@ final class DioRewardsRepository
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return RewardClaimModel.fromJson(data);
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: RewardsRepositoryExceptionCode.failedToClaimReward,
       );

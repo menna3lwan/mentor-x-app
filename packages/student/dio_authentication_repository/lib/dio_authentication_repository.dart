@@ -111,7 +111,7 @@ final class DioAuthenticationRepository
       return user;
     } on HttpClientResponse catch (e) {
       if (e.statusCode == 401) return null;
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: _ExceptionCode.failedToGetCurrentUser,
       );
@@ -150,7 +150,7 @@ final class DioAuthenticationRepository
       return expiresIn == null ? null : Duration(seconds: expiresIn);
     } on HttpClientResponse catch (e) {
       AuthRateLimiter.recordFailedAttempt(phoneNumber, 'resend_otp');
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: _ExceptionCode.failedToResendOtp,
       );
@@ -282,12 +282,12 @@ final class DioAuthenticationRepository
         );
       }
       if (_isInvalidCredentialsError(e)) {
-        handleHttpClientErrorResponse(
+        return handleHttpClientErrorResponse(
           e,
           defaultCode: AuthenticationRepositoryExceptionCode.invalidCredentials,
         );
       }
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: _ExceptionCode.failedToGetCurrentUser,
       );
@@ -315,7 +315,7 @@ final class DioAuthenticationRepository
         otpLength: otpLength,
       );
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: _ExceptionCode.failedToSendOtp,
       );
@@ -366,7 +366,7 @@ final class DioAuthenticationRepository
       clearOtpVerificationContext();
       return fallbackUser;
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: _ExceptionCode.failedToVerifyOtp,
       );
@@ -436,7 +436,7 @@ final class DioAuthenticationRepository
       await _cacheUser(user);
       return user;
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: _ExceptionCode.unknown,
       );
@@ -694,7 +694,7 @@ final class DioAuthenticationRepository
       final response = await httpClient.get('/api/auth/pending-status');
       return asMap(response.data);
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: _ExceptionCode.unknown,
       );
@@ -708,7 +708,7 @@ final class DioAuthenticationRepository
       final data = asMap(response.data);
       return stringOrEmpty(data['entry_point'] ?? data['entryPoint']);
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: _ExceptionCode.unknown,
       );
@@ -722,7 +722,7 @@ final class DioAuthenticationRepository
       final data = asMap(response.data);
       return boolOrNull(data['available'] ?? data['exists']) ?? true;
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: _ExceptionCode.unknown,
       );

@@ -554,13 +554,14 @@ class _ActionButtons extends StatelessWidget {
             onPressed: () => Navigator.pop(ctx),
             child: Text(t['cancel'] ?? 'Cancel', style: TextStyle(color: palette.textSecondary, fontWeight: FontWeight.w700)),
           ),
-          const Gap(8),
+          const SizedBox(width: 8),
           SizedBox(
             width: 120,
             child: MentorXButton(
               onPressed: () {
                 Navigator.pop(ctx);
                 context.read<AppAuthenticationCubit>().logout();
+                context.go('/login');
               },
               text: t['logoutSetting'] ?? 'Log Out',
             ),

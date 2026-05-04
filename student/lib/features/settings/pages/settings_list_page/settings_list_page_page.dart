@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:gap/gap.dart';
+import '../../../../core/core.dart';
 
 class SettingsListPage extends StatelessWidget {
   const SettingsListPage({super.key});
@@ -141,18 +143,12 @@ class SettingsListPage extends StatelessWidget {
                 palette: palette,
                 children: [
                   _SettingsItem(
-                    icon: Icons.support_agent_rounded,
-                    label: t['supportSetting'] ?? 'Support',
-                    color: palette.brandPrimary,
-                    onTap: () => context.push('/support'),
-                    palette: palette,
-                  ),
-                  _SettingsItem(
                     icon: Icons.info_rounded,
                     label: t['aboutSetting'] ?? 'About',
                     color: palette.textTertiary,
                     onTap: () => context.push('/about'),
                     palette: palette,
+                    isLast: true,
                   ),
                 ],
               ),
@@ -213,6 +209,7 @@ class SettingsListPage extends StatelessWidget {
               child: MentorXButton(
                 onPressed: () {
                   Navigator.pop(ctx);
+                  context.read<AppAuthenticationCubit>().logout();
                   context.go('/login');
                 },
                 label: t['logoutSetting'] ?? 'Log Out',

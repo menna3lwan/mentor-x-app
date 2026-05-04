@@ -23,7 +23,7 @@ final class DioQuizRepository
       final data = asList(response.data);
       return data.map((e) => QuizModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: QuizRepositoryExceptionCode.unknown,
       );
@@ -37,13 +37,26 @@ final class DioQuizRepository
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return QuizModel.fromJson(data);
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: QuizRepositoryExceptionCode.failedToStartQuiz,
       );
     }
   }
 
+  @override
+  Future<List<QuizQuestionEntity>> getQuizQuestions(String quizId) async {
+    try {
+      final response = await httpClient.get('/api/questions/quiz/$quizId');
+      final data = asList(asMap(response.data)['data'] ?? response.data);
+      return data.map((e) => QuizQuestionModel.fromJson(asMap(e))).toList();
+    } on HttpClientResponse catch (e) {
+      return handleHttpClientErrorResponse(
+        e,
+        defaultCode: QuizRepositoryExceptionCode.unknown,
+      );
+    }
+  }
 
   @override
   Future<QuizAttemptEntity> submitQuiz(
@@ -56,10 +69,12 @@ final class DioQuizRepository
         data: {
           'quizId': quizId,
           'answers': answers.entries
-              .map((e) => {
-                    'questionId': e.key,
-                    'selectedAnswer': e.value,
-                  })
+              .map(
+                (e) => {
+                  'questionId': e.key,
+                  'selectedAnswer': e.value,
+                },
+              )
               .toList(),
         },
       );
@@ -67,7 +82,7 @@ final class DioQuizRepository
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return QuizAttemptModel.fromJson(data);
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: QuizRepositoryExceptionCode.failedToSubmitQuiz,
       );
@@ -81,7 +96,7 @@ final class DioQuizRepository
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return QuizAttemptModel.fromJson(data);
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: QuizRepositoryExceptionCode.failedToLoadResults,
       );
@@ -95,7 +110,10 @@ final class DioQuizRepository
       final responseData = asMap(response.data)['data'] ?? asMap(response.data);
       return QuizModel.fromJson(responseData);
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(e, defaultCode: QuizRepositoryExceptionCode.unknown);
+      return handleHttpClientErrorResponse(
+        e,
+        defaultCode: QuizRepositoryExceptionCode.unknown,
+      );
     }
   }
 
@@ -104,7 +122,10 @@ final class DioQuizRepository
     try {
       await httpClient.post('/api/quizzes/$quizId/start');
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(e, defaultCode: QuizRepositoryExceptionCode.failedToStartQuiz);
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: QuizRepositoryExceptionCode.failedToStartQuiz,
+      );
     }
   }
 
@@ -115,7 +136,10 @@ final class DioQuizRepository
       final data = asList(asMap(response.data)['data'] ?? response.data);
       return data.map((e) => QuizModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(e, defaultCode: QuizRepositoryExceptionCode.unknown);
+      return handleHttpClientErrorResponse(
+        e,
+        defaultCode: QuizRepositoryExceptionCode.unknown,
+      );
     }
   }
 
@@ -124,7 +148,10 @@ final class DioQuizRepository
     try {
       await httpClient.delete('/api/quizzes/$quizId');
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(e, defaultCode: QuizRepositoryExceptionCode.unknown);
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: QuizRepositoryExceptionCode.unknown,
+      );
     }
   }
 
@@ -133,40 +160,61 @@ final class DioQuizRepository
     try {
       await httpClient.delete('/api/quiz-attempts/$attemptId');
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(e, defaultCode: QuizRepositoryExceptionCode.unknown);
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: QuizRepositoryExceptionCode.unknown,
+      );
     }
   }
 
   @override
   Future<List<QuizAttemptEntity>> getStudentAttempts(String studentId) async {
     try {
-      final response = await httpClient.get('/api/quiz-attempts/student/$studentId');
+      final response = await httpClient.get(
+        '/api/quiz-attempts/student/$studentId',
+      );
       final data = asList(asMap(response.data)['data'] ?? response.data);
       return data.map((e) => QuizAttemptModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(e, defaultCode: QuizRepositoryExceptionCode.unknown);
+      return handleHttpClientErrorResponse(
+        e,
+        defaultCode: QuizRepositoryExceptionCode.unknown,
+      );
     }
   }
 
   @override
   Future<Map<String, dynamic>> getStudentQuizStatus(String studentId) async {
     try {
-      final response = await httpClient.get('/api/quiz-attempts/student/$studentId/status');
+      final response = await httpClient.get(
+        '/api/quiz-attempts/student/$studentId/status',
+      );
       return asMap(response.data);
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(e, defaultCode: QuizRepositoryExceptionCode.unknown);
+      return handleHttpClientErrorResponse(
+        e,
+        defaultCode: QuizRepositoryExceptionCode.unknown,
+      );
     }
   }
 
   @override
-  Future<QuizAttemptEntity?> getStudentAttemptForQuiz(String studentId, String quizId) async {
+  Future<QuizAttemptEntity?> getStudentAttemptForQuiz(
+    String studentId,
+    String quizId,
+  ) async {
     try {
-      final response = await httpClient.get('/api/quiz-attempts/student/$studentId/quiz/$quizId');
+      final response = await httpClient.get(
+        '/api/quiz-attempts/student/$studentId/quiz/$quizId',
+      );
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return QuizAttemptModel.fromJson(data);
     } on HttpClientResponse catch (e) {
       if (e.statusCode == 404) return null;
-      handleHttpClientErrorResponse(e, defaultCode: QuizRepositoryExceptionCode.unknown);
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: QuizRepositoryExceptionCode.unknown,
+      );
     }
   }
 
@@ -177,17 +225,25 @@ final class DioQuizRepository
       final data = asList(asMap(response.data)['data'] ?? response.data);
       return data.map((e) => QuizAttemptModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(e, defaultCode: QuizRepositoryExceptionCode.unknown);
+      return handleHttpClientErrorResponse(
+        e,
+        defaultCode: QuizRepositoryExceptionCode.unknown,
+      );
     }
   }
 
   @override
   Future<Map<String, dynamic>> getQuizStatistics(String quizId) async {
     try {
-      final response = await httpClient.get('/api/quiz-attempts/quiz/$quizId/statistics');
+      final response = await httpClient.get(
+        '/api/quiz-attempts/quiz/$quizId/statistics',
+      );
       return asMap(response.data);
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(e, defaultCode: QuizRepositoryExceptionCode.unknown);
+      return handleHttpClientErrorResponse(
+        e,
+        defaultCode: QuizRepositoryExceptionCode.unknown,
+      );
     }
   }
 }

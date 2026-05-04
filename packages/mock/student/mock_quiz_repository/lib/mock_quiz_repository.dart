@@ -40,6 +40,12 @@ final class MockQuizRepository implements QuizRepository {
   }
 
   @override
+  Future<List<QuizQuestionEntity>> getQuizQuestions(String quizId) async {
+    await Future<void>.delayed(delay);
+    return MockQuizGenerator.questions(quizId);
+  }
+
+  @override
   Future<QuizAttemptEntity> submitQuiz(
     String quizId, {
     required Map<String, String> answers,

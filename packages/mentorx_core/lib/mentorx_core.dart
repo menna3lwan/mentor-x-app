@@ -71,6 +71,7 @@ part 'src/entities/attendance_summary_entity.dart';
 // Financial
 part 'src/entities/wallet_transaction_entity.dart';
 part 'src/entities/payment_entity.dart';
+part 'src/entities/payment_order_entity.dart';
 part 'src/entities/points_transaction_entity.dart';
 
 // Communication
@@ -96,6 +97,7 @@ part 'src/entities/reward_claim_entity.dart';
 part 'src/entities/profile_edit_request_entity.dart';
 part 'src/entities/national_id_verification_entity.dart';
 part 'src/entities/code_redemption_entity.dart';
+part 'src/entities/leaderboard_entry_entity.dart';
 
 // ——————————————————————————————————————————————
 // Repositories — Common interfaces
@@ -132,3 +134,4 @@ part 'src/repositories/assignment_repository.dart';
 part 'src/repositories/ai_repository.dart';
 part 'src/repositories/marketplace_repository.dart';
 part 'src/repositories/rewards_repository.dart';
+part 'src/repositories/leaderboard_repository.dart';

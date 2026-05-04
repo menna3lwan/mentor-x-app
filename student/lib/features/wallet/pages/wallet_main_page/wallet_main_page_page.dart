@@ -112,6 +112,17 @@ class WalletMainPage extends StatelessWidget {
                                 palette: palette,
                               ),
                             ),
+                            const Gap(12),
+                            FadeInUp(
+                              duration: const Duration(milliseconds: 500),
+                              delay: const Duration(milliseconds: 400),
+                              child: _ActionButton(
+                                icon: Icons.receipt_long_rounded,
+                                label: t['myOrders'] ?? 'My Orders',
+                                onTap: () => const WalletOrdersPageRoute().push(context),
+                                palette: palette,
+                              ),
+                            ),
                           ],
                         ),
                       ),

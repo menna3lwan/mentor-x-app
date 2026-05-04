@@ -13,7 +13,7 @@ part '../../features/attendance/pages/attendance_qr_page/attendance_qr_page_rout
 part '../../features/attendance/pages/attendance_history_page/attendance_history_page_route.dart';
 part '../../features/settings/pages/device_management_page/device_management_page_route.dart';
 part '../../features/settings/pages/about_page/about_page_route.dart';
-part '../../features/settings/pages/support_page/support_page_route.dart';
+
 part '../../features/settings/pages/whatsapp_groups_page/whatsapp_groups_page_route.dart';
 part '../../features/settings/pages/settings_list_page/settings_list_page_route.dart';
 part '../../features/home/pages/home_page/home_page_route.dart';
@@ -26,10 +26,10 @@ part '../../features/course/pages/my_grades_page/my_grades_page_route.dart';
 part '../../features/assignments/pages/assignment_result_page/assignment_result_page_route.dart';
 part '../../features/assignments/pages/assignment_detail_page/assignment_detail_page_route.dart';
 part '../../features/assignments/pages/assignment_submit_page/assignment_submit_page_route.dart';
-part '../../features/products/pages/product_detail_page/product_detail_page_route.dart';
-part '../../features/products/pages/shopping_cart_page/shopping_cart_page_route.dart';
-part '../../features/products/pages/order_history_page/order_history_page_route.dart';
-part '../../features/products/pages/products_grid_page/products_grid_page_route.dart';
+part '../../features/marketplace/pages/marketplace_detail_page/marketplace_detail_page_route.dart';
+part '../../features/marketplace/pages/marketplace_cart_page/marketplace_cart_page_route.dart';
+part '../../features/marketplace/pages/marketplace_orders_page/marketplace_orders_page_route.dart';
+part '../../features/marketplace/pages/marketplace_grid_page/marketplace_grid_page_route.dart';
 part '../../features/auth/pages/registration/registration_page_route.dart';
 part '../../features/auth/pages/otp/otp_page_route.dart';
 part '../../features/auth/pages/login/login_page_route.dart';
@@ -44,12 +44,14 @@ part '../../features/account_status/pages/status_blocked_page/status_blocked_pag
 part '../../features/profile/pages/profile_view_page/profile_view_page_route.dart';
 part '../../features/profile/pages/edit_profile_page/edit_profile_page_route.dart';
 part '../../features/profile/pages/change_password_page/change_password_page_route.dart';
+part '../../features/profile/pages/verify_identity_page/verify_identity_page_route.dart';
 part '../../features/wallet/pages/redeem_code_page/redeem_code_page_route.dart';
 part '../../features/wallet/pages/add_balance_page/add_balance_page_route.dart';
 part '../../features/wallet/pages/wallet_main_page/wallet_main_page_route.dart';
 part '../../features/wallet/pages/purchase_confirm_page/purchase_confirm_page_route.dart';
 part '../../features/wallet/pages/payment_success_page/payment_success_page_route.dart';
 part '../../features/wallet/pages/transactions_history_page/transactions_history_page_route.dart';
+part '../../features/wallet/pages/wallet_orders_page/wallet_orders_page_route.dart';
 part '../../features/quizzes/pages/quiz_taking_page/quiz_taking_page_route.dart';
 part '../../features/quizzes/pages/quiz_result_page/quiz_result_page_route.dart';
 part '../../features/quizzes/pages/quiz_list_page/quiz_list_page_route.dart';

@@ -28,10 +28,10 @@ final class DioAiRepository
         },
       );
 
-      final data = asList(response.data);
+      final data = asList(asMap(response.data)['data'] ?? asMap(response.data)['content'] ?? response.data);
       return data.map((e) => AIConversationModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: AIRepositoryExceptionCode.failedToLoadConversations,
       );
@@ -49,7 +49,7 @@ final class DioAiRepository
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return AIConversationModel.fromJson(data);
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: AIRepositoryExceptionCode.failedToCreateConversation,
       );
@@ -96,10 +96,10 @@ final class DioAiRepository
         },
       );
 
-      final data = asList(response.data);
+      final data = asList(asMap(response.data)['data'] ?? asMap(response.data)['content'] ?? response.data);
       return data.map((e) => AIMessageModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: AIRepositoryExceptionCode.failedToLoadMessages,
       );
@@ -120,7 +120,7 @@ final class DioAiRepository
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return AIMessageModel.fromJson(data);
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: AIRepositoryExceptionCode.failedToSendMessage,
       );
@@ -155,7 +155,7 @@ final class DioAiRepository
       final response = await httpClient.get('/api/ai/stats');
       return asMap(response.data);
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(e, defaultCode: AIRepositoryExceptionCode.unknown);
+      return handleHttpClientErrorResponse(e, defaultCode: AIRepositoryExceptionCode.unknown);
     }
   }
 

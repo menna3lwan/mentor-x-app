@@ -102,6 +102,8 @@ dependencies:
     path: ../packages/mock/student/mock_grade_repository
   mock_student_registration_repository:
     path: ../packages/mock/student/mock_student_registration_repository
+  mock_leaderboard_repository:
+    path: ../packages/mock/student/mock_leaderboard_repository
 
   # Clients
   dio_http_client:
@@ -140,6 +142,8 @@ dependencies:
     path: ../packages/student/dio_settings_repository
   dio_student_registration_repository:
     path: ../packages/student/dio_student_registration_repository
+  dio_leaderboard_repository:
+    path: ../packages/student/dio_leaderboard_repository
   dio: ^5.9.2
   flutter_markdown: ^0.7.7+1
   animate_do: ^5.1.0

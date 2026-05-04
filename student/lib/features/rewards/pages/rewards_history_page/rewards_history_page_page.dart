@@ -5,7 +5,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:gap/gap.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 import 'package:mentorx_student/core/core.dart';
-import '../rewards_catalog_page/bloc/rewards_page_bloc.dart';
+import 'bloc/rewards_history_page_bloc.dart';
 import 'package:intl/intl.dart';
 
 class RewardsHistoryPage extends StatelessWidget {
@@ -16,7 +16,7 @@ class RewardsHistoryPage extends StatelessWidget {
     final palette = MentorXThemeColorPalette.light;
     final t = context.t.student;
 
-    return BlocBuilder<RewardsPageBloc, RewardsPageState>(
+    return BlocBuilder<RewardsHistoryPageBloc, RewardsHistoryPageState>(
       builder: (context, state) {
         return Scaffold(
           backgroundColor: palette.backgroundSecondary,
@@ -54,7 +54,7 @@ class RewardsHistoryPage extends StatelessWidget {
 
   Widget _buildBody(
     BuildContext context,
-    RewardsPageState state,
+    RewardsHistoryPageState state,
     MentorXThemeColorPalette palette,
     dynamic t,
   ) {

@@ -163,22 +163,6 @@ final class _LoginPageWrapperState extends State<LoginPageWrapper> {
             onRegister: () {
               const RegistrationPageRoute().go(context);
             },
-            onChangeTeacher: () async {
-              final cacheRepository = context.read<CacheRepository>();
-              await cacheRepository.removeAll([
-                CacheKeys.tenantId,
-                CacheKeys.tenantName,
-                CacheKeys.tenantLogoUrl,
-                CacheKeys.tenantPrimaryColor,
-                CacheKeys.tenantAccentColor,
-              ]);
-
-              if (!context.mounted) {
-                return;
-              }
-
-              const WalkthroughPageRoute().go(context);
-            },
             onSubmit: () => _submit(bloc),
             tenantName: _tenantName,
             tenantLogoUrl: _tenantLogoUrl,

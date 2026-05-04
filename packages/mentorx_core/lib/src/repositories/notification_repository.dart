@@ -33,4 +33,7 @@ abstract interface class NotificationRepository {
 
   /// Get unread notifications count.
   Future<int> getUnreadCount();
+
+  /// Update FCM token.
+  Future<void> updateFCMToken(String token);
 }

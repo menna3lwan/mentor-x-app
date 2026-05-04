@@ -7,18 +7,14 @@ import '../../widgets/status_layout.dart';
 final class StatusPendingPagePage extends StatelessWidget {
   final String? studentCode;
   final bool isRefreshing;
-  final bool showContactTeacher;
   final VoidCallback onRefresh;
-  final VoidCallback? onContactTeacher;
   final VoidCallback onLogout;
 
   const StatusPendingPagePage({
     super.key,
     required this.studentCode,
     required this.isRefreshing,
-    required this.showContactTeacher,
     required this.onRefresh,
-    required this.onContactTeacher,
     required this.onLogout,
   });
 
@@ -106,18 +102,7 @@ final class StatusPendingPagePage extends StatelessWidget {
             label: 'Refresh Status',
           ),
         ),
-        if (showContactTeacher) ...[
-          const Gap(12),
-          FadeInUp(
-            duration: const Duration(milliseconds: 500),
-            delay: const Duration(milliseconds: 400),
-            child: MentorXButton(
-              onPressed: onContactTeacher,
-              label: 'Contact Teacher',
-              variant: MentorXButtonVariant.outline,
-            ),
-          ),
-        ],
+
         const Gap(20),
         FadeInUp(
           duration: const Duration(milliseconds: 500),

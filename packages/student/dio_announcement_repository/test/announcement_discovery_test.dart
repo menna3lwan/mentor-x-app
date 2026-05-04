@@ -5,12 +5,15 @@ import 'package:mentorx_core/mentorx_core.dart';
 import 'integration_config.dart';
 import 'memory_cache_repository.dart';
 
+final _log = MentorXLogger('AnnouncementDiscoveryTest');
+
 void main() {
   late AnnouncementRepository repository;
   late DioHttpClient httpClient;
   late MemoryCacheRepository cacheRepository;
 
   setUp(() async {
+    MentorXLogger.enabled = true;
     cacheRepository = MemoryCacheRepository();
     httpClient = DioHttpClient(
       baseUrl: IntegrationConfig.baseUrl,
@@ -23,14 +26,14 @@ void main() {
     test('Get Announcements', () async {
       try {
         final announcements = await repository.getAnnouncements();
-        print('Announcements count: ${announcements.length}');
+        _log.info('Announcements count: ${announcements.length}');
         for (var a in announcements.take(5)) {
-          print('Announcement: ${a.id} - ${a.title}');
+          _log.info('Announcement: ${a.id} - ${a.title}');
         }
       } on HttpClientResponse catch (e) {
-        print('Error: ${e.statusCode} ${e.data}');
+        _log.error('Error: ${e.statusCode} ${e.data}');
       } catch (e) {
-        print('Failed to get announcements: $e');
+        _log.error('Failed to get announcements: $e');
       }
     });
   });

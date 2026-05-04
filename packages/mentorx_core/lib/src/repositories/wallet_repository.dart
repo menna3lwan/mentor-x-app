@@ -45,6 +45,29 @@ abstract interface class WalletRepository {
     MentorXPaginationInfo? paginationInfo,
   });
 
+  /// Get list of available payment methods.
+  Future<List<Map<String, dynamic>>> getPaymentMethods();
+
+  /// Get list of payments orders.
+  Future<List<PaymentOrderEntity>> getOrders({
+    MentorXPaginationInfo? paginationInfo,
+  });
+
+  /// Get specific order detail.
+  Future<PaymentOrderEntity> getOrderDetail(String orderNumber);
+
+  /// Create a new payment order.
+  Future<PaymentOrderEntity> createOrder({
+    required double amount,
+    required String description,
+  });
+
+  /// Deposit funds into wallet.
+  Future<PaymentEntity> depositFunds({
+    required double amount,
+    required PaymentMethod method,
+  });
+
   // Pro Features
   Future<void> transferFunds(String recipientPhone, double amount);
   Future<void> creditWallet(String studentId, double amount, String reason);

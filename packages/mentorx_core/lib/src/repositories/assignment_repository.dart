@@ -19,6 +19,12 @@ abstract interface class AssignmentRepository {
   /// Fetch assignment details.
   Future<AssignmentEntity> getAssignment(String assignmentId);
 
+  /// Fetch all assignments for the student.
+  Future<List<AssignmentEntity>> getAssignments();
+
+  /// Fetch assignment questions.
+  Future<List<QuizQuestionEntity>> getAssignmentQuestions(String assignmentId);
+
   /// Fetch the student's submission for an assignment.
   Future<AssignmentSubmissionEntity?> getSubmission(String assignmentId);
 

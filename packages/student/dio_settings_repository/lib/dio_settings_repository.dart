@@ -24,10 +24,10 @@ final class DioSettingsRepository
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return UserSettingsModel.fromJson(data);
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: SettingsRepositoryExceptionCode.failedToLoadSettings,
-      );
+       );
     }
   }
 
@@ -55,7 +55,7 @@ final class DioSettingsRepository
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return UserSettingsModel.fromJson(data);
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: SettingsRepositoryExceptionCode.failedToUpdateSettings,
       );

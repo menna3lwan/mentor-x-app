@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
-import 'bloc/verify_identity_bloc.dart';
+import 'bloc/verify_identity_page_bloc.dart';
 import 'verify_identity_page_page.dart';
 
 class VerifyIdentityPageWrapper extends StatefulWidget {
@@ -30,7 +30,7 @@ class _VerifyIdentityPageWrapperState extends State<VerifyIdentityPageWrapper> {
   Widget build(BuildContext context) {
     final t = context.t.student;
 
-    return BlocConsumer<VerifyIdentityBloc, VerifyIdentityState>(
+    return BlocConsumer<VerifyIdentityPageBloc, VerifyIdentityPageState>(
       listener: (context, state) {
         if (state.status == VerifyIdentityStatus.success) {
           MentorXUI.showToast(
@@ -50,7 +50,7 @@ class _VerifyIdentityPageWrapperState extends State<VerifyIdentityPageWrapper> {
           onPickImage: _pickImage,
           onSubmit: () {
             if (_selectedImagePath != null) {
-              context.read<VerifyIdentityBloc>().add(VerifyIdentitySubmit(_selectedImagePath!));
+              context.read<VerifyIdentityPageBloc>().add(VerifyIdentityPageSubmit(_selectedImagePath!));
             }
           },
           state: state,

@@ -39,4 +39,9 @@ final class MockNotificationRepository implements NotificationRepository {
     await Future<void>.delayed(delay ~/ 2);
     return MockNotificationGenerator.unreadCount();
   }
+
+  @override
+  Future<void> updateFCMToken(String token) async {
+    await Future<void>.delayed(delay ~/ 2);
+  }
 }

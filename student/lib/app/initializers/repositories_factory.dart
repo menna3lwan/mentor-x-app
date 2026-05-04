@@ -22,6 +22,7 @@ import 'package:dio_grade_repository/dio_grade_repository.dart';
 import 'package:dio_announcement_repository/dio_announcement_repository.dart';
 import 'package:dio_settings_repository/dio_settings_repository.dart';
 import 'package:dio_student_registration_repository/dio_student_registration_repository.dart';
+import 'package:dio_leaderboard_repository/dio_leaderboard_repository.dart';
 
 import 'package:mock_authentication_repository/mock_authentication_repository.dart';
 import 'package:mock_home_repository/mock_home_repository.dart';
@@ -39,6 +40,7 @@ import 'package:mock_rewards_repository/mock_rewards_repository.dart';
 import 'package:mock_grade_repository/mock_grade_repository.dart';
 import 'package:mock_student_registration_repository/mock_student_registration_repository.dart';
 import 'package:mock_profile_repository/mock_profile_repository.dart';
+import 'package:mock_leaderboard_repository/mock_leaderboard_repository.dart';
 
 import '../../core/utils/env.dart';
 
@@ -60,6 +62,7 @@ final class AppRepositories {
   final GradeRepository gradeRepository;
   final AnnouncementRepository announcementRepository;
   final StudentRegistrationRepository registrationRepository;
+  final LeaderboardRepository leaderboardRepository;
 
   const AppRepositories._({
     required this.cacheRepository,
@@ -79,6 +82,7 @@ final class AppRepositories {
     required this.gradeRepository,
     required this.announcementRepository,
     required this.registrationRepository,
+    required this.leaderboardRepository,
   });
 
   List<Object> toList() {
@@ -100,6 +104,7 @@ final class AppRepositories {
       gradeRepository,
       announcementRepository,
       registrationRepository,
+      leaderboardRepository,
     ];
   }
 
@@ -137,6 +142,9 @@ final class AppRepositories {
       ),
       RepositoryProvider<StudentRegistrationRepository>(
         create: (_) => registrationRepository,
+      ),
+      RepositoryProvider<LeaderboardRepository>(
+        create: (_) => leaderboardRepository,
       ),
     ];
   }
@@ -347,6 +355,16 @@ final class RepositoriesFactory {
     }
   }
 
+  static Future<LeaderboardRepository> _initLeaderboardRepository() async {
+    switch (Env.homeRepositoryMode) { // Reuse home mode for leaderboard or add its own env
+      case RepositoryMode.mock:
+        return MockLeaderboardRepository(delay: Env.mockDelayDuration);
+      case RepositoryMode.prod:
+        final httpClient = await _initHttpClient();
+        return DioLeaderboardRepository(httpClient: httpClient);
+    }
+  }
+
   static String _defaultLanguageCode() {
     final deviceLanguageCode = PlatformDispatcher.instance.locale.languageCode;
     final supportedLocales = LocaleSettings.instance.supportedLocalesRaw;
@@ -391,6 +409,7 @@ final class RepositoriesFactory {
       gradeRepository as GradeRepository,
       announcementRepository as AnnouncementRepository,
       registrationRepository as StudentRegistrationRepository,
+      leaderboardRepository as LeaderboardRepository,
     ] = await Future.wait(
       [
         _initAuthenticationRepository(),
@@ -409,6 +428,7 @@ final class RepositoriesFactory {
         _initGradeRepository(),
         _initAnnouncementRepository(),
         _initRegistrationRepository(),
+        _initLeaderboardRepository(),
       ],
     );
     final repos = AppRepositories._(
@@ -429,6 +449,7 @@ final class RepositoriesFactory {
       gradeRepository: gradeRepository,
       announcementRepository: announcementRepository,
       registrationRepository: registrationRepository,
+      leaderboardRepository: leaderboardRepository,
     );
     final localizedClients = <LocalizedClient>[];
     if (_httpClient != null && _httpClient is LocalizedClient) {

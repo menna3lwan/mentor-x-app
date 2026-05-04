@@ -4,13 +4,13 @@ import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:gap/gap.dart';
 import '../../../../core/core.dart';
-import 'bloc/verify_identity_bloc.dart';
+import 'bloc/verify_identity_page_bloc.dart';
 
 class VerifyIdentityPagePage extends StatelessWidget {
   final String? selectedImagePath;
   final VoidCallback onPickImage;
   final VoidCallback onSubmit;
-  final VerifyIdentityState state;
+  final VerifyIdentityPageState state;
 
   const VerifyIdentityPagePage({
     super.key,

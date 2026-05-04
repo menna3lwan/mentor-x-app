@@ -18,7 +18,6 @@ void main() {
     (name: 'device_management', route: const DeviceManagementPageRoute()),
     (name: 'whatsapp_groups', route: const WhatsappGroupsPageRoute()),
     (name: 'about', route: const AboutPageRoute()),
-    (name: 'support', route: const SupportPageRoute()),
     (name: 'edit_profile', route: const EditProfilePageRoute()),
     (name: 'change_password', route: const ChangePasswordPageRoute()),
   ];

@@ -43,7 +43,7 @@ final class DioCourseRepository
           .map(CourseSummaryModel.fromJson)
           .toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: CourseRepositoryExceptionCode.failedToLoadCourses,
       );
@@ -81,7 +81,7 @@ final class DioCourseRepository
           .map(CourseSummaryModel.fromJson)
           .toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: CourseRepositoryExceptionCode.failedToLoadCatalog,
       );
@@ -105,7 +105,7 @@ final class DioCourseRepository
           .map(CategoryModel.fromJson)
           .toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: CourseRepositoryExceptionCode.failedToLoadCategories,
       );
@@ -120,7 +120,7 @@ final class DioCourseRepository
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return CourseModel.fromJson(data);
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: CourseRepositoryExceptionCode.failedToLoadCourseDetail,
       );
@@ -141,7 +141,7 @@ final class DioCourseRepository
           .map(SessionModel.fromJson)
           .toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: CourseRepositoryExceptionCode.failedToLoadSessions,
       );
@@ -162,7 +162,7 @@ final class DioCourseRepository
           .map(SessionItemModel.fromJson)
           .toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: CourseRepositoryExceptionCode.failedToLoadSessions,
       );
@@ -178,7 +178,7 @@ final class DioCourseRepository
       return EnrollmentModel.fromJson(data);
     } on HttpClientResponse catch (e) {
       if (e.statusCode == 404) return null;
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: CourseRepositoryExceptionCode.failedToLoadProgress,
       );
@@ -196,7 +196,7 @@ final class DioCourseRepository
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return EnrollmentModel.fromJson(data);
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: CourseRepositoryExceptionCode.failedToEnroll,
       );
@@ -211,7 +211,7 @@ final class DioCourseRepository
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return data['stream_url']?.toString() ?? data['url']?.toString() ?? '';
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: CourseRepositoryExceptionCode.failedToLoadStreamUrl,
       );
@@ -226,7 +226,7 @@ final class DioCourseRepository
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return data['content_url']?.toString() ?? data['url']?.toString() ?? '';
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: CourseRepositoryExceptionCode.failedToLoadContentUrl,
       );
@@ -284,7 +284,7 @@ final class DioCourseRepository
       final responseData = asMap(response.data)['data'] ?? asMap(response.data);
       return CourseModel.fromJson(responseData);
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(e, defaultCode: CourseRepositoryExceptionCode.unknown);
+      return handleHttpClientErrorResponse(e, defaultCode: CourseRepositoryExceptionCode.unknown);
     }
   }
 
@@ -339,7 +339,7 @@ final class DioCourseRepository
       final response = await httpClient.get('/api/enrollments/stats/my-stats');
       return asMap(response.data);
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(e, defaultCode: CourseRepositoryExceptionCode.unknown);
+      return handleHttpClientErrorResponse(e, defaultCode: CourseRepositoryExceptionCode.unknown);
     }
   }
 
@@ -350,7 +350,7 @@ final class DioCourseRepository
       final list = asList(asMap(response.data)['data'] ?? response.data);
       return list.map(asMap).map(EnrollmentModel.fromJson).toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(e, defaultCode: CourseRepositoryExceptionCode.unknown);
+      return handleHttpClientErrorResponse(e, defaultCode: CourseRepositoryExceptionCode.unknown);
     }
   }
 
@@ -361,7 +361,7 @@ final class DioCourseRepository
       final list = asList(asMap(response.data)['data'] ?? response.data);
       return list.map(asMap).map(EnrollmentModel.fromJson).toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(e, defaultCode: CourseRepositoryExceptionCode.unknown);
+      return handleHttpClientErrorResponse(e, defaultCode: CourseRepositoryExceptionCode.unknown);
     }
   }
 

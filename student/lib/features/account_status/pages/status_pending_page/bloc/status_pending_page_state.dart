@@ -34,8 +34,7 @@ final class StatusPendingPageState extends Equatable {
     );
   }
 
-  bool get hasTeacherContact =>
-      tenantWhatsAppNumber != null && tenantWhatsAppNumber!.trim().isNotEmpty;
+
 
   @override
   List<Object?> get props => [

@@ -5,12 +5,15 @@ import 'package:mentorx_core/mentorx_core.dart';
 import 'integration_config.dart';
 import 'memory_cache_repository.dart';
 
+final _log = MentorXLogger('RegistrationDiscoveryTest');
+
 void main() {
   late StudentRegistrationRepository repository;
   late DioHttpClient httpClient;
   late MemoryCacheRepository cacheRepository;
 
   setUp(() async {
+    MentorXLogger.enabled = true;
     cacheRepository = MemoryCacheRepository();
     httpClient = DioHttpClient(
       baseUrl: IntegrationConfig.baseUrl,
@@ -23,22 +26,22 @@ void main() {
     test('Get Application Info', () async {
       try {
         final info = await repository.getApplicationInfo();
-        print('Application Info Type: ${info.runtimeType}');
-        print('Application Info: $info');
+        _log.info('Application Info Type: ${info.runtimeType}');
+        _log.info('Application Info: $info');
       } catch (e) {
-        print('Failed to get application info: $e');
+        _log.error('Failed to get application info: $e');
       }
     });
 
     test('Get Governorates', () async {
       try {
         final governorates = await repository.getGovernorates();
-        print('Governorates count: ${governorates.length}');
+        _log.info('Governorates count: ${governorates.length}');
         for (var g in governorates.take(3)) {
-          print('Gov: ${g.name} (${g.id})');
+          _log.info('Gov: ${g.name} (${g.id})');
         }
       } catch (e) {
-        print('Failed to get governorates: $e');
+        _log.error('Failed to get governorates: $e');
       }
     });
 
@@ -47,10 +50,10 @@ void main() {
         final governorates = await repository.getGovernorates();
         if (governorates.isNotEmpty) {
           final areas = await repository.getAreas(governorates.first.id);
-          print('Areas for ${governorates.first.name}: ${areas.take(5)}');
+          _log.info('Areas for ${governorates.first.name}: ${areas.take(5)}');
         }
       } catch (e) {
-        print('Failed to get areas: $e');
+        _log.error('Failed to get areas: $e');
       }
     });
 
@@ -61,11 +64,11 @@ void main() {
           phone: '01234567899', // Dummy unique phone
           parentPhone: '01234567888',
         );
-        print('Registration started successfully');
+        _log.info('Registration started successfully');
       } on HttpClientResponse catch (e) {
-        print('Error: ${e.statusCode} ${e.data}');
+        _log.error('Error: ${e.statusCode} ${e.data}');
       } catch (e) {
-        print('Failed to start registration: $e');
+        _log.error('Failed to start registration: $e');
       }
     });
 
@@ -86,11 +89,11 @@ void main() {
           password: 'password123',
           confirmPassword: 'password123',
         );
-        print('Registration completed successfully');
+        _log.info('Registration completed successfully');
       } on HttpClientResponse catch (e) {
-        print('Error: ${e.statusCode} ${e.data}');
+        _log.error('Error: ${e.statusCode} ${e.data}');
       } catch (e) {
-        print('Failed to complete registration: $e');
+        _log.error('Failed to complete registration: $e');
       }
     });
   });

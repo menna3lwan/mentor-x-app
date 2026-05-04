@@ -122,7 +122,7 @@ final class DioStudentRegistrationRepository
   Future<List<GovernorateEntity>> getGovernorates() async {
     try {
       final response = await httpClient.get('/api/student/register/governorates');
-      final data = asList(response.data);
+      final data = asList(asMap(response.data)['data'] ?? asMap(response.data)['content'] ?? response.data);
       return data.map((item) {
         final map = asMap(item);
         if (item is String) {
@@ -134,7 +134,7 @@ final class DioStudentRegistrationRepository
         );
       }).toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: _ExceptionCode.failedToLoadGovernorates,
       );
@@ -147,10 +147,10 @@ final class DioStudentRegistrationRepository
       final response = await httpClient.get(
         '/api/student/register/areas/$governorate',
       );
-      final data = asList(response.data);
+      final data = asList(asMap(response.data)['data'] ?? asMap(response.data)['content'] ?? response.data);
       return data.map((item) => item.toString()).toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: _ExceptionCode.failedToLoadAreas,
       );
@@ -163,7 +163,7 @@ final class DioStudentRegistrationRepository
       final response = await httpClient.get('/api/student/register/application-info');
       return asMap(response.data);
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: _ExceptionCode.failedToLoadApplicationInfo,
       );
@@ -180,7 +180,7 @@ final class DioStudentRegistrationRepository
       return boolOrNull(data['available']) ?? true;
     } on HttpClientResponse catch (e) {
       if (e.statusCode == 409) return false;
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: _ExceptionCode.unknown,
       );

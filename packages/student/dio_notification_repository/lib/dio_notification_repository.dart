@@ -34,7 +34,7 @@ final class DioNotificationRepository
           response.data);
       return list.map((e) => NotificationModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: NotificationRepositoryExceptionCode.failedToLoadNotifications,
       );
@@ -84,11 +84,22 @@ final class DioNotificationRepository
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return (data['count'] as num?)?.toInt() ?? (data is num ? data.toInt() : 0);
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: NotificationRepositoryExceptionCode.failedToGetUnreadCount,
       );
     }
   }
 
+  @override
+  Future<void> updateFCMToken(String token) async {
+    try {
+      await httpClient.post(
+        '/api/notifications/fcm-token',
+        data: {'token': token},
+      );
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(e, defaultCode: NotificationRepositoryExceptionCode.unknown);
+    }
+  }
 }
