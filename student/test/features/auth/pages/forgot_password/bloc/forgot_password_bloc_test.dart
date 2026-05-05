@@ -37,8 +37,9 @@ void main() {
     blocTest<ForgotPasswordBloc, ForgotPasswordState>(
       'emits success when ForgotPasswordSubmitted is successful',
       build: () {
-        when(() => authRepository.requestPasswordReset(any()))
-            .thenAnswer((_) async {});
+        when(
+          () => authRepository.requestPasswordReset(any()),
+        ).thenAnswer((_) async {});
         return ForgotPasswordBloc(
           authRepository: authRepository,
           initialPhone: '01234567890',
@@ -56,18 +57,21 @@ void main() {
         ),
       ],
       verify: (_) {
-        verify(() => authRepository.requestPasswordReset('01234567890')).called(1);
+        verify(
+          () => authRepository.requestPasswordReset('01234567890'),
+        ).called(1);
       },
     );
 
     blocTest<ForgotPasswordBloc, ForgotPasswordState>(
       'emits failure when ForgotPasswordSubmitted fails',
       build: () {
-        when(() => authRepository.requestPasswordReset(any()))
-            .thenThrow(AuthenticationRepositoryException(
-          code: AuthenticationRepositoryExceptionCode.unknown,
-          message: 'Error',
-        ));
+        when(() => authRepository.requestPasswordReset(any())).thenThrow(
+          AuthenticationRepositoryException(
+            code: AuthenticationRepositoryExceptionCode.unknown,
+            message: 'Error',
+          ),
+        );
         return ForgotPasswordBloc(
           authRepository: authRepository,
           initialPhone: '01234567890',

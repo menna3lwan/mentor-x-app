@@ -41,7 +41,11 @@ final class ContinueLearningSectionWidget extends StatelessWidget {
         ),
         child: Column(
           children: [
-            Icon(Icons.auto_stories_rounded, color: palette.brandPrimary, size: 48),
+            Icon(
+              Icons.auto_stories_rounded,
+              color: palette.brandPrimary,
+              size: 48,
+            ),
             const SizedBox(height: 12),
             Text(
               context.t.home.dashboard.startLearningJourney,
@@ -148,7 +152,8 @@ final class ContinueLearningSectionWidget extends StatelessWidget {
                                     child: LinearProgressIndicator(
                                       value: progressPercent / 100,
                                       minHeight: 6,
-                                      backgroundColor: palette.backgroundTertiary,
+                                      backgroundColor:
+                                          palette.backgroundTertiary,
                                       color: palette.brandPrimary,
                                     ),
                                   ),

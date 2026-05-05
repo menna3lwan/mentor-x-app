@@ -4,7 +4,8 @@ enum LoadingState {
   loaded,
   actionInProgress,
   success,
-  error;
+  error
+  ;
 
   bool get isLoading => this == LoadingState.loading;
   bool get isLoaded => this == LoadingState.loaded;

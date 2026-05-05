@@ -660,7 +660,6 @@ class _LeaderboardSection extends StatelessWidget {
   }
 }
 
-
 class _LeaderboardRow extends StatelessWidget {
   const _LeaderboardRow({required this.entry, required this.t});
   final LeaderboardEntryEntity entry;

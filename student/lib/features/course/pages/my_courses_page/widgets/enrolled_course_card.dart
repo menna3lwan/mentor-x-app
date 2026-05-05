@@ -57,7 +57,10 @@ final class EnrolledCourseCard extends StatelessWidget {
               ),
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -80,16 +83,19 @@ final class EnrolledCourseCard extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      progress >= 100 ? 'Completed' : 'In Progress',
+                                      progress >= 100
+                                          ? 'Completed'
+                                          : 'In Progress',
                                       style: TextStyle(
                                         fontSize: 11,
                                         fontWeight: FontWeight.w600,
-                                        color: progress >= 100 
-                                          ? palette.statusSuccess 
-                                          : palette.brandPrimary,
+                                        color: progress >= 100
+                                            ? palette.statusSuccess
+                                            : palette.brandPrimary,
                                       ),
                                     ),
                                     Text(
@@ -114,19 +120,35 @@ final class EnrolledCourseCard extends StatelessWidget {
                                       ),
                                     ),
                                     AnimatedContainer(
-                                      duration: const Duration(milliseconds: 500),
+                                      duration: const Duration(
+                                        milliseconds: 500,
+                                      ),
                                       height: 6,
-                                      width: (progress / 100) * 150, // Approximation for animation logic
+                                      width:
+                                          (progress / 100) *
+                                          150, // Approximation for animation logic
                                       decoration: BoxDecoration(
                                         gradient: LinearGradient(
                                           colors: progress >= 100
-                                              ? [palette.statusSuccess, palette.statusSuccess.withOpacity(0.7)]
-                                              : [palette.brandPrimary, palette.brandPrimary.withOpacity(0.7)],
+                                              ? [
+                                                  palette.statusSuccess,
+                                                  palette.statusSuccess
+                                                      .withOpacity(0.7),
+                                                ]
+                                              : [
+                                                  palette.brandPrimary,
+                                                  palette.brandPrimary
+                                                      .withOpacity(0.7),
+                                                ],
                                         ),
                                         borderRadius: BorderRadius.circular(3),
                                         boxShadow: [
                                           BoxShadow(
-                                            color: (progress >= 100 ? palette.statusSuccess : palette.brandPrimary).withOpacity(0.3),
+                                            color:
+                                                (progress >= 100
+                                                        ? palette.statusSuccess
+                                                        : palette.brandPrimary)
+                                                    .withOpacity(0.3),
                                             blurRadius: 4,
                                             offset: const Offset(0, 2),
                                           ),

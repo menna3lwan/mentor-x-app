@@ -34,7 +34,9 @@ final class QuizResultPageBloc
     QuizResultPageLoadEvent event,
     Emitter<QuizResultPageState> emit,
   ) async {
-    emit(state.copyWith(loadingState: LoadingState.loading, errorMessage: null));
+    emit(
+      state.copyWith(loadingState: LoadingState.loading, errorMessage: null),
+    );
     try {
       final result = await quizRepository.getResults(event.attemptId);
 
@@ -44,17 +46,21 @@ final class QuizResultPageBloc
         leaderboardRepository.getQuizLeaderboard(result.quizId),
       ]);
 
-      emit(state.copyWith(
-        loadingState: LoadingState.loaded,
-        result: result,
-        myRank: myRank as LeaderboardEntryEntity?,
-        leaderboard: leaderboard as List<LeaderboardEntryEntity>,
-      ));
+      emit(
+        state.copyWith(
+          loadingState: LoadingState.loaded,
+          result: result,
+          myRank: myRank as LeaderboardEntryEntity?,
+          leaderboard: leaderboard as List<LeaderboardEntryEntity>,
+        ),
+      );
     } catch (e) {
-      emit(state.copyWith(
-        loadingState: LoadingState.error,
-        errorMessage: e.toString(),
-      ));
+      emit(
+        state.copyWith(
+          loadingState: LoadingState.error,
+          errorMessage: e.toString(),
+        ),
+      );
     }
   }
 }

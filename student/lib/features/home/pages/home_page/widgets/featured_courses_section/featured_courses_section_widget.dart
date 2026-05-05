@@ -87,7 +87,11 @@ final class FeaturedCoursesSectionWidget extends StatelessWidget {
                                   vertical: 6,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: (isFree ? palette.statusSuccess : palette.brandPrimary).withOpacity(0.9),
+                                  color:
+                                      (isFree
+                                              ? palette.statusSuccess
+                                              : palette.brandPrimary)
+                                          .withOpacity(0.9),
                                   borderRadius: BorderRadius.circular(12),
                                   boxShadow: [
                                     BoxShadow(

@@ -9,7 +9,8 @@ class VerifyIdentityPageWrapper extends StatefulWidget {
   const VerifyIdentityPageWrapper({super.key});
 
   @override
-  State<VerifyIdentityPageWrapper> createState() => _VerifyIdentityPageWrapperState();
+  State<VerifyIdentityPageWrapper> createState() =>
+      _VerifyIdentityPageWrapperState();
 }
 
 class _VerifyIdentityPageWrapperState extends State<VerifyIdentityPageWrapper> {
@@ -34,7 +35,9 @@ class _VerifyIdentityPageWrapperState extends State<VerifyIdentityPageWrapper> {
       listener: (context, state) {
         if (state.status == VerifyIdentityStatus.success) {
           MentorXUI.showToast(
-            message: t['verificationSubmitted'] ?? 'Verification submitted successfully!',
+            message:
+                t['verificationSubmitted'] ??
+                'Verification submitted successfully!',
           );
           Navigator.pop(context);
         }
@@ -50,7 +53,9 @@ class _VerifyIdentityPageWrapperState extends State<VerifyIdentityPageWrapper> {
           onPickImage: _pickImage,
           onSubmit: () {
             if (_selectedImagePath != null) {
-              context.read<VerifyIdentityPageBloc>().add(VerifyIdentityPageSubmit(_selectedImagePath!));
+              context.read<VerifyIdentityPageBloc>().add(
+                VerifyIdentityPageSubmit(_selectedImagePath!),
+              );
             }
           },
           state: state,

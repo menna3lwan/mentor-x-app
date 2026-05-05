@@ -14,8 +14,7 @@ final class EditProfilePageNavigateBack
   const EditProfilePageNavigateBack();
 }
 
-final class EditProfilePageSuccess
-    extends EditProfilePagePresentationEvent {
+final class EditProfilePageSuccess extends EditProfilePagePresentationEvent {
   const EditProfilePageSuccess();
 }
 
@@ -47,19 +46,23 @@ final class EditProfilePageBloc
     Emitter<EditProfilePageState> emit,
   ) async {
     if (profileRepository is! StudentProfileRepository) {
-      emit(state.copyWith(
-        loadingState: LoadingState.error,
-        errorMessage: const MentorXNullableValue('Invalid repository type'),
-      ));
+      emit(
+        state.copyWith(
+          loadingState: LoadingState.error,
+          errorMessage: const MentorXNullableValue('Invalid repository type'),
+        ),
+      );
       return;
     }
 
     final studentRepo = profileRepository as StudentProfileRepository;
 
-    emit(state.copyWith(
-      loadingState: LoadingState.loading,
-      errorMessage: const MentorXNullableValue(null),
-    ));
+    emit(
+      state.copyWith(
+        loadingState: LoadingState.loading,
+        errorMessage: const MentorXNullableValue(null),
+      ),
+    );
 
     try {
       await studentRepo.submitEditRequest(
@@ -70,15 +73,19 @@ final class EditProfilePageBloc
       emit(state.copyWith(loadingState: LoadingState.loaded));
       emitPresentation(const EditProfilePageSuccess());
     } on MentorXException catch (e) {
-      emit(state.copyWith(
-        loadingState: LoadingState.error,
-        errorMessage: MentorXNullableValue(e.message),
-      ));
+      emit(
+        state.copyWith(
+          loadingState: LoadingState.error,
+          errorMessage: MentorXNullableValue(e.message),
+        ),
+      );
     } catch (e) {
-      emit(state.copyWith(
-        loadingState: LoadingState.error,
-        errorMessage: MentorXNullableValue(e.toString()),
-      ));
+      emit(
+        state.copyWith(
+          loadingState: LoadingState.error,
+          errorMessage: MentorXNullableValue(e.toString()),
+        ),
+      );
     }
   }
 }

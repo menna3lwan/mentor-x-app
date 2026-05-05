@@ -19,12 +19,12 @@ final class NotificationsPageState extends Equatable {
 
   @override
   List<Object?> get props => [
-        loadingState,
-        notifications,
-        errorMessage,
-        hasMore,
-        currentPage,
-      ];
+    loadingState,
+    notifications,
+    errorMessage,
+    hasMore,
+    currentPage,
+  ];
 
   NotificationsPageState copyWith({
     LoadingState? loadingState,
@@ -36,7 +36,9 @@ final class NotificationsPageState extends Equatable {
     return NotificationsPageState(
       loadingState: loadingState ?? this.loadingState,
       notifications: notifications ?? this.notifications,
-      errorMessage: errorMessage != null ? errorMessage.value : this.errorMessage,
+      errorMessage: errorMessage != null
+          ? errorMessage.value
+          : this.errorMessage,
       hasMore: hasMore ?? this.hasMore,
       currentPage: currentPage ?? this.currentPage,
     );

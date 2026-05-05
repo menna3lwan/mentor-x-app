@@ -10,7 +10,8 @@
             "skip": "تخطي",
             "next": "التالي",
             "getStarted": "ابدأ الآن",
-            "backToLogin": "العودة لتسجيل الدخول"
+            "backToLogin": "العودة لتسجيل الدخول",
+            "noResults": "لا توجد نتائج"
         },
         "errors": {
             "somethingWentWrong": "حدث خطأ ما",
@@ -118,6 +119,7 @@
                 "attendance": "الحضور",
                 "grades": "الدرجات",
                 "aiAssistant": "المساعد الذكي",
+                "assignments": "الواجبات",
                 "rewards": "المكافآت",
                 "marketplace": "المتجر"
             }

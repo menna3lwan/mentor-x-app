@@ -10,7 +10,7 @@ sealed class LoginEvent extends Equatable {
 final class LoginPhoneChanged extends LoginEvent {
   final String phoneNumber;
   const LoginPhoneChanged(this.phoneNumber);
-  
+
   @override
   List<Object?> get props => [phoneNumber];
 }
@@ -18,7 +18,7 @@ final class LoginPhoneChanged extends LoginEvent {
 final class LoginPasswordChanged extends LoginEvent {
   final String password;
   const LoginPasswordChanged(this.password);
-  
+
   @override
   List<Object?> get props => [password];
 }

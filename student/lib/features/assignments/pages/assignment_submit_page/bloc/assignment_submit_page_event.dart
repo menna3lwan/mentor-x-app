@@ -11,7 +11,8 @@ final class AssignmentSubmitPageLoadEvent extends AssignmentSubmitPageEvent {
   const AssignmentSubmitPageLoadEvent();
 }
 
-final class AssignmentSubmitPageAnswerSelected extends AssignmentSubmitPageEvent {
+final class AssignmentSubmitPageAnswerSelected
+    extends AssignmentSubmitPageEvent {
   final String questionId;
   final String selectedAnswer;
 
@@ -28,7 +29,8 @@ final class AssignmentSubmitPageNextQuestion extends AssignmentSubmitPageEvent {
   const AssignmentSubmitPageNextQuestion();
 }
 
-final class AssignmentSubmitPagePreviousQuestion extends AssignmentSubmitPageEvent {
+final class AssignmentSubmitPagePreviousQuestion
+    extends AssignmentSubmitPageEvent {
   const AssignmentSubmitPagePreviousQuestion();
 }
 
@@ -50,7 +52,8 @@ final class AssignmentSubmitPageFileRemoved extends AssignmentSubmitPageEvent {
   List<Object?> get props => [filePath];
 }
 
-final class AssignmentSubmitPageContentChanged extends AssignmentSubmitPageEvent {
+final class AssignmentSubmitPageContentChanged
+    extends AssignmentSubmitPageEvent {
   final String content;
   const AssignmentSubmitPageContentChanged(this.content);
   @override

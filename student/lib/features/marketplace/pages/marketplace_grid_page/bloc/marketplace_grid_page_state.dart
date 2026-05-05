@@ -19,12 +19,12 @@ final class MarketplaceGridPageState extends Equatable {
 
   @override
   List<Object?> get props => [
-        loadingState,
-        items,
-        categories,
-        selectedCategoryId,
-        searchQuery,
-      ];
+    loadingState,
+    items,
+    categories,
+    selectedCategoryId,
+    searchQuery,
+  ];
 
   MarketplaceGridPageState copyWith({
     LoadingState? loadingState,
@@ -37,8 +37,9 @@ final class MarketplaceGridPageState extends Equatable {
       loadingState: loadingState ?? this.loadingState,
       items: items ?? this.items,
       categories: categories ?? this.categories,
-      selectedCategoryId:
-          selectedCategoryId != null ? selectedCategoryId() : this.selectedCategoryId,
+      selectedCategoryId: selectedCategoryId != null
+          ? selectedCategoryId()
+          : this.selectedCategoryId,
       searchQuery: searchQuery ?? this.searchQuery,
     );
   }

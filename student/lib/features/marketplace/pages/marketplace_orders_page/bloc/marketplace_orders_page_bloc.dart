@@ -26,9 +26,10 @@ final class MarketplaceOrdersPageBloc
         > {
   final MarketplaceRepository _marketplaceRepository;
 
-  MarketplaceOrdersPageBloc({required MarketplaceRepository marketplaceRepository})
-    : _marketplaceRepository = marketplaceRepository,
-      super(MarketplaceOrdersPageState.initial) {
+  MarketplaceOrdersPageBloc({
+    required MarketplaceRepository marketplaceRepository,
+  }) : _marketplaceRepository = marketplaceRepository,
+       super(MarketplaceOrdersPageState.initial) {
     on<MarketplaceOrdersPageInitialized>(_onInitialized);
     on<MarketplaceOrdersPageRefreshed>(_onRefreshed);
   }

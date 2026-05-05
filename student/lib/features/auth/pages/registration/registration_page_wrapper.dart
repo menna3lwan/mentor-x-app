@@ -19,7 +19,9 @@ final class RegistrationPageWrapper extends StatelessWidget {
         if (event is StudentRegistrationSuccessPresentationEvent) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('Registration completed successfully! Please login.'),
+              content: Text(
+                'Registration completed successfully! Please login.',
+              ),
               backgroundColor: Colors.green,
             ),
           );

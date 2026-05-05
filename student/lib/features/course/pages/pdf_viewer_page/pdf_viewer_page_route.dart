@@ -4,8 +4,7 @@ part of '../../../../core/routing/app_routes.dart';
   path: '/pdf-viewer/:itemId',
   name: 'pdfViewer',
 )
-final class PdfViewerPageRoute extends GoRouteData
-    with $PdfViewerPageRoute {
+final class PdfViewerPageRoute extends GoRouteData with $PdfViewerPageRoute {
   final String itemId;
   final String title;
   final String? enrollmentId;

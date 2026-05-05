@@ -33,13 +33,22 @@ final class MyGradesPagePage extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [palette.brandPrimary, palette.brandPrimary.withValues(alpha: 0.8)],
+              colors: [
+                palette.brandPrimary,
+                palette.brandPrimary.withValues(alpha: 0.8),
+              ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
-            borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
+            borderRadius: const BorderRadius.vertical(
+              bottom: Radius.circular(24),
+            ),
             boxShadow: [
-              BoxShadow(color: palette.brandPrimary.withValues(alpha: 0.3), blurRadius: 15, offset: const Offset(0, 4)),
+              BoxShadow(
+                color: palette.brandPrimary.withValues(alpha: 0.3),
+                blurRadius: 15,
+                offset: const Offset(0, 4),
+              ),
             ],
           ),
           child: AppBar(
@@ -49,7 +58,11 @@ final class MyGradesPagePage extends StatelessWidget {
             centerTitle: true,
             title: Text(
               t['myGrades'] ?? 'My Grades',
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900, letterSpacing: -0.5),
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w900,
+                letterSpacing: -0.5,
+              ),
             ),
           ),
         ),
@@ -60,15 +73,21 @@ final class MyGradesPagePage extends StatelessWidget {
         child: state.isLoading
             ? const Center(child: CircularProgressIndicator())
             : state.loadingState.isError
-                ? _ErrorView(errorMessage: state.errorMessage, palette: palette)
-                : _buildLoaded(context, palette, t),
+            ? _ErrorView(errorMessage: state.errorMessage, palette: palette)
+            : _buildLoaded(context, palette, t),
       ),
     );
   }
 
-  Widget _buildLoaded(BuildContext context, MentorXThemeColorPalette palette, dynamic t) {
+  Widget _buildLoaded(
+    BuildContext context,
+    MentorXThemeColorPalette palette,
+    dynamic t,
+  ) {
     if (state.sections.isEmpty) {
-      return FadeInUp(child: _EmptyGrades(palette: palette, t: t));
+      return FadeInUp(
+        child: _EmptyGrades(palette: palette, t: t),
+      );
     }
 
     return CustomScrollView(
@@ -139,7 +158,11 @@ class _SummaryHeader extends StatelessWidget {
   final MentorXThemeColorPalette palette;
   final dynamic t;
 
-  const _SummaryHeader({required this.average, required this.palette, required this.t});
+  const _SummaryHeader({
+    required this.average,
+    required this.palette,
+    required this.t,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -151,7 +174,11 @@ class _SummaryHeader extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(32),
         boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 20, offset: const Offset(0, 10)),
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
         ],
       ),
       child: Row(
@@ -162,7 +189,11 @@ class _SummaryHeader extends StatelessWidget {
               color: palette.brandPrimary.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(20),
             ),
-            child: Icon(Icons.auto_graph_rounded, color: palette.brandPrimary, size: 32),
+            child: Icon(
+              Icons.auto_graph_rounded,
+              color: palette.brandPrimary,
+              size: 32,
+            ),
           ),
           const Gap(20),
           Expanded(
@@ -171,7 +202,11 @@ class _SummaryHeader extends StatelessWidget {
               children: [
                 Text(
                   t['overallAverage'] ?? 'Overall Average',
-                  style: TextStyle(color: palette.textSecondary, fontSize: 14, fontWeight: FontWeight.w700),
+                  style: TextStyle(
+                    color: palette.textSecondary,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
                 const Gap(4),
                 Row(
@@ -179,14 +214,22 @@ class _SummaryHeader extends StatelessWidget {
                   children: [
                     Text(
                       display,
-                      style: TextStyle(fontSize: 32, fontWeight: FontWeight.w900, color: palette.textPrimary),
+                      style: TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.w900,
+                        color: palette.textPrimary,
+                      ),
                     ),
                     const Gap(4),
                     Padding(
                       padding: const EdgeInsets.only(bottom: 6),
                       child: Text(
                         '%',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: palette.brandPrimary),
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w900,
+                          color: palette.brandPrimary,
+                        ),
                       ),
                     ),
                   ],
@@ -228,10 +271,17 @@ class _CourseFilter extends StatelessWidget {
         child: DropdownButton<String>(
           value: selectedCourseId ?? 'all',
           isExpanded: true,
-          style: TextStyle(color: palette.textPrimary, fontWeight: FontWeight.w700, fontSize: 14),
+          style: TextStyle(
+            color: palette.textPrimary,
+            fontWeight: FontWeight.w700,
+            fontSize: 14,
+          ),
           icon: Icon(Icons.filter_list_rounded, color: palette.brandPrimary),
           items: [
-            DropdownMenuItem(value: 'all', child: Text(t['allCourses'] ?? 'All Courses')),
+            DropdownMenuItem(
+              value: 'all',
+              child: Text(t['allCourses'] ?? 'All Courses'),
+            ),
             ...courses.map<DropdownMenuItem<String>>(
               (course) => DropdownMenuItem<String>(
                 value: course.id,
@@ -268,7 +318,11 @@ class _CourseSectionCard extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 15, offset: const Offset(0, 8)),
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.03),
+            blurRadius: 15,
+            offset: const Offset(0, 8),
+          ),
         ],
       ),
       child: Column(
@@ -281,11 +335,18 @@ class _CourseSectionCard extends StatelessWidget {
                 Expanded(
                   child: Text(
                     section.course.title,
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w900, color: palette.textPrimary),
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w900,
+                      color: palette.textPrimary,
+                    ),
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
                   decoration: BoxDecoration(
                     color: palette.brandPrimary.withValues(alpha: 0.08),
                     borderRadius: BorderRadius.circular(12),
@@ -294,7 +355,11 @@ class _CourseSectionCard extends StatelessWidget {
                     section.averagePercentage == null
                         ? '--'
                         : '${section.averagePercentage!.toStringAsFixed(1)}%',
-                    style: TextStyle(color: palette.brandPrimary, fontWeight: FontWeight.w900, fontSize: 13),
+                    style: TextStyle(
+                      color: palette.brandPrimary,
+                      fontWeight: FontWeight.w900,
+                      fontSize: 13,
+                    ),
                   ),
                 ),
               ],
@@ -379,20 +444,34 @@ class _AssessmentTile extends StatelessWidget {
                   children: [
                     Text(
                       title,
-                      style: TextStyle(fontWeight: FontWeight.w800, fontSize: 14, color: palette.textPrimary),
+                      style: TextStyle(
+                        fontWeight: FontWeight.w800,
+                        fontSize: 14,
+                        color: palette.textPrimary,
+                      ),
                     ),
                     const Gap(2),
                     Text(
                       subtitle,
-                      style: TextStyle(fontSize: 11, color: palette.textTertiary, fontWeight: FontWeight.w600),
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: palette.textTertiary,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ],
                 ),
               ),
               const Gap(12),
               Text(
-                percentage == null ? '--' : '${percentage!.toStringAsFixed(1)}%',
-                style: TextStyle(color: color, fontWeight: FontWeight.w900, fontSize: 14),
+                percentage == null
+                    ? '--'
+                    : '${percentage!.toStringAsFixed(1)}%',
+                style: TextStyle(
+                  color: color,
+                  fontWeight: FontWeight.w900,
+                  fontSize: 14,
+                ),
               ),
             ],
           ),
@@ -424,12 +503,19 @@ class _ErrorView extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.error_outline_rounded, size: 64, color: palette.statusDanger.withValues(alpha: 0.3)),
+            Icon(
+              Icons.error_outline_rounded,
+              size: 64,
+              color: palette.statusDanger.withValues(alpha: 0.3),
+            ),
             const Gap(24),
             Text(
               errorMessage ?? 'Unable to load grades.',
               textAlign: TextAlign.center,
-              style: TextStyle(color: palette.textSecondary, fontWeight: FontWeight.w800),
+              style: TextStyle(
+                color: palette.textSecondary,
+                fontWeight: FontWeight.w800,
+              ),
             ),
           ],
         ),
@@ -456,23 +542,39 @@ class _EmptyGrades extends StatelessWidget {
               color: Colors.white,
               shape: BoxShape.circle,
               boxShadow: [
-                BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 20),
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.05),
+                  blurRadius: 20,
+                ),
               ],
             ),
-            child: Icon(Icons.school_rounded, size: 80, color: palette.textTertiary.withValues(alpha: 0.2)),
+            child: Icon(
+              Icons.school_rounded,
+              size: 80,
+              color: palette.textTertiary.withValues(alpha: 0.2),
+            ),
           ),
           const Gap(32),
           Text(
             t['noGrades'] ?? 'No grades available yet.',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900, color: palette.textPrimary),
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w900,
+              color: palette.textPrimary,
+            ),
           ),
           const Gap(12),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 40),
             child: Text(
-              t['completeAssessmentsDesc'] ?? 'Complete quizzes and assignments to see your grades.',
+              t['completeAssessmentsDesc'] ??
+                  'Complete quizzes and assignments to see your grades.',
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 14, color: palette.textSecondary, fontWeight: FontWeight.w500),
+              style: TextStyle(
+                fontSize: 14,
+                color: palette.textSecondary,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
         ],

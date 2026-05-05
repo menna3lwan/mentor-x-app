@@ -71,7 +71,9 @@ final class QuizTakingPageBloc
     Emitter<QuizTakingPageState> emit,
   ) {
     if (state.currentQuestionIndex < state.questions.length - 1) {
-      emit(state.copyWith(currentQuestionIndex: state.currentQuestionIndex + 1));
+      emit(
+        state.copyWith(currentQuestionIndex: state.currentQuestionIndex + 1),
+      );
     }
   }
 
@@ -80,7 +82,9 @@ final class QuizTakingPageBloc
     Emitter<QuizTakingPageState> emit,
   ) {
     if (state.currentQuestionIndex > 0) {
-      emit(state.copyWith(currentQuestionIndex: state.currentQuestionIndex - 1));
+      emit(
+        state.copyWith(currentQuestionIndex: state.currentQuestionIndex - 1),
+      );
     }
   }
 

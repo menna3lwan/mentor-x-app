@@ -9,7 +9,7 @@ class QuizReviewPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = context.t.student;
     final palette = MentorXThemeColorPalette.light;
-    
+
     // Mock data for UI demonstration
     const timerText = '24:35';
     final answered = List.generate(16, (i) => i);
@@ -21,7 +21,7 @@ class QuizReviewPage extends StatelessWidget {
         children: [
           // Premium Header
           _BuildHeader(palette: palette, t: t, timerText: timerText),
-          
+
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(24),
@@ -30,14 +30,14 @@ class QuizReviewPage extends StatelessWidget {
                 children: [
                   // Progress Overview Card
                   _BuildProgressOverview(
-                    palette: palette, 
-                    t: t, 
-                    answeredCount: answered.length, 
+                    palette: palette,
+                    t: t,
+                    answeredCount: answered.length,
                     totalCount: total,
                   ),
-                  
+
                   const SizedBox(height: 32),
-                  
+
                   Text(
                     t['jumpToQuestion'] ?? 'Jump to Question',
                     style: TextStyle(
@@ -47,15 +47,16 @@ class QuizReviewPage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  
+
                   // Question Grid
                   GridView.builder(
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 5,
-                      mainAxisSpacing: 12,
-                      crossAxisSpacing: 12,
-                      childAspectRatio: 1,
-                    ),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 5,
+                          mainAxisSpacing: 12,
+                          crossAxisSpacing: 12,
+                          childAspectRatio: 1,
+                        ),
                     itemCount: total,
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
@@ -68,9 +69,9 @@ class QuizReviewPage extends StatelessWidget {
                       );
                     },
                   ),
-                  
+
                   const SizedBox(height: 40),
-                  
+
                   // Actions
                   MentorXButton(
                     onPressed: () => context.push('/quiz-result'),
@@ -83,8 +84,12 @@ class QuizReviewPage extends StatelessWidget {
                       onPressed: () => Navigator.pop(context),
                       style: OutlinedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                        side: BorderSide(color: palette.brandPrimary.withOpacity(0.2)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        side: BorderSide(
+                          color: palette.brandPrimary.withOpacity(0.2),
+                        ),
                       ),
                       child: Text(
                         t['backToQuestions'] ?? 'Back to Questions',
@@ -144,7 +149,11 @@ class _BuildHeader extends StatelessWidget {
         children: [
           IconButton(
             onPressed: () => Navigator.pop(context),
-            icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 20),
+            icon: const Icon(
+              Icons.arrow_back_ios_new_rounded,
+              color: Colors.white,
+              size: 20,
+            ),
           ),
           Expanded(
             child: Text(
@@ -202,7 +211,7 @@ class _BuildProgressOverview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final unansweredCount = totalCount - answeredCount;
-    
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(24),
@@ -262,10 +271,15 @@ class _BuildProgressOverview extends StatelessWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.warning_amber_rounded, size: 16, color: palette.statusWarning),
+                  Icon(
+                    Icons.warning_amber_rounded,
+                    size: 16,
+                    color: palette.statusWarning,
+                  ),
                   const SizedBox(width: 8),
                   Text(
-                    t['unansweredNote']?.replaceAll('%s', '$unansweredCount') ?? '$unansweredCount questions left',
+                    t['unansweredNote']?.replaceAll('%s', '$unansweredCount') ??
+                        '$unansweredCount questions left',
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w700,
@@ -300,16 +314,20 @@ class _QuestionStatusBox extends StatelessWidget {
         color: isAnswered ? palette.brandPrimary : palette.backgroundPrimary,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: isAnswered ? palette.brandPrimary : palette.textTertiary.withOpacity(0.1),
+          color: isAnswered
+              ? palette.brandPrimary
+              : palette.textTertiary.withOpacity(0.1),
           width: 1.5,
         ),
-        boxShadow: isAnswered ? [
-          BoxShadow(
-            color: palette.brandPrimary.withOpacity(0.2),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          ),
-        ] : null,
+        boxShadow: isAnswered
+            ? [
+                BoxShadow(
+                  color: palette.brandPrimary.withOpacity(0.2),
+                  blurRadius: 8,
+                  offset: const Offset(0, 4),
+                ),
+              ]
+            : null,
       ),
       child: Center(
         child: Text(

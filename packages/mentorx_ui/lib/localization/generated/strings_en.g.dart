@@ -272,13 +272,13 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 		'uploadFile': 'Click to upload file',
 		'uploadHint': 'PDF, images (max 10 MB)',
 		'notesOptional': 'Notes (optional):',
-		'notesHint': 'Add a note for the teacher...',
-		'assignmentResult': 'Assignment Result',
-		'teacherFeedback': 'Teacher feedback:',
+		'notesHint': 'Add a note for the instructor...',
+		'feedbackTitle': 'Feedback',
+		'instructorFeedback': 'Instructor feedback:',
 		'registerAttendance': 'Register Attendance',
 		'attendanceHistory': 'Attendance History',
 		'yourAttendanceCode': 'Your Attendance Code',
-		'showCodeInstruction': 'Show the code to the teacher or assistant to register your attendance',
+		'showCodeInstruction': 'Show the code to the instructor or assistant to register your attendance',
 		'codeValidFor': 'Code valid for 5 minutes',
 		'viewAttendance': 'Attendance Record',
 		'totalAttendance': 'Total attendance rate',
@@ -376,14 +376,6 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 		'schoolNameHint': 'Enter school name',
 		'educationAdminLabel': 'Educational Administration',
 		'educationAdminHint': 'Enter administration',
-		'selectTeacherLabel': 'Select Teacher',
-		'teacherInfoNote': 'Content, courses, and quizzes will be customized for the teacher you select.',
-		'teacher1Name': 'Mr. Ahmed',
-		'teacher1Subject': 'Physics',
-		'teacher2Name': 'Mr. Mohamed',
-		'teacher2Subject': 'Chemistry',
-		'teacher3Name': 'Mr. Khaled',
-		'teacher3Subject': 'Mathematics',
 		'contactInfoLabel': 'Contact Info',
 		'passwordAndPhotosLabel': 'Password & Photos',
 		'confirmAndCreateAccount': 'Confirm & Create Account',
@@ -651,7 +643,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 		'phoneCall': 'Phone',
 		'email': 'Email',
 		'aboutTitle': 'About App',
-		'aboutDesc': 'An integrated educational platform connecting teachers and students',
+		'aboutDesc': 'An integrated educational platform connecting instructors and students',
 		'version': 'Version',
 		'lastUpdate': 'Last Update',
 		'walletTitle': 'Wallet',
@@ -1224,6 +1216,9 @@ class TranslationsUiCommonEn {
 
 	/// en: 'Back to Login'
 	String get backToLogin => 'Back to Login';
+
+	/// en: 'No results found'
+	String get noResults => 'No results found';
 }
 
 // Path: ui.errors
@@ -1813,6 +1808,9 @@ class TranslationsHomeDashboardActionsEn {
 	/// en: 'AI Assistant'
 	String get aiAssistant => 'AI Assistant';
 
+	/// en: 'Assignments'
+	String get assignments => 'Assignments';
+
 	/// en: 'Rewards'
 	String get rewards => 'Rewards';
 
@@ -1838,6 +1836,7 @@ extension on Translations {
 			'ui.common.next' => 'Next',
 			'ui.common.getStarted' => 'Get Started',
 			'ui.common.backToLogin' => 'Back to Login',
+			'ui.common.noResults' => 'No results found',
 			'ui.errors.somethingWentWrong' => 'Something went wrong',
 			'ui.errors.retry' => 'Retry',
 			'ui.dateTime.yesterday' => 'Yesterday',
@@ -1910,6 +1909,7 @@ extension on Translations {
 			'home.dashboard.actions.attendance' => 'Attendance',
 			'home.dashboard.actions.grades' => 'Grades',
 			'home.dashboard.actions.aiAssistant' => 'AI Assistant',
+			'home.dashboard.actions.assignments' => 'Assignments',
 			'home.dashboard.actions.rewards' => 'Rewards',
 			'home.dashboard.actions.marketplace' => 'Marketplace',
 			'home.errors.failedToLoadUpcomingEvents' => 'Failed to load upcoming events',
@@ -2274,13 +2274,13 @@ extension on Translations {
 			'student.uploadFile' => 'Click to upload file',
 			'student.uploadHint' => 'PDF, images (max 10 MB)',
 			'student.notesOptional' => 'Notes (optional):',
-			'student.notesHint' => 'Add a note for the teacher...',
-			'student.assignmentResult' => 'Assignment Result',
-			'student.teacherFeedback' => 'Teacher feedback:',
+			'student.notesHint' => 'Add a note for the instructor...',
+			'student.feedbackTitle' => 'Feedback',
+			'student.instructorFeedback' => 'Instructor feedback:',
 			'student.registerAttendance' => 'Register Attendance',
 			'student.attendanceHistory' => 'Attendance History',
 			'student.yourAttendanceCode' => 'Your Attendance Code',
-			'student.showCodeInstruction' => 'Show the code to the teacher or assistant to register your attendance',
+			'student.showCodeInstruction' => 'Show the code to the instructor or assistant to register your attendance',
 			'student.codeValidFor' => 'Code valid for 5 minutes',
 			'student.viewAttendance' => 'Attendance Record',
 			'student.totalAttendance' => 'Total attendance rate',
@@ -2338,10 +2338,10 @@ extension on Translations {
 			'student.passwordRulesHint' => 'Minimum 8 characters, letters or numbers only.',
 			'student.uploadPhotosLabel' => 'Upload Required Images',
 			'student.personalPhotoLabel' => 'Personal Photo',
-			'student.nationalIdPhotoLabel' => 'Student ID Photo',
-			'student.studyTypeLabel' => 'Select Study Type',
 			_ => null,
 		} ?? switch (path) {
+			'student.nationalIdPhotoLabel' => 'Student ID Photo',
+			'student.studyTypeLabel' => 'Select Study Type',
 			'student.studyTypeCenter' => 'Center Student (Offline)',
 			'student.studyTypeOnline' => 'Online Student',
 			'student.scheduleLabel' => 'Select Schedule',
@@ -2380,14 +2380,6 @@ extension on Translations {
 			'student.schoolNameHint' => 'Enter school name',
 			'student.educationAdminLabel' => 'Educational Administration',
 			'student.educationAdminHint' => 'Enter administration',
-			'student.selectTeacherLabel' => 'Select Teacher',
-			'student.teacherInfoNote' => 'Content, courses, and quizzes will be customized for the teacher you select.',
-			'student.teacher1Name' => 'Mr. Ahmed',
-			'student.teacher1Subject' => 'Physics',
-			'student.teacher2Name' => 'Mr. Mohamed',
-			'student.teacher2Subject' => 'Chemistry',
-			'student.teacher3Name' => 'Mr. Khaled',
-			'student.teacher3Subject' => 'Mathematics',
 			'student.contactInfoLabel' => 'Contact Info',
 			'student.passwordAndPhotosLabel' => 'Password & Photos',
 			'student.confirmAndCreateAccount' => 'Confirm & Create Account',
@@ -2655,7 +2647,7 @@ extension on Translations {
 			'student.phoneCall' => 'Phone',
 			'student.email' => 'Email',
 			'student.aboutTitle' => 'About App',
-			'student.aboutDesc' => 'An integrated educational platform connecting teachers and students',
+			'student.aboutDesc' => 'An integrated educational platform connecting instructors and students',
 			'student.version' => 'Version',
 			'student.lastUpdate' => 'Last Update',
 			'student.walletTitle' => 'Wallet',

@@ -26,7 +26,9 @@ final class StatusRejectedPagePage extends StatelessWidget {
           decoration: BoxDecoration(
             color: palette.statusDanger.withValues(alpha: 0.05),
             borderRadius: BorderRadius.circular(28),
-            border: Border.all(color: palette.statusDanger.withValues(alpha: 0.1)),
+            border: Border.all(
+              color: palette.statusDanger.withValues(alpha: 0.1),
+            ),
           ),
           child: Column(
             children: [

@@ -51,10 +51,18 @@ class RegistrationPage extends StatelessWidget {
             elevation: 0,
             title: Text(
               steps[currentStep],
-              style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 20, letterSpacing: -0.5),
+              style: const TextStyle(
+                fontWeight: FontWeight.w900,
+                fontSize: 20,
+                letterSpacing: -0.5,
+              ),
             ),
             leading: IconButton(
-              icon: Icon(Icons.arrow_back_ios_new_rounded, color: palette.textPrimary, size: 20),
+              icon: Icon(
+                Icons.arrow_back_ios_new_rounded,
+                color: palette.textPrimary,
+                size: 20,
+              ),
               onPressed: onBack,
             ),
             centerTitle: true,
@@ -111,9 +119,16 @@ class RegistrationPage extends StatelessWidget {
                         color: isCompleted
                             ? palette.brandPrimary
                             : palette.brandPrimary.withValues(alpha: 0.1),
-                        boxShadow: isCompleted 
-                          ? [BoxShadow(color: palette.brandPrimary.withValues(alpha: 0.2), blurRadius: 4)]
-                          : null,
+                        boxShadow: isCompleted
+                            ? [
+                                BoxShadow(
+                                  color: palette.brandPrimary.withValues(
+                                    alpha: 0.2,
+                                  ),
+                                  blurRadius: 4,
+                                ),
+                              ]
+                            : null,
                       ),
                     ),
                   ),
@@ -141,20 +156,23 @@ class RegistrationPage extends StatelessWidget {
         color: isCompleted
             ? palette.brandPrimary
             : isActive
-                ? palette.brandPrimary.withValues(alpha: 0.15)
-                : palette.backgroundSecondary,
+            ? palette.brandPrimary.withValues(alpha: 0.15)
+            : palette.backgroundSecondary,
         border: isActive
             ? Border.all(color: palette.brandPrimary, width: 3)
             : isCompleted
-                ? null
-                : Border.all(color: palette.textTertiary.withValues(alpha: 0.3), width: 1.5),
+            ? null
+            : Border.all(
+                color: palette.textTertiary.withValues(alpha: 0.3),
+                width: 1.5,
+              ),
         boxShadow: isActive
             ? [
                 BoxShadow(
                   color: palette.brandPrimary.withValues(alpha: 0.3),
                   blurRadius: 12,
                   offset: const Offset(0, 4),
-                )
+                ),
               ]
             : null,
       ),
@@ -165,7 +183,9 @@ class RegistrationPage extends StatelessWidget {
                 step.toString(),
                 style: TextStyle(
                   fontSize: isActive ? 16 : 14,
-                  color: isActive ? palette.brandPrimary : palette.textSecondary,
+                  color: isActive
+                      ? palette.brandPrimary
+                      : palette.textSecondary,
                   fontWeight: FontWeight.w900,
                 ),
               ),
@@ -216,7 +236,9 @@ class RegistrationPage extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           MentorXButton(
-            onPressed: isLoading ? null : (currentStep == 5 ? onSubmit : onNext),
+            onPressed: isLoading
+                ? null
+                : (currentStep == 5 ? onSubmit : onNext),
             label: currentStep == 5
                 ? 'Complete Registration'
                 : (currentStep == 0 ? 'Verify & Continue' : 'Continue'),
@@ -229,11 +251,16 @@ class RegistrationPage extends StatelessWidget {
               children: [
                 Text(
                   'Already have an account?',
-                  style: TextStyle(color: palette.textSecondary, fontWeight: FontWeight.w600),
+                  style: TextStyle(
+                    color: palette.textSecondary,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
                 TextButton(
                   onPressed: isLoading ? null : onLogin,
-                  style: TextButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 8)),
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                  ),
                   child: Text(
                     'Sign In',
                     style: TextStyle(

@@ -10,7 +10,8 @@
             "skip": "Skip",
             "next": "Next",
             "getStarted": "Get Started",
-            "backToLogin": "Back to Login"
+            "backToLogin": "Back to Login",
+            "noResults": "No results found"
         },
         "errors": {
             "somethingWentWrong": "Something went wrong",
@@ -118,6 +119,7 @@
                 "attendance": "Attendance",
                 "grades": "Grades",
                 "aiAssistant": "AI Assistant",
+                "assignments": "Assignments",
                 "rewards": "Rewards",
                 "marketplace": "Marketplace"
             }

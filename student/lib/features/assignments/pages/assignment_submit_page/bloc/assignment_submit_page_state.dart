@@ -36,17 +36,17 @@ final class AssignmentSubmitPageState extends Equatable {
 
   @override
   List<Object?> get props => [
-        assignmentId,
-        loadingState,
-        assignment,
-        questions,
-        currentQuestionIndex,
-        answers,
-        filePaths,
-        contentText,
-        result,
-        errorMessage,
-      ];
+    assignmentId,
+    loadingState,
+    assignment,
+    questions,
+    currentQuestionIndex,
+    answers,
+    filePaths,
+    contentText,
+    result,
+    errorMessage,
+  ];
 
   AssignmentSubmitPageState copyWith({
     String? assignmentId,

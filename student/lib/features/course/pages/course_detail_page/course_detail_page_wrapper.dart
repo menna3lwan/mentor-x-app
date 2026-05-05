@@ -102,7 +102,7 @@ final class _CourseDetailPageWrapperState
         QuizTakingPageRoute(quizId: item.id).push(context);
         break;
       case SessionItemType.assignment:
-        AssignmentSubmitPageRoute(assignmentId: item.id).push(context);
+        AssignmentDetailPageRoute(assignmentId: item.id).push(context);
         break;
       case SessionItemType.audio:
         ScaffoldMessenger.of(context).showSnackBar(

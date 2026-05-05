@@ -44,7 +44,7 @@ final class StudentRegistrationBloc
     on<StudentRegistrationStepChanged>(_onStepChanged);
     on<StudentRegistrationNextStepRequested>(_onNextStepRequested);
     on<StudentRegistrationPreviousStepRequested>(_onPreviousStepRequested);
-    
+
     // Step 0: Start
     on<StudentRegistrationFirstNameChanged>(
       (event, emit) => emit(state.copyWith(firstName: event.value)),
@@ -87,7 +87,8 @@ final class StudentRegistrationBloc
       (event, emit) => emit(state.copyWith(isOnline: event.value)),
     );
     on<StudentRegistrationCenterNameChanged>(
-      (event, emit) => emit(state.copyWith(centerName: MentorXNullableValue(event.value))),
+      (event, emit) =>
+          emit(state.copyWith(centerName: MentorXNullableValue(event.value))),
     );
     on<StudentRegistrationEducationDepartmentChanged>(
       (event, emit) => emit(state.copyWith(educationDepartment: event.value)),
@@ -137,7 +138,7 @@ final class StudentRegistrationBloc
       final isAvailable = await _registrationRepository.checkPhone(event.phone);
       emit(state.copyWith(isPhoneUnique: isAvailable));
     } catch (_) {
-      // If check fails, assume it's okay or ignore? 
+      // If check fails, assume it's okay or ignore?
       // Usually, if it's 409, checkPhone returns false.
     }
   }
@@ -149,20 +150,24 @@ final class StudentRegistrationBloc
     try {
       final governorates = await _registrationRepository.getGovernorates();
       final appInfo = await _registrationRepository.getApplicationInfo();
-      
-      final gradesRaw = appInfo['grades'] as List?;
-      final grades = gradesRaw?.map((g) {
-        final map = g as Map<String, dynamic>;
-        return GradeEntity(
-          id: map['id']?.toString() ?? '',
-          name: map['name']?.toString() ?? '',
-        );
-      }).toList() ?? [];
 
-      emit(state.copyWith(
-        governorates: governorates,
-        grades: grades,
-      ));
+      final gradesRaw = appInfo['grades'] as List?;
+      final grades =
+          gradesRaw?.map((g) {
+            final map = g as Map<String, dynamic>;
+            return GradeEntity(
+              id: map['id']?.toString() ?? '',
+              name: map['name']?.toString() ?? '',
+            );
+          }).toList() ??
+          [];
+
+      emit(
+        state.copyWith(
+          governorates: governorates,
+          grades: grades,
+        ),
+      );
     } catch (_) {}
   }
 
@@ -190,18 +195,24 @@ final class StudentRegistrationBloc
         phone: state.phone,
         parentPhone: state.parentPhone,
       );
-      emit(state.copyWith(
-        loadingState: LoadingState.loaded,
-        isRegistrationStarted: true,
-        currentStep: 1, // Move to OTP
-      ));
+      emit(
+        state.copyWith(
+          loadingState: LoadingState.loaded,
+          isRegistrationStarted: true,
+          currentStep: 1, // Move to OTP
+        ),
+      );
       emitPresentation(StudentRegistrationOtpSentPresentationEvent());
     } catch (e) {
-      emit(state.copyWith(
-        loadingState: LoadingState.error,
-        errorMessage: MentorXNullableValue(e.toString()),
-      ));
-      emitPresentation(StudentRegistrationFailurePresentationEvent(e.toString()));
+      emit(
+        state.copyWith(
+          loadingState: LoadingState.error,
+          errorMessage: MentorXNullableValue(e.toString()),
+        ),
+      );
+      emitPresentation(
+        StudentRegistrationFailurePresentationEvent(e.toString()),
+      );
     }
   }
 
@@ -213,7 +224,9 @@ final class StudentRegistrationBloc
       await _registrationRepository.resendOtp(state.phone);
       emitPresentation(StudentRegistrationOtpSentPresentationEvent());
     } catch (e) {
-      emitPresentation(StudentRegistrationFailurePresentationEvent(e.toString()));
+      emitPresentation(
+        StudentRegistrationFailurePresentationEvent(e.toString()),
+      );
     }
   }
 
@@ -305,7 +318,9 @@ final class StudentRegistrationBloc
         password: state.password,
         confirmPassword: state.confirmPassword,
         schoolName: state.schoolName.isEmpty ? null : state.schoolName,
-        educationDepartment: state.educationDepartment.isEmpty ? null : state.educationDepartment,
+        educationDepartment: state.educationDepartment.isEmpty
+            ? null
+            : state.educationDepartment,
         centerName: state.centerName?.isEmpty ?? true ? null : state.centerName,
         profileImagePath: state.profilePhotoPath,
         identityDocumentPath: state.idCardPhotoPath,

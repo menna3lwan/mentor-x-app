@@ -13,7 +13,8 @@ final class MarketplaceGridPageWrapper extends StatefulWidget {
       _MarketplaceGridPageWrapperState();
 }
 
-class _MarketplaceGridPageWrapperState extends State<MarketplaceGridPageWrapper> {
+class _MarketplaceGridPageWrapperState
+    extends State<MarketplaceGridPageWrapper> {
   @override
   Widget build(BuildContext context) {
     return BlocPresentationListener<

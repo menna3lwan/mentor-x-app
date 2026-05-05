@@ -1,4 +1,3 @@
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 
@@ -24,7 +23,8 @@ final class MarketplaceCartState extends Equatable {
 
   const MarketplaceCartState({this.items = const []});
 
-  double get subtotal => items.fold(0, (sum, item) => sum + item.item.price * item.quantity);
+  double get subtotal =>
+      items.fold(0, (sum, item) => sum + item.item.price * item.quantity);
   int get totalCount => items.fold(0, (sum, item) => sum + item.quantity);
 
   @override
@@ -43,7 +43,14 @@ final class MarketplaceCartCubit extends Cubit<MarketplaceCartState> {
       );
       emit(MarketplaceCartState(items: updatedItems));
     } else {
-      emit(MarketplaceCartState(items: [...state.items, MarketplaceCartItem(item: item, quantity: 1)]));
+      emit(
+        MarketplaceCartState(
+          items: [
+            ...state.items,
+            MarketplaceCartItem(item: item, quantity: 1),
+          ],
+        ),
+      );
     }
   }
 
@@ -60,7 +67,9 @@ final class MarketplaceCartCubit extends Cubit<MarketplaceCartState> {
     final existingIndex = state.items.indexWhere((i) => i.item.id == itemId);
     if (existingIndex >= 0) {
       final updatedItems = List<MarketplaceCartItem>.from(state.items);
-      updatedItems[existingIndex] = updatedItems[existingIndex].copyWith(quantity: quantity);
+      updatedItems[existingIndex] = updatedItems[existingIndex].copyWith(
+        quantity: quantity,
+      );
       emit(MarketplaceCartState(items: updatedItems));
     }
   }

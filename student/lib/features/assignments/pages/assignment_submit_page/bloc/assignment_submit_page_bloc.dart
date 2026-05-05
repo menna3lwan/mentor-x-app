@@ -66,8 +66,9 @@ final class AssignmentSubmitPageBloc
   ) async {
     emit(state.copyWith(loadingState: LoadingState.loading));
     try {
-      final assignment =
-          await assignmentRepository.getAssignment(state.assignmentId);
+      final assignment = await assignmentRepository.getAssignment(
+        state.assignmentId,
+      );
       emit(
         state.copyWith(
           loadingState: LoadingState.loaded,
@@ -99,7 +100,9 @@ final class AssignmentSubmitPageBloc
     Emitter<AssignmentSubmitPageState> emit,
   ) {
     if (state.currentQuestionIndex < state.questions.length - 1) {
-      emit(state.copyWith(currentQuestionIndex: state.currentQuestionIndex + 1));
+      emit(
+        state.copyWith(currentQuestionIndex: state.currentQuestionIndex + 1),
+      );
     }
   }
 
@@ -108,7 +111,9 @@ final class AssignmentSubmitPageBloc
     Emitter<AssignmentSubmitPageState> emit,
   ) {
     if (state.currentQuestionIndex > 0) {
-      emit(state.copyWith(currentQuestionIndex: state.currentQuestionIndex - 1));
+      emit(
+        state.copyWith(currentQuestionIndex: state.currentQuestionIndex - 1),
+      );
     }
   }
 

@@ -25,7 +25,9 @@ class _SecurityStepState extends State<SecurityStep> {
     super.initState();
     final state = context.read<StudentRegistrationBloc>().state;
     _passwordController = TextEditingController(text: state.password);
-    _confirmPasswordController = TextEditingController(text: state.confirmPassword);
+    _confirmPasswordController = TextEditingController(
+      text: state.confirmPassword,
+    );
   }
 
   @override
@@ -49,9 +51,9 @@ class _SecurityStepState extends State<SecurityStep> {
               child: Text(
                 'Security & Identity',
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.w900,
-                      color: palette.textPrimary,
-                    ),
+                  fontWeight: FontWeight.w900,
+                  color: palette.textPrimary,
+                ),
               ),
             ),
             const Gap(8),
@@ -60,9 +62,9 @@ class _SecurityStepState extends State<SecurityStep> {
               child: Text(
                 'Protect your account with a strong password and verify your identity with your National ID.',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: palette.textSecondary,
-                      height: 1.5,
-                    ),
+                  color: palette.textSecondary,
+                  height: 1.5,
+                ),
               ),
             ),
             const Gap(32),
@@ -73,7 +75,8 @@ class _SecurityStepState extends State<SecurityStep> {
                 icon: Icons.lock_outline_rounded,
                 controller: _passwordController,
                 isPassword: true,
-                onChanged: (value) => bloc.add(StudentRegistrationPasswordChanged(value)),
+                onChanged: (value) =>
+                    bloc.add(StudentRegistrationPasswordChanged(value)),
               ),
             ),
             const Gap(12),
@@ -89,10 +92,13 @@ class _SecurityStepState extends State<SecurityStep> {
                 icon: Icons.lock_reset_rounded,
                 controller: _confirmPasswordController,
                 isPassword: true,
-                errorText: state.password != state.confirmPassword && state.confirmPassword.isNotEmpty
+                errorText:
+                    state.password != state.confirmPassword &&
+                        state.confirmPassword.isNotEmpty
                     ? 'Passwords do not match'
                     : null,
-                onChanged: (value) => bloc.add(StudentRegistrationConfirmPasswordChanged(value)),
+                onChanged: (value) =>
+                    bloc.add(StudentRegistrationConfirmPasswordChanged(value)),
               ),
             ),
             const Gap(32),
@@ -147,9 +153,9 @@ class _SecurityStepState extends State<SecurityStep> {
             Text(
               label,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: color,
-                    fontWeight: FontWeight.w900,
-                  ),
+                color: color,
+                fontWeight: FontWeight.w900,
+              ),
             ),
           ],
         ),
@@ -179,9 +185,9 @@ class _SecurityStepState extends State<SecurityStep> {
         Text(
           'National ID Card Photo',
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w800,
-                color: palette.textPrimary,
-              ),
+            fontWeight: FontWeight.w800,
+            color: palette.textPrimary,
+          ),
         ),
         const Gap(12),
         Material(
@@ -219,7 +225,8 @@ class _SecurityStepState extends State<SecurityStep> {
                         const Gap(16),
                         Text(
                           'Upload Front Side of ID Card',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(
                                 color: palette.textSecondary,
                                 fontWeight: FontWeight.w700,
                               ),
@@ -245,7 +252,11 @@ class _SecurityStepState extends State<SecurityStep> {
                               color: Colors.white,
                               shape: BoxShape.circle,
                             ),
-                            child: Icon(Icons.edit_rounded, size: 16, color: palette.brandPrimary),
+                            child: Icon(
+                              Icons.edit_rounded,
+                              size: 16,
+                              color: palette.brandPrimary,
+                            ),
                           ),
                         ),
                       ],

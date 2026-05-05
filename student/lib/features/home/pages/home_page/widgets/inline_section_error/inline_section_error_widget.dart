@@ -28,8 +28,11 @@ final class InlineSectionErrorWidget extends StatelessWidget {
               color: palette.statusDanger.withOpacity(0.1),
               shape: BoxShape.circle,
             ),
-            child: Icon(Icons.error_outline_rounded,
-                color: palette.statusDanger, size: 20),
+            child: Icon(
+              Icons.error_outline_rounded,
+              color: palette.statusDanger,
+              size: 20,
+            ),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -48,7 +51,10 @@ final class InlineSectionErrorWidget extends StatelessWidget {
               onTap: onRetry,
               borderRadius: BorderRadius.circular(12),
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
                 child: Text(
                   context.t.ui.errors.retry,
                   style: TextStyle(

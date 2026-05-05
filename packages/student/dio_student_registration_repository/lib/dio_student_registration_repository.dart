@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:mentorx_core/mentorx_core.dart';
 
 typedef _Exception = StudentRegistrationException;
@@ -78,7 +79,7 @@ final class DioStudentRegistrationRepository
     String? identityDocumentPath,
   }) async {
     try {
-      final queryParameters = {
+      final requestData = {
         'firstName': firstName,
         'secondName': secondName,
         'thirdName': thirdName,
@@ -86,7 +87,7 @@ final class DioStudentRegistrationRepository
         'governorate': governorate,
         'area': area,
         'grade': grade,
-        'online': online.toString(),
+        'online': online,
         'otp': otp,
         'parentPhone': parentPhone,
         'phone': phone,
@@ -107,7 +108,9 @@ final class DioStudentRegistrationRepository
 
       await httpClient.postMultipart(
         '/api/student/register/complete',
-        queryParameters: queryParameters,
+        data: {
+          'data': jsonEncode(requestData),
+        },
         files: files,
       );
     } on HttpClientResponse catch (e) {

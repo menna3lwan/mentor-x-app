@@ -72,7 +72,11 @@ final class CourseDetailPagePage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.error_outline_rounded, size: 48, color: palette.statusDanger),
+            Icon(
+              Icons.error_outline_rounded,
+              size: 48,
+              color: palette.statusDanger,
+            ),
             const Gap(12),
             Text(
               errorMessage!,
@@ -164,7 +168,9 @@ final class _DetailTabBar extends StatelessWidget {
                 decoration: BoxDecoration(
                   border: Border(
                     bottom: BorderSide(
-                      color: isSelected ? palette.brandPrimary : Colors.transparent,
+                      color: isSelected
+                          ? palette.brandPrimary
+                          : Colors.transparent,
                       width: 3,
                     ),
                   ),
@@ -173,9 +179,11 @@ final class _DetailTabBar extends StatelessWidget {
                   label,
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontWeight: isSelected ? FontWeight.w900 : FontWeight.w600,
-                        color: isSelected ? palette.brandPrimary : palette.textSecondary,
-                      ),
+                    fontWeight: isSelected ? FontWeight.w900 : FontWeight.w600,
+                    color: isSelected
+                        ? palette.brandPrimary
+                        : palette.textSecondary,
+                  ),
                 ),
               ),
             ),
@@ -205,18 +213,18 @@ final class _DescriptionTab extends StatelessWidget {
             Text(
               context.t.course.detail.aboutCourse,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.w900,
-                    color: palette.textPrimary,
-                  ),
+                fontWeight: FontWeight.w900,
+                color: palette.textPrimary,
+              ),
             ),
             const Gap(16),
             if (course.subtitle != null)
               Text(
                 course.subtitle!,
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: palette.textSecondary,
-                      height: 1.6,
-                    ),
+                  color: palette.textSecondary,
+                  height: 1.6,
+                ),
               ),
             const Gap(24),
             Wrap(
@@ -225,22 +233,26 @@ final class _DescriptionTab extends StatelessWidget {
               children: [
                 _InfoChip(
                   icon: Icons.play_circle_filled_rounded,
-                  label: '${course.totalVideos} ${context.t.course.detail.videos}',
+                  label:
+                      '${course.totalVideos} ${context.t.course.detail.videos}',
                   palette: palette,
                 ),
                 _InfoChip(
                   icon: Icons.timer_rounded,
-                  label: '${course.totalDurationMinutes} ${context.t.course.detail.minutes}',
+                  label:
+                      '${course.totalDurationMinutes} ${context.t.course.detail.minutes}',
                   palette: palette,
                 ),
                 _InfoChip(
                   icon: Icons.people_rounded,
-                  label: '${course.enrolledCount} ${context.t.course.detail.students}',
+                  label:
+                      '${course.enrolledCount} ${context.t.course.detail.students}',
                   palette: palette,
                 ),
                 _InfoChip(
                   icon: Icons.library_books_rounded,
-                  label: '${course.totalSessions} ${context.t.course.detail.sessions}',
+                  label:
+                      '${course.totalSessions} ${context.t.course.detail.sessions}',
                   palette: palette,
                 ),
                 if (course.pointsReward > 0)
@@ -277,16 +289,24 @@ final class _InfoChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       decoration: BoxDecoration(
-        color: isHighlight ? palette.brandPrimary.withValues(alpha: 0.1) : palette.backgroundSecondary,
+        color: isHighlight
+            ? palette.brandPrimary.withValues(alpha: 0.1)
+            : palette.backgroundSecondary,
         borderRadius: BorderRadius.circular(30),
         border: Border.all(
-          color: isHighlight ? palette.brandPrimary.withValues(alpha: 0.2) : Colors.transparent,
+          color: isHighlight
+              ? palette.brandPrimary.withValues(alpha: 0.2)
+              : Colors.transparent,
         ),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 18, color: isHighlight ? palette.brandPrimary : palette.textTertiary),
+          Icon(
+            icon,
+            size: 18,
+            color: isHighlight ? palette.brandPrimary : palette.textTertiary,
+          ),
           const Gap(8),
           Text(
             label,
@@ -495,18 +515,20 @@ final class _EnrollmentBar extends StatelessWidget {
             backgroundColor: status == EnrollmentStatus.active
                 ? palette.brandSecondary
                 : status == EnrollmentStatus.completed
-                    ? palette.statusSuccess
-                    : palette.statusDanger,
+                ? palette.statusSuccess
+                : palette.statusDanger,
             foregroundColor: Colors.white,
             elevation: 0,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(18),
+            ),
           ),
           child: Text(
             status == EnrollmentStatus.active
                 ? context.t.course.detail.continueStudying
                 : status == EnrollmentStatus.completed
-                    ? context.t.course.detail.courseCompleted
-                    : context.t.course.detail.courseExpired,
+                ? context.t.course.detail.courseCompleted
+                : context.t.course.detail.courseExpired,
             style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 14),
           ),
         ),
@@ -530,17 +552,25 @@ final class _EnrollmentBar extends StatelessWidget {
           backgroundColor: palette.brandPrimary,
           foregroundColor: Colors.white,
           elevation: 0,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(18),
+          ),
         ),
         child: isEnrolling
             ? const SizedBox(
                 width: 24,
                 height: 24,
-                child: CircularProgressIndicator(strokeWidth: 3, color: Colors.white),
+                child: CircularProgressIndicator(
+                  strokeWidth: 3,
+                  color: Colors.white,
+                ),
               )
             : Text(
                 context.t.course.detail.enrollNow,
-                style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 16),
+                style: const TextStyle(
+                  fontWeight: FontWeight.w900,
+                  fontSize: 16,
+                ),
               ),
       ),
     );

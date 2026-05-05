@@ -27,8 +27,7 @@ final class AnnouncementsSectionWidget extends StatelessWidget {
     }
 
     final palette = MentorXThemeColorPalette.light;
-    final announcementItems =
-        announcements ?? const <AnnouncementEntity>[];
+    final announcementItems = announcements ?? const <AnnouncementEntity>[];
 
     return Skeletonizer(
       enabled: isLoading,
@@ -38,12 +37,15 @@ final class AnnouncementsSectionWidget extends StatelessWidget {
         physics: const NeverScrollableScrollPhysics(),
         separatorBuilder: (context, index) => const SizedBox(height: 12),
         itemBuilder: (context, index) {
-          final announcement =
-              announcementItems.isEmpty ? null : announcementItems[index];
+          final announcement = announcementItems.isEmpty
+              ? null
+              : announcementItems[index];
           final isPinned = announcement?.isPinned ?? false;
-          final title = announcement?.title ??
+          final title =
+              announcement?.title ??
               context.t.home.dashboard.loadingAnnouncement;
-          final preview = announcement?.preview ??
+          final preview =
+              announcement?.preview ??
               context.t.home.dashboard.loadingAnnouncementDetails;
           final createdAt = announcement?.createdAt ?? DateTime.now();
 
@@ -55,7 +57,9 @@ final class AnnouncementsSectionWidget extends StatelessWidget {
                 color: palette.backgroundPrimary,
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: isPinned ? palette.brandPrimary.withOpacity(0.2) : palette.backgroundTertiary,
+                  color: isPinned
+                      ? palette.brandPrimary.withOpacity(0.2)
+                      : palette.backgroundTertiary,
                 ),
                 boxShadow: [
                   BoxShadow(
@@ -75,13 +79,19 @@ final class AnnouncementsSectionWidget extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: isPinned ? palette.brandTertiary : palette.backgroundTertiary,
+                          color: isPinned
+                              ? palette.brandTertiary
+                              : palette.backgroundTertiary,
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
-                          isPinned ? Icons.push_pin_rounded : Icons.campaign_rounded,
+                          isPinned
+                              ? Icons.push_pin_rounded
+                              : Icons.campaign_rounded,
                           size: 18,
-                          color: isPinned ? palette.brandPrimary : palette.textSecondary,
+                          color: isPinned
+                              ? palette.brandPrimary
+                              : palette.textSecondary,
                         ),
                       ),
                       const SizedBox(width: 12),

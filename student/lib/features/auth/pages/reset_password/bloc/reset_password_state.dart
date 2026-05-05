@@ -19,13 +19,13 @@ final class ResetPasswordState extends Equatable {
 
   @override
   List<Object?> get props => [
-        phoneNumber,
-        otp,
-        newPassword,
-        confirmPassword,
-        loadingState,
-        errorMessage,
-      ];
+    phoneNumber,
+    otp,
+    newPassword,
+    confirmPassword,
+    loadingState,
+    errorMessage,
+  ];
 
   ResetPasswordState copyWith({
     String? otp,
@@ -40,7 +40,9 @@ final class ResetPasswordState extends Equatable {
       newPassword: newPassword ?? this.newPassword,
       confirmPassword: confirmPassword ?? this.confirmPassword,
       loadingState: loadingState ?? this.loadingState,
-      errorMessage: errorMessage != null ? errorMessage.value : this.errorMessage,
+      errorMessage: errorMessage != null
+          ? errorMessage.value
+          : this.errorMessage,
     );
   }
 }

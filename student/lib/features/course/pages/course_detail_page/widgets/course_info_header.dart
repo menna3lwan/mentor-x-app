@@ -63,7 +63,10 @@ final class CourseInfoHeader extends StatelessWidget {
                   child: FadeInLeft(
                     delay: const Duration(milliseconds: 400),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 6,
+                      ),
                       decoration: BoxDecoration(
                         color: palette.brandPrimary,
                         borderRadius: BorderRadius.circular(12),
@@ -77,7 +80,11 @@ final class CourseInfoHeader extends StatelessWidget {
                       ),
                       child: Row(
                         children: [
-                          const Icon(Icons.play_arrow_rounded, color: Colors.white, size: 18),
+                          const Icon(
+                            Icons.play_arrow_rounded,
+                            color: Colors.white,
+                            size: 18,
+                          ),
                           const SizedBox(width: 4),
                           Text(
                             'Introduction Video',
@@ -150,7 +157,10 @@ final class CourseInfoHeader extends StatelessWidget {
                       const SizedBox(width: 12),
                       _StatChip(
                         icon: Icons.access_time_filled_rounded,
-                        label: _formatDuration(context, course.totalDurationMinutes),
+                        label: _formatDuration(
+                          context,
+                          course.totalDurationMinutes,
+                        ),
                         palette: palette,
                       ),
                     ],
@@ -284,7 +294,10 @@ final class _ProgressBar extends StatelessWidget {
                     width: constraints.maxWidth * (progressPercent / 100),
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
-                        colors: [palette.brandPrimary, palette.brandPrimary.withOpacity(0.7)],
+                        colors: [
+                          palette.brandPrimary,
+                          palette.brandPrimary.withOpacity(0.7),
+                        ],
                       ),
                       borderRadius: BorderRadius.circular(4),
                       boxShadow: [

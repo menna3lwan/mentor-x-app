@@ -79,7 +79,8 @@ final class _BannersCarouselWidgetState extends State<BannersCarouselWidget> {
               itemBuilder: (context, index) {
                 final banner = hasItems ? widget.banners[index] : null;
                 final bannerId = banner?.id ?? '';
-                final bannerImageUrl = banner?.imageUrl ??
+                final bannerImageUrl =
+                    banner?.imageUrl ??
                     'https://picsum.photos/800/450?placeholder';
                 final bannerTitle = banner?.title;
 
@@ -107,12 +108,12 @@ final class _BannersCarouselWidgetState extends State<BannersCarouselWidget> {
                             fit: BoxFit.cover,
                             errorBuilder: (context, error, stackTrace) =>
                                 ColoredBox(
-                              color: palette.backgroundTertiary,
-                              child: Icon(
-                                Icons.image_not_supported_outlined,
-                                color: palette.textSecondary,
-                              ),
-                            ),
+                                  color: palette.backgroundTertiary,
+                                  child: Icon(
+                                    Icons.image_not_supported_outlined,
+                                    color: palette.textSecondary,
+                                  ),
+                                ),
                           ),
                           // Gradient Overlay
                           const DecoratedBox(

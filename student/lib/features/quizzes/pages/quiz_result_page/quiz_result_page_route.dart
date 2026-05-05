@@ -1,6 +1,9 @@
 part of '../../../../core/routing/app_routes.dart';
 
-@TypedGoRoute<QuizResultPageRoute>(path: '/quiz-result/:attemptId', name: 'quizResult')
+@TypedGoRoute<QuizResultPageRoute>(
+  path: '/quiz-result/:attemptId',
+  name: 'quizResult',
+)
 final class QuizResultPageRoute extends GoRouteData with $QuizResultPageRoute {
   final String attemptId;
   const QuizResultPageRoute({required this.attemptId});

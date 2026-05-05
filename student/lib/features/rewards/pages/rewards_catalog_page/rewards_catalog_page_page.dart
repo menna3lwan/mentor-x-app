@@ -24,13 +24,22 @@ class RewardsCatalogPage extends StatelessWidget {
             child: Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [palette.brandPrimary, palette.brandPrimary.withValues(alpha: 0.8)],
+                  colors: [
+                    palette.brandPrimary,
+                    palette.brandPrimary.withValues(alpha: 0.8),
+                  ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
-                borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
+                borderRadius: const BorderRadius.vertical(
+                  bottom: Radius.circular(24),
+                ),
                 boxShadow: [
-                  BoxShadow(color: palette.brandPrimary.withValues(alpha: 0.3), blurRadius: 15, offset: const Offset(0, 4)),
+                  BoxShadow(
+                    color: palette.brandPrimary.withValues(alpha: 0.3),
+                    blurRadius: 15,
+                    offset: const Offset(0, 4),
+                  ),
                 ],
               ),
               child: AppBar(
@@ -40,12 +49,17 @@ class RewardsCatalogPage extends StatelessWidget {
                 centerTitle: true,
                 title: Text(
                   t['rewardsTitle'] ?? 'Rewards Catalog',
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900, letterSpacing: -0.5),
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: -0.5,
+                  ),
                 ),
                 actions: [
                   IconButton(
                     icon: const Icon(Icons.history_rounded),
-                    onPressed: () => const RewardsHistoryPageRoute().push(context),
+                    onPressed: () =>
+                        const RewardsHistoryPageRoute().push(context),
                   ),
                   const SizedBox(width: 8),
                 ],
@@ -91,7 +105,9 @@ class RewardsCatalogPage extends StatelessWidget {
           if (items.isEmpty)
             SliverFillRemaining(
               hasScrollBody: false,
-              child: FadeInUp(child: _EmptyRewards(palette: palette, t: t)),
+              child: FadeInUp(
+                child: _EmptyRewards(palette: palette, t: t),
+              ),
             )
           else
             SliverPadding(
@@ -136,7 +152,11 @@ class _PointsHeader extends StatelessWidget {
   final MentorXThemeColorPalette palette;
   final dynamic t;
 
-  const _PointsHeader({required this.points, required this.palette, required this.t});
+  const _PointsHeader({
+    required this.points,
+    required this.palette,
+    required this.t,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -145,7 +165,10 @@ class _PointsHeader extends StatelessWidget {
       padding: const EdgeInsets.all(28),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [palette.brandPrimary, palette.brandPrimary.withValues(alpha: 0.8)],
+          colors: [
+            palette.brandPrimary,
+            palette.brandPrimary.withValues(alpha: 0.8),
+          ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -208,7 +231,8 @@ class _PointsHeader extends StatelessWidget {
               ),
               const Gap(12),
               Text(
-                t['redeemPointsDesc'] ?? 'Redeem your points for exclusive rewards.',
+                t['redeemPointsDesc'] ??
+                    'Redeem your points for exclusive rewards.',
                 style: TextStyle(
                   fontSize: 12,
                   color: Colors.white.withValues(alpha: 0.6),
@@ -256,13 +280,19 @@ class _RewardItemCard extends StatelessWidget {
               children: [
                 Positioned.fill(
                   child: ClipRRect(
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(24),
+                    ),
                     child: Image.network(
                       item.imageUrl ?? '',
                       fit: BoxFit.cover,
                       errorBuilder: (_, _, _) => Container(
                         color: palette.brandPrimary.withValues(alpha: 0.05),
-                        child: Icon(Icons.card_giftcard_rounded, color: palette.brandPrimary.withValues(alpha: 0.2), size: 40),
+                        child: Icon(
+                          Icons.card_giftcard_rounded,
+                          color: palette.brandPrimary.withValues(alpha: 0.2),
+                          size: 40,
+                        ),
                       ),
                     ),
                   ),
@@ -271,7 +301,10 @@ class _RewardItemCard extends StatelessWidget {
                   top: 12,
                   right: 12,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 6,
+                    ),
                     decoration: BoxDecoration(
                       color: Colors.black.withValues(alpha: 0.6),
                       borderRadius: BorderRadius.circular(10),
@@ -279,11 +312,19 @@ class _RewardItemCard extends StatelessWidget {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(Icons.stars_rounded, color: Colors.amber, size: 12),
+                        const Icon(
+                          Icons.stars_rounded,
+                          color: Colors.amber,
+                          size: 12,
+                        ),
                         const Gap(6),
                         Text(
                           '${item.requiredPoints}',
-                          style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w900),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 11,
+                            fontWeight: FontWeight.w900,
+                          ),
                         ),
                       ],
                     ),
@@ -346,7 +387,10 @@ class _EmptyRewards extends StatelessWidget {
               color: Colors.white,
               shape: BoxShape.circle,
               boxShadow: [
-                BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 20),
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.05),
+                  blurRadius: 20,
+                ),
               ],
             ),
             child: Icon(

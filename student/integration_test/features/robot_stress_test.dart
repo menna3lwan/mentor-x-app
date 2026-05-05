@@ -7,7 +7,7 @@ void main() {
   patrolTest('Student App Stress Test - Robot Overload', ($) async {
     await launchStudentApp($);
     await $.pump(const Duration(seconds: 2));
-    
+
     if (currentStudentLocation() == '/login') {
       await $.loginAsStudent();
     }

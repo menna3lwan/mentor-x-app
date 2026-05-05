@@ -38,11 +38,16 @@ class _MarketplaceGridPageState extends State<MarketplaceGridPage> {
         child: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [palette.brandPrimary, palette.brandPrimary.withValues(alpha: 0.8)],
+              colors: [
+                palette.brandPrimary,
+                palette.brandPrimary.withValues(alpha: 0.8),
+              ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
-            borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
+            borderRadius: const BorderRadius.vertical(
+              bottom: Radius.circular(24),
+            ),
             boxShadow: [
               BoxShadow(
                 color: palette.brandPrimary.withValues(alpha: 0.3),
@@ -58,12 +63,17 @@ class _MarketplaceGridPageState extends State<MarketplaceGridPage> {
             centerTitle: true,
             title: Text(
               t['store'] ?? 'Store',
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w900, letterSpacing: -0.5),
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w900,
+                letterSpacing: -0.5,
+              ),
             ),
             actions: [
               IconButton(
                 icon: const Icon(Icons.history_rounded),
-                onPressed: () => const MarketplaceOrdersPageRoute().push(context),
+                onPressed: () =>
+                    const MarketplaceOrdersPageRoute().push(context),
                 tooltip: t['marketplaceOrders'],
               ),
               _CartBadge(palette: palette),
@@ -114,7 +124,11 @@ class _MarketplaceGridPageState extends State<MarketplaceGridPage> {
                       selected: isSelected,
                       onSelected: (selected) {
                         if (selected) {
-                          bloc.add(MarketplaceGridPageCategorySelectedEvent(category?.id));
+                          bloc.add(
+                            MarketplaceGridPageCategorySelectedEvent(
+                              category?.id,
+                            ),
+                          );
                         }
                       },
                       selectedColor: palette.brandPrimary,
@@ -127,10 +141,15 @@ class _MarketplaceGridPageState extends State<MarketplaceGridPage> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                         side: BorderSide(
-                          color: isSelected ? palette.brandPrimary : palette.brandPrimary.withValues(alpha: 0.1),
+                          color: isSelected
+                              ? palette.brandPrimary
+                              : palette.brandPrimary.withValues(alpha: 0.1),
                         ),
                       ),
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
                       showCheckmark: false,
                     );
                   },
@@ -144,31 +163,37 @@ class _MarketplaceGridPageState extends State<MarketplaceGridPage> {
             child: state.loadingState == LoadingState.loading
                 ? const Center(child: CircularProgressIndicator())
                 : state.loadingState == LoadingState.error
-                    ? _ErrorView(t: t, onRetry: () => bloc.add(const MarketplaceGridPageLoadEvent()), palette: palette)
-                    : state.items.isEmpty
-                        ? _EmptyView(t: t, palette: palette)
-                        : GridView.builder(
-                            physics: const BouncingScrollPhysics(),
-                            padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
-                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 16,
-                              mainAxisSpacing: 16,
-                              childAspectRatio: 0.65,
-                            ),
-                            itemCount: state.items.length,
-                            itemBuilder: (context, index) {
-                              return FadeInUp(
-                                duration: const Duration(milliseconds: 500),
-                                delay: Duration(milliseconds: 50 * index),
-                                child: _ProductCard(
-                                  item: state.items[index],
-                                  palette: palette,
-                                  t: t,
-                                ),
-                              );
-                            },
-                          ),
+                ? _ErrorView(
+                    t: t,
+                    onRetry: () =>
+                        bloc.add(const MarketplaceGridPageLoadEvent()),
+                    palette: palette,
+                  )
+                : state.items.isEmpty
+                ? _EmptyView(t: t, palette: palette)
+                : GridView.builder(
+                    physics: const BouncingScrollPhysics(),
+                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 16,
+                          mainAxisSpacing: 16,
+                          childAspectRatio: 0.65,
+                        ),
+                    itemCount: state.items.length,
+                    itemBuilder: (context, index) {
+                      return FadeInUp(
+                        duration: const Duration(milliseconds: 500),
+                        delay: Duration(milliseconds: 50 * index),
+                        child: _ProductCard(
+                          item: state.items[index],
+                          palette: palette,
+                          t: t,
+                        ),
+                      );
+                    },
+                  ),
           ),
         ],
       ),
@@ -208,7 +233,10 @@ class _CartBadge extends StatelessWidget {
                       ),
                     ],
                   ),
-                  constraints: const BoxConstraints(minWidth: 18, minHeight: 18),
+                  constraints: const BoxConstraints(
+                    minWidth: 18,
+                    minHeight: 18,
+                  ),
                   child: Text(
                     '${state.totalCount}',
                     style: const TextStyle(
@@ -232,7 +260,11 @@ class _ErrorView extends StatelessWidget {
   final VoidCallback onRetry;
   final MentorXThemeColorPalette palette;
 
-  const _ErrorView({required this.t, required this.onRetry, required this.palette});
+  const _ErrorView({
+    required this.t,
+    required this.onRetry,
+    required this.palette,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -240,11 +272,18 @@ class _ErrorView extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.error_outline_rounded, size: 64, color: Colors.red.withOpacity(0.3)),
+          Icon(
+            Icons.error_outline_rounded,
+            size: 64,
+            color: Colors.red.withOpacity(0.3),
+          ),
           const SizedBox(height: 16),
           Text(
             t['errorLoadingProducts'] ?? 'Error loading products',
-            style: TextStyle(color: palette.textSecondary, fontWeight: FontWeight.w600),
+            style: TextStyle(
+              color: palette.textSecondary,
+              fontWeight: FontWeight.w600,
+            ),
           ),
           const SizedBox(height: 24),
           SizedBox(
@@ -272,7 +311,11 @@ class _EmptyView extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.inventory_2_outlined, size: 64, color: palette.textTertiary),
+          Icon(
+            Icons.inventory_2_outlined,
+            size: 64,
+            color: palette.textTertiary,
+          ),
           const SizedBox(height: 16),
           Text(
             t['noProductsFound'] ?? 'No products found',
@@ -325,23 +368,34 @@ class _ProductCard extends StatelessWidget {
                 children: [
                   Positioned.fill(
                     child: ClipRRect(
-                      borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+                      borderRadius: const BorderRadius.vertical(
+                        top: Radius.circular(24),
+                      ),
                       child: item.imageUrls.isNotEmpty
                           ? CachedNetworkImage(
                               imageUrl: item.imageUrls.first,
                               fit: BoxFit.cover,
                               placeholder: (context, url) => Container(
                                 color: palette.backgroundSecondary,
-                                child: Icon(Icons.image_outlined, color: palette.textTertiary),
+                                child: Icon(
+                                  Icons.image_outlined,
+                                  color: palette.textTertiary,
+                                ),
                               ),
                               errorWidget: (context, url, error) => Container(
                                 color: palette.backgroundSecondary,
-                                child: const Icon(Icons.broken_image_outlined, color: Colors.red),
+                                child: const Icon(
+                                  Icons.broken_image_outlined,
+                                  color: Colors.red,
+                                ),
                               ),
                             )
                           : Container(
                               color: palette.backgroundSecondary,
-                              child: Icon(Icons.image_outlined, color: palette.textTertiary),
+                              child: Icon(
+                                Icons.image_outlined,
+                                color: palette.textTertiary,
+                              ),
                             ),
                     ),
                   ),
@@ -350,7 +404,10 @@ class _ProductCard extends StatelessWidget {
                       top: 12,
                       left: 12,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 6,
+                        ),
                         decoration: BoxDecoration(
                           color: Colors.amber,
                           borderRadius: BorderRadius.circular(10),
@@ -364,7 +421,11 @@ class _ProductCard extends StatelessWidget {
                         child: const Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(Icons.star_rounded, color: Colors.black, size: 14),
+                            Icon(
+                              Icons.star_rounded,
+                              color: Colors.black,
+                              size: 14,
+                            ),
                             SizedBox(width: 4),
                             Text(
                               'HOT',
@@ -451,14 +512,19 @@ class _AddToCartButton extends StatelessWidget {
         onTap: item.inStock
             ? () {
                 context.read<MarketplaceCartCubit>().addItem(item);
-                MentorXUI.showToast(message: '${item.title} ${t['addedToCart'] ?? 'added to cart'}');
+                MentorXUI.showToast(
+                  message:
+                      '${item.title} ${t['addedToCart'] ?? 'added to cart'}',
+                );
               }
             : null,
         borderRadius: BorderRadius.circular(12),
         child: Padding(
           padding: const EdgeInsets.all(8),
           child: Icon(
-            item.inStock ? Icons.add_shopping_cart_rounded : Icons.not_interested_rounded,
+            item.inStock
+                ? Icons.add_shopping_cart_rounded
+                : Icons.not_interested_rounded,
             color: item.inStock ? Colors.white : palette.textTertiary,
             size: 18,
           ),

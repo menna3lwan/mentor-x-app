@@ -33,13 +33,22 @@ final class PdfViewerPagePage extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [palette.brandPrimary, palette.brandPrimary.withOpacity(0.8)],
+              colors: [
+                palette.brandPrimary,
+                palette.brandPrimary.withOpacity(0.8),
+              ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
-            borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
+            borderRadius: const BorderRadius.vertical(
+              bottom: Radius.circular(24),
+            ),
             boxShadow: [
-              BoxShadow(color: palette.brandPrimary.withOpacity(0.3), blurRadius: 15, offset: const Offset(0, 4)),
+              BoxShadow(
+                color: palette.brandPrimary.withOpacity(0.3),
+                blurRadius: 15,
+                offset: const Offset(0, 4),
+              ),
             ],
           ),
           child: AppBar(
@@ -73,7 +82,11 @@ final class PdfViewerPagePage extends StatelessWidget {
     );
   }
 
-  Widget _buildBody(BuildContext context, MentorXThemeColorPalette palette, dynamic t) {
+  Widget _buildBody(
+    BuildContext context,
+    MentorXThemeColorPalette palette,
+    dynamic t,
+  ) {
     if (errorMessage != null) {
       return Center(
         child: Padding(
@@ -81,11 +94,18 @@ final class PdfViewerPagePage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.error_outline_rounded, size: 64, color: Colors.red.withOpacity(0.3)),
+              Icon(
+                Icons.error_outline_rounded,
+                size: 64,
+                color: Colors.red.withOpacity(0.3),
+              ),
               const SizedBox(height: 24),
               Text(
                 errorMessage!,
-                style: TextStyle(color: palette.textSecondary, fontWeight: FontWeight.w600),
+                style: TextStyle(
+                  color: palette.textSecondary,
+                  fontWeight: FontWeight.w600,
+                ),
                 textAlign: TextAlign.center,
               ),
             ],
@@ -120,22 +140,35 @@ final class PdfViewerPagePage extends StatelessWidget {
             const SizedBox(height: 32),
             Text(
               context.t.course.pdf.title,
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900, color: palette.textPrimary),
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w900,
+                color: palette.textPrimary,
+              ),
             ),
             const SizedBox(height: 12),
             Text(
               title,
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 15, color: palette.textSecondary, fontWeight: FontWeight.w500),
+              style: TextStyle(
+                fontSize: 15,
+                color: palette.textSecondary,
+                fontWeight: FontWeight.w500,
+              ),
             ),
             if (contentUrl != null) ...[
               const SizedBox(height: 24),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
                 decoration: BoxDecoration(
                   color: palette.backgroundPrimary,
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: palette.brandPrimary.withOpacity(0.1)),
+                  border: Border.all(
+                    color: palette.brandPrimary.withOpacity(0.1),
+                  ),
                 ),
                 child: Text(
                   contentUrl!,
@@ -149,7 +182,10 @@ final class PdfViewerPagePage extends StatelessWidget {
             if (isCompleted) ...[
               const SizedBox(height: 32),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 10,
+                ),
                 decoration: BoxDecoration(
                   color: Colors.green.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(20),
@@ -157,11 +193,19 @@ final class PdfViewerPagePage extends StatelessWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.verified_rounded, color: Colors.green, size: 20),
+                    const Icon(
+                      Icons.verified_rounded,
+                      color: Colors.green,
+                      size: 20,
+                    ),
                     const SizedBox(width: 8),
                     Text(
                       context.t.course.pdf.completed,
-                      style: const TextStyle(color: Colors.green, fontWeight: FontWeight.w800, fontSize: 13),
+                      style: const TextStyle(
+                        color: Colors.green,
+                        fontWeight: FontWeight.w800,
+                        fontSize: 13,
+                      ),
                     ),
                   ],
                 ),

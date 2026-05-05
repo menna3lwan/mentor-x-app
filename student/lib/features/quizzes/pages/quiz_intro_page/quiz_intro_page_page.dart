@@ -91,7 +91,11 @@ class _BuildHeader extends StatelessWidget {
             children: [
               IconButton(
                 onPressed: () => Navigator.pop(context),
-                icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 20),
+                icon: const Icon(
+                  Icons.arrow_back_ios_new_rounded,
+                  color: Colors.white,
+                  size: 20,
+                ),
               ),
               const Spacer(),
               Text(
@@ -113,9 +117,16 @@ class _BuildHeader extends StatelessWidget {
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.15),
               shape: BoxShape.circle,
-              border: Border.all(color: Colors.white.withOpacity(0.3), width: 2),
+              border: Border.all(
+                color: Colors.white.withOpacity(0.3),
+                width: 2,
+              ),
             ),
-            child: const Icon(Icons.fact_check_rounded, size: 40, color: Colors.white),
+            child: const Icon(
+              Icons.fact_check_rounded,
+              size: 40,
+              color: Colors.white,
+            ),
           ),
           const SizedBox(height: 16),
           Text(
@@ -155,7 +166,11 @@ class _BuildContentCard extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(28),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 20, offset: const Offset(0, 10)),
+          BoxShadow(
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
         ],
       ),
       child: Column(
@@ -168,8 +183,16 @@ class _BuildContentCard extends StatelessWidget {
             physics: const NeverScrollableScrollPhysics(),
             childAspectRatio: 2.2,
             children: [
-              _InfoItem(value: '20', label: t['questionCount']!, palette: palette),
-              _InfoItem(value: '30 ${t['minutesShort']!}', label: t['duration']!, palette: palette),
+              _InfoItem(
+                value: '20',
+                label: t['questionCount']!,
+                palette: palette,
+              ),
+              _InfoItem(
+                value: '30 ${t['minutesShort']!}',
+                label: t['duration']!,
+                palette: palette,
+              ),
               _InfoItem(value: '60%', label: t['passGrade']!, palette: palette),
               _InfoItem(value: '3', label: t['attempts']!, palette: palette),
             ],
@@ -188,7 +211,11 @@ class _BuildContentCard extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Icon(Icons.info_outline_rounded, size: 18, color: palette.brandPrimary),
+                    Icon(
+                      Icons.info_outline_rounded,
+                      size: 18,
+                      color: palette.brandPrimary,
+                    ),
                     const SizedBox(width: 10),
                     Text(
                       t['instructions'] ?? 'Instructions',
@@ -226,7 +253,11 @@ class _InfoItem extends StatelessWidget {
   final String label;
   final MentorXThemeColorPalette palette;
 
-  const _InfoItem({required this.value, required this.label, required this.palette});
+  const _InfoItem({
+    required this.value,
+    required this.label,
+    required this.palette,
+  });
 
   @override
   Widget build(BuildContext context) {

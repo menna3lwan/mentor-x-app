@@ -75,12 +75,20 @@ class _QuizTakingPageState extends State<QuizTakingPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.error_outline_rounded, size: 64, color: palette.statusDanger.withOpacity(0.5)),
+                    Icon(
+                      Icons.error_outline_rounded,
+                      size: 64,
+                      color: palette.statusDanger.withOpacity(0.5),
+                    ),
                     const SizedBox(height: 24),
                     Text(
                       state.errorMessage!,
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: palette.textSecondary),
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: palette.textSecondary,
+                      ),
                     ),
                     const SizedBox(height: 32),
                     MentorXButton(
@@ -104,7 +112,9 @@ class _QuizTakingPageState extends State<QuizTakingPage> {
         final q = state.currentQuestion;
         final totalQuestions = state.questions.length;
         final currentQuestionIndex = state.currentQuestionIndex;
-        final progress = totalQuestions > 0 ? (currentQuestionIndex + 1) / totalQuestions : 0.0;
+        final progress = totalQuestions > 0
+            ? (currentQuestionIndex + 1) / totalQuestions
+            : 0.0;
 
         return AnnotatedRegion<SystemUiOverlayStyle>(
           value: SystemUiOverlayStyle.light.copyWith(
@@ -233,7 +243,10 @@ class _BuildHeader extends StatelessWidget {
               ),
               if (showTimer) ...[
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.15),
                     borderRadius: BorderRadius.circular(12),
@@ -241,7 +254,11 @@ class _BuildHeader extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
-                      const Icon(Icons.timer_outlined, color: Colors.white, size: 14),
+                      const Icon(
+                        Icons.timer_outlined,
+                        color: Colors.white,
+                        size: 14,
+                      ),
                       const SizedBox(width: 6),
                       Text(
                         timerText,
@@ -257,7 +274,10 @@ class _BuildHeader extends StatelessWidget {
                 const SizedBox(width: 12),
               ],
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: Colors.white.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(12),
@@ -293,7 +313,10 @@ class _BuildHeader extends StatelessWidget {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(4),
                     boxShadow: [
-                      BoxShadow(color: Colors.white.withOpacity(0.3), blurRadius: 10),
+                      BoxShadow(
+                        color: Colors.white.withOpacity(0.3),
+                        blurRadius: 10,
+                      ),
                     ],
                   ),
                 ),
@@ -305,15 +328,28 @@ class _BuildHeader extends StatelessWidget {
     );
   }
 
-  void _showExitDialog(BuildContext context, dynamic t, MentorXThemeColorPalette palette) {
+  void _showExitDialog(
+    BuildContext context,
+    dynamic t,
+    MentorXThemeColorPalette palette,
+  ) {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-        title: Text(t['exitQuizTitle'] ?? 'Exit Quiz?', style: const TextStyle(fontWeight: FontWeight.w900)),
-        content: Text(t['exitQuizDesc'] ?? 'Your progress will not be saved. Are you sure you want to exit?'),
+        title: Text(
+          t['exitQuizTitle'] ?? 'Exit Quiz?',
+          style: const TextStyle(fontWeight: FontWeight.w900),
+        ),
+        content: Text(
+          t['exitQuizDesc'] ??
+              'Your progress will not be saved. Are you sure you want to exit?',
+        ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: Text(t['cancel'] ?? 'Cancel')),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: Text(t['cancel'] ?? 'Cancel'),
+          ),
           SizedBox(
             width: 100,
             child: MentorXButton(
@@ -358,7 +394,11 @@ class _QuestionCard extends StatelessWidget {
             color: Colors.white,
             borderRadius: BorderRadius.circular(28),
             boxShadow: [
-              BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 20, offset: const Offset(0, 10)),
+              BoxShadow(
+                color: Colors.black.withOpacity(0.03),
+                blurRadius: 20,
+                offset: const Offset(0, 10),
+              ),
             ],
           ),
           child: Column(
@@ -367,7 +407,10 @@ class _QuestionCard extends StatelessWidget {
               Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: palette.brandPrimary.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(8),
@@ -417,12 +460,15 @@ class _QuestionCard extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 16),
-        if (q.type == QuizQuestionType.multipleChoice || q.type == QuizQuestionType.trueFalse)
+        if (q.type == QuizQuestionType.multipleChoice ||
+            q.type == QuizQuestionType.trueFalse)
           ...q.options.asMap().entries.map((entry) {
             final optionIndex = entry.key;
             final optionText = entry.value;
             final labels = ['A', 'B', 'C', 'D', 'E', 'F'];
-            final label = optionIndex < labels.length ? labels[optionIndex] : (optionIndex + 1).toString();
+            final label = optionIndex < labels.length
+                ? labels[optionIndex]
+                : (optionIndex + 1).toString();
             final isSelected = selectedAnswer == optionText;
 
             return _OptionTile(
@@ -431,14 +477,15 @@ class _QuestionCard extends StatelessWidget {
               isSelected: isSelected,
               palette: palette,
               onTap: () => context.read<QuizTakingPageBloc>().add(
-                    QuizTakingPageAnswerSelected(
-                      questionId: q.id,
-                      selectedAnswer: optionText,
-                    ),
-                  ),
+                QuizTakingPageAnswerSelected(
+                  questionId: q.id,
+                  selectedAnswer: optionText,
+                ),
+              ),
             );
           })
-        else if (q.type == QuizQuestionType.shortAnswer || q.type == QuizQuestionType.essay)
+        else if (q.type == QuizQuestionType.shortAnswer ||
+            q.type == QuizQuestionType.essay)
           _TextAnswerField(
             questionId: q.id,
             initialValue: selectedAnswer,
@@ -500,7 +547,11 @@ class _TextAnswerFieldState extends State<_TextAnswerField> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10, offset: const Offset(0, 4)),
+          BoxShadow(
+            color: Colors.black.withOpacity(0.02),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
         ],
       ),
       child: MentorXTextFormField(
@@ -511,11 +562,11 @@ class _TextAnswerFieldState extends State<_TextAnswerField> {
         maxLines: widget.isLong ? 6 : 1,
         onChanged: (value) {
           context.read<QuizTakingPageBloc>().add(
-                QuizTakingPageAnswerSelected(
-                  questionId: widget.questionId,
-                  selectedAnswer: value,
-                ),
-              );
+            QuizTakingPageAnswerSelected(
+              questionId: widget.questionId,
+              selectedAnswer: value,
+            ),
+          );
         },
       ),
     );
@@ -550,7 +601,9 @@ class _OptionTile extends StatelessWidget {
             duration: const Duration(milliseconds: 200),
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: isSelected ? palette.brandPrimary.withOpacity(0.05) : Colors.white,
+              color: isSelected
+                  ? palette.brandPrimary.withOpacity(0.05)
+                  : Colors.white,
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
                 color: isSelected ? palette.brandPrimary : Colors.transparent,
@@ -558,7 +611,11 @@ class _OptionTile extends StatelessWidget {
               ),
               boxShadow: [
                 if (!isSelected)
-                  BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10, offset: const Offset(0, 4)),
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.02),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
               ],
             ),
             child: Row(
@@ -567,7 +624,9 @@ class _OptionTile extends StatelessWidget {
                   width: 32,
                   height: 32,
                   decoration: BoxDecoration(
-                    color: isSelected ? palette.brandPrimary : palette.backgroundSecondary,
+                    color: isSelected
+                        ? palette.brandPrimary
+                        : palette.backgroundSecondary,
                     shape: BoxShape.circle,
                   ),
                   child: Center(
@@ -576,7 +635,9 @@ class _OptionTile extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w900,
-                        color: isSelected ? Colors.white : palette.textSecondary,
+                        color: isSelected
+                            ? Colors.white
+                            : palette.textSecondary,
                       ),
                     ),
                   ),
@@ -587,13 +648,21 @@ class _OptionTile extends StatelessWidget {
                     text,
                     style: TextStyle(
                       fontSize: 15,
-                      fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
-                      color: isSelected ? palette.brandPrimary : palette.textPrimary,
+                      fontWeight: isSelected
+                          ? FontWeight.w800
+                          : FontWeight.w600,
+                      color: isSelected
+                          ? palette.brandPrimary
+                          : palette.textPrimary,
                     ),
                   ),
                 ),
                 if (isSelected)
-                  Icon(Icons.check_circle_rounded, color: palette.brandPrimary, size: 24),
+                  Icon(
+                    Icons.check_circle_rounded,
+                    color: palette.brandPrimary,
+                    size: 24,
+                  ),
               ],
             ),
           ),
@@ -625,7 +694,11 @@ class _BuildNavigation extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 20, offset: const Offset(0, -5)),
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 20,
+            offset: const Offset(0, -5),
+          ),
         ],
       ),
       child: Row(
@@ -634,7 +707,9 @@ class _BuildNavigation extends StatelessWidget {
             Expanded(
               flex: 1,
               child: MentorXButton(
-                onPressed: () => context.read<QuizTakingPageBloc>().add(const QuizTakingPagePreviousQuestion()),
+                onPressed: () => context.read<QuizTakingPageBloc>().add(
+                  const QuizTakingPagePreviousQuestion(),
+                ),
                 text: t['commonPrevious']!,
               ),
             ),
@@ -646,9 +721,13 @@ class _BuildNavigation extends StatelessWidget {
               loading: isSubmitting,
               onPressed: () {
                 if (!isLast) {
-                  context.read<QuizTakingPageBloc>().add(const QuizTakingPageNextQuestion());
+                  context.read<QuizTakingPageBloc>().add(
+                    const QuizTakingPageNextQuestion(),
+                  );
                 } else {
-                  context.read<QuizTakingPageBloc>().add(const QuizTakingPageSubmit());
+                  context.read<QuizTakingPageBloc>().add(
+                    const QuizTakingPageSubmit(),
+                  );
                 }
               },
               text: isLast ? t['review']! : t['commonNext']!,

@@ -5,7 +5,10 @@ import 'package:mentorx_student/app/student_app.dart';
 import 'student_patrol_harness.dart';
 
 extension RobotHelper on PatrolIntegrationTester {
-  Future<void> loginAsStudent({String phone = '01000000000', String password = '123123'}) async {
+  Future<void> loginAsStudent({
+    String phone = '01000000000',
+    String password = '123123',
+  }) async {
     await this(TextFormField).at(0).waitUntilVisible();
     await this(TextFormField).at(0).enterText(phone);
     await this(TextFormField).at(1).enterText(password);
@@ -39,8 +42,8 @@ extension RobotHelper on PatrolIntegrationTester {
         } else if (this(IconButton).at(0).exists) {
           await this(IconButton).at(0).tap();
         } else {
-           // Fallback to Navigator.pop
-           Navigator.of(rootNavigatorKey.currentContext!).pop();
+          // Fallback to Navigator.pop
+          Navigator.of(rootNavigatorKey.currentContext!).pop();
         }
       }
     } else {
@@ -78,13 +81,13 @@ extension RobotHelper on PatrolIntegrationTester {
     // We use tester.widgetList to get the count of matching widgets
     final elevatedButtons = this(ElevatedButton);
     final count = tester.widgetList(elevatedButtons).length;
-    
+
     for (int i = 0; i < count; i++) {
       await elevatedButtons.at(i).tap();
       await pump(const Duration(seconds: 2));
-      await goBack(); 
+      await goBack();
     }
-    
+
     final iconButtons = this(IconButton);
     final iconCount = tester.widgetList(iconButtons).length;
     for (int i = 0; i < iconCount; i++) {

@@ -31,15 +31,15 @@ final class QuizTakingPageState extends Equatable {
 
   @override
   List<Object?> get props => [
-        quizId,
-        loadingState,
-        quiz,
-        questions,
-        currentQuestionIndex,
-        answers,
-        result,
-        errorMessage,
-      ];
+    quizId,
+    loadingState,
+    quiz,
+    questions,
+    currentQuestionIndex,
+    answers,
+    result,
+    errorMessage,
+  ];
 
   QuizTakingPageState copyWith({
     String? quizId,

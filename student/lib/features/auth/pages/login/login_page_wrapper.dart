@@ -212,5 +212,4 @@ final class _LoginPageWrapperState extends State<LoginPageWrapper> {
         const StatusRejectedPageRoute().go(context);
     }
   }
-
 }

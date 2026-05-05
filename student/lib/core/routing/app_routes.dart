@@ -26,6 +26,7 @@ part '../../features/course/pages/my_grades_page/my_grades_page_route.dart';
 part '../../features/assignments/pages/assignment_result_page/assignment_result_page_route.dart';
 part '../../features/assignments/pages/assignment_detail_page/assignment_detail_page_route.dart';
 part '../../features/assignments/pages/assignment_submit_page/assignment_submit_page_route.dart';
+part '../../features/assignments/pages/assignments_list_page/assignments_list_page_route.dart';
 part '../../features/marketplace/pages/marketplace_detail_page/marketplace_detail_page_route.dart';
 part '../../features/marketplace/pages/marketplace_cart_page/marketplace_cart_page_route.dart';
 part '../../features/marketplace/pages/marketplace_orders_page/marketplace_orders_page_route.dart';

@@ -37,11 +37,16 @@ final class AiConversationsPagePage extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [palette.brandPrimary, palette.brandPrimary.withValues(alpha: 0.8)],
+              colors: [
+                palette.brandPrimary,
+                palette.brandPrimary.withValues(alpha: 0.8),
+              ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
-            borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
+            borderRadius: const BorderRadius.vertical(
+              bottom: Radius.circular(24),
+            ),
             boxShadow: [
               BoxShadow(
                 color: palette.brandPrimary.withValues(alpha: 0.3),
@@ -57,7 +62,11 @@ final class AiConversationsPagePage extends StatelessWidget {
             centerTitle: true,
             title: const Text(
               'AI Tutor History',
-              style: TextStyle(fontWeight: FontWeight.w900, fontSize: 18, letterSpacing: -0.5),
+              style: TextStyle(
+                fontWeight: FontWeight.w900,
+                fontSize: 18,
+                letterSpacing: -0.5,
+              ),
             ),
           ),
         ),
@@ -161,7 +170,10 @@ final class AiConversationsPagePage extends StatelessWidget {
               color: Colors.white,
               shape: BoxShape.circle,
               boxShadow: [
-                BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 20),
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.05),
+                  blurRadius: 20,
+                ),
               ],
             ),
             child: Icon(
@@ -295,7 +307,10 @@ final class AiConversationsPagePage extends StatelessWidget {
                                 const Gap(8),
                                 Text(
                                   '•',
-                                  style: TextStyle(color: palette.textTertiary, fontSize: 12),
+                                  style: TextStyle(
+                                    color: palette.textTertiary,
+                                    fontSize: 12,
+                                  ),
                                 ),
                                 const Gap(8),
                                 Text(
@@ -351,7 +366,12 @@ final class AiConversationsPagePage extends StatelessWidget {
                                 children: [
                                   Icon(Icons.edit_outlined, size: 20),
                                   Gap(12),
-                                  Text('Rename', style: TextStyle(fontWeight: FontWeight.w600)),
+                                  Text(
+                                    'Rename',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
@@ -430,7 +450,10 @@ final class AiConversationsPagePage extends StatelessWidget {
               hintText: 'Enter new title',
               filled: true,
               fillColor: palette.backgroundSecondary,
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 14,
+              ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16),
                 borderSide: BorderSide.none,
@@ -442,13 +465,17 @@ final class AiConversationsPagePage extends StatelessWidget {
               onPressed: () => Navigator.of(dialogContext).pop(),
               child: Text(
                 'Cancel',
-                style: TextStyle(color: palette.textSecondary, fontWeight: FontWeight.w700),
+                style: TextStyle(
+                  color: palette.textSecondary,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
             Padding(
               padding: const EdgeInsets.only(right: 8, bottom: 4),
               child: MentorXButton(
-                onPressed: () => Navigator.of(dialogContext).pop(controller.text.trim()),
+                onPressed: () =>
+                    Navigator.of(dialogContext).pop(controller.text.trim()),
                 label: 'Save',
                 size: MentorXButtonSize.small,
               ),

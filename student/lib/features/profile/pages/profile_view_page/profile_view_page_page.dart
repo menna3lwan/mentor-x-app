@@ -29,10 +29,14 @@ class ProfileViewPage extends StatelessWidget {
                 children: [
                   FadeInUp(
                     duration: const Duration(milliseconds: 500),
-                    child: _QuickStats(session: session, t: t, palette: palette),
+                    child: _QuickStats(
+                      session: session,
+                      t: t,
+                      palette: palette,
+                    ),
                   ),
                   const Gap(24),
-                  
+
                   // Verification Section
                   FadeInUp(
                     duration: const Duration(milliseconds: 500),
@@ -44,7 +48,12 @@ class ProfileViewPage extends StatelessWidget {
                   FadeInUp(
                     duration: const Duration(milliseconds: 500),
                     delay: const Duration(milliseconds: 200),
-                    child: _PersonalDetails(session: session, isAr: isAr, t: t, palette: palette),
+                    child: _PersonalDetails(
+                      session: session,
+                      isAr: isAr,
+                      t: t,
+                      palette: palette,
+                    ),
                   ),
                   const Gap(24),
 
@@ -65,7 +74,11 @@ class ProfileViewPage extends StatelessWidget {
 }
 
 class _ProfileHeader extends StatelessWidget {
-  const _ProfileHeader({required this.session, required this.isAr, required this.palette});
+  const _ProfileHeader({
+    required this.session,
+    required this.isAr,
+    required this.palette,
+  });
   final AppSessionState session;
   final bool isAr;
   final MentorXThemeColorPalette palette;
@@ -83,7 +96,10 @@ class _ProfileHeader extends StatelessWidget {
             Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [palette.brandPrimary, palette.brandPrimary.withValues(alpha: 0.85)],
+                  colors: [
+                    palette.brandPrimary,
+                    palette.brandPrimary.withValues(alpha: 0.85),
+                  ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
@@ -100,12 +116,19 @@ class _ProfileHeader extends StatelessWidget {
                         padding: const EdgeInsets.all(4),
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          border: Border.all(color: Colors.white.withValues(alpha: 0.2), width: 2),
+                          border: Border.all(
+                            color: Colors.white.withValues(alpha: 0.2),
+                            width: 2,
+                          ),
                         ),
                         child: CircleAvatar(
                           radius: 50,
                           backgroundColor: Colors.white,
-                          child: Icon(Icons.person_rounded, size: 56, color: palette.brandPrimary),
+                          child: Icon(
+                            Icons.person_rounded,
+                            size: 56,
+                            color: palette.brandPrimary,
+                          ),
                         ),
                       ),
                     ),
@@ -127,11 +150,16 @@ class _ProfileHeader extends StatelessWidget {
                       duration: const Duration(milliseconds: 600),
                       delay: const Duration(milliseconds: 100),
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 6,
+                        ),
                         decoration: BoxDecoration(
                           color: Colors.white.withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(30),
-                          border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                          border: Border.all(
+                            color: Colors.white.withValues(alpha: 0.1),
+                          ),
                         ),
                         child: Text(
                           session.studentCode,
@@ -156,7 +184,11 @@ class _ProfileHeader extends StatelessWidget {
 }
 
 class _QuickStats extends StatelessWidget {
-  const _QuickStats({required this.session, required this.t, required this.palette});
+  const _QuickStats({
+    required this.session,
+    required this.t,
+    required this.palette,
+  });
   final AppSessionState session;
   final Map<String, String> t;
   final MentorXThemeColorPalette palette;
@@ -292,7 +324,9 @@ class _VerificationCard extends StatelessWidget {
           decoration: BoxDecoration(
             color: palette.brandPrimary.withValues(alpha: 0.03),
             borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: palette.brandPrimary.withValues(alpha: 0.1)),
+            border: Border.all(
+              color: palette.brandPrimary.withValues(alpha: 0.1),
+            ),
           ),
           child: Row(
             children: [
@@ -302,7 +336,11 @@ class _VerificationCard extends StatelessWidget {
                   color: palette.brandPrimary.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(Icons.verified_user_rounded, color: palette.brandPrimary, size: 28),
+                child: Icon(
+                  Icons.verified_user_rounded,
+                  color: palette.brandPrimary,
+                  size: 28,
+                ),
               ),
               const Gap(16),
               Expanded(
@@ -319,7 +357,8 @@ class _VerificationCard extends StatelessWidget {
                     ),
                     const Gap(4),
                     Text(
-                      t['verifyNowDesc'] ?? 'Verify your ID to unlock all features.',
+                      t['verifyNowDesc'] ??
+                          'Verify your ID to unlock all features.',
                       style: TextStyle(
                         fontSize: 12,
                         color: palette.textSecondary,
@@ -356,7 +395,10 @@ class _PersonalDetails extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _SectionTitle(title: t['personalData'] ?? 'Personal Data', palette: palette),
+        _SectionTitle(
+          title: t['personalData'] ?? 'Personal Data',
+          palette: palette,
+        ),
         const Gap(12),
         Container(
           decoration: BoxDecoration(
@@ -463,7 +505,9 @@ class _DetailRow extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        border: isLast ? null : Border(bottom: BorderSide(color: palette.backgroundSecondary)),
+        border: isLast
+            ? null
+            : Border(bottom: BorderSide(color: palette.backgroundSecondary)),
       ),
       child: Row(
         children: [
@@ -482,12 +526,20 @@ class _DetailRow extends StatelessWidget {
               children: [
                 Text(
                   label,
-                  style: TextStyle(fontSize: 11, color: palette.textTertiary, fontWeight: FontWeight.w700),
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: palette.textTertiary,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
                 const Gap(2),
                 Text(
                   value,
-                  style: TextStyle(fontSize: 14, color: palette.textPrimary, fontWeight: FontWeight.w800),
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: palette.textPrimary,
+                    fontWeight: FontWeight.w800,
+                  ),
                 ),
               ],
             ),
@@ -547,12 +599,23 @@ class _ActionButtons extends StatelessWidget {
       context: context,
       builder: (ctx) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-        title: Text(t['logoutConfirmTitle'] ?? 'Log Out', style: const TextStyle(fontWeight: FontWeight.w900)),
-        content: Text(t['logoutConfirmDesc'] ?? 'Are you sure you want to log out?'),
+        title: Text(
+          t['logoutConfirmTitle'] ?? 'Log Out',
+          style: const TextStyle(fontWeight: FontWeight.w900),
+        ),
+        content: Text(
+          t['logoutConfirmDesc'] ?? 'Are you sure you want to log out?',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: Text(t['cancel'] ?? 'Cancel', style: TextStyle(color: palette.textSecondary, fontWeight: FontWeight.w700)),
+            child: Text(
+              t['cancel'] ?? 'Cancel',
+              style: TextStyle(
+                color: palette.textSecondary,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
           ),
           const SizedBox(width: 8),
           SizedBox(
@@ -599,15 +662,27 @@ class _ActionButton extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: isDanger ? palette.statusDanger.withValues(alpha: 0.1) : palette.brandPrimary.withValues(alpha: 0.1)),
+            border: Border.all(
+              color: isDanger
+                  ? palette.statusDanger.withValues(alpha: 0.1)
+                  : palette.brandPrimary.withValues(alpha: 0.1),
+            ),
             boxShadow: [
-              BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 10, offset: const Offset(0, 4)),
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.02),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
             ],
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, size: 20, color: isDanger ? palette.statusDanger : palette.brandPrimary),
+              Icon(
+                icon,
+                size: 20,
+                color: isDanger ? palette.statusDanger : palette.brandPrimary,
+              ),
               const Gap(8),
               Text(
                 label,

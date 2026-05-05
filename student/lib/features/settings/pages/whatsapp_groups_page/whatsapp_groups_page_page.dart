@@ -35,7 +35,11 @@ final class WhatsappGroupsPagePage extends StatelessWidget {
             centerTitle: true,
             title: const Text(
               'WhatsApp Groups',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, letterSpacing: -0.5),
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w900,
+                letterSpacing: -0.5,
+              ),
             ),
           ),
         ),
@@ -46,7 +50,10 @@ final class WhatsappGroupsPagePage extends StatelessWidget {
             ? const Center(child: CircularProgressIndicator())
             : ListView(
                 physics: const BouncingScrollPhysics(),
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 16,
+                ),
                 children: [
                   FadeInUp(
                     duration: const Duration(milliseconds: 500),
@@ -55,11 +62,17 @@ final class WhatsappGroupsPagePage extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: palette.brandPrimary.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: palette.brandPrimary.withValues(alpha: 0.2)),
+                        border: Border.all(
+                          color: palette.brandPrimary.withValues(alpha: 0.2),
+                        ),
                       ),
                       child: Row(
                         children: [
-                          Icon(Icons.info_outline_rounded, color: palette.brandPrimary, size: 20),
+                          Icon(
+                            Icons.info_outline_rounded,
+                            color: palette.brandPrimary,
+                            size: 20,
+                          ),
                           const Gap(12),
                           Expanded(
                             child: Text(
@@ -77,24 +90,24 @@ final class WhatsappGroupsPagePage extends StatelessWidget {
                   ),
                   const Gap(20),
                   ...state.groups.asMap().entries.map(
-                        (entry) => FadeInUp(
-                          duration: const Duration(milliseconds: 500),
-                          delay: Duration(milliseconds: 100 * entry.key),
-                          child: Padding(
-                            padding: const EdgeInsets.only(bottom: 16),
-                            child: _GroupCard(
-                              group: entry.value,
-                              isJoined: state.joinedGroupId == entry.value.id,
-                              onJoin: () async {
-                                await Clipboard.setData(
-                                  ClipboardData(text: entry.value.inviteLink),
-                                );
-                                onJoinGroup(entry.value.id);
-                              },
-                            ),
-                          ),
+                    (entry) => FadeInUp(
+                      duration: const Duration(milliseconds: 500),
+                      delay: Duration(milliseconds: 100 * entry.key),
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 16),
+                        child: _GroupCard(
+                          group: entry.value,
+                          isJoined: state.joinedGroupId == entry.value.id,
+                          onJoin: () async {
+                            await Clipboard.setData(
+                              ClipboardData(text: entry.value.inviteLink),
+                            );
+                            onJoinGroup(entry.value.id);
+                          },
                         ),
                       ),
+                    ),
+                  ),
                 ],
               ),
       ),
@@ -144,7 +157,11 @@ final class _GroupCard extends StatelessWidget {
                     color: const Color(0xFF25D366).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(16),
                   ),
-                  child: const Icon(Icons.chat_rounded, color: Color(0xFF25D366), size: 28),
+                  child: const Icon(
+                    Icons.chat_rounded,
+                    color: Color(0xFF25D366),
+                    size: 28,
+                  ),
                 ),
               ),
               const Gap(14),
@@ -192,7 +209,9 @@ final class _GroupCard extends StatelessWidget {
               onPressed: onJoin,
               label: isJoined ? 'Link Copied' : 'Copy Invite Link',
               color: isJoined ? palette.statusSuccess : const Color(0xFF25D366),
-              icon: isJoined ? Icons.check_circle_rounded : Icons.content_copy_rounded,
+              icon: isJoined
+                  ? Icons.check_circle_rounded
+                  : Icons.content_copy_rounded,
             ),
           ),
         ],

@@ -72,14 +72,18 @@ final class WalletQuickViewCardWidget extends StatelessWidget {
                               children: [
                                 Icon(
                                   Icons.account_balance_wallet_outlined,
-                                  color: palette.textForeground.withOpacity(0.9),
+                                  color: palette.textForeground.withOpacity(
+                                    0.9,
+                                  ),
                                   size: 16,
                                 ),
                                 const SizedBox(width: 6),
                                 Text(
                                   context.t.home.dashboard.walletBalance,
                                   style: TextStyle(
-                                    color: palette.textForeground.withOpacity(0.9),
+                                    color: palette.textForeground.withOpacity(
+                                      0.9,
+                                    ),
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -116,7 +120,9 @@ final class WalletQuickViewCardWidget extends StatelessWidget {
                                   ),
                                   const SizedBox(width: 4),
                                   Text(
-                                    context.t.home.dashboard.points(count: points),
+                                    context.t.home.dashboard.points(
+                                      count: points,
+                                    ),
                                     style: TextStyle(
                                       color: palette.textForeground,
                                       fontSize: 12,

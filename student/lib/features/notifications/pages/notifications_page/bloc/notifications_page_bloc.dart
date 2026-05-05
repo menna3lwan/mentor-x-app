@@ -35,35 +35,43 @@ final class NotificationsPageBloc
     NotificationsPageLoadEvent event,
     Emitter<NotificationsPageState> emit,
   ) async {
-    emit(state.copyWith(
-      loadingState: LoadingState.loading,
-      errorMessage: const MentorXNullableValue(null),
-      notifications: [],
-      currentPage: 0,
-      hasMore: true,
-    ));
+    emit(
+      state.copyWith(
+        loadingState: LoadingState.loading,
+        errorMessage: const MentorXNullableValue(null),
+        notifications: [],
+        currentPage: 0,
+        hasMore: true,
+      ),
+    );
 
     try {
       final notifications = await notificationRepository.getNotifications(
         paginationInfo: const MentorXPaginationInfo(page: 0, limit: 20),
       );
-      
-      emit(state.copyWith(
-        loadingState: LoadingState.loaded,
-        notifications: notifications,
-        hasMore: notifications.length >= 20,
-        currentPage: 0,
-      ));
+
+      emit(
+        state.copyWith(
+          loadingState: LoadingState.loaded,
+          notifications: notifications,
+          hasMore: notifications.length >= 20,
+          currentPage: 0,
+        ),
+      );
     } on MentorXException catch (e) {
-      emit(state.copyWith(
-        loadingState: LoadingState.error,
-        errorMessage: MentorXNullableValue(e.message),
-      ));
+      emit(
+        state.copyWith(
+          loadingState: LoadingState.error,
+          errorMessage: MentorXNullableValue(e.message),
+        ),
+      );
     } catch (e) {
-      emit(state.copyWith(
-        loadingState: LoadingState.error,
-        errorMessage: MentorXNullableValue(e.toString()),
-      ));
+      emit(
+        state.copyWith(
+          loadingState: LoadingState.error,
+          errorMessage: MentorXNullableValue(e.toString()),
+        ),
+      );
     }
   }
 
@@ -79,12 +87,14 @@ final class NotificationsPageBloc
       final moreNotifications = await notificationRepository.getNotifications(
         paginationInfo: MentorXPaginationInfo(page: nextPage, limit: 20),
       );
-      
-      emit(state.copyWith(
-        notifications: [...state.notifications, ...moreNotifications],
-        hasMore: moreNotifications.length >= 20,
-        currentPage: nextPage,
-      ));
+
+      emit(
+        state.copyWith(
+          notifications: [...state.notifications, ...moreNotifications],
+          hasMore: moreNotifications.length >= 20,
+          currentPage: nextPage,
+        ),
+      );
     } catch (e) {
       // Ignore pagination errors
     }
@@ -96,14 +106,14 @@ final class NotificationsPageBloc
   ) async {
     try {
       await notificationRepository.markAsRead(event.notificationId);
-      
+
       final updatedList = state.notifications.map((n) {
         if (n.id == event.notificationId) {
           return n.copyWith(isRead: true);
         }
         return n;
       }).toList();
-      
+
       emit(state.copyWith(notifications: updatedList));
     } catch (e) {
       // Ignore read errors
@@ -116,11 +126,11 @@ final class NotificationsPageBloc
   ) async {
     try {
       await notificationRepository.markAllAsRead();
-      
+
       final updatedList = state.notifications.map((n) {
         return n.copyWith(isRead: true);
       }).toList();
-      
+
       emit(state.copyWith(notifications: updatedList));
     } catch (e) {
       // Ignore read errors

@@ -20,7 +20,9 @@ final class EditProfilePageState extends Equatable {
   }) {
     return EditProfilePageState(
       loadingState: loadingState ?? this.loadingState,
-      errorMessage: errorMessage != null ? errorMessage.value : this.errorMessage,
+      errorMessage: errorMessage != null
+          ? errorMessage.value
+          : this.errorMessage,
     );
   }
 }

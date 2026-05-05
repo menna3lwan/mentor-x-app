@@ -23,10 +23,14 @@ class _AddBalancePageState extends State<AddBalancePage> {
 
   PaymentMethod _getPaymentMethod(int index) {
     switch (index) {
-      case 0: return PaymentMethod.vodafoneCash;
-      case 1: return PaymentMethod.instaPay;
-      case 2: return PaymentMethod.fawry;
-      default: return PaymentMethod.fawry;
+      case 0:
+        return PaymentMethod.vodafoneCash;
+      case 1:
+        return PaymentMethod.instaPay;
+      case 2:
+        return PaymentMethod.fawry;
+      default:
+        return PaymentMethod.fawry;
     }
   }
 
@@ -41,7 +45,10 @@ class _AddBalancePageState extends State<AddBalancePage> {
       (Icons.store_rounded, t['fawry']!, t['fawryDesc']!),
     ];
 
-    return BlocPresentationListener<AddBalancePageBloc, AddBalancePagePresentationEvent>(
+    return BlocPresentationListener<
+      AddBalancePageBloc,
+      AddBalancePagePresentationEvent
+    >(
       listener: (context, event) {
         if (event is AddBalancePageSuccess) {
           PurchaseConfirmPageRoute(paymentId: event.payment.id).push(context);
@@ -56,11 +63,16 @@ class _AddBalancePageState extends State<AddBalancePage> {
               child: Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [palette.brandPrimary, palette.brandPrimary.withOpacity(0.8)],
+                    colors: [
+                      palette.brandPrimary,
+                      palette.brandPrimary.withOpacity(0.8),
+                    ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
-                  borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
+                  borderRadius: const BorderRadius.vertical(
+                    bottom: Radius.circular(24),
+                  ),
                   boxShadow: [
                     BoxShadow(
                       color: palette.brandPrimary.withOpacity(0.3),
@@ -76,7 +88,10 @@ class _AddBalancePageState extends State<AddBalancePage> {
                   centerTitle: true,
                   title: Text(
                     t['addBalance']!,
-                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
                 ),
               ),
@@ -89,9 +104,12 @@ class _AddBalancePageState extends State<AddBalancePage> {
                   if (state.errorMessage != null)
                     Padding(
                       padding: const EdgeInsets.only(bottom: 16),
-                      child: StatusBadge(message: state.errorMessage!, status: StatusBadgeType.danger),
+                      child: StatusBadge(
+                        message: state.errorMessage!,
+                        status: StatusBadgeType.danger,
+                      ),
                     ),
-                  
+
                   Text(
                     t['amount']!,
                     style: TextStyle(
@@ -120,23 +138,29 @@ class _AddBalancePageState extends State<AddBalancePage> {
                         selected: isSelected,
                         onSelected: (selected) {
                           if (selected) {
-                            setState(() => _amountController.text = p.toString());
+                            setState(
+                              () => _amountController.text = p.toString(),
+                            );
                           }
                         },
                         selectedColor: palette.brandPrimary,
                         labelStyle: TextStyle(
-                          color: isSelected ? Colors.white : palette.brandPrimary,
+                          color: isSelected
+                              ? Colors.white
+                              : palette.brandPrimary,
                           fontWeight: FontWeight.bold,
                         ),
                         backgroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
-                          side: BorderSide(color: palette.brandPrimary.withOpacity(0.2)),
+                          side: BorderSide(
+                            color: palette.brandPrimary.withOpacity(0.2),
+                          ),
                         ),
                       );
                     }).toList(),
                   ),
-                  
+
                   const SizedBox(height: 40),
                   Text(
                     t['choosePaymentMethod']!,
@@ -160,14 +184,16 @@ class _AddBalancePageState extends State<AddBalancePage> {
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(20),
                           border: Border.all(
-                            color: isSelected ? palette.brandPrimary : Colors.transparent,
+                            color: isSelected
+                                ? palette.brandPrimary
+                                : Colors.transparent,
                             width: 2,
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: isSelected 
-                                ? palette.brandPrimary.withOpacity(0.1) 
-                                : Colors.black.withOpacity(0.02),
+                              color: isSelected
+                                  ? palette.brandPrimary.withOpacity(0.1)
+                                  : Colors.black.withOpacity(0.02),
                               blurRadius: 10,
                               offset: const Offset(0, 4),
                             ),
@@ -178,15 +204,17 @@ class _AddBalancePageState extends State<AddBalancePage> {
                             Container(
                               padding: const EdgeInsets.all(12),
                               decoration: BoxDecoration(
-                                color: isSelected 
-                                  ? palette.brandPrimary.withOpacity(0.1) 
-                                  : palette.backgroundSecondary,
+                                color: isSelected
+                                    ? palette.brandPrimary.withOpacity(0.1)
+                                    : palette.backgroundSecondary,
                                 borderRadius: BorderRadius.circular(14),
                               ),
                               child: Icon(
-                                icon, 
-                                size: 24, 
-                                color: isSelected ? palette.brandPrimary : palette.textTertiary,
+                                icon,
+                                size: 24,
+                                color: isSelected
+                                    ? palette.brandPrimary
+                                    : palette.textTertiary,
                               ),
                             ),
                             const SizedBox(width: 16),
@@ -229,7 +257,12 @@ class _AddBalancePageState extends State<AddBalancePage> {
               ),
             ),
             bottomNavigationBar: Container(
-              padding: EdgeInsets.fromLTRB(24, 16, 24, MediaQuery.of(context).padding.bottom + 16),
+              padding: EdgeInsets.fromLTRB(
+                24,
+                16,
+                24,
+                MediaQuery.of(context).padding.bottom + 16,
+              ),
               decoration: BoxDecoration(
                 color: Colors.white,
                 boxShadow: [
@@ -241,9 +274,12 @@ class _AddBalancePageState extends State<AddBalancePage> {
                 ],
               ),
               child: MentorXButton(
-                onPressed: (_amountController.text.isNotEmpty && _selectedMethodIndex >= 0)
+                onPressed:
+                    (_amountController.text.isNotEmpty &&
+                        _selectedMethodIndex >= 0)
                     ? () {
-                        final amount = double.tryParse(_amountController.text) ?? 0.0;
+                        final amount =
+                            double.tryParse(_amountController.text) ?? 0.0;
                         context.read<AddBalancePageBloc>().add(
                           AddBalancePageSubmitEvent(
                             amount: amount,

@@ -19,12 +19,12 @@ final class TransactionsHistoryPageState extends Equatable {
 
   @override
   List<Object?> get props => [
-        loadingState,
-        transactions,
-        errorMessage,
-        hasMore,
-        currentPage,
-      ];
+    loadingState,
+    transactions,
+    errorMessage,
+    hasMore,
+    currentPage,
+  ];
 
   TransactionsHistoryPageState copyWith({
     LoadingState? loadingState,
@@ -36,7 +36,9 @@ final class TransactionsHistoryPageState extends Equatable {
     return TransactionsHistoryPageState(
       loadingState: loadingState ?? this.loadingState,
       transactions: transactions ?? this.transactions,
-      errorMessage: errorMessage != null ? errorMessage.value : this.errorMessage,
+      errorMessage: errorMessage != null
+          ? errorMessage.value
+          : this.errorMessage,
       hasMore: hasMore ?? this.hasMore,
       currentPage: currentPage ?? this.currentPage,
     );

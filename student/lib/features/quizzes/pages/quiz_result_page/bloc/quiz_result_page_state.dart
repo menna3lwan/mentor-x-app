@@ -18,7 +18,13 @@ final class QuizResultPageState extends Equatable {
   static const initial = QuizResultPageState();
 
   @override
-  List<Object?> get props => [loadingState, result, myRank, leaderboard, errorMessage];
+  List<Object?> get props => [
+    loadingState,
+    result,
+    myRank,
+    leaderboard,
+    errorMessage,
+  ];
 
   QuizResultPageState copyWith({
     LoadingState? loadingState,

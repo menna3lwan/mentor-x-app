@@ -25,17 +25,17 @@ final class HomeAsyncSection<T> extends Equatable {
   const HomeAsyncSection.initial() : this._(status: HomeSectionStatus.initial);
 
   const HomeAsyncSection.loading({T? data})
-      : this._(status: HomeSectionStatus.loading, data: data);
+    : this._(status: HomeSectionStatus.loading, data: data);
 
   const HomeAsyncSection.loaded(T data)
-      : this._(status: HomeSectionStatus.loaded, data: data);
+    : this._(status: HomeSectionStatus.loaded, data: data);
 
   const HomeAsyncSection.failure(String message, {T? data})
-      : this._(
-          status: HomeSectionStatus.failure,
-          data: data,
-          errorMessage: message,
-        );
+    : this._(
+        status: HomeSectionStatus.failure,
+        data: data,
+        errorMessage: message,
+      );
 
   bool get isInitial => status == HomeSectionStatus.initial;
   bool get isLoading => status == HomeSectionStatus.loading;
@@ -58,8 +58,7 @@ final class HomePageState extends Equatable {
   final HomeAsyncSection<List<BannerEntity>> bannersSection;
   final HomeAsyncSection<List<CourseSummaryEntity>> continueLearningSection;
   final HomeAsyncSection<List<CourseSummaryEntity>> featuredCoursesSection;
-  final HomeAsyncSection<List<AnnouncementEntity>>
-      announcementsSection;
+  final HomeAsyncSection<List<AnnouncementEntity>> announcementsSection;
 
   const HomePageState({
     required this.studentName,
@@ -122,14 +121,14 @@ final class HomePageState extends Equatable {
 
   @override
   List<Object?> get props => [
-        studentName,
-        isRefreshing,
-        lastUpdatedAt,
-        walletSection,
-        unreadCountSection,
-        bannersSection,
-        continueLearningSection,
-        featuredCoursesSection,
-        announcementsSection,
-      ];
+    studentName,
+    isRefreshing,
+    lastUpdatedAt,
+    walletSection,
+    unreadCountSection,
+    bannersSection,
+    continueLearningSection,
+    featuredCoursesSection,
+    announcementsSection,
+  ];
 }

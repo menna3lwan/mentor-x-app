@@ -31,32 +31,40 @@ final class WalletMainPageBloc
     WalletMainPageLoadEvent event,
     Emitter<WalletMainPageState> emit,
   ) async {
-    emit(state.copyWith(
-      loadingState: LoadingState.loading,
-      errorMessage: const MentorXNullableValue(null),
-    ));
+    emit(
+      state.copyWith(
+        loadingState: LoadingState.loading,
+        errorMessage: const MentorXNullableValue(null),
+      ),
+    );
 
     try {
       final summary = await walletRepository.getSummary();
       final transactions = await walletRepository.getTransactions(
         paginationInfo: const MentorXPaginationInfo(page: 0, limit: 5),
       );
-      
-      emit(state.copyWith(
-        loadingState: LoadingState.loaded,
-        summary: MentorXNullableValue(summary),
-        transactions: transactions,
-      ));
+
+      emit(
+        state.copyWith(
+          loadingState: LoadingState.loaded,
+          summary: MentorXNullableValue(summary),
+          transactions: transactions,
+        ),
+      );
     } on MentorXException catch (e) {
-      emit(state.copyWith(
-        loadingState: LoadingState.error,
-        errorMessage: MentorXNullableValue(e.message),
-      ));
+      emit(
+        state.copyWith(
+          loadingState: LoadingState.error,
+          errorMessage: MentorXNullableValue(e.message),
+        ),
+      );
     } catch (e) {
-      emit(state.copyWith(
-        loadingState: LoadingState.error,
-        errorMessage: MentorXNullableValue(e.toString()),
-      ));
+      emit(
+        state.copyWith(
+          loadingState: LoadingState.error,
+          errorMessage: MentorXNullableValue(e.toString()),
+        ),
+      );
     }
   }
 }

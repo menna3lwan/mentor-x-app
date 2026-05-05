@@ -7,7 +7,8 @@ sealed class MarketplaceOrdersPageEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-final class MarketplaceOrdersPageInitialized extends MarketplaceOrdersPageEvent {
+final class MarketplaceOrdersPageInitialized
+    extends MarketplaceOrdersPageEvent {
   const MarketplaceOrdersPageInitialized();
 }
 

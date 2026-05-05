@@ -80,7 +80,10 @@ final class SessionExpansionTile extends StatelessWidget {
               if (session.isFree) ...[
                 const SizedBox(width: 12),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 2,
+                  ),
                   decoration: BoxDecoration(
                     color: palette.statusSuccess.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(6),

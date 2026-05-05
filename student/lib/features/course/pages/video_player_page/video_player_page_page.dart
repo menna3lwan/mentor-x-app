@@ -39,13 +39,22 @@ final class VideoPlayerPagePage extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [palette.brandPrimary, palette.brandPrimary.withOpacity(0.8)],
+              colors: [
+                palette.brandPrimary,
+                palette.brandPrimary.withOpacity(0.8),
+              ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
-            borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
+            borderRadius: const BorderRadius.vertical(
+              bottom: Radius.circular(24),
+            ),
             boxShadow: [
-              BoxShadow(color: palette.brandPrimary.withOpacity(0.3), blurRadius: 15, offset: const Offset(0, 4)),
+              BoxShadow(
+                color: palette.brandPrimary.withOpacity(0.3),
+                blurRadius: 15,
+                offset: const Offset(0, 4),
+              ),
             ],
           ),
           child: AppBar(
@@ -66,7 +75,11 @@ final class VideoPlayerPagePage extends StatelessWidget {
     );
   }
 
-  Widget _buildBody(BuildContext context, MentorXThemeColorPalette palette, dynamic t) {
+  Widget _buildBody(
+    BuildContext context,
+    MentorXThemeColorPalette palette,
+    dynamic t,
+  ) {
     if (errorMessage != null) {
       return Center(
         child: Padding(
@@ -74,11 +87,18 @@ final class VideoPlayerPagePage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.error_outline_rounded, size: 64, color: Colors.red.withOpacity(0.3)),
+              Icon(
+                Icons.error_outline_rounded,
+                size: 64,
+                color: Colors.red.withOpacity(0.3),
+              ),
               const SizedBox(height: 24),
               Text(
                 errorMessage!,
-                style: TextStyle(color: palette.textSecondary, fontWeight: FontWeight.w600),
+                style: TextStyle(
+                  color: palette.textSecondary,
+                  fontWeight: FontWeight.w600,
+                ),
                 textAlign: TextAlign.center,
               ),
             ],
@@ -103,7 +123,11 @@ final class VideoPlayerPagePage extends StatelessWidget {
                 color: Colors.black,
                 borderRadius: BorderRadius.circular(24),
                 boxShadow: [
-                  BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 20, offset: const Offset(0, 10)),
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    blurRadius: 20,
+                    offset: const Offset(0, 10),
+                  ),
                 ],
               ),
               clipBehavior: Clip.antiAlias,
@@ -114,7 +138,10 @@ final class VideoPlayerPagePage extends StatelessWidget {
                   Container(
                     decoration: BoxDecoration(
                       gradient: RadialGradient(
-                        colors: [palette.brandPrimary.withOpacity(0.2), Colors.transparent],
+                        colors: [
+                          palette.brandPrimary.withOpacity(0.2),
+                          Colors.transparent,
+                        ],
                         radius: 1,
                       ),
                     ),
@@ -128,12 +155,20 @@ final class VideoPlayerPagePage extends StatelessWidget {
                           color: Colors.white.withOpacity(0.15),
                           shape: BoxShape.circle,
                         ),
-                        child: Icon(Icons.play_arrow_rounded, size: 48, color: Colors.white),
+                        child: Icon(
+                          Icons.play_arrow_rounded,
+                          size: 48,
+                          color: Colors.white,
+                        ),
                       ),
                       const SizedBox(height: 16),
                       Text(
                         context.t.course.player.title,
-                        style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 13, fontWeight: FontWeight.w600),
+                        style: TextStyle(
+                          color: Colors.white.withOpacity(0.7),
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ],
                   ),
@@ -146,7 +181,10 @@ final class VideoPlayerPagePage extends StatelessWidget {
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
-                          colors: [Colors.transparent, Colors.black.withOpacity(0.5)],
+                          colors: [
+                            Colors.transparent,
+                            Colors.black.withOpacity(0.5),
+                          ],
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
                         ),
@@ -158,18 +196,25 @@ final class VideoPlayerPagePage extends StatelessWidget {
                               borderRadius: BorderRadius.circular(4),
                               child: LinearProgressIndicator(
                                 value: totalDurationSeconds > 0
-                                    ? currentPositionSeconds / totalDurationSeconds
+                                    ? currentPositionSeconds /
+                                          totalDurationSeconds
                                     : 0,
                                 minHeight: 4,
                                 backgroundColor: Colors.white.withOpacity(0.2),
-                                valueColor: AlwaysStoppedAnimation(palette.brandPrimary),
+                                valueColor: AlwaysStoppedAnimation(
+                                  palette.brandPrimary,
+                                ),
                               ),
                             ),
                           ),
                           const SizedBox(width: 12),
                           Text(
                             '${_formatTime(currentPositionSeconds)} / ${_formatTime(totalDurationSeconds)}',
-                            style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.w700),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
                         ],
                       ),
@@ -180,7 +225,7 @@ final class VideoPlayerPagePage extends StatelessWidget {
             ),
           ),
         ),
-        
+
         // Video Info Section
         Expanded(
           child: Container(
@@ -189,9 +234,15 @@ final class VideoPlayerPagePage extends StatelessWidget {
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(32),
+              ),
               boxShadow: [
-                BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 15, offset: const Offset(0, -5)),
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.03),
+                  blurRadius: 15,
+                  offset: const Offset(0, -5),
+                ),
               ],
             ),
             child: Column(
@@ -202,23 +253,38 @@ final class VideoPlayerPagePage extends StatelessWidget {
                     Expanded(
                       child: Text(
                         title,
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: palette.textPrimary),
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w900,
+                          color: palette.textPrimary,
+                        ),
                       ),
                     ),
                     if (isCompleted)
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 4,
+                        ),
                         decoration: BoxDecoration(
                           color: Colors.green.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Row(
                           children: [
-                            const Icon(Icons.check_circle_rounded, color: Colors.green, size: 14),
+                            const Icon(
+                              Icons.check_circle_rounded,
+                              color: Colors.green,
+                              size: 14,
+                            ),
                             const SizedBox(width: 4),
                             Text(
                               context.t.course.player.completed,
-                              style: const TextStyle(color: Colors.green, fontSize: 11, fontWeight: FontWeight.bold),
+                              style: const TextStyle(
+                                color: Colors.green,
+                                fontSize: 11,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ],
                         ),
@@ -235,7 +301,9 @@ final class VideoPlayerPagePage extends StatelessWidget {
                 const SizedBox(height: 12),
                 _InfoTile(
                   label: t['videoStatus'] ?? 'Status',
-                  value: isCompleted ? (t['videoCompleted'] ?? 'Completed') : (t['videoWatching'] ?? 'Watching'),
+                  value: isCompleted
+                      ? (t['videoCompleted'] ?? 'Completed')
+                      : (t['videoWatching'] ?? 'Watching'),
                   icon: Icons.info_outline_rounded,
                   palette: palette,
                 ),
@@ -260,7 +328,12 @@ class _InfoTile extends StatelessWidget {
   final IconData icon;
   final MentorXThemeColorPalette palette;
 
-  const _InfoTile({required this.label, required this.value, required this.icon, required this.palette});
+  const _InfoTile({
+    required this.label,
+    required this.value,
+    required this.icon,
+    required this.palette,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -274,9 +347,23 @@ class _InfoTile extends StatelessWidget {
         children: [
           Icon(icon, color: palette.textTertiary, size: 20),
           const SizedBox(width: 12),
-          Text(label, style: TextStyle(color: palette.textSecondary, fontSize: 13, fontWeight: FontWeight.w600)),
+          Text(
+            label,
+            style: TextStyle(
+              color: palette.textSecondary,
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
           const Spacer(),
-          Text(value, style: TextStyle(color: palette.textPrimary, fontSize: 13, fontWeight: FontWeight.w800)),
+          Text(
+            value,
+            style: TextStyle(
+              color: palette.textPrimary,
+              fontSize: 13,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
         ],
       ),
     );

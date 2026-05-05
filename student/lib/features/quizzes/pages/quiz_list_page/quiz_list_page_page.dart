@@ -24,13 +24,22 @@ class QuizListPage extends StatelessWidget {
             child: Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [palette.brandPrimary, palette.brandPrimary.withValues(alpha: 0.8)],
+                  colors: [
+                    palette.brandPrimary,
+                    palette.brandPrimary.withValues(alpha: 0.8),
+                  ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
-                borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
+                borderRadius: const BorderRadius.vertical(
+                  bottom: Radius.circular(24),
+                ),
                 boxShadow: [
-                  BoxShadow(color: palette.brandPrimary.withValues(alpha: 0.3), blurRadius: 15, offset: const Offset(0, 4)),
+                  BoxShadow(
+                    color: palette.brandPrimary.withValues(alpha: 0.3),
+                    blurRadius: 15,
+                    offset: const Offset(0, 4),
+                  ),
                 ],
               ),
               child: AppBar(
@@ -40,7 +49,11 @@ class QuizListPage extends StatelessWidget {
                 centerTitle: true,
                 title: Text(
                   t['navQuizzes']!,
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900, letterSpacing: -0.5),
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: -0.5,
+                  ),
                 ),
               ),
             ),
@@ -62,7 +75,9 @@ class QuizListPage extends StatelessWidget {
     }
 
     if (state.quizzes.isEmpty) {
-      return FadeInUp(child: _EmptyQuizzes(t: t, palette: palette));
+      return FadeInUp(
+        child: _EmptyQuizzes(t: t, palette: palette),
+      );
     }
 
     return ListView.builder(
@@ -79,7 +94,7 @@ class QuizListPage extends StatelessWidget {
             palette: palette,
             t: t,
             onTap: () {
-              context.push('/quiz-intro'); 
+              context.push('/quiz-intro');
             },
           ),
         );
@@ -131,7 +146,11 @@ class _QuizItemCard extends StatelessWidget {
                     color: palette.brandPrimary.withValues(alpha: 0.08),
                     borderRadius: BorderRadius.circular(16),
                   ),
-                  child: Icon(Icons.quiz_rounded, size: 28, color: palette.brandPrimary),
+                  child: Icon(
+                    Icons.quiz_rounded,
+                    size: 28,
+                    color: palette.brandPrimary,
+                  ),
                 ),
                 const Gap(16),
                 Expanded(
@@ -150,18 +169,34 @@ class _QuizItemCard extends StatelessWidget {
                       const Gap(6),
                       Row(
                         children: [
-                          Icon(Icons.help_outline_rounded, size: 12, color: palette.textTertiary),
+                          Icon(
+                            Icons.help_outline_rounded,
+                            size: 12,
+                            color: palette.textTertiary,
+                          ),
                           const Gap(4),
                           Text(
                             '${quiz.questionsCount ?? 0} ${t['questions']!}',
-                            style: TextStyle(fontSize: 11, color: palette.textTertiary, fontWeight: FontWeight.w700),
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: palette.textTertiary,
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
                           const Gap(12),
-                          Icon(Icons.access_time_rounded, size: 12, color: palette.textTertiary),
+                          Icon(
+                            Icons.access_time_rounded,
+                            size: 12,
+                            color: palette.textTertiary,
+                          ),
                           const Gap(4),
                           Text(
                             '${quiz.durationMinutes} ${t['minutesShort']!}',
-                            style: TextStyle(fontSize: 11, color: palette.textTertiary, fontWeight: FontWeight.w700),
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: palette.textTertiary,
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
                         ],
                       ),
@@ -199,7 +234,10 @@ class _EmptyQuizzes extends StatelessWidget {
               color: Colors.white,
               shape: BoxShape.circle,
               boxShadow: [
-                BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 20),
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.05),
+                  blurRadius: 20,
+                ),
               ],
             ),
             child: Icon(

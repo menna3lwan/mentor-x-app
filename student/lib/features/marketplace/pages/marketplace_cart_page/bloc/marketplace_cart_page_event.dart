@@ -11,7 +11,8 @@ final class MarketplaceCartPageLoadEvent extends MarketplaceCartPageEvent {
   const MarketplaceCartPageLoadEvent();
 }
 
-final class MarketplaceCartPagePlaceOrderEvent extends MarketplaceCartPageEvent {
+final class MarketplaceCartPagePlaceOrderEvent
+    extends MarketplaceCartPageEvent {
   final List<({String itemId, int quantity})> items;
   final String address;
   final String phone;

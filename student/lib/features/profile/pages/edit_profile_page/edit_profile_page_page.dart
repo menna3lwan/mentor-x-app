@@ -39,11 +39,16 @@ class EditProfilePage extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [palette.brandPrimary, palette.brandPrimary.withValues(alpha: 0.8)],
+              colors: [
+                palette.brandPrimary,
+                palette.brandPrimary.withValues(alpha: 0.8),
+              ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
-            borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
+            borderRadius: const BorderRadius.vertical(
+              bottom: Radius.circular(24),
+            ),
             boxShadow: [
               BoxShadow(
                 color: palette.brandPrimary.withValues(alpha: 0.3),
@@ -59,7 +64,11 @@ class EditProfilePage extends StatelessWidget {
             centerTitle: true,
             title: Text(
               t['editProfile'] ?? 'Edit Profile',
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w900, letterSpacing: -0.5),
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w900,
+                letterSpacing: -0.5,
+              ),
             ),
           ),
         ),
@@ -75,7 +84,9 @@ class EditProfilePage extends StatelessWidget {
               FadeInDown(
                 duration: const Duration(milliseconds: 500),
                 child: _InfoBanner(
-                  text: t['editsNeedApproval'] ?? 'Edits need admin approval and verification',
+                  text:
+                      t['editsNeedApproval'] ??
+                      'Edits need admin approval and verification',
                   palette: palette,
                 ),
               ),
@@ -83,10 +94,13 @@ class EditProfilePage extends StatelessWidget {
 
               FadeInUp(
                 duration: const Duration(milliseconds: 500),
-                child: _BuildSectionTitle(title: t['personalInfo'] ?? 'Personal Information', palette: palette),
+                child: _BuildSectionTitle(
+                  title: t['personalInfo'] ?? 'Personal Information',
+                  palette: palette,
+                ),
               ),
               const Gap(16),
-              
+
               FadeInUp(
                 duration: const Duration(milliseconds: 500),
                 delay: const Duration(milliseconds: 100),
@@ -96,10 +110,11 @@ class EditProfilePage extends StatelessWidget {
                   icon: Icons.person_outline_rounded,
                   palette: palette,
                   enabled: !isSubmitting,
-                  validator: (v) => v == null || v.isEmpty ? t['requiredField'] : null,
+                  validator: (v) =>
+                      v == null || v.isEmpty ? t['requiredField'] : null,
                 ),
               ),
-              
+
               FadeInUp(
                 duration: const Duration(milliseconds: 500),
                 delay: const Duration(milliseconds: 150),
@@ -110,7 +125,8 @@ class EditProfilePage extends StatelessWidget {
                   palette: palette,
                   enabled: !isSubmitting,
                   keyboardType: TextInputType.phone,
-                  validator: (v) => v == null || v.isEmpty ? t['requiredField'] : null,
+                  validator: (v) =>
+                      v == null || v.isEmpty ? t['requiredField'] : null,
                 ),
               ),
 
@@ -118,7 +134,10 @@ class EditProfilePage extends StatelessWidget {
               FadeInUp(
                 duration: const Duration(milliseconds: 500),
                 delay: const Duration(milliseconds: 200),
-                child: _BuildSectionTitle(title: t['academicInfo'] ?? 'Academic Details', palette: palette),
+                child: _BuildSectionTitle(
+                  title: t['academicInfo'] ?? 'Academic Details',
+                  palette: palette,
+                ),
               ),
               const Gap(16),
 
@@ -133,7 +152,7 @@ class EditProfilePage extends StatelessWidget {
                   enabled: !isSubmitting,
                 ),
               ),
-              
+
               FadeInUp(
                 duration: const Duration(milliseconds: 500),
                 delay: const Duration(milliseconds: 300),
@@ -162,10 +181,13 @@ class EditProfilePage extends StatelessWidget {
               FadeInUp(
                 duration: const Duration(milliseconds: 500),
                 delay: const Duration(milliseconds: 400),
-                child: _BuildSectionTitle(title: t['reasonForEdit'] ?? 'Reason for this change', palette: palette),
+                child: _BuildSectionTitle(
+                  title: t['reasonForEdit'] ?? 'Reason for this change',
+                  palette: palette,
+                ),
               ),
               const Gap(16),
-              
+
               FadeInUp(
                 duration: const Duration(milliseconds: 500),
                 delay: const Duration(milliseconds: 450),
@@ -173,11 +195,18 @@ class EditProfilePage extends StatelessWidget {
                   controller: reasonController,
                   maxLines: 4,
                   enabled: !isSubmitting,
-                  validator: (v) => v == null || v.trim().isEmpty ? t['provideReason'] : null,
+                  validator: (v) =>
+                      v == null || v.trim().isEmpty ? t['provideReason'] : null,
                   style: const TextStyle(fontWeight: FontWeight.w600),
                   decoration: InputDecoration(
-                    hintText: t['reasonHint'] ?? 'Briefly explain why you want to update your profile...',
-                    hintStyle: TextStyle(fontSize: 14, color: palette.textTertiary, fontWeight: FontWeight.w500),
+                    hintText:
+                        t['reasonHint'] ??
+                        'Briefly explain why you want to update your profile...',
+                    hintStyle: TextStyle(
+                      fontSize: 14,
+                      color: palette.textTertiary,
+                      fontWeight: FontWeight.w500,
+                    ),
                     filled: true,
                     fillColor: Colors.white,
                     border: OutlineInputBorder(
@@ -190,18 +219,24 @@ class EditProfilePage extends StatelessWidget {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(24),
-                      borderSide: BorderSide(color: palette.brandPrimary, width: 2),
+                      borderSide: BorderSide(
+                        color: palette.brandPrimary,
+                        width: 2,
+                      ),
                     ),
                     errorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(24),
-                      borderSide: const BorderSide(color: Colors.red, width: 1.5),
+                      borderSide: const BorderSide(
+                        color: Colors.red,
+                        width: 1.5,
+                      ),
                     ),
                     contentPadding: const EdgeInsets.all(20),
                   ),
                 ),
               ),
               const Gap(40),
-              
+
               FadeInUp(
                 duration: const Duration(milliseconds: 500),
                 delay: const Duration(milliseconds: 500),
@@ -267,7 +302,11 @@ class _InfoBanner extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(Icons.info_outline_rounded, color: palette.brandPrimary, size: 24),
+          Icon(
+            Icons.info_outline_rounded,
+            color: palette.brandPrimary,
+            size: 24,
+          ),
           const SizedBox(width: 16),
           Expanded(
             child: Text(

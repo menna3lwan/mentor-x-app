@@ -21,7 +21,9 @@ class MarketplaceDetailPage extends StatelessWidget {
     if (state.loadingState == LoadingState.error || state.item == null) {
       return Scaffold(
         appBar: AppBar(),
-        body: Center(child: Text(t['errorLoadingProduct'] ?? 'Error loading product')),
+        body: Center(
+          child: Text(t['errorLoadingProduct'] ?? 'Error loading product'),
+        ),
       );
     }
 
@@ -46,14 +48,20 @@ class MarketplaceDetailPage extends StatelessWidget {
                           fit: BoxFit.cover,
                           placeholder: (context, url) => Container(
                             color: Colors.white,
-                            child: const Center(child: CircularProgressIndicator()),
+                            child: const Center(
+                              child: CircularProgressIndicator(),
+                            ),
                           ),
                         );
                       },
                     )
                   : Container(
                       color: Colors.white,
-                      child: const Icon(Icons.image, size: 100, color: Colors.grey),
+                      child: const Icon(
+                        Icons.image,
+                        size: 100,
+                        color: Colors.grey,
+                      ),
                     ),
             ),
           ),
@@ -78,14 +86,21 @@ class MarketplaceDetailPage extends StatelessWidget {
                       ),
                       if (item.isFeatured)
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
                           decoration: BoxDecoration(
                             color: AppColors.accent.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Row(
                             children: [
-                              Icon(Icons.star, color: AppColors.accent, size: 16),
+                              Icon(
+                                Icons.star,
+                                color: AppColors.accent,
+                                size: 16,
+                              ),
                               const SizedBox(width: 4),
                               Text(
                                 'FEATURED',
@@ -127,12 +142,19 @@ class MarketplaceDetailPage extends StatelessWidget {
                   const SizedBox(height: 24),
                   Text(
                     t['description'] ?? 'Description',
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     item.description ?? '',
-                    style: TextStyle(fontSize: 14, color: Colors.grey[700], height: 1.5),
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey[700],
+                      height: 1.5,
+                    ),
                   ),
                   const SizedBox(height: 32),
                   Container(
@@ -145,14 +167,17 @@ class MarketplaceDetailPage extends StatelessWidget {
                       children: [
                         _DetailRow(
                           label: t['stockStatus'] ?? 'Stock Status',
-                          value: item.inStock ? t['inStock'] ?? 'In Stock' : t['outOfStock'] ?? 'Out of Stock',
+                          value: item.inStock
+                              ? t['inStock'] ?? 'In Stock'
+                              : t['outOfStock'] ?? 'Out of Stock',
                           valueColor: item.inStock ? Colors.green : Colors.red,
                         ),
                         if (item.stockQuantity < 10 && item.inStock) ...[
                           const Divider(),
                           _DetailRow(
                             label: t['onlyLeft'] ?? 'Only left',
-                            value: '${item.stockQuantity} ${t['items'] ?? 'items'}',
+                            value:
+                                '${item.stockQuantity} ${t['items'] ?? 'items'}',
                             valueColor: Colors.orange,
                           ),
                         ],
@@ -186,7 +211,9 @@ class MarketplaceDetailPage extends StatelessWidget {
                     ? () {
                         context.read<MarketplaceCartCubit>().addItem(item);
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('${item.title} added to cart')),
+                          SnackBar(
+                            content: Text('${item.title} added to cart'),
+                          ),
                         );
                       }
                     : null,

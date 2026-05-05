@@ -25,13 +25,22 @@ class RewardsHistoryPage extends StatelessWidget {
             child: Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [palette.brandPrimary, palette.brandPrimary.withValues(alpha: 0.8)],
+                  colors: [
+                    palette.brandPrimary,
+                    palette.brandPrimary.withValues(alpha: 0.8),
+                  ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
-                borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
+                borderRadius: const BorderRadius.vertical(
+                  bottom: Radius.circular(24),
+                ),
                 boxShadow: [
-                  BoxShadow(color: palette.brandPrimary.withValues(alpha: 0.3), blurRadius: 15, offset: const Offset(0, 4)),
+                  BoxShadow(
+                    color: palette.brandPrimary.withValues(alpha: 0.3),
+                    blurRadius: 15,
+                    offset: const Offset(0, 4),
+                  ),
                 ],
               ),
               child: AppBar(
@@ -41,7 +50,11 @@ class RewardsHistoryPage extends StatelessWidget {
                 centerTitle: true,
                 title: Text(
                   t['rewardsHistoryTitle'] ?? 'Points History',
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900, letterSpacing: -0.5),
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: -0.5,
+                  ),
                 ),
               ),
             ),
@@ -76,7 +89,10 @@ class RewardsHistoryPage extends StatelessWidget {
                   color: Colors.white,
                   shape: BoxShape.circle,
                   boxShadow: [
-                    BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 20),
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.05),
+                      blurRadius: 20,
+                    ),
                   ],
                 ),
                 child: Icon(
@@ -181,7 +197,11 @@ class _PointsTransactionTile extends StatelessWidget {
                 const Gap(4),
                 Text(
                   formattedDate,
-                  style: TextStyle(color: palette.textTertiary, fontSize: 11, fontWeight: FontWeight.w600),
+                  style: TextStyle(
+                    color: palette.textTertiary,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ],
             ),

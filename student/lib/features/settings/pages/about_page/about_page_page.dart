@@ -91,11 +91,16 @@ class AboutPage extends StatelessWidget {
                     ),
                     const Gap(8),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 14,
+                        vertical: 6,
+                      ),
                       decoration: BoxDecoration(
                         color: palette.brandPrimary.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: palette.brandPrimary.withValues(alpha: 0.2)),
+                        border: Border.all(
+                          color: palette.brandPrimary.withValues(alpha: 0.2),
+                        ),
                       ),
                       child: Text(
                         'Student Edition',

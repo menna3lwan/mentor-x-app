@@ -51,7 +51,10 @@ final class StatusLayout extends StatelessWidget {
                   child: Center(
                     child: SingleChildScrollView(
                       physics: const BouncingScrollPhysics(),
-                      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 40),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 32,
+                        vertical: 40,
+                      ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -68,14 +71,19 @@ final class StatusLayout extends StatelessWidget {
                               child: Container(
                                 decoration: BoxDecoration(
                                   gradient: LinearGradient(
-                                    colors: [iconBackground, iconBackground.withValues(alpha: 0.8)],
+                                    colors: [
+                                      iconBackground,
+                                      iconBackground.withValues(alpha: 0.8),
+                                    ],
                                     begin: Alignment.topLeft,
                                     end: Alignment.bottomRight,
                                   ),
                                   shape: BoxShape.circle,
                                   boxShadow: [
                                     BoxShadow(
-                                      color: iconBackground.withValues(alpha: 0.3),
+                                      color: iconBackground.withValues(
+                                        alpha: 0.3,
+                                      ),
                                       blurRadius: 25,
                                       offset: const Offset(0, 12),
                                     ),

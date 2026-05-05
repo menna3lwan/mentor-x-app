@@ -34,13 +34,15 @@ final class PdfViewerPageBloc
     int completedLessons = 0,
     int totalLessons = 0,
   }) : _courseRepository = courseRepository,
-       super(PdfViewerPageState(
-         itemId: itemId,
-         title: title,
-         enrollmentId: enrollmentId,
-         completedLessons: completedLessons,
-         totalLessons: totalLessons,
-       )) {
+       super(
+         PdfViewerPageState(
+           itemId: itemId,
+           title: title,
+           enrollmentId: enrollmentId,
+           completedLessons: completedLessons,
+           totalLessons: totalLessons,
+         ),
+       ) {
     on<PdfViewerPageInitialized>(_onInitialized);
     on<PdfViewerPageCompleted>(_onCompleted);
   }

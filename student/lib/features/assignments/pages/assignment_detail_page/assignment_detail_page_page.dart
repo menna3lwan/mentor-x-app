@@ -33,14 +33,22 @@ class AssignmentDetailPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     FadeInDown(
-                      child: Icon(Icons.error_outline_rounded, size: 64, color: palette.statusDanger.withValues(alpha: 0.5)),
+                      child: Icon(
+                        Icons.error_outline_rounded,
+                        size: 64,
+                        color: palette.statusDanger.withValues(alpha: 0.5),
+                      ),
                     ),
                     const Gap(24),
                     FadeInUp(
                       child: Text(
                         state.errorMessage!,
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: palette.textSecondary),
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w800,
+                          color: palette.textSecondary,
+                        ),
                       ),
                     ),
                     const Gap(32),
@@ -62,13 +70,16 @@ class AssignmentDetailPage extends StatelessWidget {
         if (assignment == null) {
           return Scaffold(
             backgroundColor: palette.backgroundSecondary,
-            body: Center(child: Text(t['assignmentNotFound'] ?? 'Assignment not found')),
+            body: Center(
+              child: Text(t['assignmentNotFound'] ?? 'Assignment not found'),
+            ),
           );
         }
 
         final submission = state.submission;
         final isSubmitted = submission != null;
-        final deadlineStr = "${assignment.deadlineAt.day} ${_getMonth(assignment.deadlineAt.month)} ${assignment.deadlineAt.year}";
+        final deadlineStr =
+            "${assignment.deadlineAt.day} ${_getMonth(assignment.deadlineAt.month)} ${assignment.deadlineAt.year}";
 
         return Scaffold(
           backgroundColor: palette.backgroundSecondary,
@@ -77,13 +88,22 @@ class AssignmentDetailPage extends StatelessWidget {
             child: Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [palette.brandPrimary, palette.brandPrimary.withValues(alpha: 0.8)],
+                  colors: [
+                    palette.brandPrimary,
+                    palette.brandPrimary.withValues(alpha: 0.8),
+                  ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
-                borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
+                borderRadius: const BorderRadius.vertical(
+                  bottom: Radius.circular(24),
+                ),
                 boxShadow: [
-                  BoxShadow(color: palette.brandPrimary.withValues(alpha: 0.3), blurRadius: 15, offset: const Offset(0, 4)),
+                  BoxShadow(
+                    color: palette.brandPrimary.withValues(alpha: 0.3),
+                    blurRadius: 15,
+                    offset: const Offset(0, 4),
+                  ),
                 ],
               ),
               child: AppBar(
@@ -93,7 +113,11 @@ class AssignmentDetailPage extends StatelessWidget {
                 centerTitle: true,
                 title: Text(
                   t['assignmentDetail']!,
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900, letterSpacing: -0.5),
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: -0.5,
+                  ),
                 ),
               ),
             ),
@@ -122,7 +146,12 @@ class AssignmentDetailPage extends StatelessWidget {
                       if ((assignment.description ?? '').isNotEmpty)
                         Text(
                           assignment.description!,
-                          style: TextStyle(fontSize: 15, color: palette.textSecondary, height: 1.6, fontWeight: FontWeight.w500),
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: palette.textSecondary,
+                            height: 1.6,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                     ],
                   ),
@@ -173,12 +202,16 @@ class AssignmentDetailPage extends StatelessWidget {
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(28),
                           boxShadow: [
-                            BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 15, offset: const Offset(0, 8)),
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.02),
+                              blurRadius: 15,
+                              offset: const Offset(0, 8),
+                            ),
                           ],
                         ),
                         child: Text(
-                          (assignment.instructions ?? '').isNotEmpty 
-                              ? assignment.instructions! 
+                          (assignment.instructions ?? '').isNotEmpty
+                              ? assignment.instructions!
                               : t['assignmentInstructions']!,
                           style: TextStyle(
                             fontSize: 15,
@@ -202,17 +235,25 @@ class AssignmentDetailPage extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(24),
-                        border: Border.all(color: palette.brandPrimary.withValues(alpha: 0.1)),
+                        border: Border.all(
+                          color: palette.brandPrimary.withValues(alpha: 0.1),
+                        ),
                       ),
                       child: Row(
                         children: [
                           Container(
                             padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
-                              color: palette.brandPrimary.withValues(alpha: 0.05),
+                              color: palette.brandPrimary.withValues(
+                                alpha: 0.05,
+                              ),
                               shape: BoxShape.circle,
                             ),
-                            child: Icon(Icons.picture_as_pdf_rounded, color: palette.brandPrimary, size: 26),
+                            child: Icon(
+                              Icons.picture_as_pdf_rounded,
+                              color: palette.brandPrimary,
+                              size: 26,
+                            ),
                           ),
                           const Gap(16),
                           Expanded(
@@ -240,7 +281,10 @@ class AssignmentDetailPage extends StatelessWidget {
                             ),
                           ),
                           IconButton(
-                            icon: Icon(Icons.download_rounded, color: palette.brandPrimary),
+                            icon: Icon(
+                              Icons.download_rounded,
+                              color: palette.brandPrimary,
+                            ),
                             onPressed: () {},
                           ),
                         ],
@@ -254,11 +298,15 @@ class AssignmentDetailPage extends StatelessWidget {
                   delay: const Duration(milliseconds: 400),
                   child: isSubmitted
                       ? StatusBadge(
-                          message: t['alreadySubmitted'] ?? 'You have already submitted this assignment',
+                          message:
+                              t['alreadySubmitted'] ??
+                              'You have already submitted this assignment',
                           status: StatusBadgeType.success,
                         )
                       : MentorXButton(
-                          onPressed: () => context.push('/assignment-submit/${assignment.id}'),
+                          onPressed: () => context.push(
+                            '/assignment-submit/${assignment.id}',
+                          ),
                           label: t['submitAssignment']!,
                         ),
                 ),
@@ -272,8 +320,18 @@ class AssignmentDetailPage extends StatelessWidget {
 
   String _getMonth(int month) {
     const months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
     ];
     return months[month - 1];
   }
@@ -299,7 +357,11 @@ class _DetailChip extends StatelessWidget {
           color: Colors.white,
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
-            BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 10, offset: const Offset(0, 4)),
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.02),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
           ],
         ),
         child: Row(
@@ -312,7 +374,12 @@ class _DetailChip extends StatelessWidget {
                 children: [
                   Text(
                     label,
-                    style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: palette.textTertiary, letterSpacing: 0.5),
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
+                      color: palette.textTertiary,
+                      letterSpacing: 0.5,
+                    ),
                   ),
                   const Gap(2),
                   Text(

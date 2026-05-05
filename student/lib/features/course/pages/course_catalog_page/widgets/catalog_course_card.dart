@@ -62,7 +62,10 @@ final class CatalogCourseCard extends StatelessWidget {
                   top: 8,
                   right: 8,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: palette.backgroundPrimary.withOpacity(0.9),
                       borderRadius: BorderRadius.circular(8),

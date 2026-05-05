@@ -1,6 +1,9 @@
 part of '../../../../core/routing/app_routes.dart';
 
-@TypedGoRoute<WalletOrdersPageRoute>(path: '/wallet/orders', name: 'walletOrders')
+@TypedGoRoute<WalletOrdersPageRoute>(
+  path: '/wallet/orders',
+  name: 'walletOrders',
+)
 final class WalletOrdersPageRoute extends GoRouteData
     with $WalletOrdersPageRoute {
   const WalletOrdersPageRoute();

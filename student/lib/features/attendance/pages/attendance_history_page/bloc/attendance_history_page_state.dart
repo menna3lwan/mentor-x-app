@@ -21,13 +21,13 @@ final class AttendanceHistoryPageState extends Equatable {
 
   @override
   List<Object?> get props => [
-        loadingState,
-        records,
-        totalCount,
-        presentCount,
-        absentCount,
-        errorMessage,
-      ];
+    loadingState,
+    records,
+    totalCount,
+    presentCount,
+    absentCount,
+    errorMessage,
+  ];
 
   AttendanceHistoryPageState copyWith({
     LoadingState? loadingState,
@@ -43,7 +43,9 @@ final class AttendanceHistoryPageState extends Equatable {
       totalCount: totalCount ?? this.totalCount,
       presentCount: presentCount ?? this.presentCount,
       absentCount: absentCount ?? this.absentCount,
-      errorMessage: errorMessage != null ? errorMessage.value : this.errorMessage,
+      errorMessage: errorMessage != null
+          ? errorMessage.value
+          : this.errorMessage,
     );
   }
 }

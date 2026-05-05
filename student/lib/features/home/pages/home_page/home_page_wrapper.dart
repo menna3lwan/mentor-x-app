@@ -72,7 +72,8 @@ final class _HomePageWrapperState extends State<HomePageWrapper> {
                   ),
                 FadeInUp(
                   duration: const Duration(milliseconds: 500),
-                  child: state.walletSection.isFailure &&
+                  child:
+                      state.walletSection.isFailure &&
                           state.walletSection.data == null
                       ? InlineSectionError(
                           onRetry: () => bloc.add(
@@ -89,17 +90,21 @@ final class _HomePageWrapperState extends State<HomePageWrapper> {
                 FadeInUp(
                   duration: const Duration(milliseconds: 500),
                   delay: const Duration(milliseconds: 100),
-                  child: state.bannersSection.isFailure &&
+                  child:
+                      state.bannersSection.isFailure &&
                           state.bannersSection.data == null
                       ? InlineSectionError(
                           onRetry: () => bloc.add(
-                            const HomePageRetrySectionEvent(HomeSection.banners),
+                            const HomePageRetrySectionEvent(
+                              HomeSection.banners,
+                            ),
                           ),
                         )
                       : BannersCarousel(
                           banners: state.bannersSection.data ?? const [],
                           isLoading:
-                              isInitialLoading || state.bannersSection.isLoading,
+                              isInitialLoading ||
+                              state.bannersSection.isLoading,
                           onTapBanner: (bannerId) =>
                               bloc.add(HomePageBannerClickedEvent(bannerId)),
                         ),
@@ -112,14 +117,15 @@ final class _HomePageWrapperState extends State<HomePageWrapper> {
                     children: [
                       SectionHeader(
                         title: context.t.home.dashboard.continueLearning,
-                        onSeeAll: () => const MyCoursesPageRoute().push(context),
+                        onSeeAll: () =>
+                            const MyCoursesPageRoute().push(context),
                       ),
                       const Gap(12),
                       ContinueLearningSection(
                         section: state.continueLearningSection,
-                        onTapCourse: (courseId) =>
-                            CourseDetailPageRoute(courseId: courseId)
-                                .push(context),
+                        onTapCourse: (courseId) => CourseDetailPageRoute(
+                          courseId: courseId,
+                        ).push(context),
                         onRetry: () => bloc.add(
                           const HomePageRetrySectionEvent(
                             HomeSection.continueLearning,
@@ -143,9 +149,9 @@ final class _HomePageWrapperState extends State<HomePageWrapper> {
                       const Gap(12),
                       FeaturedCoursesSection(
                         section: state.featuredCoursesSection,
-                        onTapCourse: (courseId) =>
-                            CourseDetailPageRoute(courseId: courseId)
-                                .push(context),
+                        onTapCourse: (courseId) => CourseDetailPageRoute(
+                          courseId: courseId,
+                        ).push(context),
                         onRetry: () => bloc.add(
                           const HomePageRetrySectionEvent(
                             HomeSection.featuredCourses,
@@ -189,7 +195,8 @@ final class _HomePageWrapperState extends State<HomePageWrapper> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SectionHeader(
-                          title: context.t.home.dashboard.quickActions),
+                        title: context.t.home.dashboard.quickActions,
+                      ),
                       const Gap(12),
                       QuickActionsGrid(
                         onActionTap: (index) {
@@ -207,9 +214,12 @@ final class _HomePageWrapperState extends State<HomePageWrapper> {
                               const AiConversationsPageRoute().push(context);
                               return;
                             case 4:
-                              const RewardsCatalogPageRoute().push(context);
+                              const AssignmentsListPageRoute().push(context);
                               return;
                             case 5:
+                              const RewardsCatalogPageRoute().push(context);
+                              return;
+                            case 6:
                               const MarketplaceGridPageRoute().push(context);
                               return;
                             default:

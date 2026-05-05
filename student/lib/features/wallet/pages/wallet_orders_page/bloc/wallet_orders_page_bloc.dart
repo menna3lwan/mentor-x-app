@@ -27,18 +27,24 @@ final class WalletOrdersPageBloc
     WalletOrdersPageLoadEvent event,
     Emitter<WalletOrdersPageState> emit,
   ) async {
-    emit(state.copyWith(loadingState: LoadingState.loading, errorMessage: null));
+    emit(
+      state.copyWith(loadingState: LoadingState.loading, errorMessage: null),
+    );
     try {
       final orders = await walletRepository.getOrders();
-      emit(state.copyWith(
-        loadingState: LoadingState.loaded,
-        orders: orders,
-      ));
+      emit(
+        state.copyWith(
+          loadingState: LoadingState.loaded,
+          orders: orders,
+        ),
+      );
     } catch (e) {
-      emit(state.copyWith(
-        loadingState: LoadingState.error,
-        errorMessage: e.toString(),
-      ));
+      emit(
+        state.copyWith(
+          loadingState: LoadingState.error,
+          errorMessage: e.toString(),
+        ),
+      );
     }
   }
 }

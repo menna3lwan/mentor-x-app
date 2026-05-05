@@ -16,16 +16,22 @@ class RewardsCatalogPageWrapper extends StatelessWidget {
         rewardsRepository: context.read<RewardsRepository>(),
         walletRepository: context.read<WalletRepository>(),
       )..add(const RewardsPageStartedEvent()),
-      child: BlocPresentationListener<RewardsPageBloc, RewardsPagePresentationEvent>(
-        listener: (context, event) {
-          if (event is RewardsPageClaimSuccessPresentationEvent) {
-             MentorXUI.showToast(message: 'Successfully claimed: ${event.rewardTitle}');
-          } else if (event is RewardsPageFailurePresentationEvent) {
-             MentorXUI.showToast(message: event.message);
-          }
-        },
-        child: const RewardsCatalogPage(),
-      ),
+      child:
+          BlocPresentationListener<
+            RewardsPageBloc,
+            RewardsPagePresentationEvent
+          >(
+            listener: (context, event) {
+              if (event is RewardsPageClaimSuccessPresentationEvent) {
+                MentorXUI.showToast(
+                  message: 'Successfully claimed: ${event.rewardTitle}',
+                );
+              } else if (event is RewardsPageFailurePresentationEvent) {
+                MentorXUI.showToast(message: event.message);
+              }
+            },
+            child: const RewardsCatalogPage(),
+          ),
     );
   }
 }

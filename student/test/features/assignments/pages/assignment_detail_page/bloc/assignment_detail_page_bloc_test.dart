@@ -18,7 +18,8 @@ void main() {
       build: () => AssignmentDetailPageBloc(
         assignmentRepository: assignmentRepository,
       ),
-      act: (bloc) => bloc.add(const AssignmentDetailPageLoadEvent(assignmentId: '1')),
+      act: (bloc) =>
+          bloc.add(const AssignmentDetailPageLoadEvent(assignmentId: '1')),
       expect: () => [
         isA<AssignmentDetailPageState>().having(
           (s) => s.loadingState,

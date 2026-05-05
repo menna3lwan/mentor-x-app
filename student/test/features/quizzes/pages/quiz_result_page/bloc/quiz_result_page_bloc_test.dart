@@ -6,6 +6,7 @@ import 'package:mentorx_student/core/core.dart';
 import 'package:mentorx_student/features/quizzes/pages/quiz_result_page/bloc/quiz_result_page_bloc.dart';
 
 class MockQuizRepo extends Mock implements QuizRepository {}
+
 class MockLeaderboardRepo extends Mock implements LeaderboardRepository {}
 
 void main() {
@@ -50,9 +51,15 @@ void main() {
           score: 100,
           quizCount: 1,
         );
-        when(() => quizRepository.getResults(any())).thenAnswer((_) async => attempt);
-        when(() => leaderboardRepository.getMyQuizRank(any())).thenAnswer((_) async => entry);
-        when(() => leaderboardRepository.getQuizLeaderboard(any())).thenAnswer((_) async => [entry]);
+        when(
+          () => quizRepository.getResults(any()),
+        ).thenAnswer((_) async => attempt);
+        when(
+          () => leaderboardRepository.getMyQuizRank(any()),
+        ).thenAnswer((_) async => entry);
+        when(
+          () => leaderboardRepository.getQuizLeaderboard(any()),
+        ).thenAnswer((_) async => [entry]);
         return QuizResultPageBloc(
           quizRepository: quizRepository,
           leaderboardRepository: leaderboardRepository,
@@ -88,11 +95,15 @@ void main() {
           passed: true,
           startedAt: DateTime.now(),
         );
-        when(() => quizRepository.getResults(any())).thenAnswer((_) async => attempt);
-        when(() => leaderboardRepository.getMyQuizRank(any()))
-            .thenThrow(Exception('Leaderboard Error'));
-        when(() => leaderboardRepository.getQuizLeaderboard(any()))
-            .thenAnswer((_) async => []);
+        when(
+          () => quizRepository.getResults(any()),
+        ).thenAnswer((_) async => attempt);
+        when(
+          () => leaderboardRepository.getMyQuizRank(any()),
+        ).thenThrow(Exception('Leaderboard Error'));
+        when(
+          () => leaderboardRepository.getQuizLeaderboard(any()),
+        ).thenAnswer((_) async => []);
         return QuizResultPageBloc(
           quizRepository: quizRepository,
           leaderboardRepository: leaderboardRepository,

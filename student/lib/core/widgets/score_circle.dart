@@ -31,7 +31,8 @@ class ScoreCircle extends StatelessWidget {
     final percentage = (percent * 100).toInt();
 
     Color progressColor = activeColor ?? palette.brandPrimary;
-    Color centerBgColor = backgroundColor ?? palette.brandPrimary.withOpacity(0.05);
+    Color centerBgColor =
+        backgroundColor ?? palette.brandPrimary.withOpacity(0.05);
     String statusText = '';
 
     if (percentage >= 85) {
@@ -94,4 +95,3 @@ class ScoreCircle extends StatelessWidget {
     );
   }
 }
-

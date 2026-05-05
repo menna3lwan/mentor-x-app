@@ -14,7 +14,8 @@ class ForgotPasswordPageWrapper extends StatefulWidget {
   const ForgotPasswordPageWrapper({super.key, this.initialPhone});
 
   @override
-  State<ForgotPasswordPageWrapper> createState() => _ForgotPasswordPageWrapperState();
+  State<ForgotPasswordPageWrapper> createState() =>
+      _ForgotPasswordPageWrapperState();
 }
 
 class _ForgotPasswordPageWrapperState extends State<ForgotPasswordPageWrapper> {
@@ -51,36 +52,41 @@ class _ForgotPasswordPageWrapperState extends State<ForgotPasswordPageWrapper> {
         authRepository: context.read<StudentAuthenticationRepository>(),
         initialPhone: widget.initialPhone,
       ),
-      child: BlocPresentationListener<ForgotPasswordBloc, ForgotPasswordPresentationEvent>(
-        listener: (context, event) {
-          if (event is ForgotPasswordSuccessPresentationEvent) {
-            ResetPasswordPageRoute(phoneNumber: event.phone).go(context);
-          }
-        },
-        child: BlocBuilder<ForgotPasswordBloc, ForgotPasswordState>(
-          builder: (context, state) {
-            final bloc = context.read<ForgotPasswordBloc>();
-            return ForgotPasswordPage(
-              formKey: _formKey,
-              phoneController: _phoneController,
-              isLoading: state.loadingState.isLoading,
-              errorMessage: state.errorMessage,
-              inputFormatters: [
-                FilteringTextInputFormatter.digitsOnly,
-                LengthLimitingTextInputFormatter(11),
-              ],
-              phoneValidator: _phoneValidator,
-              onPhoneChanged: (value) => bloc.add(ForgotPasswordPhoneChanged(value)),
-              onSubmit: () {
-                if (_formKey.currentState?.validate() ?? false) {
-                  bloc.add(const ForgotPasswordSubmitted());
-                }
+      child:
+          BlocPresentationListener<
+            ForgotPasswordBloc,
+            ForgotPasswordPresentationEvent
+          >(
+            listener: (context, event) {
+              if (event is ForgotPasswordSuccessPresentationEvent) {
+                ResetPasswordPageRoute(phoneNumber: event.phone).go(context);
+              }
+            },
+            child: BlocBuilder<ForgotPasswordBloc, ForgotPasswordState>(
+              builder: (context, state) {
+                final bloc = context.read<ForgotPasswordBloc>();
+                return ForgotPasswordPage(
+                  formKey: _formKey,
+                  phoneController: _phoneController,
+                  isLoading: state.loadingState.isLoading,
+                  errorMessage: state.errorMessage,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(11),
+                  ],
+                  phoneValidator: _phoneValidator,
+                  onPhoneChanged: (value) =>
+                      bloc.add(ForgotPasswordPhoneChanged(value)),
+                  onSubmit: () {
+                    if (_formKey.currentState?.validate() ?? false) {
+                      bloc.add(const ForgotPasswordSubmitted());
+                    }
+                  },
+                  onBack: () => context.pop(),
+                );
               },
-              onBack: () => context.pop(),
-            );
-          },
-        ),
-      ),
+            ),
+          ),
     );
   }
 }

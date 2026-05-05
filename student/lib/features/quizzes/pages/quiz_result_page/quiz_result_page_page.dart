@@ -34,14 +34,22 @@ class QuizResultPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     FadeInDown(
-                      child: Icon(Icons.error_outline_rounded, size: 64, color: palette.statusDanger.withValues(alpha: 0.5)),
+                      child: Icon(
+                        Icons.error_outline_rounded,
+                        size: 64,
+                        color: palette.statusDanger.withValues(alpha: 0.5),
+                      ),
                     ),
                     const Gap(24),
                     FadeInUp(
                       child: Text(
                         state.errorMessage!,
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: palette.textSecondary),
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w800,
+                          color: palette.textSecondary,
+                        ),
                       ),
                     ),
                     const Gap(32),
@@ -63,7 +71,9 @@ class QuizResultPage extends StatelessWidget {
         if (result == null) {
           return Scaffold(
             backgroundColor: palette.backgroundSecondary,
-            body: Center(child: Text(t['resultNotFound'] ?? 'Result not found')),
+            body: Center(
+              child: Text(t['resultNotFound'] ?? 'Result not found'),
+            ),
           );
         }
 
@@ -72,14 +82,17 @@ class QuizResultPage extends StatelessWidget {
         final wrong = total - correct;
         final minutes = result.timeSpentSeconds ~/ 60;
         final seconds = result.timeSpentSeconds % 60;
-        final timeTaken = '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+        final timeTaken =
+            '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
         final percent = result.percentage / 100;
 
         final resultLabel = percent >= 0.85
             ? t['excellent']!
             : (percent >= 0.60 ? t['veryGood']! : t['fail']!);
 
-        final statusColor = percent >= 0.60 ? palette.statusSuccess : palette.statusDanger;
+        final statusColor = percent >= 0.60
+            ? palette.statusSuccess
+            : palette.statusDanger;
 
         return AnnotatedRegion<SystemUiOverlayStyle>(
           value: SystemUiOverlayStyle.light.copyWith(
@@ -114,7 +127,10 @@ class QuizResultPage extends StatelessWidget {
                           duration: const Duration(milliseconds: 600),
                           delay: const Duration(milliseconds: 200),
                           child: Text(
-                            percent >= 0.60 ? t['greatResult']! : (t['betterLuckNextTime'] ?? 'Better luck next time!'),
+                            percent >= 0.60
+                                ? t['greatResult']!
+                                : (t['betterLuckNextTime'] ??
+                                      'Better luck next time!'),
                             style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.w900,
@@ -198,7 +214,10 @@ class QuizResultPage extends StatelessWidget {
                           delay: const Duration(milliseconds: 800),
                           child: MentorXButton(
                             label: t['reviewAnswers']!,
-                            onPressed: () => context.push('/quiz-answers-review', extra: result),
+                            onPressed: () => context.push(
+                              '/quiz-answers-review',
+                              extra: result,
+                            ),
                           ),
                         ),
                         if (percent >= 0.85) ...[
@@ -208,7 +227,8 @@ class QuizResultPage extends StatelessWidget {
                             delay: const Duration(milliseconds: 900),
                             child: MentorXButton(
                               label: t['claimReward']!,
-                              onPressed: () => context.push('/quiz-rewards', extra: result),
+                              onPressed: () =>
+                                  context.push('/quiz-rewards', extra: result),
                             ),
                           ),
                         ],
@@ -258,7 +278,10 @@ class _BuildHeader extends StatelessWidget {
       ),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [palette.brandPrimary, palette.brandPrimary.withValues(alpha: 0.8)],
+          colors: [
+            palette.brandPrimary,
+            palette.brandPrimary.withValues(alpha: 0.8),
+          ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -320,7 +343,9 @@ class _BuildResultCircle extends StatelessWidget {
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
-                color: color.withValues(alpha: 0.2 * (value / percent).clamp(0, 1)),
+                color: color.withValues(
+                  alpha: 0.2 * (value / percent).clamp(0, 1),
+                ),
                 blurRadius: 40,
                 offset: const Offset(0, 10),
               ),
@@ -393,7 +418,11 @@ class _BuildLeaderboard extends StatelessWidget {
       children: [
         Row(
           children: [
-            Icon(Icons.emoji_events_outlined, color: palette.brandSecondary, size: 24),
+            Icon(
+              Icons.emoji_events_outlined,
+              color: palette.brandSecondary,
+              size: 24,
+            ),
             const Gap(8),
             Text(
               t['leaderboard'] ?? 'Leaderboard',
@@ -421,11 +450,19 @@ class _BuildLeaderboard extends StatelessWidget {
           ),
           child: Column(
             children: [
-              ...leaderboard.take(3).map((entry) => _LeaderboardTile(
-                    entry: entry,
-                    palette: palette,
-                  )),
-              if (myRank != null && leaderboard.indexWhere((e) => e.studentId == myRank!.studentId) >= 3) ...[
+              ...leaderboard
+                  .take(3)
+                  .map(
+                    (entry) => _LeaderboardTile(
+                      entry: entry,
+                      palette: palette,
+                    ),
+                  ),
+              if (myRank != null &&
+                  leaderboard.indexWhere(
+                        (e) => e.studentId == myRank!.studentId,
+                      ) >=
+                      3) ...[
                 const Divider(height: 1, indent: 24, endIndent: 24),
                 _LeaderboardTile(
                   entry: myRank!,
@@ -456,12 +493,18 @@ class _LeaderboardTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final color = entry.rank == 1
         ? const Color(0xFFFFD700)
-        : (entry.rank == 2 ? const Color(0xFFC0C0C0) : (entry.rank == 3 ? const Color(0xFFCD7F32) : palette.brandSecondary));
+        : (entry.rank == 2
+              ? const Color(0xFFC0C0C0)
+              : (entry.rank == 3
+                    ? const Color(0xFFCD7F32)
+                    : palette.brandSecondary));
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       decoration: BoxDecoration(
-        color: isHighlighted ? palette.brandPrimary.withValues(alpha: 0.05) : null,
+        color: isHighlighted
+            ? palette.brandPrimary.withValues(alpha: 0.05)
+            : null,
         borderRadius: BorderRadius.circular(24),
       ),
       child: Row(
@@ -530,7 +573,11 @@ class _StatBox extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 10, offset: const Offset(0, 4)),
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.02),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
         ],
       ),
       child: Column(

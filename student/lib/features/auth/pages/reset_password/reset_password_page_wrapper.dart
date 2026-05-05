@@ -13,7 +13,8 @@ class ResetPasswordPageWrapper extends StatefulWidget {
   const ResetPasswordPageWrapper({super.key, required this.phoneNumber});
 
   @override
-  State<ResetPasswordPageWrapper> createState() => _ResetPasswordPageWrapperState();
+  State<ResetPasswordPageWrapper> createState() =>
+      _ResetPasswordPageWrapperState();
 }
 
 class _ResetPasswordPageWrapperState extends State<ResetPasswordPageWrapper> {
@@ -37,41 +38,46 @@ class _ResetPasswordPageWrapperState extends State<ResetPasswordPageWrapper> {
         authRepository: context.read<StudentAuthenticationRepository>(),
         phoneNumber: widget.phoneNumber,
       ),
-      child: BlocPresentationListener<ResetPasswordBloc, ResetPasswordPresentationEvent>(
-        listener: (context, event) {
-          if (event is ResetPasswordSuccessPresentationEvent) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Password reset successfully!')),
-            );
-            context.go('/login');
-          }
-        },
-        child: BlocBuilder<ResetPasswordBloc, ResetPasswordState>(
-          builder: (context, state) {
-            final bloc = context.read<ResetPasswordBloc>();
-            return ResetPasswordPage(
-              formKey: _formKey,
-              phoneNumber: widget.phoneNumber,
-              otpController: _otpController,
-              passwordController: _passwordController,
-              confirmPasswordController: _confirmPasswordController,
-              isLoading: state.loadingState.isLoading,
-              errorMessage: state.errorMessage,
-              onOtpChanged: (value) => bloc.add(ResetPasswordOtpChanged(value)),
-              onPasswordChanged: (value) =>
-                  bloc.add(ResetPasswordNewPasswordChanged(value)),
-              onConfirmPasswordChanged: (value) =>
-                  bloc.add(ResetPasswordConfirmPasswordChanged(value)),
-              onSubmit: () {
-                if (_formKey.currentState?.validate() ?? false) {
-                  bloc.add(const ResetPasswordSubmitted());
-                }
+      child:
+          BlocPresentationListener<
+            ResetPasswordBloc,
+            ResetPasswordPresentationEvent
+          >(
+            listener: (context, event) {
+              if (event is ResetPasswordSuccessPresentationEvent) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Password reset successfully!')),
+                );
+                context.go('/login');
+              }
+            },
+            child: BlocBuilder<ResetPasswordBloc, ResetPasswordState>(
+              builder: (context, state) {
+                final bloc = context.read<ResetPasswordBloc>();
+                return ResetPasswordPage(
+                  formKey: _formKey,
+                  phoneNumber: widget.phoneNumber,
+                  otpController: _otpController,
+                  passwordController: _passwordController,
+                  confirmPasswordController: _confirmPasswordController,
+                  isLoading: state.loadingState.isLoading,
+                  errorMessage: state.errorMessage,
+                  onOtpChanged: (value) =>
+                      bloc.add(ResetPasswordOtpChanged(value)),
+                  onPasswordChanged: (value) =>
+                      bloc.add(ResetPasswordNewPasswordChanged(value)),
+                  onConfirmPasswordChanged: (value) =>
+                      bloc.add(ResetPasswordConfirmPasswordChanged(value)),
+                  onSubmit: () {
+                    if (_formKey.currentState?.validate() ?? false) {
+                      bloc.add(const ResetPasswordSubmitted());
+                    }
+                  },
+                  onBack: () => context.pop(),
+                );
               },
-              onBack: () => context.pop(),
-            );
-          },
-        ),
-      ),
+            ),
+          ),
     );
   }
 }

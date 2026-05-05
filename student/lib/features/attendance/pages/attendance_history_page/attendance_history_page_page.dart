@@ -28,13 +28,22 @@ class AttendanceHistoryPage extends StatelessWidget {
             child: Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [palette.brandPrimary, palette.brandPrimary.withValues(alpha: 0.8)],
+                  colors: [
+                    palette.brandPrimary,
+                    palette.brandPrimary.withValues(alpha: 0.8),
+                  ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
-                borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
+                borderRadius: const BorderRadius.vertical(
+                  bottom: Radius.circular(24),
+                ),
                 boxShadow: [
-                  BoxShadow(color: palette.brandPrimary.withValues(alpha: 0.3), blurRadius: 15, offset: const Offset(0, 4)),
+                  BoxShadow(
+                    color: palette.brandPrimary.withValues(alpha: 0.3),
+                    blurRadius: 15,
+                    offset: const Offset(0, 4),
+                  ),
                 ],
               ),
               child: AppBar(
@@ -44,7 +53,11 @@ class AttendanceHistoryPage extends StatelessWidget {
                 centerTitle: true,
                 title: Text(
                   t['attendanceHistory']!,
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900, letterSpacing: -0.5),
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: -0.5,
+                  ),
                 ),
               ),
             ),
@@ -55,8 +68,8 @@ class AttendanceHistoryPage extends StatelessWidget {
                   color: palette.brandPrimary,
                   onRefresh: () async {
                     context.read<AttendanceHistoryPageBloc>().add(
-                          const AttendanceHistoryPageLoadEvent(),
-                        );
+                      const AttendanceHistoryPageLoadEvent(),
+                    );
                   },
                   child: CustomScrollView(
                     physics: const BouncingScrollPhysics(),
@@ -66,18 +79,27 @@ class AttendanceHistoryPage extends StatelessWidget {
                           padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
                           child: FadeInDown(
                             duration: const Duration(milliseconds: 600),
-                            child: _StatsHeader(state: state, palette: palette, t: t),
+                            child: _StatsHeader(
+                              state: state,
+                              palette: palette,
+                              t: t,
+                            ),
                           ),
                         ),
                       ),
                       if (records.isEmpty)
                         SliverFillRemaining(
                           hasScrollBody: false,
-                          child: FadeInUp(child: _EmptyAttendance(t: t, palette: palette)),
+                          child: FadeInUp(
+                            child: _EmptyAttendance(t: t, palette: palette),
+                          ),
                         )
                       else
                         SliverPadding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 8,
+                          ),
                           sliver: SliverList(
                             delegate: SliverChildBuilderDelegate(
                               (context, i) {
@@ -110,7 +132,11 @@ class _StatsHeader extends StatelessWidget {
   final MentorXThemeColorPalette palette;
   final Map<String, String> t;
 
-  const _StatsHeader({required this.state, required this.palette, required this.t});
+  const _StatsHeader({
+    required this.state,
+    required this.palette,
+    required this.t,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -272,13 +298,17 @@ class _AttendanceItem extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: (present ? palette.statusSuccess : palette.statusDanger).withValues(alpha: 0.1),
+                    color:
+                        (present ? palette.statusSuccess : palette.statusDanger)
+                            .withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
                     present ? Icons.check_rounded : Icons.close_rounded,
                     size: 20,
-                    color: present ? palette.statusSuccess : palette.statusDanger,
+                    color: present
+                        ? palette.statusSuccess
+                        : palette.statusDanger,
                   ),
                 ),
                 const Gap(16),
@@ -297,7 +327,11 @@ class _AttendanceItem extends StatelessWidget {
                       const Gap(4),
                       Row(
                         children: [
-                          Icon(Icons.calendar_today_outlined, size: 12, color: palette.textTertiary),
+                          Icon(
+                            Icons.calendar_today_outlined,
+                            size: 12,
+                            color: palette.textTertiary,
+                          ),
                           const Gap(4),
                           Text(
                             formattedDate,
@@ -315,7 +349,10 @@ class _AttendanceItem extends StatelessWidget {
                 if (record.sessionTitle != null) ...[
                   const Gap(8),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 6,
+                    ),
                     decoration: BoxDecoration(
                       color: palette.backgroundSecondary,
                       borderRadius: BorderRadius.circular(10),
@@ -356,7 +393,10 @@ class _EmptyAttendance extends StatelessWidget {
               color: Colors.white,
               shape: BoxShape.circle,
               boxShadow: [
-                BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 20),
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.05),
+                  blurRadius: 20,
+                ),
               ],
             ),
             child: Icon(

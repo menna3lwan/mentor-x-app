@@ -72,12 +72,14 @@ class _EditProfilePageWrapperState extends State<EditProfilePageWrapper> {
 
   void _onSubmit() {
     if (!_formKey.currentState!.validate()) return;
-    
+
     final isAr = context.isArabic;
     final requests = <_AddRequest>[];
 
     // Detect changes
-    final currentName = isAr ? _initialSession.studentNameAr : _initialSession.studentName;
+    final currentName = isAr
+        ? _initialSession.studentNameAr
+        : _initialSession.studentName;
     if (_nameController.text != currentName) {
       requests.add(_AddRequest('name', _nameController.text));
     }
@@ -91,18 +93,25 @@ class _EditProfilePageWrapperState extends State<EditProfilePageWrapper> {
       requests.add(_AddRequest('grade', _gradeController.text));
     }
 
-    final currentCenter = isAr ? _initialSession.centerAr : _initialSession.center;
+    final currentCenter = isAr
+        ? _initialSession.centerAr
+        : _initialSession.center;
     if (_centerController.text != currentCenter) {
       requests.add(_AddRequest('center', _centerController.text));
     }
 
-    final currentSchool = isAr ? _initialSession.schoolAr : _initialSession.school;
+    final currentSchool = isAr
+        ? _initialSession.schoolAr
+        : _initialSession.school;
     if (_schoolController.text != currentSchool) {
       requests.add(_AddRequest('school', _schoolController.text));
     }
 
     if (requests.isEmpty) {
-      MentorXUI.showToast(message: context.t.student['noChangesDetected'] ?? 'No changes detected');
+      MentorXUI.showToast(
+        message:
+            context.t.student['noChangesDetected'] ?? 'No changes detected',
+      );
       return;
     }
 
@@ -128,7 +137,11 @@ class _EditProfilePageWrapperState extends State<EditProfilePageWrapper> {
           case EditProfilePageNavigateBack():
             Navigator.of(context).pop();
           case EditProfilePageSuccess():
-            MentorXUI.showToast(message: context.t.student['requestSentSuccess'] ?? 'Request sent successfully');
+            MentorXUI.showToast(
+              message:
+                  context.t.student['requestSentSuccess'] ??
+                  'Request sent successfully',
+            );
             Navigator.of(context).pop();
         }
       },

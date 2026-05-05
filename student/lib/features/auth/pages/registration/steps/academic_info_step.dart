@@ -23,7 +23,9 @@ class _AcademicInfoStepState extends State<AcademicInfoStep> {
     super.initState();
     final state = context.read<StudentRegistrationBloc>().state;
     _schoolNameController = TextEditingController(text: state.schoolName);
-    _educationDepartmentController = TextEditingController(text: state.educationDepartment);
+    _educationDepartmentController = TextEditingController(
+      text: state.educationDepartment,
+    );
     _centerNameController = TextEditingController(text: state.centerName ?? '');
   }
 
@@ -49,9 +51,9 @@ class _AcademicInfoStepState extends State<AcademicInfoStep> {
               child: Text(
                 'Academic Information',
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.w900,
-                      color: palette.textPrimary,
-                    ),
+                  fontWeight: FontWeight.w900,
+                  color: palette.textPrimary,
+                ),
               ),
             ),
             const Gap(8),
@@ -60,9 +62,9 @@ class _AcademicInfoStepState extends State<AcademicInfoStep> {
               child: Text(
                 'Tell us about your current grade and study preferences to personalize your experience.',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: palette.textSecondary,
-                      height: 1.5,
-                    ),
+                  color: palette.textSecondary,
+                  height: 1.5,
+                ),
               ),
             ),
             const Gap(32),
@@ -77,7 +79,8 @@ class _AcademicInfoStepState extends State<AcademicInfoStep> {
                 label: 'School Name (Optional)',
                 icon: Icons.school_rounded,
                 controller: _schoolNameController,
-                onChanged: (value) => bloc.add(StudentRegistrationSchoolNameChanged(value)),
+                onChanged: (value) =>
+                    bloc.add(StudentRegistrationSchoolNameChanged(value)),
               ),
             ),
             const Gap(16),
@@ -87,7 +90,9 @@ class _AcademicInfoStepState extends State<AcademicInfoStep> {
                 label: 'Education Department (Optional)',
                 icon: Icons.domain_rounded,
                 controller: _educationDepartmentController,
-                onChanged: (value) => bloc.add(StudentRegistrationEducationDepartmentChanged(value)),
+                onChanged: (value) => bloc.add(
+                  StudentRegistrationEducationDepartmentChanged(value),
+                ),
               ),
             ),
             const Gap(24),
@@ -103,7 +108,8 @@ class _AcademicInfoStepState extends State<AcademicInfoStep> {
                   label: 'Center Name',
                   icon: Icons.location_on_rounded,
                   controller: _centerNameController,
-                  onChanged: (value) => bloc.add(StudentRegistrationCenterNameChanged(value)),
+                  onChanged: (value) =>
+                      bloc.add(StudentRegistrationCenterNameChanged(value)),
                 ),
               ),
             ],
@@ -113,7 +119,11 @@ class _AcademicInfoStepState extends State<AcademicInfoStep> {
     );
   }
 
-  Widget _buildGradePicker(BuildContext context, StudentRegistrationState state, StudentRegistrationBloc bloc) {
+  Widget _buildGradePicker(
+    BuildContext context,
+    StudentRegistrationState state,
+    StudentRegistrationBloc bloc,
+  ) {
     final palette = MentorXThemeColorPalette.light;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -121,32 +131,43 @@ class _AcademicInfoStepState extends State<AcademicInfoStep> {
         Text(
           'Current Grade',
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w800,
-                color: palette.textPrimary,
-              ),
+            fontWeight: FontWeight.w800,
+            color: palette.textPrimary,
+          ),
         ),
         const Gap(12),
         DropdownButtonFormField<GradeEntity>(
           value: state.selectedGrade,
-          icon: Icon(Icons.keyboard_arrow_down_rounded, color: palette.brandPrimary),
+          icon: Icon(
+            Icons.keyboard_arrow_down_rounded,
+            color: palette.brandPrimary,
+          ),
           decoration: InputDecoration(
             filled: true,
             fillColor: palette.backgroundSecondary,
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 16,
+            ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
               borderSide: BorderSide.none,
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
-              borderSide: BorderSide(color: palette.textTertiary.withValues(alpha: 0.1)),
+              borderSide: BorderSide(
+                color: palette.textTertiary.withValues(alpha: 0.1),
+              ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
               borderSide: BorderSide(color: palette.brandPrimary, width: 2),
             ),
           ),
-          hint: Text('Select your grade', style: TextStyle(color: palette.textTertiary)),
+          hint: Text(
+            'Select your grade',
+            style: TextStyle(color: palette.textTertiary),
+          ),
           items: state.grades.map((grade) {
             return DropdownMenuItem(
               value: grade,
@@ -159,13 +180,18 @@ class _AcademicInfoStepState extends State<AcademicInfoStep> {
               ),
             );
           }).toList(),
-          onChanged: (value) => bloc.add(StudentRegistrationGradeChanged(value)),
+          onChanged: (value) =>
+              bloc.add(StudentRegistrationGradeChanged(value)),
         ),
       ],
     );
   }
 
-  Widget _buildStudyTypeToggle(BuildContext context, StudentRegistrationState state, StudentRegistrationBloc bloc) {
+  Widget _buildStudyTypeToggle(
+    BuildContext context,
+    StudentRegistrationState state,
+    StudentRegistrationBloc bloc,
+  ) {
     final palette = MentorXThemeColorPalette.light;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -173,9 +199,9 @@ class _AcademicInfoStepState extends State<AcademicInfoStep> {
         Text(
           'Study Preference',
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w800,
-                color: palette.textPrimary,
-              ),
+            fontWeight: FontWeight.w800,
+            color: palette.textPrimary,
+          ),
         ),
         const Gap(12),
         Container(
@@ -192,7 +218,9 @@ class _AcademicInfoStepState extends State<AcademicInfoStep> {
                   'Online Study',
                   Icons.laptop_chromebook_rounded,
                   state.isOnline,
-                  () => bloc.add(const StudentRegistrationOnlineToggleChanged(true)),
+                  () => bloc.add(
+                    const StudentRegistrationOnlineToggleChanged(true),
+                  ),
                 ),
               ),
               const Gap(8),
@@ -202,7 +230,9 @@ class _AcademicInfoStepState extends State<AcademicInfoStep> {
                   'Center Study',
                   Icons.location_city_rounded,
                   !state.isOnline,
-                  () => bloc.add(const StudentRegistrationOnlineToggleChanged(false)),
+                  () => bloc.add(
+                    const StudentRegistrationOnlineToggleChanged(false),
+                  ),
                 ),
               ),
             ],
@@ -212,7 +242,13 @@ class _AcademicInfoStepState extends State<AcademicInfoStep> {
     );
   }
 
-  Widget _buildToggleOption(BuildContext context, String label, IconData icon, bool isSelected, VoidCallback onTap) {
+  Widget _buildToggleOption(
+    BuildContext context,
+    String label,
+    IconData icon,
+    bool isSelected,
+    VoidCallback onTap,
+  ) {
     final palette = MentorXThemeColorPalette.light;
     return GestureDetector(
       onTap: onTap,
@@ -228,7 +264,7 @@ class _AcademicInfoStepState extends State<AcademicInfoStep> {
                     color: Colors.black.withValues(alpha: 0.05),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
-                  )
+                  ),
                 ]
               : null,
         ),
@@ -244,9 +280,11 @@ class _AcademicInfoStepState extends State<AcademicInfoStep> {
             Text(
               label,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    fontWeight: FontWeight.w800,
-                    color: isSelected ? palette.brandPrimary : palette.textSecondary,
-                  ),
+                fontWeight: FontWeight.w800,
+                color: isSelected
+                    ? palette.brandPrimary
+                    : palette.textSecondary,
+              ),
             ),
           ],
         ),

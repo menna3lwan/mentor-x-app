@@ -34,13 +34,15 @@ final class VideoPlayerPageBloc
     int completedLessons = 0,
     int totalLessons = 0,
   }) : _courseRepository = courseRepository,
-       super(VideoPlayerPageState(
-         itemId: itemId,
-         title: title,
-         enrollmentId: enrollmentId,
-         completedLessons: completedLessons,
-         totalLessons: totalLessons,
-       )) {
+       super(
+         VideoPlayerPageState(
+           itemId: itemId,
+           title: title,
+           enrollmentId: enrollmentId,
+           completedLessons: completedLessons,
+           totalLessons: totalLessons,
+         ),
+       ) {
     on<VideoPlayerPageInitialized>(_onInitialized);
     on<VideoPlayerPageProgressUpdated>(_onProgressUpdated);
     on<VideoPlayerPageCompleted>(_onCompleted);
@@ -117,7 +119,7 @@ final class VideoPlayerPageBloc
     Emitter<VideoPlayerPageState> emit,
   ) async {
     emit(state.copyWith(isCompleted: true));
-    
+
     if (state.enrollmentId == null) return;
 
     try {

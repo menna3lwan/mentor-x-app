@@ -40,13 +40,22 @@ final class MyCoursesPagePage extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [palette.brandPrimary, palette.brandPrimary.withValues(alpha: 0.8)],
+              colors: [
+                palette.brandPrimary,
+                palette.brandPrimary.withValues(alpha: 0.8),
+              ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
-            borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
+            borderRadius: const BorderRadius.vertical(
+              bottom: Radius.circular(24),
+            ),
             boxShadow: [
-              BoxShadow(color: palette.brandPrimary.withValues(alpha: 0.3), blurRadius: 15, offset: const Offset(0, 4)),
+              BoxShadow(
+                color: palette.brandPrimary.withValues(alpha: 0.3),
+                blurRadius: 15,
+                offset: const Offset(0, 4),
+              ),
             ],
           ),
           child: AppBar(
@@ -56,7 +65,11 @@ final class MyCoursesPagePage extends StatelessWidget {
             centerTitle: true,
             title: Text(
               context.t.course.myCourses,
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900, letterSpacing: -0.5),
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w900,
+                letterSpacing: -0.5,
+              ),
             ),
           ),
         ),
@@ -93,11 +106,18 @@ final class MyCoursesPagePage extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.error_outline_rounded, size: 64, color: palette.statusDanger.withValues(alpha: 0.3)),
+                Icon(
+                  Icons.error_outline_rounded,
+                  size: 64,
+                  color: palette.statusDanger.withValues(alpha: 0.3),
+                ),
                 const Gap(24),
                 Text(
                   errorMessage!,
-                  style: TextStyle(color: palette.textSecondary, fontWeight: FontWeight.w600),
+                  style: TextStyle(
+                    color: palette.textSecondary,
+                    fontWeight: FontWeight.w600,
+                  ),
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -160,7 +180,11 @@ final class _TabBar extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 10, offset: const Offset(0, 4)),
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.03),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
         ],
       ),
       child: Row(
@@ -183,7 +207,13 @@ final class _TabBar extends StatelessWidget {
                   color: isSelected ? palette.brandPrimary : Colors.transparent,
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: isSelected
-                      ? [BoxShadow(color: palette.brandPrimary.withValues(alpha: 0.3), blurRadius: 8, offset: const Offset(0, 4))]
+                      ? [
+                          BoxShadow(
+                            color: palette.brandPrimary.withValues(alpha: 0.3),
+                            blurRadius: 8,
+                            offset: const Offset(0, 4),
+                          ),
+                        ]
                       : null,
                 ),
                 child: Text(
@@ -225,15 +255,26 @@ class _EmptyCourses extends StatelessWidget {
                   color: palette.backgroundPrimary,
                   shape: BoxShape.circle,
                   boxShadow: [
-                    BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 20),
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.05),
+                      blurRadius: 20,
+                    ),
                   ],
                 ),
-                child: Icon(Icons.school_rounded, size: 80, color: palette.textTertiary.withValues(alpha: 0.2)),
+                child: Icon(
+                  Icons.school_rounded,
+                  size: 80,
+                  color: palette.textTertiary.withValues(alpha: 0.2),
+                ),
               ),
               const Gap(32),
               Text(
                 context.t.course.empty.noEnrolledCourses,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900, color: palette.textPrimary),
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w900,
+                  color: palette.textPrimary,
+                ),
               ),
               const Gap(12),
               Text(

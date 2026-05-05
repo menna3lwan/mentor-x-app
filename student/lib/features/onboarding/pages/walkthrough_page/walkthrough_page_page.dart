@@ -38,12 +38,17 @@ final class WalkthroughPagePage extends StatelessWidget {
               child: Align(
                 alignment: AlignmentDirectional.topEnd,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 8,
+                  ),
                   child: TextButton(
                     onPressed: isLoading ? null : onSkip,
                     style: TextButton.styleFrom(
                       foregroundColor: palette.textTertiary,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
                     child: Text(
                       context.t.ui.common.skip,
@@ -80,7 +85,9 @@ final class WalkthroughPagePage extends StatelessWidget {
                               decoration: BoxDecoration(
                                 gradient: RadialGradient(
                                   colors: [
-                                    palette.brandPrimary.withValues(alpha: 0.15),
+                                    palette.brandPrimary.withValues(
+                                      alpha: 0.15,
+                                    ),
                                     palette.brandPrimary.withValues(alpha: 0.0),
                                   ],
                                 ),
@@ -95,14 +102,20 @@ final class WalkthroughPagePage extends StatelessWidget {
                                     height: 140,
                                     decoration: BoxDecoration(
                                       gradient: LinearGradient(
-                                        colors: [palette.brandPrimary, palette.brandPrimary.withValues(alpha: 0.8)],
+                                        colors: [
+                                          palette.brandPrimary,
+                                          palette.brandPrimary.withValues(
+                                            alpha: 0.8,
+                                          ),
+                                        ],
                                         begin: Alignment.topLeft,
                                         end: Alignment.bottomRight,
                                       ),
                                       borderRadius: BorderRadius.circular(40),
                                       boxShadow: [
                                         BoxShadow(
-                                          color: palette.brandPrimary.withValues(alpha: 0.3),
+                                          color: palette.brandPrimary
+                                              .withValues(alpha: 0.3),
                                           blurRadius: 30,
                                           offset: const Offset(0, 15),
                                         ),
@@ -178,10 +191,12 @@ final class WalkthroughPagePage extends StatelessWidget {
                         boxShadow: currentPage == index
                             ? [
                                 BoxShadow(
-                                  color: palette.brandPrimary.withValues(alpha: 0.3),
+                                  color: palette.brandPrimary.withValues(
+                                    alpha: 0.3,
+                                  ),
                                   blurRadius: 8,
                                   offset: const Offset(0, 3),
-                                )
+                                ),
                               ]
                             : null,
                       ),

@@ -29,7 +29,9 @@ class _RedeemCodePageWrapperState extends State<RedeemCodePageWrapper> {
         builder: (context, state) {
           return RedeemCodePagePage(
             state: state,
-            onSubmit: (code) => context.read<RedeemCodePageBloc>().add(RedeemCodePageSubmitEvent(code)),
+            onSubmit: (code) => context.read<RedeemCodePageBloc>().add(
+              RedeemCodePageSubmitEvent(code),
+            ),
           );
         },
       ),

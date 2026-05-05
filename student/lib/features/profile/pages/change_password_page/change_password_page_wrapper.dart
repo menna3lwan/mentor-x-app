@@ -35,7 +35,7 @@ class _ChangePasswordPageWrapperState extends State<ChangePasswordPageWrapper> {
 
   void _onSubmit() {
     if (!_formKey.currentState!.validate()) return;
-    
+
     context.read<ChangePasswordPageBloc>().add(
       ChangePasswordPageSubmitEvent(
         currentPassword: _currentController.text,
@@ -76,9 +76,11 @@ class _ChangePasswordPageWrapperState extends State<ChangePasswordPageWrapper> {
             obscureNew: _obscureNew,
             obscureConfirm: _obscureConfirm,
             isSubmitting: isSubmitting,
-            onToggleCurrent: () => setState(() => _obscureCurrent = !_obscureCurrent),
+            onToggleCurrent: () =>
+                setState(() => _obscureCurrent = !_obscureCurrent),
             onToggleNew: () => setState(() => _obscureNew = !_obscureNew),
-            onToggleConfirm: () => setState(() => _obscureConfirm = !_obscureConfirm),
+            onToggleConfirm: () =>
+                setState(() => _obscureConfirm = !_obscureConfirm),
             onSubmit: _onSubmit,
           );
         },

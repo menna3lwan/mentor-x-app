@@ -11,10 +11,12 @@ class AttendanceQrPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = context.t.student;
     final palette = MentorXThemeColorPalette.light;
-    
+
     return BlocBuilder<AppSessionCubit, AppSessionState>(
       builder: (context, state) {
-        final code = state.studentCode.isNotEmpty ? state.studentCode : 'NO-CODE';
+        final code = state.studentCode.isNotEmpty
+            ? state.studentCode
+            : 'NO-CODE';
 
         return Scaffold(
           backgroundColor: palette.backgroundSecondary,
@@ -23,11 +25,16 @@ class AttendanceQrPage extends StatelessWidget {
             child: Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [palette.brandPrimary, palette.brandPrimary.withOpacity(0.8)],
+                  colors: [
+                    palette.brandPrimary,
+                    palette.brandPrimary.withOpacity(0.8),
+                  ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
-                borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
+                borderRadius: const BorderRadius.vertical(
+                  bottom: Radius.circular(24),
+                ),
                 boxShadow: [
                   BoxShadow(
                     color: palette.brandPrimary.withOpacity(0.3),
@@ -43,7 +50,10 @@ class AttendanceQrPage extends StatelessWidget {
                 centerTitle: true,
                 title: Text(
                   t['registerAttendance']!,
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w800,
+                  ),
                 ),
               ),
             ),
@@ -91,7 +101,10 @@ class AttendanceQrPage extends StatelessWidget {
                         ),
                         const SizedBox(height: 20),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
+                          ),
                           decoration: BoxDecoration(
                             color: palette.backgroundSecondary,
                             borderRadius: BorderRadius.circular(12),
@@ -145,7 +158,11 @@ class _InfoCard extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Icon(Icons.qr_code_scanner_rounded, color: palette.brandPrimary, size: 32),
+          Icon(
+            Icons.qr_code_scanner_rounded,
+            color: palette.brandPrimary,
+            size: 32,
+          ),
           const SizedBox(height: 12),
           Text(
             t['yourAttendanceCode']!,

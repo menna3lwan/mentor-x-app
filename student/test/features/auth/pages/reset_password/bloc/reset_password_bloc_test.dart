@@ -54,11 +54,15 @@ void main() {
     blocTest<ResetPasswordBloc, ResetPasswordState>(
       'emits success when ResetPasswordSubmitted is successful',
       build: () {
-        when(() => authRepository.verifyOtp(any())).thenAnswer((_) async => StudentEntity.placeholder);
-        when(() => authRepository.resetPassword(
-              phoneNumber: any(named: 'phoneNumber'),
-              newPassword: any(named: 'newPassword'),
-            )).thenAnswer((_) async {});
+        when(
+          () => authRepository.verifyOtp(any()),
+        ).thenAnswer((_) async => StudentEntity.placeholder);
+        when(
+          () => authRepository.resetPassword(
+            phoneNumber: any(named: 'phoneNumber'),
+            newPassword: any(named: 'newPassword'),
+          ),
+        ).thenAnswer((_) async {});
         return ResetPasswordBloc(
           authRepository: authRepository,
           phoneNumber: testPhone,
@@ -106,14 +110,20 @@ void main() {
     blocTest<ResetPasswordBloc, ResetPasswordState>(
       'emits failure when repository throws exception',
       build: () {
-        when(() => authRepository.verifyOtp(any())).thenAnswer((_) async => StudentEntity.placeholder);
-        when(() => authRepository.resetPassword(
-              phoneNumber: any(named: 'phoneNumber'),
-              newPassword: any(named: 'newPassword'),
-            )).thenThrow(AuthenticationRepositoryException(
-          code: AuthenticationRepositoryExceptionCode.unknown,
-          message: 'Reset failed',
-        ));
+        when(
+          () => authRepository.verifyOtp(any()),
+        ).thenAnswer((_) async => StudentEntity.placeholder);
+        when(
+          () => authRepository.resetPassword(
+            phoneNumber: any(named: 'phoneNumber'),
+            newPassword: any(named: 'newPassword'),
+          ),
+        ).thenThrow(
+          AuthenticationRepositoryException(
+            code: AuthenticationRepositoryExceptionCode.unknown,
+            message: 'Reset failed',
+          ),
+        );
         return ResetPasswordBloc(
           authRepository: authRepository,
           phoneNumber: testPhone,

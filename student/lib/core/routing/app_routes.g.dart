@@ -21,6 +21,7 @@ List<RouteBase> get $appRoutes => [
   $assignmentResultPageRoute,
   $assignmentDetailPageRoute,
   $assignmentSubmitPageRoute,
+  $assignmentsListPageRoute,
   $marketplaceDetailPageRoute,
   $marketplaceCartPageRoute,
   $marketplaceOrdersPageRoute,
@@ -506,6 +507,33 @@ mixin $AssignmentSubmitPageRoute on GoRouteData {
   String get location => GoRouteData.$location(
     '/assignment-submit/${Uri.encodeComponent(_self.assignmentId)}',
   );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $assignmentsListPageRoute => GoRouteData.$route(
+  path: '/assignments',
+  name: 'assignmentsList',
+  factory: $AssignmentsListPageRoute._fromState,
+);
+
+mixin $AssignmentsListPageRoute on GoRouteData {
+  static AssignmentsListPageRoute _fromState(GoRouterState state) =>
+      const AssignmentsListPageRoute();
+
+  @override
+  String get location => GoRouteData.$location('/assignments');
 
   @override
   void go(BuildContext context) => context.go(location);

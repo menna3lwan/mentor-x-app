@@ -52,9 +52,9 @@ class _PersonalInfoStepState extends State<PersonalInfoStep> {
               child: Text(
                 'Complete Your Profile',
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.w900,
-                      color: palette.textPrimary,
-                    ),
+                  fontWeight: FontWeight.w900,
+                  color: palette.textPrimary,
+                ),
               ),
             ),
             const Gap(8),
@@ -63,9 +63,9 @@ class _PersonalInfoStepState extends State<PersonalInfoStep> {
               child: Text(
                 'Please provide your full name as it appears in your official documents.',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: palette.textSecondary,
-                      height: 1.5,
-                    ),
+                  color: palette.textSecondary,
+                  height: 1.5,
+                ),
               ),
             ),
             const Gap(32),
@@ -80,7 +80,8 @@ class _PersonalInfoStepState extends State<PersonalInfoStep> {
                 label: 'Father\'s Name',
                 icon: Icons.person_outline_rounded,
                 controller: _secondNameController,
-                onChanged: (value) => bloc.add(StudentRegistrationSecondNameChanged(value)),
+                onChanged: (value) =>
+                    bloc.add(StudentRegistrationSecondNameChanged(value)),
               ),
             ),
             const Gap(16),
@@ -90,7 +91,8 @@ class _PersonalInfoStepState extends State<PersonalInfoStep> {
                 label: 'Grandfather\'s Name',
                 icon: Icons.person_outline_rounded,
                 controller: _thirdNameController,
-                onChanged: (value) => bloc.add(StudentRegistrationThirdNameChanged(value)),
+                onChanged: (value) =>
+                    bloc.add(StudentRegistrationThirdNameChanged(value)),
               ),
             ),
             const Gap(16),
@@ -100,7 +102,8 @@ class _PersonalInfoStepState extends State<PersonalInfoStep> {
                 label: 'Family Name (Last Name)',
                 icon: Icons.people_outline_rounded,
                 controller: _fourthNameController,
-                onChanged: (value) => bloc.add(StudentRegistrationFourthNameChanged(value)),
+                onChanged: (value) =>
+                    bloc.add(StudentRegistrationFourthNameChanged(value)),
               ),
             ),
           ],
@@ -124,7 +127,10 @@ class _PersonalInfoStepState extends State<PersonalInfoStep> {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: palette.backgroundSecondary,
-              border: Border.all(color: palette.brandPrimary.withValues(alpha: 0.2), width: 3),
+              border: Border.all(
+                color: palette.brandPrimary.withValues(alpha: 0.2),
+                width: 3,
+              ),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.05),
@@ -140,7 +146,11 @@ class _PersonalInfoStepState extends State<PersonalInfoStep> {
                   : null,
             ),
             child: state.profilePhotoPath == null
-                ? Icon(Icons.person_add_rounded, size: 40, color: palette.brandPrimary.withValues(alpha: 0.5))
+                ? Icon(
+                    Icons.person_add_rounded,
+                    size: 40,
+                    color: palette.brandPrimary.withValues(alpha: 0.5),
+                  )
                 : null,
           ),
           Positioned(

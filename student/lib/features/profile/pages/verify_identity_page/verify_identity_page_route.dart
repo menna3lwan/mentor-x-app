@@ -1,7 +1,8 @@
 part of '../../../../core/routing/app_routes.dart';
 
 @TypedGoRoute<VerifyIdentityPageRoute>(path: '/verify-identity')
-final class VerifyIdentityPageRoute extends GoRouteData with $VerifyIdentityPageRoute {
+final class VerifyIdentityPageRoute extends GoRouteData
+    with $VerifyIdentityPageRoute {
   const VerifyIdentityPageRoute();
 
   @override

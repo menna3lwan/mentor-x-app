@@ -45,10 +45,12 @@ final class RedeemCodePageBloc
       emit(state.copyWith(loadingState: LoadingState.loaded));
       emitPresentation(const RedeemCodePageNavigateBack());
     } catch (e) {
-      emit(state.copyWith(
-        loadingState: LoadingState.error,
-        errorMessage: e.toString(),
-      ));
+      emit(
+        state.copyWith(
+          loadingState: LoadingState.error,
+          errorMessage: e.toString(),
+        ),
+      );
     }
   }
 }

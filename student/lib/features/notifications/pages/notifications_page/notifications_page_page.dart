@@ -29,8 +29,11 @@ class _NotificationsPageState extends State<NotificationsPage> {
   }
 
   void _onScroll() {
-    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
-      context.read<NotificationsPageBloc>().add(const NotificationsPageLoadMoreEvent());
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      context.read<NotificationsPageBloc>().add(
+        const NotificationsPageLoadMoreEvent(),
+      );
     }
   }
 
@@ -52,13 +55,22 @@ class _NotificationsPageState extends State<NotificationsPage> {
             child: Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [palette.brandPrimary, palette.brandPrimary.withValues(alpha: 0.8)],
+                  colors: [
+                    palette.brandPrimary,
+                    palette.brandPrimary.withValues(alpha: 0.8),
+                  ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
-                borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
+                borderRadius: const BorderRadius.vertical(
+                  bottom: Radius.circular(24),
+                ),
                 boxShadow: [
-                  BoxShadow(color: palette.brandPrimary.withValues(alpha: 0.3), blurRadius: 15, offset: const Offset(0, 4)),
+                  BoxShadow(
+                    color: palette.brandPrimary.withValues(alpha: 0.3),
+                    blurRadius: 15,
+                    offset: const Offset(0, 4),
+                  ),
                 ],
               ),
               child: AppBar(
@@ -68,13 +80,19 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 centerTitle: true,
                 title: Text(
                   t['notificationsTitle']!,
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900, letterSpacing: -0.5),
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: -0.5,
+                  ),
                 ),
                 actions: [
                   if (notifications.isNotEmpty)
                     IconButton(
                       onPressed: () {
-                        context.read<NotificationsPageBloc>().add(const NotificationsPageMarkAllAsReadEvent());
+                        context.read<NotificationsPageBloc>().add(
+                          const NotificationsPageMarkAllAsReadEvent(),
+                        );
                       },
                       icon: const Icon(Icons.done_all_rounded, size: 22),
                       tooltip: t['markAllRead'],
@@ -86,46 +104,53 @@ class _NotificationsPageState extends State<NotificationsPage> {
           body: isInitialLoading
               ? const Center(child: CircularProgressIndicator())
               : notifications.isEmpty
-                  ? _EmptyNotifications(t: t, palette: palette)
-                  : RefreshIndicator(
-                      color: palette.brandPrimary,
-                      onRefresh: () async {
-                        context.read<NotificationsPageBloc>().add(const NotificationsPageLoadEvent());
-                      },
-                      child: ListView.builder(
-                        controller: _scrollController,
-                        physics: const BouncingScrollPhysics(),
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-                        itemCount: notifications.length + (state.hasMore ? 1 : 0),
-                        itemBuilder: (context, i) {
-                          if (i == notifications.length) {
-                            return const Center(
-                              child: Padding(
-                                padding: EdgeInsets.all(16.0),
-                                child: CircularProgressIndicator(strokeWidth: 2),
-                              ),
-                            );
-                          }
-
-                          final notification = notifications[i];
-                          return FadeInUp(
-                            duration: const Duration(milliseconds: 500),
-                            delay: Duration(milliseconds: 50 * i),
-                            child: _NotificationItem(
-                              notification: notification,
-                              palette: palette,
-                              onTap: () {
-                                if (!notification.isRead) {
-                                  context.read<NotificationsPageBloc>().add(
-                                        NotificationsPageMarkAsReadEvent(notification.id),
-                                      );
-                                }
-                              },
-                            ),
-                          );
-                        },
-                      ),
+              ? _EmptyNotifications(t: t, palette: palette)
+              : RefreshIndicator(
+                  color: palette.brandPrimary,
+                  onRefresh: () async {
+                    context.read<NotificationsPageBloc>().add(
+                      const NotificationsPageLoadEvent(),
+                    );
+                  },
+                  child: ListView.builder(
+                    controller: _scrollController,
+                    physics: const BouncingScrollPhysics(),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 24,
                     ),
+                    itemCount: notifications.length + (state.hasMore ? 1 : 0),
+                    itemBuilder: (context, i) {
+                      if (i == notifications.length) {
+                        return const Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(16.0),
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          ),
+                        );
+                      }
+
+                      final notification = notifications[i];
+                      return FadeInUp(
+                        duration: const Duration(milliseconds: 500),
+                        delay: Duration(milliseconds: 50 * i),
+                        child: _NotificationItem(
+                          notification: notification,
+                          palette: palette,
+                          onTap: () {
+                            if (!notification.isRead) {
+                              context.read<NotificationsPageBloc>().add(
+                                NotificationsPageMarkAsReadEvent(
+                                  notification.id,
+                                ),
+                              );
+                            }
+                          },
+                        ),
+                      );
+                    },
+                  ),
+                ),
         );
       },
     );
@@ -147,7 +172,9 @@ class _NotificationItem extends StatelessWidget {
     final isUnread = !notification.isRead;
     final color = _getNotificationColor(notification.type, palette);
     final icon = _getNotificationIcon(notification.type);
-    final formattedDate = DateFormat('dd MMM yyyy, hh:mm a').format(notification.createdAt);
+    final formattedDate = DateFormat(
+      'dd MMM yyyy, hh:mm a',
+    ).format(notification.createdAt);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
@@ -155,12 +182,16 @@ class _NotificationItem extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: isUnread ? palette.brandPrimary.withValues(alpha: 0.15) : Colors.transparent,
+          color: isUnread
+              ? palette.brandPrimary.withValues(alpha: 0.15)
+              : Colors.transparent,
           width: 1.5,
         ),
         boxShadow: [
           BoxShadow(
-            color: isUnread ? palette.brandPrimary.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.03),
+            color: isUnread
+                ? palette.brandPrimary.withValues(alpha: 0.1)
+                : Colors.black.withValues(alpha: 0.03),
             blurRadius: 15,
             offset: const Offset(0, 8),
           ),
@@ -198,8 +229,12 @@ class _NotificationItem extends StatelessWidget {
                               notification.title,
                               style: TextStyle(
                                 fontSize: 15,
-                                fontWeight: isUnread ? FontWeight.w900 : FontWeight.w700,
-                                color: isUnread ? palette.brandPrimary : palette.textPrimary,
+                                fontWeight: isUnread
+                                    ? FontWeight.w900
+                                    : FontWeight.w700,
+                                color: isUnread
+                                    ? palette.brandPrimary
+                                    : palette.textPrimary,
                               ),
                             ),
                           ),
@@ -211,7 +246,12 @@ class _NotificationItem extends StatelessWidget {
                                 color: palette.brandSecondary,
                                 shape: BoxShape.circle,
                                 boxShadow: [
-                                  BoxShadow(color: palette.brandSecondary.withValues(alpha: 0.4), blurRadius: 4),
+                                  BoxShadow(
+                                    color: palette.brandSecondary.withValues(
+                                      alpha: 0.4,
+                                    ),
+                                    blurRadius: 4,
+                                  ),
                                 ],
                               ),
                             ),
@@ -224,17 +264,27 @@ class _NotificationItem extends StatelessWidget {
                           fontSize: 13,
                           color: palette.textSecondary,
                           height: 1.5,
-                          fontWeight: isUnread ? FontWeight.w600 : FontWeight.w500,
+                          fontWeight: isUnread
+                              ? FontWeight.w600
+                              : FontWeight.w500,
                         ),
                       ),
                       const Gap(12),
                       Row(
                         children: [
-                          Icon(Icons.access_time_rounded, size: 12, color: palette.textTertiary),
+                          Icon(
+                            Icons.access_time_rounded,
+                            size: 12,
+                            color: palette.textTertiary,
+                          ),
                           const Gap(4),
                           Text(
                             formattedDate,
-                            style: TextStyle(fontSize: 11, color: palette.textTertiary, fontWeight: FontWeight.w700),
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: palette.textTertiary,
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
                         ],
                       ),
@@ -249,25 +299,40 @@ class _NotificationItem extends StatelessWidget {
     );
   }
 
-  Color _getNotificationColor(NotificationType type, MentorXThemeColorPalette palette) {
+  Color _getNotificationColor(
+    NotificationType type,
+    MentorXThemeColorPalette palette,
+  ) {
     switch (type) {
-      case NotificationType.quiz: return palette.brandSecondary;
-      case NotificationType.announcement: return palette.brandPrimary;
-      case NotificationType.success: return palette.statusSuccess;
-      case NotificationType.system: return Colors.blue;
-      case NotificationType.error: return palette.statusDanger;
-      default: return palette.brandPrimary;
+      case NotificationType.quiz:
+        return palette.brandSecondary;
+      case NotificationType.announcement:
+        return palette.brandPrimary;
+      case NotificationType.success:
+        return palette.statusSuccess;
+      case NotificationType.system:
+        return Colors.blue;
+      case NotificationType.error:
+        return palette.statusDanger;
+      default:
+        return palette.brandPrimary;
     }
   }
 
   IconData _getNotificationIcon(NotificationType type) {
     switch (type) {
-      case NotificationType.quiz: return Icons.quiz_rounded;
-      case NotificationType.announcement: return Icons.campaign_rounded;
-      case NotificationType.system: return Icons.settings_suggest_rounded;
-      case NotificationType.success: return Icons.check_circle_rounded;
-      case NotificationType.error: return Icons.error_rounded;
-      default: return Icons.notifications_rounded;
+      case NotificationType.quiz:
+        return Icons.quiz_rounded;
+      case NotificationType.announcement:
+        return Icons.campaign_rounded;
+      case NotificationType.system:
+        return Icons.settings_suggest_rounded;
+      case NotificationType.success:
+        return Icons.check_circle_rounded;
+      case NotificationType.error:
+        return Icons.error_rounded;
+      default:
+        return Icons.notifications_rounded;
     }
   }
 }
@@ -290,7 +355,10 @@ class _EmptyNotifications extends StatelessWidget {
                 color: Colors.white,
                 shape: BoxShape.circle,
                 boxShadow: [
-                  BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 20),
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.05),
+                    blurRadius: 20,
+                  ),
                 ],
               ),
               child: Icon(
@@ -312,7 +380,8 @@ class _EmptyNotifications extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40),
               child: Text(
-                t['noNotificationsDesc'] ?? "We'll notify you when something important happens.",
+                t['noNotificationsDesc'] ??
+                    "We'll notify you when something important happens.",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 14,

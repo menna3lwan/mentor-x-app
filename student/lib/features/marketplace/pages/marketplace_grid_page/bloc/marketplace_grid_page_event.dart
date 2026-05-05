@@ -11,7 +11,8 @@ final class MarketplaceGridPageLoadEvent extends MarketplaceGridPageEvent {
   const MarketplaceGridPageLoadEvent();
 }
 
-final class MarketplaceGridPageCategorySelectedEvent extends MarketplaceGridPageEvent {
+final class MarketplaceGridPageCategorySelectedEvent
+    extends MarketplaceGridPageEvent {
   final String? categoryId;
 
   const MarketplaceGridPageCategorySelectedEvent(this.categoryId);
@@ -20,7 +21,8 @@ final class MarketplaceGridPageCategorySelectedEvent extends MarketplaceGridPage
   List<Object?> get props => [categoryId];
 }
 
-final class MarketplaceGridPageSearchQueryChangedEvent extends MarketplaceGridPageEvent {
+final class MarketplaceGridPageSearchQueryChangedEvent
+    extends MarketplaceGridPageEvent {
   final String searchQuery;
 
   const MarketplaceGridPageSearchQueryChangedEvent(this.searchQuery);

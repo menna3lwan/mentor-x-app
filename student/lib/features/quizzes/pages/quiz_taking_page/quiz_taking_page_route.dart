@@ -1,6 +1,9 @@
 part of '../../../../core/routing/app_routes.dart';
 
-@TypedGoRoute<QuizTakingPageRoute>(path: '/quiz-taking/:quizId', name: 'quizTaking')
+@TypedGoRoute<QuizTakingPageRoute>(
+  path: '/quiz-taking/:quizId',
+  name: 'quizTaking',
+)
 final class QuizTakingPageRoute extends GoRouteData with $QuizTakingPageRoute {
   final String quizId;
 

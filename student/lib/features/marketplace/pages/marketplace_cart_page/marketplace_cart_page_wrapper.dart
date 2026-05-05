@@ -14,7 +14,8 @@ final class MarketplaceCartPageWrapper extends StatefulWidget {
       _MarketplaceCartPageWrapperState();
 }
 
-class _MarketplaceCartPageWrapperState extends State<MarketplaceCartPageWrapper> {
+class _MarketplaceCartPageWrapperState
+    extends State<MarketplaceCartPageWrapper> {
   @override
   Widget build(BuildContext context) {
     return BlocPresentationListener<

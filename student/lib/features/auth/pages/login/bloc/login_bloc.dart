@@ -173,8 +173,9 @@ final class LoginBloc extends Bloc<LoginEvent, LoginState>
         ),
       );
     } on AuthenticationRepositoryException catch (e) {
-      final fallbackMessage =
-          e.message?.trim().isNotEmpty == true ? e.message! : 'Login failed.';
+      final fallbackMessage = e.message?.trim().isNotEmpty == true
+          ? e.message!
+          : 'Login failed.';
       final message = _registerFailedAttempt(fallbackMessage: fallbackMessage);
       emit(
         state.copyWith(

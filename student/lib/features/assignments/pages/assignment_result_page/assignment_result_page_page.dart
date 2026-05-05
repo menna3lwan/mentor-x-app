@@ -17,7 +17,7 @@ class AssignmentResultPage extends StatelessWidget {
       body: Column(
         children: [
           _BuildHeader(palette: palette, title: t['assignmentResult']!),
-          
+
           Expanded(
             child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
@@ -60,9 +60,14 @@ class AssignmentResultPage extends StatelessWidget {
                           ),
                           const Gap(12),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 8,
+                            ),
                             decoration: BoxDecoration(
-                              color: palette.statusSuccess.withValues(alpha: 0.1),
+                              color: palette.statusSuccess.withValues(
+                                alpha: 0.1,
+                              ),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Text(
@@ -134,7 +139,10 @@ class _BuildHeader extends StatelessWidget {
       width: double.infinity,
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [palette.brandPrimary, palette.brandPrimary.withValues(alpha: 0.8)],
+          colors: [
+            palette.brandPrimary,
+            palette.brandPrimary.withValues(alpha: 0.8),
+          ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -153,7 +161,11 @@ class _BuildHeader extends StatelessWidget {
             children: [
               IconButton(
                 onPressed: () => Navigator.pop(context),
-                icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 20),
+                icon: const Icon(
+                  Icons.arrow_back_ios_new_rounded,
+                  color: Colors.white,
+                  size: 20,
+                ),
               ),
               Expanded(
                 child: Text(

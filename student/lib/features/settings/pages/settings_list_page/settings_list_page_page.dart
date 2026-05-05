@@ -24,7 +24,9 @@ class SettingsListPage extends StatelessWidget {
           child: Container(
             decoration: BoxDecoration(
               color: palette.backgroundPrimary,
-              borderRadius: const BorderRadius.vertical(bottom: Radius.circular(28)),
+              borderRadius: const BorderRadius.vertical(
+                bottom: Radius.circular(28),
+              ),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.03),
@@ -40,7 +42,11 @@ class SettingsListPage extends StatelessWidget {
               centerTitle: true,
               title: Text(
                 t['settingsTitle'] ?? 'Settings',
-                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w900, letterSpacing: -0.5),
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: -0.5,
+                ),
               ),
             ),
           ),
@@ -55,7 +61,10 @@ class SettingsListPage extends StatelessWidget {
             // ── Language Section ─────────────────────────────────────────
             FadeInUp(
               duration: const Duration(milliseconds: 500),
-              child: _SectionTitle(title: t['language'] ?? 'Language', palette: palette),
+              child: _SectionTitle(
+                title: t['language'] ?? 'Language',
+                palette: palette,
+              ),
             ),
             const Gap(12),
             FadeInUp(
@@ -69,7 +78,10 @@ class SettingsListPage extends StatelessWidget {
             FadeInUp(
               duration: const Duration(milliseconds: 500),
               delay: const Duration(milliseconds: 200),
-              child: _SectionTitle(title: t['account'] ?? 'Account', palette: palette),
+              child: _SectionTitle(
+                title: t['account'] ?? 'Account',
+                palette: palette,
+              ),
             ),
             const Gap(12),
             FadeInUp(
@@ -101,7 +113,10 @@ class SettingsListPage extends StatelessWidget {
             FadeInUp(
               duration: const Duration(milliseconds: 500),
               delay: const Duration(milliseconds: 400),
-              child: _SectionTitle(title: t['communication'] ?? 'Communication', palette: palette),
+              child: _SectionTitle(
+                title: t['communication'] ?? 'Communication',
+                palette: palette,
+              ),
             ),
             const Gap(12),
             FadeInUp(
@@ -133,7 +148,10 @@ class SettingsListPage extends StatelessWidget {
             FadeInUp(
               duration: const Duration(milliseconds: 500),
               delay: const Duration(milliseconds: 600),
-              child: _SectionTitle(title: t['helpAndInfo'] ?? 'Help & Info', palette: palette),
+              child: _SectionTitle(
+                title: t['helpAndInfo'] ?? 'Help & Info',
+                palette: palette,
+              ),
             ),
             const Gap(12),
             FadeInUp(
@@ -186,22 +204,33 @@ class SettingsListPage extends StatelessWidget {
       builder: (ctx) => ZoomIn(
         duration: const Duration(milliseconds: 300),
         child: AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(28),
+          ),
           backgroundColor: MentorXThemeColorPalette.light.backgroundPrimary,
           title: Text(
             t['logoutConfirmTitle'] ?? 'Log Out',
-            style: const TextStyle(fontWeight: FontWeight.w900, letterSpacing: -0.5),
+            style: const TextStyle(
+              fontWeight: FontWeight.w900,
+              letterSpacing: -0.5,
+            ),
           ),
           content: Text(
             t['logoutConfirmDesc'] ?? 'Are you sure you want to log out?',
-            style: TextStyle(color: MentorXThemeColorPalette.light.textSecondary, fontWeight: FontWeight.w500),
+            style: TextStyle(
+              color: MentorXThemeColorPalette.light.textSecondary,
+              fontWeight: FontWeight.w500,
+            ),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx),
               child: Text(
                 t['cancel'] ?? 'Cancel',
-                style: TextStyle(color: MentorXThemeColorPalette.light.textTertiary, fontWeight: FontWeight.w800),
+                style: TextStyle(
+                  color: MentorXThemeColorPalette.light.textTertiary,
+                  fontWeight: FontWeight.w800,
+                ),
               ),
             ),
             SizedBox(
@@ -240,7 +269,10 @@ class _SectionTitle extends StatelessWidget {
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: [palette.brandPrimary, palette.brandPrimary.withValues(alpha: 0.7)],
+              colors: [
+                palette.brandPrimary,
+                palette.brandPrimary.withValues(alpha: 0.7),
+              ],
             ),
             borderRadius: BorderRadius.circular(3),
           ),
@@ -331,7 +363,10 @@ class _LanguageOption extends StatelessWidget {
         decoration: BoxDecoration(
           gradient: isSelected
               ? LinearGradient(
-                  colors: [palette.brandPrimary, palette.brandPrimary.withValues(alpha: 0.8)],
+                  colors: [
+                    palette.brandPrimary,
+                    palette.brandPrimary.withValues(alpha: 0.8),
+                  ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 )
@@ -416,7 +451,14 @@ class _SettingsItem extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
           decoration: BoxDecoration(
-            border: isLast ? null : Border(bottom: BorderSide(color: palette.backgroundSecondary, width: 1.5)),
+            border: isLast
+                ? null
+                : Border(
+                    bottom: BorderSide(
+                      color: palette.backgroundSecondary,
+                      width: 1.5,
+                    ),
+                  ),
           ),
           child: Row(
             children: [
@@ -435,7 +477,9 @@ class _SettingsItem extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w800,
-                    color: isDestructive ? palette.statusDanger : palette.textPrimary,
+                    color: isDestructive
+                        ? palette.statusDanger
+                        : palette.textPrimary,
                   ),
                 ),
               ),

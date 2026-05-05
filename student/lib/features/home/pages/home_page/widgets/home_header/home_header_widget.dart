@@ -25,7 +25,10 @@ final class HomeHeaderWidget extends StatelessWidget {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               gradient: LinearGradient(
-                colors: [palette.brandPrimary, palette.brandPrimary.withOpacity(0.4)],
+                colors: [
+                  palette.brandPrimary,
+                  palette.brandPrimary.withOpacity(0.4),
+                ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
@@ -40,7 +43,11 @@ final class HomeHeaderWidget extends StatelessWidget {
             child: CircleAvatar(
               radius: 24,
               backgroundColor: Colors.white,
-              child: Icon(Icons.person_rounded, color: palette.brandPrimary, size: 28),
+              child: Icon(
+                Icons.person_rounded,
+                color: palette.brandPrimary,
+                size: 28,
+              ),
             ),
           ),
           const SizedBox(width: 16),

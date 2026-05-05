@@ -1,6 +1,9 @@
 part of '../../../../core/routing/app_routes.dart';
 
-@TypedGoRoute<MarketplaceGridPageRoute>(path: '/marketplace', name: 'marketplaceGrid')
+@TypedGoRoute<MarketplaceGridPageRoute>(
+  path: '/marketplace',
+  name: 'marketplaceGrid',
+)
 final class MarketplaceGridPageRoute extends GoRouteData
     with $MarketplaceGridPageRoute {
   const MarketplaceGridPageRoute();

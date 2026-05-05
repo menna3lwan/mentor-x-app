@@ -17,6 +17,7 @@ final class QuickActionsGridWidget extends StatelessWidget {
       ),
       (context.t.home.dashboard.actions.grades, Icons.grading_rounded),
       (context.t.home.dashboard.actions.aiAssistant, Icons.smart_toy_rounded),
+      (context.t.home.dashboard.actions.assignments, Icons.assignment_rounded),
       (context.t.home.dashboard.actions.rewards, Icons.emoji_events_rounded),
       (context.t.home.dashboard.actions.marketplace, Icons.storefront_rounded),
     ];

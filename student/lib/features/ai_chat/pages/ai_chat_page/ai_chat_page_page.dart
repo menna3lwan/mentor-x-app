@@ -60,11 +60,16 @@ class _AiChatPageState extends State<AiChatPage> {
             child: Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [palette.brandPrimary, palette.brandPrimary.withValues(alpha: 0.8)],
+                  colors: [
+                    palette.brandPrimary,
+                    palette.brandPrimary.withValues(alpha: 0.8),
+                  ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
-                borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
+                borderRadius: const BorderRadius.vertical(
+                  bottom: Radius.circular(24),
+                ),
                 boxShadow: [
                   BoxShadow(
                     color: palette.brandPrimary.withValues(alpha: 0.3),
@@ -83,7 +88,11 @@ class _AiChatPageState extends State<AiChatPage> {
                   children: [
                     Text(
                       t['aiAssistant'] ?? 'AI Assistant',
-                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w900, letterSpacing: -0.5),
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: -0.5,
+                      ),
                     ),
                     Row(
                       children: [
@@ -91,11 +100,17 @@ class _AiChatPageState extends State<AiChatPage> {
                           width: 8,
                           height: 8,
                           decoration: BoxDecoration(
-                            color: state.isLoading ? Colors.orangeAccent : Colors.greenAccent,
+                            color: state.isLoading
+                                ? Colors.orangeAccent
+                                : Colors.greenAccent,
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
-                                color: (state.isLoading ? Colors.orangeAccent : Colors.greenAccent).withValues(alpha: 0.5),
+                                color:
+                                    (state.isLoading
+                                            ? Colors.orangeAccent
+                                            : Colors.greenAccent)
+                                        .withValues(alpha: 0.5),
                                 blurRadius: 4,
                               ),
                             ],
@@ -103,7 +118,9 @@ class _AiChatPageState extends State<AiChatPage> {
                         ),
                         const Gap(6),
                         Text(
-                          state.isLoading ? t['commonLoading'] ?? 'Loading...' : t['aiSubtitle'] ?? 'Always here to help',
+                          state.isLoading
+                              ? t['commonLoading'] ?? 'Loading...'
+                              : t['aiSubtitle'] ?? 'Always here to help',
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w700,
@@ -120,15 +137,22 @@ class _AiChatPageState extends State<AiChatPage> {
           body: Column(
             children: [
               if (state.errorMessage != null)
-                StatusBadge(message: state.errorMessage!, status: StatusBadgeType.danger),
+                StatusBadge(
+                  message: state.errorMessage!,
+                  status: StatusBadgeType.danger,
+                ),
               Expanded(
-                child: state.isLoading 
+                child: state.isLoading
                     ? const Center(child: CircularProgressIndicator())
                     : ListView.builder(
                         physics: const BouncingScrollPhysics(),
                         controller: _scrollController,
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-                        itemCount: state.messages.length + (state.isTyping ? 1 : 0),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 20,
+                        ),
+                        itemCount:
+                            state.messages.length + (state.isTyping ? 1 : 0),
                         itemBuilder: (context, i) {
                           if (i == state.messages.length && state.isTyping) {
                             return const _TypingIndicator();
@@ -180,16 +204,25 @@ class _AiChatPageState extends State<AiChatPage> {
               decoration: BoxDecoration(
                 color: palette.backgroundSecondary,
                 borderRadius: BorderRadius.circular(24),
-                border: Border.all(color: palette.textTertiary.withValues(alpha: 0.1)),
+                border: Border.all(
+                  color: palette.textTertiary.withValues(alpha: 0.1),
+                ),
               ),
               child: TextField(
                 controller: _controller,
                 onSubmitted: (_) => _sendMessage(),
                 enabled: !state.isLoading && !state.isTyping,
-                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                ),
                 decoration: InputDecoration(
                   hintText: t['typeQuestion'] ?? 'Ask me anything...',
-                  hintStyle: TextStyle(fontSize: 14, color: palette.textTertiary, fontWeight: FontWeight.w500),
+                  hintStyle: TextStyle(
+                    fontSize: 14,
+                    color: palette.textTertiary,
+                    fontWeight: FontWeight.w500,
+                  ),
                   contentPadding: const EdgeInsets.symmetric(
                     horizontal: 20,
                     vertical: 12,
@@ -203,7 +236,10 @@ class _AiChatPageState extends State<AiChatPage> {
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [palette.brandPrimary, palette.brandPrimary.withValues(alpha: 0.8)],
+                colors: [
+                  palette.brandPrimary,
+                  palette.brandPrimary.withValues(alpha: 0.8),
+                ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
@@ -219,11 +255,17 @@ class _AiChatPageState extends State<AiChatPage> {
             child: Material(
               color: Colors.transparent,
               child: InkWell(
-                onTap: (state.isLoading || state.isTyping) ? null : _sendMessage,
+                onTap: (state.isLoading || state.isTyping)
+                    ? null
+                    : _sendMessage,
                 borderRadius: BorderRadius.circular(20),
                 child: const Padding(
                   padding: EdgeInsets.all(12),
-                  child: Icon(Icons.send_rounded, size: 24, color: Colors.white),
+                  child: Icon(
+                    Icons.send_rounded,
+                    size: 24,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),
@@ -256,7 +298,10 @@ class _ChatBubble extends StatelessWidget {
           decoration: BoxDecoration(
             gradient: isUser
                 ? LinearGradient(
-                    colors: [palette.brandPrimary, palette.brandPrimary.withValues(alpha: 0.9)],
+                    colors: [
+                      palette.brandPrimary,
+                      palette.brandPrimary.withValues(alpha: 0.9),
+                    ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   )
@@ -289,13 +334,17 @@ class _ChatBubble extends StatelessWidget {
                 letterSpacing: -0.2,
               ),
               code: TextStyle(
-                backgroundColor: isUser ? Colors.white.withValues(alpha: 0.2) : palette.backgroundSecondary,
+                backgroundColor: isUser
+                    ? Colors.white.withValues(alpha: 0.2)
+                    : palette.backgroundSecondary,
                 fontSize: 12,
                 fontFamily: 'monospace',
                 color: isUser ? Colors.white : palette.brandPrimary,
               ),
               codeblockDecoration: BoxDecoration(
-                color: isUser ? Colors.white.withValues(alpha: 0.1) : palette.backgroundSecondary,
+                color: isUser
+                    ? Colors.white.withValues(alpha: 0.1)
+                    : palette.backgroundSecondary,
                 borderRadius: BorderRadius.circular(12),
               ),
               blockquote: TextStyle(
@@ -305,7 +354,9 @@ class _ChatBubble extends StatelessWidget {
               blockquoteDecoration: BoxDecoration(
                 border: Border(
                   left: BorderSide(
-                    color: isUser ? Colors.white38 : palette.brandPrimary.withValues(alpha: 0.3),
+                    color: isUser
+                        ? Colors.white38
+                        : palette.brandPrimary.withValues(alpha: 0.3),
                     width: 4,
                   ),
                 ),
@@ -365,19 +416,21 @@ class _AnimatedDot extends StatefulWidget {
   State<_AnimatedDot> createState() => _AnimatedDotState();
 }
 
-class _AnimatedDotState extends State<_AnimatedDot> with SingleTickerProviderStateMixin {
+class _AnimatedDotState extends State<_AnimatedDot>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 600),
-    )..addStatusListener((status) {
-        if (status == AnimationStatus.completed) _controller.reverse();
-        if (status == AnimationStatus.dismissed) _controller.forward();
-      });
+    _controller =
+        AnimationController(
+          vsync: this,
+          duration: const Duration(milliseconds: 600),
+        )..addStatusListener((status) {
+          if (status == AnimationStatus.completed) _controller.reverse();
+          if (status == AnimationStatus.dismissed) _controller.forward();
+        });
 
     Future.delayed(Duration(milliseconds: widget.delay), () {
       if (mounted) _controller.forward();

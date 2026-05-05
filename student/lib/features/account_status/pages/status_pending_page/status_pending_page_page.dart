@@ -35,11 +35,16 @@ final class StatusPendingPagePage extends StatelessWidget {
               duration: const Duration(milliseconds: 600),
               child: Container(
                 width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 24),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 24,
+                  horizontal: 24,
+                ),
                 decoration: BoxDecoration(
                   color: palette.backgroundSecondary,
                   borderRadius: BorderRadius.circular(28),
-                  border: Border.all(color: palette.brandPrimary.withValues(alpha: 0.1)),
+                  border: Border.all(
+                    color: palette.brandPrimary.withValues(alpha: 0.1),
+                  ),
                   boxShadow: [
                     BoxShadow(
                       color: palette.brandPrimary.withValues(alpha: 0.03),

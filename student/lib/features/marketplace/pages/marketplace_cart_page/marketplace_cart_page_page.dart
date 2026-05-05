@@ -25,13 +25,22 @@ class MarketplaceCartPage extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [palette.brandPrimary, palette.brandPrimary.withValues(alpha: 0.8)],
+              colors: [
+                palette.brandPrimary,
+                palette.brandPrimary.withValues(alpha: 0.8),
+              ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
-            borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
+            borderRadius: const BorderRadius.vertical(
+              bottom: Radius.circular(24),
+            ),
             boxShadow: [
-              BoxShadow(color: palette.brandPrimary.withValues(alpha: 0.3), blurRadius: 15, offset: const Offset(0, 4)),
+              BoxShadow(
+                color: palette.brandPrimary.withValues(alpha: 0.3),
+                blurRadius: 15,
+                offset: const Offset(0, 4),
+              ),
             ],
           ),
           child: AppBar(
@@ -41,7 +50,11 @@ class MarketplaceCartPage extends StatelessWidget {
             centerTitle: true,
             title: Text(
               t['marketplaceCart']!,
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900, letterSpacing: -0.5),
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w900,
+                letterSpacing: -0.5,
+              ),
             ),
           ),
         ),
@@ -60,21 +73,36 @@ class MarketplaceCartPage extends StatelessWidget {
                           color: Colors.white,
                           shape: BoxShape.circle,
                           boxShadow: [
-                            BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 20),
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.05),
+                              blurRadius: 20,
+                            ),
                           ],
                         ),
-                        child: Icon(Icons.shopping_bag_outlined, size: 80, color: palette.textTertiary.withValues(alpha: 0.2)),
+                        child: Icon(
+                          Icons.shopping_bag_outlined,
+                          size: 80,
+                          color: palette.textTertiary.withValues(alpha: 0.2),
+                        ),
                       ),
                       const Gap(32),
                       Text(
                         t['cartEmpty']!,
-                        style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: palette.textPrimary),
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w900,
+                          color: palette.textPrimary,
+                        ),
                       ),
                       const Gap(12),
                       Text(
                         'Looks like you haven\'t added anything yet.',
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 14, color: palette.textSecondary, fontWeight: FontWeight.w500),
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: palette.textSecondary,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                       const Gap(40),
                       Padding(
@@ -101,7 +129,10 @@ class MarketplaceCartPage extends StatelessWidget {
                       return FadeInUp(
                         duration: const Duration(milliseconds: 500),
                         delay: Duration(milliseconds: 50 * index),
-                        child: _MarketplaceCartItemTile(cartItem: cartItem, palette: palette),
+                        child: _MarketplaceCartItemTile(
+                          cartItem: cartItem,
+                          palette: palette,
+                        ),
                       );
                     },
                   ),
@@ -119,10 +150,15 @@ class MarketplaceCartPage extends StatelessWidget {
     );
   }
 
-  void _showCheckoutSheet(BuildContext context, MentorXThemeColorPalette palette) {
+  void _showCheckoutSheet(
+    BuildContext context,
+    MentorXThemeColorPalette palette,
+  ) {
     final user = context.read<AppAuthenticationCubit>().state;
     final addressController = TextEditingController(text: user?.address ?? '');
-    final phoneController = TextEditingController(text: user?.phoneNumber ?? '');
+    final phoneController = TextEditingController(
+      text: user?.phoneNumber ?? '',
+    );
     final notesController = TextEditingController();
 
     showModalBottomSheet(
@@ -157,7 +193,11 @@ class MarketplaceCartPage extends StatelessWidget {
             const Gap(32),
             Text(
               'Delivery Details',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900, color: palette.textPrimary),
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w900,
+                color: palette.textPrimary,
+              ),
             ),
             const Gap(24),
             MentorXTextFormField(
@@ -188,8 +228,11 @@ class MarketplaceCartPage extends StatelessWidget {
                 return MentorXButton(
                   loading: state.loadingState == LoadingState.loading,
                   onPressed: () {
-                    if (addressController.text.isEmpty || phoneController.text.isEmpty) {
-                      MentorXUI.showToast(message: 'Please fill all required fields');
+                    if (addressController.text.isEmpty ||
+                        phoneController.text.isEmpty) {
+                      MentorXUI.showToast(
+                        message: 'Please fill all required fields',
+                      );
                       return;
                     }
                     Navigator.pop(context);
@@ -210,19 +253,24 @@ class MarketplaceCartPage extends StatelessWidget {
     );
   }
 
-  void _placeOrder(BuildContext context, String address, String phone, String notes) {
+  void _placeOrder(
+    BuildContext context,
+    String address,
+    String phone,
+    String notes,
+  ) {
     final cartCubit = context.read<MarketplaceCartCubit>();
     final items = cartCubit.state.items
         .map((i) => (itemId: i.item.id, quantity: i.quantity))
         .toList();
 
     context.read<MarketplaceCartPageBloc>().add(
-          MarketplaceCartPagePlaceOrderEvent(
-            items: items,
-            address: address,
-            phone: phone,
-          ),
-        );
+      MarketplaceCartPagePlaceOrderEvent(
+        items: items,
+        address: address,
+        phone: phone,
+      ),
+    );
   }
 }
 
@@ -230,7 +278,10 @@ class _MarketplaceCartItemTile extends StatelessWidget {
   final MarketplaceCartItem cartItem;
   final MentorXThemeColorPalette palette;
 
-  const _MarketplaceCartItemTile({required this.cartItem, required this.palette});
+  const _MarketplaceCartItemTile({
+    required this.cartItem,
+    required this.palette,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -258,7 +309,8 @@ class _MarketplaceCartItemTile extends StatelessWidget {
               width: 80,
               height: 80,
               fit: BoxFit.cover,
-              placeholder: (context, url) => Container(color: palette.backgroundSecondary),
+              placeholder: (context, url) =>
+                  Container(color: palette.backgroundSecondary),
               errorWidget: (context, url, error) => Container(
                 color: palette.backgroundSecondary,
                 child: const Icon(Icons.image_rounded, color: Colors.grey),
@@ -272,7 +324,11 @@ class _MarketplaceCartItemTile extends StatelessWidget {
               children: [
                 Text(
                   item.title,
-                  style: TextStyle(fontWeight: FontWeight.w900, fontSize: 14, color: palette.textPrimary),
+                  style: TextStyle(
+                    fontWeight: FontWeight.w900,
+                    fontSize: 14,
+                    color: palette.textPrimary,
+                  ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -298,15 +354,23 @@ class _MarketplaceCartItemTile extends StatelessWidget {
               children: [
                 _IconButton(
                   icon: Icons.remove_rounded,
-                  onPressed: () => context.read<MarketplaceCartCubit>().updateQuantity(item.id, cartItem.quantity - 1),
+                  onPressed: () => context
+                      .read<MarketplaceCartCubit>()
+                      .updateQuantity(item.id, cartItem.quantity - 1),
                 ),
                 Text(
                   '${cartItem.quantity}',
-                  style: TextStyle(fontWeight: FontWeight.w900, fontSize: 14, color: palette.textPrimary),
+                  style: TextStyle(
+                    fontWeight: FontWeight.w900,
+                    fontSize: 14,
+                    color: palette.textPrimary,
+                  ),
                 ),
                 _IconButton(
                   icon: Icons.add_rounded,
-                  onPressed: () => context.read<MarketplaceCartCubit>().updateQuantity(item.id, cartItem.quantity + 1),
+                  onPressed: () => context
+                      .read<MarketplaceCartCubit>()
+                      .updateQuantity(item.id, cartItem.quantity + 1),
                 ),
               ],
             ),
@@ -340,7 +404,11 @@ class _OrderSummary extends StatelessWidget {
   final MentorXThemeColorPalette palette;
   final VoidCallback onCheckout;
 
-  const _OrderSummary({required this.subtotal, required this.palette, required this.onCheckout});
+  const _OrderSummary({
+    required this.subtotal,
+    required this.palette,
+    required this.onCheckout,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -370,13 +438,22 @@ class _OrderSummary extends StatelessWidget {
                 _SummaryRow(
                   label: 'Wallet Balance',
                   value: '${walletBalance.toStringAsFixed(2)} EGP',
-                  valueColor: isBalanceSufficient ? palette.statusSuccess : palette.statusDanger,
+                  valueColor: isBalanceSufficient
+                      ? palette.statusSuccess
+                      : palette.statusDanger,
                   isBold: true,
                 ),
                 const Gap(12),
-                _SummaryRow(label: 'Subtotal', value: '${subtotal.toStringAsFixed(2)} EGP'),
+                _SummaryRow(
+                  label: 'Subtotal',
+                  value: '${subtotal.toStringAsFixed(2)} EGP',
+                ),
                 const Gap(8),
-                _SummaryRow(label: 'Delivery', value: 'Free', valueColor: palette.statusSuccess),
+                _SummaryRow(
+                  label: 'Delivery',
+                  value: 'Free',
+                  valueColor: palette.statusSuccess,
+                ),
                 const Padding(
                   padding: EdgeInsets.symmetric(vertical: 16),
                   child: Divider(height: 1),
@@ -386,7 +463,11 @@ class _OrderSummary extends StatelessWidget {
                   children: [
                     Text(
                       'Total',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: palette.textPrimary),
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w900,
+                        color: palette.textPrimary,
+                      ),
                     ),
                     Text(
                       '${subtotal.toStringAsFixed(2)} EGP',
@@ -408,7 +489,11 @@ class _OrderSummary extends StatelessWidget {
                     ),
                     child: Text(
                       'Insufficient balance. Top up ${deficit.toStringAsFixed(2)} EGP to place order.',
-                      style: TextStyle(color: palette.statusDanger, fontSize: 12, fontWeight: FontWeight.w700),
+                      style: TextStyle(
+                        color: palette.statusDanger,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                      ),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -416,7 +501,7 @@ class _OrderSummary extends StatelessWidget {
                 const Gap(24),
                 MentorXButton(
                   onPressed: isBalanceSufficient ? onCheckout : null,
-                  text: isBalanceSufficient 
+                  text: isBalanceSufficient
                       ? context.t.student['checkout']!
                       : 'Insufficient Balance',
                 ),
@@ -435,14 +520,26 @@ class _SummaryRow extends StatelessWidget {
   final Color? valueColor;
   final bool isBold;
 
-  const _SummaryRow({required this.label, required this.value, this.valueColor, this.isBold = false});
+  const _SummaryRow({
+    required this.label,
+    required this.value,
+    this.valueColor,
+    this.isBold = false,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(label, style: const TextStyle(color: Colors.grey, fontSize: 14, fontWeight: FontWeight.w600)),
+        Text(
+          label,
+          style: const TextStyle(
+            color: Colors.grey,
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
         Text(
           value,
           style: TextStyle(

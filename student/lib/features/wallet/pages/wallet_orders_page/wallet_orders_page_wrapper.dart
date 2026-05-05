@@ -8,7 +8,8 @@ final class WalletOrdersPageWrapper extends StatefulWidget {
   const WalletOrdersPageWrapper({super.key});
 
   @override
-  State<WalletOrdersPageWrapper> createState() => _WalletOrdersPageWrapperState();
+  State<WalletOrdersPageWrapper> createState() =>
+      _WalletOrdersPageWrapperState();
 }
 
 class _WalletOrdersPageWrapperState extends State<WalletOrdersPageWrapper> {

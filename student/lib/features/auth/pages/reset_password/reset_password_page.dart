@@ -47,7 +47,11 @@ class ResetPasswordPage extends StatelessWidget {
             backgroundColor: Colors.transparent,
             elevation: 0,
             leading: IconButton(
-              icon: Icon(Icons.arrow_back_ios_new_rounded, color: palette.textPrimary, size: 20),
+              icon: Icon(
+                Icons.arrow_back_ios_new_rounded,
+                color: palette.textPrimary,
+                size: 20,
+              ),
               onPressed: onBack,
             ),
           ),
@@ -69,7 +73,8 @@ class ResetPasswordPage extends StatelessWidget {
                     duration: const Duration(milliseconds: 600),
                     child: Text(
                       'Set New Password',
-                      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                      style: Theme.of(context).textTheme.headlineMedium
+                          ?.copyWith(
                             fontWeight: FontWeight.w900,
                             color: palette.textPrimary,
                             letterSpacing: -1.0,
@@ -83,10 +88,10 @@ class ResetPasswordPage extends StatelessWidget {
                     child: RichText(
                       text: TextSpan(
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              color: palette.textSecondary,
-                              height: 1.6,
-                              fontWeight: FontWeight.w500,
-                            ),
+                          color: palette.textSecondary,
+                          height: 1.6,
+                          fontWeight: FontWeight.w500,
+                        ),
                         children: [
                           const TextSpan(text: 'We sent a 6-digit code to '),
                           TextSpan(
@@ -96,7 +101,10 @@ class ResetPasswordPage extends StatelessWidget {
                               fontWeight: FontWeight.w900,
                             ),
                           ),
-                          const TextSpan(text: '. Please enter it below to reset your password.'),
+                          const TextSpan(
+                            text:
+                                '. Please enter it below to reset your password.',
+                          ),
                         ],
                       ),
                     ),

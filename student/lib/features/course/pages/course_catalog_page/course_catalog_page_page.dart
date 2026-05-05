@@ -46,13 +46,22 @@ final class CourseCatalogPagePage extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [palette.brandPrimary, palette.brandPrimary.withOpacity(0.8)],
+              colors: [
+                palette.brandPrimary,
+                palette.brandPrimary.withOpacity(0.8),
+              ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
-            borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
+            borderRadius: const BorderRadius.vertical(
+              bottom: Radius.circular(24),
+            ),
             boxShadow: [
-              BoxShadow(color: palette.brandPrimary.withOpacity(0.3), blurRadius: 15, offset: const Offset(0, 4)),
+              BoxShadow(
+                color: palette.brandPrimary.withOpacity(0.3),
+                blurRadius: 15,
+                offset: const Offset(0, 4),
+              ),
             ],
           ),
           child: AppBar(
@@ -93,7 +102,11 @@ final class CourseCatalogPagePage extends StatelessWidget {
               children: [
                 Text(
                   '${courses.length} Courses Found',
-                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: palette.textSecondary),
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                    color: palette.textSecondary,
+                  ),
                 ),
                 const Spacer(),
                 _SortDropdown(
@@ -120,11 +133,18 @@ final class CourseCatalogPagePage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.error_outline_rounded, size: 64, color: Colors.red.withOpacity(0.3)),
+              Icon(
+                Icons.error_outline_rounded,
+                size: 64,
+                color: Colors.red.withOpacity(0.3),
+              ),
               const SizedBox(height: 24),
               Text(
                 errorMessage!,
-                style: TextStyle(color: palette.textSecondary, fontWeight: FontWeight.w600),
+                style: TextStyle(
+                  color: palette.textSecondary,
+                  fontWeight: FontWeight.w600,
+                ),
                 textAlign: TextAlign.center,
               ),
             ],
@@ -171,7 +191,12 @@ class _SearchBar extends StatelessWidget {
   final MentorXThemeColorPalette palette;
   final dynamic t;
 
-  const _SearchBar({required this.controller, required this.onChanged, required this.palette, required this.t});
+  const _SearchBar({
+    required this.controller,
+    required this.onChanged,
+    required this.palette,
+    required this.t,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -180,21 +205,39 @@ class _SearchBar extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 15, offset: const Offset(0, 4)),
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 15,
+            offset: const Offset(0, 4),
+          ),
         ],
       ),
       child: TextField(
         controller: controller,
         onChanged: onChanged,
-        style: TextStyle(color: palette.textPrimary, fontSize: 14, fontWeight: FontWeight.w600),
+        style: TextStyle(
+          color: palette.textPrimary,
+          fontSize: 14,
+          fontWeight: FontWeight.w600,
+        ),
         decoration: InputDecoration(
           hintText: context.t.course.catalog.searchHint,
-          hintStyle: TextStyle(color: palette.textTertiary, fontWeight: FontWeight.w400),
-          prefixIcon: Icon(Icons.search_rounded, color: palette.brandPrimary, size: 22),
+          hintStyle: TextStyle(
+            color: palette.textTertiary,
+            fontWeight: FontWeight.w400,
+          ),
+          prefixIcon: Icon(
+            Icons.search_rounded,
+            color: palette.brandPrimary,
+            size: 22,
+          ),
           filled: true,
           fillColor: Colors.transparent,
           contentPadding: const EdgeInsets.symmetric(vertical: 16),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(20), borderSide: BorderSide.none),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20),
+            borderSide: BorderSide.none,
+          ),
         ),
       ),
     );
@@ -231,7 +274,11 @@ final class _SortDropdown extends StatelessWidget {
             const SizedBox(width: 6),
             Text(
               context.t.course.catalog.sortBy,
-              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: palette.brandPrimary),
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w800,
+                color: palette.brandPrimary,
+              ),
             ),
           ],
         ),
@@ -276,15 +323,26 @@ class _EmptyCatalog extends StatelessWidget {
               color: palette.backgroundPrimary,
               shape: BoxShape.circle,
               boxShadow: [
-                BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 20),
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 20,
+                ),
               ],
             ),
-            child: Icon(Icons.search_off_rounded, size: 80, color: palette.textTertiary.withOpacity(0.2)),
+            child: Icon(
+              Icons.search_off_rounded,
+              size: 80,
+              color: palette.textTertiary.withOpacity(0.2),
+            ),
           ),
           const SizedBox(height: 32),
           Text(
             context.t.course.catalog.noCourses,
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900, color: palette.textPrimary),
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w900,
+              color: palette.textPrimary,
+            ),
           ),
           const SizedBox(height: 12),
           Text(

@@ -34,13 +34,22 @@ class WalletMainPage extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [palette.brandPrimary, palette.brandPrimary.withValues(alpha: 0.8)],
+              colors: [
+                palette.brandPrimary,
+                palette.brandPrimary.withValues(alpha: 0.8),
+              ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
-            borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
+            borderRadius: const BorderRadius.vertical(
+              bottom: Radius.circular(24),
+            ),
             boxShadow: [
-              BoxShadow(color: palette.brandPrimary.withValues(alpha: 0.3), blurRadius: 15, offset: const Offset(0, 4)),
+              BoxShadow(
+                color: palette.brandPrimary.withValues(alpha: 0.3),
+                blurRadius: 15,
+                offset: const Offset(0, 4),
+              ),
             ],
           ),
           child: AppBar(
@@ -50,7 +59,11 @@ class WalletMainPage extends StatelessWidget {
             centerTitle: true,
             title: Text(
               t['walletTitle'] ?? 'Wallet',
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900, letterSpacing: -0.5),
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w900,
+                letterSpacing: -0.5,
+              ),
             ),
           ),
         ),
@@ -75,135 +88,143 @@ class WalletMainPage extends StatelessWidget {
                     ),
                   ),
 
-                      // Action Buttons
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Row(
-                          children: [
-                            FadeInUp(
-                              duration: const Duration(milliseconds: 500),
-                              delay: const Duration(milliseconds: 100),
-                              child: _ActionButton(
-                                icon: Icons.add_circle_rounded,
-                                label: t['addBalance']!,
-                                onTap: () => context.push('/add-balance'),
-                                palette: palette,
-                              ),
-                            ),
-                            const Gap(12),
-                            FadeInUp(
-                              duration: const Duration(milliseconds: 500),
-                              delay: const Duration(milliseconds: 200),
-                              child: _ActionButton(
-                                icon: Icons.confirmation_number_rounded,
-                                label: t['redeemCode']!,
-                                onTap: () => context.push('/redeem-code'),
-                                palette: palette,
-                              ),
-                            ),
-                            const Gap(12),
-                            FadeInUp(
-                              duration: const Duration(milliseconds: 500),
-                              delay: const Duration(milliseconds: 300),
-                              child: _ActionButton(
-                                icon: Icons.receipt_long_rounded,
-                                label: t['transactionsTitle']!,
-                                onTap: () => context.push('/transactions-history'),
-                                palette: palette,
-                              ),
-                            ),
-                            const Gap(12),
-                            FadeInUp(
-                              duration: const Duration(milliseconds: 500),
-                              delay: const Duration(milliseconds: 400),
-                              child: _ActionButton(
-                                icon: Icons.receipt_long_rounded,
-                                label: t['myOrders'] ?? 'My Orders',
-                                onTap: () => const WalletOrdersPageRoute().push(context),
-                                palette: palette,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      const Gap(40),
-                      FadeInUp(
-                        duration: const Duration(milliseconds: 500),
-                        delay: const Duration(milliseconds: 400),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 24),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                t['recentTransactions']!,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w900,
-                                  color: palette.textPrimary,
-                                ),
-                              ),
-                              TextButton(
-                                onPressed: () => context.push('/transactions-history'),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      t['seeAll'] ?? 'See All',
-                                      style: TextStyle(
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w900,
-                                        color: palette.brandPrimary,
-                                      ),
-                                    ),
-                                    const Gap(4),
-                                    Icon(Icons.arrow_forward_ios_rounded, size: 10, color: palette.brandPrimary),
-                                  ],
-                                ),
-                              ),
-                            ],
+                  // Action Buttons
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Row(
+                      children: [
+                        FadeInUp(
+                          duration: const Duration(milliseconds: 500),
+                          delay: const Duration(milliseconds: 100),
+                          child: _ActionButton(
+                            icon: Icons.add_circle_rounded,
+                            label: t['addBalance']!,
+                            onTap: () => context.push('/add-balance'),
+                            palette: palette,
                           ),
                         ),
-                      ),
-                      const Gap(8),
-                    ],
+                        const Gap(12),
+                        FadeInUp(
+                          duration: const Duration(milliseconds: 500),
+                          delay: const Duration(milliseconds: 200),
+                          child: _ActionButton(
+                            icon: Icons.confirmation_number_rounded,
+                            label: t['redeemCode']!,
+                            onTap: () => context.push('/redeem-code'),
+                            palette: palette,
+                          ),
+                        ),
+                        const Gap(12),
+                        FadeInUp(
+                          duration: const Duration(milliseconds: 500),
+                          delay: const Duration(milliseconds: 300),
+                          child: _ActionButton(
+                            icon: Icons.receipt_long_rounded,
+                            label: t['transactionsTitle']!,
+                            onTap: () => context.push('/transactions-history'),
+                            palette: palette,
+                          ),
+                        ),
+                        const Gap(12),
+                        FadeInUp(
+                          duration: const Duration(milliseconds: 500),
+                          delay: const Duration(milliseconds: 400),
+                          child: _ActionButton(
+                            icon: Icons.receipt_long_rounded,
+                            label: t['myOrders'] ?? 'My Orders',
+                            onTap: () =>
+                                const WalletOrdersPageRoute().push(context),
+                            palette: palette,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                if (isLoading && transactions.isEmpty)
-                  const SliverFillRemaining(
-                    child: Center(child: CircularProgressIndicator()),
-                  )
-                else if (transactions.isEmpty)
-                  SliverFillRemaining(
-                    hasScrollBody: false,
-                    child: FadeIn(child: _EmptyTransactions(t: t, palette: palette)),
-                  )
-                else
-                  SliverPadding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    sliver: SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                          return FadeInUp(
-                            duration: const Duration(milliseconds: 500),
-                            delay: Duration(milliseconds: 450 + (50 * index)),
-                            child: _TransactionItem(
-                              transaction: transactions[index],
-                              t: t,
-                              palette: palette,
+
+                  const Gap(40),
+                  FadeInUp(
+                    duration: const Duration(milliseconds: 500),
+                    delay: const Duration(milliseconds: 400),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            t['recentTransactions']!,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w900,
+                              color: palette.textPrimary,
                             ),
-                          );
-                        },
-                        childCount: transactions.length,
+                          ),
+                          TextButton(
+                            onPressed: () =>
+                                context.push('/transactions-history'),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  t['seeAll'] ?? 'See All',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w900,
+                                    color: palette.brandPrimary,
+                                  ),
+                                ),
+                                const Gap(4),
+                                Icon(
+                                  Icons.arrow_forward_ios_rounded,
+                                  size: 10,
+                                  color: palette.brandPrimary,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
-                const SliverToBoxAdapter(child: Gap(40)),
-              ],
+                  const Gap(8),
+                ],
+              ),
             ),
-          ),
-        );
+            if (isLoading && transactions.isEmpty)
+              const SliverFillRemaining(
+                child: Center(child: CircularProgressIndicator()),
+              )
+            else if (transactions.isEmpty)
+              SliverFillRemaining(
+                hasScrollBody: false,
+                child: FadeIn(
+                  child: _EmptyTransactions(t: t, palette: palette),
+                ),
+              )
+            else
+              SliverPadding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                sliver: SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      return FadeInUp(
+                        duration: const Duration(milliseconds: 500),
+                        delay: Duration(milliseconds: 450 + (50 * index)),
+                        child: _TransactionItem(
+                          transaction: transactions[index],
+                          t: t,
+                          palette: palette,
+                        ),
+                      );
+                    },
+                    childCount: transactions.length,
+                  ),
+                ),
+              ),
+            const SliverToBoxAdapter(child: Gap(40)),
+          ],
+        ),
+      ),
+    );
   }
 }
 
@@ -228,7 +249,10 @@ class _BalanceCard extends StatelessWidget {
       padding: const EdgeInsets.all(28),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [palette.brandPrimary, palette.brandPrimary.withValues(alpha: 0.85)],
+          colors: [
+            palette.brandPrimary,
+            palette.brandPrimary.withValues(alpha: 0.85),
+          ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -296,16 +320,25 @@ class _BalanceCard extends StatelessWidget {
                   onTap: () {}, // Future: points detail
                   borderRadius: BorderRadius.circular(16),
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
                     decoration: BoxDecoration(
                       color: Colors.white.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
+                      border: Border.all(
+                        color: Colors.white.withValues(alpha: 0.2),
+                      ),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(Icons.stars_rounded, color: Colors.amber, size: 20),
+                        const Icon(
+                          Icons.stars_rounded,
+                          color: Colors.amber,
+                          size: 20,
+                        ),
                         const Gap(8),
                         Text(
                           '$points ${t['points'] ?? 'Points'}',
@@ -316,7 +349,11 @@ class _BalanceCard extends StatelessWidget {
                           ),
                         ),
                         const Gap(8),
-                        Icon(Icons.arrow_forward_ios_rounded, color: Colors.white.withValues(alpha: 0.5), size: 12),
+                        Icon(
+                          Icons.arrow_forward_ios_rounded,
+                          color: Colors.white.withValues(alpha: 0.5),
+                          size: 12,
+                        ),
                       ],
                     ),
                   ),
@@ -347,7 +384,10 @@ class _EmptyTransactions extends StatelessWidget {
               color: Colors.white,
               shape: BoxShape.circle,
               boxShadow: [
-                BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 20),
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.05),
+                  blurRadius: 20,
+                ),
               ],
             ),
             child: Icon(
@@ -396,7 +436,9 @@ class _ActionButton extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 20),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(24),
-              border: Border.all(color: palette.brandPrimary.withValues(alpha: 0.05)),
+              border: Border.all(
+                color: palette.brandPrimary.withValues(alpha: 0.05),
+              ),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.02),
@@ -449,7 +491,9 @@ class _TransactionItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isCredit = transaction.isCredit;
-    final formattedDate = DateFormat('dd MMM, hh:mm a').format(transaction.createdAt);
+    final formattedDate = DateFormat(
+      'dd MMM, hh:mm a',
+    ).format(transaction.createdAt);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -487,7 +531,8 @@ class _TransactionItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  transaction.typeBadge ?? transaction.transactionType.name.toUpperCase(),
+                  transaction.typeBadge ??
+                      transaction.transactionType.name.toUpperCase(),
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w900,
@@ -498,7 +543,7 @@ class _TransactionItem extends StatelessWidget {
                 Text(
                   formattedDate,
                   style: TextStyle(
-                    fontSize: 11, 
+                    fontSize: 11,
                     color: palette.textTertiary,
                     fontWeight: FontWeight.w600,
                   ),
@@ -515,7 +560,9 @@ class _TransactionItem extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w900,
-                  color: isCredit ? palette.statusSuccess : palette.statusDanger,
+                  color: isCredit
+                      ? palette.statusSuccess
+                      : palette.statusDanger,
                   letterSpacing: -0.5,
                 ),
               ),
@@ -524,7 +571,9 @@ class _TransactionItem extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 10,
                   fontWeight: FontWeight.w800,
-                  color: (isCredit ? palette.statusSuccess : palette.statusDanger).withValues(alpha: 0.6),
+                  color:
+                      (isCredit ? palette.statusSuccess : palette.statusDanger)
+                          .withValues(alpha: 0.6),
                 ),
               ),
             ],

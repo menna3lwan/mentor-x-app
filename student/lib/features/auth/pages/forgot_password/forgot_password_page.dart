@@ -41,7 +41,11 @@ class ForgotPasswordPage extends StatelessWidget {
             backgroundColor: Colors.transparent,
             elevation: 0,
             leading: IconButton(
-              icon: Icon(Icons.arrow_back_ios_new_rounded, color: palette.textPrimary, size: 20),
+              icon: Icon(
+                Icons.arrow_back_ios_new_rounded,
+                color: palette.textPrimary,
+                size: 20,
+              ),
               onPressed: onBack,
             ),
           ),
@@ -69,7 +73,8 @@ class ForgotPasswordPage extends StatelessWidget {
                     delay: const Duration(milliseconds: 100),
                     child: Text(
                       'Forgot Password?',
-                      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                      style: Theme.of(context).textTheme.headlineMedium
+                          ?.copyWith(
                             fontWeight: FontWeight.w900,
                             color: palette.textPrimary,
                             letterSpacing: -1.0,
@@ -83,10 +88,10 @@ class ForgotPasswordPage extends StatelessWidget {
                     child: Text(
                       'No worries! Enter your phone number below and we will send you a code to reset your password.',
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            color: palette.textSecondary,
-                            height: 1.6,
-                            fontWeight: FontWeight.w500,
-                          ),
+                        color: palette.textSecondary,
+                        height: 1.6,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
                   const Gap(40),

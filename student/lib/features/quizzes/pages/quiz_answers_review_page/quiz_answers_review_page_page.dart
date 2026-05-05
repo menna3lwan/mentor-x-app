@@ -9,7 +9,7 @@ class QuizAnswersReviewPage extends StatelessWidget {
     final t = context.t.student;
     final palette = MentorXThemeColorPalette.light;
     final isAr = Localizations.localeOf(context).languageCode == 'ar';
-    
+
     // Mock data for UI demonstration
     final answers = List.generate(
       10,
@@ -29,13 +29,14 @@ class QuizAnswersReviewPage extends StatelessWidget {
         children: [
           // Premium Header
           _BuildHeader(palette: palette, t: t),
-          
+
           Expanded(
             child: ListView.builder(
               padding: const EdgeInsets.symmetric(vertical: 24),
               itemCount: answers.length,
               itemBuilder: (context, i) {
-                final (isCorrect, question, userAnswer, correctAnswer) = answers[i];
+                final (isCorrect, question, userAnswer, correctAnswer) =
+                    answers[i];
                 return _AnswerReviewCard(
                   question: question,
                   userAnswer: userAnswer,
@@ -90,7 +91,11 @@ class _BuildHeader extends StatelessWidget {
         children: [
           IconButton(
             onPressed: () => Navigator.pop(context),
-            icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 20),
+            icon: const Icon(
+              Icons.arrow_back_ios_new_rounded,
+              color: Colors.white,
+              size: 20,
+            ),
           ),
           Expanded(
             child: Text(
@@ -152,13 +157,17 @@ class _AnswerReviewCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: (isCorrect ? palette.statusSuccess : palette.statusDanger).withOpacity(0.1),
+                  color:
+                      (isCorrect ? palette.statusSuccess : palette.statusDanger)
+                          .withOpacity(0.1),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
                   isCorrect ? Icons.check_rounded : Icons.close_rounded,
                   size: 16,
-                  color: isCorrect ? palette.statusSuccess : palette.statusDanger,
+                  color: isCorrect
+                      ? palette.statusSuccess
+                      : palette.statusDanger,
                 ),
               ),
               const SizedBox(width: 12),
@@ -176,7 +185,7 @@ class _AnswerReviewCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 20),
-          
+
           // User Answer
           _InfoTile(
             label: t['yourAnswer'] ?? 'Your Answer',
@@ -185,7 +194,7 @@ class _AnswerReviewCard extends StatelessWidget {
             color: isCorrect ? palette.statusSuccess : palette.statusDanger,
             palette: palette,
           ),
-          
+
           if (!isCorrect) ...[
             const SizedBox(height: 12),
             // Correct Answer

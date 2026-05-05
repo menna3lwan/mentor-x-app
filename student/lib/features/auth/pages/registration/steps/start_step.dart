@@ -54,19 +54,21 @@ class _StartStepState extends State<StartStep> {
               icon: Icons.person_outline,
               controller: _firstNameController,
               onChanged: (v) => context.read<StudentRegistrationBloc>().add(
-                    StudentRegistrationFirstNameChanged(v),
-                  ),
+                StudentRegistrationFirstNameChanged(v),
+              ),
             ),
             const SizedBox(height: 16),
             MentorXTextFormField(
               label: 'Your Phone Number',
               icon: Icons.phone_android_outlined,
               keyboardType: TextInputType.phone,
-              errorText: !state.isPhoneUnique ? 'This phone number is already registered.' : null,
+              errorText: !state.isPhoneUnique
+                  ? 'This phone number is already registered.'
+                  : null,
               controller: _phoneController,
               onChanged: (v) => context.read<StudentRegistrationBloc>().add(
-                    StudentRegistrationPhoneChanged(v),
-                  ),
+                StudentRegistrationPhoneChanged(v),
+              ),
             ),
             const SizedBox(height: 16),
             MentorXTextFormField(
@@ -75,8 +77,8 @@ class _StartStepState extends State<StartStep> {
               keyboardType: TextInputType.phone,
               controller: _parentPhoneController,
               onChanged: (v) => context.read<StudentRegistrationBloc>().add(
-                    StudentRegistrationParentPhoneChanged(v),
-                  ),
+                StudentRegistrationParentPhoneChanged(v),
+              ),
             ),
           ],
         );

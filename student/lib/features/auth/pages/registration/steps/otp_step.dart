@@ -32,8 +32,8 @@ class OtpStep extends StatelessWidget {
             Pinput(
               length: 6,
               onChanged: (v) => context.read<StudentRegistrationBloc>().add(
-                    StudentRegistrationOtpChanged(v),
-                  ),
+                StudentRegistrationOtpChanged(v),
+              ),
             ),
             const SizedBox(height: 24),
             Row(
@@ -42,8 +42,8 @@ class OtpStep extends StatelessWidget {
                 const Text('Didn\'t receive a code? '),
                 TextButton(
                   onPressed: () => context.read<StudentRegistrationBloc>().add(
-                        const StudentRegistrationResendOtpRequested(),
-                      ),
+                    const StudentRegistrationResendOtpRequested(),
+                  ),
                   child: const Text('Resend'),
                 ),
               ],

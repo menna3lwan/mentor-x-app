@@ -34,8 +34,6 @@ final class StatusPendingPageState extends Equatable {
     );
   }
 
-
-
   @override
   List<Object?> get props => [
     loadingState,

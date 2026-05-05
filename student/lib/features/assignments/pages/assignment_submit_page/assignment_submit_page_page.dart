@@ -25,7 +25,10 @@ class _AssignmentSubmitPageState extends State<AssignmentSubmitPage> {
       listener: (context, state) {
         if (state.isSuccess) {
           context.pop();
-          MentorXUI.showToast(message: t['assignmentSubmitted'] ?? 'Assignment submitted successfully');
+          MentorXUI.showToast(
+            message:
+                t['assignmentSubmitted'] ?? 'Assignment submitted successfully',
+          );
         }
       },
       builder: (context, state) {
@@ -45,14 +48,22 @@ class _AssignmentSubmitPageState extends State<AssignmentSubmitPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     FadeInDown(
-                      child: Icon(Icons.error_outline_rounded, size: 64, color: palette.statusDanger.withValues(alpha: 0.5)),
+                      child: Icon(
+                        Icons.error_outline_rounded,
+                        size: 64,
+                        color: palette.statusDanger.withValues(alpha: 0.5),
+                      ),
                     ),
                     const Gap(24),
                     FadeInUp(
                       child: Text(
                         state.errorMessage!,
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: palette.textSecondary),
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w800,
+                          color: palette.textSecondary,
+                        ),
                       ),
                     ),
                     const Gap(32),
@@ -73,14 +84,18 @@ class _AssignmentSubmitPageState extends State<AssignmentSubmitPage> {
         if (state.assignment == null) {
           return Scaffold(
             backgroundColor: palette.backgroundSecondary,
-            body: Center(child: Text(t['assignmentNotFound'] ?? 'Assignment not found')),
+            body: Center(
+              child: Text(t['assignmentNotFound'] ?? 'Assignment not found'),
+            ),
           );
         }
 
         final q = state.currentQuestion;
         final totalQuestions = state.questions.length;
         final currentQuestionIndex = state.currentQuestionIndex;
-        final progress = totalQuestions > 0 ? (currentQuestionIndex + 1) / totalQuestions : 1.0;
+        final progress = totalQuestions > 0
+            ? (currentQuestionIndex + 1) / totalQuestions
+            : 1.0;
 
         return AnnotatedRegion<SystemUiOverlayStyle>(
           value: SystemUiOverlayStyle.light.copyWith(
@@ -124,7 +139,13 @@ class _AssignmentSubmitPageState extends State<AssignmentSubmitPage> {
                                   duration: const Duration(milliseconds: 600),
                                   child: _EssayCard(
                                     initialValue: state.contentText ?? '',
-                                    onChanged: (val) => context.read<AssignmentSubmitPageBloc>().add(AssignmentSubmitPageContentChanged(val)),
+                                    onChanged: (val) => context
+                                        .read<AssignmentSubmitPageBloc>()
+                                        .add(
+                                          AssignmentSubmitPageContentChanged(
+                                            val,
+                                          ),
+                                        ),
                                     palette: palette,
                                     t: t,
                                   ),
@@ -136,17 +157,31 @@ class _AssignmentSubmitPageState extends State<AssignmentSubmitPage> {
                                   child: _FileUploadCard(
                                     filePaths: state.filePaths,
                                     onAdd: () async {
-                                      final result = await FilePicker.platform.pickFiles(allowMultiple: true);
+                                      final result = await FilePicker.platform
+                                          .pickFiles(allowMultiple: true);
                                       if (!context.mounted) return;
-                                      if (result != null && result.files.isNotEmpty) {
+                                      if (result != null &&
+                                          result.files.isNotEmpty) {
                                         for (final file in result.files) {
                                           if (file.path != null) {
-                                            context.read<AssignmentSubmitPageBloc>().add(AssignmentSubmitPageFileAdded(file.path!));
+                                            context
+                                                .read<
+                                                  AssignmentSubmitPageBloc
+                                                >()
+                                                .add(
+                                                  AssignmentSubmitPageFileAdded(
+                                                    file.path!,
+                                                  ),
+                                                );
                                           }
                                         }
                                       }
                                     },
-                                    onRemove: (path) => context.read<AssignmentSubmitPageBloc>().add(AssignmentSubmitPageFileRemoved(path)),
+                                    onRemove: (path) => context
+                                        .read<AssignmentSubmitPageBloc>()
+                                        .add(
+                                          AssignmentSubmitPageFileRemoved(path),
+                                        ),
                                     palette: palette,
                                     t: t,
                                   ),
@@ -158,8 +193,12 @@ class _AssignmentSubmitPageState extends State<AssignmentSubmitPage> {
                   FadeInUp(
                     duration: const Duration(milliseconds: 500),
                     child: _BuildNavigation(
-                      isFirst: totalQuestions > 0 ? currentQuestionIndex == 0 : true,
-                      isLast: totalQuestions > 0 ? currentQuestionIndex == totalQuestions - 1 : true,
+                      isFirst: totalQuestions > 0
+                          ? currentQuestionIndex == 0
+                          : true,
+                      isLast: totalQuestions > 0
+                          ? currentQuestionIndex == totalQuestions - 1
+                          : true,
                       isSubmitting: state.isSubmitting,
                       palette: palette,
                       t: t,
@@ -204,7 +243,10 @@ class _BuildHeader extends StatelessWidget {
       ),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [palette.brandPrimary, palette.brandPrimary.withValues(alpha: 0.8)],
+          colors: [
+            palette.brandPrimary,
+            palette.brandPrimary.withValues(alpha: 0.8),
+          ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -240,7 +282,10 @@ class _BuildHeader extends StatelessWidget {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(12),
@@ -276,7 +321,10 @@ class _BuildHeader extends StatelessWidget {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(4),
                     boxShadow: [
-                      BoxShadow(color: Colors.white.withValues(alpha: 0.3), blurRadius: 10),
+                      BoxShadow(
+                        color: Colors.white.withValues(alpha: 0.3),
+                        blurRadius: 10,
+                      ),
                     ],
                   ),
                 ),
@@ -288,18 +336,38 @@ class _BuildHeader extends StatelessWidget {
     );
   }
 
-  void _showExitDialog(BuildContext context, dynamic t, MentorXThemeColorPalette palette) {
+  void _showExitDialog(
+    BuildContext context,
+    dynamic t,
+    MentorXThemeColorPalette palette,
+  ) {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
-        title: Text(t['exitQuizTitle'] ?? 'Exit Assignment?', style: const TextStyle(fontWeight: FontWeight.w900, letterSpacing: -0.5)),
-        content: Text(t['exitQuizDesc'] ?? 'Your progress will not be saved. Are you sure you want to exit?', style: const TextStyle(fontWeight: FontWeight.w500)),
+        title: Text(
+          t['exitQuizTitle'] ?? 'Exit Assignment?',
+          style: const TextStyle(
+            fontWeight: FontWeight.w900,
+            letterSpacing: -0.5,
+          ),
+        ),
+        content: Text(
+          t['exitQuizDesc'] ??
+              'Your progress will not be saved. Are you sure you want to exit?',
+          style: const TextStyle(fontWeight: FontWeight.w500),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: Text(t['cancel'] ?? 'Cancel', style: TextStyle(color: palette.textTertiary, fontWeight: FontWeight.w700)),
+            child: Text(
+              t['cancel'] ?? 'Cancel',
+              style: TextStyle(
+                color: palette.textTertiary,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
           ),
           SizedBox(
             width: 110,
@@ -415,7 +483,11 @@ class _FileUploadCard extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(28),
         boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 20, offset: const Offset(0, 10)),
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.03),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
         ],
       ),
       child: Column(
@@ -426,11 +498,20 @@ class _FileUploadCard extends StatelessWidget {
             children: [
               Text(
                 t['attachments'] ?? 'Attachments',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w900, color: palette.textPrimary, letterSpacing: -0.3),
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w900,
+                  color: palette.textPrimary,
+                  letterSpacing: -0.3,
+                ),
               ),
               IconButton(
                 onPressed: onAdd,
-                icon: Icon(Icons.add_circle_outline_rounded, color: palette.brandPrimary, size: 28),
+                icon: Icon(
+                  Icons.add_circle_outline_rounded,
+                  color: palette.brandPrimary,
+                  size: 28,
+                ),
               ),
             ],
           ),
@@ -441,11 +522,19 @@ class _FileUploadCard extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 20),
                 child: Column(
                   children: [
-                    Icon(Icons.cloud_upload_outlined, size: 56, color: palette.textTertiary.withValues(alpha: 0.3)),
+                    Icon(
+                      Icons.cloud_upload_outlined,
+                      size: 56,
+                      color: palette.textTertiary.withValues(alpha: 0.3),
+                    ),
                     const Gap(16),
                     Text(
                       t['noFiles'] ?? 'No files attached yet',
-                      style: TextStyle(color: palette.textTertiary, fontSize: 14, fontWeight: FontWeight.w600),
+                      style: TextStyle(
+                        color: palette.textTertiary,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ],
                 ),
@@ -470,19 +559,31 @@ class _FileUploadCard extends StatelessWidget {
                     ),
                     child: Row(
                       children: [
-                        Icon(Icons.insert_drive_file_rounded, color: palette.brandPrimary, size: 22),
+                        Icon(
+                          Icons.insert_drive_file_rounded,
+                          color: palette.brandPrimary,
+                          size: 22,
+                        ),
                         const Gap(12),
                         Expanded(
                           child: Text(
                             fileName,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: palette.textPrimary),
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700,
+                              color: palette.textPrimary,
+                            ),
                           ),
                         ),
                         IconButton(
                           onPressed: () => onRemove(path),
-                          icon: const Icon(Icons.close_rounded, size: 20, color: Colors.redAccent),
+                          icon: const Icon(
+                            Icons.close_rounded,
+                            size: 20,
+                            color: Colors.redAccent,
+                          ),
                           padding: EdgeInsets.zero,
                           constraints: const BoxConstraints(),
                         ),
@@ -526,7 +627,11 @@ class _QuestionCard extends StatelessWidget {
             color: Colors.white,
             borderRadius: BorderRadius.circular(28),
             boxShadow: [
-              BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 25, offset: const Offset(0, 12)),
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.03),
+                blurRadius: 25,
+                offset: const Offset(0, 12),
+              ),
             ],
           ),
           child: Column(
@@ -535,7 +640,10 @@ class _QuestionCard extends StatelessWidget {
               Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
                     decoration: BoxDecoration(
                       color: palette.brandPrimary.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(10),
@@ -577,7 +685,8 @@ class _QuestionCard extends StatelessWidget {
           ),
         ),
         const Gap(32),
-        if (q.type == QuizQuestionType.multipleChoice || q.type == QuizQuestionType.trueFalse) ...[
+        if (q.type == QuizQuestionType.multipleChoice ||
+            q.type == QuizQuestionType.trueFalse) ...[
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 4),
             child: Text(
@@ -595,7 +704,9 @@ class _QuestionCard extends StatelessWidget {
             final optionIndex = entry.key;
             final optionText = entry.value;
             final labels = ['A', 'B', 'C', 'D', 'E', 'F'];
-            final label = optionIndex < labels.length ? labels[optionIndex] : (optionIndex + 1).toString();
+            final label = optionIndex < labels.length
+                ? labels[optionIndex]
+                : (optionIndex + 1).toString();
             final isSelected = selectedAnswer == optionText;
 
             return FadeInUp(
@@ -607,11 +718,11 @@ class _QuestionCard extends StatelessWidget {
                 isSelected: isSelected,
                 palette: palette,
                 onTap: () => context.read<AssignmentSubmitPageBloc>().add(
-                      AssignmentSubmitPageAnswerSelected(
-                        questionId: q.id,
-                        selectedAnswer: optionText,
-                      ),
-                    ),
+                  AssignmentSubmitPageAnswerSelected(
+                    questionId: q.id,
+                    selectedAnswer: optionText,
+                  ),
+                ),
               ),
             );
           }),
@@ -619,11 +730,11 @@ class _QuestionCard extends StatelessWidget {
           _EssayCard(
             initialValue: selectedAnswer ?? '',
             onChanged: (val) => context.read<AssignmentSubmitPageBloc>().add(
-                  AssignmentSubmitPageAnswerSelected(
-                    questionId: q.id,
-                    selectedAnswer: val,
-                  ),
-                ),
+              AssignmentSubmitPageAnswerSelected(
+                questionId: q.id,
+                selectedAnswer: val,
+              ),
+            ),
             palette: palette,
             t: t,
           ),
@@ -661,7 +772,9 @@ class _OptionTile extends StatelessWidget {
             duration: const Duration(milliseconds: 200),
             padding: const EdgeInsets.all(18),
             decoration: BoxDecoration(
-              color: isSelected ? palette.brandPrimary.withValues(alpha: 0.05) : Colors.white,
+              color: isSelected
+                  ? palette.brandPrimary.withValues(alpha: 0.05)
+                  : Colors.white,
               borderRadius: BorderRadius.circular(24),
               border: Border.all(
                 color: isSelected ? palette.brandPrimary : Colors.transparent,
@@ -669,7 +782,11 @@ class _OptionTile extends StatelessWidget {
               ),
               boxShadow: [
                 if (!isSelected)
-                  BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 15, offset: const Offset(0, 8)),
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.02),
+                    blurRadius: 15,
+                    offset: const Offset(0, 8),
+                  ),
               ],
             ),
             child: Row(
@@ -678,7 +795,9 @@ class _OptionTile extends StatelessWidget {
                   width: 36,
                   height: 36,
                   decoration: BoxDecoration(
-                    color: isSelected ? palette.brandPrimary : palette.backgroundSecondary,
+                    color: isSelected
+                        ? palette.brandPrimary
+                        : palette.backgroundSecondary,
                     shape: BoxShape.circle,
                   ),
                   child: Center(
@@ -687,7 +806,9 @@ class _OptionTile extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w900,
-                        color: isSelected ? Colors.white : palette.textSecondary,
+                        color: isSelected
+                            ? Colors.white
+                            : palette.textSecondary,
                       ),
                     ),
                   ),
@@ -698,14 +819,22 @@ class _OptionTile extends StatelessWidget {
                     text,
                     style: TextStyle(
                       fontSize: 16,
-                      fontWeight: isSelected ? FontWeight.w900 : FontWeight.w700,
-                      color: isSelected ? palette.brandPrimary : palette.textPrimary,
+                      fontWeight: isSelected
+                          ? FontWeight.w900
+                          : FontWeight.w700,
+                      color: isSelected
+                          ? palette.brandPrimary
+                          : palette.textPrimary,
                     ),
                   ),
                 ),
                 if (isSelected)
                   FadeIn(
-                    child: Icon(Icons.check_circle_rounded, color: palette.brandPrimary, size: 28),
+                    child: Icon(
+                      Icons.check_circle_rounded,
+                      color: palette.brandPrimary,
+                      size: 28,
+                    ),
                   ),
               ],
             ),
@@ -738,7 +867,11 @@ class _BuildNavigation extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 20, offset: const Offset(0, -5)),
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 20,
+            offset: const Offset(0, -5),
+          ),
         ],
       ),
       child: Row(
@@ -747,7 +880,9 @@ class _BuildNavigation extends StatelessWidget {
             Expanded(
               flex: 1,
               child: MentorXButton(
-                onPressed: () => context.read<AssignmentSubmitPageBloc>().add(const AssignmentSubmitPagePreviousQuestion()),
+                onPressed: () => context.read<AssignmentSubmitPageBloc>().add(
+                  const AssignmentSubmitPagePreviousQuestion(),
+                ),
                 label: t['commonPrevious']!,
                 size: MentorXButtonSize.medium,
               ),
@@ -760,9 +895,13 @@ class _BuildNavigation extends StatelessWidget {
               loading: isSubmitting,
               onPressed: () {
                 if (!isLast) {
-                  context.read<AssignmentSubmitPageBloc>().add(const AssignmentSubmitPageNextQuestion());
+                  context.read<AssignmentSubmitPageBloc>().add(
+                    const AssignmentSubmitPageNextQuestion(),
+                  );
                 } else {
-                  context.read<AssignmentSubmitPageBloc>().add(const AssignmentSubmitPageSubmit());
+                  context.read<AssignmentSubmitPageBloc>().add(
+                    const AssignmentSubmitPageSubmit(),
+                  );
                 }
               },
               label: isLast ? t['commonSubmit']! : t['commonNext']!,

@@ -52,7 +52,11 @@ final class OtpPage extends StatelessWidget {
             backgroundColor: Colors.transparent,
             elevation: 0,
             leading: IconButton(
-              icon: Icon(Icons.arrow_back_ios_new_rounded, color: palette.textPrimary, size: 20),
+              icon: Icon(
+                Icons.arrow_back_ios_new_rounded,
+                color: palette.textPrimary,
+                size: 20,
+              ),
               onPressed: onEditPhone,
             ),
           ),
@@ -93,7 +97,9 @@ final class OtpPage extends StatelessWidget {
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
-                                color: palette.statusSuccess.withValues(alpha: 0.2),
+                                color: palette.statusSuccess.withValues(
+                                  alpha: 0.2,
+                                ),
                                 blurRadius: 16,
                                 offset: const Offset(0, 8),
                               ),
@@ -110,7 +116,8 @@ final class OtpPage extends StatelessWidget {
                       const Gap(24),
                       Text(
                         'Verify OTP',
-                        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        style: Theme.of(context).textTheme.headlineSmall
+                            ?.copyWith(
                               fontWeight: FontWeight.w900,
                               letterSpacing: -0.5,
                             ),
@@ -120,9 +127,9 @@ final class OtpPage extends StatelessWidget {
                         'Enter the code sent to your phone',
                         textAlign: TextAlign.center,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: palette.textSecondary,
-                              fontWeight: FontWeight.w500,
-                            ),
+                          color: palette.textSecondary,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                       const Gap(4),
                       Directionality(
@@ -130,7 +137,8 @@ final class OtpPage extends StatelessWidget {
                         child: Text(
                           phoneNumber,
                           textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          style: Theme.of(context).textTheme.bodyLarge
+                              ?.copyWith(
                                 fontWeight: FontWeight.w900,
                                 color: palette.brandPrimary,
                               ),
@@ -154,8 +162,15 @@ final class OtpPage extends StatelessWidget {
                             ),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(16),
-                              border: Border.all(color: palette.textTertiary.withValues(alpha: 0.2), width: 2),
-                              color: palette.backgroundSecondary.withValues(alpha: 0.3),
+                              border: Border.all(
+                                color: palette.textTertiary.withValues(
+                                  alpha: 0.2,
+                                ),
+                                width: 2,
+                              ),
+                              color: palette.backgroundSecondary.withValues(
+                                alpha: 0.3,
+                              ),
                             ),
                           ),
                           focusedPinTheme: PinTheme(
@@ -168,11 +183,16 @@ final class OtpPage extends StatelessWidget {
                             ),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(16),
-                              border: Border.all(color: palette.brandPrimary, width: 2.5),
+                              border: Border.all(
+                                color: palette.brandPrimary,
+                                width: 2.5,
+                              ),
                               color: palette.backgroundPrimary,
                               boxShadow: [
                                 BoxShadow(
-                                  color: palette.brandPrimary.withValues(alpha: 0.1),
+                                  color: palette.brandPrimary.withValues(
+                                    alpha: 0.1,
+                                  ),
                                   blurRadius: 12,
                                   offset: const Offset(0, 6),
                                 ),
@@ -203,41 +223,72 @@ final class OtpPage extends StatelessWidget {
                                         ? const SizedBox(
                                             width: 16,
                                             height: 16,
-                                            child: CircularProgressIndicator(strokeWidth: 2, color: Colors.blue),
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2,
+                                              color: Colors.blue,
+                                            ),
                                           )
-                                        : Icon(Icons.refresh_rounded, size: 20, color: palette.brandPrimary),
+                                        : Icon(
+                                            Icons.refresh_rounded,
+                                            size: 20,
+                                            color: palette.brandPrimary,
+                                          ),
                                     label: Text(
                                       'Resend Code',
-                                      style: TextStyle(fontWeight: FontWeight.w800, color: palette.brandPrimary),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w800,
+                                        color: palette.brandPrimary,
+                                      ),
                                     ),
                                   ),
                                   TextButton.icon(
-                                    onPressed: isResendingWhatsapp ? null : onResendViaWhatsapp,
+                                    onPressed: isResendingWhatsapp
+                                        ? null
+                                        : onResendViaWhatsapp,
                                     icon: isResendingWhatsapp
                                         ? const SizedBox(
                                             width: 16,
                                             height: 16,
-                                            child: CircularProgressIndicator(strokeWidth: 2, color: Colors.green),
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2,
+                                              color: Colors.green,
+                                            ),
                                           )
-                                        : const Icon(Icons.chat_rounded, size: 20, color: Colors.green),
+                                        : const Icon(
+                                            Icons.chat_rounded,
+                                            size: 20,
+                                            color: Colors.green,
+                                          ),
                                     label: const Text(
                                       'Resend via WhatsApp',
-                                      style: TextStyle(fontWeight: FontWeight.w800, color: Colors.green),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w800,
+                                        color: Colors.green,
+                                      ),
                                     ),
                                   ),
                                 ],
                               )
                             : Padding(
                                 key: const ValueKey('countdown'),
-                                padding: const EdgeInsets.symmetric(vertical: 12),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 12,
+                                ),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Icon(Icons.timer_outlined, size: 18, color: palette.textTertiary),
+                                    Icon(
+                                      Icons.timer_outlined,
+                                      size: 18,
+                                      color: palette.textTertiary,
+                                    ),
                                     const Gap(8),
                                     Text(
                                       'Resend in $formattedCountdown',
-                                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium
+                                          ?.copyWith(
                                             color: palette.textSecondary,
                                             fontWeight: FontWeight.w600,
                                           ),
@@ -254,7 +305,9 @@ final class OtpPage extends StatelessWidget {
                           label: const Text('Edit Phone Number'),
                           style: TextButton.styleFrom(
                             foregroundColor: palette.textTertiary,
-                            textStyle: const TextStyle(fontWeight: FontWeight.w700),
+                            textStyle: const TextStyle(
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
                         ),
                       ],

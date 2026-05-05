@@ -269,13 +269,13 @@ class TranslationsAr with BaseTranslations<AppLocale, Translations> implements T
 		'uploadFile': 'اضغط لرفع الملف',
 		'uploadHint': 'PDF, صور (حد أقصى 10 MB)',
 		'notesOptional': 'ملاحظات (اختياري):',
-		'notesHint': 'أضف ملاحظة للمدرس...',
-		'assignmentResult': 'نتيجة الواجب',
-		'teacherFeedback': 'تعليق المدرس:',
+		'notesHint': 'أضف ملاحظة للمحاضر...',
+		'feedbackTitle': 'التعليقات',
+		'instructorFeedback': 'تعليق المحاضر:',
 		'registerAttendance': 'تسجيل الحضور',
 		'attendanceHistory': 'سجل الحضور',
 		'yourAttendanceCode': 'كود الحضور الخاص بك',
-		'showCodeInstruction': 'اعرض الكود للمدرس أو المساعد لتسجيل حضورك',
+		'showCodeInstruction': 'اعرض الكود للمحاضر أو المساعد لتسجيل حضورك',
 		'codeValidFor': 'الكود صالح لمدة 5 دقايق',
 		'viewAttendance': 'سجل الحضور',
 		'totalAttendance': 'نسبة الحضور الكلية',
@@ -649,7 +649,7 @@ class TranslationsAr with BaseTranslations<AppLocale, Translations> implements T
 		'phoneCall': 'هاتف',
 		'email': 'البريد',
 		'aboutTitle': 'عن التطبيق',
-		'aboutDesc': 'منصة تعليمية متكاملة تربط بين المدرسين والطلاب',
+		'aboutDesc': 'منصة تعليمية متكاملة تربط بين المحاضرين والطلاب',
 		'version': 'الإصدار',
 		'lastUpdate': 'آخر تحديث',
 		'walletTitle': 'المحفظة',
@@ -974,6 +974,7 @@ class _TranslationsUiCommonAr implements TranslationsUiCommonEn {
 	@override String get next => 'التالي';
 	@override String get getStarted => 'ابدأ الآن';
 	@override String get backToLogin => 'العودة لتسجيل الدخول';
+	@override String get noResults => 'لا توجد نتائج';
 }
 
 // Path: ui.errors
@@ -1310,6 +1311,7 @@ class _TranslationsHomeDashboardActionsAr implements TranslationsHomeDashboardAc
 	@override String get attendance => 'الحضور';
 	@override String get grades => 'الدرجات';
 	@override String get aiAssistant => 'المساعد الذكي';
+	@override String get assignments => 'الواجبات';
 	@override String get rewards => 'المكافآت';
 	@override String get marketplace => 'المتجر';
 }
@@ -1332,6 +1334,7 @@ extension on TranslationsAr {
 			'ui.common.next' => 'التالي',
 			'ui.common.getStarted' => 'ابدأ الآن',
 			'ui.common.backToLogin' => 'العودة لتسجيل الدخول',
+			'ui.common.noResults' => 'لا توجد نتائج',
 			'ui.errors.somethingWentWrong' => 'حدث خطأ ما',
 			'ui.errors.retry' => 'إعادة المحاولة',
 			'ui.dateTime.yesterday' => 'أمس',
@@ -1404,6 +1407,7 @@ extension on TranslationsAr {
 			'home.dashboard.actions.attendance' => 'الحضور',
 			'home.dashboard.actions.grades' => 'الدرجات',
 			'home.dashboard.actions.aiAssistant' => 'المساعد الذكي',
+			'home.dashboard.actions.assignments' => 'الواجبات',
 			'home.dashboard.actions.rewards' => 'المكافآت',
 			'home.dashboard.actions.marketplace' => 'المتجر',
 			'home.errors.failedToLoadUpcomingEvents' => 'فشل تحميل الفاعليات القادمة',
@@ -1768,13 +1772,13 @@ extension on TranslationsAr {
 			'student.uploadFile' => 'اضغط لرفع الملف',
 			'student.uploadHint' => 'PDF, صور (حد أقصى 10 MB)',
 			'student.notesOptional' => 'ملاحظات (اختياري):',
-			'student.notesHint' => 'أضف ملاحظة للمدرس...',
-			'student.assignmentResult' => 'نتيجة الواجب',
-			'student.teacherFeedback' => 'تعليق المدرس:',
+			'student.notesHint' => 'أضف ملاحظة للمحاضر...',
+			'student.feedbackTitle' => 'التعليقات',
+			'student.instructorFeedback' => 'تعليق المحاضر:',
 			'student.registerAttendance' => 'تسجيل الحضور',
 			'student.attendanceHistory' => 'سجل الحضور',
 			'student.yourAttendanceCode' => 'كود الحضور الخاص بك',
-			'student.showCodeInstruction' => 'اعرض الكود للمدرس أو المساعد لتسجيل حضورك',
+			'student.showCodeInstruction' => 'اعرض الكود للمحاضر أو المساعد لتسجيل حضورك',
 			'student.codeValidFor' => 'الكود صالح لمدة 5 دقايق',
 			'student.viewAttendance' => 'سجل الحضور',
 			'student.totalAttendance' => 'نسبة الحضور الكلية',
@@ -1832,10 +1836,10 @@ extension on TranslationsAr {
 			'student.passwordRulesHint' => 'حد أدنى 8 أحرف أو أرقام.',
 			'student.uploadPhotosLabel' => 'ارفع الصور المطلوبة',
 			'student.personalPhotoLabel' => 'صورة شخصية',
-			'student.nationalIdPhotoLabel' => 'بطاقة الطالب',
-			'student.studyTypeLabel' => 'اختر نوع الدراسة',
 			_ => null,
 		} ?? switch (path) {
+			'student.nationalIdPhotoLabel' => 'بطاقة الطالب',
+			'student.studyTypeLabel' => 'اختر نوع الدراسة',
 			'student.studyTypeCenter' => 'طالب سنتر (حضور)',
 			'student.studyTypeOnline' => 'طالب أونلاين',
 			'student.scheduleLabel' => 'اختر الميعاد',
@@ -2150,7 +2154,7 @@ extension on TranslationsAr {
 			'student.phoneCall' => 'هاتف',
 			'student.email' => 'البريد',
 			'student.aboutTitle' => 'عن التطبيق',
-			'student.aboutDesc' => 'منصة تعليمية متكاملة تربط بين المدرسين والطلاب',
+			'student.aboutDesc' => 'منصة تعليمية متكاملة تربط بين المحاضرين والطلاب',
 			'student.version' => 'الإصدار',
 			'student.lastUpdate' => 'آخر تحديث',
 			'student.walletTitle' => 'المحفظة',

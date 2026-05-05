@@ -35,7 +35,11 @@ final class DeviceManagementPagePage extends StatelessWidget {
             centerTitle: true,
             title: const Text(
               'Device Management',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, letterSpacing: -0.5),
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w900,
+                letterSpacing: -0.5,
+              ),
             ),
           ),
         ),
@@ -45,8 +49,8 @@ final class DeviceManagementPagePage extends StatelessWidget {
         child: state.isLoading
             ? const Center(child: CircularProgressIndicator())
             : state.loadingState.isError
-                ? _buildError(palette)
-                : _buildLoaded(context, palette),
+            ? _buildError(palette)
+            : _buildLoaded(context, palette),
       ),
     );
   }
@@ -70,7 +74,11 @@ final class DeviceManagementPagePage extends StatelessWidget {
           child: Text(
             state.errorMessage ?? 'Unable to load devices.',
             textAlign: TextAlign.center,
-            style: TextStyle(color: palette.statusDanger, fontWeight: FontWeight.w700, fontSize: 16),
+            style: TextStyle(
+              color: palette.statusDanger,
+              fontWeight: FontWeight.w700,
+              fontSize: 16,
+            ),
           ),
         ),
         const Gap(8),
@@ -80,7 +88,10 @@ final class DeviceManagementPagePage extends StatelessWidget {
           child: Text(
             'Pull down to try again.',
             textAlign: TextAlign.center,
-            style: TextStyle(color: palette.textSecondary, fontWeight: FontWeight.w500),
+            style: TextStyle(
+              color: palette.textSecondary,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ),
       ],
@@ -115,9 +126,9 @@ final class DeviceManagementPagePage extends StatelessWidget {
               'No registered devices',
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.w900,
-                    color: palette.textPrimary,
-                  ),
+                fontWeight: FontWeight.w900,
+                color: palette.textPrimary,
+              ),
             ),
           ),
           const Gap(10),
@@ -127,7 +138,11 @@ final class DeviceManagementPagePage extends StatelessWidget {
             child: Text(
               'Your active login sessions will appear here.',
               textAlign: TextAlign.center,
-              style: TextStyle(color: palette.textSecondary, fontWeight: FontWeight.w500, fontSize: 15),
+              style: TextStyle(
+                color: palette.textSecondary,
+                fontWeight: FontWeight.w500,
+                fontSize: 15,
+              ),
             ),
           ),
         ],
@@ -218,12 +233,14 @@ final class DeviceManagementPagePage extends StatelessWidget {
                       icon: Icons.access_time_rounded,
                       label: 'Last used ${_formatDate(device.lastUsedAt)}',
                     ),
-                    if (device.osVersion != null && device.osVersion!.isNotEmpty)
+                    if (device.osVersion != null &&
+                        device.osVersion!.isNotEmpty)
                       _MetaPill(
                         icon: Icons.settings_cell_rounded,
                         label: 'OS ${device.osVersion}',
                       ),
-                    if (device.appVersion != null && device.appVersion!.isNotEmpty)
+                    if (device.appVersion != null &&
+                        device.appVersion!.isNotEmpty)
                       _MetaPill(
                         icon: Icons.verified_rounded,
                         label: 'App v${device.appVersion}',
@@ -234,8 +251,12 @@ final class DeviceManagementPagePage extends StatelessWidget {
                 SizedBox(
                   width: double.infinity,
                   child: MentorXButton(
-                    onPressed: !device.isActive || isDeactivating ? null : () => onDeactivateTapped(device.id),
-                    label: device.isActive ? 'Deactivate Device' : 'Deactivated',
+                    onPressed: !device.isActive || isDeactivating
+                        ? null
+                        : () => onDeactivateTapped(device.id),
+                    label: device.isActive
+                        ? 'Deactivate Device'
+                        : 'Deactivated',
                     loading: isDeactivating,
                     color: palette.statusDanger,
                     variant: MentorXButtonVariant.outline,
@@ -253,7 +274,9 @@ final class DeviceManagementPagePage extends StatelessWidget {
   IconData _getDeviceIcon(String? type) {
     type = type?.toLowerCase();
     if (type == 'tablet') return Icons.tablet_android_rounded;
-    if (type == 'desktop' || type == 'web') return Icons.desktop_windows_rounded;
+    if (type == 'desktop' || type == 'web') {
+      return Icons.desktop_windows_rounded;
+    }
     return Icons.smartphone_rounded;
   }
 

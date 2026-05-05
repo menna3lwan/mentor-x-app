@@ -27,11 +27,16 @@ final class MarketplaceOrdersPagePage extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [palette.brandPrimary, palette.brandPrimary.withValues(alpha: 0.8)],
+              colors: [
+                palette.brandPrimary,
+                palette.brandPrimary.withValues(alpha: 0.8),
+              ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
-            borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
+            borderRadius: const BorderRadius.vertical(
+              bottom: Radius.circular(24),
+            ),
             boxShadow: [
               BoxShadow(
                 color: palette.brandPrimary.withValues(alpha: 0.3),
@@ -47,7 +52,11 @@ final class MarketplaceOrdersPagePage extends StatelessWidget {
             centerTitle: true,
             title: Text(
               t['marketplaceOrders'] ?? 'Order History',
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w900, letterSpacing: -0.5),
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w900,
+                letterSpacing: -0.5,
+              ),
             ),
           ),
         ),
@@ -55,26 +64,32 @@ final class MarketplaceOrdersPagePage extends StatelessWidget {
       body: RefreshIndicator(
         onRefresh: () async => onRefresh(),
         color: palette.brandPrimary,
-        child: state.loadingState == LoadingState.loading && state.orders.isEmpty
+        child:
+            state.loadingState == LoadingState.loading && state.orders.isEmpty
             ? const Center(child: CircularProgressIndicator())
             : state.loadingState == LoadingState.error && state.orders.isEmpty
-                ? _ErrorView(errorMessage: state.errorMessage, onRefresh: onRefresh, t: t, palette: palette)
-                : state.orders.isEmpty
-                    ? _EmptyView(t: t, palette: palette)
-                    : ListView.separated(
-                        physics: const BouncingScrollPhysics(),
-                        padding: const EdgeInsets.fromLTRB(20, 24, 20, 40),
-                        itemCount: state.orders.length,
-                        separatorBuilder: (_, _) => const Gap(16),
-                        itemBuilder: (context, index) {
-                          final order = state.orders[index];
-                          return FadeInUp(
-                            duration: const Duration(milliseconds: 500),
-                            delay: Duration(milliseconds: 50 * index),
-                            child: _OrderCard(order: order, palette: palette, t: t),
-                          );
-                        },
-                      ),
+            ? _ErrorView(
+                errorMessage: state.errorMessage,
+                onRefresh: onRefresh,
+                t: t,
+                palette: palette,
+              )
+            : state.orders.isEmpty
+            ? _EmptyView(t: t, palette: palette)
+            : ListView.separated(
+                physics: const BouncingScrollPhysics(),
+                padding: const EdgeInsets.fromLTRB(20, 24, 20, 40),
+                itemCount: state.orders.length,
+                separatorBuilder: (_, _) => const Gap(16),
+                itemBuilder: (context, index) {
+                  final order = state.orders[index];
+                  return FadeInUp(
+                    duration: const Duration(milliseconds: 500),
+                    delay: Duration(milliseconds: 50 * index),
+                    child: _OrderCard(order: order, palette: palette, t: t),
+                  );
+                },
+              ),
       ),
     );
   }
@@ -86,7 +101,12 @@ class _ErrorView extends StatelessWidget {
   final dynamic t;
   final MentorXThemeColorPalette palette;
 
-  const _ErrorView({this.errorMessage, required this.onRefresh, required this.t, required this.palette});
+  const _ErrorView({
+    this.errorMessage,
+    required this.onRefresh,
+    required this.t,
+    required this.palette,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -95,13 +115,20 @@ class _ErrorView extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           FadeInDown(
-            child: Icon(Icons.error_outline_rounded, size: 64, color: Colors.red.withValues(alpha: 0.3)),
+            child: Icon(
+              Icons.error_outline_rounded,
+              size: 64,
+              color: Colors.red.withValues(alpha: 0.3),
+            ),
           ),
           const Gap(16),
           FadeInUp(
             child: Text(
               errorMessage ?? 'Unable to load orders.',
-              style: TextStyle(color: palette.textSecondary, fontWeight: FontWeight.w800),
+              style: TextStyle(
+                color: palette.textSecondary,
+                fontWeight: FontWeight.w800,
+              ),
             ),
           ),
           const Gap(24),
@@ -109,7 +136,10 @@ class _ErrorView extends StatelessWidget {
             delay: const Duration(milliseconds: 200),
             child: SizedBox(
               width: 120,
-              child: MentorXButton(onPressed: onRefresh, label: t['retry'] ?? 'Retry'),
+              child: MentorXButton(
+                onPressed: onRefresh,
+                label: t['retry'] ?? 'Retry',
+              ),
             ),
           ),
         ],
@@ -136,7 +166,11 @@ class _EmptyView extends StatelessWidget {
                 color: palette.brandPrimary.withValues(alpha: 0.05),
                 shape: BoxShape.circle,
               ),
-              child: Icon(Icons.shopping_bag_outlined, size: 64, color: palette.textTertiary.withValues(alpha: 0.3)),
+              child: Icon(
+                Icons.shopping_bag_outlined,
+                size: 64,
+                color: palette.textTertiary.withValues(alpha: 0.3),
+              ),
             ),
           ),
           const Gap(24),
@@ -155,9 +189,14 @@ class _EmptyView extends StatelessWidget {
           FadeInUp(
             delay: const Duration(milliseconds: 200),
             child: Text(
-              t['startShoppingDesc'] ?? "Explore our marketplace and place your first order!",
+              t['startShoppingDesc'] ??
+                  "Explore our marketplace and place your first order!",
               textAlign: TextAlign.center,
-              style: TextStyle(color: palette.textTertiary, fontSize: 14, fontWeight: FontWeight.w500),
+              style: TextStyle(
+                color: palette.textTertiary,
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
         ],
@@ -171,7 +210,11 @@ final class _OrderCard extends StatelessWidget {
   final MentorXThemeColorPalette palette;
   final dynamic t;
 
-  const _OrderCard({required this.order, required this.palette, required this.t});
+  const _OrderCard({
+    required this.order,
+    required this.palette,
+    required this.t,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -203,7 +246,11 @@ final class _OrderCard extends StatelessWidget {
                       color: palette.brandPrimary.withValues(alpha: 0.05),
                       borderRadius: BorderRadius.circular(14),
                     ),
-                    child: Icon(Icons.receipt_long_rounded, color: palette.brandPrimary, size: 22),
+                    child: Icon(
+                      Icons.receipt_long_rounded,
+                      color: palette.brandPrimary,
+                      size: 22,
+                    ),
                   ),
                   const Gap(16),
                   Expanded(
@@ -222,7 +269,11 @@ final class _OrderCard extends StatelessWidget {
                         const Gap(2),
                         Text(
                           '${order.createdAt.day}/${order.createdAt.month}/${order.createdAt.year}',
-                          style: TextStyle(color: palette.textTertiary, fontSize: 12, fontWeight: FontWeight.w600),
+                          style: TextStyle(
+                            color: palette.textTertiary,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ],
                     ),
@@ -251,11 +302,19 @@ final class _OrderCard extends StatelessWidget {
                       const Gap(6),
                       Row(
                         children: [
-                          Icon(Icons.location_on_outlined, size: 14, color: palette.textTertiary),
+                          Icon(
+                            Icons.location_on_outlined,
+                            size: 14,
+                            color: palette.textTertiary,
+                          ),
                           const Gap(4),
                           Text(
                             order.deliveryAddress ?? '',
-                            style: TextStyle(color: palette.textTertiary, fontSize: 12, fontWeight: FontWeight.w600),
+                            style: TextStyle(
+                              color: palette.textTertiary,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ],
                       ),

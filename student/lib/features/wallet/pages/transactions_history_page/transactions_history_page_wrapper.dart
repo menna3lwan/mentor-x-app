@@ -32,8 +32,11 @@ class _TransactionsHistoryPageWrapperState
   }
 
   void _onScroll() {
-    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
-      context.read<TransactionsHistoryPageBloc>().add(const TransactionsHistoryPageLoadMoreEvent());
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      context.read<TransactionsHistoryPageBloc>().add(
+        const TransactionsHistoryPageLoadMoreEvent(),
+      );
     }
   }
 
@@ -49,25 +52,29 @@ class _TransactionsHistoryPageWrapperState
             Navigator.of(context).pop();
         }
       },
-      child: BlocBuilder<TransactionsHistoryPageBloc, TransactionsHistoryPageState>(
-        builder: (context, state) {
-          final bloc = context.read<TransactionsHistoryPageBloc>();
-          final transactions = state.transactions;
-          final isLoading = state.loadingState == LoadingState.loading;
-          final isInitialLoading = isLoading && transactions.isEmpty;
+      child:
+          BlocBuilder<
+            TransactionsHistoryPageBloc,
+            TransactionsHistoryPageState
+          >(
+            builder: (context, state) {
+              final bloc = context.read<TransactionsHistoryPageBloc>();
+              final transactions = state.transactions;
+              final isLoading = state.loadingState == LoadingState.loading;
+              final isInitialLoading = isLoading && transactions.isEmpty;
 
-          return TransactionsHistoryPage(
-            transactions: transactions,
-            hasMore: state.hasMore,
-            isLoading: isLoading,
-            isInitialLoading: isInitialLoading,
-            scrollController: _scrollController,
-            onRefresh: () async {
-              bloc.add(const TransactionsHistoryPageLoadEvent());
+              return TransactionsHistoryPage(
+                transactions: transactions,
+                hasMore: state.hasMore,
+                isLoading: isLoading,
+                isInitialLoading: isInitialLoading,
+                scrollController: _scrollController,
+                onRefresh: () async {
+                  bloc.add(const TransactionsHistoryPageLoadEvent());
+                },
+              );
             },
-          );
-        },
-      ),
+          ),
     );
   }
 }

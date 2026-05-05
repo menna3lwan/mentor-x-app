@@ -37,11 +37,16 @@ class VerifyIdentityPagePage extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [palette.brandPrimary, palette.brandPrimary.withValues(alpha: 0.8)],
+              colors: [
+                palette.brandPrimary,
+                palette.brandPrimary.withValues(alpha: 0.8),
+              ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
-            borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
+            borderRadius: const BorderRadius.vertical(
+              bottom: Radius.circular(24),
+            ),
             boxShadow: [
               BoxShadow(
                 color: palette.brandPrimary.withValues(alpha: 0.3),
@@ -57,7 +62,11 @@ class VerifyIdentityPagePage extends StatelessWidget {
             centerTitle: true,
             title: Text(
               t['verifyIdentity'] ?? 'Verify Identity',
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w900, letterSpacing: -0.5),
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w900,
+                letterSpacing: -0.5,
+              ),
             ),
           ),
         ),
@@ -74,7 +83,9 @@ class VerifyIdentityPagePage extends StatelessWidget {
                   icon: Icons.verified_rounded,
                   color: Colors.green,
                   title: t['identityVerified'] ?? 'Identity Verified',
-                  description: t['identityVerifiedDesc'] ?? 'Your identity has been successfully verified.',
+                  description:
+                      t['identityVerifiedDesc'] ??
+                      'Your identity has been successfully verified.',
                   palette: palette,
                 ),
               )
@@ -85,7 +96,9 @@ class VerifyIdentityPagePage extends StatelessWidget {
                   icon: Icons.timer_rounded,
                   color: Colors.orange,
                   title: t['verificationPending'] ?? 'Verification Pending',
-                  description: t['verificationPendingDesc'] ?? 'Your verification is currently under review.',
+                  description:
+                      t['verificationPendingDesc'] ??
+                      'Your verification is currently under review.',
                   palette: palette,
                 ),
               )
@@ -96,14 +109,20 @@ class VerifyIdentityPagePage extends StatelessWidget {
                   icon: Icons.error_rounded,
                   color: Colors.red,
                   title: t['verificationRejected'] ?? 'Verification Rejected',
-                  description: verification?.rejectionReason ?? (t['verificationRejectedDesc'] ?? 'Please try again with a clearer photo.'),
+                  description:
+                      verification?.rejectionReason ??
+                      (t['verificationRejectedDesc'] ??
+                          'Please try again with a clearer photo.'),
                   palette: palette,
                 ),
               ),
-            
+
             const Gap(24),
 
-            if (!isVerified && (!isPending || verification?.idCardPhotoUrl == null || isRejected))
+            if (!isVerified &&
+                (!isPending ||
+                    verification?.idCardPhotoUrl == null ||
+                    isRejected))
               FadeInUp(
                 duration: const Duration(milliseconds: 600),
                 child: _UploadSection(
@@ -115,8 +134,9 @@ class VerifyIdentityPagePage extends StatelessWidget {
               ),
 
             const Gap(40),
-            
-            if (selectedImagePath != null && state.status != VerifyIdentityStatus.loading)
+
+            if (selectedImagePath != null &&
+                state.status != VerifyIdentityStatus.loading)
               FadeInUp(
                 duration: const Duration(milliseconds: 500),
                 child: MentorXButton(
@@ -124,7 +144,7 @@ class VerifyIdentityPagePage extends StatelessWidget {
                   text: t['submitVerification'] ?? 'Submit Verification',
                 ),
               ),
-            
+
             if (state.status == VerifyIdentityStatus.loading)
               const Center(child: CircularProgressIndicator()),
             const Gap(40),
@@ -168,13 +188,23 @@ class _StatusBanner extends StatelessWidget {
           const Gap(16),
           Text(
             title,
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900, color: palette.textPrimary, letterSpacing: -0.5),
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w900,
+              color: palette.textPrimary,
+              letterSpacing: -0.5,
+            ),
           ),
           const Gap(8),
           Text(
             description,
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 14, color: palette.textSecondary, height: 1.5, fontWeight: FontWeight.w500),
+            style: TextStyle(
+              fontSize: 14,
+              color: palette.textSecondary,
+              height: 1.5,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ],
       ),
@@ -188,7 +218,12 @@ class _UploadSection extends StatelessWidget {
   final MentorXThemeColorPalette palette;
   final dynamic t;
 
-  const _UploadSection({this.selectedPath, required this.onTap, required this.palette, required this.t});
+  const _UploadSection({
+    this.selectedPath,
+    required this.onTap,
+    required this.palette,
+    required this.t,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -208,7 +243,12 @@ class _UploadSection extends StatelessWidget {
             const Gap(12),
             Text(
               t['uploadNationalId'] ?? 'Upload National ID',
-              style: TextStyle(fontSize: 17, fontWeight: FontWeight.w900, color: palette.textPrimary, letterSpacing: -0.5),
+              style: TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.w900,
+                color: palette.textPrimary,
+                letterSpacing: -0.5,
+              ),
             ),
           ],
         ),
@@ -216,8 +256,13 @@ class _UploadSection extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(left: 18),
           child: Text(
-            t['uploadIdInstructions'] ?? 'Please take a clear photo of your ID card front side.',
-            style: TextStyle(fontSize: 14, color: palette.textSecondary, fontWeight: FontWeight.w500),
+            t['uploadIdInstructions'] ??
+                'Please take a clear photo of your ID card front side.',
+            style: TextStyle(
+              fontSize: 14,
+              color: palette.textSecondary,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ),
         const Gap(24),
@@ -229,9 +274,15 @@ class _UploadSection extends StatelessWidget {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(28),
-              border: Border.all(color: palette.brandPrimary.withValues(alpha: 0.1)),
+              border: Border.all(
+                color: palette.brandPrimary.withValues(alpha: 0.1),
+              ),
               boxShadow: [
-                BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 20, offset: const Offset(0, 4)),
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.03),
+                  blurRadius: 20,
+                  offset: const Offset(0, 4),
+                ),
               ],
             ),
             child: selectedPath != null
@@ -250,7 +301,11 @@ class _UploadSection extends StatelessWidget {
                             color: palette.brandPrimary.withValues(alpha: 0.05),
                             shape: BoxShape.circle,
                           ),
-                          child: Icon(Icons.add_a_photo_rounded, size: 40, color: palette.brandPrimary),
+                          child: Icon(
+                            Icons.add_a_photo_rounded,
+                            size: 40,
+                            color: palette.brandPrimary,
+                          ),
                         ),
                       ),
                       const Gap(16),

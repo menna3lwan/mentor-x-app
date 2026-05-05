@@ -45,11 +45,16 @@ class ChangePasswordPage extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [palette.brandPrimary, palette.brandPrimary.withValues(alpha: 0.8)],
+              colors: [
+                palette.brandPrimary,
+                palette.brandPrimary.withValues(alpha: 0.8),
+              ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
-            borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
+            borderRadius: const BorderRadius.vertical(
+              bottom: Radius.circular(24),
+            ),
             boxShadow: [
               BoxShadow(
                 color: palette.brandPrimary.withValues(alpha: 0.3),
@@ -65,7 +70,11 @@ class ChangePasswordPage extends StatelessWidget {
             centerTitle: true,
             title: Text(
               t['changePassword'] ?? 'Change Password',
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w900, letterSpacing: -0.5),
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w900,
+                letterSpacing: -0.5,
+              ),
             ),
           ),
         ),
@@ -119,7 +128,9 @@ class ChangePasswordPage extends StatelessWidget {
                   controller: currentController,
                   obscure: obscureCurrent,
                   onToggle: onToggleCurrent,
-                  validator: (v) => v == null || v.isEmpty ? t['requiredField'] ?? 'Required' : null,
+                  validator: (v) => v == null || v.isEmpty
+                      ? t['requiredField'] ?? 'Required'
+                      : null,
                   enabled: !isSubmitting,
                   palette: palette,
                 ),
@@ -134,8 +145,12 @@ class ChangePasswordPage extends StatelessWidget {
                   obscure: obscureNew,
                   onToggle: onToggleNew,
                   validator: (v) {
-                    if (v == null || v.isEmpty) return t['requiredField'] ?? 'Required';
-                    if (v.length < 6) return t['passwordTooShort'] ?? 'Min. 6 characters';
+                    if (v == null || v.isEmpty) {
+                      return t['requiredField'] ?? 'Required';
+                    }
+                    if (v.length < 6) {
+                      return t['passwordTooShort'] ?? 'Min. 6 characters';
+                    }
                     return null;
                   },
                   enabled: !isSubmitting,
@@ -152,8 +167,13 @@ class ChangePasswordPage extends StatelessWidget {
                   obscure: obscureConfirm,
                   onToggle: onToggleConfirm,
                   validator: (v) {
-                    if (v == null || v.isEmpty) return t['requiredField'] ?? 'Required';
-                    if (v != newController.text) return t['passwordsDoNotMatch'] ?? 'Passwords do not match';
+                    if (v == null || v.isEmpty) {
+                      return t['requiredField'] ?? 'Required';
+                    }
+                    if (v != newController.text) {
+                      return t['passwordsDoNotMatch'] ??
+                          'Passwords do not match';
+                    }
                     return null;
                   },
                   enabled: !isSubmitting,
@@ -204,7 +224,11 @@ class _PremiumPasswordField extends StatelessWidget {
       children: [
         Row(
           children: [
-            Icon(Icons.lock_outline_rounded, size: 15, color: palette.brandPrimary),
+            Icon(
+              Icons.lock_outline_rounded,
+              size: 15,
+              color: palette.brandPrimary,
+            ),
             const SizedBox(width: 6),
             Text(
               label,
@@ -245,11 +269,17 @@ class _PremiumPasswordField extends StatelessWidget {
             ),
             disabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(14),
-              borderSide: const BorderSide(color: AppColors.greyLight, width: 0.5),
+              borderSide: const BorderSide(
+                color: AppColors.greyLight,
+                width: 0.5,
+              ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(14),
-              borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
+              borderSide: const BorderSide(
+                color: AppColors.primary,
+                width: 1.5,
+              ),
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(14),
@@ -257,7 +287,9 @@ class _PremiumPasswordField extends StatelessWidget {
             ),
             suffixIcon: IconButton(
               icon: Icon(
-                obscure ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                obscure
+                    ? Icons.visibility_off_outlined
+                    : Icons.visibility_outlined,
                 size: 20,
                 color: AppColors.grey,
               ),
