@@ -21,9 +21,14 @@ abstract interface class StudentRegistrationRepository {
   /// Step 1: Start registration by sending basic info.
   /// Triggers OTP.
   Future<void> startRegistration({
-    required String firstName,
     required String phone,
-    required String parentPhone,
+  });
+
+  /// Step 2: Verify OTP code before proceeding.
+  Future<void> verifyOtp({
+    required String phone,
+    required String otp,
+    int? tenantId,
   });
 
   /// Resend OTP if needed.
@@ -31,14 +36,14 @@ abstract interface class StudentRegistrationRepository {
 
   /// Step 3: Complete registration with all details and OTP.
   /// Uses multipart/form-data for images and query parameters for other fields as per API spec.
-  Future<void> completeRegistration({
+  Future<StudentRegistrationResponseEntity> completeRegistration({
     required String firstName,
     required String secondName,
     required String thirdName,
     required String fourthName,
-    required String governorate,
+    required String governorateId,
     required String area,
-    required String grade,
+    required String gradeId,
     required bool online,
     required String otp,
     required String parentPhone,
@@ -54,7 +59,7 @@ abstract interface class StudentRegistrationRepository {
 
   /// Lookups
   Future<List<GovernorateEntity>> getGovernorates();
-  Future<List<String>> getAreas(String governorate);
-  Future<Map<String, dynamic>> getApplicationInfo();
+  Future<List<String>> getAreas(String governorateId);
+  Future<StudentApplicationInfoEntity> getApplicationInfo();
   Future<bool> checkPhone(String phone);
 }

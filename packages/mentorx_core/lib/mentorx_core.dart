@@ -42,6 +42,9 @@ part 'src/entities/governorate_entity.dart';
 part 'src/entities/district_entity.dart';
 part 'src/entities/parent/parent_lookup_type.dart';
 part 'src/entities/parent_registration_entities.dart';
+part 'src/entities/student/application_info_entity.dart';
+part 'src/entities/student/support_info_entity.dart';
+part 'src/entities/student/registration_step_entity.dart';
 
 // Learning
 part 'src/entities/grade_entity.dart';
@@ -104,6 +107,12 @@ part 'src/entities/leaderboard_entry_entity.dart';
 // ——————————————————————————————————————————————
 part 'src/repositories/cache_repository.dart';
 part 'src/models/parent_model.dart';
+part 'src/models/student_registration_response_entity.dart';
+part 'src/models/student/application_info_model.dart';
+part 'src/models/student/support_info_model.dart';
+part 'src/models/student/registration_step_model.dart';
+part 'src/models/student/grade_model.dart';
+part 'src/models/student/governorate_model.dart';
 part 'src/repositories/http_client_repository.dart';
 part 'src/repositories/authentication_repository.dart';
 part 'src/repositories/student_authentication_repository.dart';

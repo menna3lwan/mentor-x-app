@@ -5,7 +5,6 @@ import 'package:mentorx_core/mentorx_core.dart';
 import 'integration_config.dart';
 import 'memory_cache_repository.dart';
 
-final _log = MentorXLogger('RegistrationDiscoveryTest');
 
 void main() {
   late StudentRegistrationRepository repository;
@@ -26,22 +25,22 @@ void main() {
     test('Get Application Info', () async {
       try {
         final info = await repository.getApplicationInfo();
-        _log.info('Application Info Type: ${info.runtimeType}');
-        _log.info('Application Info: $info');
+        print('Application Info Type: ${info.runtimeType}');
+        print('Application Info: $info');
       } catch (e) {
-        _log.error('Failed to get application info: $e');
+        print('Failed to get application info: $e');
       }
     });
 
     test('Get Governorates', () async {
       try {
         final governorates = await repository.getGovernorates();
-        _log.info('Governorates count: ${governorates.length}');
+        print('Governorates count: ${governorates.length}');
         for (var g in governorates.take(3)) {
-          _log.info('Gov: ${g.name} (${g.id})');
+          print('Gov: ${g.name} (${g.id})');
         }
       } catch (e) {
-        _log.error('Failed to get governorates: $e');
+        print('Failed to get governorates: $e');
       }
     });
 
@@ -50,25 +49,23 @@ void main() {
         final governorates = await repository.getGovernorates();
         if (governorates.isNotEmpty) {
           final areas = await repository.getAreas(governorates.first.id);
-          _log.info('Areas for ${governorates.first.name}: ${areas.take(5)}');
+          print('Areas for ${governorates.first.name}: ${areas.take(5)}');
         }
       } catch (e) {
-        _log.error('Failed to get areas: $e');
+        print('Failed to get areas: $e');
       }
     });
 
     test('Start Registration', () async {
       try {
         await repository.startRegistration(
-          firstName: 'Integration',
           phone: '01234567899', // Dummy unique phone
-          parentPhone: '01234567888',
         );
-        _log.info('Registration started successfully');
+        print('Registration started successfully');
       } on HttpClientResponse catch (e) {
-        _log.error('Error: ${e.statusCode} ${e.data}');
+        print('Error: ${e.statusCode} ${e.data}');
       } catch (e) {
-        _log.error('Failed to start registration: $e');
+        print('Failed to start registration: $e');
       }
     });
 
@@ -79,9 +76,9 @@ void main() {
           secondName: 'Test',
           thirdName: 'User',
           fourthName: 'Entity',
-          governorate: 'اسيوط',
+          governorateId: 'اسيوط',
           area: 'اسيوط',
-          grade: '1',
+          gradeId: '1',
           online: true,
           otp: '123456', // Guessing
           parentPhone: '01234567888',
@@ -89,11 +86,13 @@ void main() {
           password: 'password123',
           confirmPassword: 'password123',
         );
-        _log.info('Registration completed successfully');
-      } on HttpClientResponse catch (e) {
-        _log.error('Error: ${e.statusCode} ${e.data}');
+        print('Registration completed successfully');
       } catch (e) {
-        _log.error('Failed to complete registration: $e');
+        print('Failed to complete registration error: $e');
+        if (e is StudentRegistrationException) {
+          print('Exception code: ${e.code}');
+          print('Exception message: ${e.message}');
+        }
       }
     });
   });

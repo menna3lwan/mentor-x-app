@@ -30,8 +30,8 @@ final class DioGradeRepository
         },
       );
 
-      final list = asList(asMap(response.data)['content'] ??
-          asMap(response.data)['data'] ??
+      final list = asList(asMap(response.data)['data'] ??
+          asMap(response.data)['content'] ??
           response.data);
 
       return list.map((e) => QuizAttemptModel.fromJson(asMap(e))).toList();

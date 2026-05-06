@@ -38,10 +38,10 @@ final class DioAuthenticationRepository
     );
 
     if (cachedAccessToken != null && cachedAccessToken.isNotEmpty) {
-      httpClient.setBearerToken(
-        cachedAccessToken,
-        refreshToken: cachedRefreshToken,
-      );
+      httpClient.setAccessToken(cachedAccessToken).ignore();
+      if (cachedRefreshToken != null) {
+        httpClient.setRefreshToken(cachedRefreshToken).ignore();
+      }
     }
   }
 
@@ -238,7 +238,7 @@ final class DioAuthenticationRepository
     } catch (_) {
     } finally {
       await _deleteCachedUser();
-      httpClient.removeBearerToken();
+      await httpClient.clearTokens();
     }
   }
 
@@ -348,7 +348,7 @@ final class DioAuthenticationRepository
 
   Future<void> _clearLocalSession() async {
     await _deleteCachedUser();
-    httpClient.removeBearerToken();
+    await httpClient.clearTokens();
   }
 
   @override
@@ -464,7 +464,10 @@ final class DioAuthenticationRepository
     if (accessToken == null) return;
 
     final refreshToken = stringOrNull(data['refreshToken'] ?? data['refresh_token']);
-    httpClient.setBearerToken(accessToken, refreshToken: refreshToken);
+    httpClient.setAccessToken(accessToken).ignore();
+    if (refreshToken != null) {
+      httpClient.setRefreshToken(refreshToken).ignore();
+    }
   }
 
   Map<String, dynamic> _extractDataMap(dynamic rawResponse) {

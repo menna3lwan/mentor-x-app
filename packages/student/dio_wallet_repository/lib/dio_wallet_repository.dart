@@ -47,8 +47,8 @@ final class DioWalletRepository
       );
 
       final list = asList(
-        asMap(response.data)['content'] ??
-            asMap(response.data)['data'] ??
+        asMap(response.data)['data'] ??
+            asMap(response.data)['content'] ??
             response.data,
       );
 
@@ -74,8 +74,8 @@ final class DioWalletRepository
         '/api/payment/process',
         data: {
           'amount': amount,
-          'method': method.name,
-          'type': paymentType.name,
+          'paymentMethod': method.name.toUpperCase(),
+          'type': paymentType.name.toUpperCase(),
         },
         headers: {
           'X-Idempotency-Key':
@@ -138,8 +138,8 @@ final class DioWalletRepository
       );
 
       final list = asList(
-        asMap(response.data)['content'] ??
-            asMap(response.data)['data'] ??
+        asMap(response.data)['data'] ??
+            asMap(response.data)['content'] ??
             response.data,
       );
 
@@ -247,7 +247,10 @@ final class DioWalletRepository
           if (paginationInfo != null) ...paginationInfo.toJson(),
         },
       );
-      final data = asList(asMap(response.data)['data'] ?? response.data);
+      final data = asList(asMap(response.data)['data'] ??
+          asMap(response.data)['content'] ??
+          response.data);
+
       return data.map((e) => PaymentOrderModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
@@ -304,7 +307,7 @@ final class DioWalletRepository
         '/api/payment/wallet/deposit',
         data: {
           'amount': amount,
-          'method': method.name,
+          'paymentMethod': method.name.toUpperCase(),
         },
       );
       final data = asMap(response.data)['data'] ?? asMap(response.data);

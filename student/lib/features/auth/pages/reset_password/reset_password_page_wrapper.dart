@@ -2,8 +2,8 @@ import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mentorx_core/mentorx_core.dart';
 
+import '../../../../core/core.dart';
 import 'bloc/reset_password_bloc.dart';
 import 'reset_password_page.dart';
 
@@ -73,7 +73,13 @@ class _ResetPasswordPageWrapperState extends State<ResetPasswordPageWrapper> {
                       bloc.add(const ResetPasswordSubmitted());
                     }
                   },
-                  onBack: () => context.pop(),
+                  onBack: () {
+                    if (context.canPop()) {
+                      context.pop();
+                    } else {
+                      const ForgotPasswordPageRoute().go(context);
+                    }
+                  },
                 );
               },
             ),

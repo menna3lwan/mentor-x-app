@@ -29,13 +29,14 @@ class RegistrationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t.student;
     final steps = [
-      'Welcome',
-      'Verify',
-      'Profile',
-      'Academic',
-      'Location',
-      'Security',
+      t['welcome'] ?? 'Welcome',
+      t['otpVerifyTitle'] ?? 'Verify',
+      t['profile'] ?? 'Profile',
+      t['academicInfo'] ?? 'Academic',
+      t['locationDetails'] ?? 'Location',
+      t['securityAndIdentity'] ?? 'Security',
     ];
 
     final palette = MentorXThemeColorPalette.light;
@@ -213,6 +214,7 @@ class RegistrationPage extends StatelessWidget {
   }
 
   Widget _buildBottomActions(BuildContext context) {
+    final t = context.t.student;
     final palette = MentorXThemeColorPalette.light;
     return Container(
       padding: EdgeInsets.only(
@@ -240,8 +242,10 @@ class RegistrationPage extends StatelessWidget {
                 ? null
                 : (currentStep == 5 ? onSubmit : onNext),
             label: currentStep == 5
-                ? 'Complete Registration'
-                : (currentStep == 0 ? 'Verify & Continue' : 'Continue'),
+                ? (t['completeRegistration'] ?? 'Complete Registration')
+                : (currentStep == 0
+                    ? (t['commonNext'] ?? 'Verify & Continue')
+                    : (t['commonNext'] ?? 'Continue')),
             loading: isLoading,
           ),
           if (currentStep == 0) ...[
@@ -250,7 +254,7 @@ class RegistrationPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Already have an account?',
+                  t['alreadyHaveAccount'] ?? 'Already have an account?',
                   style: TextStyle(
                     color: palette.textSecondary,
                     fontWeight: FontWeight.w600,
@@ -262,7 +266,7 @@ class RegistrationPage extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                   ),
                   child: Text(
-                    'Sign In',
+                    t['signIn'] ?? 'Sign In',
                     style: TextStyle(
                       color: palette.brandPrimary,
                       fontWeight: FontWeight.w900,
@@ -276,4 +280,5 @@ class RegistrationPage extends StatelessWidget {
       ),
     );
   }
+
 }

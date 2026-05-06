@@ -10,7 +10,6 @@ final class LoginPage extends StatelessWidget {
   final TextEditingController passwordController;
   final bool isLoading;
   final bool obscurePassword;
-  final bool rememberMe;
   final String? errorMessage;
   final List<TextInputFormatter> inputFormatters;
   final String? Function(String?) phoneValidator;
@@ -18,7 +17,6 @@ final class LoginPage extends StatelessWidget {
   final ValueChanged<String> onPhoneChanged;
   final ValueChanged<String> onPasswordChanged;
   final VoidCallback onObscurePasswordToggled;
-  final VoidCallback onRememberMeToggled;
   final VoidCallback onForgotPassword;
   final VoidCallback onRegister;
   final VoidCallback onSubmit;
@@ -34,7 +32,6 @@ final class LoginPage extends StatelessWidget {
     required this.passwordController,
     required this.isLoading,
     required this.obscurePassword,
-    required this.rememberMe,
     required this.errorMessage,
     required this.inputFormatters,
     required this.phoneValidator,
@@ -42,7 +39,6 @@ final class LoginPage extends StatelessWidget {
     required this.onPhoneChanged,
     required this.onPasswordChanged,
     required this.onObscurePasswordToggled,
-    required this.onRememberMeToggled,
     required this.onForgotPassword,
     required this.onRegister,
     required this.onSubmit,
@@ -146,48 +142,25 @@ final class LoginPage extends StatelessWidget {
                                 // validator: passwordValidator,
                               ),
                               const Gap(16),
-                              Row(
-                                children: [
-                                  SizedBox(
-                                    height: 24,
-                                    width: 24,
-                                    child: Checkbox(
-                                      value: rememberMe,
-                                      onChanged: (_) => onRememberMeToggled(),
-                                      activeColor: palette.brandPrimary,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(6),
-                                      ),
+                              Align(
+                                alignment: Alignment.centerRight,
+                                child: TextButton(
+                                  onPressed: onForgotPassword,
+                                  style: TextButton.styleFrom(
+                                    padding: EdgeInsets.zero,
+                                    minimumSize: Size.zero,
+                                    tapTargetSize:
+                                        MaterialTapTargetSize.shrinkWrap,
+                                  ),
+                                  child: Text(
+                                    'Forgot password?',
+                                    style: TextStyle(
+                                      color: palette.brandPrimary,
+                                      fontWeight: FontWeight.w800,
+                                      fontSize: 13,
                                     ),
                                   ),
-                                  const Gap(10),
-                                  Text(
-                                    'Remember me',
-                                    style: Theme.of(context).textTheme.bodySmall
-                                        ?.copyWith(
-                                          fontWeight: FontWeight.w700,
-                                          color: palette.textPrimary,
-                                        ),
-                                  ),
-                                  const Spacer(),
-                                  TextButton(
-                                    onPressed: onForgotPassword,
-                                    style: TextButton.styleFrom(
-                                      padding: EdgeInsets.zero,
-                                      minimumSize: Size.zero,
-                                      tapTargetSize:
-                                          MaterialTapTargetSize.shrinkWrap,
-                                    ),
-                                    child: Text(
-                                      'Forgot password?',
-                                      style: TextStyle(
-                                        color: palette.brandPrimary,
-                                        fontWeight: FontWeight.w800,
-                                        fontSize: 13,
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                                ),
                               ),
                               if (errorMessage != null) ...[
                                 const Gap(20),

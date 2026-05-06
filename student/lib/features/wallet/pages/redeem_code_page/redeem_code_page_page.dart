@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
 import '../../../../core/core.dart';
@@ -89,107 +90,126 @@ class _RedeemCodePagePageState extends State<RedeemCodePagePage> {
             children: [
               const SizedBox(height: 32),
               // Icon with glow
-              Container(
-                padding: const EdgeInsets.all(24),
-                decoration: BoxDecoration(
-                  color: palette.brandPrimary.withOpacity(0.05),
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: palette.brandPrimary.withOpacity(0.1),
+              FadeInDown(
+                child: Container(
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    color: palette.brandPrimary.withOpacity(0.05),
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: palette.brandPrimary.withOpacity(0.1),
+                    ),
                   ),
-                ),
-                child: Icon(
-                  Icons.qr_code_scanner_rounded,
-                  size: 56,
-                  color: palette.brandPrimary,
+                  child: Icon(
+                    Icons.qr_code_scanner_rounded,
+                    size: 56,
+                    color: palette.brandPrimary,
+                  ),
                 ),
               ),
               const SizedBox(height: 32),
-              Text(
-                t['redeemCodeTitle'] ?? 'Redeem Your Code',
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w900,
-                  color: palette.textPrimary,
+              FadeInDown(
+                delay: const Duration(milliseconds: 200),
+                child: Text(
+                  t['redeemCodeTitle'] ?? 'Redeem Your Code',
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w900,
+                    color: palette.textPrimary,
+                  ),
                 ),
               ),
               const SizedBox(height: 12),
-              Text(
-                t['enterCodeDesc'] ??
-                    'Enter the activation code to top up your wallet balance instantly.',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: palette.textSecondary,
-                  height: 1.5,
+              FadeInDown(
+                delay: const Duration(milliseconds: 300),
+                child: Text(
+                  t['enterCodeDesc'] ??
+                      'Enter the activation code to top up your wallet balance instantly.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: palette.textSecondary,
+                    height: 1.5,
+                  ),
                 ),
               ),
               const SizedBox(height: 40),
               // Glassmorphic Input
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(24),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.03),
-                      blurRadius: 15,
-                      offset: const Offset(0, 8),
-                    ),
-                  ],
-                ),
-                child: TextField(
-                  controller: _codeController,
-                  textAlign: TextAlign.center,
-                  textDirection: TextDirection.ltr,
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: 4,
-                    color: palette.brandPrimary,
+              FadeInUp(
+                delay: const Duration(milliseconds: 400),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(24),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.03),
+                        blurRadius: 15,
+                        offset: const Offset(0, 8),
+                      ),
+                    ],
                   ),
-                  onChanged: (_) => setState(() {}),
-                  decoration: InputDecoration(
-                    hintText: 'XXXX-XXXX-XXXX',
-                    hintStyle: TextStyle(
-                      fontSize: 18,
-                      color: palette.textTertiary.withOpacity(0.3),
+                  child: TextField(
+                    controller: _codeController,
+                    textAlign: TextAlign.center,
+                    textDirection: TextDirection.ltr,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w900,
                       letterSpacing: 4,
+                      color: palette.brandPrimary,
                     ),
-                    contentPadding: const EdgeInsets.symmetric(
-                      vertical: 20,
-                      horizontal: 20,
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(24),
-                      borderSide: BorderSide.none,
+                    onChanged: (_) => setState(() {}),
+                    decoration: InputDecoration(
+                      hintText: 'XXXX-XXXX-XXXX',
+                      hintStyle: TextStyle(
+                        fontSize: 18,
+                        color: palette.textTertiary.withOpacity(0.3),
+                        letterSpacing: 4,
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                        vertical: 20,
+                        horizontal: 20,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(24),
+                        borderSide: BorderSide.none,
+                      ),
                     ),
                   ),
                 ),
               ),
               if (widget.state.errorMessage != null) ...[
                 const SizedBox(height: 16),
-                StatusBadge(
-                  message: widget.state.errorMessage!,
-                  status: StatusBadgeType.danger,
+                FadeIn(
+                  child: StatusBadge(
+                    message: widget.state.errorMessage!,
+                    status: StatusBadgeType.danger,
+                  ),
                 ),
               ],
               const SizedBox(height: 48),
-              MentorXButton(
-                onPressed:
-                    _codeController.text.isNotEmpty &&
-                        widget.state.loadingState != LoadingState.loading
-                    ? () => widget.onSubmit(_codeController.text)
-                    : null,
-                text: t['activateCode']!,
-                loading: widget.state.loadingState == LoadingState.loading,
+              FadeInUp(
+                delay: const Duration(milliseconds: 500),
+                child: MentorXButton(
+                  onPressed:
+                      _codeController.text.isNotEmpty &&
+                          widget.state.loadingState != LoadingState.loading
+                      ? () => widget.onSubmit(_codeController.text)
+                      : null,
+                  text: t['activateCode']!,
+                  loading: widget.state.loadingState == LoadingState.loading,
+                ),
               ),
               const SizedBox(height: 24),
-              Text(
-                t['redeemPolicy'] ??
-                    'By activating this code, you agree to our terms and conditions.',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 11, color: palette.textTertiary),
+              FadeIn(
+                delay: const Duration(milliseconds: 700),
+                child: Text(
+                  t['redeemPolicy'] ??
+                      'By activating this code, you agree to our terms and conditions.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 11, color: palette.textTertiary),
+                ),
               ),
             ],
           ),

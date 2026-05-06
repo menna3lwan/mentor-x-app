@@ -28,7 +28,9 @@ final class DioRewardsRepository
         },
       );
 
-      final data = asList(asMap(response.data)['data'] ?? asMap(response.data)['content'] ?? response.data);
+      final data = asList(asMap(response.data)['data'] ??
+          asMap(response.data)['content'] ??
+          response.data);
       return data.map((e) => PointsTransactionModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
@@ -50,7 +52,9 @@ final class DioRewardsRepository
         },
       );
 
-      final data = asList(asMap(response.data)['data'] ?? asMap(response.data)['content'] ?? response.data);
+      final data = asList(asMap(response.data)['data'] ??
+          asMap(response.data)['content'] ??
+          response.data);
       return data.map((e) => RewardItemModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
@@ -72,7 +76,9 @@ final class DioRewardsRepository
         },
       );
 
-      final data = asList(asMap(response.data)['data'] ?? asMap(response.data)['content'] ?? response.data);
+      final data = asList(asMap(response.data)['data'] ??
+          asMap(response.data)['content'] ??
+          response.data);
       return data.map((e) => RewardClaimModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(

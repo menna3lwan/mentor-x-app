@@ -40,6 +40,7 @@ class _PersonalInfoStepState extends State<PersonalInfoStep> {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t.student;
     final bloc = context.read<StudentRegistrationBloc>();
     final palette = MentorXThemeColorPalette.light;
     return BlocBuilder<StudentRegistrationBloc, StudentRegistrationState>(
@@ -50,7 +51,7 @@ class _PersonalInfoStepState extends State<PersonalInfoStep> {
             FadeInDown(
               duration: const Duration(milliseconds: 400),
               child: Text(
-                'Complete Your Profile',
+                t['completeProfileTitle'] ?? 'Complete Your Profile',
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.w900,
                   color: palette.textPrimary,
@@ -61,7 +62,7 @@ class _PersonalInfoStepState extends State<PersonalInfoStep> {
             FadeInDown(
               duration: const Duration(milliseconds: 500),
               child: Text(
-                'Please provide your full name as it appears in your official documents.',
+                t['completeProfileSubtitle'] ?? 'Please provide your full name as it appears in your official documents.',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: palette.textSecondary,
                   height: 1.5,
@@ -77,7 +78,8 @@ class _PersonalInfoStepState extends State<PersonalInfoStep> {
             FadeInUp(
               duration: const Duration(milliseconds: 400),
               child: MentorXTextFormField(
-                label: 'Father\'s Name',
+                key: const Key('registration_second_name'),
+                label: t['secondNameLabel'] ?? "Father's Name",
                 icon: Icons.person_outline_rounded,
                 controller: _secondNameController,
                 onChanged: (value) =>
@@ -88,7 +90,8 @@ class _PersonalInfoStepState extends State<PersonalInfoStep> {
             FadeInUp(
               duration: const Duration(milliseconds: 500),
               child: MentorXTextFormField(
-                label: 'Grandfather\'s Name',
+                key: const Key('registration_third_name'),
+                label: t['thirdNameLabel'] ?? "Grandfather's Name",
                 icon: Icons.person_outline_rounded,
                 controller: _thirdNameController,
                 onChanged: (value) =>
@@ -99,7 +102,8 @@ class _PersonalInfoStepState extends State<PersonalInfoStep> {
             FadeInUp(
               duration: const Duration(milliseconds: 600),
               child: MentorXTextFormField(
-                label: 'Family Name (Last Name)',
+                key: const Key('registration_fourth_name'),
+                label: t['fourthNameLabel'] ?? 'Family Name (Last Name)',
                 icon: Icons.people_outline_rounded,
                 controller: _fourthNameController,
                 onChanged: (value) =>
@@ -111,6 +115,7 @@ class _PersonalInfoStepState extends State<PersonalInfoStep> {
       },
     );
   }
+
 
   Widget _buildPhotoPicker(
     BuildContext context,
@@ -189,6 +194,7 @@ class _PersonalInfoStepState extends State<PersonalInfoStep> {
     BuildContext context,
     StudentRegistrationBloc bloc,
   ) async {
+    final t = context.t.student;
     final palette = MentorXThemeColorPalette.light;
     final source = await showModalBottomSheet<ImageSource>(
       context: context,
@@ -204,7 +210,7 @@ class _PersonalInfoStepState extends State<PersonalInfoStep> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Profile Photo',
+                t['personalPhotoLabel'] ?? 'Profile Photo',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w900,
@@ -217,13 +223,13 @@ class _PersonalInfoStepState extends State<PersonalInfoStep> {
                 children: [
                   _PhotoSourceOption(
                     icon: Icons.photo_library_outlined,
-                    label: 'Gallery',
+                    label: t['gallery'] ?? 'Gallery',
                     onTap: () => Navigator.of(context).pop(ImageSource.gallery),
                     palette: palette,
                   ),
                   _PhotoSourceOption(
                     icon: Icons.camera_alt_outlined,
-                    label: 'Camera',
+                    label: t['camera'] ?? 'Camera',
                     onTap: () => Navigator.of(context).pop(ImageSource.camera),
                     palette: palette,
                   ),
@@ -234,6 +240,7 @@ class _PersonalInfoStepState extends State<PersonalInfoStep> {
         );
       },
     );
+
 
     if (source == null) return;
 

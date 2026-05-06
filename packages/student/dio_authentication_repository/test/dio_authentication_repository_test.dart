@@ -23,6 +23,11 @@ void main() {
     // Register fallbacks for mocktail
     registerFallbackValue(<String, dynamic>{});
     registerFallbackValue(<String, String>{});
+
+    // Default mocks for HttpClient Future<void> methods
+    when(() => httpClient.setAccessToken(any())).thenAnswer((_) async {});
+    when(() => httpClient.setRefreshToken(any())).thenAnswer((_) async {});
+    when(() => httpClient.clearTokens()).thenAnswer((_) async {});
   });
 
   group('DioAuthenticationRepository', () {
@@ -59,7 +64,7 @@ void main() {
         ));
 
         // Mock isAuthenticated check called by getCurrentUser
-        when(() => httpClient.isAuthenticated()).thenAnswer((_) async => true);
+        when(() => httpClient.isAuthenticated).thenReturn(true);
 
         // Mock GET /api/auth/me
         when(() => httpClient.get(
@@ -140,7 +145,8 @@ void main() {
           'last_name': 'User',
         };
 
-        when(() => httpClient.isAuthenticated()).thenAnswer((_) async => true);
+        when(() => httpClient.isAuthenticated).thenReturn(true);
+
         when(() => httpClient.get(
           any(),
           queryParameters: any(named: 'queryParameters'),
@@ -178,8 +184,35 @@ void main() {
           queryParameters: any(named: 'queryParameters'),
           headers: any(named: 'headers'),
         )).called(1);
-        verify(() => httpClient.removeBearerToken()).called(1);
+        verify(() => httpClient.clearTokens()).called(1);
         verify(() => cacheRepository.remove(CacheKeys.user)).called(1);
+      });
+    });
+
+    group('getAccountStatus', () {
+      test('returns StudentEntity on slim session-status response', () async {
+        final mockResponse = {
+          'role': 'STUDENT',
+          'studentCode': 'G2766',
+          'hasSession': true,
+          'status': 'ACTIVE',
+        };
+
+        when(() => httpClient.get(
+          '/api/auth/session-status',
+          queryParameters: any(named: 'queryParameters'),
+          headers: any(named: 'headers'),
+        )).thenAnswer((_) async => HttpClientResponse(
+          data: mockResponse,
+          statusCode: 200,
+        ));
+        when(() => cacheRepository.put(any(), any())).thenAnswer((_) async {});
+
+        final result = await repository.getAccountStatus();
+        
+        expect(result.studentCode, 'G2766');
+        expect(result.status, StudentStatus.active);
+        expect(result.firstName, 'Student'); // Skeleton default
       });
     });
   });

@@ -124,14 +124,14 @@ class _OrderCard extends StatelessWidget {
   Color _getStatusColor() {
     switch (order.status) {
       case PaymentOrderStatus.completed:
-        return AppColors.green;
+        return palette.statusSuccess;
       case PaymentOrderStatus.pending:
-        return AppColors.accent;
+        return palette.statusWarning;
       case PaymentOrderStatus.failed:
       case PaymentOrderStatus.cancelled:
-        return AppColors.red;
+        return palette.statusDanger;
       case PaymentOrderStatus.refunded:
-        return AppColors.purple;
+        return palette.brandPrimary;
     }
   }
 

@@ -39,6 +39,7 @@ class _AcademicInfoStepState extends State<AcademicInfoStep> {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t.student;
     final bloc = context.read<StudentRegistrationBloc>();
     final palette = MentorXThemeColorPalette.light;
     return BlocBuilder<StudentRegistrationBloc, StudentRegistrationState>(
@@ -49,7 +50,7 @@ class _AcademicInfoStepState extends State<AcademicInfoStep> {
             FadeInDown(
               duration: const Duration(milliseconds: 400),
               child: Text(
-                'Academic Information',
+                t['academicInfoTitle'] ?? 'Academic Information',
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.w900,
                   color: palette.textPrimary,
@@ -60,7 +61,7 @@ class _AcademicInfoStepState extends State<AcademicInfoStep> {
             FadeInDown(
               duration: const Duration(milliseconds: 500),
               child: Text(
-                'Tell us about your current grade and study preferences to personalize your experience.',
+                t['academicInfoSubtitle'] ?? 'Tell us about your current grade and study preferences to personalize your experience.',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: palette.textSecondary,
                   height: 1.5,
@@ -76,7 +77,7 @@ class _AcademicInfoStepState extends State<AcademicInfoStep> {
             FadeInUp(
               duration: const Duration(milliseconds: 500),
               child: MentorXTextFormField(
-                label: 'School Name (Optional)',
+                label: t['schoolNameLabel'] ?? 'School Name',
                 icon: Icons.school_rounded,
                 controller: _schoolNameController,
                 onChanged: (value) =>
@@ -87,7 +88,7 @@ class _AcademicInfoStepState extends State<AcademicInfoStep> {
             FadeInUp(
               duration: const Duration(milliseconds: 600),
               child: MentorXTextFormField(
-                label: 'Education Department (Optional)',
+                label: t['educationAdminLabel'] ?? 'Education Department',
                 icon: Icons.domain_rounded,
                 controller: _educationDepartmentController,
                 onChanged: (value) => bloc.add(
@@ -105,7 +106,7 @@ class _AcademicInfoStepState extends State<AcademicInfoStep> {
               FadeInUp(
                 duration: const Duration(milliseconds: 400),
                 child: MentorXTextFormField(
-                  label: 'Center Name',
+                  label: t['centerLabel'] ?? 'Center Name',
                   icon: Icons.location_on_rounded,
                   controller: _centerNameController,
                   onChanged: (value) =>
@@ -119,17 +120,19 @@ class _AcademicInfoStepState extends State<AcademicInfoStep> {
     );
   }
 
+
   Widget _buildGradePicker(
     BuildContext context,
     StudentRegistrationState state,
     StudentRegistrationBloc bloc,
   ) {
+    final t = context.t.student;
     final palette = MentorXThemeColorPalette.light;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Current Grade',
+          t['gradeLabel'] ?? 'Current Grade',
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
             fontWeight: FontWeight.w800,
             color: palette.textPrimary,
@@ -165,7 +168,7 @@ class _AcademicInfoStepState extends State<AcademicInfoStep> {
             ),
           ),
           hint: Text(
-            'Select your grade',
+            t['gradeHint'] ?? 'Select your grade',
             style: TextStyle(color: palette.textTertiary),
           ),
           items: state.grades.map((grade) {
@@ -192,12 +195,13 @@ class _AcademicInfoStepState extends State<AcademicInfoStep> {
     StudentRegistrationState state,
     StudentRegistrationBloc bloc,
   ) {
+    final t = context.t.student;
     final palette = MentorXThemeColorPalette.light;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Study Preference',
+          t['studyTypeLabel'] ?? 'Study Preference',
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
             fontWeight: FontWeight.w800,
             color: palette.textPrimary,
@@ -215,7 +219,7 @@ class _AcademicInfoStepState extends State<AcademicInfoStep> {
               Expanded(
                 child: _buildToggleOption(
                   context,
-                  'Online Study',
+                  t['studyTypeOnline'] ?? 'Online Study',
                   Icons.laptop_chromebook_rounded,
                   state.isOnline,
                   () => bloc.add(
@@ -227,7 +231,7 @@ class _AcademicInfoStepState extends State<AcademicInfoStep> {
               Expanded(
                 child: _buildToggleOption(
                   context,
-                  'Center Study',
+                  t['studyTypeCenter'] ?? 'Center Study',
                   Icons.location_city_rounded,
                   !state.isOnline,
                   () => bloc.add(

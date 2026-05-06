@@ -182,6 +182,7 @@ final class RepositoriesFactory {
       cacheRepository: cacheRepository,
     );
     _httpClient = httpClient;
+    httpClient.setDefaultHeader('X-Device-Id', 'student-app');
     isHttpClientInitialized = true;
     return httpClient;
   }

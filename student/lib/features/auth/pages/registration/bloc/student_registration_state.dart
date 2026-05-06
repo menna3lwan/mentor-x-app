@@ -4,6 +4,7 @@ final class StudentRegistrationState extends Equatable {
   final int currentStep;
   final LoadingState loadingState;
   final String? errorMessage;
+  final int? tenantId;
 
   // Step 0: Initial Start
   final String firstName;
@@ -39,11 +40,13 @@ final class StudentRegistrationState extends Equatable {
   final String password;
   final String confirmPassword;
   final String? idCardPhotoPath;
+  final StudentApplicationInfoEntity? appInfo;
 
   const StudentRegistrationState({
     this.currentStep = 0,
     this.loadingState = LoadingState.initial,
     this.errorMessage,
+    this.tenantId,
     this.firstName = '',
     this.phone = '',
     this.parentPhone = '',
@@ -67,6 +70,7 @@ final class StudentRegistrationState extends Equatable {
     this.password = '',
     this.confirmPassword = '',
     this.idCardPhotoPath,
+    this.appInfo,
   });
 
   @override
@@ -74,6 +78,7 @@ final class StudentRegistrationState extends Equatable {
     currentStep,
     loadingState,
     errorMessage,
+    tenantId,
     firstName,
     phone,
     parentPhone,
@@ -97,12 +102,14 @@ final class StudentRegistrationState extends Equatable {
     password,
     confirmPassword,
     idCardPhotoPath,
+    appInfo,
   ];
 
   StudentRegistrationState copyWith({
     int? currentStep,
     LoadingState? loadingState,
     MentorXNullableValue<String?>? errorMessage,
+    int? tenantId,
     String? firstName,
     String? phone,
     String? parentPhone,
@@ -126,6 +133,7 @@ final class StudentRegistrationState extends Equatable {
     String? password,
     String? confirmPassword,
     MentorXNullableValue<String?>? idCardPhotoPath,
+    StudentApplicationInfoEntity? appInfo,
   }) {
     return StudentRegistrationState(
       currentStep: currentStep ?? this.currentStep,
@@ -133,6 +141,7 @@ final class StudentRegistrationState extends Equatable {
       errorMessage: errorMessage != null
           ? errorMessage.value
           : this.errorMessage,
+      tenantId: tenantId ?? this.tenantId,
       firstName: firstName ?? this.firstName,
       phone: phone ?? this.phone,
       parentPhone: parentPhone ?? this.parentPhone,
@@ -167,6 +176,7 @@ final class StudentRegistrationState extends Equatable {
       idCardPhotoPath: idCardPhotoPath != null
           ? idCardPhotoPath.value
           : this.idCardPhotoPath,
+      appInfo: appInfo ?? this.appInfo,
     );
   }
 }

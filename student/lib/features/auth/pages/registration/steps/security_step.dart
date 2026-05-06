@@ -39,6 +39,7 @@ class _SecurityStepState extends State<SecurityStep> {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t.student;
     final bloc = context.read<StudentRegistrationBloc>();
     final palette = MentorXThemeColorPalette.light;
     return BlocBuilder<StudentRegistrationBloc, StudentRegistrationState>(
@@ -49,7 +50,7 @@ class _SecurityStepState extends State<SecurityStep> {
             FadeInDown(
               duration: const Duration(milliseconds: 400),
               child: Text(
-                'Security & Identity',
+                t['securityTitle'] ?? 'Security & Identity',
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.w900,
                   color: palette.textPrimary,
@@ -60,7 +61,7 @@ class _SecurityStepState extends State<SecurityStep> {
             FadeInDown(
               duration: const Duration(milliseconds: 500),
               child: Text(
-                'Protect your account with a strong password and verify your identity with your National ID.',
+                t['securitySubtitle'] ?? 'Protect your account with a strong password and verify your identity with your National ID.',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: palette.textSecondary,
                   height: 1.5,
@@ -71,7 +72,8 @@ class _SecurityStepState extends State<SecurityStep> {
             FadeInUp(
               duration: const Duration(milliseconds: 400),
               child: MentorXTextFormField(
-                label: 'Password',
+                key: const Key('registration_password'),
+                label: t['passwordLabel'] ?? 'Password',
                 icon: Icons.lock_outline_rounded,
                 controller: _passwordController,
                 isPassword: true,
@@ -88,14 +90,15 @@ class _SecurityStepState extends State<SecurityStep> {
             FadeInUp(
               duration: const Duration(milliseconds: 600),
               child: MentorXTextFormField(
-                label: 'Confirm Password',
+                key: const Key('registration_confirm_password'),
+                label: t['confirmPasswordLabel'] ?? 'Confirm Password',
                 icon: Icons.lock_reset_rounded,
                 controller: _confirmPasswordController,
                 isPassword: true,
                 errorText:
                     state.password != state.confirmPassword &&
                         state.confirmPassword.isNotEmpty
-                    ? 'Passwords do not match'
+                    ? (t['passwordMismatch'] ?? 'Passwords do not match')
                     : null,
                 onChanged: (value) =>
                     bloc.add(StudentRegistrationConfirmPasswordChanged(value)),
@@ -113,6 +116,7 @@ class _SecurityStepState extends State<SecurityStep> {
   }
 
   Widget _buildPasswordStrength(BuildContext context, String password) {
+    final t = context.t.student;
     final palette = MentorXThemeColorPalette.light;
     final score = _passwordStrengthScore(password);
 
@@ -120,16 +124,16 @@ class _SecurityStepState extends State<SecurityStep> {
     final Color color;
     switch (score) {
       case <= 0.25:
-        label = 'Weak';
+        label = t['passwordWeak'] ?? 'Weak';
         color = palette.statusDanger;
       case <= 0.50:
-        label = 'Fair';
+        label = t['passwordFair'] ?? 'Fair';
         color = palette.statusWarning;
       case <= 0.75:
-        label = 'Good';
+        label = t['passwordGood'] ?? 'Good';
         color = Colors.orangeAccent;
       default:
-        label = 'Strong';
+        label = t['passwordStrong'] ?? 'Strong';
         color = palette.statusSuccess;
     }
 
@@ -178,12 +182,13 @@ class _SecurityStepState extends State<SecurityStep> {
     StudentRegistrationState state,
     StudentRegistrationBloc bloc,
   ) {
+    final t = context.t.student;
     final palette = MentorXThemeColorPalette.light;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'National ID Card Photo',
+          t['nationalIdPhotoLabel'] ?? 'National ID Card Photo',
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
             fontWeight: FontWeight.w800,
             color: palette.textPrimary,
@@ -224,7 +229,7 @@ class _SecurityStepState extends State<SecurityStep> {
                         ),
                         const Gap(16),
                         Text(
-                          'Upload Front Side of ID Card',
+                          t['uploadIdFront'] ?? 'Upload Front Side of ID Card',
                           style: Theme.of(context).textTheme.bodySmall
                               ?.copyWith(
                                 color: palette.textSecondary,

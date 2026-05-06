@@ -63,7 +63,6 @@ final class LoginBloc extends Bloc<LoginEvent, LoginState>
     on<LoginPhoneChanged>(_onPhoneChanged);
     on<LoginPasswordChanged>(_onPasswordChanged);
     on<LoginObscurePasswordToggled>(_onObscurePasswordToggled);
-    on<LoginRememberMeToggled>(_onRememberMeToggled);
     on<LoginSubmitted>(_onSubmitted);
   }
 
@@ -100,12 +99,6 @@ final class LoginBloc extends Bloc<LoginEvent, LoginState>
     emit(state.copyWith(obscurePassword: !state.obscurePassword));
   }
 
-  void _onRememberMeToggled(
-    LoginRememberMeToggled event,
-    Emitter<LoginState> emit,
-  ) {
-    emit(state.copyWith(rememberMe: !state.rememberMe));
-  }
 
   Future<void> _onSubmitted(
     LoginSubmitted event,

@@ -121,8 +121,9 @@ class TransactionsHistoryPage extends StatelessWidget {
                                 padding: const EdgeInsets.all(12),
                                 decoration: BoxDecoration(
                                   color: isCredit
-                                      ? Colors.green.withValues(alpha: 0.1)
-                                      : Colors.red.withValues(alpha: 0.1),
+                                      ? palette.statusSuccess.withValues(alpha: 0.1)
+                                      : palette.statusDanger.withValues(alpha: 0.1)
+                                  ,
                                   borderRadius: BorderRadius.circular(16),
                                 ),
                                 child: Icon(
@@ -130,7 +131,7 @@ class TransactionsHistoryPage extends StatelessWidget {
                                       ? Icons.add_rounded
                                       : Icons.remove_rounded,
                                   size: 20,
-                                  color: isCredit ? Colors.green : Colors.red,
+                                  color: isCredit ? palette.statusSuccess : palette.statusDanger,
                                 ),
                               ),
                               const SizedBox(width: 16),
@@ -200,8 +201,8 @@ class TransactionsHistoryPage extends StatelessWidget {
                                       fontSize: 18,
                                       fontWeight: FontWeight.w900,
                                       color: isCredit
-                                          ? Colors.green
-                                          : Colors.red,
+                                          ? palette.statusSuccess
+                                          : palette.statusDanger,
                                       letterSpacing: -0.5,
                                     ),
                                   ),
@@ -211,7 +212,7 @@ class TransactionsHistoryPage extends StatelessWidget {
                                       fontSize: 10,
                                       fontWeight: FontWeight.w800,
                                       color:
-                                          (isCredit ? Colors.green : Colors.red)
+                                          (isCredit ? palette.statusSuccess : palette.statusDanger)
                                               .withValues(alpha: 0.7),
                                     ),
                                   ),

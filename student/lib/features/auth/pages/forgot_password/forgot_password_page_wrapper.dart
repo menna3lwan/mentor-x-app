@@ -59,7 +59,7 @@ class _ForgotPasswordPageWrapperState extends State<ForgotPasswordPageWrapper> {
           >(
             listener: (context, event) {
               if (event is ForgotPasswordSuccessPresentationEvent) {
-                ResetPasswordPageRoute(phoneNumber: event.phone).go(context);
+                ResetPasswordPageRoute(phoneNumber: event.phone).push(context);
               }
             },
             child: BlocBuilder<ForgotPasswordBloc, ForgotPasswordState>(
@@ -82,7 +82,13 @@ class _ForgotPasswordPageWrapperState extends State<ForgotPasswordPageWrapper> {
                       bloc.add(const ForgotPasswordSubmitted());
                     }
                   },
-                  onBack: () => context.pop(),
+                  onBack: () {
+                    if (context.canPop()) {
+                      context.pop();
+                    } else {
+                      const LoginPageRoute().go(context);
+                    }
+                  },
                 );
               },
             ),

@@ -68,6 +68,11 @@ final class StudentRegistrationResendOtpRequested
   const StudentRegistrationResendOtpRequested();
 }
 
+final class StudentRegistrationVerifyOtpRequested
+    extends StudentRegistrationEvent {
+  const StudentRegistrationVerifyOtpRequested();
+}
+
 // Step 2: Full Personal
 final class StudentRegistrationSecondNameChanged
     extends StudentRegistrationEvent {

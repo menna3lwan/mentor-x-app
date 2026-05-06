@@ -37,7 +37,9 @@ final class DioAssignmentRepository
   Future<List<AssignmentEntity>> getAssignments() async {
     try {
       final response = await httpClient.get('/api/assignments');
-      final list = asList(asMap(response.data)['data'] ?? response.data);
+      final list = asList(asMap(response.data)['data'] ??
+          asMap(response.data)['content'] ??
+          response.data);
       return list.map((e) => AssignmentModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
@@ -55,7 +57,9 @@ final class DioAssignmentRepository
       final response = await httpClient.get(
         '/api/assignment-questions/assignment/$assignmentId',
       );
-      final data = asList(asMap(response.data)['data'] ?? response.data);
+      final data = asList(asMap(response.data)['data'] ??
+          asMap(response.data)['content'] ??
+          response.data);
       return data.map((e) => QuizQuestionModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
@@ -137,7 +141,9 @@ final class DioAssignmentRepository
       final response = await httpClient.get(
         '/api/assignment-attempts/student/$studentId',
       );
-      final data = asList(asMap(response.data)['data'] ?? response.data);
+      final data = asList(asMap(response.data)['data'] ??
+          asMap(response.data)['content'] ??
+          response.data);
       return data
           .map((e) => AssignmentSubmissionModel.fromJson(asMap(e)))
           .toList();
@@ -157,7 +163,9 @@ final class DioAssignmentRepository
       final response = await httpClient.get(
         '/api/assignment-attempts/assignment/$assignmentId',
       );
-      final data = asList(asMap(response.data)['data'] ?? response.data);
+      final data = asList(asMap(response.data)['data'] ??
+          asMap(response.data)['content'] ??
+          response.data);
       return data
           .map((e) => AssignmentSubmissionModel.fromJson(asMap(e)))
           .toList();

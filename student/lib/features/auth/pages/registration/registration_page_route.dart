@@ -11,7 +11,7 @@ final class RegistrationPageRoute extends GoRouteData
       create: (context) => StudentRegistrationBloc(
         registrationRepository: context.read<StudentRegistrationRepository>(),
         tenantId: '1',
-      ),
+      )..add(const StudentRegistrationBootstrapRequested()),
       child: const RegistrationPageWrapper(),
     );
   }

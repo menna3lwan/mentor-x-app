@@ -5,12 +5,17 @@ import 'package:dio/dio.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 
 part 'src/interceptors/refresh_token_interceptor.dart';
+part 'src/interceptors/header_interceptor.dart';
 
-final class DioHttpClient implements HttpClient, LocalizedClient {
+final class DioHttpClient implements HttpClient {
   final Dio _dio;
   final CacheRepository _cacheRepository;
   final Map<String, String> _defaultHeaders = {};
+  
+  String? _accessToken;
   String? _refreshToken;
+  String? _userId;
+  String _languageCode = 'ar';
 
 
   DioHttpClient({
@@ -18,18 +23,24 @@ final class DioHttpClient implements HttpClient, LocalizedClient {
     required CacheRepository cacheRepository,
   }) : _dio = Dio(BaseOptions(baseUrl: baseUrl)),
        _cacheRepository = cacheRepository {
+    _registerInterceptors(baseUrl);
     _loadCachedToken();
-    _registerRefreshTokenInterceptor(baseUrl);
   }
 
-  void _registerRefreshTokenInterceptor(String baseUrl) {
+  void _registerInterceptors(String baseUrl) {
+    // 1. Header Injection (Token, Device ID, Locale)
+    addInterceptor(HeaderInterceptor(httpClient: this));
+    
+    // 2. Token Refresh Logic
     addInterceptor(
       RefreshTokenInterceptor(
         dio: _dio,
         cacheRepository: _cacheRepository,
         baseUrl: baseUrl,
         onTokensUpdated: (token, refreshToken) =>
-            setBearerToken(token, refreshToken: refreshToken),
+            setAccessToken(token).then((_) {
+              if (refreshToken != null) setRefreshToken(refreshToken);
+            }),
       ),
     );
   }
@@ -39,9 +50,16 @@ final class DioHttpClient implements HttpClient, LocalizedClient {
     _dio.interceptors.add(interceptor);
   }
 
+  String get languageCode => _languageCode;
+
+  set languageCode(String code) {
+    _languageCode = code;
+    setDefaultHeader('Accept-Language', code);
+  }
+
   @override
   void setLocale(String languageCode) {
-    setDefaultHeader('Accept-Language', languageCode);
+    this.languageCode = languageCode;
   }
 
   /// Loads cached token and sets it as bearer token
@@ -59,14 +77,16 @@ final class DioHttpClient implements HttpClient, LocalizedClient {
 
     if (cachedToken != null && cachedToken.isNotEmpty) {
       if (_isJwtTokenExpired(cachedToken)) {
-        await _cacheRepository.remove(CacheKeys.accessToken);
-        await _cacheRepository.remove(CacheKeys.refreshToken);
-        return;
+        await clearTokens();
+      } else {
+        await setAccessToken(cachedToken);
+        if (cachedRefreshToken != null) {
+          await setRefreshToken(cachedRefreshToken);
+        }
       }
-
-      setBearerToken(cachedToken, refreshToken: cachedRefreshToken);
       return;
     }
+
   }
 
   /// Processes response and caches token if present
@@ -109,10 +129,11 @@ final class DioHttpClient implements HttpClient, LocalizedClient {
 
     if (accessToken != null && _isJwtToken(accessToken)) {
       if (_isJwtTokenExpired(accessToken)) {
-        removeBearerToken();
+        clearTokens();
         return;
       }
-      setBearerToken(accessToken, refreshToken: refreshToken);
+      setAccessToken(accessToken);
+      if (refreshToken != null) setRefreshToken(refreshToken);
       return;
     }
 
@@ -120,8 +141,6 @@ final class DioHttpClient implements HttpClient, LocalizedClient {
       _cacheRepository.put(CacheKeys.refreshToken, refreshToken).ignore();
     }
   }
-
-  String? _userId;
 
   @override
   String? get userId => _userId;
@@ -319,67 +338,65 @@ final class DioHttpClient implements HttpClient, LocalizedClient {
   }
 
   @override
-  void setBearerToken(String token, {String? refreshToken}) {
-    _defaultHeaders['Authorization'] = 'Bearer $token';
+  String? get accessToken => _accessToken;
+
+  @override
+  String? get refreshToken => _refreshToken;
+
+  @override
+  bool get isAuthenticated => _accessToken != null && !(_isJwtTokenExpired(_accessToken!));
+
+  @override
+  Future<void> setAccessToken(String token) async {
+    _accessToken = token;
     _userId = _extractUserIdFromJwt(token);
-    _cacheRepository.put(CacheKeys.accessToken, token).ignore();
-
-    if (refreshToken != null && refreshToken.isNotEmpty) {
-      _refreshToken = refreshToken;
-      _cacheRepository.put(CacheKeys.refreshToken, refreshToken).ignore();
-    }
+    _dio.options.headers['Authorization'] = 'Bearer $token';
+    _defaultHeaders['Authorization'] = 'Bearer $token';
+    await _cacheRepository.put(CacheKeys.accessToken, token);
   }
 
   @override
-  void removeBearerToken() {
-    _defaultHeaders.remove('Authorization');
-    _userId = null;
+  Future<void> setRefreshToken(String token) async {
+    _refreshToken = token;
+    await _cacheRepository.put(CacheKeys.refreshToken, token);
+  }
+
+  @override
+  Future<void> clearTokens() async {
+    _accessToken = null;
     _refreshToken = null;
-    _cacheRepository.remove(CacheKeys.accessToken).ignore();
-    _cacheRepository.remove(CacheKeys.refreshToken).ignore();
+    _userId = null;
+    _dio.options.headers.remove('Authorization');
+    _defaultHeaders.remove('Authorization');
+    await _cacheRepository.remove(CacheKeys.accessToken);
+    await _cacheRepository.remove(CacheKeys.refreshToken);
   }
 
-  @override
-  String? getBearerToken() {
-    final authHeader = _defaultHeaders['Authorization'];
-    if (authHeader != null && authHeader.startsWith('Bearer ')) {
-      return authHeader.substring(7); // Remove 'Bearer ' prefix
-    }
-    return null;
-  }
 
-  @override
-  String? getRefreshToken() => _refreshToken;
-
-  @override
-  Future<bool> isAuthenticated() async {
-    // Check if there's a token in memory first
-    final memoryToken = getBearerToken();
-    if (memoryToken != null && memoryToken.isNotEmpty) {
-      if (_isJwtTokenExpired(memoryToken)) {
-        removeBearerToken();
-        return false;
-      }
-
+  Future<bool> tryRestoreSession() async {
+    if (_accessToken != null && !(_isJwtTokenExpired(_accessToken!))) {
       return true;
     }
 
-    // Check cached token
     final cachedToken = await _cacheRepository.get(CacheKeys.accessToken);
     if (cachedToken != null && cachedToken.isNotEmpty) {
       if (_isJwtTokenExpired(cachedToken)) {
-        await _cacheRepository.remove(CacheKeys.accessToken);
-        await _cacheRepository.remove(CacheKeys.refreshToken);
+        await clearTokens();
         return false;
       }
 
       final cachedRefreshToken = await _cacheRepository.get(
         CacheKeys.refreshToken,
       );
-      setBearerToken(cachedToken, refreshToken: cachedRefreshToken);
+      
+      _accessToken = cachedToken;
+      _refreshToken = cachedRefreshToken;
+      _userId = _extractUserIdFromJwt(cachedToken);
+      _dio.options.headers['Authorization'] = 'Bearer $cachedToken';
+      _defaultHeaders['Authorization'] = 'Bearer $cachedToken';
+      
       return true;
     }
-
     return false;
   }
 
@@ -608,7 +625,7 @@ final class DioHttpClient implements HttpClient, LocalizedClient {
     await _cacheRepository.remove(CacheKeys.accessToken);
     await _cacheRepository.remove(CacheKeys.refreshToken);
     await _cacheRepository.remove(CacheKeys.deviceId);
-    removeBearerToken();
+    await clearTokens();
     removeDefaultHeader('X-Device-Id');
   }
 

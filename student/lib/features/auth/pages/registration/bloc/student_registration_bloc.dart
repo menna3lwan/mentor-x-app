@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
+import 'package:mentorx_ui/mentorx_ui.dart';
 import '../../../../../core/core.dart';
 
 part 'student_registration_event.dart';
@@ -39,7 +40,7 @@ final class StudentRegistrationBloc
     required StudentRegistrationRepository registrationRepository,
     required String tenantId,
   }) : _registrationRepository = registrationRepository,
-       super(const StudentRegistrationState()) {
+       super(StudentRegistrationState(tenantId: int.tryParse(tenantId))) {
     on<StudentRegistrationBootstrapRequested>(_onBootstrapRequested);
     on<StudentRegistrationStepChanged>(_onStepChanged);
     on<StudentRegistrationNextStepRequested>(_onNextStepRequested);
@@ -61,6 +62,7 @@ final class StudentRegistrationBloc
       (event, emit) => emit(state.copyWith(otp: event.value)),
     );
     on<StudentRegistrationResendOtpRequested>(_onResendOtpRequested);
+    on<StudentRegistrationVerifyOtpRequested>(_onVerifyOtpRequested);
 
     // Step 2: Full Personal
     on<StudentRegistrationSecondNameChanged>(
@@ -116,8 +118,6 @@ final class StudentRegistrationBloc
     );
 
     on<StudentRegistrationSubmitted>(_onSubmitted);
-
-    add(const StudentRegistrationBootstrapRequested());
   }
 
   void _onPhoneChanged(
@@ -151,24 +151,27 @@ final class StudentRegistrationBloc
       final governorates = await _registrationRepository.getGovernorates();
       final appInfo = await _registrationRepository.getApplicationInfo();
 
-      final gradesRaw = appInfo['grades'] as List?;
-      final grades =
-          gradesRaw?.map((g) {
-            final map = g as Map<String, dynamic>;
-            return GradeEntity(
-              id: map['id']?.toString() ?? '',
-              name: map['name']?.toString() ?? '',
-            );
-          }).toList() ??
-          [];
-
       emit(
         state.copyWith(
           governorates: governorates,
-          grades: grades,
+          grades: appInfo.grades,
+          appInfo: appInfo,
         ),
       );
-    } catch (_) {}
+    } catch (e) {
+      emit(
+        state.copyWith(
+          loadingState: LoadingState.error,
+          errorMessage:
+              MentorXNullableValue('Failed to load application data: $e'),
+        ),
+      );
+      emitPresentation(
+        StudentRegistrationFailurePresentationEvent(
+          'Failed to load application data: $e',
+        ),
+      );
+    }
   }
 
   void _onStepChanged(
@@ -191,9 +194,7 @@ final class StudentRegistrationBloc
     emit(state.copyWith(loadingState: LoadingState.loading));
     try {
       await _registrationRepository.startRegistration(
-        firstName: state.firstName,
         phone: state.phone,
-        parentPhone: state.parentPhone,
       );
       emit(
         state.copyWith(
@@ -230,12 +231,47 @@ final class StudentRegistrationBloc
     }
   }
 
+  Future<void> _onVerifyOtpRequested(
+    StudentRegistrationVerifyOtpRequested event,
+    Emitter<StudentRegistrationState> emit,
+  ) async {
+    emit(state.copyWith(loadingState: LoadingState.loading));
+    try {
+      await _registrationRepository.verifyOtp(
+        phone: state.phone,
+        otp: state.otp,
+        tenantId: state.tenantId,
+      );
+      emit(
+        state.copyWith(
+          loadingState: LoadingState.loaded,
+          currentStep: 2, // Move to Profile
+        ),
+      );
+    } catch (e) {
+      emit(
+        state.copyWith(
+          loadingState: LoadingState.error,
+          errorMessage: MentorXNullableValue(e.toString()),
+        ),
+      );
+      emitPresentation(
+        StudentRegistrationFailurePresentationEvent(e.toString()),
+      );
+    }
+  }
+
   void _onNextStepRequested(
     StudentRegistrationNextStepRequested event,
     Emitter<StudentRegistrationState> emit,
   ) {
     if (state.currentStep == 0 && !state.isRegistrationStarted) {
       add(const StudentRegistrationStartRequested());
+      return;
+    }
+
+    if (state.currentStep == 1) {
+      add(const StudentRegistrationVerifyOtpRequested());
       return;
     }
 
@@ -280,7 +316,7 @@ final class StudentRegistrationBloc
     );
     if (event.value != null) {
       try {
-        final areas = await _registrationRepository.getAreas(event.value!.name);
+        final areas = await _registrationRepository.getAreas(event.value!.id);
         emit(state.copyWith(areas: areas));
       } catch (_) {}
     }
@@ -303,14 +339,14 @@ final class StudentRegistrationBloc
     emit(state.copyWith(loadingState: LoadingState.loading));
 
     try {
-      await _registrationRepository.completeRegistration(
+      final response = await _registrationRepository.completeRegistration(
         firstName: state.firstName,
         secondName: state.secondName,
         thirdName: state.thirdName,
         fourthName: state.fourthName,
-        governorate: state.selectedGovernorate!.name,
+        governorateId: state.selectedGovernorate!.id,
         area: state.selectedArea!,
-        grade: state.selectedGrade!.name,
+        gradeId: state.selectedGrade!.id,
         online: state.isOnline,
         otp: state.otp,
         parentPhone: state.parentPhone,
@@ -327,7 +363,11 @@ final class StudentRegistrationBloc
       );
 
       emit(state.copyWith(loadingState: LoadingState.loaded));
-      emitPresentation(StudentRegistrationSuccessPresentationEvent());
+      emitPresentation(
+        StudentRegistrationSuccessPresentationEvent(
+          studentCode: response.studentCode,
+        ),
+      );
     } catch (e) {
       emit(
         state.copyWith(
@@ -345,53 +385,53 @@ final class StudentRegistrationBloc
     switch (step) {
       case 0:
         if (state.firstName.trim().length < 2) {
-          return 'First name is required.';
+          return t.student['firstNameRequired'] ?? 'First name is required.';
         }
         if (!_isValidEgyptPhone(state.phone)) {
-          return 'Please enter a valid phone number.';
+          return t.student['invalidPhone'] ?? 'Please enter a valid phone number.';
         }
         if (!state.isPhoneUnique) {
-          return 'This phone number is already registered.';
+          return t.student['phoneAlreadyRegistered'] ?? 'This phone number is already registered.';
         }
         if (!_isValidEgyptPhone(state.parentPhone)) {
-          return 'Please enter a valid parent phone number.';
+          return t.student['invalidParentPhone'] ?? 'Please enter a valid parent phone number.';
         }
         if (state.parentPhone == state.phone) {
-          return 'Parent phone number must be different from student phone.';
+          return t.student['parentPhoneDifferent'] ?? 'Parent phone number must be different from student phone.';
         }
         break;
       case 1:
-        if (state.otp.length < 4) {
-          return 'Please enter a valid OTP.';
+        if (state.otp.length < 6) {
+          return t.student['invalidOtp'] ?? 'Please enter a valid 6-digit OTP.';
         }
         break;
       case 2:
-        if (state.secondName.trim().isEmpty) return 'Second name is required.';
-        if (state.thirdName.trim().isEmpty) return 'Third name is required.';
-        if (state.fourthName.trim().isEmpty) return 'Fourth name is required.';
+        if (state.secondName.trim().isEmpty) return t.student['secondNameRequired'] ?? 'Second name is required.';
+        if (state.thirdName.trim().isEmpty) return t.student['thirdNameRequired'] ?? 'Third name is required.';
+        if (state.fourthName.trim().isEmpty) return t.student['fourthNameRequired'] ?? 'Fourth name is required.';
         break;
       case 3:
         if (state.selectedGrade == null) {
-          return 'Please select your grade.';
+          return t.student['gradeRequired'] ?? 'Please select your grade.';
         }
         if (!state.isOnline && (state.centerName?.isEmpty ?? true)) {
-          return 'Please enter the center name.';
+          return t.student['centerNameRequired'] ?? 'Please enter the center name.';
         }
         break;
       case 4:
         if (state.selectedGovernorate == null) {
-          return 'Please select your governorate.';
+          return t.student['governorateRequired'] ?? 'Please select your governorate.';
         }
         if (state.selectedArea == null) {
-          return 'Please select your area.';
+          return t.student['areaRequired'] ?? 'Please select your area.';
         }
         break;
       case 5:
         if (state.password != state.confirmPassword) {
-          return 'Passwords do not match.';
+          return t.student['passwordMismatch'] ?? 'Passwords do not match.';
         }
         if (state.password.length < 6) {
-          return 'Password must be at least 6 characters.';
+          return t.student['passwordLength'] ?? 'Password must be at least 6 characters.';
         }
         break;
     }

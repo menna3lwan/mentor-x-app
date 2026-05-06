@@ -19,23 +19,41 @@ final class DioStudentRegistrationRepository
 
   @override
   Future<void> startRegistration({
-    required String firstName,
     required String phone,
-    required String parentPhone,
   }) async {
     try {
       await httpClient.post(
         '/api/student/register/start',
         data: {
-          'firstName': firstName,
           'phone': phone,
-          'parentPhone': parentPhone,
         },
       );
     } on HttpClientResponse catch (e) {
       handleHttpClientErrorResponse(
         e,
         defaultCode: _ExceptionCode.failedToStartRegistration,
+      );
+    }
+  }
+
+  @override
+  Future<void> verifyOtp({
+    required String phone,
+    required String otp,
+    int? tenantId,
+  }) async {
+    try {
+      await httpClient.post(
+        '/api/auth/verify-otp',
+        data: {
+          'phone': phone,
+          'otp': int.tryParse(otp) ?? otp,
+        },
+      );
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: _ExceptionCode.invalidOtp,
       );
     }
   }
@@ -58,14 +76,14 @@ final class DioStudentRegistrationRepository
   }
 
   @override
-  Future<void> completeRegistration({
+  Future<StudentRegistrationResponseEntity> completeRegistration({
     required String firstName,
     required String secondName,
     required String thirdName,
     required String fourthName,
-    required String governorate,
+    required String governorateId,
     required String area,
-    required String grade,
+    required String gradeId,
     required bool online,
     required String otp,
     required String parentPhone,
@@ -84,15 +102,14 @@ final class DioStudentRegistrationRepository
         'secondName': secondName,
         'thirdName': thirdName,
         'fourthName': fourthName,
-        'governorate': governorate,
+        'governorate': governorateId,
         'area': area,
-        'grade': grade,
+        'grade': gradeId,
         'online': online,
-        'otp': otp,
+        'otp': int.tryParse(otp) ?? otp,
         'parentPhone': parentPhone,
         'phone': phone,
         'password': password,
-        'confirmPassword': confirmPassword,
         if (schoolName != null) 'schoolName': schoolName,
         if (educationDepartment != null) 'educationDepartment': educationDepartment,
         if (centerName != null) 'centerName': centerName,
@@ -106,12 +123,21 @@ final class DioStudentRegistrationRepository
         files['identityDocument'] = [identityDocumentPath];
       }
 
-      await httpClient.postMultipart(
+      final response = await httpClient.postMultipart(
         '/api/student/register/complete',
         data: {
           'data': jsonEncode(requestData),
         },
         files: files,
+      );
+
+      final data = asMap(response.data);
+      final responseData = asMap(data['data'] ?? data);
+      
+      return StudentRegistrationResponseEntity(
+        studentCode: stringOrNull(responseData['studentCode'] ?? responseData['student_code']),
+        token: stringOrNull(responseData['token']),
+        status: stringOrNull(responseData['status']) ?? 'pending',
       );
     } on HttpClientResponse catch (e) {
       handleHttpClientErrorResponse(
@@ -124,18 +150,11 @@ final class DioStudentRegistrationRepository
   @override
   Future<List<GovernorateEntity>> getGovernorates() async {
     try {
-      final response = await httpClient.get('/api/student/register/governorates');
+      final response = await httpClient.get(
+        '/api/student/register/governorates',
+      );
       final data = asList(asMap(response.data)['data'] ?? asMap(response.data)['content'] ?? response.data);
-      return data.map((item) {
-        final map = asMap(item);
-        if (item is String) {
-          return GovernorateEntity(id: item, name: item);
-        }
-        return GovernorateEntity(
-          id: stringOrEmpty(map['id'] ?? map['name']),
-          name: stringOrEmpty(map['name']),
-        );
-      }).toList();
+      return data.map((item) => GovernorateModel.fromJson(asMap(item))).toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
@@ -145,10 +164,10 @@ final class DioStudentRegistrationRepository
   }
 
   @override
-  Future<List<String>> getAreas(String governorate) async {
+  Future<List<String>> getAreas(String governorateId) async {
     try {
       final response = await httpClient.get(
-        '/api/student/register/areas/$governorate',
+        '/api/student/register/areas/$governorateId',
       );
       final data = asList(asMap(response.data)['data'] ?? asMap(response.data)['content'] ?? response.data);
       return data.map((item) => item.toString()).toList();
@@ -161,10 +180,12 @@ final class DioStudentRegistrationRepository
   }
 
   @override
-  Future<Map<String, dynamic>> getApplicationInfo() async {
+  Future<StudentApplicationInfoEntity> getApplicationInfo() async {
     try {
-      final response = await httpClient.get('/api/student/register/application-info');
-      return asMap(response.data);
+      final response = await httpClient.get(
+        '/api/student/register/application-info',
+      );
+      return StudentApplicationInfoModel.fromJson(asMap(response.data));
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
@@ -180,7 +201,9 @@ final class DioStudentRegistrationRepository
         '/api/student/register/check-phone/$phone',
       );
       final data = asMap(response.data);
-      return boolOrNull(data['available']) ?? true;
+      final isAvailable = boolOrNull(data['available']) ?? 
+                         !(boolOrNull(data['exists']) ?? false);
+      return isAvailable;
     } on HttpClientResponse catch (e) {
       if (e.statusCode == 409) return false;
       return handleHttpClientErrorResponse(

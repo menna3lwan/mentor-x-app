@@ -29,8 +29,8 @@ final class DioNotificationRepository
         },
       );
 
-      final list = asList(asMap(response.data)['content'] ??
-          asMap(response.data)['data'] ??
+      final list = asList(asMap(response.data)['data'] ??
+          asMap(response.data)['content'] ??
           response.data);
       return list.map((e) => NotificationModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
@@ -81,8 +81,10 @@ final class DioNotificationRepository
   Future<int> getUnreadCount() async {
     try {
       final response = await httpClient.get('/api/notifications/unread-count');
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
-      return (data['count'] as num?)?.toInt() ?? (data is num ? data.toInt() : 0);
+      final rawData = asMap(response.data)['data'] ?? response.data;
+      if (rawData is num) return rawData.toInt();
+      if (rawData is Map) return (rawData['count'] as num?)?.toInt() ?? 0;
+      return 0;
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,

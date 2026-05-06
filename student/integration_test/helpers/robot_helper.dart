@@ -16,6 +16,67 @@ extension RobotHelper on PatrolIntegrationTester {
     await pump(const Duration(seconds: 2));
   }
 
+  Future<void> enterRegistrationStartInfo({
+    required String firstName,
+    required String phone,
+    required String parentPhone,
+  }) async {
+    await this(TextFormField).at(0).enterText(firstName);
+    await this(TextFormField).at(1).enterText(phone);
+    await this(TextFormField).at(2).enterText(parentPhone);
+  }
+
+  Future<void> enterOtp(String otp) async {
+    // Pinput usually uses one editable text field internally or multiple
+    // Patrol's enterText on Pinput usually works if it finds the internal TextField
+    await this(TextFormField).enterText(otp);
+    await pump(const Duration(seconds: 1));
+  }
+
+  Future<void> enterRegistrationPersonalInfo({
+    required String secondName,
+    required String thirdName,
+    required String fourthName,
+  }) async {
+    await this(TextFormField).at(0).enterText(secondName);
+    await this(TextFormField).at(1).enterText(thirdName);
+    await this(TextFormField).at(2).enterText(fourthName);
+  }
+
+  Future<void> selectRegistrationGrade(String gradeName) async {
+    // Assuming MentorXGradePicker or similar shows text
+    await tapText(gradeName);
+  }
+
+  Future<void> selectRegistrationGovernorate(String govName) async {
+    await tapText(govName);
+  }
+
+  Future<void> selectRegistrationArea(String areaName) async {
+    await tapText(areaName);
+  }
+
+  Future<void> enterRegistrationSecurity({
+    required String password,
+    required String confirmPassword,
+  }) async {
+    await this(TextFormField).at(0).enterText(password);
+    await this(TextFormField).at(1).enterText(confirmPassword);
+  }
+
+  Future<void> tapContinue() async {
+    // The "Continue" button is a MentorXButton which is likely an ElevatedButton or similar
+    // We can also find it by text if we know the locale, but for tests we might use types or keys
+    if (this('Continue').exists) {
+      await tapText('Continue');
+    } else if (this('Verify & Continue').exists) {
+      await tapText('Verify & Continue');
+    } else {
+      await this(ElevatedButton).at(0).tap();
+    }
+    await pump(const Duration(seconds: 2));
+  }
+
   Future<void> tapBottomNav(int index) async {
     // In our custom shell, it's a Row of GestureDetector widgets inside a Container at the bottom
     await this(GestureDetector).at(index).tap();

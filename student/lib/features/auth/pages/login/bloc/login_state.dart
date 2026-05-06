@@ -4,7 +4,6 @@ final class LoginState extends Equatable {
   final String phoneNumber;
   final String password;
   final bool obscurePassword;
-  final bool rememberMe;
   final LoadingState loadingState;
   final String? errorMessage;
 
@@ -12,7 +11,6 @@ final class LoginState extends Equatable {
     required this.phoneNumber,
     required this.password,
     required this.obscurePassword,
-    required this.rememberMe,
     required this.loadingState,
     this.errorMessage,
   });
@@ -21,7 +19,6 @@ final class LoginState extends Equatable {
     phoneNumber: '',
     password: '',
     obscurePassword: true,
-    rememberMe: false,
     loadingState: LoadingState.initial,
   );
 
@@ -31,7 +28,6 @@ final class LoginState extends Equatable {
     String? phoneNumber,
     String? password,
     bool? obscurePassword,
-    bool? rememberMe,
     LoadingState? loadingState,
     String? errorMessage,
   }) {
@@ -39,7 +35,6 @@ final class LoginState extends Equatable {
       phoneNumber: phoneNumber ?? this.phoneNumber,
       password: password ?? this.password,
       obscurePassword: obscurePassword ?? this.obscurePassword,
-      rememberMe: rememberMe ?? this.rememberMe,
       loadingState: loadingState ?? this.loadingState,
       errorMessage: errorMessage,
     );
@@ -50,7 +45,6 @@ final class LoginState extends Equatable {
     phoneNumber,
     password,
     obscurePassword,
-    rememberMe,
     loadingState,
     errorMessage,
   ];

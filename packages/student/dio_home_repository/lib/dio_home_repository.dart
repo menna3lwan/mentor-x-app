@@ -21,7 +21,7 @@ final class DioStudentHomeRepository
   Future<WalletSummaryEntity> getWalletSummary() async {
     try {
       final response = await httpClient.get('/api/payment/wallet/balance');
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final data = asMap(response.data)["content"] ?? asMap(response.data);
       return WalletSummaryModel.fromJson(data);
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
@@ -35,7 +35,7 @@ final class DioStudentHomeRepository
   Future<int> getUnreadNotificationsCount() async {
     try {
       final response = await httpClient.get('/api/notifications/unread-count');
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final data = asMap(response.data)["content"] ?? asMap(response.data);
       return intOrNull(data['count']) ?? 0;
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
@@ -50,15 +50,15 @@ final class DioStudentHomeRepository
   Future<List<BannerEntity>> getHomeBanners({String? gradeId}) async {
     try {
       final response = await httpClient.get(
-        '/api/banners',
+        '/api/banners/active',
         queryParameters: {
           'placement': 'home',
           if (gradeId != null) 'grade_id': gradeId,
         },
       );
 
-      final list = asList(asMap(response.data)['content'] ??
-          asMap(response.data)['data'] ??
+      final list = asList(asMap(response.data)['data'] ??
+          asMap(response.data)['content'] ??
           response.data);
       return list
           .map(asMap)
@@ -66,6 +66,7 @@ final class DioStudentHomeRepository
           .where((banner) => banner.id.isNotEmpty && banner.imageUrl.isNotEmpty)
           .toList();
     } on HttpClientResponse catch (e) {
+      if (e.statusCode == 403) return [];
       return handleHttpClientErrorResponse(
         e,
         defaultCode: StudentHomeRepositoryExceptionCode.failedToLoadBanners,
@@ -84,8 +85,8 @@ final class DioStudentHomeRepository
         },
       );
 
-      final content = asList(asMap(response.data)['content'] ??
-          asMap(response.data)['data'] ??
+      final content = asList(asMap(response.data)['data'] ??
+          asMap(response.data)['content'] ??
           response.data);
       return content
           .map(asMap)
@@ -113,8 +114,8 @@ final class DioStudentHomeRepository
         },
       );
 
-      final content = asList(asMap(response.data)['content'] ??
-          asMap(response.data)['data'] ??
+      final content = asList(asMap(response.data)['data'] ??
+          asMap(response.data)['content'] ??
           response.data);
       return content
           .map(asMap)
@@ -132,12 +133,12 @@ final class DioStudentHomeRepository
   Future<List<AnnouncementEntity>> getRecentAnnouncements() async {
     try {
       final response = await httpClient.get(
-        '/api/announcements',
+        '/api/announcements/active',
         queryParameters: {'limit': 3},
       );
 
-      final list = asList(asMap(response.data)['content'] ??
-          asMap(response.data)['data'] ??
+      final list = asList(asMap(response.data)['data'] ??
+          asMap(response.data)['content'] ??
           response.data);
 
       return list
@@ -167,7 +168,7 @@ final class DioStudentHomeRepository
   Future<BannerEntity> createBanner(Map<String, dynamic> data) async {
     try {
       final response = await httpClient.post('/api/banners', data: data);
-      final responseData = asMap(response.data)['data'] ?? asMap(response.data);
+      final responseData = asMap(response.data)["content"] ?? asMap(response.data);
       return BannerModel.fromJson(responseData);
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(e, defaultCode: StudentHomeRepositoryExceptionCode.unknown);

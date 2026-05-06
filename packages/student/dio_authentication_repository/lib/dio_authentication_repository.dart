@@ -95,7 +95,7 @@ final class DioAuthenticationRepository
   @override
   Future<StudentEntity?> getCurrentUser() async {
     try {
-      final isAuthenticated = await httpClient.isAuthenticated();
+      final isAuthenticated = httpClient.isAuthenticated;
       if (!isAuthenticated) return null;
 
       final response = await _getCurrentUserResponse();
@@ -199,9 +199,10 @@ final class DioAuthenticationRepository
 
   Future<void> _clearLocalAuthSession() async {
     await _deleteCachedUser();
-    httpClient.removeBearerToken();
+    await httpClient.clearTokens();
     clearOtpVerificationContext();
   }
+
 
   @override
   Future<StudentEntity> loginWithPassword({
@@ -329,8 +330,13 @@ final class DioAuthenticationRepository
       throw _Exception(code: _ExceptionCode.invalidPhoneNumber);
     }
 
+    final otpInt = int.tryParse(otp);
+    if (otpInt == null) {
+      throw _Exception(code: _ExceptionCode.invalidOtp);
+    }
+
     try {
-      final response = await _verifyOtpResponse(phone, otp);
+      final response = await _verifyOtpResponse(phone, otpInt);
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       _setTokensIfPresent(data);
 
@@ -376,7 +382,7 @@ final class DioAuthenticationRepository
   @override
   Future<void> refreshToken() async {
     try {
-      final currentRefreshToken = httpClient.getRefreshToken();
+      final currentRefreshToken = httpClient.refreshToken;
       if (currentRefreshToken == null || currentRefreshToken.isEmpty) {
         throw AuthenticationRepositoryException(
           code: AuthenticationRepositoryExceptionCode.failedToRefreshToken,
@@ -425,12 +431,27 @@ final class DioAuthenticationRepository
     try {
       final response = await httpClient.get('/api/auth/session-status');
 
-      final user = _extractStudentFromResponse(response.data);
+      var user = _extractStudentFromResponse(response.data);
       if (user == null) {
-        throw _Exception(
-          code: _ExceptionCode.unknown,
-          message: 'Account status payload was missing user details.',
-        );
+        // Fallback: If session status says we have a session, create a skeleton user
+        final data = asMap(response.data);
+        if (boolOrFalse(data['hasSession'])) {
+          user = StudentEntity(
+            id: stringOrNull(data['studentCode']) ?? '',
+            firstName: 'Student',
+            lastName: stringOrNull(data['studentCode']) ?? '',
+            phoneNumber: '',
+            status: _parseStatus(stringOrNull(data['status'])) ?? StudentStatus.active,
+            studentCode: stringOrNull(data['studentCode']),
+            createdAt: DateTime.now(),
+            updatedAt: DateTime.now(),
+          );
+        } else {
+          throw _Exception(
+            code: _ExceptionCode.unknown,
+            message: 'Account status payload was missing user details.',
+          );
+        }
       }
 
       await _cacheUser(user);
@@ -498,24 +519,13 @@ final class DioAuthenticationRepository
 
   Future<HttpClientResponse> _verifyOtpResponse(
     String phone,
-    String otp,
+    int otp,
   ) async {
-    if (_pendingOtpPurpose == OtpVerificationPurpose.registration) {
-      try {
-        return await httpClient.post(
-          '/api/student/register/complete',
-          data: {'phone': phone, 'otp': otp},
-        );
-      } on HttpClientResponse catch (e) {
-        if (e.statusCode != 404) rethrow;
-      }
-    }
-
     return httpClient.post(
       '/api/auth/verify-otp',
       data: {
         'phone': phone,
-        'otp': otp, // Matches Postman field name "otp"
+        'otp': otp,
       },
     );
   }
@@ -552,7 +562,10 @@ final class DioAuthenticationRepository
     final refreshToken = stringOrNull(
       data['refresh_token'] ?? data['refreshToken'],
     );
-    httpClient.setBearerToken(accessToken, refreshToken: refreshToken);
+    httpClient.setAccessToken(accessToken).ignore();
+    if (refreshToken != null) {
+      httpClient.setRefreshToken(refreshToken).ignore();
+    }
   }
 
   StudentEntity? _extractStudentFromResponse(dynamic rawResponse) {

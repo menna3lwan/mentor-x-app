@@ -33,8 +33,8 @@ final class DioAnnouncementRepository
         },
       );
 
-      final data = asList(asMap(response.data)['content'] ??
-          asMap(response.data)['data'] ??
+      final data = asList(asMap(response.data)['data'] ??
+          asMap(response.data)['content'] ??
           response.data);
       return data.map((e) => AnnouncementModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {

@@ -5,9 +5,7 @@ final class MockStudentRegistrationRepository
     implements StudentRegistrationRepository {
   @override
   Future<void> startRegistration({
-    required String firstName,
     required String phone,
-    required String parentPhone,
   }) async {
     await Future.delayed(const Duration(seconds: 1));
     // Simulate phone already exists for a specific number
@@ -25,14 +23,29 @@ final class MockStudentRegistrationRepository
   }
 
   @override
-  Future<void> completeRegistration({
+  Future<void> verifyOtp({
+    required String phone,
+    required String otp,
+    int? tenantId,
+  }) async {
+    await Future.delayed(const Duration(seconds: 1));
+    if (otp != '123456') {
+      throw StudentRegistrationException(
+        code: StudentRegistrationExceptionCode.invalidOtp,
+        message: 'Invalid verification code. Please use 123456 for testing.',
+      );
+    }
+  }
+
+  @override
+  Future<StudentRegistrationResponseEntity> completeRegistration({
     required String firstName,
     required String secondName,
     required String thirdName,
     required String fourthName,
-    required String governorate,
+    required String governorateId,
     required String area,
-    required String grade,
+    required String gradeId,
     required bool online,
     required String otp,
     required String parentPhone,
@@ -54,6 +67,10 @@ final class MockStudentRegistrationRepository
         message: 'Invalid verification code. Please use 123456 for testing.',
       );
     }
+    return const StudentRegistrationResponseEntity(
+      studentCode: 'STU-12345',
+      status: 'pending',
+    );
   }
 
   @override
@@ -67,30 +84,42 @@ final class MockStudentRegistrationRepository
   }
 
   @override
-  Future<List<String>> getAreas(String governorate) async {
+  Future<List<String>> getAreas(String governorateId) async {
     await Future.delayed(const Duration(milliseconds: 300));
-    if (governorate == 'Cairo') {
+    if (governorateId == '1' || governorateId == 'Cairo') {
       return ['Maadi', 'Nasr City', 'Heliopolis', 'Zamalek'];
-    } else if (governorate == 'Giza') {
+    } else if (governorateId == '2' || governorateId == 'Giza') {
       return ['6th of October', 'Dokki', 'Mohandessin', 'Sheikh Zayed'];
     }
     return ['Sidi Gaber', 'Stanley', 'Montaza', 'Smouha'];
   }
 
   @override
-  Future<Map<String, dynamic>> getApplicationInfo() async {
+  Future<StudentApplicationInfoEntity> getApplicationInfo() async {
     await Future.delayed(const Duration(milliseconds: 500));
-    return {
-      'grades': [
-        {'id': '1', 'name': 'Primary 1'},
-        {'id': '2', 'name': 'Primary 2'},
-        {'id': '3', 'name': 'Primary 3'},
-        {'id': '4', 'name': 'Secondary 1'},
-        {'id': '5', 'name': 'Secondary 2'},
-        {'id': '6', 'name': 'Secondary 3'},
+    return const StudentApplicationInfoEntity(
+      requiredDocuments: ['National ID', 'Profile Photo'],
+      supportInfo: SupportInfoEntity(
+        whatsapp: '+20123456789',
+        email: 'support@mentorx.com',
+        workingHours: '9 AM - 6 PM',
+      ),
+      steps: [
+        RegistrationStepEntity(
+          step: '1',
+          title: 'Start',
+          description: 'Enter your phone number',
+        ),
       ],
-      'studyModes': ['Online', 'Center'],
-    };
+      grades: [
+        GradeEntity(id: '1', name: 'Primary 1'),
+        GradeEntity(id: '2', name: 'Primary 2'),
+        GradeEntity(id: '3', name: 'Primary 3'),
+        GradeEntity(id: '4', name: 'Secondary 1'),
+        GradeEntity(id: '5', name: 'Secondary 2'),
+        GradeEntity(id: '6', name: 'Secondary 3'),
+      ],
+    );
   }
 
   @override

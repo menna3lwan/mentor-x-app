@@ -22,7 +22,9 @@ final class DioMarketplaceRepository
   Future<List<MarketplaceCategoryEntity>> getCategories() async {
     try {
       final response = await httpClient.get('/api/marketplace/categories');
-      final data = asList(response.data);
+      final data = asList(asMap(response.data)['data'] ??
+          asMap(response.data)['content'] ??
+          response.data);
       return data
           .map((e) => MarketplaceCategoryModel.fromJson(asMap(e)))
           .toList();
@@ -50,7 +52,9 @@ final class DioMarketplaceRepository
         },
       );
 
-      final data = asList(response.data);
+      final data = asList(asMap(response.data)['data'] ??
+          asMap(response.data)['content'] ??
+          response.data);
       return data.map((e) => MarketplaceItemModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
@@ -116,7 +120,9 @@ final class DioMarketplaceRepository
         },
       );
 
-      final data = asList(response.data);
+      final data = asList(asMap(response.data)['data'] ??
+          asMap(response.data)['content'] ??
+          response.data);
       return data.map((e) => MarketplaceOrderModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(

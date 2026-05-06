@@ -41,6 +41,7 @@ dependencies:
   # MentorX Packages
   mentorx_core:
     path: ../mentorx_core
+  url_launcher: ^6.3.2
 
 dev_dependencies:
   flutter_test:

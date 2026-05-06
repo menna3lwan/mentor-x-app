@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
+import 'package:animate_do/animate_do.dart';
 import '../bloc/student_registration_bloc.dart';
 
 class StartStep extends StatefulWidget {
@@ -34,50 +35,73 @@ class _StartStepState extends State<StartStep> {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t.student;
+    final palette = MentorXThemeColorPalette.light;
+    final bloc = context.read<StudentRegistrationBloc>();
+
     return BlocBuilder<StudentRegistrationBloc, StudentRegistrationState>(
       builder: (context, state) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Let\'s get started',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            FadeInDown(
+              duration: const Duration(milliseconds: 400),
+              child: Text(
+                t['welcomeTitle'] ?? "Let's get started",
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.w900,
+                  color: palette.textPrimary,
+                ),
+              ),
             ),
             const SizedBox(height: 8),
-            const Text(
-              'Enter your basic details to verify your phone number.',
-              style: TextStyle(color: Colors.grey),
+            FadeInDown(
+              duration: const Duration(milliseconds: 500),
+              child: Text(
+                t['welcomeSubtitle'] ?? 'Enter your basic details to verify your phone number and begin your journey.',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: palette.textSecondary,
+                  height: 1.5,
+                ),
+              ),
             ),
             const SizedBox(height: 32),
-            MentorXTextFormField(
-              label: 'First Name',
-              icon: Icons.person_outline,
-              controller: _firstNameController,
-              onChanged: (v) => context.read<StudentRegistrationBloc>().add(
-                StudentRegistrationFirstNameChanged(v),
+            FadeInUp(
+              duration: const Duration(milliseconds: 400),
+              child: MentorXTextFormField(
+                key: const Key('registration_first_name'),
+                label: t['firstNameLabel'] ?? 'First Name',
+                icon: Icons.person_outline_rounded,
+                controller: _firstNameController,
+                onChanged: (v) => bloc.add(StudentRegistrationFirstNameChanged(v)),
               ),
             ),
             const SizedBox(height: 16),
-            MentorXTextFormField(
-              label: 'Your Phone Number',
-              icon: Icons.phone_android_outlined,
-              keyboardType: TextInputType.phone,
-              errorText: !state.isPhoneUnique
-                  ? 'This phone number is already registered.'
-                  : null,
-              controller: _phoneController,
-              onChanged: (v) => context.read<StudentRegistrationBloc>().add(
-                StudentRegistrationPhoneChanged(v),
+            FadeInUp(
+              duration: const Duration(milliseconds: 500),
+              child: MentorXTextFormField(
+                key: const Key('registration_phone'),
+                label: t['studentPhoneLabel'] ?? 'Your Phone Number',
+                icon: Icons.phone_android_outlined,
+                keyboardType: TextInputType.phone,
+                errorText: !state.isPhoneUnique
+                    ? (t['phoneAlreadyRegistered'] ?? 'This phone number is already registered.')
+                    : null,
+                controller: _phoneController,
+                onChanged: (v) => bloc.add(StudentRegistrationPhoneChanged(v)),
               ),
             ),
             const SizedBox(height: 16),
-            MentorXTextFormField(
-              label: 'Parent Phone Number',
-              icon: Icons.family_restroom_outlined,
-              keyboardType: TextInputType.phone,
-              controller: _parentPhoneController,
-              onChanged: (v) => context.read<StudentRegistrationBloc>().add(
-                StudentRegistrationParentPhoneChanged(v),
+            FadeInUp(
+              duration: const Duration(milliseconds: 600),
+              child: MentorXTextFormField(
+                key: const Key('registration_parent_phone'),
+                label: t['parentPhoneLabel'] ?? 'Parent Phone Number',
+                icon: Icons.family_restroom_outlined,
+                keyboardType: TextInputType.phone,
+                controller: _parentPhoneController,
+                onChanged: (v) =>
+                    bloc.add(StudentRegistrationParentPhoneChanged(v)),
               ),
             ),
           ],
@@ -85,4 +109,5 @@ class _StartStepState extends State<StartStep> {
       },
     );
   }
+
 }

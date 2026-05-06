@@ -163,7 +163,7 @@ final class WalletTransactionModel extends WalletTransactionEntity {
     if (value == null) return null;
     final str = ModelParser.asString(value).toLowerCase();
     return TransactionStatus.values.firstWhere(
-      (e) => e.name == str,
+      (e) => e.name.toLowerCase() == str,
       orElse: () => TransactionStatus.pending,
     );
   }
@@ -171,7 +171,7 @@ final class WalletTransactionModel extends WalletTransactionEntity {
   static WalletTransactionType _parseType(dynamic value) {
     final str = ModelParser.asString(value).toLowerCase();
     return WalletTransactionType.values.firstWhere(
-      (e) => e.name == str,
+      (e) => e.name.toLowerCase() == str,
       orElse: () => WalletTransactionType.deposit,
     );
   }
@@ -233,7 +233,7 @@ final class PaymentModel extends PaymentEntity {
   static PaymentStatus _parseStatus(dynamic value) {
     final str = ModelParser.asString(value).toLowerCase();
     return PaymentStatus.values.firstWhere(
-      (e) => e.name == str,
+      (e) => e.name.toLowerCase() == str,
       orElse: () => PaymentStatus.pending,
     );
   }
@@ -241,7 +241,7 @@ final class PaymentModel extends PaymentEntity {
   static PaymentMethod _parseMethod(dynamic value) {
     final str = ModelParser.asString(value).toLowerCase();
     return PaymentMethod.values.firstWhere(
-      (e) => e.name == str,
+      (e) => e.name.toLowerCase() == str,
       orElse: () => PaymentMethod.vodafoneCash,
     );
   }
@@ -250,7 +250,7 @@ final class PaymentModel extends PaymentEntity {
     final str = ModelParser.asString(value).toLowerCase();
     if (str == 'topup' || str == 'deposit') return PaymentType.walletTopup;
     return PaymentType.values.firstWhere(
-      (e) => e.name == str,
+      (e) => e.name.toLowerCase() == str,
       orElse: () => PaymentType.walletTopup,
     );
   }

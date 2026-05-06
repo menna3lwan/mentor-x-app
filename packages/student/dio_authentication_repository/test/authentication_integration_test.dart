@@ -76,7 +76,7 @@ void main() {
       await repository.logout();
       
       expect(await cacheRepository.get(CacheKeys.accessToken), isNull);
-      expect(await httpClient.isAuthenticated(), isFalse);
+      expect(httpClient.isAuthenticated, isFalse);
     });
   });
 }

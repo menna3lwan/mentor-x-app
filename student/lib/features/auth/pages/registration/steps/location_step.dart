@@ -11,6 +11,7 @@ class LocationStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t.student;
     final bloc = context.read<StudentRegistrationBloc>();
     final palette = MentorXThemeColorPalette.light;
     return BlocBuilder<StudentRegistrationBloc, StudentRegistrationState>(
@@ -21,7 +22,7 @@ class LocationStep extends StatelessWidget {
             FadeInDown(
               duration: const Duration(milliseconds: 400),
               child: Text(
-                'Location Details',
+                t['locationLabel'] ?? 'Location Details',
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.w900,
                   color: palette.textPrimary,
@@ -32,7 +33,7 @@ class LocationStep extends StatelessWidget {
             FadeInDown(
               duration: const Duration(milliseconds: 500),
               child: Text(
-                'Help us know where you are from to suggest the nearest centers.',
+                t['locationSubtitle'] ?? 'Help us know where you are from to suggest the nearest centers.',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: palette.textSecondary,
                   height: 1.5,
@@ -60,12 +61,13 @@ class LocationStep extends StatelessWidget {
     StudentRegistrationState state,
     StudentRegistrationBloc bloc,
   ) {
+    final t = context.t.student;
     final palette = MentorXThemeColorPalette.light;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Governorate',
+          t['governorateLabel'] ?? 'Governorate',
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
             fontWeight: FontWeight.w800,
             color: palette.textPrimary,
@@ -101,7 +103,7 @@ class LocationStep extends StatelessWidget {
             ),
           ),
           hint: Text(
-            'Select Governorate',
+            t['governorateHint'] ?? 'Select Governorate',
             style: TextStyle(color: palette.textTertiary),
           ),
           items: state.governorates.map((gov) {
@@ -128,12 +130,13 @@ class LocationStep extends StatelessWidget {
     StudentRegistrationState state,
     StudentRegistrationBloc bloc,
   ) {
+    final t = context.t.student;
     final palette = MentorXThemeColorPalette.light;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Area',
+          t['regionLabel'] ?? 'Area',
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
             fontWeight: FontWeight.w800,
             color: palette.textPrimary,
@@ -169,7 +172,7 @@ class LocationStep extends StatelessWidget {
             ),
           ),
           hint: Text(
-            'Select Area',
+            t['regionHint'] ?? 'Select Area',
             style: TextStyle(color: palette.textTertiary),
           ),
           items: state.areas.map((area) {

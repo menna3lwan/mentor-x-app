@@ -30,7 +30,9 @@ final class DioLeaderboardRepository
         },
       );
 
-      final data = asList(asMap(response.data)['data'] ?? response.data);
+      final data = asList(asMap(response.data)['data'] ??
+          asMap(response.data)['content'] ??
+          response.data);
       return data.map((e) => LeaderboardEntryModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
@@ -53,7 +55,9 @@ final class DioLeaderboardRepository
         },
       );
 
-      final data = asList(asMap(response.data)['data'] ?? response.data);
+      final data = asList(asMap(response.data)['data'] ??
+          asMap(response.data)['content'] ??
+          response.data);
       return data.map((e) => LeaderboardEntryModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
@@ -76,7 +80,9 @@ final class DioLeaderboardRepository
         },
       );
 
-      final data = asList(asMap(response.data)['data'] ?? response.data);
+      final data = asList(asMap(response.data)['data'] ??
+          asMap(response.data)['content'] ??
+          response.data);
       return data.map((e) => LeaderboardEntryModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(

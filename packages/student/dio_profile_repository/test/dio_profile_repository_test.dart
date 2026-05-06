@@ -26,7 +26,7 @@ void main() {
         };
 
         when(() => httpClient.get(
-          '/api/auth/me',
+          '/api/profile/student/details',
           queryParameters: any(named: 'queryParameters'),
           headers: any(named: 'headers'),
         )).thenAnswer((_) async => HttpClientResponse(
@@ -64,6 +64,29 @@ void main() {
         final result = await repository.getDevices();
         expect(result.length, 1);
         expect(result[0].deviceName, 'iPhone');
+      });
+
+      test('returns representative device on slim session-status response', () async {
+        final mockData = {
+          'role': 'STUDENT',
+          'studentCode': 'G2766',
+          'hasSession': true,
+          'status': 'ACTIVE',
+        };
+
+        when(() => httpClient.get(
+          '/api/auth/session-status',
+          queryParameters: any(named: 'queryParameters'),
+          headers: any(named: 'headers'),
+        )).thenAnswer((_) async => HttpClientResponse(
+          data: mockData,
+          statusCode: 200,
+        ));
+
+        final result = await repository.getDevices();
+        expect(result.length, 1);
+        expect(result[0].id, 'G2766');
+        expect(result[0].deviceName, 'Active Session');
       });
     });
 

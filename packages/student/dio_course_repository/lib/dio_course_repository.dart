@@ -34,8 +34,8 @@ final class DioCourseRepository
         },
       );
 
-      final list = asList(asMap(response.data)['content'] ??
-          asMap(response.data)['data'] ??
+      final list = asList(asMap(response.data)['data'] ??
+          asMap(response.data)['content'] ??
           response.data);
 
       return list
@@ -72,8 +72,8 @@ final class DioCourseRepository
         },
       );
 
-      final list = asList(asMap(response.data)['content'] ??
-          asMap(response.data)['data'] ??
+      final list = asList(asMap(response.data)['data'] ??
+          asMap(response.data)['content'] ??
           response.data);
 
       return list
@@ -96,8 +96,8 @@ final class DioCourseRepository
         queryParameters: {if (gradeId != null) 'grade_id': gradeId},
       );
 
-      final list = asList(asMap(response.data)['content'] ??
-          asMap(response.data)['data'] ??
+      final list = asList(asMap(response.data)['data'] ??
+          asMap(response.data)['content'] ??
           response.data);
 
       return list
@@ -132,8 +132,8 @@ final class DioCourseRepository
     try {
       final response = await httpClient.get('/api/sessions/course/$courseId');
 
-      final list = asList(asMap(response.data)['content'] ??
-          asMap(response.data)['data'] ??
+      final list = asList(asMap(response.data)['data'] ??
+          asMap(response.data)['content'] ??
           response.data);
 
       return list
@@ -153,8 +153,8 @@ final class DioCourseRepository
     try {
       final response = await httpClient.get('/api/weeks/session/$sessionId');
 
-      final list = asList(asMap(response.data)['content'] ??
-          asMap(response.data)['data'] ??
+      final list = asList(asMap(response.data)['data'] ??
+          asMap(response.data)['content'] ??
           response.data);
 
       return list

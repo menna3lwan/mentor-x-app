@@ -85,7 +85,6 @@ final class _LoginPageWrapperState extends State<LoginPageWrapper> {
       final trimmedPhone = rememberedPhone.trim();
       _phoneController.text = trimmedPhone;
       bloc.add(LoginPhoneChanged(trimmedPhone));
-      bloc.add(const LoginRememberMeToggled());
     }
 
     setState(() {
@@ -113,7 +112,7 @@ final class _LoginPageWrapperState extends State<LoginPageWrapper> {
             phoneNumber: event.phoneNumber,
             otpLength: event.otpLength,
             otpDurationSeconds: event.otpDuration?.inSeconds,
-          ).go(context);
+          ).push(context);
         } else if (event is LoginDeviceLimitReachedPresentationEvent) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -140,10 +139,7 @@ final class _LoginPageWrapperState extends State<LoginPageWrapper> {
             passwordController: _passwordController,
             isLoading: state.isLoading,
             obscurePassword: state.obscurePassword,
-            rememberMe: state.rememberMe,
-            errorMessage: state.loadingState.isError
-                ? state.errorMessage
-                : null,
+            errorMessage: state.loadingState.isError ? state.errorMessage : null,
             inputFormatters: [
               FilteringTextInputFormatter.digitsOnly,
               LengthLimitingTextInputFormatter(11),
@@ -154,14 +150,13 @@ final class _LoginPageWrapperState extends State<LoginPageWrapper> {
             onPasswordChanged: (value) => bloc.add(LoginPasswordChanged(value)),
             onObscurePasswordToggled: () =>
                 bloc.add(const LoginObscurePasswordToggled()),
-            onRememberMeToggled: () => bloc.add(const LoginRememberMeToggled()),
             onForgotPassword: () {
               ForgotPasswordPageRoute(
                 phoneNumber: _phoneController.text.trim(),
-              ).go(context);
+              ).push(context);
             },
             onRegister: () {
-              const RegistrationPageRoute().go(context);
+              const RegistrationPageRoute().push(context);
             },
             onSubmit: () => _submit(bloc),
             tenantName: _tenantName,
@@ -184,17 +179,10 @@ final class _LoginPageWrapperState extends State<LoginPageWrapper> {
 
   Future<void> _handleRememberedPhone(BuildContext context) async {
     final cacheRepository = context.read<CacheRepository>();
-    final bloc = context.read<LoginBloc>();
-
-    if (bloc.state.rememberMe) {
-      await cacheRepository.put(
-        CacheKeys.rememberedPhone,
-        _phoneController.text.trim(),
-      );
-      return;
-    }
-
-    await cacheRepository.remove(CacheKeys.rememberedPhone);
+    await cacheRepository.put(
+      CacheKeys.rememberedPhone,
+      _phoneController.text.trim(),
+    );
   }
 
   void _handleAuthenticatedUser(BuildContext context, StudentEntity user) {

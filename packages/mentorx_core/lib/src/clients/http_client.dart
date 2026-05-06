@@ -58,7 +58,7 @@ final class HttpClientResponse {
     final value = data;
     if (value is List<dynamic>) return value;
     if (value is Map) {
-      final d = value['data'] ?? value['items'];
+      final d = value['data'] ?? value['items'] ?? value['content'];
       if (d is List<dynamic>) return d;
     }
     return <dynamic>[];
@@ -90,9 +90,18 @@ final class HttpClientResponse {
   }
 }
 
-abstract class HttpClient {
+abstract interface class HttpClient extends LocalizedClient {
   /// Returns the current authenticated user ID if available
   String? get userId;
+
+  /// Returns the current access token if available
+  String? get accessToken;
+
+  /// Returns the current refresh token if available
+  String? get refreshToken;
+
+  /// Checks if the client is authenticated (has a valid access token)
+  bool get isAuthenticated;
 
   /// Sets default headers that will be included in all requests
   void setDefaultHeaders(Map<String, String> headers);
@@ -109,21 +118,14 @@ abstract class HttpClient {
   /// Gets current default headers
   Map<String, String> getDefaultHeaders();
 
-  /// Sets the bearer token for authentication
-  /// This will automatically add/update the Authorization header
-  void setBearerToken(String token, {String? refreshToken});
+  /// Sets the access token for authentication
+  Future<void> setAccessToken(String token);
 
-  /// Removes the bearer token
-  void removeBearerToken();
+  /// Sets the refresh token for authentication
+  Future<void> setRefreshToken(String token);
 
-  /// Gets the current bearer token (without 'Bearer ' prefix)
-  String? getBearerToken();
-
-  /// Gets the current refresh token if available
-  String? getRefreshToken();
-
-  /// Checks if the client is authenticated (has a valid token)
-  Future<bool> isAuthenticated();
+  /// Clears all authentication tokens
+  Future<void> clearTokens();
 
   Future<HttpClientResponse> get(
     String path, {
@@ -177,3 +179,4 @@ abstract class HttpClient {
 
   String? extractErrorMessage(HttpClientResponse errorResponse);
 }
+

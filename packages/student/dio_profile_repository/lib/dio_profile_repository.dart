@@ -53,7 +53,10 @@ final class DioStudentProfileRepository
         queryParameters: {'status': 'pending'},
       );
 
-      return asList(response.data)
+      final data = asList(asMap(response.data)['data'] ??
+          asMap(response.data)['content'] ??
+          response.data);
+      return data
           .map(asMap)
           .map(ProfileEditRequestModel.fromJson)
           .toList();
@@ -130,14 +133,27 @@ final class DioStudentProfileRepository
   Future<List<DeviceEntity>> getDevices() async {
     try {
       final response = await httpClient.get('/api/auth/session-status');
-      final data = asList(asMap(response.data)['content'] ??
-          asMap(response.data)['data'] ??
-          response.data);
+      final rootData = asMap(response.data);
 
-      return data
-          .map(asMap)
-          .map(DeviceModel.fromJson)
-          .toList();
+      // Handle the case where session-status returns a single status object instead of a list
+      if (rootData.containsKey('hasSession')) {
+        final hasSession = boolOrFalse(rootData['hasSession']);
+        if (!hasSession) return const [];
+
+        return [
+          DeviceEntity(
+            id: stringOrNull(rootData['studentCode']) ?? 'current',
+            deviceName: 'Active Session',
+            deviceModel: stringOrNull(rootData['role']) ?? 'Student',
+            isActive: true,
+            lastUsedAt: DateTime.now(),
+          ),
+        ];
+      }
+
+      final data = asList(rootData['data'] ?? rootData['content'] ?? response.data);
+
+      return data.map(asMap).map(DeviceModel.fromJson).toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,

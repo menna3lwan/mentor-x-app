@@ -28,7 +28,10 @@ final class DioAiRepository
         },
       );
 
-      final data = asList(asMap(response.data)['data'] ?? asMap(response.data)['content'] ?? response.data);
+      final data = asList(asMap(response.data)['data'] ??
+          asMap(response.data)['content'] ??
+          response.data);
+
       return data.map((e) => AIConversationModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
@@ -96,7 +99,10 @@ final class DioAiRepository
         },
       );
 
-      final data = asList(asMap(response.data)['data'] ?? asMap(response.data)['content'] ?? response.data);
+      final data = asList(asMap(response.data)['data'] ??
+          asMap(response.data)['content'] ??
+          response.data);
+
       return data.map((e) => AIMessageModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(

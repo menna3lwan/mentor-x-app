@@ -1299,10 +1299,15 @@ RouteBase get $paymentSuccessPageRoute => GoRouteData.$route(
 
 mixin $PaymentSuccessPageRoute on GoRouteData {
   static PaymentSuccessPageRoute _fromState(GoRouterState state) =>
-      const PaymentSuccessPageRoute();
+      PaymentSuccessPageRoute(amount: state.uri.queryParameters['amount']);
+
+  PaymentSuccessPageRoute get _self => this as PaymentSuccessPageRoute;
 
   @override
-  String get location => GoRouteData.$location('/payment-success');
+  String get location => GoRouteData.$location(
+    '/payment-success',
+    queryParams: {if (_self.amount != null) 'amount': _self.amount},
+  );
 
   @override
   void go(BuildContext context) => context.go(location);
