@@ -21,7 +21,9 @@ final class RegistrationPageWrapper extends StatelessWidget {
           case StudentRegistrationSuccessPresentationEvent(:final studentCode):
             _showSuccessDialog(context, studentCode);
           case StudentRegistrationOtpSentPresentationEvent():
-            context.showSuccessSnackBar('Verification code sent to your phone.');
+            context.showSuccessSnackBar(
+              'Verification code sent to your phone.',
+            );
           case StudentRegistrationFailurePresentationEvent(:final message):
             context.showErrorSnackBar(message);
         }
@@ -68,60 +70,66 @@ final class RegistrationPageWrapper extends StatelessWidget {
   }
 
   void _showSuccessDialog(BuildContext context, String? studentCode) {
-    final palette = MentorXThemeColorPalette.light;
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
-        backgroundColor: palette.backgroundPrimary,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
+        backgroundColor: context.backgroundSecondaryColor,
+        surfaceTintColor: Colors.transparent,
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
-                color: palette.statusSuccess.withValues(alpha: 0.1),
+                color: context.statusSuccessColor.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
+                border: Border.all(
+                  color: context.statusSuccessColor.withValues(alpha: 0.1),
+                ),
               ),
               child: Icon(
-                Icons.check_circle_outline_rounded,
+                Icons.check_circle_rounded,
                 size: 64,
-                color: palette.statusSuccess,
+                color: context.statusSuccessColor,
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 32),
             Text(
               'Registration Successful!',
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 22,
+                fontSize: 24,
                 fontWeight: FontWeight.w900,
-                color: palette.textPrimary,
+                color: context.textPrimaryColor,
+                letterSpacing: -0.5,
               ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 16),
             Text(
               'Your account has been created successfully and is now pending approval.',
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 14,
-                color: palette.textSecondary,
-                height: 1.5,
+                fontSize: 15,
+                color: context.textSecondaryColor,
+                height: 1.6,
+                fontWeight: FontWeight.w600,
               ),
             ),
             if (studentCode != null) ...[
-              const SizedBox(height: 24),
+              const SizedBox(height: 32),
               Container(
+                width: double.infinity,
                 padding: const EdgeInsets.symmetric(
-                  vertical: 16,
+                  vertical: 20,
                   horizontal: 24,
                 ),
                 decoration: BoxDecoration(
-                  color: palette.backgroundSecondary,
-                  borderRadius: BorderRadius.circular(16),
+                  color: context.backgroundPrimaryColor,
+                  borderRadius: BorderRadius.circular(24),
                   border: Border.all(
-                    color: palette.brandPrimary.withValues(alpha: 0.1),
+                    color: context.brandPrimaryColor.withValues(alpha: 0.1),
                   ),
                 ),
                 child: Column(
@@ -129,27 +137,27 @@ final class RegistrationPageWrapper extends StatelessWidget {
                     Text(
                       'YOUR STUDENT CODE',
                       style: TextStyle(
-                        fontSize: 10,
+                        fontSize: 11,
                         fontWeight: FontWeight.w900,
-                        color: palette.textTertiary,
-                        letterSpacing: 1.1,
+                        color: context.textTertiaryColor,
+                        letterSpacing: 2.0,
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 12),
                     Text(
                       studentCode,
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 28,
                         fontWeight: FontWeight.w900,
-                        color: palette.brandPrimary,
-                        letterSpacing: 2,
+                        color: context.brandPrimaryColor,
+                        letterSpacing: 4,
                       ),
                     ),
                   ],
                 ),
               ),
             ],
-            const SizedBox(height: 32),
+            const SizedBox(height: 48),
             MentorXButton(
               label: 'Go to Login',
               onPressed: () {

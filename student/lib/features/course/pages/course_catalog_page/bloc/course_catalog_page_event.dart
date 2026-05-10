@@ -29,6 +29,15 @@ final class CourseCatalogPageCategoryChanged extends CourseCatalogPageEvent {
   List<Object?> get props => [categoryId];
 }
 
+final class CourseCatalogPageGradeChanged extends CourseCatalogPageEvent {
+  final String? gradeId;
+
+  const CourseCatalogPageGradeChanged(this.gradeId);
+
+  @override
+  List<Object?> get props => [gradeId];
+}
+
 final class CourseCatalogPageSortChanged extends CourseCatalogPageEvent {
   final CatalogSortOption sortOption;
 

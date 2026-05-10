@@ -15,6 +15,7 @@ final class ParentFinancialRepositoryException
 // ——— Repository ———
 
 abstract interface class ParentFinancialRepository {
+  Future<void> initialize();
   Future<List<WalletTransactionEntity>> getTransactions(
     String childId, {
     MentorXPaginationInfo? paginationInfo,

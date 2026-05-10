@@ -22,10 +22,9 @@ final class DioMarketplaceRepository
   Future<List<MarketplaceCategoryEntity>> getCategories() async {
     try {
       final response = await httpClient.get('/api/marketplace/categories');
-      final data = asList(asMap(response.data)['data'] ??
-          asMap(response.data)['content'] ??
-          response.data);
-      return data
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final list = asList(data is Map ? data['content'] : data);
+      return list
           .map((e) => MarketplaceCategoryModel.fromJson(asMap(e)))
           .toList();
     } on HttpClientResponse catch (e) {
@@ -43,19 +42,20 @@ final class DioMarketplaceRepository
     MentorXPaginationInfo? paginationInfo,
   }) async {
     try {
+      final queryParams = {
+        if (categoryId != null) 'category_id': categoryId,
+        if (search != null) 'search': search,
+        if (paginationInfo != null) ...paginationInfo.toJson(),
+      };
+
       final response = await httpClient.get(
         '/api/marketplace/items',
-        queryParameters: {
-          if (categoryId != null) 'category_id': categoryId,
-          if (search != null) 'search': search,
-          if (paginationInfo != null) ...paginationInfo.toJson(),
-        },
+        queryParameters: queryParams,
       );
 
-      final data = asList(asMap(response.data)['data'] ??
-          asMap(response.data)['content'] ??
-          response.data);
-      return data.map((e) => MarketplaceItemModel.fromJson(asMap(e))).toList();
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final list = asList(data is Map ? data['content'] : data);
+      return list.map((e) => MarketplaceItemModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
@@ -86,16 +86,18 @@ final class DioMarketplaceRepository
     String? deliveryNotes,
   }) async {
     try {
+      final payload = {
+        'items': items
+            .map((e) => {'item_id': e.itemId, 'quantity': e.quantity})
+            .toList(),
+        'delivery_address': deliveryAddress,
+        'delivery_phone': deliveryPhone,
+        if (deliveryNotes != null) 'delivery_notes': deliveryNotes,
+      };
+
       final response = await httpClient.post(
         '/api/marketplace/orders',
-        data: {
-          'items': items
-              .map((e) => {'item_id': e.itemId, 'quantity': e.quantity})
-              .toList(),
-          'delivery_address': deliveryAddress,
-          'delivery_phone': deliveryPhone,
-          if (deliveryNotes != null) 'delivery_notes': deliveryNotes,
-        },
+        data: payload,
       );
 
       final data = asMap(response.data)['data'] ?? asMap(response.data);
@@ -113,17 +115,18 @@ final class DioMarketplaceRepository
     MentorXPaginationInfo? paginationInfo,
   }) async {
     try {
+      final queryParams = {
+        if (paginationInfo != null) ...paginationInfo.toJson(),
+      };
+
       final response = await httpClient.get(
         '/api/marketplace/orders',
-        queryParameters: {
-          if (paginationInfo != null) ...paginationInfo.toJson(),
-        },
+        queryParameters: queryParams,
       );
 
-      final data = asList(asMap(response.data)['data'] ??
-          asMap(response.data)['content'] ??
-          response.data);
-      return data.map((e) => MarketplaceOrderModel.fromJson(asMap(e))).toList();
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final list = asList(data is Map ? data['content'] : data);
+      return list.map((e) => MarketplaceOrderModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,

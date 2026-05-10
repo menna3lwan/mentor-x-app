@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:mentorx_core/mentorx_core.dart' hide ParentModel;
+import 'package:mentorx_core/mentorx_core.dart';
 import 'models/parent_model.dart';
 export 'models/parent_model.dart';
 
@@ -66,7 +66,7 @@ final class DioAuthenticationRepository
 
       HttpClientResponse response;
       try {
-        response = await httpClient.post('/api/v1/parent/login', data: payload);
+        response = await httpClient.post('/api/parent/login', data: payload);
       } on HttpClientResponse catch (e) {
         if (e.statusCode != 404) rethrow;
         response = await httpClient.post('/api/auth/parent/login', data: payload);
@@ -127,7 +127,7 @@ final class DioAuthenticationRepository
 
       HttpClientResponse response;
       try {
-        response = await httpClient.post('/api/v1/parent/register', data: payload);
+        response = await httpClient.post('/api/parent/register', data: payload);
       } on HttpClientResponse catch (e) {
         if (e.statusCode != 404) rethrow;
         response = await httpClient.post('/api/parent/register', data: payload);
@@ -190,7 +190,7 @@ final class DioAuthenticationRepository
 
       HttpClientResponse response;
       try {
-        response = await httpClient.post('/api/v1/parent/find-student', data: payload);
+        response = await httpClient.post('/api/parent/find-student', data: payload);
       } on HttpClientResponse catch (e) {
         if (e.statusCode != 404) rethrow;
         response = await httpClient.post('/api/parent/find-student', data: payload);
@@ -278,7 +278,7 @@ final class DioAuthenticationRepository
   Future<void> requestPasswordReset(String phone) async {
     try {
       try {
-        await httpClient.post('/api/v1/auth/forgot-password', data: {'phone': phone});
+        await httpClient.post('/api/auth/forgot-password', data: {'phone': phone});
       } on HttpClientResponse catch (e) {
         if (e.statusCode != 404) rethrow;
         await httpClient.post('/api/auth/forgot-password', data: {'phone': phone});
@@ -309,12 +309,12 @@ final class DioAuthenticationRepository
     };
 
     try {
-      await httpClient.post('/api/v1/auth/reset-password', data: primaryPayload);
+      await httpClient.post('/api/auth/reset-password', data: primaryPayload);
       await _clearLocalSession();
     } on HttpClientResponse catch (e) {
       if (e.statusCode == 400 || e.statusCode == 422) {
         try {
-          await httpClient.post('/api/v1/auth/reset-password', data: secondaryPayload);
+          await httpClient.post('/api/auth/reset-password', data: secondaryPayload);
           await _clearLocalSession();
           return;
         } catch (_) {}
@@ -365,14 +365,14 @@ final class DioAuthenticationRepository
 
     try {
       try {
-        await httpClient.post('/api/v1/parent/register/start', data: {'phone': phone});
+        await httpClient.post('/api/parent/register/start', data: {'phone': phone});
       } on HttpClientResponse catch (e) {
         if (e.statusCode != 404) rethrow;
         try {
           await httpClient.post('/api/parent/register/start', data: {'phone': phone});
         } on HttpClientResponse catch (e2) {
           if (e2.statusCode != 404) rethrow;
-          await httpClient.post('/api/v1/auth/resend-otp', data: {
+          await httpClient.post('/api/auth/resend-otp', data: {
             'phone': phone,
             'purpose': 'registration',
           });
@@ -403,7 +403,7 @@ final class DioAuthenticationRepository
     try {
       HttpClientResponse response;
       try {
-        response = await httpClient.post('/api/v1/auth/resend-otp', data: {'phone': phone});
+        response = await httpClient.post('/api/auth/resend-otp', data: {'phone': phone});
       } on HttpClientResponse catch (e) {
         if (e.statusCode != 404) rethrow;
         try {
@@ -432,7 +432,7 @@ final class DioAuthenticationRepository
     try {
       HttpClientResponse response;
       try {
-        response = await httpClient.post('/api/v1/auth/verify-otp', data: {
+        response = await httpClient.post('/api/auth/verify-otp', data: {
           'phone': phone,
           'otp_code': code,
           'purpose': 'registration',
@@ -460,13 +460,19 @@ final class DioAuthenticationRepository
   }
 
   void _setTokensIfPresent(Map<String, dynamic> data) {
-    final accessToken = stringOrNull(data['accessToken'] ?? data['access_token']);
+    final accessToken =
+        stringOrNull(data['accessToken'] ?? data['access_token']);
     if (accessToken == null) return;
 
-    final refreshToken = stringOrNull(data['refreshToken'] ?? data['refresh_token']);
+    final refreshToken =
+        stringOrNull(data['refreshToken'] ?? data['refresh_token']);
+    
     httpClient.setAccessToken(accessToken).ignore();
+    cacheRepository.put(CacheKeys.accessToken, accessToken).ignore();
+    
     if (refreshToken != null) {
       httpClient.setRefreshToken(refreshToken).ignore();
+      cacheRepository.put(CacheKeys.refreshToken, refreshToken).ignore();
     }
   }
 

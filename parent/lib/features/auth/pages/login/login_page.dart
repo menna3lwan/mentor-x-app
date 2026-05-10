@@ -39,8 +39,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final palette = MentorXThemeColorPalette.light;
-
     return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) {
         if (state.loadingState == LoginLoadingState.success) {
@@ -53,7 +51,7 @@ class _LoginPageState extends State<LoginPage> {
         }
       },
       child: Scaffold(
-        backgroundColor: palette.backgroundPrimary,
+        backgroundColor: context.backgroundPrimaryColor,
         body: Stack(
           children: [
             // Premium background with glassmorphism
@@ -69,8 +67,8 @@ class _LoginPageState extends State<LoginPage> {
                     shape: BoxShape.circle,
                     gradient: LinearGradient(
                       colors: [
-                        palette.brandPrimary.withValues(alpha: 0.08),
-                        palette.brandSecondary.withValues(alpha: 0.03),
+                        context.brandPrimaryColor.withValues(alpha: 0.08),
+                        context.brandSecondaryColor.withValues(alpha: 0.03),
                       ],
                     ),
                   ),
@@ -89,8 +87,8 @@ class _LoginPageState extends State<LoginPage> {
                     shape: BoxShape.circle,
                     gradient: LinearGradient(
                       colors: [
-                        palette.brandSecondary.withValues(alpha: 0.05),
-                        palette.brandPrimary.withValues(alpha: 0.02),
+                        context.brandSecondaryColor.withValues(alpha: 0.05),
+                        context.brandPrimaryColor.withValues(alpha: 0.02),
                       ],
                     ),
                   ),
@@ -119,13 +117,13 @@ class _LoginPageState extends State<LoginPage> {
                               shape: BoxShape.circle,
                               boxShadow: [
                                 BoxShadow(
-                                  color: palette.brandPrimary.withValues(alpha: 0.12),
+                                  color: context.brandPrimaryColor.withValues(alpha: 0.12),
                                   blurRadius: 30,
                                   offset: const Offset(0, 15),
                                 ),
                               ],
                             ),
-                            child: Icon(Icons.family_restroom_rounded, color: palette.brandPrimary, size: 56),
+                            child: Icon(Icons.family_restroom_rounded, color: context.brandPrimaryColor, size: 56),
                           ),
                         ),
                         const Gap(32),
@@ -139,7 +137,7 @@ class _LoginPageState extends State<LoginPage> {
                                 style: TextStyle(
                                   fontSize: 32,
                                   fontWeight: FontWeight.w900,
-                                  color: palette.textPrimary,
+                                  color: context.textPrimaryColor,
                                   letterSpacing: -1.0,
                                 ),
                               ),
@@ -148,7 +146,7 @@ class _LoginPageState extends State<LoginPage> {
                                 'Monitor your child\'s academic journey with confidence',
                                 style: TextStyle(
                                   fontSize: 15,
-                                  color: palette.textSecondary,
+                                  color: context.textSecondaryColor,
                                   fontWeight: FontWeight.w500,
                                   height: 1.5,
                                 ),
@@ -210,7 +208,7 @@ class _LoginPageState extends State<LoginPage> {
                                     child: Text(
                                       'Forgot Password?',
                                       style: TextStyle(
-                                        color: palette.brandPrimary,
+                                        color: context.brandPrimaryColor,
                                         fontWeight: FontWeight.w800,
                                         fontSize: 14,
                                       ),
@@ -242,7 +240,7 @@ class _LoginPageState extends State<LoginPage> {
                                     Text(
                                       "New to MentorX?",
                                       style: TextStyle(
-                                        color: palette.textSecondary,
+                                        color: context.textSecondaryColor,
                                         fontSize: 14,
                                         fontWeight: FontWeight.w500,
                                       ),
@@ -254,7 +252,7 @@ class _LoginPageState extends State<LoginPage> {
                                       child: Text(
                                         'Create Account',
                                         style: TextStyle(
-                                          color: palette.brandPrimary,
+                                          color: context.brandPrimaryColor,
                                           fontWeight: FontWeight.w900,
                                           fontSize: 14,
                                         ),

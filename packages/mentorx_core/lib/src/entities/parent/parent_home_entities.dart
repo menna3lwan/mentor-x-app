@@ -25,12 +25,12 @@ class ParentHomeSummaryEntity extends Equatable {
 
   @override
   List<Object?> get props => [
-        overview,
-        upcomingSessions,
-        recentGrades,
-        latestAnnouncement,
-        childrenSummaries,
-      ];
+    overview,
+    upcomingSessions,
+    recentGrades,
+    latestAnnouncement,
+    childrenSummaries,
+  ];
 
   ParentHomeSummaryEntity copyWith({
     ParentHomeOverviewEntity? overview,
@@ -71,11 +71,11 @@ class ParentHomeOverviewEntity extends Equatable {
 
   @override
   List<Object?> get props => [
-        unpaidInvoicesCount,
-        avgAttendanceRate,
-        avgGrade,
-        totalPoints,
-      ];
+    unpaidInvoicesCount,
+    avgAttendanceRate,
+    avgGrade,
+    totalPoints,
+  ];
 
   ParentHomeOverviewEntity copyWith({
     int? unpaidInvoicesCount,
@@ -121,14 +121,14 @@ class ParentChildSummaryEntity extends Equatable {
 
   @override
   List<Object?> get props => [
-        childId,
-        name,
-        profileImageUrl,
-        grade,
-        attendanceRate,
-        averageGrade,
-        lastActivity,
-      ];
+    childId,
+    name,
+    profileImageUrl,
+    grade,
+    attendanceRate,
+    averageGrade,
+    lastActivity,
+  ];
 
   ParentChildSummaryEntity copyWith({
     String? childId,
@@ -150,6 +150,7 @@ class ParentChildSummaryEntity extends Equatable {
     );
   }
 }
+
 class ParentChildDashboardSummaryEntity extends Equatable {
   final ParentChildEntity child;
   final ParentHomeAttendanceSummary attendance;
@@ -177,12 +178,12 @@ class ParentChildDashboardSummaryEntity extends Equatable {
 
   @override
   List<Object?> get props => [
-        child,
-        attendance,
-        academics,
-        financial,
-        recentActivity,
-      ];
+    child,
+    attendance,
+    academics,
+    financial,
+    recentActivity,
+  ];
 
   ParentChildDashboardSummaryEntity copyWith({
     ParentChildEntity? child,
@@ -224,8 +225,13 @@ class ParentHomeAttendanceSummary extends Equatable {
   );
 
   @override
-  List<Object?> get props =>
-      [attendanceRate, totalDays, attendedDays, absentDays, lastAttendanceDate];
+  List<Object?> get props => [
+    attendanceRate,
+    totalDays,
+    attendedDays,
+    absentDays,
+    lastAttendanceDate,
+  ];
 
   ParentHomeAttendanceSummary copyWith({
     double? attendanceRate,
@@ -268,12 +274,12 @@ class ParentHomeAcademicSummary extends Equatable {
 
   @override
   List<Object?> get props => [
-        averageGrade,
-        gradeTrend,
-        enrolledCoursesCount,
-        activeAssignmentsCount,
-        nextDeadline,
-      ];
+    averageGrade,
+    gradeTrend,
+    enrolledCoursesCount,
+    activeAssignmentsCount,
+    nextDeadline,
+  ];
 
   ParentHomeAcademicSummary copyWith({
     double? averageGrade,
@@ -313,8 +319,12 @@ class ParentHomeFinancialSummary extends Equatable {
   );
 
   @override
-  List<Object?> get props =>
-      [walletBalance, spentThisMonth, currency, lastTransactionDate];
+  List<Object?> get props => [
+    walletBalance,
+    spentThisMonth,
+    currency,
+    lastTransactionDate,
+  ];
 
   ParentHomeFinancialSummary copyWith({
     double? walletBalance,
@@ -357,8 +367,14 @@ class ParentRecentActivityEntity extends Equatable {
   );
 
   @override
-  List<Object?> get props =>
-      [id, type, title, description, timestamp, metadata];
+  List<Object?> get props => [
+    id,
+    type,
+    title,
+    description,
+    timestamp,
+    metadata,
+  ];
 
   ParentRecentActivityEntity copyWith({
     String? id,

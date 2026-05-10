@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -8,14 +7,14 @@ import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 import '../bloc/student_registration_bloc.dart';
 
-class SecurityStep extends StatefulWidget {
+final class SecurityStep extends StatefulWidget {
   const SecurityStep({super.key});
 
   @override
   State<SecurityStep> createState() => _SecurityStepState();
 }
 
-class _SecurityStepState extends State<SecurityStep> {
+final class _SecurityStepState extends State<SecurityStep> {
   final ImagePicker _imagePicker = ImagePicker();
   late final TextEditingController _passwordController;
   late final TextEditingController _confirmPasswordController;
@@ -41,7 +40,6 @@ class _SecurityStepState extends State<SecurityStep> {
   Widget build(BuildContext context) {
     final t = context.t.student;
     final bloc = context.read<StudentRegistrationBloc>();
-    final palette = MentorXThemeColorPalette.light;
     return BlocBuilder<StudentRegistrationBloc, StudentRegistrationState>(
       builder: (context, state) {
         return Column(
@@ -51,24 +49,29 @@ class _SecurityStepState extends State<SecurityStep> {
               duration: const Duration(milliseconds: 400),
               child: Text(
                 t['securityTitle'] ?? 'Security & Identity',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                style: TextStyle(
+                  fontSize: 28,
                   fontWeight: FontWeight.w900,
-                  color: palette.textPrimary,
+                  color: context.textPrimaryColor,
+                  letterSpacing: -1.0,
                 ),
               ),
             ),
-            const Gap(8),
+            const Gap(12),
             FadeInDown(
               duration: const Duration(milliseconds: 500),
               child: Text(
-                t['securitySubtitle'] ?? 'Protect your account with a strong password and verify your identity with your National ID.',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: palette.textSecondary,
-                  height: 1.5,
+                t['securitySubtitle'] ??
+                    'Protect your account with a strong password and verify your identity with your National ID.',
+                style: TextStyle(
+                  color: context.textSecondaryColor,
+                  fontSize: 15,
+                  height: 1.6,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ),
-            const Gap(32),
+            const Gap(40),
             FadeInUp(
               duration: const Duration(milliseconds: 400),
               child: MentorXTextFormField(
@@ -81,7 +84,7 @@ class _SecurityStepState extends State<SecurityStep> {
                     bloc.add(StudentRegistrationPasswordChanged(value)),
               ),
             ),
-            const Gap(12),
+            const Gap(16),
             FadeInUp(
               duration: const Duration(milliseconds: 500),
               child: _buildPasswordStrength(context, state.password),
@@ -104,7 +107,7 @@ class _SecurityStepState extends State<SecurityStep> {
                     bloc.add(StudentRegistrationConfirmPasswordChanged(value)),
               ),
             ),
-            const Gap(32),
+            const Gap(48),
             FadeInUp(
               duration: const Duration(milliseconds: 700),
               child: _buildIdCardUpload(context, state, bloc),
@@ -117,7 +120,6 @@ class _SecurityStepState extends State<SecurityStep> {
 
   Widget _buildPasswordStrength(BuildContext context, String password) {
     final t = context.t.student;
-    final palette = MentorXThemeColorPalette.light;
     final score = _passwordStrengthScore(password);
 
     final String label;
@@ -125,16 +127,16 @@ class _SecurityStepState extends State<SecurityStep> {
     switch (score) {
       case <= 0.25:
         label = t['passwordWeak'] ?? 'Weak';
-        color = palette.statusDanger;
+        color = context.statusDangerColor;
       case <= 0.50:
         label = t['passwordFair'] ?? 'Fair';
-        color = palette.statusWarning;
+        color = context.statusWarningColor;
       case <= 0.75:
         label = t['passwordGood'] ?? 'Good';
         color = Colors.orangeAccent;
       default:
         label = t['passwordStrong'] ?? 'Strong';
-        color = palette.statusSuccess;
+        color = context.statusSuccessColor;
     }
 
     return Column(
@@ -144,21 +146,23 @@ class _SecurityStepState extends State<SecurityStep> {
           children: [
             Expanded(
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(10),
                 child: LinearProgressIndicator(
                   value: score == 0 ? 0.05 : score,
-                  minHeight: 6,
+                  minHeight: 8,
                   color: color,
-                  backgroundColor: palette.backgroundSecondary,
+                  backgroundColor: context.backgroundSecondaryColor,
                 ),
               ),
             ),
-            const Gap(12),
+            const Gap(16),
             Text(
               label,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              style: TextStyle(
                 color: color,
                 fontWeight: FontWeight.w900,
+                fontSize: 12,
+                letterSpacing: 0.5,
               ),
             ),
           ],
@@ -183,58 +187,77 @@ class _SecurityStepState extends State<SecurityStep> {
     StudentRegistrationBloc bloc,
   ) {
     final t = context.t.student;
-    final palette = MentorXThemeColorPalette.light;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          t['nationalIdPhotoLabel'] ?? 'National ID Card Photo',
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            fontWeight: FontWeight.w800,
-            color: palette.textPrimary,
-          ),
+        Row(
+          children: [
+            Icon(
+              Icons.badge_rounded,
+              color: context.brandPrimaryColor,
+              size: 18,
+            ),
+            const Gap(8),
+            Text(
+              t['nationalIdPhotoLabel'] ?? 'National ID Card Photo',
+              style: TextStyle(
+                fontWeight: FontWeight.w800,
+                color: context.textPrimaryColor,
+                fontSize: 14,
+              ),
+            ),
+          ],
         ),
-        const Gap(12),
+        const Gap(16),
         Material(
           color: Colors.transparent,
           child: InkWell(
             onTap: () => _pickIdCardPhoto(bloc),
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(24),
             child: Container(
-              height: 180,
+              height: 200,
               width: double.infinity,
               decoration: BoxDecoration(
-                color: palette.backgroundSecondary,
-                borderRadius: BorderRadius.circular(20),
+                color: context.backgroundSecondaryColor,
+                borderRadius: BorderRadius.circular(24),
                 border: Border.all(
-                  color: palette.brandPrimary.withValues(alpha: 0.1),
+                  color: context.brandPrimaryColor.withValues(alpha: 0.1),
                   width: 2,
                 ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.1),
+                    blurRadius: 20,
+                    offset: const Offset(0, 10),
+                  ),
+                ],
               ),
               child: state.idCardPhotoPath == null
                   ? Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
-                          padding: const EdgeInsets.all(16),
+                          padding: const EdgeInsets.all(20),
                           decoration: BoxDecoration(
-                            color: palette.brandPrimary.withValues(alpha: 0.1),
+                            color: context.brandPrimaryColor.withValues(
+                              alpha: 0.1,
+                            ),
                             shape: BoxShape.circle,
                           ),
                           child: Icon(
                             Icons.add_a_photo_rounded,
-                            size: 32,
-                            color: palette.brandPrimary,
+                            size: 36,
+                            color: context.brandPrimaryColor,
                           ),
                         ),
-                        const Gap(16),
+                        const Gap(20),
                         Text(
                           t['uploadIdFront'] ?? 'Upload Front Side of ID Card',
-                          style: Theme.of(context).textTheme.bodySmall
-                              ?.copyWith(
-                                color: palette.textSecondary,
-                                fontWeight: FontWeight.w700,
-                              ),
+                          style: TextStyle(
+                            color: context.textSecondaryColor,
+                            fontWeight: FontWeight.w800,
+                            fontSize: 14,
+                          ),
                         ),
                       ],
                     )
@@ -242,25 +265,44 @@ class _SecurityStepState extends State<SecurityStep> {
                       fit: StackFit.expand,
                       children: [
                         ClipRRect(
-                          borderRadius: BorderRadius.circular(18),
+                          borderRadius: BorderRadius.circular(22),
                           child: Image.file(
                             File(state.idCardPhotoPath!),
                             fit: BoxFit.cover,
                           ),
                         ),
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(22),
+                            gradient: LinearGradient(
+                              colors: [
+                                Colors.transparent,
+                                Colors.black.withValues(alpha: 0.4),
+                              ],
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                            ),
+                          ),
+                        ),
                         Positioned(
-                          top: 12,
-                          right: 12,
+                          top: 16,
+                          right: 16,
                           child: Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: const BoxDecoration(
-                              color: Colors.white,
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: context.backgroundPrimaryColor,
                               shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.2),
+                                  blurRadius: 10,
+                                ),
+                              ],
                             ),
                             child: Icon(
                               Icons.edit_rounded,
-                              size: 16,
-                              color: palette.brandPrimary,
+                              size: 18,
+                              color: context.brandPrimaryColor,
                             ),
                           ),
                         ),

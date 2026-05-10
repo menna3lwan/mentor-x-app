@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:mentorx_core/mentorx_core.dart';
+import 'package:device_info_service/device_info_service.dart';
 
 import 'models/student_model.dart';
 
@@ -24,11 +25,13 @@ final class DioAuthenticationRepository
 
   final HttpClient httpClient;
   final CacheRepository cacheRepository;
+  final DeviceInfoService deviceInfoService;
 
   DioAuthenticationRepository({
     required this.httpClient,
     required this.cacheRepository,
-  });
+    DeviceInfoService? deviceInfoService,
+  }) : deviceInfoService = deviceInfoService ?? DeviceInfoServiceImpl();
 
   String? _pendingOtpPhoneNumber;
   OtpVerificationPurpose _pendingOtpPurpose = OtpVerificationPurpose.login;
@@ -160,6 +163,7 @@ final class DioAuthenticationRepository
   @override
   Future<void> requestPasswordReset(String phoneNumber) async {
     try {
+      await httpClient.clearTokens();
       await httpClient.post(
         '/api/auth/forgot-password',
         data: {'phone': phoneNumber},
@@ -210,6 +214,10 @@ final class DioAuthenticationRepository
     required String password,
   }) async {
     try {
+      // Proactively clear existing tokens to avoid sending stale/invalid
+      // tokens in the Authorization header to the login endpoint.
+      await httpClient.clearTokens();
+
       final payload = await _buildLoginPayload(
         phoneNumber: phoneNumber,
         password: password,
@@ -236,7 +244,7 @@ final class DioAuthenticationRepository
         );
       }
 
-      _setTokensIfPresent(data);
+      await _setTokensIfPresent(data);
 
       var user = _extractStudentFromResponse(response.data);
       user ??= await getCurrentUser();
@@ -300,6 +308,9 @@ final class DioAuthenticationRepository
     String phoneNumber,
   ) async {
     try {
+      // Clear existing tokens before starting a new registration/OTP flow.
+      await httpClient.clearTokens();
+
       final response = await _sendOtpResponse(phoneNumber);
 
       setOtpVerificationContext(
@@ -338,7 +349,7 @@ final class DioAuthenticationRepository
     try {
       final response = await _verifyOtpResponse(phone, otpInt);
       final data = asMap(response.data)['data'] ?? asMap(response.data);
-      _setTokensIfPresent(data);
+      await _setTokensIfPresent(data);
 
       final studentFromPayload = _extractStudentFromResponse(response.data);
       if (studentFromPayload != null) {
@@ -398,7 +409,7 @@ final class DioAuthenticationRepository
       );
 
       final data = asMap(response.data)['data'] ?? asMap(response.data);
-      _setTokensIfPresent(data);
+      await _setTokensIfPresent(data);
     } on HttpClientResponse catch (e) {
       handleHttpClientErrorResponse(
         e,
@@ -457,6 +468,12 @@ final class DioAuthenticationRepository
       await _cacheUser(user);
       return user;
     } on HttpClientResponse catch (e) {
+      if (e.statusCode == 401) {
+        return handleHttpClientErrorResponse(
+          e,
+          defaultCode: AuthenticationRepositoryExceptionCode.invalidCredentials,
+        );
+      }
       return handleHttpClientErrorResponse(
         e,
         defaultCode: _ExceptionCode.unknown,
@@ -537,11 +554,11 @@ final class DioAuthenticationRepository
     final payload = <String, dynamic>{
       'phone': phoneNumber,
       'password': password,
-      'device_hash': _buildDeviceHash(),
-      'device_name': _buildDeviceName(),
+      'device_hash': await deviceInfoService.getDeviceHash(),
+      'device_name': await deviceInfoService.getDeviceName(),
       'device_model': _buildDeviceModel(),
       'os_version': Platform.operatingSystemVersion,
-      'app_version': '1.0.0',
+      'app_version': await deviceInfoService.getAppVersion(),
     };
 
     final tenantId = await cacheRepository.get(CacheKeys.tenantId);
@@ -553,18 +570,23 @@ final class DioAuthenticationRepository
     return payload;
   }
 
-  void _setTokensIfPresent(Map<String, dynamic> data) {
+  Future<void> _setTokensIfPresent(Map<String, dynamic> data) async {
     final accessToken = stringOrNull(
       data['token'] ?? data['access_token'] ?? data['accessToken'],
     );
-    if (accessToken == null) return;
+    
+    if (accessToken == null) {
+      _logger.warning('No access token found in response data keys: ${data.keys.toList()}');
+      return;
+    }
 
+    _logger.info('Token found in response, updating HttpClient and Cache');
     final refreshToken = stringOrNull(
       data['refresh_token'] ?? data['refreshToken'],
     );
-    httpClient.setAccessToken(accessToken).ignore();
+    await httpClient.setAccessToken(accessToken);
     if (refreshToken != null) {
-      httpClient.setRefreshToken(refreshToken).ignore();
+      await httpClient.setRefreshToken(refreshToken);
     }
   }
 
@@ -662,25 +684,6 @@ final class DioAuthenticationRepository
     final map = asMap(responseData);
     final error = map['error'];
     return asMap(error);
-  }
-
-
-
-  static String _buildDeviceHash() {
-    final raw = [
-      Platform.operatingSystem,
-      Platform.operatingSystemVersion,
-      Platform.localHostname,
-      Platform.localeName,
-    ].join('|');
-
-    return base64UrlEncode(utf8.encode(raw)).replaceAll('=', '');
-  }
-
-  static String _buildDeviceName() {
-    if (Platform.isAndroid) return 'Android Device';
-    if (Platform.isIOS) return 'iPhone';
-    return 'Mobile Device';
   }
 
   static String _buildDeviceModel() {

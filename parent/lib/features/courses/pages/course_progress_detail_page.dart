@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:mentorx_core/mentorx_core.dart';
+import 'package:animate_do/animate_do.dart';
+import 'package:gap/gap.dart';
 
 class CourseProgressDetailPage extends StatelessWidget {
   final CourseEntity course;
@@ -11,34 +14,108 @@ class CourseProgressDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(course.title),
-      ),
+    return AppDashboardScaffold(
+      title: 'Course Progress',
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(24),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
+            FadeInDown(
+              duration: const Duration(milliseconds: 600),
+              child: AppHeroCard(
+                title: course.title.toUpperCase(),
+                icon: Icons.auto_stories_rounded,
+                stats: [
+                  AppHeroStatItem(
+                    label: 'Sessions',
+                    value: course.totalSessions.toString(),
+                    onTap: () {},
+                  ),
+                  AppHeroStatItem(
+                    label: 'Progress',
+                    value: '85%', // Placeholder for progress
+                    onTap: () {},
+                  ),
+                  AppHeroStatItem(
+                    label: 'ID',
+                    value: course.id.substring(0, 4),
+                    onTap: () {},
+                  ),
+                ],
+              ),
+            ),
+            const Gap(32),
+            
+            FadeInLeft(
+              duration: const Duration(milliseconds: 500),
+              child: const AppSectionHeader(title: 'Course Breakdown'),
+            ),
+            const Gap(16),
+            
+            FadeInUp(
+              duration: const Duration(milliseconds: 500),
+              child: Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: context.backgroundSecondaryColor,
+                  borderRadius: BorderRadius.circular(24),
+                  border: Border.all(color: context.textTertiaryColor.withValues(alpha: 0.1)),
+                ),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Course Details: ${course.title}',
-                      style: Theme.of(context).textTheme.titleLarge,
+                    _DetailRow(label: 'Course ID', value: course.id),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 16),
+                      child: Divider(),
                     ),
-                    const SizedBox(height: 16),
-                    Text('Course ID: ${course.id}'),
-                    // Add more progress details here as needed
+                    _DetailRow(label: 'Full Title', value: course.title),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 16),
+                      child: Divider(),
+                    ),
+                    const _DetailRow(label: 'Status', value: 'Active'),
                   ],
                 ),
               ),
             ),
+            
+            const Gap(40),
           ],
         ),
       ),
+    );
+  }
+}
+
+class _DetailRow extends StatelessWidget {
+  final String label;
+  final String value;
+
+  const _DetailRow({required this.label, required this.value});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            color: context.textSecondaryColor,
+            fontWeight: FontWeight.w600,
+            fontSize: 14,
+          ),
+        ),
+        Text(
+          value,
+          style: TextStyle(
+            color: context.textPrimaryColor,
+            fontWeight: FontWeight.w800,
+            fontSize: 14,
+          ),
+        ),
+      ],
     );
   }
 }

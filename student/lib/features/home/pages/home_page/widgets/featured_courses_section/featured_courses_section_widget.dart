@@ -1,6 +1,8 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:gap/gap.dart';
 
 import 'package:mentorx_core/mentorx_core.dart';
 import '../inline_section_error/inline_section_error_wrapper.dart';
@@ -27,18 +29,18 @@ final class FeaturedCoursesSectionWidget extends StatelessWidget {
       return InlineSectionError(onRetry: onRetry);
     }
 
-    final palette = MentorXThemeColorPalette.light;
     final courseItems = courses ?? const <CourseSummaryEntity>[];
 
     return SizedBox(
-      height: 270,
+      height: 280,
       child: Skeletonizer(
         enabled: isLoading,
         child: ListView.separated(
           scrollDirection: Axis.horizontal,
+          physics: const BouncingScrollPhysics(),
           itemCount: courseItems.isEmpty ? 3 : courseItems.length,
-          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-          separatorBuilder: (context, index) => const SizedBox(width: 16),
+          padding: const EdgeInsets.symmetric(vertical: 4),
+          separatorBuilder: (context, index) => const Gap(16),
           itemBuilder: (context, index) {
             final course = courseItems.isEmpty ? null : courseItems[index];
             final thumbnailUrl =
@@ -50,118 +52,111 @@ final class FeaturedCoursesSectionWidget extends StatelessWidget {
             final price = course?.price ?? 0;
             final enrolledCount = course?.enrolledCount ?? 100;
 
-            return Container(
-              width: 220,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: palette.textPrimary.withOpacity(0.06),
-                    blurRadius: 15,
-                    offset: const Offset(0, 6),
+            return GestureDetector(
+              onTap: course == null ? null : () => onTapCourse?.call(course.id),
+              child: Container(
+                width: 220,
+                decoration: BoxDecoration(
+                  color: context.backgroundSecondaryColor.withValues(alpha: 0.45),
+                  borderRadius: BorderRadius.circular(24),
+                  border: Border.all(
+                    color: context.borderPrimaryColor.withValues(alpha: 0.1),
                   ),
-                ],
-              ),
-              child: Material(
-                color: palette.backgroundPrimary,
-                borderRadius: BorderRadius.circular(20),
-                clipBehavior: Clip.antiAlias,
-                child: InkWell(
-                  onTap: course == null
-                      ? null
-                      : () => onTapCourse?.call(course.id),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: Stack(
-                          fit: StackFit.expand,
-                          children: [
-                            Image.network(thumbnailUrl, fit: BoxFit.cover),
-                            Positioned(
-                              top: 12,
-                              left: 12,
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 10,
-                                  vertical: 6,
-                                ),
-                                decoration: BoxDecoration(
-                                  color:
-                                      (isFree
-                                              ? palette.statusSuccess
-                                              : palette.brandPrimary)
-                                          .withOpacity(0.9),
-                                  borderRadius: BorderRadius.circular(12),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black12,
-                                      blurRadius: 4,
-                                      offset: const Offset(0, 2),
-                                    ),
-                                  ],
-                                ),
-                                child: Text(
-                                  isFree
-                                      ? context.t.home.dashboard.free
-                                      : context.t.core.price(amount: price),
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w800,
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(24),
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Stack(
+                            fit: StackFit.expand,
+                            children: [
+                              Image.network(thumbnailUrl, fit: BoxFit.cover),
+                              Positioned(
+                                top: 12,
+                                left: 12,
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                    vertical: 6,
                                   ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(14),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              title,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: palette.textPrimary,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 15,
-                                height: 1.3,
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            Row(
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.all(4),
                                   decoration: BoxDecoration(
-                                    color: palette.brandTertiary,
-                                    shape: BoxShape.circle,
+                                    color: context.backgroundPrimaryColor
+                                        .withValues(alpha: 0.8),
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(
+                                      color: context.borderPrimaryColor
+                                          .withValues(alpha: 0.1),
+                                    ),
                                   ),
-                                  child: Icon(
-                                    Icons.people_alt_rounded,
-                                    size: 14,
-                                    color: palette.brandPrimary,
+                                  child: Text(
+                                    isFree
+                                        ? context.t.home.dashboard.free
+                                        : context.t.core.price(amount: price),
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: context.brandPrimaryColor,
+                                      fontWeight: FontWeight.w900,
+                                    ),
                                   ),
                                 ),
-                                const SizedBox(width: 6),
-                                Text(
-                                  '$enrolledCount Students',
-                                  style: TextStyle(
-                                    color: palette.textSecondary,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                        Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                title,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  color: context.textPrimaryColor,
+                                  fontWeight: FontWeight.w900,
+                                  fontSize: 15,
+                                  height: 1.3,
+                                  letterSpacing: -0.3,
+                                ),
+                              ),
+                              const Gap(12),
+                              Row(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(6),
+                                    decoration: BoxDecoration(
+                                      color: context.brandPrimaryColor.withValues(
+                                        alpha: 0.1,
+                                      ),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Icon(
+                                      Icons.people_alt_rounded,
+                                      size: 14,
+                                      color: context.brandPrimaryColor,
+                                    ),
+                                  ),
+                                  const Gap(8),
+                                  Text(
+                                    '$enrolledCount ${context.t.course.detail.students}',
+                                    style: TextStyle(
+                                      color: context.textSecondaryColor,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

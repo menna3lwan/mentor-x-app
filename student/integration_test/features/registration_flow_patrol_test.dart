@@ -39,7 +39,7 @@ void main() {
     // selectRegistrationGrade assumes the text is visible
     // This might fail if the picker needs to be opened first
     // For now, let's assume a simple tap on the grade name if visible or in a list
-    await $.tapText('Grade 1'); 
+    await $.tapText('Grade 1');
     await $.tapContinue();
 
     // Step 4: Location Info
@@ -54,7 +54,7 @@ void main() {
       password: 'Password123!',
       confirmPassword: 'Password123!',
     );
-    
+
     // Final Submission
     if ($('Complete Registration').exists) {
       await $.tapText('Complete Registration');

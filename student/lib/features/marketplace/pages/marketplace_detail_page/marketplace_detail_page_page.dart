@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:mentorx_student/core/core.dart';
+import 'package:gap/gap.dart';
 import '../../cubit/marketplace_cart_cubit.dart';
 import 'bloc/marketplace_detail_page_bloc.dart';
 
-class MarketplaceDetailPage extends StatelessWidget {
+final class MarketplaceDetailPage extends StatelessWidget {
   const MarketplaceDetailPage({super.key});
 
   @override
@@ -15,14 +16,28 @@ class MarketplaceDetailPage extends StatelessWidget {
     final state = context.watch<MarketplaceDetailPageBloc>().state;
 
     if (state.loadingState == LoadingState.loading) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      return Scaffold(
+        backgroundColor: context.backgroundPrimaryColor,
+        body: const Center(child: CircularProgressIndicator()),
+      );
     }
 
     if (state.loadingState == LoadingState.error || state.item == null) {
       return Scaffold(
-        appBar: AppBar(),
+        backgroundColor: context.backgroundPrimaryColor,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          foregroundColor: context.textPrimaryColor,
+        ),
         body: Center(
-          child: Text(t['errorLoadingProduct'] ?? 'Error loading product'),
+          child: Text(
+            t['errorLoadingProduct'] ?? 'Error loading product',
+            style: TextStyle(
+              color: context.textSecondaryColor,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
         ),
       );
     }
@@ -30,14 +45,15 @@ class MarketplaceDetailPage extends StatelessWidget {
     final item = state.item!;
 
     return Scaffold(
-      backgroundColor: AppColors.backgroundLight,
+      backgroundColor: context.backgroundPrimaryColor,
       body: CustomScrollView(
+        physics: const BouncingScrollPhysics(),
         slivers: [
           SliverAppBar(
-            expandedHeight: 300,
+            expandedHeight: 400,
             pinned: true,
-            backgroundColor: AppColors.primary,
-            foregroundColor: Colors.white,
+            backgroundColor: context.backgroundSecondaryColor,
+            foregroundColor: context.textPrimaryColor,
             flexibleSpace: FlexibleSpaceBar(
               background: item.imageUrls.isNotEmpty
                   ? PageView.builder(
@@ -47,7 +63,7 @@ class MarketplaceDetailPage extends StatelessWidget {
                           imageUrl: item.imageUrls[index],
                           fit: BoxFit.cover,
                           placeholder: (context, url) => Container(
-                            color: Colors.white,
+                            color: context.backgroundPrimaryColor,
                             child: const Center(
                               child: CircularProgressIndicator(),
                             ),
@@ -56,18 +72,18 @@ class MarketplaceDetailPage extends StatelessWidget {
                       },
                     )
                   : Container(
-                      color: Colors.white,
-                      child: const Icon(
+                      color: context.backgroundPrimaryColor,
+                      child: Icon(
                         Icons.image,
                         size: 100,
-                        color: Colors.grey,
+                        color: context.textTertiaryColor.withValues(alpha: 0.2),
                       ),
                     ),
             ),
           ),
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.all(24.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -77,37 +93,45 @@ class MarketplaceDetailPage extends StatelessWidget {
                       Expanded(
                         child: Text(
                           item.title,
-                          style: const TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Cairo',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w900,
+                            color: context.textPrimaryColor,
+                            letterSpacing: -0.5,
                           ),
                         ),
                       ),
                       if (item.isFeatured)
                         Container(
                           padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
+                            horizontal: 10,
+                            vertical: 6,
                           ),
                           decoration: BoxDecoration(
-                            color: AppColors.accent.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(8),
+                            color: context.brandSecondaryColor.withValues(
+                              alpha: 0.1,
+                            ),
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              color: context.brandSecondaryColor.withValues(
+                                alpha: 0.2,
+                              ),
+                            ),
                           ),
                           child: Row(
                             children: [
                               Icon(
-                                Icons.star,
-                                color: AppColors.accent,
+                                Icons.star_rounded,
+                                color: context.brandSecondaryColor,
                                 size: 16,
                               ),
-                              const SizedBox(width: 4),
+                              const Gap(4),
                               Text(
-                                'FEATURED',
+                                'HOT',
                                 style: TextStyle(
-                                  color: AppColors.accent,
+                                  color: context.brandSecondaryColor,
                                   fontSize: 10,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w900,
                                 ),
                               ),
                             ],
@@ -115,53 +139,80 @@ class MarketplaceDetailPage extends StatelessWidget {
                         ),
                     ],
                   ),
-                  const SizedBox(height: 12),
+                  const Gap(16),
                   Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        '${item.price} ${t['egp'] ?? 'EGP'}',
+                        item.price.toStringAsFixed(0),
                         style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w800,
-                          color: AppColors.accent,
-                          fontFamily: 'Cairo',
+                          fontSize: 32,
+                          fontWeight: FontWeight.w900,
+                          color: context.brandPrimaryColor,
+                          letterSpacing: -1,
                         ),
                       ),
-                      const SizedBox(width: 12),
-                      if (item.hasDiscount)
-                        Text(
-                          '${item.oldPrice} ${t['egp'] ?? 'EGP'}',
-                          style: const TextStyle(
+                      const Gap(6),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 6),
+                        child: Text(
+                          t['egp'] ?? 'EGP',
+                          style: TextStyle(
                             fontSize: 16,
-                            color: Colors.grey,
-                            decoration: TextDecoration.lineThrough,
+                            fontWeight: FontWeight.w900,
+                            color: context.brandPrimaryColor.withValues(
+                              alpha: 0.5,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const Gap(16),
+                      if (item.hasDiscount)
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 6),
+                          child: Text(
+                            '${item.oldPrice} ${t['egp'] ?? 'EGP'}',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: context.textTertiaryColor,
+                              decoration: TextDecoration.lineThrough,
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
                         ),
                     ],
                   ),
-                  const SizedBox(height: 24),
+                  const Gap(32),
                   Text(
                     t['description'] ?? 'Description',
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w900,
+                      color: context.textPrimaryColor,
+                      letterSpacing: -0.5,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const Gap(12),
                   Text(
                     item.description ?? '',
                     style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[700],
-                      height: 1.5,
+                      fontSize: 15,
+                      color: context.textSecondaryColor,
+                      height: 1.6,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
-                  const SizedBox(height: 32),
+                  const Gap(32),
                   Container(
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(16),
+                      color: context.backgroundSecondaryColor,
+                      borderRadius: BorderRadius.circular(24),
+                      border: Border.all(
+                        color: context.borderPrimaryColor.withValues(
+                          alpha: 0.05,
+                        ),
+                      ),
                     ),
                     child: Column(
                       children: [
@@ -170,21 +221,29 @@ class MarketplaceDetailPage extends StatelessWidget {
                           value: item.inStock
                               ? t['inStock'] ?? 'In Stock'
                               : t['outOfStock'] ?? 'Out of Stock',
-                          valueColor: item.inStock ? Colors.green : Colors.red,
+                          valueColor: item.inStock
+                              ? context.statusSuccessColor
+                              : context.statusDangerColor,
                         ),
                         if (item.stockQuantity < 10 && item.inStock) ...[
-                          const Divider(),
+                          const Gap(16),
+                          Divider(
+                            color: context.borderPrimaryColor.withValues(
+                              alpha: 0.05,
+                            ),
+                          ),
+                          const Gap(16),
                           _DetailRow(
                             label: t['onlyLeft'] ?? 'Only left',
                             value:
                                 '${item.stockQuantity} ${t['items'] ?? 'items'}',
-                            valueColor: Colors.orange,
+                            valueColor: Colors.orangeAccent,
                           ),
                         ],
                       ],
                     ),
                   ),
-                  const SizedBox(height: 100), // Space for bottom button
+                  const Gap(120),
                 ],
               ),
             ),
@@ -192,14 +251,25 @@ class MarketplaceDetailPage extends StatelessWidget {
         ],
       ),
       bottomSheet: Container(
-        padding: const EdgeInsets.all(20),
+        padding: EdgeInsets.fromLTRB(
+          24,
+          20,
+          24,
+          MediaQuery.of(context).padding.bottom + 20,
+        ),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.backgroundSecondaryColor,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+          border: Border(
+            top: BorderSide(
+              color: context.borderPrimaryColor.withValues(alpha: 0.05),
+            ),
+          ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
-              blurRadius: 10,
-              offset: const Offset(0, -5),
+              color: Colors.black.withValues(alpha: 0.1),
+              blurRadius: 15,
+              offset: const Offset(0, -4),
             ),
           ],
         ),
@@ -210,25 +280,29 @@ class MarketplaceDetailPage extends StatelessWidget {
                 onPressed: item.inStock
                     ? () {
                         context.read<MarketplaceCartCubit>().addItem(item);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('${item.title} added to cart'),
-                          ),
+                        MentorXUI.showToast(
+                          message: '${item.title} added to cart',
                         );
                       }
                     : null,
-                text: t['addToCart'] ?? 'Add to Cart',
+                label: t['addToCart'] ?? 'Add to Cart',
               ),
             ),
-            const SizedBox(width: 16),
+            const Gap(16),
             Container(
               decoration: BoxDecoration(
-                border: Border.all(color: AppColors.primary),
-                borderRadius: BorderRadius.circular(12),
+                color: context.backgroundPrimaryColor,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: context.borderPrimaryColor.withValues(alpha: 0.1),
+                ),
               ),
               child: IconButton(
                 onPressed: () {},
-                icon: Icon(Icons.favorite_border, color: AppColors.primary),
+                icon: Icon(
+                  Icons.favorite_border_rounded,
+                  color: context.textPrimaryColor,
+                ),
               ),
             ),
           ],
@@ -238,7 +312,7 @@ class MarketplaceDetailPage extends StatelessWidget {
   }
 }
 
-class _DetailRow extends StatelessWidget {
+final class _DetailRow extends StatelessWidget {
   final String label;
   final String value;
   final Color? valueColor;
@@ -251,21 +325,26 @@ class _DetailRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(label, style: const TextStyle(color: Colors.grey)),
-          Text(
-            value,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: valueColor ?? AppColors.primary,
-            ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            color: context.textTertiaryColor,
+            fontWeight: FontWeight.w700,
+            fontSize: 14,
           ),
-        ],
-      ),
+        ),
+        Text(
+          value,
+          style: TextStyle(
+            fontWeight: FontWeight.w900,
+            color: valueColor ?? context.brandPrimaryColor,
+            fontSize: 14,
+          ),
+        ),
+      ],
     );
   }
 }

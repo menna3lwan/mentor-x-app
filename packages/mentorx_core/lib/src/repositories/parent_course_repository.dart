@@ -16,6 +16,7 @@ final class ParentCourseRepositoryException
 // ——— Repository ———
 
 abstract interface class ParentCourseRepository {
+  Future<void> initialize();
   Future<List<CourseEntity>> getCourses(String childId, {String? status});
   Future<CourseSummaryEntity> getCourseProgress(String childId, String courseId);
 }

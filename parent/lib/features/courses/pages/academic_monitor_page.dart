@@ -14,7 +14,6 @@ class AcademicMonitorPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = MentorXThemeColorPalette.light;
     final t = Translations.of(context).parent;
 
     return BlocProvider(
@@ -24,322 +23,136 @@ class AcademicMonitorPage extends StatelessWidget {
       )..add(CoursesStarted(childId)),
       child: BlocBuilder<CoursesBloc, CoursesState>(
         builder: (context, state) {
-          return Scaffold(
-            backgroundColor: palette.backgroundSecondary,
-            body: Column(
-              children: [
-                // Premium Header
-                _BuildHeader(palette: palette, childId: childId, title: t.academicMonitor),
-                
-                Expanded(
-                  child: _buildBody(context, state, palette, t),
-                ),
-              ],
-            ),
+          return AppDashboardScaffold(
+            title: t.academicMonitor,
+            onRefresh: () async {
+              context.read<CoursesBloc>().add(CoursesRefreshRequested(childId));
+            },
+            actions: [
+              IconButton(
+                onPressed: () => context.read<CoursesBloc>().add(CoursesRefreshRequested(childId)),
+                icon: const Icon(Icons.refresh_rounded),
+              ),
+            ],
+            body: _buildBody(context, state, t),
           );
         },
       ),
     );
   }
 
-  Widget _buildBody(BuildContext context, CoursesState state, MentorXThemeColorPalette palette, TranslationsParentEn t) {
+  Widget _buildBody(BuildContext context, CoursesState state, TranslationsParentEn t) {
     if (state.status == CoursesStatus.loading) {
       return const Center(child: CircularProgressIndicator());
     }
 
     if (state.status == CoursesStatus.failure) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.error_outline_rounded, size: 64, color: palette.statusDanger),
-              const SizedBox(height: 16),
-              Text(
-                state.errorMessage ?? t.unableToLoad,
-                textAlign: TextAlign.center,
-                style: TextStyle(color: palette.textPrimary, fontWeight: FontWeight.w700),
-              ),
-              const SizedBox(height: 24),
-              SizedBox(
-                width: 120,
-                child: MentorXButton(
-                  onPressed: () => context.read<CoursesBloc>().add(CoursesStarted(childId)),
-                  text: t.retry,
-                ),
-              ),
-            ],
-          ),
-        ),
+      return AppErrorView(
+        message: state.errorMessage ?? t.unableToLoad,
+        onRetry: () => context.read<CoursesBloc>().add(CoursesStarted(childId)),
       );
     }
 
-    if (state.courses.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.auto_stories_rounded, size: 64, color: palette.textTertiary.withOpacity(0.2)),
-            const SizedBox(height: 16),
-            Text(
-              t.noData,
-              style: TextStyle(color: palette.textSecondary, fontWeight: FontWeight.w600),
-            ),
-          ],
-        ),
+    if (state.courses.isEmpty && state.gradeSummary == null) {
+      return AppEmptyView(
+        title: t.noData,
+        message: 'Academic data will appear here once available.',
+        icon: Icons.auto_stories_rounded,
+        onAction: () => context.read<CoursesBloc>().add(CoursesRefreshRequested(childId)),
+        actionLabel: 'Refresh',
       );
     }
 
-    return RefreshIndicator(
-      color: palette.brandPrimary,
-      onRefresh: () async {
-        context.read<CoursesBloc>().add(CoursesRefreshRequested(childId));
-      },
-      child: ListView(
-        padding: const EdgeInsets.all(20),
-        children: [
-          if (state.gradeSummary != null) ...[
-            _BuildGradeSummaryCard(summary: state.gradeSummary!, palette: palette),
-            const SizedBox(height: 32),
-          ],
-          
-          Text(
-            t.enrolledCourses,
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w900,
-              color: palette.textPrimary,
-            ),
-          ),
-          const SizedBox(height: 16),
-          
-          ...state.courses.map(
-            (course) => _CourseCard(course: course, palette: palette),
-          ),
-          
-          const SizedBox(height: 40),
-        ],
-      ),
-    );
-  }
-}
-
-class _BuildHeader extends StatelessWidget {
-  final MentorXThemeColorPalette palette;
-  final String childId;
-  final String title;
-  const _BuildHeader({required this.palette, required this.childId, required this.title});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(
-        top: MediaQuery.of(context).padding.top + 10,
-        bottom: 24,
-        left: 20,
-        right: 20,
-      ),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [palette.brandPrimary, palette.brandPrimary.withOpacity(0.8)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(32)),
-        boxShadow: [
-          BoxShadow(
-            color: palette.brandPrimary.withOpacity(0.3),
-            blurRadius: 15,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          IconButton(
-            onPressed: () => Navigator.pop(context),
-            icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 20),
-          ),
-          Expanded(
-            child: Text(
-              title,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w800,
-                color: Colors.white,
-              ),
-            ),
-          ),
-          IconButton(
-            onPressed: () => context.read<CoursesBloc>().add(CoursesRefreshRequested(childId)),
-            icon: const Icon(Icons.refresh_rounded, color: Colors.white, size: 22),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _BuildGradeSummaryCard extends StatelessWidget {
-  final ParentGradeSummaryEntity summary;
-  final MentorXThemeColorPalette palette;
-
-  const _BuildGradeSummaryCard({required this.summary, required this.palette});
-
-  @override
-  Widget build(BuildContext context) {
-    final t = Translations.of(context).parent;
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(28),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.03),
-            blurRadius: 15,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          Text(
-            t.overallAverage,
-            style: TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w700,
-              color: palette.textTertiary,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.baseline,
-            textBaseline: TextBaseline.alphabetic,
-            children: [
-              Text(
-                summary.overallAverage.toStringAsFixed(1),
-                style: TextStyle(
-                  fontSize: 48,
-                  fontWeight: FontWeight.w900,
-                  color: palette.brandPrimary,
-                ),
-              ),
-              Text(
-                '%',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w800,
-                  color: palette.brandPrimary.withOpacity(0.5),
-                ),
-              ),
-            ],
-          ),
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 20),
-            child: Divider(),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: summary.distribution.entries.map((entry) => _DistributionItem(
-              grade: entry.key,
-              count: entry.value,
-              palette: palette,
-            )).toList(),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _DistributionItem extends StatelessWidget {
-  final String grade;
-  final int count;
-  final MentorXThemeColorPalette palette;
-
-  const _DistributionItem({required this.grade, required this.count, required this.palette});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
+    return ListView(
+      physics: const BouncingScrollPhysics(),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       children: [
-        Text(
-          grade,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w900,
-            color: palette.brandPrimary,
+        if (state.gradeSummary != null) ...[
+          AppHeroCard(
+            title: t.overallAverage.toUpperCase(),
+            icon: Icons.auto_graph_rounded,
+            stats: [
+              AppHeroStatItem(
+                label: 'Average',
+                value: '${state.gradeSummary!.overallAverage.toStringAsFixed(1)}%',
+                onTap: () {},
+              ),
+              AppHeroStatItem(
+                label: 'Graded',
+                value: state.gradeSummary!.graded.toString(),
+                onTap: () {},
+              ),
+              AppHeroStatItem(
+                label: 'Pending',
+                value: state.gradeSummary!.pending.toString(),
+                onTap: () {},
+              ),
+            ],
           ),
+          const SizedBox(height: 32),
+        ],
+        
+        AppSectionHeader(title: t.enrolledCourses),
+        const SizedBox(height: 16),
+        
+        ...state.courses.map(
+          (course) => _CourseCard(course: course),
         ),
-        const SizedBox(height: 2),
-        Text(
-          '$count Courses',
-          style: TextStyle(
-            fontSize: 10,
-            fontWeight: FontWeight.w700,
-            color: palette.textTertiary,
-          ),
-        ),
+        
+        const SizedBox(height: 40),
       ],
     );
   }
 }
 
+// Removed _BuildHeader, _BuildGradeSummaryCard, and _DistributionItem in favor of standardized components
+
 class _CourseCard extends StatelessWidget {
   final CourseEntity course;
-  final MentorXThemeColorPalette palette;
 
-  const _CourseCard({required this.course, required this.palette});
+  const _CourseCard({required this.course});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.backgroundSecondaryColor,
         borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: context.textTertiaryColor.withValues(alpha: 0.1)),
       ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: palette.brandPrimary.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(Icons.book_rounded, color: palette.brandPrimary, size: 20),
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+        leading: Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: context.brandPrimaryColor.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(16),
           ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  course.title,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w800,
-                    color: palette.textPrimary,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  'Sessions: ${course.totalSessions}',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: palette.textSecondary,
-                  ),
-                ),
-              ],
+          child: Icon(Icons.book_rounded, color: context.brandPrimaryColor, size: 24),
+        ),
+        title: Text(
+          course.title,
+          style: TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.w800,
+            color: context.textPrimaryColor,
+          ),
+        ),
+        subtitle: Padding(
+          padding: const EdgeInsets.only(top: 4.0),
+          child: Text(
+            'Sessions: ${course.totalSessions}',
+            style: TextStyle(
+              fontSize: 13,
+              color: context.textSecondaryColor,
             ),
           ),
-          Icon(Icons.arrow_forward_ios_rounded, color: palette.textTertiary, size: 14),
-        ],
+        ),
+        trailing: Icon(Icons.arrow_forward_ios_rounded, color: context.textTertiaryColor, size: 14),
+        onTap: () {
+          // Navigate to course details
+        },
       ),
     );
   }

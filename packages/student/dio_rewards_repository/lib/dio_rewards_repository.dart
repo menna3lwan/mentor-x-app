@@ -21,11 +21,13 @@ final class DioRewardsRepository
     MentorXPaginationInfo? paginationInfo,
   }) async {
     try {
+      final queryParams = {
+        if (paginationInfo != null) ...paginationInfo.toJson(),
+      };
+
       final response = await httpClient.get(
         '/api/student/points/history',
-        queryParameters: {
-          if (paginationInfo != null) ...paginationInfo.toJson(),
-        },
+        queryParameters: queryParams,
       );
 
       final data = asList(asMap(response.data)['data'] ??
@@ -45,11 +47,13 @@ final class DioRewardsRepository
     MentorXPaginationInfo? paginationInfo,
   }) async {
     try {
+      final queryParams = {
+        if (paginationInfo != null) ...paginationInfo.toJson(),
+      };
+
       final response = await httpClient.get(
         '/api/rewards/items',
-        queryParameters: {
-          if (paginationInfo != null) ...paginationInfo.toJson(),
-        },
+        queryParameters: queryParams,
       );
 
       final data = asList(asMap(response.data)['data'] ??
@@ -69,11 +73,13 @@ final class DioRewardsRepository
     MentorXPaginationInfo? paginationInfo,
   }) async {
     try {
+      final queryParams = {
+        if (paginationInfo != null) ...paginationInfo.toJson(),
+      };
+
       final response = await httpClient.get(
         '/api/rewards/claims',
-        queryParameters: {
-          if (paginationInfo != null) ...paginationInfo.toJson(),
-        },
+        queryParameters: queryParams,
       );
 
       final data = asList(asMap(response.data)['data'] ??
@@ -91,9 +97,10 @@ final class DioRewardsRepository
   @override
   Future<RewardClaimEntity> claimReward(String rewardItemId) async {
     try {
+      final payload = {'reward_item_id': rewardItemId};
       final response = await httpClient.post(
         '/api/rewards/claims',
-        data: {'reward_item_id': rewardItemId},
+        data: payload,
       );
 
       final data = asMap(response.data)['data'] ?? asMap(response.data);

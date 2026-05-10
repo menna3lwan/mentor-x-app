@@ -395,4 +395,19 @@ final class MockCourseGenerator {
       expiresAt: DateTime.now().add(const Duration(days: 90)),
     );
   }
+
+  static List<WeekEntity> sessionWeeks(String sessionId) {
+    return [
+      WeekEntity(
+        id: 'w1',
+        sessionId: sessionId,
+        title: 'Week 1',
+      ),
+      WeekEntity(
+        id: 'w2',
+        sessionId: sessionId,
+        title: 'Week 2',
+      ),
+    ];
+  }
 }

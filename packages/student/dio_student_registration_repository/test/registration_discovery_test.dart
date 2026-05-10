@@ -1,3 +1,4 @@
+import 'dart:developer' as dev;
 import 'package:test/test.dart';
 import 'package:dio_student_registration_repository/dio_student_registration_repository.dart';
 import 'package:dio_http_client/dio_http_client.dart';
@@ -25,22 +26,22 @@ void main() {
     test('Get Application Info', () async {
       try {
         final info = await repository.getApplicationInfo();
-        print('Application Info Type: ${info.runtimeType}');
-        print('Application Info: $info');
+        dev.log('Application Info Type: ${info.runtimeType}');
+        dev.log('Application Info: $info');
       } catch (e) {
-        print('Failed to get application info: $e');
+        dev.log('Failed to get application info: $e');
       }
     });
 
     test('Get Governorates', () async {
       try {
         final governorates = await repository.getGovernorates();
-        print('Governorates count: ${governorates.length}');
+        dev.log('Governorates count: ${governorates.length}');
         for (var g in governorates.take(3)) {
-          print('Gov: ${g.name} (${g.id})');
+          dev.log('Gov: ${g.name} (${g.id})');
         }
       } catch (e) {
-        print('Failed to get governorates: $e');
+        dev.log('Failed to get governorates: $e');
       }
     });
 
@@ -49,10 +50,10 @@ void main() {
         final governorates = await repository.getGovernorates();
         if (governorates.isNotEmpty) {
           final areas = await repository.getAreas(governorates.first.id);
-          print('Areas for ${governorates.first.name}: ${areas.take(5)}');
+          dev.log('Areas for ${governorates.first.name}: ${areas.take(5)}');
         }
       } catch (e) {
-        print('Failed to get areas: $e');
+        dev.log('Failed to get areas: $e');
       }
     });
 
@@ -61,11 +62,11 @@ void main() {
         await repository.startRegistration(
           phone: '01234567899', // Dummy unique phone
         );
-        print('Registration started successfully');
+        dev.log('Registration started successfully');
       } on HttpClientResponse catch (e) {
-        print('Error: ${e.statusCode} ${e.data}');
+        dev.log('Error: ${e.statusCode} ${e.data}');
       } catch (e) {
-        print('Failed to start registration: $e');
+        dev.log('Failed to start registration: $e');
       }
     });
 
@@ -86,12 +87,12 @@ void main() {
           password: 'password123',
           confirmPassword: 'password123',
         );
-        print('Registration completed successfully');
+        dev.log('Registration completed successfully');
       } catch (e) {
-        print('Failed to complete registration error: $e');
+        dev.log('Failed to complete registration error: $e');
         if (e is StudentRegistrationException) {
-          print('Exception code: ${e.code}');
-          print('Exception message: ${e.message}');
+          dev.log('Exception code: ${e.code}');
+          dev.log('Exception message: ${e.message}');
         }
       }
     });

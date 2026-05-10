@@ -23,12 +23,11 @@ final class StatusLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = MentorXThemeColorPalette.light;
-
     return Scaffold(
-      backgroundColor: palette.backgroundPrimary,
+      backgroundColor: context.backgroundPrimaryColor,
       body: Stack(
         children: [
+          // Background decorative element
           Positioned(
             top: -100,
             right: -100,
@@ -38,7 +37,7 @@ final class StatusLayout extends StatelessWidget {
                 width: 300,
                 height: 300,
                 decoration: BoxDecoration(
-                  color: iconBackground.withValues(alpha: 0.05),
+                  color: iconBackground.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
               ),
@@ -64,10 +63,10 @@ final class StatusLayout extends StatelessWidget {
                               width: 160,
                               height: 160,
                               decoration: BoxDecoration(
-                                color: iconBackground.withValues(alpha: 0.05),
+                                color: iconBackground.withValues(alpha: 0.1),
                                 shape: BoxShape.circle,
                               ),
-                              padding: const EdgeInsets.all(20),
+                              padding: const EdgeInsets.all(24),
                               child: Container(
                                 decoration: BoxDecoration(
                                   gradient: LinearGradient(
@@ -84,14 +83,14 @@ final class StatusLayout extends StatelessWidget {
                                       color: iconBackground.withValues(
                                         alpha: 0.3,
                                       ),
-                                      blurRadius: 25,
-                                      offset: const Offset(0, 12),
+                                      blurRadius: 30,
+                                      offset: const Offset(0, 15),
                                     ),
                                   ],
                                 ),
                                 child: Icon(
                                   icon,
-                                  size: 56,
+                                  size: 64,
                                   color: Colors.white,
                                 ),
                               ),
@@ -102,10 +101,10 @@ final class StatusLayout extends StatelessWidget {
                             duration: const Duration(milliseconds: 500),
                             child: Text(
                               title,
-                              style: const TextStyle(
-                                fontSize: 28,
+                              style: TextStyle(
+                                fontSize: 32,
                                 fontWeight: FontWeight.w900,
-                                color: Colors.black,
+                                color: context.textPrimaryColor,
                                 letterSpacing: -1.0,
                               ),
                               textAlign: TextAlign.center,
@@ -119,9 +118,9 @@ final class StatusLayout extends StatelessWidget {
                               description,
                               style: TextStyle(
                                 fontSize: 16,
-                                color: palette.textSecondary,
+                                color: context.textSecondaryColor,
                                 height: 1.6,
-                                fontWeight: FontWeight.w500,
+                                fontWeight: FontWeight.w700,
                               ),
                               textAlign: TextAlign.center,
                             ),
@@ -140,7 +139,7 @@ final class StatusLayout extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(32, 0, 32, 40),
+                  padding: const EdgeInsets.fromLTRB(32, 0, 32, 48),
                   child: FadeInUp(
                     duration: const Duration(milliseconds: 500),
                     delay: const Duration(milliseconds: 300),

@@ -16,293 +16,163 @@ class GradeMonitorPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = MentorXThemeColorPalette.light;
-
     return BlocProvider(
       create: (context) => AssessmentsBloc(
         repository: context.read<ParentGradeRepository>(),
       )..add(AssessmentsStarted(childId)),
-      child: Scaffold(
-        backgroundColor: palette.backgroundPrimary,
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          leading: IconButton(
-            onPressed: () => Navigator.pop(context),
-            icon: Icon(Icons.arrow_back_ios_new_rounded, color: palette.textPrimary, size: 20),
+      child: BlocBuilder<AssessmentsBloc, AssessmentsState>(
+        builder: (context, state) {
+          return AppDashboardScaffold(
+            title: 'Academic Performance',
+            onRefresh: () async {
+              context.read<AssessmentsBloc>().add(AssessmentsRefreshRequested(childId));
+            },
+            actions: [
+              IconButton(
+                onPressed: () => context.read<AssessmentsBloc>().add(AssessmentsRefreshRequested(childId)),
+                icon: const Icon(Icons.refresh_rounded),
+              ),
+            ],
+            body: _buildBody(context, state),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildBody(BuildContext context, AssessmentsState state) {
+    if (state.status == AssessmentsStatus.loading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (state.status == AssessmentsStatus.failure) {
+      return AppErrorView(
+        message: state.errorMessage ?? 'Failed to load grades',
+        onRetry: () => context.read<AssessmentsBloc>().add(AssessmentsStarted(childId)),
+      );
+    }
+
+    if (state.assessments.isEmpty) {
+      return AppEmptyView(
+        title: 'No Assessments',
+        message: 'Academic evaluation data will appear here once submitted.',
+        icon: Icons.assessment_rounded,
+        onAction: () => context.read<AssessmentsBloc>().add(AssessmentsRefreshRequested(childId)),
+        actionLabel: 'Refresh',
+      );
+    }
+
+    return ListView(
+      physics: const BouncingScrollPhysics(),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      children: [
+        if (state.gradeSummary != null) ...[
+          FadeInDown(
+            duration: const Duration(milliseconds: 600),
+            child: AppHeroCard(
+              title: 'Overall Performance',
+              icon: Icons.trending_up_rounded,
+              stats: [
+                AppHeroStatItem(
+                  label: 'Average',
+                  value: '${state.gradeSummary!.overallAverage.toStringAsFixed(1)}%',
+                  onTap: () {},
+                ),
+                AppHeroStatItem(
+                  label: 'Graded',
+                  value: state.gradeSummary!.graded.toString(),
+                  onTap: () {},
+                ),
+                AppHeroStatItem(
+                  label: 'Pending',
+                  value: state.gradeSummary!.pending.toString(),
+                  onTap: () {},
+                ),
+              ],
+            ),
           ),
-          title: Text(
-            'Academic Performance',
+          const Gap(32),
+        ],
+        
+        FadeInLeft(
+          duration: const Duration(milliseconds: 500),
+          child: const AppSectionHeader(title: 'Assessment History'),
+        ),
+        const Gap(16),
+        
+        ...state.assessments.asMap().entries.map((entry) {
+          final index = entry.key;
+          final assessment = entry.value;
+          return FadeInUp(
+            duration: const Duration(milliseconds: 500),
+            delay: Duration(milliseconds: 50 * index),
+            child: _AssessmentRecordCard(assessment: assessment),
+          );
+        }),
+        
+        const Gap(40),
+      ],
+    );
+  }
+}
+
+class _AssessmentRecordCard extends StatelessWidget {
+  final QuizAttemptEntity assessment;
+
+  const _AssessmentRecordCard({required this.assessment});
+
+  @override
+  Widget build(BuildContext context) {
+    final statusColor = assessment.passed ? context.statusSuccessColor : context.statusDangerColor;
+    
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      decoration: BoxDecoration(
+        color: context.backgroundSecondaryColor,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: context.textTertiaryColor.withValues(alpha: 0.1)),
+      ),
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+        leading: Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: context.backgroundPrimaryColor,
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Icon(
+            Icons.description_rounded,
+            color: context.brandPrimaryColor,
+            size: 24,
+          ),
+        ),
+        title: Text(
+          'Quiz Result • ID ${assessment.quizId}',
+          style: TextStyle(
+            fontWeight: FontWeight.w800,
+            fontSize: 15,
+            color: context.textPrimaryColor,
+          ),
+        ),
+        subtitle: Padding(
+          padding: const EdgeInsets.only(top: 4.0),
+          child: Text(
+            'Score: ${assessment.score}/${assessment.totalMarks} • ${assessment.passed ? "Passed" : "Failed"}',
             style: TextStyle(
-              color: palette.textPrimary,
-              fontWeight: FontWeight.w900,
-              fontSize: 20,
-              letterSpacing: -0.5,
+              fontSize: 13,
+              color: context.textSecondaryColor,
+              fontWeight: FontWeight.w500,
             ),
           ),
-          actions: [
-            Builder(
-              builder: (context) => IconButton(
-                icon: Icon(Icons.refresh_rounded, color: palette.brandPrimary),
-                onPressed: () {
-                  context.read<AssessmentsBloc>().add(AssessmentsRefreshRequested(childId));
-                },
-              ),
-            ),
-            const Gap(8),
-          ],
         ),
-        body: BlocBuilder<AssessmentsBloc, AssessmentsState>(
-          builder: (context, state) {
-            if (state.status == AssessmentsStatus.loading) {
-              return Center(
-                child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(palette.brandPrimary),
-                ),
-              );
-            }
-
-            if (state.status == AssessmentsStatus.failure) {
-              return Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(32),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.error_outline_rounded, size: 64, color: palette.statusDanger),
-                      const Gap(16),
-                      Text(
-                        'Failed to load grades',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: palette.textPrimary),
-                      ),
-                      const Gap(8),
-                      Text(
-                        state.errorMessage ?? 'An unexpected error occurred',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: palette.textSecondary),
-                      ),
-                      const Gap(24),
-                      MentorXButton(
-                        onPressed: () => context.read<AssessmentsBloc>().add(AssessmentsStarted(childId)),
-                        label: 'Retry',
-                        size: MentorXButtonSize.small,
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            }
-
-            if (state.assessments.isEmpty) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(24),
-                      decoration: BoxDecoration(
-                        color: palette.backgroundSecondary,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(Icons.assessment_rounded, size: 48, color: palette.textTertiary.withValues(alpha: 0.3)),
-                    ),
-                    const Gap(20),
-                    Text(
-                      'No Assessments Yet',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: palette.textPrimary),
-                    ),
-                    const Gap(8),
-                    Text(
-                      'Evaluation data will appear here once submitted.',
-                      style: TextStyle(color: palette.textSecondary),
-                    ),
-                  ],
-                ),
-              );
-            }
-
-            return RefreshIndicator(
-              color: palette.brandPrimary,
-              onRefresh: () async {
-                context.read<AssessmentsBloc>().add(AssessmentsRefreshRequested(childId));
-              },
-              child: ListView(
-                physics: const BouncingScrollPhysics(),
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                children: [
-                  if (state.gradeSummary != null) ...[
-                    FadeInDown(
-                      duration: const Duration(milliseconds: 600),
-                      child: Container(
-                        padding: const EdgeInsets.all(28),
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [palette.brandPrimary, palette.brandPrimary.withValues(alpha: 0.8)],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
-                          borderRadius: BorderRadius.circular(32),
-                          boxShadow: [
-                            BoxShadow(
-                              color: palette.brandPrimary.withValues(alpha: 0.3),
-                              blurRadius: 20,
-                              offset: const Offset(0, 10),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          children: [
-                            Text(
-                              'OVERALL PERFORMANCE',
-                              style: TextStyle(
-                                color: Colors.white.withValues(alpha: 0.7),
-                                fontWeight: FontWeight.w900,
-                                fontSize: 12,
-                                letterSpacing: 1.5,
-                              ),
-                            ),
-                            const Gap(12),
-                            Text(
-                              '${state.gradeSummary!.overallAverage.toStringAsFixed(1)}%',
-                              style: const TextStyle(
-                                fontSize: 56,
-                                fontWeight: FontWeight.w900,
-                                color: Colors.white,
-                                letterSpacing: -2.0,
-                              ),
-                            ),
-                            const Gap(24),
-                            Container(
-                              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.15),
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                children: state.gradeSummary!.distribution.entries.map((entry) {
-                                  return Column(
-                                    children: [
-                                      Text(
-                                        entry.key,
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w900,
-                                          fontSize: 16,
-                                        ),
-                                      ),
-                                      const Gap(4),
-                                      Text(
-                                        'Grade',
-                                        style: TextStyle(
-                                          color: Colors.white.withValues(alpha: 0.7),
-                                          fontSize: 11,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ],
-                                  );
-                                }).toList(),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const Gap(40),
-                  ],
-                  FadeInLeft(
-                    duration: const Duration(milliseconds: 500),
-                    child: Text(
-                      'Assessment History',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w900,
-                        color: palette.textPrimary,
-                        letterSpacing: -0.5,
-                      ),
-                    ),
-                  ),
-                  const Gap(16),
-                  ...state.assessments.asMap().entries.map((entry) {
-                    final index = entry.key;
-                    final assessment = entry.value;
-                    return FadeInUp(
-                      duration: const Duration(milliseconds: 500),
-                      delay: Duration(milliseconds: 50 * index),
-                      child: Container(
-                        margin: const EdgeInsets.only(bottom: 16),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(24),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.03),
-                              blurRadius: 15,
-                              offset: const Offset(0, 6),
-                            ),
-                          ],
-                        ),
-                        child: ListTile(
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                          leading: Container(
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: palette.backgroundSecondary,
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: Icon(
-                              Icons.description_rounded,
-                              color: palette.brandPrimary,
-                              size: 24,
-                            ),
-                          ),
-                          title: Text(
-                            'Quiz Result • ID ${assessment.quizId}',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w800,
-                              fontSize: 15,
-                              color: palette.textPrimary,
-                            ),
-                          ),
-                          subtitle: Padding(
-                            padding: const EdgeInsets.only(top: 4.0),
-                            child: Text(
-                              'Score: ${assessment.score}/${assessment.totalMarks} • Passed: ${assessment.passed ? 'Yes' : 'No'}',
-                              style: TextStyle(
-                                fontSize: 13,
-                                color: palette.textSecondary,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                          trailing: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                            decoration: BoxDecoration(
-                              color: (assessment.passed ? palette.statusSuccess : palette.statusDanger).withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Text(
-                              '${assessment.percentage.toInt()}%',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w900,
-                                fontSize: 14,
-                                color: assessment.passed ? palette.statusSuccess : palette.statusDanger,
-                              ),
-                            ),
-                          ),
-                          onTap: () {
-                            // Detail navigation
-                          },
-                        ),
-                      ),
-                    );
-                  }),
-                ],
-              ),
-            );
-          },
+        trailing: StatusBadge(
+          label: '${assessment.percentage.toInt()}%',
+          color: statusColor,
+          isSmall: true,
         ),
+        onTap: () {
+          // Detail navigation
+        },
       ),
     );
   }

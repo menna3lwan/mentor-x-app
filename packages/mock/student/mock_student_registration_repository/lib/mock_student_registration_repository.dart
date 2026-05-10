@@ -3,11 +3,22 @@ import 'package:mentorx_core/mentorx_core.dart';
 
 final class MockStudentRegistrationRepository
     implements StudentRegistrationRepository {
+  final Duration delay;
+
+  const MockStudentRegistrationRepository({
+    this.delay = const Duration(milliseconds: 500),
+  });
+
+  @override
+  Future<void> initialize() async {
+    await Future.delayed(delay);
+  }
+
   @override
   Future<void> startRegistration({
     required String phone,
   }) async {
-    await Future.delayed(const Duration(seconds: 1));
+    await Future.delayed(delay);
     // Simulate phone already exists for a specific number
     if (phone == '01000000000') {
       throw StudentRegistrationException(
@@ -19,7 +30,7 @@ final class MockStudentRegistrationRepository
 
   @override
   Future<void> resendOtp(String phone) async {
-    await Future.delayed(const Duration(seconds: 1));
+    await Future.delayed(delay);
   }
 
   @override
@@ -28,7 +39,7 @@ final class MockStudentRegistrationRepository
     required String otp,
     int? tenantId,
   }) async {
-    await Future.delayed(const Duration(seconds: 1));
+    await Future.delayed(delay);
     if (otp != '123456') {
       throw StudentRegistrationException(
         code: StudentRegistrationExceptionCode.invalidOtp,
@@ -58,7 +69,7 @@ final class MockStudentRegistrationRepository
     String? profileImagePath,
     String? identityDocumentPath,
   }) async {
-    await Future.delayed(const Duration(seconds: 2));
+    await Future.delayed(delay);
     
     // Simulate OTP verification
     if (otp != '123456') {
@@ -75,7 +86,7 @@ final class MockStudentRegistrationRepository
 
   @override
   Future<List<GovernorateEntity>> getGovernorates() async {
-    await Future.delayed(const Duration(milliseconds: 400));
+    await Future.delayed(delay);
     return [
       const GovernorateEntity(id: '1', name: 'Cairo'),
       const GovernorateEntity(id: '2', name: 'Giza'),
@@ -85,7 +96,7 @@ final class MockStudentRegistrationRepository
 
   @override
   Future<List<String>> getAreas(String governorateId) async {
-    await Future.delayed(const Duration(milliseconds: 300));
+    await Future.delayed(delay);
     if (governorateId == '1' || governorateId == 'Cairo') {
       return ['Maadi', 'Nasr City', 'Heliopolis', 'Zamalek'];
     } else if (governorateId == '2' || governorateId == 'Giza') {
@@ -96,7 +107,7 @@ final class MockStudentRegistrationRepository
 
   @override
   Future<StudentApplicationInfoEntity> getApplicationInfo() async {
-    await Future.delayed(const Duration(milliseconds: 500));
+    await Future.delayed(delay);
     return const StudentApplicationInfoEntity(
       requiredDocuments: ['National ID', 'Profile Photo'],
       supportInfo: SupportInfoEntity(
@@ -124,7 +135,7 @@ final class MockStudentRegistrationRepository
 
   @override
   Future<bool> checkPhone(String phone) async {
-    await Future.delayed(const Duration(milliseconds: 500));
+    await Future.delayed(delay);
     // Simulate uniqueness (except for a specific testing number)
     return phone != '01000000000';
   }

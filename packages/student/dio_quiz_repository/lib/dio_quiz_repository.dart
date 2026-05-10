@@ -20,10 +20,9 @@ final class DioQuizRepository
   Future<List<QuizEntity>> getQuizzes() async {
     try {
       final response = await httpClient.get('/api/quizzes');
-      final data = asList(asMap(response.data)['data'] ??
-          asMap(response.data)['content'] ??
-          response.data);
-      return data.map((e) => QuizModel.fromJson(asMap(e))).toList();
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final list = asList(data is Map ? data['content'] : data);
+      return list.map((e) => QuizModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
@@ -50,10 +49,9 @@ final class DioQuizRepository
   Future<List<QuizQuestionEntity>> getQuizQuestions(String quizId) async {
     try {
       final response = await httpClient.get('/api/questions/quiz/$quizId');
-      final data = asList(asMap(response.data)['data'] ??
-          asMap(response.data)['content'] ??
-          response.data);
-      return data.map((e) => QuizQuestionModel.fromJson(asMap(e))).toList();
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final list = asList(data is Map ? data['content'] : data);
+      return list.map((e) => QuizQuestionModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
@@ -137,10 +135,9 @@ final class DioQuizRepository
   Future<List<QuizEntity>> getQuizzesByWeek(String weekId) async {
     try {
       final response = await httpClient.get('/api/quizzes/week/$weekId');
-      final data = asList(asMap(response.data)['data'] ??
-          asMap(response.data)['content'] ??
-          response.data);
-      return data.map((e) => QuizModel.fromJson(asMap(e))).toList();
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final list = asList(data is Map ? data['content'] : data);
+      return list.map((e) => QuizModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,

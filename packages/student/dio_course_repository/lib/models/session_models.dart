@@ -102,6 +102,28 @@ final class SessionItemModel extends SessionItemEntity {
   }
 }
 
+final class WeekModel extends WeekEntity {
+  const WeekModel({
+    required super.id,
+    required super.sessionId,
+    required super.title,
+    super.orderIndex = 0,
+    super.items = const [],
+  });
+
+  factory WeekModel.fromJson(Map<String, dynamic> json) {
+    return WeekModel(
+      id: ModelParser.asString(json['id']),
+      sessionId: ModelParser.asString(json['sessionId'] ?? json['session_id']),
+      title: ModelParser.asString(json['title']),
+      orderIndex: ModelParser.asInt(json['orderIndex'] ?? json['order_index']),
+      items: ModelParser.asList(json['items'] ?? json['materials'])
+          .map((e) => SessionItemModel.fromJson(ModelParser.asMap(e)))
+          .toList(),
+    );
+  }
+}
+
 final class EnrollmentModel extends EnrollmentEntity {
   const EnrollmentModel({
     required super.id,

@@ -3,18 +3,26 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mock_course_repository/mock_course_repository.dart';
 
 import 'package:mentorx_student/features/course/pages/course_catalog_page/bloc/course_catalog_page_bloc.dart';
+import 'package:mock_student_registration_repository/mock_student_registration_repository.dart';
 
 void main() {
   late MockCourseRepository courseRepository;
+  late MockStudentRegistrationRepository registrationRepository;
 
   setUp(() {
     courseRepository = const MockCourseRepository(delay: Duration.zero);
+    registrationRepository = const MockStudentRegistrationRepository(
+      delay: Duration.zero,
+    );
   });
 
   group('CourseCatalogPageBloc', () {
     blocTest<CourseCatalogPageBloc, CourseCatalogPageState>(
       'loads categories and courses when initialized',
-      build: () => CourseCatalogPageBloc(courseRepository: courseRepository),
+      build: () => CourseCatalogPageBloc(
+        courseRepository: courseRepository,
+        registrationRepository: registrationRepository,
+      ),
       act: (bloc) => bloc.add(const CourseCatalogPageInitialized()),
       wait: const Duration(milliseconds: 50),
       verify: (bloc) {
@@ -27,7 +35,10 @@ void main() {
 
     blocTest<CourseCatalogPageBloc, CourseCatalogPageState>(
       'changes sort option and reloads courses',
-      build: () => CourseCatalogPageBloc(courseRepository: courseRepository),
+      build: () => CourseCatalogPageBloc(
+        courseRepository: courseRepository,
+        registrationRepository: registrationRepository,
+      ),
       seed: () => const CourseCatalogPageState(
         coursesStatus: CatalogSectionStatus.loaded,
       ),
@@ -65,7 +76,10 @@ void main() {
 
     blocTest<CourseCatalogPageBloc, CourseCatalogPageState>(
       'search updates query and reloads',
-      build: () => CourseCatalogPageBloc(courseRepository: courseRepository),
+      build: () => CourseCatalogPageBloc(
+        courseRepository: courseRepository,
+        registrationRepository: registrationRepository,
+      ),
       seed: () => const CourseCatalogPageState(
         coursesStatus: CatalogSectionStatus.loaded,
       ),
@@ -103,7 +117,10 @@ void main() {
 
     blocTest<CourseCatalogPageBloc, CourseCatalogPageState>(
       'category selection filters courses',
-      build: () => CourseCatalogPageBloc(courseRepository: courseRepository),
+      build: () => CourseCatalogPageBloc(
+        courseRepository: courseRepository,
+        registrationRepository: registrationRepository,
+      ),
       seed: () => const CourseCatalogPageState(
         coursesStatus: CatalogSectionStatus.loaded,
       ),
@@ -140,7 +157,10 @@ void main() {
 
     blocTest<CourseCatalogPageBloc, CourseCatalogPageState>(
       'refresh reloads courses',
-      build: () => CourseCatalogPageBloc(courseRepository: courseRepository),
+      build: () => CourseCatalogPageBloc(
+        courseRepository: courseRepository,
+        registrationRepository: registrationRepository,
+      ),
       seed: () => const CourseCatalogPageState(
         coursesStatus: CatalogSectionStatus.loaded,
       ),
@@ -164,7 +184,10 @@ void main() {
     );
 
     test('initial state has default values', () {
-      final bloc = CourseCatalogPageBloc(courseRepository: courseRepository);
+      final bloc = CourseCatalogPageBloc(
+        courseRepository: courseRepository,
+        registrationRepository: registrationRepository,
+      );
       expect(bloc.state.coursesStatus, CatalogSectionStatus.initial);
       expect(bloc.state.categoriesStatus, CatalogSectionStatus.initial);
       expect(bloc.state.courses, isEmpty);
@@ -178,7 +201,10 @@ void main() {
 
     blocTest<CourseCatalogPageBloc, CourseCatalogPageState>(
       'clearing category resets to null',
-      build: () => CourseCatalogPageBloc(courseRepository: courseRepository),
+      build: () => CourseCatalogPageBloc(
+        courseRepository: courseRepository,
+        registrationRepository: registrationRepository,
+      ),
       seed: () => const CourseCatalogPageState(
         coursesStatus: CatalogSectionStatus.loaded,
         selectedCategoryId: 'cat_math',
@@ -194,7 +220,10 @@ void main() {
 
     blocTest<CourseCatalogPageBloc, CourseCatalogPageState>(
       'search with empty string loads all courses',
-      build: () => CourseCatalogPageBloc(courseRepository: courseRepository),
+      build: () => CourseCatalogPageBloc(
+        courseRepository: courseRepository,
+        registrationRepository: registrationRepository,
+      ),
       seed: () => const CourseCatalogPageState(
         coursesStatus: CatalogSectionStatus.loaded,
         searchQuery: 'Chemistry',

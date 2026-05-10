@@ -7,13 +7,13 @@ import 'package:animate_do/animate_do.dart';
 import 'package:gap/gap.dart';
 import 'bloc/ai_chat_page_bloc.dart';
 
-class AiChatPage extends StatefulWidget {
+final class AiChatPage extends StatefulWidget {
   const AiChatPage({super.key});
   @override
   State<AiChatPage> createState() => _AiChatPageState();
 }
 
-class _AiChatPageState extends State<AiChatPage> {
+final class _AiChatPageState extends State<AiChatPage> {
   final _controller = TextEditingController();
   final _scrollController = ScrollController();
 
@@ -45,7 +45,6 @@ class _AiChatPageState extends State<AiChatPage> {
 
   @override
   Widget build(BuildContext context) {
-    final palette = MentorXThemeColorPalette.light;
     final t = context.t.student;
 
     return BlocConsumer<AiChatPageBloc, AiChatPageState>(
@@ -54,34 +53,25 @@ class _AiChatPageState extends State<AiChatPage> {
       },
       builder: (context, state) {
         return Scaffold(
-          backgroundColor: palette.backgroundSecondary,
+          backgroundColor: context.backgroundPrimaryColor,
           appBar: PreferredSize(
             preferredSize: const Size.fromHeight(70),
             child: Container(
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    palette.brandPrimary,
-                    palette.brandPrimary.withValues(alpha: 0.8),
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
+                color: context.backgroundSecondaryColor,
                 borderRadius: const BorderRadius.vertical(
                   bottom: Radius.circular(24),
                 ),
-                boxShadow: [
-                  BoxShadow(
-                    color: palette.brandPrimary.withValues(alpha: 0.3),
-                    blurRadius: 15,
-                    offset: const Offset(0, 4),
+                border: Border(
+                  bottom: BorderSide(
+                    color: context.borderPrimaryColor.withValues(alpha: 0.05),
                   ),
-                ],
+                ),
               ),
               child: AppBar(
                 backgroundColor: Colors.transparent,
                 elevation: 0,
-                foregroundColor: Colors.white,
+                foregroundColor: context.textPrimaryColor,
                 centerTitle: false,
                 title: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -100,14 +90,14 @@ class _AiChatPageState extends State<AiChatPage> {
                           width: 8,
                           height: 8,
                           decoration: BoxDecoration(
-                            color: state.isLoading
+                            color: state.isLoading || state.isTyping
                                 ? Colors.orangeAccent
                                 : Colors.greenAccent,
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
                                 color:
-                                    (state.isLoading
+                                    (state.isLoading || state.isTyping
                                             ? Colors.orangeAccent
                                             : Colors.greenAccent)
                                         .withValues(alpha: 0.5),
@@ -118,13 +108,13 @@ class _AiChatPageState extends State<AiChatPage> {
                         ),
                         const Gap(6),
                         Text(
-                          state.isLoading
-                              ? t['commonLoading'] ?? 'Loading...'
+                          state.isLoading || state.isTyping
+                              ? t['commonLoading'] ?? 'Processing...'
                               : t['aiSubtitle'] ?? 'Always here to help',
                           style: TextStyle(
                             fontSize: 12,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.white.withValues(alpha: 0.8),
+                            fontWeight: FontWeight.w800,
+                            color: context.textTertiaryColor,
                           ),
                         ),
                       ],
@@ -142,7 +132,7 @@ class _AiChatPageState extends State<AiChatPage> {
                   status: StatusBadgeType.danger,
                 ),
               Expanded(
-                child: state.isLoading
+                child: state.isLoading && state.messages.isEmpty
                     ? const Center(child: CircularProgressIndicator())
                     : ListView.builder(
                         physics: const BouncingScrollPhysics(),
@@ -165,7 +155,7 @@ class _AiChatPageState extends State<AiChatPage> {
                         },
                       ),
               ),
-              _buildInputArea(context, palette, t, state),
+              _buildInputArea(context, t, state),
             ],
           ),
         );
@@ -175,7 +165,6 @@ class _AiChatPageState extends State<AiChatPage> {
 
   Widget _buildInputArea(
     BuildContext context,
-    MentorXThemeColorPalette palette,
     dynamic t,
     AiChatPageState state,
   ) {
@@ -187,41 +176,47 @@ class _AiChatPageState extends State<AiChatPage> {
         MediaQuery.of(context).padding.bottom + 12,
       ),
       decoration: BoxDecoration(
-        color: palette.backgroundPrimary,
+        color: context.backgroundSecondaryColor,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 15,
             offset: const Offset(0, -4),
           ),
         ],
         borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+        border: Border(
+          top: BorderSide(
+            color: context.borderPrimaryColor.withValues(alpha: 0.05),
+          ),
+        ),
       ),
       child: Row(
         children: [
           Expanded(
             child: Container(
               decoration: BoxDecoration(
-                color: palette.backgroundSecondary,
+                color: context.backgroundPrimaryColor,
                 borderRadius: BorderRadius.circular(24),
                 border: Border.all(
-                  color: palette.textTertiary.withValues(alpha: 0.1),
+                  color: context.borderPrimaryColor.withValues(alpha: 0.1),
                 ),
               ),
               child: TextField(
                 controller: _controller,
                 onSubmitted: (_) => _sendMessage(),
                 enabled: !state.isLoading && !state.isTyping,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
+                  color: context.textPrimaryColor,
                 ),
                 decoration: InputDecoration(
                   hintText: t['typeQuestion'] ?? 'Ask me anything...',
                   hintStyle: TextStyle(
                     fontSize: 14,
-                    color: palette.textTertiary,
-                    fontWeight: FontWeight.w500,
+                    color: context.textTertiaryColor,
+                    fontWeight: FontWeight.w600,
                   ),
                   contentPadding: const EdgeInsets.symmetric(
                     horizontal: 20,
@@ -235,18 +230,11 @@ class _AiChatPageState extends State<AiChatPage> {
           const Gap(12),
           Container(
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  palette.brandPrimary,
-                  palette.brandPrimary.withValues(alpha: 0.8),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
+              color: context.brandPrimaryColor,
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
-                  color: palette.brandPrimary.withValues(alpha: 0.3),
+                  color: context.brandPrimaryColor.withValues(alpha: 0.3),
                   blurRadius: 8,
                   offset: const Offset(0, 4),
                 ),
@@ -276,15 +264,13 @@ class _AiChatPageState extends State<AiChatPage> {
   }
 }
 
-class _ChatBubble extends StatelessWidget {
+final class _ChatBubble extends StatelessWidget {
   const _ChatBubble({required this.text, required this.isUser});
   final String text;
   final bool isUser;
 
   @override
   Widget build(BuildContext context) {
-    final palette = MentorXThemeColorPalette.light;
-
     return FadeInUp(
       duration: const Duration(milliseconds: 400),
       child: Align(
@@ -296,28 +282,23 @@ class _ChatBubble extends StatelessWidget {
             maxWidth: MediaQuery.of(context).size.width * 0.8,
           ),
           decoration: BoxDecoration(
-            gradient: isUser
-                ? LinearGradient(
-                    colors: [
-                      palette.brandPrimary,
-                      palette.brandPrimary.withValues(alpha: 0.9),
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  )
-                : null,
-            color: isUser ? null : palette.backgroundPrimary,
+            color: isUser
+                ? context.brandPrimaryColor
+                : context.backgroundSecondaryColor,
             borderRadius: BorderRadius.only(
               topLeft: const Radius.circular(24),
               topRight: const Radius.circular(24),
               bottomLeft: Radius.circular(isUser ? 24 : 4),
               bottomRight: Radius.circular(isUser ? 4 : 24),
             ),
+            border: Border.all(
+              color: isUser
+                  ? context.brandPrimaryColor
+                  : context.borderPrimaryColor.withValues(alpha: 0.05),
+            ),
             boxShadow: [
               BoxShadow(
-                color: isUser
-                    ? palette.brandPrimary.withValues(alpha: 0.2)
-                    : Colors.black.withValues(alpha: 0.04),
+                color: Colors.black.withValues(alpha: 0.05),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
@@ -328,27 +309,30 @@ class _ChatBubble extends StatelessWidget {
             styleSheet: MarkdownStyleSheet(
               p: TextStyle(
                 fontSize: 14,
-                fontWeight: isUser ? FontWeight.w700 : FontWeight.w600,
-                color: isUser ? Colors.white : palette.textPrimary,
+                fontWeight: FontWeight.w700,
+                color: isUser ? Colors.white : context.textPrimaryColor,
                 height: 1.6,
                 letterSpacing: -0.2,
               ),
               code: TextStyle(
                 backgroundColor: isUser
-                    ? Colors.white.withValues(alpha: 0.2)
-                    : palette.backgroundSecondary,
+                    ? Colors.white.withValues(alpha: 0.1)
+                    : context.backgroundPrimaryColor,
                 fontSize: 12,
                 fontFamily: 'monospace',
-                color: isUser ? Colors.white : palette.brandPrimary,
+                color: isUser ? Colors.white : context.brandPrimaryColor,
               ),
               codeblockDecoration: BoxDecoration(
                 color: isUser
-                    ? Colors.white.withValues(alpha: 0.1)
-                    : palette.backgroundSecondary,
+                    ? Colors.white.withValues(alpha: 0.05)
+                    : context.backgroundPrimaryColor,
                 borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: context.borderPrimaryColor.withValues(alpha: 0.1),
+                ),
               ),
               blockquote: TextStyle(
-                color: isUser ? Colors.white70 : palette.textSecondary,
+                color: isUser ? Colors.white70 : context.textTertiaryColor,
                 fontStyle: FontStyle.italic,
               ),
               blockquoteDecoration: BoxDecoration(
@@ -356,10 +340,14 @@ class _ChatBubble extends StatelessWidget {
                   left: BorderSide(
                     color: isUser
                         ? Colors.white38
-                        : palette.brandPrimary.withValues(alpha: 0.3),
+                        : context.brandPrimaryColor.withValues(alpha: 0.3),
                     width: 4,
                   ),
                 ),
+              ),
+              listBullet: TextStyle(
+                color: isUser ? Colors.white : context.textPrimaryColor,
+                fontWeight: FontWeight.w900,
               ),
             ),
           ),
@@ -369,28 +357,30 @@ class _ChatBubble extends StatelessWidget {
   }
 }
 
-class _TypingIndicator extends StatelessWidget {
+final class _TypingIndicator extends StatelessWidget {
   const _TypingIndicator();
 
   @override
   Widget build(BuildContext context) {
-    final palette = MentorXThemeColorPalette.light;
     return Align(
       alignment: Alignment.centerLeft,
       child: Container(
         margin: const EdgeInsets.only(bottom: 16),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          color: palette.backgroundPrimary,
+          color: context.backgroundSecondaryColor,
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(20),
             topRight: Radius.circular(20),
             bottomRight: Radius.circular(20),
             bottomLeft: Radius.circular(4),
           ),
+          border: Border.all(
+            color: context.borderPrimaryColor.withValues(alpha: 0.05),
+          ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.04),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 8,
               offset: const Offset(0, 4),
             ),
@@ -408,7 +398,7 @@ class _TypingIndicator extends StatelessWidget {
   }
 }
 
-class _AnimatedDot extends StatefulWidget {
+final class _AnimatedDot extends StatefulWidget {
   final int delay;
   const _AnimatedDot({required this.delay});
 
@@ -416,7 +406,7 @@ class _AnimatedDot extends StatefulWidget {
   State<_AnimatedDot> createState() => _AnimatedDotState();
 }
 
-class _AnimatedDotState extends State<_AnimatedDot>
+final class _AnimatedDotState extends State<_AnimatedDot>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
@@ -453,8 +443,8 @@ class _AnimatedDotState extends State<_AnimatedDot>
           width: 6,
           height: 6,
           decoration: BoxDecoration(
-            color: MentorXThemeColorPalette.light.brandPrimary.withOpacity(
-              0.3 + (0.7 * _controller.value),
+            color: context.brandPrimaryColor.withValues(
+              alpha: 0.3 + (0.7 * _controller.value),
             ),
             shape: BoxShape.circle,
           ),

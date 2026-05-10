@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
+import 'package:gap/gap.dart';
+import 'package:animate_do/animate_do.dart';
 
-class QuizReviewPage extends StatelessWidget {
+final class QuizReviewPage extends StatelessWidget {
   const QuizReviewPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     final t = context.t.student;
-    final palette = MentorXThemeColorPalette.light;
 
     // Mock data for UI demonstration
     const timerText = '24:35';
@@ -16,87 +17,77 @@ class QuizReviewPage extends StatelessWidget {
     const total = 20;
 
     return Scaffold(
-      backgroundColor: palette.backgroundSecondary,
+      backgroundColor: context.backgroundPrimaryColor,
       body: Column(
         children: [
-          // Premium Header
-          _BuildHeader(palette: palette, t: t, timerText: timerText),
-
+          _BuildHeader(t: t, timerText: timerText),
           Expanded(
             child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
               padding: const EdgeInsets.all(24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Progress Overview Card
-                  _BuildProgressOverview(
-                    palette: palette,
-                    t: t,
-                    answeredCount: answered.length,
-                    totalCount: total,
-                  ),
-
-                  const SizedBox(height: 32),
-
-                  Text(
-                    t['jumpToQuestion'] ?? 'Jump to Question',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w900,
-                      color: palette.textPrimary,
+                  FadeInDown(
+                    child: _BuildProgressOverview(
+                      t: t,
+                      answeredCount: answered.length,
+                      totalCount: total,
                     ),
                   ),
-                  const SizedBox(height: 16),
-
-                  // Question Grid
-                  GridView.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 5,
-                          mainAxisSpacing: 12,
-                          crossAxisSpacing: 12,
-                          childAspectRatio: 1,
-                        ),
-                    itemCount: total,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, i) {
-                      final isAnswered = answered.contains(i);
-                      return _QuestionStatusBox(
-                        index: i + 1,
-                        isAnswered: isAnswered,
-                        palette: palette,
-                      );
-                    },
-                  ),
-
-                  const SizedBox(height: 40),
-
-                  // Actions
-                  MentorXButton(
-                    onPressed: () => context.push('/quiz-result'),
-                    text: t['submitQuiz'] ?? 'Submit Quiz',
-                  ),
-                  const SizedBox(height: 12),
-                  SizedBox(
-                    width: double.infinity,
-                    child: OutlinedButton(
-                      onPressed: () => Navigator.pop(context),
-                      style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        side: BorderSide(
-                          color: palette.brandPrimary.withOpacity(0.2),
-                        ),
+                  const Gap(40),
+                  FadeInUp(
+                    delay: const Duration(milliseconds: 200),
+                    child: Text(
+                      t['jumpToQuestion'] ?? 'Jump to Question',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w900,
+                        color: context.textPrimaryColor,
+                        letterSpacing: -0.5,
                       ),
-                      child: Text(
-                        t['backToQuestions'] ?? 'Back to Questions',
-                        style: TextStyle(
-                          color: palette.brandPrimary,
-                          fontWeight: FontWeight.w700,
-                        ),
+                    ),
+                  ),
+                  const Gap(20),
+                  FadeInUp(
+                    delay: const Duration(milliseconds: 300),
+                    child: GridView.builder(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 5,
+                            mainAxisSpacing: 12,
+                            crossAxisSpacing: 12,
+                            childAspectRatio: 1,
+                          ),
+                      itemCount: total,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, i) {
+                        final isAnswered = answered.contains(i);
+                        return _QuestionStatusBox(
+                          index: i + 1,
+                          isAnswered: isAnswered,
+                        );
+                      },
+                    ),
+                  ),
+                  const Gap(48),
+                  FadeInUp(
+                    delay: const Duration(milliseconds: 400),
+                    child: MentorXButton(
+                      onPressed: () => context.push('/quiz-result'),
+                      label: t['submitQuiz'] ?? 'Submit Quiz',
+                    ),
+                  ),
+                  const Gap(16),
+                  FadeInUp(
+                    delay: const Duration(milliseconds: 500),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: MentorXButton(
+                        onPressed: () => Navigator.pop(context),
+                        label: t['backToQuestions'] ?? 'Back to Questions',
+                        color: context.backgroundPrimaryColor,
                       ),
                     ),
                   ),
@@ -110,13 +101,11 @@ class QuizReviewPage extends StatelessWidget {
   }
 }
 
-class _BuildHeader extends StatelessWidget {
-  final MentorXThemeColorPalette palette;
+final class _BuildHeader extends StatelessWidget {
   final dynamic t;
   final String timerText;
 
   const _BuildHeader({
-    required this.palette,
     required this.t,
     required this.timerText,
   });
@@ -131,27 +120,21 @@ class _BuildHeader extends StatelessWidget {
         right: 20,
       ),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [palette.brandPrimary, palette.brandPrimary.withOpacity(0.8)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        color: context.backgroundSecondaryColor,
         borderRadius: const BorderRadius.vertical(bottom: Radius.circular(32)),
-        boxShadow: [
-          BoxShadow(
-            color: palette.brandPrimary.withOpacity(0.3),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
+        border: Border(
+          bottom: BorderSide(
+            color: context.borderPrimaryColor.withValues(alpha: 0.05),
           ),
-        ],
+        ),
       ),
       child: Row(
         children: [
           IconButton(
             onPressed: () => Navigator.pop(context),
-            icon: const Icon(
+            icon: Icon(
               Icons.arrow_back_ios_new_rounded,
-              color: Colors.white,
+              color: context.textPrimaryColor,
               size: 20,
             ),
           ),
@@ -159,31 +142,38 @@ class _BuildHeader extends StatelessWidget {
             child: Text(
               t['reviewAnswers'] ?? 'Review Answers',
               textAlign: TextAlign.center,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 18,
-                fontWeight: FontWeight.w800,
-                color: Colors.white,
+                fontWeight: FontWeight.w900,
+                color: context.textPrimaryColor,
+                letterSpacing: -0.5,
               ),
             ),
           ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.15),
+              color: context.backgroundPrimaryColor,
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.white.withOpacity(0.2)),
+              border: Border.all(
+                color: context.borderPrimaryColor.withValues(alpha: 0.1),
+              ),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.timer_outlined, color: Colors.white, size: 14),
-                const SizedBox(width: 6),
+                Icon(
+                  Icons.timer_outlined,
+                  color: context.brandPrimaryColor,
+                  size: 14,
+                ),
+                const Gap(6),
                 Text(
                   timerText,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 13,
-                    fontWeight: FontWeight.w800,
-                    color: Colors.white,
+                    fontWeight: FontWeight.w900,
+                    color: context.textPrimaryColor,
                   ),
                 ),
               ],
@@ -195,14 +185,12 @@ class _BuildHeader extends StatelessWidget {
   }
 }
 
-class _BuildProgressOverview extends StatelessWidget {
-  final MentorXThemeColorPalette palette;
+final class _BuildProgressOverview extends StatelessWidget {
   final dynamic t;
   final int answeredCount;
   final int totalCount;
 
   const _BuildProgressOverview({
-    required this.palette,
     required this.t,
     required this.answeredCount,
     required this.totalCount,
@@ -216,11 +204,14 @@ class _BuildProgressOverview extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
+        color: context.backgroundSecondaryColor,
+        borderRadius: BorderRadius.circular(28),
+        border: Border.all(
+          color: context.borderPrimaryColor.withValues(alpha: 0.05),
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -232,11 +223,12 @@ class _BuildProgressOverview extends StatelessWidget {
             t['answeredCount'] ?? 'Answered Questions',
             style: TextStyle(
               fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: palette.textTertiary,
+              fontWeight: FontWeight.w800,
+              color: context.textTertiaryColor,
+              letterSpacing: -0.2,
             ),
           ),
-          const SizedBox(height: 12),
+          const Gap(16),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -245,28 +237,32 @@ class _BuildProgressOverview extends StatelessWidget {
               Text(
                 '$answeredCount',
                 style: TextStyle(
-                  fontSize: 42,
+                  fontSize: 48,
                   fontWeight: FontWeight.w900,
-                  color: palette.brandPrimary,
+                  color: context.brandPrimaryColor,
+                  letterSpacing: -1,
                 ),
               ),
               Text(
                 ' / $totalCount',
                 style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w700,
-                  color: palette.textTertiary.withOpacity(0.5),
+                  fontSize: 22,
+                  fontWeight: FontWeight.w800,
+                  color: context.textTertiaryColor.withValues(alpha: 0.3),
                 ),
               ),
             ],
           ),
           if (unansweredCount > 0) ...[
-            const SizedBox(height: 16),
+            const Gap(24),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               decoration: BoxDecoration(
-                color: palette.statusWarning.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(12),
+                color: context.statusWarningColor.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: context.statusWarningColor.withValues(alpha: 0.2),
+                ),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -274,16 +270,16 @@ class _BuildProgressOverview extends StatelessWidget {
                   Icon(
                     Icons.warning_amber_rounded,
                     size: 16,
-                    color: palette.statusWarning,
+                    color: context.statusWarningColor,
                   ),
-                  const SizedBox(width: 8),
+                  const Gap(10),
                   Text(
                     t['unansweredNote']?.replaceAll('%s', '$unansweredCount') ??
                         '$unansweredCount questions left',
                     style: TextStyle(
                       fontSize: 12,
-                      fontWeight: FontWeight.w700,
-                      color: palette.statusWarning,
+                      fontWeight: FontWeight.w900,
+                      color: context.statusWarningColor,
                     ),
                   ),
                 ],
@@ -296,33 +292,33 @@ class _BuildProgressOverview extends StatelessWidget {
   }
 }
 
-class _QuestionStatusBox extends StatelessWidget {
+final class _QuestionStatusBox extends StatelessWidget {
   final int index;
   final bool isAnswered;
-  final MentorXThemeColorPalette palette;
 
   const _QuestionStatusBox({
     required this.index,
     required this.isAnswered,
-    required this.palette,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: isAnswered ? palette.brandPrimary : palette.backgroundPrimary,
+        color: isAnswered
+            ? context.brandPrimaryColor
+            : context.backgroundSecondaryColor,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: isAnswered
-              ? palette.brandPrimary
-              : palette.textTertiary.withOpacity(0.1),
-          width: 1.5,
+              ? context.brandPrimaryColor
+              : context.borderPrimaryColor.withValues(alpha: 0.05),
+          width: 2,
         ),
         boxShadow: isAnswered
             ? [
                 BoxShadow(
-                  color: palette.brandPrimary.withOpacity(0.2),
+                  color: context.brandPrimaryColor.withValues(alpha: 0.2),
                   blurRadius: 8,
                   offset: const Offset(0, 4),
                 ),
@@ -334,8 +330,8 @@ class _QuestionStatusBox extends StatelessWidget {
           '$index',
           style: TextStyle(
             fontSize: 16,
-            fontWeight: FontWeight.w800,
-            color: isAnswered ? Colors.white : palette.textTertiary,
+            fontWeight: FontWeight.w900,
+            color: isAnswered ? Colors.white : context.textTertiaryColor,
           ),
         ),
       ),

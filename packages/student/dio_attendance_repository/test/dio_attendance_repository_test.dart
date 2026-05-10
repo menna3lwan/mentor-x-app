@@ -30,7 +30,7 @@ void main() {
         };
 
         when(() => httpClient.get(
-          '/api/attendance/records',
+          '/api/attendance/my',
           queryParameters: any(named: 'queryParameters'),
         )).thenAnswer((_) async => HttpClientResponse(
           data: mockData,

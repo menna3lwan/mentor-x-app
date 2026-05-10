@@ -22,7 +22,7 @@ class HomePageWrapper extends StatelessWidget {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.errorMessage!),
-                backgroundColor: MentorXThemeColorPalette.light.statusDanger,
+                backgroundColor: context.statusDangerColor,
               ),
             );
           }

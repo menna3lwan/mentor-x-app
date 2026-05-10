@@ -1,7 +1,7 @@
 part of 'package:mentorx_core/mentorx_core.dart';
 
 /// Lightweight course representation for lists and home dashboard sections.
-class CourseSummaryEntity extends Equatable {
+base class CourseSummaryEntity extends Equatable {
   final String id;
   final String title;
   final String? description;
@@ -43,19 +43,19 @@ class CourseSummaryEntity extends Equatable {
   CourseSummaryEntity copyWith({
     String? id,
     String? title,
-    String? description,
+    MentorXNullableValue<String?>? description,
     String? thumbnailUrl,
-    double? progressPercent,
-    double? price,
+    MentorXNullableValue<double?>? progressPercent,
+    MentorXNullableValue<double?>? price,
     int? enrolledCount,
   }) {
     return CourseSummaryEntity(
       id: id ?? this.id,
       title: title ?? this.title,
-      description: description ?? this.description,
+      description: description != null ? description.value : this.description,
       thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
-      progressPercent: progressPercent ?? this.progressPercent,
-      price: price ?? this.price,
+      progressPercent: progressPercent != null ? progressPercent.value : this.progressPercent,
+      price: price != null ? price.value : this.price,
       enrolledCount: enrolledCount ?? this.enrolledCount,
     );
   }

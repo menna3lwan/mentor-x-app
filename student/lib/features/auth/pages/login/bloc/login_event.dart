@@ -27,7 +27,6 @@ final class LoginObscurePasswordToggled extends LoginEvent {
   const LoginObscurePasswordToggled();
 }
 
-
 final class LoginSubmitted extends LoginEvent {
   const LoginSubmitted();
 }

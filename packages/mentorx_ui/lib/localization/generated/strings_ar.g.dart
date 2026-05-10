@@ -251,11 +251,12 @@ class TranslationsAr with BaseTranslations<AppLocale, Translations> implements T
 	@override late final _TranslationsCartAr cart = _TranslationsCartAr._(_root);
 	@override late final _TranslationsSettingsAr settings = _TranslationsSettingsAr._(_root);
 	@override late final _TranslationsCourseAr course = _TranslationsCourseAr._(_root);
-	@override Map<String, String> get student => {
+	@override Map<String, dynamic> get student => {
 		'aiAssistant': 'المساعد الذكي',
 		'aiSubtitle': 'مساعد AI للفيزياء',
 		'aiWelcome': 'أهلاً بك! أنا المساعد الذكي للفيزياء. اسألني أي سؤال!',
 		'typeQuestion': 'اكتب سؤالك هنا...',
+		'analytics': _TranslationsStudentAnalyticsAr._(_root),
 		'assignmentDetail': 'تفاصيل الواجب',
 		'assignmentTitle': 'واجب الموجات',
 		'assignmentUnit': 'الوحدة الثالثة - الحصة 2',
@@ -275,6 +276,29 @@ class TranslationsAr with BaseTranslations<AppLocale, Translations> implements T
 		'registerAttendance': 'تسجيل الحضور',
 		'attendanceHistory': 'سجل الحضور',
 		'yourAttendanceCode': 'كود الحضور الخاص بك',
+		'exitQuizTitle': 'خروج من الواجب؟',
+		'exitQuizDesc': 'لن يتم حفظ تقدمك. هل أنت متأكد أنك تريد الخروج؟',
+		'cancel': 'إلغاء',
+		'exit': 'خروج',
+		'yourResponse': 'إجابتك',
+		'writeResponse': 'اكتب إجابتك هنا...',
+		'responseHint': 'ابدأ الكتابة...',
+		'attachments': 'المرفقات',
+		'noFiles': 'لا توجد ملفات مرفقة بعد',
+		'chooseCorrect': 'اختر الإجابة الصحيحة:',
+		'questionLabel': 'سؤال',
+		'assignmentSubmitted': 'تم تسليم الواجب بنجاح',
+		'alreadySubmitted': 'لقد قمت بتسليم هذا الواجب بالفعل',
+		'assignmentNotFound': 'الواجب غير موجود',
+		'commonBack': 'رجوع',
+		'commonNext': 'التالي',
+		'commonPrevious': 'السابق',
+		'commonSubmit': 'إرسال',
+		'review': 'مراجعة',
+		'quizNotFound': 'الاختبار غير موجود',
+		'noQuestions': 'لا توجد أسئلة متاحة',
+		'yourAnswer': 'إجابتك:',
+		'typeAnswerHere': 'اكتب إجابتك هنا...',
 		'showCodeInstruction': 'اعرض الكود للمحاضر أو المساعد لتسجيل حضورك',
 		'codeValidFor': 'الكود صالح لمدة 5 دقايق',
 		'viewAttendance': 'سجل الحضور',
@@ -436,11 +460,8 @@ class TranslationsAr with BaseTranslations<AppLocale, Translations> implements T
 		'platformTagline': '',
 		'splashTagline': 'علّم • نظّم • وصّل',
 		'commonSkip': 'تخطي',
-		'commonNext': 'التالي',
-		'commonPrevious': 'السابق',
 		'commonStartNow': 'ابدأ دلوقتي',
 		'commonOr': 'أو',
-		'commonBack': 'رجوع',
 		'commonSave': 'حفظ',
 		'commonCancel': 'إلغاء',
 		'commonConfirm': 'تأكيد',
@@ -453,7 +474,6 @@ class TranslationsAr with BaseTranslations<AppLocale, Translations> implements T
 		'commonRetry': 'حاول تاني',
 		'commonYes': 'أيوه',
 		'commonNo': 'لأ',
-		'commonSubmit': 'إرسال',
 		'commonDelete': 'حذف',
 		'commonEdit': 'تعديل',
 		'egp': 'ج.م',
@@ -586,7 +606,6 @@ class TranslationsAr with BaseTranslations<AppLocale, Translations> implements T
 		'instructionNoReturn': 'لا يمكن العودة بعد تسليم الكويز',
 		'startQuiz': 'ابدأ الكويز',
 		'questionOf': 'السؤال %s من %s',
-		'review': 'مراجعة',
 		'submitQuiz': 'تسليم الكويز',
 		'backToQuestions': 'العودة للأسئلة',
 		'answeredCount': 'تم الإجابة على',
@@ -602,7 +621,6 @@ class TranslationsAr with BaseTranslations<AppLocale, Translations> implements T
 		'wrongAnswers': 'إجابة خاطئة',
 		'timeTaken': 'الوقت المستغرق',
 		'reviewAnswers': 'مراجعة الإجابات',
-		'yourAnswer': 'إجابتك:',
 		'correctAnswer': 'الإجابة الصحيحة:',
 		'minutesShort': 'د',
 		'claimReward': 'احصل على مكافأتك',
@@ -688,6 +706,7 @@ class TranslationsAr with BaseTranslations<AppLocale, Translations> implements T
 		'yesterday': 'أمس',
 	};
 	@override late final _TranslationsParentAr parent = _TranslationsParentAr._(_root);
+	@override late final _TranslationsAssignmentsAr assignments = _TranslationsAssignmentsAr._(_root);
 }
 
 // Path: ui
@@ -923,6 +942,36 @@ class _TranslationsCourseAr implements TranslationsCourseEn {
 	@override late final _TranslationsCourseErrorsAr errors = _TranslationsCourseErrorsAr._(_root);
 }
 
+// Path: student.analytics
+class _TranslationsStudentAnalyticsAr implements TranslationsStudentAnalyticsEn {
+	_TranslationsStudentAnalyticsAr._(this._root);
+
+	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'تحليلات الأداء';
+	@override String get gradeVsPeers => 'درجتك وسط زملائك';
+	@override String rank({required Object rank}) => 'الترتيب: #${rank}';
+	@override String get yourScore => 'درجتك';
+	@override String get classAverage => 'متوسط الفصل';
+	@override String studentsCount({required Object count}) => 'من أصل ${count} طالبًا';
+	@override String get aboveAverage => 'أعلى من المتوسط';
+	@override String get belowAverage => 'أقل من المتوسط';
+	@override String get performanceTrend => 'درمان النمو الطالبة';
+	@override String get studyPeakHours => 'ساعات الذروة للدراسة';
+	@override String get badgesAndAchievements => 'الشارات والإنجازات';
+	@override String get streakTitle => 'سلسلة الحماس';
+	@override String streakDays({required Object count}) => '${count} يوم متتالي';
+	@override String get streakEncouragement => 'استمر! أنت في تقدم مستمر';
+	@override String get bestStreak => 'أفضل سلسلة';
+	@override String get quizSpeedMetrics => 'مقاييس سرعة الاختبارات';
+	@override String get secondsPerQuestion => 'ثانية/سؤال';
+	@override String get yourAverage => 'متوسطك';
+	@override String get peerAverage => 'متوسط الطلاب';
+	@override String get speedEncouragement => 'أنت أسرع من متوسط الطلاب بـ %15! استمر في هذا الأداء.';
+	@override String get allCourses => 'جميع الكورسات';
+}
+
 // Path: parent
 class _TranslationsParentAr implements TranslationsParentEn {
 	_TranslationsParentAr._(this._root);
@@ -957,6 +1006,24 @@ class _TranslationsParentAr implements TranslationsParentEn {
 	@override String get pointsEarned => 'النقاط المكتسبة';
 }
 
+// Path: assignments
+class _TranslationsAssignmentsAr implements TranslationsAssignmentsEn {
+	_TranslationsAssignmentsAr._(this._root);
+
+	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
+	@override String get listTitle => 'الواجبات';
+	@override String dueAt({required Object date}) => 'تاريخ التسليم: ${date}';
+	@override String get noDeadline => 'لا يوجد موعد تسليم';
+	@override String get submitAssignment => 'تسليم الواجب';
+	@override String get viewFeedback => 'عرض الملاحظات';
+	@override String get submitted => 'تم التسليم';
+	@override String get notSubmitted => 'لم يتم التسليم';
+	@override String get grading => 'جاري التصحيح';
+	@override String get graded => 'تم التصحيح';
+}
+
 // Path: ui.common
 class _TranslationsUiCommonAr implements TranslationsUiCommonEn {
 	_TranslationsUiCommonAr._(this._root);
@@ -975,6 +1042,8 @@ class _TranslationsUiCommonAr implements TranslationsUiCommonEn {
 	@override String get getStarted => 'ابدأ الآن';
 	@override String get backToLogin => 'العودة لتسجيل الدخول';
 	@override String get noResults => 'لا توجد نتائج';
+	@override String opening({required Object url}) => 'جاري فتح: ${url}';
+	@override String get comingSoon => 'قريباً';
 }
 
 // Path: ui.errors
@@ -1177,13 +1246,15 @@ class _TranslationsCourseCatalogAr implements TranslationsCourseCatalogEn {
 	// Translations
 	@override String get searchHint => 'ابحث عن الدورات...';
 	@override String get allCategories => 'الكل';
+	@override String get allLevels => 'جميع الصفوف';
 	@override String get sortBy => 'ترتيب حسب';
 	@override String get sortNewest => 'الأحدث';
 	@override String get sortPriceAsc => 'السعر: من الأقل للأعلى';
 	@override String get sortPriceDesc => 'السعر: من الأعلى للأقل';
 	@override String get sortPopular => 'الأكثر شعبية';
-	@override String get noCourses => 'لا توجد دورات';
+	@override String get noCourses => 'لم يتم العثور على كورسات';
 	@override String get noCoursesDescription => 'حاول تعديل البحث أو الفلاتر.';
+	@override String coursesFound({required Object count}) => 'تم العثور على ${count} كورس';
 }
 
 // Path: course.detail
@@ -1208,6 +1279,10 @@ class _TranslationsCourseDetailAr implements TranslationsCourseDetailEn {
 	@override String get minutes => 'دقيقة';
 	@override String get hours => 'ساعات';
 	@override String get sessionFree => 'مجاني';
+	@override String durationShort({required Object mins, required Object secs}) => '${mins}د ${secs}ث';
+	@override String pagesCount({required Object count}) => '${count} صفحة';
+	@override String get yourProgress => 'تقدمك الحالي';
+	@override String completePercent({required Object percent}) => '${percent}% مكتمل';
 	@override String get enrolling => 'جاري التسجيل...';
 	@override String get enrollSuccess => 'تم التسجيل بنجاح!';
 	@override String get enrollFailed => 'فشل التسجيل. حاول مرة أخرى.';
@@ -1314,6 +1389,7 @@ class _TranslationsHomeDashboardActionsAr implements TranslationsHomeDashboardAc
 	@override String get assignments => 'الواجبات';
 	@override String get rewards => 'المكافآت';
 	@override String get marketplace => 'المتجر';
+	@override String get analytics => 'تحليلات الأداء';
 }
 
 /// The flat map containing all translations for locale <ar>.
@@ -1335,6 +1411,8 @@ extension on TranslationsAr {
 			'ui.common.getStarted' => 'ابدأ الآن',
 			'ui.common.backToLogin' => 'العودة لتسجيل الدخول',
 			'ui.common.noResults' => 'لا توجد نتائج',
+			'ui.common.opening' => ({required Object url}) => 'جاري فتح: ${url}',
+			'ui.common.comingSoon' => 'قريباً',
 			'ui.errors.somethingWentWrong' => 'حدث خطأ ما',
 			'ui.errors.retry' => 'إعادة المحاولة',
 			'ui.dateTime.yesterday' => 'أمس',
@@ -1410,6 +1488,7 @@ extension on TranslationsAr {
 			'home.dashboard.actions.assignments' => 'الواجبات',
 			'home.dashboard.actions.rewards' => 'المكافآت',
 			'home.dashboard.actions.marketplace' => 'المتجر',
+			'home.dashboard.actions.analytics' => 'تحليلات الأداء',
 			'home.errors.failedToLoadUpcomingEvents' => 'فشل تحميل الفاعليات القادمة',
 			'home.errors.failedToLoadVendors' => 'فشل تحميل مزودي الخدمات',
 			'home.errors.failedToLoadOccasions' => 'فشل تحميل المناسبات',
@@ -1712,13 +1791,15 @@ extension on TranslationsAr {
 			'course.tabs.sessions' => 'الحصص',
 			'course.catalog.searchHint' => 'ابحث عن الدورات...',
 			'course.catalog.allCategories' => 'الكل',
+			'course.catalog.allLevels' => 'جميع الصفوف',
 			'course.catalog.sortBy' => 'ترتيب حسب',
 			'course.catalog.sortNewest' => 'الأحدث',
 			'course.catalog.sortPriceAsc' => 'السعر: من الأقل للأعلى',
 			'course.catalog.sortPriceDesc' => 'السعر: من الأعلى للأقل',
 			'course.catalog.sortPopular' => 'الأكثر شعبية',
-			'course.catalog.noCourses' => 'لا توجد دورات',
+			'course.catalog.noCourses' => 'لم يتم العثور على كورسات',
 			'course.catalog.noCoursesDescription' => 'حاول تعديل البحث أو الفلاتر.',
+			'course.catalog.coursesFound' => ({required Object count}) => 'تم العثور على ${count} كورس',
 			'course.detail.aboutCourse' => 'عن هذه الدورة',
 			'course.detail.sessions' => 'الحصص',
 			'course.detail.items' => 'عناصر',
@@ -1734,6 +1815,10 @@ extension on TranslationsAr {
 			'course.detail.minutes' => 'دقيقة',
 			'course.detail.hours' => 'ساعات',
 			'course.detail.sessionFree' => 'مجاني',
+			'course.detail.durationShort' => ({required Object mins, required Object secs}) => '${mins}د ${secs}ث',
+			'course.detail.pagesCount' => ({required Object count}) => '${count} صفحة',
+			'course.detail.yourProgress' => 'تقدمك الحالي',
+			'course.detail.completePercent' => ({required Object percent}) => '${percent}% مكتمل',
 			'course.detail.enrolling' => 'جاري التسجيل...',
 			'course.detail.enrollSuccess' => 'تم التسجيل بنجاح!',
 			'course.detail.enrollFailed' => 'فشل التسجيل. حاول مرة أخرى.',
@@ -1759,6 +1844,27 @@ extension on TranslationsAr {
 			'student.aiSubtitle' => 'مساعد AI للفيزياء',
 			'student.aiWelcome' => 'أهلاً بك! أنا المساعد الذكي للفيزياء. اسألني أي سؤال!',
 			'student.typeQuestion' => 'اكتب سؤالك هنا...',
+			'student.analytics.title' => 'تحليلات الأداء',
+			'student.analytics.gradeVsPeers' => 'درجتك وسط زملائك',
+			'student.analytics.rank' => ({required Object rank}) => 'الترتيب: #${rank}',
+			'student.analytics.yourScore' => 'درجتك',
+			'student.analytics.classAverage' => 'متوسط الفصل',
+			'student.analytics.studentsCount' => ({required Object count}) => 'من أصل ${count} طالبًا',
+			'student.analytics.aboveAverage' => 'أعلى من المتوسط',
+			'student.analytics.belowAverage' => 'أقل من المتوسط',
+			'student.analytics.performanceTrend' => 'درمان النمو الطالبة',
+			'student.analytics.studyPeakHours' => 'ساعات الذروة للدراسة',
+			'student.analytics.badgesAndAchievements' => 'الشارات والإنجازات',
+			'student.analytics.streakTitle' => 'سلسلة الحماس',
+			'student.analytics.streakDays' => ({required Object count}) => '${count} يوم متتالي',
+			'student.analytics.streakEncouragement' => 'استمر! أنت في تقدم مستمر',
+			'student.analytics.bestStreak' => 'أفضل سلسلة',
+			'student.analytics.quizSpeedMetrics' => 'مقاييس سرعة الاختبارات',
+			'student.analytics.secondsPerQuestion' => 'ثانية/سؤال',
+			'student.analytics.yourAverage' => 'متوسطك',
+			'student.analytics.peerAverage' => 'متوسط الطلاب',
+			'student.analytics.speedEncouragement' => 'أنت أسرع من متوسط الطلاب بـ %15! استمر في هذا الأداء.',
+			'student.analytics.allCourses' => 'جميع الكورسات',
 			'student.assignmentDetail' => 'تفاصيل الواجب',
 			'student.assignmentTitle' => 'واجب الموجات',
 			'student.assignmentUnit' => 'الوحدة الثالثة - الحصة 2',
@@ -1778,11 +1884,36 @@ extension on TranslationsAr {
 			'student.registerAttendance' => 'تسجيل الحضور',
 			'student.attendanceHistory' => 'سجل الحضور',
 			'student.yourAttendanceCode' => 'كود الحضور الخاص بك',
+			'student.exitQuizTitle' => 'خروج من الواجب؟',
+			'student.exitQuizDesc' => 'لن يتم حفظ تقدمك. هل أنت متأكد أنك تريد الخروج؟',
+			'student.cancel' => 'إلغاء',
+			'student.exit' => 'خروج',
+			'student.yourResponse' => 'إجابتك',
+			'student.writeResponse' => 'اكتب إجابتك هنا...',
+			'student.responseHint' => 'ابدأ الكتابة...',
+			'student.attachments' => 'المرفقات',
+			'student.noFiles' => 'لا توجد ملفات مرفقة بعد',
+			'student.chooseCorrect' => 'اختر الإجابة الصحيحة:',
+			'student.questionLabel' => 'سؤال',
+			'student.assignmentSubmitted' => 'تم تسليم الواجب بنجاح',
+			'student.alreadySubmitted' => 'لقد قمت بتسليم هذا الواجب بالفعل',
+			'student.assignmentNotFound' => 'الواجب غير موجود',
+			'student.commonBack' => 'رجوع',
+			'student.commonNext' => 'التالي',
+			'student.commonPrevious' => 'السابق',
+			'student.commonSubmit' => 'إرسال',
+			'student.review' => 'مراجعة',
+			'student.quizNotFound' => 'الاختبار غير موجود',
+			'student.noQuestions' => 'لا توجد أسئلة متاحة',
+			'student.yourAnswer' => 'إجابتك:',
+			'student.typeAnswerHere' => 'اكتب إجابتك هنا...',
 			'student.showCodeInstruction' => 'اعرض الكود للمحاضر أو المساعد لتسجيل حضورك',
 			'student.codeValidFor' => 'الكود صالح لمدة 5 دقايق',
 			'student.viewAttendance' => 'سجل الحضور',
 			'student.totalAttendance' => 'نسبة الحضور الكلية',
 			'student.present' => 'حاضر',
+			_ => null,
+		} ?? switch (path) {
 			'student.absent' => 'غائب',
 			'student.presentCount' => '%s حضور',
 			'student.absentCount' => '%s غياب',
@@ -1836,8 +1967,6 @@ extension on TranslationsAr {
 			'student.passwordRulesHint' => 'حد أدنى 8 أحرف أو أرقام.',
 			'student.uploadPhotosLabel' => 'ارفع الصور المطلوبة',
 			'student.personalPhotoLabel' => 'صورة شخصية',
-			_ => null,
-		} ?? switch (path) {
 			'student.nationalIdPhotoLabel' => 'بطاقة الطالب',
 			'student.studyTypeLabel' => 'اختر نوع الدراسة',
 			'student.studyTypeCenter' => 'طالب سنتر (حضور)',
@@ -1941,11 +2070,8 @@ extension on TranslationsAr {
 			'student.platformTagline' => '',
 			'student.splashTagline' => 'علّم • نظّم • وصّل',
 			'student.commonSkip' => 'تخطي',
-			'student.commonNext' => 'التالي',
-			'student.commonPrevious' => 'السابق',
 			'student.commonStartNow' => 'ابدأ دلوقتي',
 			'student.commonOr' => 'أو',
-			'student.commonBack' => 'رجوع',
 			'student.commonSave' => 'حفظ',
 			'student.commonCancel' => 'إلغاء',
 			'student.commonConfirm' => 'تأكيد',
@@ -1958,7 +2084,6 @@ extension on TranslationsAr {
 			'student.commonRetry' => 'حاول تاني',
 			'student.commonYes' => 'أيوه',
 			'student.commonNo' => 'لأ',
-			'student.commonSubmit' => 'إرسال',
 			'student.commonDelete' => 'حذف',
 			'student.commonEdit' => 'تعديل',
 			'student.egp' => 'ج.م',
@@ -2091,7 +2216,6 @@ extension on TranslationsAr {
 			'student.instructionNoReturn' => 'لا يمكن العودة بعد تسليم الكويز',
 			'student.startQuiz' => 'ابدأ الكويز',
 			'student.questionOf' => 'السؤال %s من %s',
-			'student.review' => 'مراجعة',
 			'student.submitQuiz' => 'تسليم الكويز',
 			'student.backToQuestions' => 'العودة للأسئلة',
 			'student.answeredCount' => 'تم الإجابة على',
@@ -2107,7 +2231,6 @@ extension on TranslationsAr {
 			'student.wrongAnswers' => 'إجابة خاطئة',
 			'student.timeTaken' => 'الوقت المستغرق',
 			'student.reviewAnswers' => 'مراجعة الإجابات',
-			'student.yourAnswer' => 'إجابتك:',
 			'student.correctAnswer' => 'الإجابة الصحيحة:',
 			'student.minutesShort' => 'د',
 			'student.claimReward' => 'احصل على مكافأتك',
@@ -2216,6 +2339,15 @@ extension on TranslationsAr {
 			'parent.spentThisMonth' => 'المنفق هذا الشهر',
 			'parent.transactionHistory' => 'سجل المعاملات',
 			'parent.pointsEarned' => 'النقاط المكتسبة',
+			'assignments.listTitle' => 'الواجبات',
+			'assignments.dueAt' => ({required Object date}) => 'تاريخ التسليم: ${date}',
+			'assignments.noDeadline' => 'لا يوجد موعد تسليم',
+			'assignments.submitAssignment' => 'تسليم الواجب',
+			'assignments.viewFeedback' => 'عرض الملاحظات',
+			'assignments.submitted' => 'تم التسليم',
+			'assignments.notSubmitted' => 'لم يتم التسليم',
+			'assignments.grading' => 'جاري التصحيح',
+			'assignments.graded' => 'تم التصحيح',
 			_ => null,
 		};
 	}

@@ -99,7 +99,6 @@ final class LoginBloc extends Bloc<LoginEvent, LoginState>
     emit(state.copyWith(obscurePassword: !state.obscurePassword));
   }
 
-
   Future<void> _onSubmitted(
     LoginSubmitted event,
     Emitter<LoginState> emit,

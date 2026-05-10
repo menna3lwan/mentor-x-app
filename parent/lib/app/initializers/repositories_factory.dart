@@ -140,31 +140,37 @@ final class RepositoriesFactory {
   }
 
   static Future<ParentHomeRepository> _initHomeRepository() async {
+    late final ParentHomeRepository repo;
     switch (Env.homeRepositoryMode) {
       case RepositoryMode.mock:
-        return MockParentHomeRepository(); // Assuming it matches the name in its package
+        repo = MockParentHomeRepository();
       case RepositoryMode.prod:
         final httpClient = await _initHttpClient();
         final cacheRepository = await _initCacheRepository();
-        return DioParentHomeRepository(
+        repo = DioParentHomeRepository(
           httpClient: httpClient,
           cacheRepository: cacheRepository,
         );
     }
+    await repo.initialize();
+    return repo;
   }
 
   static Future<ParentChildrenRepository> _initChildrenRepository() async {
+    late final ParentChildrenRepository repo;
     switch (Env.childrenRepositoryMode) {
       case RepositoryMode.mock:
-        return MockChildrenRepository(delay: Env.mockDelayDuration);
+        repo = MockChildrenRepository(delay: Env.mockDelayDuration);
       case RepositoryMode.prod:
         final httpClient = await _initHttpClient();
         final cacheRepository = await _initCacheRepository();
-        return DioParentChildrenRepository(
+        repo = DioParentChildrenRepository(
           httpClient: httpClient,
           cacheRepository: cacheRepository,
         );
     }
+    await repo.initialize();
+    return repo;
   }
 
   static Future<ParentFinancialRepository> _initFinancialRepository() async {
@@ -233,6 +239,9 @@ final class RepositoriesFactory {
     }
 
     final CacheRepository cacheRepository = await _initCacheRepository();
+    // Pre-initialize HttpClient to avoid race conditions during concurrent repository initialization
+    await _initHttpClient();
+
     initialLanguageCode =
         await cacheRepository.get(CacheKeys.languageCode) ??
             _defaultLanguageCode();

@@ -10,13 +10,15 @@ class SettingsParentPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = MentorXThemeColorPalette.light;
-
     return BlocProvider(
       create: (context) => ProfileBloc()..add(ProfileStarted()),
-      child: Scaffold(
-        backgroundColor: palette.backgroundPrimary,
-        body: const SettingsParentView(),
+      child: BlocBuilder<ProfileBloc, ProfileState>(
+        builder: (context, state) {
+          return AppDashboardScaffold(
+            title: 'Settings',
+            body: const SettingsParentView(),
+          );
+        },
       ),
     );
   }
@@ -27,95 +29,64 @@ class SettingsParentView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = MentorXThemeColorPalette.light;
-
     return BlocBuilder<ProfileBloc, ProfileState>(
       builder: (context, state) {
         if (state.status == ProfileStatus.loading) {
-          return Center(
-            child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(palette.brandPrimary),
-            ),
-          );
+          return const Center(child: CircularProgressIndicator());
         }
 
-        return Column(
+        return ListView(
+          physics: const BouncingScrollPhysics(),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
           children: [
-            // Header
-            _BuildHeader(palette: palette),
-            
-            Expanded(
-              child: ListView(
-                physics: const BouncingScrollPhysics(),
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-                children: [
-                  FadeInUp(
-                    duration: const Duration(milliseconds: 500),
-                    child: _SettingsSection(
-                      title: 'App Configuration',
-                      children: [
-                        _SettingsToggleTile(
-                          icon: Icons.notifications_active_rounded,
-                          label: 'Push Notifications',
-                          value: state.settingsData['notificationsEnabled'] as bool? ?? true,
-                          onChanged: (val) {
-                            // context.read<ProfileBloc>().add(ProfileSettingsUpdated({'notificationsEnabled': val}));
-                          },
-                          palette: palette,
-                        ),
-                      ],
-                    ),
-                  ),
-                  const Gap(24),
-                  FadeInUp(
-                    duration: const Duration(milliseconds: 500),
-                    delay: const Duration(milliseconds: 100),
-                    child: _SettingsSection(
-                      title: 'Preferences',
-                      children: [
-                        _SettingsNavigationTile(
-                          icon: Icons.palette_rounded,
-                          label: 'Theme Mode',
-                          value: state.settingsData['themeMode'].toString().toUpperCase(),
-                          onTap: () {},
-                          palette: palette,
-                        ),
-                        _SettingsNavigationTile(
-                          icon: Icons.language_rounded,
-                          label: 'App Language',
-                          value: state.settingsData['languageCode'].toString().toUpperCase(),
-                          onTap: () {},
-                          palette: palette,
-                        ),
-                      ],
-                    ),
-                  ),
-                  const Gap(24),
-                  FadeInUp(
-                    duration: const Duration(milliseconds: 500),
-                    delay: const Duration(milliseconds: 200),
-                    child: _SettingsSection(
-                      title: 'Support',
-                      children: [
-                        _SettingsNavigationTile(
-                          icon: Icons.help_outline_rounded,
-                          label: 'Help Center',
-                          value: 'FAQs & Support',
-                          onTap: () {},
-                          palette: palette,
-                        ),
-                        _SettingsNavigationTile(
-                          icon: Icons.info_outline_rounded,
-                          label: 'About MentorX',
-                          value: 'Version 1.0.0',
-                          onTap: () {},
-                          palette: palette,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+            _SettingsSection(
+              title: 'App Configuration',
+              children: [
+                _SettingsToggleTile(
+                  icon: Icons.notifications_active_rounded,
+                  label: 'Push Notifications',
+                  value: state.settingsData['notificationsEnabled'] as bool? ?? true,
+                  onChanged: (val) {
+                    // context.read<ProfileBloc>().add(ProfileSettingsUpdated({'notificationsEnabled': val}));
+                  },
+                ),
+              ],
+            ),
+            const Gap(24),
+            _SettingsSection(
+              title: 'Preferences',
+              children: [
+                _SettingsNavigationTile(
+                  icon: Icons.palette_rounded,
+                  label: 'Theme Mode',
+                  value: state.settingsData['themeMode'].toString().toUpperCase(),
+                  onTap: () {},
+                ),
+                _SettingsNavigationTile(
+                  icon: Icons.language_rounded,
+                  label: 'App Language',
+                  value: state.settingsData['languageCode'].toString().toUpperCase(),
+                  onTap: () {},
+                ),
+              ],
+            ),
+            const Gap(24),
+            _SettingsSection(
+              title: 'Support',
+              children: [
+                _SettingsNavigationTile(
+                  icon: Icons.help_outline_rounded,
+                  label: 'Help Center',
+                  value: 'FAQs & Support',
+                  onTap: () {},
+                ),
+                _SettingsNavigationTile(
+                  icon: Icons.info_outline_rounded,
+                  label: 'About MentorX',
+                  value: 'Version 1.0.0',
+                  onTap: () {},
+                ),
+              ],
             ),
           ],
         );
@@ -124,44 +95,7 @@ class SettingsParentView extends StatelessWidget {
   }
 }
 
-class _BuildHeader extends StatelessWidget {
-  final MentorXThemeColorPalette palette;
-  const _BuildHeader({required this.palette});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(
-        top: MediaQuery.of(context).padding.top + 10,
-        bottom: 24,
-        left: 12,
-        right: 12,
-      ),
-      color: palette.backgroundPrimary,
-      child: Row(
-        children: [
-          IconButton(
-            onPressed: () => Navigator.pop(context),
-            icon: Icon(Icons.arrow_back_ios_new_rounded, color: palette.textPrimary, size: 20),
-          ),
-          const Expanded(
-            child: Text(
-              'Settings',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w900,
-                color: Colors.black,
-                letterSpacing: -0.5,
-              ),
-            ),
-          ),
-          const Gap(48), // Spacer for balance
-        ],
-      ),
-    );
-  }
-}
+// Removed _BuildHeader in favor of AppDashboardScaffold
 
 class _SettingsSection extends StatelessWidget {
   final String title;
@@ -171,7 +105,6 @@ class _SettingsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = MentorXThemeColorPalette.light;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -180,24 +113,18 @@ class _SettingsSection extends StatelessWidget {
           child: Text(
             title.toUpperCase(),
             style: TextStyle(
-              fontSize: 11,
+              fontSize: 12,
               fontWeight: FontWeight.w900,
-              color: palette.textTertiary,
+              color: context.textTertiaryColor,
               letterSpacing: 1.0,
             ),
           ),
         ),
         Container(
           decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(28),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.02),
-                blurRadius: 15,
-                offset: const Offset(0, 5),
-              ),
-            ],
+            color: context.backgroundSecondaryColor,
+            borderRadius: BorderRadius.circular(24),
+            border: Border.all(color: context.textTertiaryColor.withValues(alpha: 0.1)),
           ),
           child: Column(
             children: children,
@@ -213,29 +140,27 @@ class _SettingsToggleTile extends StatelessWidget {
   final String label;
   final bool value;
   final ValueChanged<bool> onChanged;
-  final MentorXThemeColorPalette palette;
 
   const _SettingsToggleTile({
     required this.icon,
     required this.label,
     required this.value,
     required this.onChanged,
-    required this.palette,
   });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: palette.brandPrimary.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(12),
+              color: context.brandPrimaryColor.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(16),
             ),
-            child: Icon(icon, color: palette.brandPrimary, size: 20),
+            child: Icon(icon, color: context.brandPrimaryColor, size: 22),
           ),
           const Gap(16),
           Expanded(
@@ -244,14 +169,14 @@ class _SettingsToggleTile extends StatelessWidget {
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w800,
-                color: palette.textPrimary,
+                color: context.textPrimaryColor,
               ),
             ),
           ),
           Switch.adaptive(
             value: value,
             onChanged: onChanged,
-            activeColor: palette.brandPrimary,
+            activeColor: context.brandPrimaryColor,
           ),
         ],
       ),
@@ -264,32 +189,30 @@ class _SettingsNavigationTile extends StatelessWidget {
   final String label;
   final String value;
   final VoidCallback onTap;
-  final MentorXThemeColorPalette palette;
 
   const _SettingsNavigationTile({
     required this.icon,
     required this.label,
     required this.value,
     required this.onTap,
-    required this.palette,
   });
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(28),
+      borderRadius: BorderRadius.circular(24),
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         child: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: palette.brandPrimary.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(12),
+                color: context.brandPrimaryColor.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(16),
               ),
-              child: Icon(icon, color: palette.brandPrimary, size: 20),
+              child: Icon(icon, color: context.brandPrimaryColor, size: 22),
             ),
             const Gap(16),
             Expanded(
@@ -301,7 +224,7 @@ class _SettingsNavigationTile extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w800,
-                      color: palette.textPrimary,
+                      color: context.textPrimaryColor,
                     ),
                   ),
                   const Gap(2),
@@ -310,13 +233,13 @@ class _SettingsNavigationTile extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: palette.textTertiary,
+                      color: context.textTertiaryColor,
                     ),
                   ),
                 ],
               ),
             ),
-            Icon(Icons.arrow_forward_ios_rounded, color: palette.textTertiary, size: 14),
+            Icon(Icons.arrow_forward_ios_rounded, color: context.textTertiaryColor, size: 14),
           ],
         ),
       ),

@@ -24,7 +24,7 @@ void main() {
       cacheRepository: cacheRepository,
     );
     httpClient.setDefaultHeader('X-Tenant-Id', '1');
-    httpClient.setDefaultHeader('X-Device-Id', 'student-app');
+    httpClient.setDefaultHeader(NetworkConstants.deviceIdHeader, 'student-app');
     repository = DioStudentRegistrationRepository(httpClient: httpClient);
   });
 

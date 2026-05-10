@@ -22,7 +22,11 @@ void main() {
     when(() => repo.getApplicationInfo()).thenAnswer(
       (_) async => const StudentApplicationInfoEntity(
         requiredDocuments: [],
-        supportInfo: SupportInfoEntity(whatsapp: '', email: '', workingHours: ''),
+        supportInfo: SupportInfoEntity(
+          whatsapp: '',
+          email: '',
+          workingHours: '',
+        ),
         steps: [],
         grades: [],
       ),
@@ -50,7 +54,11 @@ void main() {
         when(() => repo.getApplicationInfo()).thenAnswer(
           (_) async => const StudentApplicationInfoEntity(
             requiredDocuments: [],
-            supportInfo: SupportInfoEntity(whatsapp: '', email: '', workingHours: ''),
+            supportInfo: SupportInfoEntity(
+              whatsapp: '',
+              email: '',
+              workingHours: '',
+            ),
             steps: [],
             grades: [GradeEntity(id: '1', name: 'Grade 1')],
           ),
@@ -73,8 +81,11 @@ void main() {
       },
       act: (bloc) => bloc.add(const StudentRegistrationBootstrapRequested()),
       expect: () => [
-        isA<StudentRegistrationState>()
-            .having((s) => s.loadingState, 'loadingState', LoadingState.error),
+        isA<StudentRegistrationState>().having(
+          (s) => s.loadingState,
+          'loadingState',
+          LoadingState.error,
+        ),
       ],
     );
 
@@ -84,7 +95,11 @@ void main() {
       build: buildBloc,
       act: (bloc) => bloc.add(const StudentRegistrationFirstNameChanged('Ali')),
       expect: () => [
-        isA<StudentRegistrationState>().having((s) => s.firstName, 'firstName', 'Ali'),
+        isA<StudentRegistrationState>().having(
+          (s) => s.firstName,
+          'firstName',
+          'Ali',
+        ),
       ],
     );
 
@@ -102,7 +117,11 @@ void main() {
       build: buildBloc,
       act: (bloc) => bloc.add(const StudentRegistrationPasswordChanged('pass')),
       expect: () => [
-        isA<StudentRegistrationState>().having((s) => s.password, 'password', 'pass'),
+        isA<StudentRegistrationState>().having(
+          (s) => s.password,
+          'password',
+          'pass',
+        ),
       ],
     );
 
@@ -113,7 +132,8 @@ void main() {
         when(() => repo.checkPhone(any())).thenAnswer((_) async => true);
         return buildBloc();
       },
-      act: (bloc) => bloc.add(const StudentRegistrationPhoneChanged('01012345678')),
+      act: (bloc) =>
+          bloc.add(const StudentRegistrationPhoneChanged('01012345678')),
       wait: const Duration(seconds: 1),
       verify: (bloc) {
         expect(bloc.state.phone, '01012345678');
@@ -126,8 +146,9 @@ void main() {
     blocTest<StudentRegistrationBloc, StudentRegistrationState>(
       'moves to OTP step after successful startRegistration',
       build: () {
-        when(() => repo.startRegistration(phone: any(named: 'phone')))
-            .thenAnswer((_) async {});
+        when(
+          () => repo.startRegistration(phone: any(named: 'phone')),
+        ).thenAnswer((_) async {});
         return buildBloc();
       },
       seed: () => const StudentRegistrationState(
@@ -137,8 +158,11 @@ void main() {
       ),
       act: (bloc) => bloc.add(const StudentRegistrationStartRequested()),
       expect: () => [
-        isA<StudentRegistrationState>()
-            .having((s) => s.loadingState, 'loading', LoadingState.loading),
+        isA<StudentRegistrationState>().having(
+          (s) => s.loadingState,
+          'loading',
+          LoadingState.loading,
+        ),
         isA<StudentRegistrationState>()
             .having((s) => s.loadingState, 'loaded', LoadingState.loaded)
             .having((s) => s.isRegistrationStarted, 'started', true)
@@ -149,8 +173,9 @@ void main() {
     blocTest<StudentRegistrationBloc, StudentRegistrationState>(
       'emits error when startRegistration fails',
       build: () {
-        when(() => repo.startRegistration(phone: any(named: 'phone')))
-            .thenThrow(Exception('Failed'));
+        when(
+          () => repo.startRegistration(phone: any(named: 'phone')),
+        ).thenThrow(Exception('Failed'));
         return buildBloc();
       },
       seed: () => const StudentRegistrationState(
@@ -160,10 +185,16 @@ void main() {
       ),
       act: (bloc) => bloc.add(const StudentRegistrationStartRequested()),
       expect: () => [
-        isA<StudentRegistrationState>()
-            .having((s) => s.loadingState, 'loading', LoadingState.loading),
-        isA<StudentRegistrationState>()
-            .having((s) => s.loadingState, 'error', LoadingState.error),
+        isA<StudentRegistrationState>().having(
+          (s) => s.loadingState,
+          'loading',
+          LoadingState.loading,
+        ),
+        isA<StudentRegistrationState>().having(
+          (s) => s.loadingState,
+          'error',
+          LoadingState.error,
+        ),
       ],
     );
 
@@ -171,11 +202,13 @@ void main() {
     blocTest<StudentRegistrationBloc, StudentRegistrationState>(
       'moves to step 2 after successful OTP verification',
       build: () {
-        when(() => repo.verifyOtp(
-              phone: any(named: 'phone'),
-              otp: any(named: 'otp'),
-              tenantId: any(named: 'tenantId'),
-            )).thenAnswer((_) async {});
+        when(
+          () => repo.verifyOtp(
+            phone: any(named: 'phone'),
+            otp: any(named: 'otp'),
+            tenantId: any(named: 'tenantId'),
+          ),
+        ).thenAnswer((_) async {});
         return buildBloc();
       },
       seed: () => const StudentRegistrationState(
@@ -185,8 +218,11 @@ void main() {
       ),
       act: (bloc) => bloc.add(const StudentRegistrationVerifyOtpRequested()),
       expect: () => [
-        isA<StudentRegistrationState>()
-            .having((s) => s.loadingState, 'loading', LoadingState.loading),
+        isA<StudentRegistrationState>().having(
+          (s) => s.loadingState,
+          'loading',
+          LoadingState.loading,
+        ),
         isA<StudentRegistrationState>()
             .having((s) => s.loadingState, 'loaded', LoadingState.loaded)
             .having((s) => s.currentStep, 'step', 2),
@@ -196,11 +232,13 @@ void main() {
     blocTest<StudentRegistrationBloc, StudentRegistrationState>(
       'emits error when OTP verification fails',
       build: () {
-        when(() => repo.verifyOtp(
-              phone: any(named: 'phone'),
-              otp: any(named: 'otp'),
-              tenantId: any(named: 'tenantId'),
-            )).thenThrow(Exception('Invalid OTP'));
+        when(
+          () => repo.verifyOtp(
+            phone: any(named: 'phone'),
+            otp: any(named: 'otp'),
+            tenantId: any(named: 'tenantId'),
+          ),
+        ).thenThrow(Exception('Invalid OTP'));
         return buildBloc();
       },
       seed: () => const StudentRegistrationState(
@@ -210,16 +248,25 @@ void main() {
       ),
       act: (bloc) => bloc.add(const StudentRegistrationVerifyOtpRequested()),
       expect: () => [
-        isA<StudentRegistrationState>()
-            .having((s) => s.loadingState, 'loading', LoadingState.loading),
-        isA<StudentRegistrationState>()
-            .having((s) => s.loadingState, 'error', LoadingState.error),
+        isA<StudentRegistrationState>().having(
+          (s) => s.loadingState,
+          'loading',
+          LoadingState.loading,
+        ),
+        isA<StudentRegistrationState>().having(
+          (s) => s.loadingState,
+          'error',
+          LoadingState.error,
+        ),
       ],
     );
 
     // ── Resend OTP ────────────────────────────────────────────────────
-    blocPresentationTest<StudentRegistrationBloc, StudentRegistrationState,
-        StudentRegistrationPresentationEvent>(
+    blocPresentationTest<
+      StudentRegistrationBloc,
+      StudentRegistrationState,
+      StudentRegistrationPresentationEvent
+    >(
       'emits OtpSent presentation event on resendOtp success',
       build: () {
         when(() => repo.resendOtp(any())).thenAnswer((_) async {});
@@ -232,8 +279,11 @@ void main() {
       ],
     );
 
-    blocPresentationTest<StudentRegistrationBloc, StudentRegistrationState,
-        StudentRegistrationPresentationEvent>(
+    blocPresentationTest<
+      StudentRegistrationBloc,
+      StudentRegistrationState,
+      StudentRegistrationPresentationEvent
+    >(
       'emits failure presentation event on resendOtp failure',
       build: () {
         when(() => repo.resendOtp(any())).thenThrow(Exception('Failed'));
@@ -250,8 +300,9 @@ void main() {
     blocTest<StudentRegistrationBloc, StudentRegistrationState>(
       'loads areas when governorate is changed',
       build: () {
-        when(() => repo.getAreas('1'))
-            .thenAnswer((_) async => ['Maadi', 'Nasr City']);
+        when(
+          () => repo.getAreas('1'),
+        ).thenAnswer((_) async => ['Maadi', 'Nasr City']);
         return buildBloc();
       },
       act: (bloc) => bloc.add(
@@ -266,8 +317,10 @@ void main() {
             .having((s) => s.selectedGovernorate?.id, 'gov', '1')
             .having((s) => s.selectedArea, 'area', isNull),
         // Second: areas loaded
-        isA<StudentRegistrationState>()
-            .having((s) => s.areas, 'areas', ['Maadi', 'Nasr City']),
+        isA<StudentRegistrationState>().having((s) => s.areas, 'areas', [
+          'Maadi',
+          'Nasr City',
+        ]),
       ],
     );
 
@@ -275,8 +328,9 @@ void main() {
     blocTest<StudentRegistrationBloc, StudentRegistrationState>(
       'NextStep triggers startRegistration at step 0',
       build: () {
-        when(() => repo.startRegistration(phone: any(named: 'phone')))
-            .thenAnswer((_) async {});
+        when(
+          () => repo.startRegistration(phone: any(named: 'phone')),
+        ).thenAnswer((_) async {});
         return buildBloc();
       },
       seed: () => const StudentRegistrationState(
@@ -287,10 +341,12 @@ void main() {
       ),
       act: (bloc) => bloc.add(const StudentRegistrationNextStepRequested()),
       expect: () => [
-        isA<StudentRegistrationState>()
-            .having((s) => s.loadingState, 'loading', LoadingState.loading),
-        isA<StudentRegistrationState>()
-            .having((s) => s.currentStep, 'step', 1),
+        isA<StudentRegistrationState>().having(
+          (s) => s.loadingState,
+          'loading',
+          LoadingState.loading,
+        ),
+        isA<StudentRegistrationState>().having((s) => s.currentStep, 'step', 1),
       ],
     );
 
@@ -329,8 +385,11 @@ void main() {
     );
 
     // ── Validation failures ───────────────────────────────────────────
-    blocPresentationTest<StudentRegistrationBloc, StudentRegistrationState,
-        StudentRegistrationPresentationEvent>(
+    blocPresentationTest<
+      StudentRegistrationBloc,
+      StudentRegistrationState,
+      StudentRegistrationPresentationEvent
+    >(
       'emits validation failure when step 0 firstName is too short',
       build: buildBloc,
       seed: () => const StudentRegistrationState(
@@ -345,8 +404,11 @@ void main() {
       ],
     );
 
-    blocPresentationTest<StudentRegistrationBloc, StudentRegistrationState,
-        StudentRegistrationPresentationEvent>(
+    blocPresentationTest<
+      StudentRegistrationBloc,
+      StudentRegistrationState,
+      StudentRegistrationPresentationEvent
+    >(
       'emits validation failure when step 0 phone equals parent phone',
       build: buildBloc,
       seed: () => const StudentRegistrationState(
@@ -365,29 +427,33 @@ void main() {
     blocTest<StudentRegistrationBloc, StudentRegistrationState>(
       'completes registration with all valid data',
       build: () {
-        when(() => repo.completeRegistration(
-              firstName: any(named: 'firstName'),
-              secondName: any(named: 'secondName'),
-              thirdName: any(named: 'thirdName'),
-              fourthName: any(named: 'fourthName'),
-              governorateId: any(named: 'governorateId'),
-              area: any(named: 'area'),
-              gradeId: any(named: 'gradeId'),
-              online: any(named: 'online'),
-              otp: any(named: 'otp'),
-              parentPhone: any(named: 'parentPhone'),
-              phone: any(named: 'phone'),
-              password: any(named: 'password'),
-              confirmPassword: any(named: 'confirmPassword'),
-              schoolName: any(named: 'schoolName'),
-              educationDepartment: any(named: 'educationDepartment'),
-              centerName: any(named: 'centerName'),
-              profileImagePath: any(named: 'profileImagePath'),
-              identityDocumentPath: any(named: 'identityDocumentPath'),
-            )).thenAnswer((_) async => const StudentRegistrationResponseEntity(
-              studentCode: 'STU-123',
-              status: 'pending',
-            ));
+        when(
+          () => repo.completeRegistration(
+            firstName: any(named: 'firstName'),
+            secondName: any(named: 'secondName'),
+            thirdName: any(named: 'thirdName'),
+            fourthName: any(named: 'fourthName'),
+            governorateId: any(named: 'governorateId'),
+            area: any(named: 'area'),
+            gradeId: any(named: 'gradeId'),
+            online: any(named: 'online'),
+            otp: any(named: 'otp'),
+            parentPhone: any(named: 'parentPhone'),
+            phone: any(named: 'phone'),
+            password: any(named: 'password'),
+            confirmPassword: any(named: 'confirmPassword'),
+            schoolName: any(named: 'schoolName'),
+            educationDepartment: any(named: 'educationDepartment'),
+            centerName: any(named: 'centerName'),
+            profileImagePath: any(named: 'profileImagePath'),
+            identityDocumentPath: any(named: 'identityDocumentPath'),
+          ),
+        ).thenAnswer(
+          (_) async => const StudentRegistrationResponseEntity(
+            studentCode: 'STU-123',
+            status: 'pending',
+          ),
+        );
         return buildBloc();
       },
       seed: () => StudentRegistrationState(
@@ -408,36 +474,44 @@ void main() {
       ),
       act: (bloc) => bloc.add(const StudentRegistrationSubmitted()),
       expect: () => [
-        isA<StudentRegistrationState>()
-            .having((s) => s.loadingState, 'loading', LoadingState.loading),
-        isA<StudentRegistrationState>()
-            .having((s) => s.loadingState, 'loaded', LoadingState.loaded),
+        isA<StudentRegistrationState>().having(
+          (s) => s.loadingState,
+          'loading',
+          LoadingState.loading,
+        ),
+        isA<StudentRegistrationState>().having(
+          (s) => s.loadingState,
+          'loaded',
+          LoadingState.loaded,
+        ),
       ],
     );
 
     blocTest<StudentRegistrationBloc, StudentRegistrationState>(
       'emits error when completeRegistration fails',
       build: () {
-        when(() => repo.completeRegistration(
-              firstName: any(named: 'firstName'),
-              secondName: any(named: 'secondName'),
-              thirdName: any(named: 'thirdName'),
-              fourthName: any(named: 'fourthName'),
-              governorateId: any(named: 'governorateId'),
-              area: any(named: 'area'),
-              gradeId: any(named: 'gradeId'),
-              online: any(named: 'online'),
-              otp: any(named: 'otp'),
-              parentPhone: any(named: 'parentPhone'),
-              phone: any(named: 'phone'),
-              password: any(named: 'password'),
-              confirmPassword: any(named: 'confirmPassword'),
-              schoolName: any(named: 'schoolName'),
-              educationDepartment: any(named: 'educationDepartment'),
-              centerName: any(named: 'centerName'),
-              profileImagePath: any(named: 'profileImagePath'),
-              identityDocumentPath: any(named: 'identityDocumentPath'),
-            )).thenThrow(Exception('Server error'));
+        when(
+          () => repo.completeRegistration(
+            firstName: any(named: 'firstName'),
+            secondName: any(named: 'secondName'),
+            thirdName: any(named: 'thirdName'),
+            fourthName: any(named: 'fourthName'),
+            governorateId: any(named: 'governorateId'),
+            area: any(named: 'area'),
+            gradeId: any(named: 'gradeId'),
+            online: any(named: 'online'),
+            otp: any(named: 'otp'),
+            parentPhone: any(named: 'parentPhone'),
+            phone: any(named: 'phone'),
+            password: any(named: 'password'),
+            confirmPassword: any(named: 'confirmPassword'),
+            schoolName: any(named: 'schoolName'),
+            educationDepartment: any(named: 'educationDepartment'),
+            centerName: any(named: 'centerName'),
+            profileImagePath: any(named: 'profileImagePath'),
+            identityDocumentPath: any(named: 'identityDocumentPath'),
+          ),
+        ).thenThrow(Exception('Server error'));
         return buildBloc();
       },
       seed: () => StudentRegistrationState(
@@ -458,10 +532,16 @@ void main() {
       ),
       act: (bloc) => bloc.add(const StudentRegistrationSubmitted()),
       expect: () => [
-        isA<StudentRegistrationState>()
-            .having((s) => s.loadingState, 'loading', LoadingState.loading),
-        isA<StudentRegistrationState>()
-            .having((s) => s.loadingState, 'error', LoadingState.error),
+        isA<StudentRegistrationState>().having(
+          (s) => s.loadingState,
+          'loading',
+          LoadingState.loading,
+        ),
+        isA<StudentRegistrationState>().having(
+          (s) => s.loadingState,
+          'error',
+          LoadingState.error,
+        ),
       ],
     );
   });

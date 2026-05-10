@@ -18,6 +18,8 @@ final class StudentRegistrationException
 }
 
 abstract interface class StudentRegistrationRepository {
+  Future<void> initialize();
+
   /// Step 1: Start registration by sending basic info.
   /// Triggers OTP.
   Future<void> startRegistration({

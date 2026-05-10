@@ -3,12 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-
 import '../../../../core/core.dart';
 import 'bloc/forgot_password_bloc.dart';
 import 'forgot_password_page.dart';
 
-class ForgotPasswordPageWrapper extends StatefulWidget {
+final class ForgotPasswordPageWrapper extends StatefulWidget {
   final String? initialPhone;
 
   const ForgotPasswordPageWrapper({super.key, this.initialPhone});
@@ -18,7 +17,8 @@ class ForgotPasswordPageWrapper extends StatefulWidget {
       _ForgotPasswordPageWrapperState();
 }
 
-class _ForgotPasswordPageWrapperState extends State<ForgotPasswordPageWrapper> {
+final class _ForgotPasswordPageWrapperState
+    extends State<ForgotPasswordPageWrapper> {
   final _formKey = GlobalKey<FormState>();
   late final TextEditingController _phoneController;
 

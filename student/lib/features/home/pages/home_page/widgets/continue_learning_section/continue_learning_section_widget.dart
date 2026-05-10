@@ -1,6 +1,8 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:gap/gap.dart';
 
 import 'package:mentorx_core/mentorx_core.dart';
 import '../inline_section_error/inline_section_error_wrapper.dart';
@@ -23,8 +25,6 @@ final class ContinueLearningSectionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = MentorXThemeColorPalette.light;
-
     if (hasFailedWithEmptyData) {
       return InlineSectionError(onRetry: onRetry);
     }
@@ -33,26 +33,37 @@ final class ContinueLearningSectionWidget extends StatelessWidget {
     if (courseItems.isEmpty && !isLoading) {
       return Container(
         width: double.infinity,
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(32),
         decoration: BoxDecoration(
-          color: palette.backgroundPrimary,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: palette.backgroundTertiary),
+          color: context.backgroundSecondaryColor,
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(
+            color: context.borderPrimaryColor.withValues(alpha: 0.05),
+          ),
         ),
         child: Column(
           children: [
-            Icon(
-              Icons.auto_stories_rounded,
-              color: palette.brandPrimary,
-              size: 48,
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: context.brandPrimaryColor.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.auto_stories_rounded,
+                color: context.brandPrimaryColor,
+                size: 40,
+              ),
             ),
-            const SizedBox(height: 12),
+            const Gap(16),
             Text(
               context.t.home.dashboard.startLearningJourney,
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: palette.textPrimary,
-                fontWeight: FontWeight.w600,
+                color: context.textPrimaryColor,
+                fontWeight: FontWeight.w900,
+                fontSize: 16,
+                letterSpacing: -0.5,
               ),
             ),
           ],
@@ -61,14 +72,15 @@ final class ContinueLearningSectionWidget extends StatelessWidget {
     }
 
     return SizedBox(
-      height: 230,
+      height: 240,
       child: Skeletonizer(
         enabled: isLoading,
         child: ListView.separated(
           scrollDirection: Axis.horizontal,
+          physics: const BouncingScrollPhysics(),
           itemCount: courseItems.isEmpty ? 2 : courseItems.length,
           padding: const EdgeInsets.symmetric(vertical: 4),
-          separatorBuilder: (context, index) => const SizedBox(width: 16),
+          separatorBuilder: (context, index) => const Gap(16),
           itemBuilder: (context, index) {
             final course = courseItems.isEmpty ? null : courseItems[index];
             final thumbnailUrl =
@@ -78,101 +90,105 @@ final class ContinueLearningSectionWidget extends StatelessWidget {
                 course?.title ?? context.t.home.dashboard.loadingCourse;
             final progressPercent = course?.progressPercent ?? 45;
 
-            return Container(
-              width: 280,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: palette.textPrimary.withOpacity(0.04),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
+            return GestureDetector(
+              onTap: course == null ? null : () => onTapCourse?.call(course.id),
+              child: Container(
+                width: 280,
+                decoration: BoxDecoration(
+                  color: context.backgroundSecondaryColor.withValues(alpha: 0.45),
+                  borderRadius: BorderRadius.circular(24),
+                  border: Border.all(
+                    color: context.borderPrimaryColor.withValues(alpha: 0.1),
                   ),
-                ],
-              ),
-              child: Material(
-                color: palette.backgroundPrimary,
-                borderRadius: BorderRadius.circular(20),
-                clipBehavior: Clip.antiAlias,
-                child: InkWell(
-                  onTap: course == null
-                      ? null
-                      : () => onTapCourse?.call(course.id),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: Stack(
-                          fit: StackFit.expand,
-                          children: [
-                            Image.network(
-                              thumbnailUrl,
-                              fit: BoxFit.cover,
-                            ),
-                            Positioned(
-                              top: 10,
-                              right: 10,
-                              child: Container(
-                                padding: const EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  color: Colors.black26,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Icon(
-                                  Icons.play_arrow_rounded,
-                                  color: Colors.white,
-                                  size: 20,
-                                ),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(24),
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Stack(
+                            fit: StackFit.expand,
+                            children: [
+                              Image.network(
+                                thumbnailUrl,
+                                fit: BoxFit.cover,
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              title,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: palette.textPrimary,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 16,
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(20),
-                                    child: LinearProgressIndicator(
-                                      value: progressPercent / 100,
-                                      minHeight: 6,
-                                      backgroundColor:
-                                          palette.backgroundTertiary,
-                                      color: palette.brandPrimary,
+                              Positioned(
+                                top: 12,
+                                right: 12,
+                                child: Container(
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    color: context.backgroundPrimaryColor
+                                        .withValues(alpha: 0.8),
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: context.borderPrimaryColor
+                                          .withValues(alpha: 0.1),
                                     ),
                                   ),
-                                ),
-                                const SizedBox(width: 12),
-                                Text(
-                                  '${progressPercent.toInt()}%',
-                                  style: TextStyle(
-                                    color: palette.brandPrimary,
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 12,
+                                  child: Icon(
+                                    Icons.play_arrow_rounded,
+                                    color: context.brandPrimaryColor,
+                                    size: 20,
                                   ),
                                 ),
-                              ],
-                            ),
-                          ],
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                        Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                title,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  color: context.textPrimaryColor,
+                                  fontWeight: FontWeight.w900,
+                                  fontSize: 16,
+                                  letterSpacing: -0.5,
+                                ),
+                              ),
+                              const Gap(12),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(4),
+                                      child: LinearProgressIndicator(
+                                        value: progressPercent / 100,
+                                        minHeight: 6,
+                                        backgroundColor:
+                                            context.backgroundPrimaryColor.withValues(alpha: 0.3),
+                                        valueColor: AlwaysStoppedAnimation<Color>(
+                                          context.brandPrimaryColor,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const Gap(12),
+                                  Text(
+                                    '${progressPercent.toInt()}%',
+                                    style: TextStyle(
+                                      color: context.brandPrimaryColor,
+                                      fontWeight: FontWeight.w900,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

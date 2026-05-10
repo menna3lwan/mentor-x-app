@@ -23,6 +23,8 @@ import 'package:dio_announcement_repository/dio_announcement_repository.dart';
 import 'package:dio_settings_repository/dio_settings_repository.dart';
 import 'package:dio_student_registration_repository/dio_student_registration_repository.dart';
 import 'package:dio_leaderboard_repository/dio_leaderboard_repository.dart';
+import 'package:dio_student_analytics_repository/dio_student_analytics_repository.dart';
+import 'package:device_info_service/device_info_service.dart';
 
 import 'package:mock_authentication_repository/mock_authentication_repository.dart';
 import 'package:mock_home_repository/mock_home_repository.dart';
@@ -41,6 +43,7 @@ import 'package:mock_grade_repository/mock_grade_repository.dart';
 import 'package:mock_student_registration_repository/mock_student_registration_repository.dart';
 import 'package:mock_profile_repository/mock_profile_repository.dart';
 import 'package:mock_leaderboard_repository/mock_leaderboard_repository.dart';
+import 'package:mock_student_analytics_repository/mock_student_analytics_repository.dart';
 
 import '../../core/utils/env.dart';
 
@@ -63,6 +66,7 @@ final class AppRepositories {
   final AnnouncementRepository announcementRepository;
   final StudentRegistrationRepository registrationRepository;
   final LeaderboardRepository leaderboardRepository;
+  final StudentAnalyticsRepository studentAnalyticsRepository;
 
   const AppRepositories._({
     required this.cacheRepository,
@@ -83,6 +87,7 @@ final class AppRepositories {
     required this.announcementRepository,
     required this.registrationRepository,
     required this.leaderboardRepository,
+    required this.studentAnalyticsRepository,
   });
 
   List<Object> toList() {
@@ -105,6 +110,7 @@ final class AppRepositories {
       announcementRepository,
       registrationRepository,
       leaderboardRepository,
+      studentAnalyticsRepository,
     ];
   }
 
@@ -146,6 +152,9 @@ final class AppRepositories {
       RepositoryProvider<LeaderboardRepository>(
         create: (_) => leaderboardRepository,
       ),
+      RepositoryProvider<StudentAnalyticsRepository>(
+        create: (_) => studentAnalyticsRepository,
+      ),
     ];
   }
 }
@@ -159,6 +168,11 @@ final class RepositoriesFactory {
   static late final String initialLanguageCode;
 
   static CacheRepository? _cacheRepository;
+  static DeviceInfoService? _deviceInfoService;
+
+  static DeviceInfoService _initDeviceInfoService() {
+    return _deviceInfoService ??= DeviceInfoServiceImpl();
+  }
 
   static Future<CacheRepository> _initCacheRepository() async {
     if (_cacheRepository != null) return _cacheRepository!;
@@ -182,7 +196,13 @@ final class RepositoriesFactory {
       cacheRepository: cacheRepository,
     );
     _httpClient = httpClient;
-    httpClient.setDefaultHeader('X-Device-Id', 'student-app');
+    await httpClient.initialize();
+
+    // Use DeviceInfoService to get the real unique device identifier.
+    final deviceInfoService = _initDeviceInfoService();
+    final deviceId = await deviceInfoService.getDeviceHash();
+    httpClient.setDefaultHeader(NetworkConstants.deviceIdHeader, deviceId);
+
     isHttpClientInitialized = true;
     return httpClient;
   }
@@ -199,6 +219,7 @@ final class RepositoriesFactory {
         repo = DioAuthenticationRepository(
           httpClient: httpClient,
           cacheRepository: cacheRepository,
+          deviceInfoService: _initDeviceInfoService(),
         );
     }
     await repo.initialize();
@@ -352,7 +373,10 @@ final class RepositoriesFactory {
         return MockStudentRegistrationRepository();
       case RepositoryMode.prod:
         final httpClient = await _initHttpClient();
-        return DioStudentRegistrationRepository(httpClient: httpClient);
+        return DioStudentRegistrationRepository(
+          httpClient: httpClient,
+          deviceInfoService: _initDeviceInfoService(),
+        );
     }
   }
 
@@ -364,6 +388,17 @@ final class RepositoriesFactory {
       case RepositoryMode.prod:
         final httpClient = await _initHttpClient();
         return DioLeaderboardRepository(httpClient: httpClient);
+    }
+  }
+
+  static Future<StudentAnalyticsRepository>
+  _initStudentAnalyticsRepository() async {
+    switch (Env.analyticsRepositoryMode) {
+      case RepositoryMode.mock:
+        return MockStudentAnalyticsRepository();
+      case RepositoryMode.prod:
+        final httpClient = await _initHttpClient();
+        return DioStudentAnalyticsRepository(client: httpClient as DioHttpClient);
     }
   }
 
@@ -412,6 +447,7 @@ final class RepositoriesFactory {
       announcementRepository as AnnouncementRepository,
       registrationRepository as StudentRegistrationRepository,
       leaderboardRepository as LeaderboardRepository,
+      studentAnalyticsRepository as StudentAnalyticsRepository,
     ] = await Future.wait(
       [
         _initAuthenticationRepository(),
@@ -431,6 +467,7 @@ final class RepositoriesFactory {
         _initAnnouncementRepository(),
         _initRegistrationRepository(),
         _initLeaderboardRepository(),
+        _initStudentAnalyticsRepository(),
       ],
     );
     final repos = AppRepositories._(
@@ -452,6 +489,7 @@ final class RepositoriesFactory {
       announcementRepository: announcementRepository,
       registrationRepository: registrationRepository,
       leaderboardRepository: leaderboardRepository,
+      studentAnalyticsRepository: studentAnalyticsRepository,
     );
     final localizedClients = <LocalizedClient>[];
     if (_httpClient != null && _httpClient is LocalizedClient) {

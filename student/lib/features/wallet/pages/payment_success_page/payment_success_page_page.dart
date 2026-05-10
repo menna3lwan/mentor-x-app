@@ -4,17 +4,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
-
 import '../../../../core/core.dart';
 
-class PaymentSuccessPage extends StatefulWidget {
+final class PaymentSuccessPage extends StatefulWidget {
   final String? amount;
   const PaymentSuccessPage({super.key, this.amount});
   @override
   State<PaymentSuccessPage> createState() => _PaymentSuccessPageState();
 }
 
-class _PaymentSuccessPageState extends State<PaymentSuccessPage> {
+final class _PaymentSuccessPageState extends State<PaymentSuccessPage> {
   double _addedAmount = 200.0;
   bool _balanceUpdated = false;
 
@@ -39,11 +38,10 @@ class _PaymentSuccessPageState extends State<PaymentSuccessPage> {
   @override
   Widget build(BuildContext context) {
     final t = context.t.student;
-    final palette = MentorXThemeColorPalette.light;
     final session = context.watch<AppSessionCubit>().state;
 
     return Scaffold(
-      backgroundColor: palette.backgroundSecondary,
+      backgroundColor: context.backgroundPrimaryColor,
       body: SafeArea(
         child: Center(
           child: Padding(
@@ -54,35 +52,49 @@ class _PaymentSuccessPageState extends State<PaymentSuccessPage> {
                 ZoomIn(
                   duration: const Duration(milliseconds: 600),
                   child: Container(
-                    padding: const EdgeInsets.all(32),
+                    padding: const EdgeInsets.all(40),
                     decoration: BoxDecoration(
-                      color: palette.statusSuccess.withOpacity(0.1),
+                      color: context.statusSuccessColor.withValues(alpha: 0.1),
                       shape: BoxShape.circle,
                       border: Border.all(
-                        color: palette.statusSuccess.withOpacity(0.2),
+                        color: context.statusSuccessColor.withValues(
+                          alpha: 0.2,
+                        ),
                         width: 4,
                       ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: context.statusSuccessColor.withValues(
+                            alpha: 0.1,
+                          ),
+                          blurRadius: 30,
+                          offset: const Offset(0, 10),
+                        ),
+                      ],
                     ),
                     child: Icon(
                       Icons.check_circle_rounded,
-                      size: 80,
-                      color: palette.statusSuccess,
+                      size: 100,
+                      color: context.statusSuccessColor,
                     ),
                   ),
                 ),
-                const Gap(32),
-                FadeInDown(
+                const Gap(40),
+                FadeInUp(
+                  duration: const Duration(milliseconds: 500),
                   child: Text(
                     t['paymentSuccess']!,
                     style: TextStyle(
-                      fontSize: 24,
+                      fontSize: 28,
                       fontWeight: FontWeight.w900,
-                      color: palette.textPrimary,
+                      color: context.textPrimaryColor,
+                      letterSpacing: -1,
                     ),
                   ),
                 ),
                 const Gap(12),
-                FadeInDown(
+                FadeInUp(
+                  duration: const Duration(milliseconds: 500),
                   delay: const Duration(milliseconds: 200),
                   child: Text(
                     t['balanceAdded']!.replaceAll(
@@ -92,23 +104,30 @@ class _PaymentSuccessPageState extends State<PaymentSuccessPage> {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 16,
-                      color: palette.textSecondary,
-                      height: 1.5,
+                      color: context.textSecondaryColor,
+                      height: 1.6,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                 ),
-                const Gap(40),
+                const Gap(48),
                 FadeInUp(
+                  duration: const Duration(milliseconds: 500),
                   delay: const Duration(milliseconds: 400),
                   child: Container(
                     width: double.infinity,
-                    padding: const EdgeInsets.all(28),
+                    padding: const EdgeInsets.all(32),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: context.backgroundSecondaryColor,
                       borderRadius: BorderRadius.circular(32),
+                      border: Border.all(
+                        color: context.borderPrimaryColor.withValues(
+                          alpha: 0.05,
+                        ),
+                      ),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.04),
+                          color: Colors.black.withValues(alpha: 0.1),
                           blurRadius: 20,
                           offset: const Offset(0, 10),
                         ),
@@ -119,32 +138,53 @@ class _PaymentSuccessPageState extends State<PaymentSuccessPage> {
                         Text(
                           t['newBalance']!,
                           style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            color: palette.textTertiary,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w800,
+                            color: context.textTertiaryColor,
+                            letterSpacing: 0.5,
                           ),
                         ),
-                        const Gap(8),
-                        Text(
-                          '${session.walletBalance.toStringAsFixed(2)} ${t['egp']!}',
-                          style: TextStyle(
-                            fontSize: 32,
-                            fontWeight: FontWeight.w900,
-                            color: palette.brandPrimary,
-                          ),
+                        const Gap(12),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.baseline,
+                          textBaseline: TextBaseline.alphabetic,
+                          children: [
+                            Text(
+                              session.walletBalance.toStringAsFixed(2),
+                              style: TextStyle(
+                                fontSize: 40,
+                                fontWeight: FontWeight.w900,
+                                color: context.brandPrimaryColor,
+                                letterSpacing: -1,
+                              ),
+                            ),
+                            const Gap(8),
+                            Text(
+                              t['egp']!,
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w900,
+                                color: context.brandPrimaryColor.withValues(
+                                  alpha: 0.7,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
                   ),
                 ),
-                const Gap(48),
+                const Gap(64),
                 FadeInUp(
+                  duration: const Duration(milliseconds: 500),
                   delay: const Duration(milliseconds: 600),
                   child: SizedBox(
                     width: double.infinity,
                     child: MentorXButton(
                       onPressed: () => context.go('/'),
-                      text: t['backToWallet']!,
+                      label: t['backToWallet']!,
                     ),
                   ),
                 ),

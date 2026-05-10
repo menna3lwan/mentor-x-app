@@ -1,26 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:mentorx_core/mentorx_core.dart';
+import '../../bloc/home_page_bloc.dart';
 import 'banners_carousel_widget.dart';
 
-final class BannersCarousel extends StatelessWidget {
-  final List<BannerEntity> banners;
-  final bool isLoading;
-  final ValueChanged<String> onTapBanner;
-
-  const BannersCarousel({
-    super.key,
-    required this.banners,
-    required this.isLoading,
-    required this.onTapBanner,
-  });
+final class BannersCarouselWrapper extends StatelessWidget {
+  const BannersCarouselWrapper({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final banners = context.select<HomePageBloc, List<BannerEntity>>(
+      (bloc) => bloc.state.bannersSection.data ?? const [],
+    );
+    final isLoading = context.select<HomePageBloc, bool>(
+      (bloc) => bloc.state.isFirstLoading || bloc.state.bannersSection.isLoading,
+    );
+
     return BannersCarouselWidget(
       banners: banners,
       isLoading: isLoading,
-      onTapBanner: onTapBanner,
+      onTapBanner: (bannerId) =>
+          context.read<HomePageBloc>().add(HomePageBannerClickedEvent(bannerId)),
     );
   }
 }

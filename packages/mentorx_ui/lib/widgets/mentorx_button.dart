@@ -32,9 +32,9 @@ class MentorXButton extends StatelessWidget {
 
   String get _displayText => label ?? text ?? '';
 
-  Style _variantStyle(MentorXThemeColorPalette palette) {
-    final baseColor = color ?? palette.brandPrimary;
-    
+  Style _variantStyle(BuildContext context) {
+    final baseColor = color ?? context.brandPrimaryColor;
+
     return switch (variant) {
       MentorXButtonVariant.filled => Style(
           $box.color(baseColor),
@@ -79,7 +79,7 @@ class MentorXButton extends StatelessWidget {
     };
   }
 
-  Style _defaultStyle(MentorXThemeColorPalette palette) {
+  Style _defaultStyle(BuildContext context) {
     return Style(
       $box.width(width ?? double.infinity),
       $box.borderRadius(16),
@@ -87,20 +87,18 @@ class MentorXButton extends StatelessWidget {
       $text.style.ref($mentorxToken.textStyle.bodyPrimary),
       $text.style.letterSpacing(-0.2),
       $on.disabled(
-        $box.color(palette.backgroundSecondary),
-        $text.style.color(palette.textTertiary),
+        $box.color(context.backgroundSecondaryColor),
+        $text.style.color(context.textTertiaryColor),
         $box.border.all.color(Colors.transparent),
       ),
-    ).merge(_variantStyle(palette)).merge(_sizeStyle());
+    ).merge(_variantStyle(context)).merge(_sizeStyle());
   }
 
   @override
   Widget build(BuildContext context) {
-    final palette = MentorXThemeColorPalette.light;
-
     return PressableBox(
       onPress: loading ? null : onPressed,
-      style: _defaultStyle(palette).merge(style),
+      style: _defaultStyle(context).merge(style),
       child: loading
           ? SizedBox(
               height: 20,
@@ -108,7 +106,9 @@ class MentorXButton extends StatelessWidget {
               child: CircularProgressIndicator(
                 strokeWidth: 2.5,
                 valueColor: AlwaysStoppedAnimation(
-                  variant == MentorXButtonVariant.filled ? Colors.white : (color ?? palette.brandPrimary),
+                  variant == MentorXButtonVariant.filled
+                      ? Colors.white
+                      : (color ?? context.brandPrimaryColor),
                 ),
               ),
             )
@@ -120,7 +120,9 @@ class MentorXButton extends StatelessWidget {
                   Icon(
                     icon,
                     size: size == MentorXButtonSize.small ? 16 : 20,
-                    color: variant == MentorXButtonVariant.filled ? Colors.white : (color ?? palette.brandPrimary),
+                    color: variant == MentorXButtonVariant.filled
+                        ? Colors.white
+                        : (color ?? context.brandPrimaryColor),
                   ),
                   const Gap(10),
                 ],

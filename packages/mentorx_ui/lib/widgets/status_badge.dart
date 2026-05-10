@@ -61,13 +61,11 @@ class StatusBadge extends StatelessWidget {
   }
 
   Widget _buildAlert(BuildContext context) {
-    final palette = MentorXThemeColorPalette.light;
-    
     final Color effectiveColor = switch (status!) {
-      StatusBadgeType.success => palette.statusSuccess,
-      StatusBadgeType.warning => palette.statusWarning,
-      StatusBadgeType.danger => palette.statusDanger,
-      StatusBadgeType.info => palette.brandPrimary,
+      StatusBadgeType.success => context.statusSuccessColor,
+      StatusBadgeType.warning => context.statusWarningColor,
+      StatusBadgeType.danger => context.statusDangerColor,
+      StatusBadgeType.info => context.brandPrimaryColor,
     };
 
     return Container(

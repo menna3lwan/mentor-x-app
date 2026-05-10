@@ -8,6 +8,7 @@ class AppDashboardScaffold extends StatelessWidget {
     required this.body,
     this.onRefresh,
     this.backgroundColor,
+    this.floatingActionButton,
   });
 
   final String title;
@@ -15,6 +16,7 @@ class AppDashboardScaffold extends StatelessWidget {
   final Widget body;
   final Future<void> Function()? onRefresh;
   final Color? backgroundColor;
+  final Widget? floatingActionButton;
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +40,7 @@ class AppDashboardScaffold extends StatelessWidget {
               child: body,
             )
           : body,
+      floatingActionButton: floatingActionButton,
     );
 
     return scaffold;

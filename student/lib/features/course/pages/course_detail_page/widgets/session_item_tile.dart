@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
+import 'package:gap/gap.dart';
 
 final class SessionItemTile extends StatelessWidget {
   final SessionItemEntity item;
@@ -14,28 +15,40 @@ final class SessionItemTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = MentorXThemeColorPalette.light;
+    final subtitle = _getSubtitle(context);
+    final typeColor = _colorForType(context, item.itemType);
 
     return InkWell(
       onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         child: Row(
           children: [
             Container(
-              width: 40,
-              height: 40,
+              width: 44,
+              height: 44,
               decoration: BoxDecoration(
-                color: _colorForType(item.itemType, palette).withOpacity(0.1),
-                shape: BoxShape.circle,
+                gradient: LinearGradient(
+                  colors: [
+                    typeColor.withValues(alpha: 0.2),
+                    typeColor.withValues(alpha: 0.05),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(
+                  color: typeColor.withValues(alpha: 0.1),
+                ),
               ),
               child: Icon(
                 _iconForType(item.itemType),
-                size: 20,
-                color: _colorForType(item.itemType, palette),
+                size: 22,
+                color: typeColor,
               ),
             ),
-            const SizedBox(width: 16),
+            const Gap(16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,49 +56,61 @@ final class SessionItemTile extends StatelessWidget {
                   Text(
                     item.title,
                     style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: palette.textPrimary,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w900,
+                      color: context.textPrimaryColor,
+                      letterSpacing: -0.2,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 2),
-                  if (_subtitle != null)
+                  const Gap(4),
+                  if (subtitle != null)
                     Text(
-                      _subtitle!,
+                      subtitle,
                       style: TextStyle(
                         fontSize: 12,
-                        color: palette.textSecondary,
-                        fontWeight: FontWeight.w500,
+                        color: context.textTertiaryColor,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                 ],
               ),
             ),
             if (item.isFree) ...[
-              const SizedBox(width: 8),
+              const Gap(12),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                decoration: BoxDecoration(
-                  color: palette.statusSuccess.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
                 ),
-                child: const Text(
-                  'FREE',
+                decoration: BoxDecoration(
+                  color: context.statusSuccessColor.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Text(
+                  context.t.course.detail.sessionFree.toUpperCase(),
                   style: TextStyle(
-                    color: Colors.green,
-                    fontSize: 10,
-                    fontWeight: FontWeight.w700,
+                    color: context.statusSuccessColor,
+                    fontSize: 8,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 0.5,
                   ),
                 ),
               ),
             ],
-            const SizedBox(width: 12),
-            Icon(
-              Icons.chevron_right_rounded,
-              size: 20,
-              color: palette.textTertiary,
+            const Gap(12),
+            Container(
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                color: context.backgroundPrimaryColor.withValues(alpha: 0.4),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.chevron_right_rounded,
+                size: 18,
+                color: context.textTertiaryColor.withValues(alpha: 0.8),
+              ),
             ),
           ],
         ),
@@ -93,14 +118,14 @@ final class SessionItemTile extends StatelessWidget {
     );
   }
 
-  String? get _subtitle {
+  String? _getSubtitle(BuildContext context) {
     if (item.durationSeconds != null) {
       final mins = item.durationSeconds! ~/ 60;
       final secs = item.durationSeconds! % 60;
-      return '${mins}m ${secs}s';
+      return context.t.course.detail.durationShort(mins: mins, secs: secs);
     }
     if (item.pageCount != null) {
-      return '${item.pageCount} pages';
+      return context.t.course.detail.pagesCount(count: item.pageCount!);
     }
     return null;
   }
@@ -116,17 +141,17 @@ final class SessionItemTile extends StatelessWidget {
     };
   }
 
-  static Color _colorForType(
+  Color _colorForType(
+    BuildContext context,
     SessionItemType type,
-    MentorXThemeColorPalette palette,
   ) {
     return switch (type) {
-      SessionItemType.video => palette.brandPrimary,
-      SessionItemType.document => const Color(0xFFEF5350),
-      SessionItemType.quiz => const Color(0xFFFFA726),
-      SessionItemType.assignment => const Color(0xFF26A69A),
-      SessionItemType.link => const Color(0xFFAB47BC),
-      SessionItemType.audio => const Color(0xFF42A5F5),
+      SessionItemType.video => context.brandPrimaryColor,
+      SessionItemType.document => context.statusDangerColor,
+      SessionItemType.quiz => context.statusWarningColor,
+      SessionItemType.assignment => context.statusSuccessColor,
+      SessionItemType.link => context.brandSecondaryColor,
+      SessionItemType.audio => context.brandTertiaryColor,
     };
   }
 }

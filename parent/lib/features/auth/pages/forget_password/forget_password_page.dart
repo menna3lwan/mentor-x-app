@@ -21,19 +21,17 @@ final class ForgetPasswordPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = MentorXThemeColorPalette.light;
-
     return Scaffold(
-      backgroundColor: palette.backgroundPrimary,
+      backgroundColor: context.backgroundPrimaryColor,
       body: Column(
         children: [
           // Premium Header
-          _BuildHeader(palette: palette, title: title),
+          _BuildHeader(title: title),
           
           Expanded(
             child: Container(
               decoration: BoxDecoration(
-                color: palette.backgroundSecondary.withValues(alpha: 0.5),
+                color: context.backgroundSecondaryColor.withValues(alpha: 0.5),
                 borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
               ),
               child: ClipRRect(
@@ -51,7 +49,7 @@ final class ForgetPasswordPage extends StatelessWidget {
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 15,
-                            color: palette.textSecondary,
+                            color: context.textSecondaryColor,
                             height: 1.6,
                             fontWeight: FontWeight.w500,
                           ),
@@ -99,10 +97,9 @@ final class ForgetPasswordPage extends StatelessWidget {
 }
 
 class _BuildHeader extends StatelessWidget {
-  final MentorXThemeColorPalette palette;
   final String title;
 
-  const _BuildHeader({required this.palette, required this.title});
+  const _BuildHeader({required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +112,7 @@ class _BuildHeader extends StatelessWidget {
       ),
       width: double.infinity,
       decoration: BoxDecoration(
-        color: palette.backgroundPrimary,
+        color: context.backgroundPrimaryColor,
       ),
       child: Column(
         children: [
@@ -123,7 +120,7 @@ class _BuildHeader extends StatelessWidget {
             children: [
               IconButton(
                 onPressed: () => Navigator.pop(context),
-                icon: Icon(Icons.arrow_back_ios_new_rounded, color: palette.textPrimary, size: 20),
+                icon: Icon(Icons.arrow_back_ios_new_rounded, color: context.textPrimaryColor, size: 20),
               ),
               Expanded(
                 child: FadeInDown(
@@ -134,7 +131,7 @@ class _BuildHeader extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w900,
-                      color: palette.textPrimary,
+                      color: context.textPrimaryColor,
                       letterSpacing: -0.5,
                     ),
                   ),
@@ -153,13 +150,13 @@ class _BuildHeader extends StatelessWidget {
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: palette.brandPrimary.withValues(alpha: 0.1),
+                    color: context.brandPrimaryColor.withValues(alpha: 0.1),
                     blurRadius: 20,
                     offset: const Offset(0, 10),
                   ),
                 ],
               ),
-              child: Icon(Icons.lock_reset_rounded, color: palette.brandPrimary, size: 48),
+              child: Icon(Icons.lock_reset_rounded, color: context.brandPrimaryColor, size: 48),
             ),
           ),
           const Gap(24),
@@ -171,7 +168,7 @@ class _BuildHeader extends StatelessWidget {
               style: TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.w900,
-                color: palette.textPrimary,
+                color: context.textPrimaryColor,
                 letterSpacing: -1.0,
               ),
             ),

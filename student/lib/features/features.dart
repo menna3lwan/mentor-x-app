@@ -1,4 +1,5 @@
 export 'account_status/account_status.dart';
+export 'analytics/analytics.dart';
 export 'ai_chat/ai_chat.dart';
 export 'assignments/assignments.dart';
 export 'attendance/attendance.dart';

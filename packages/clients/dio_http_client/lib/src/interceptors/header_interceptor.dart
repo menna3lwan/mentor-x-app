@@ -9,22 +9,32 @@ final class HeaderInterceptor extends Interceptor {
 
   HeaderInterceptor({required DioHttpClient httpClient}) : _httpClient = httpClient;
 
+  static final MentorXLogger _logger = MentorXLogger('HeaderInterceptor');
+
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    // 1. Add Authorization header if token exists
-    final token = _httpClient.accessToken;
-    if (token != null && token.isNotEmpty) {
-      options.headers['Authorization'] = 'Bearer $token';
+    _logger.debug('Request to: ${options.path}');
+    _logger.debug('Headers before injection: ${options.headers.keys.toList()}');
+
+    // Inject core headers (Token, Device ID, Locale)
+    final coreHeaders = _httpClient._getCoreHeaders();
+    options.headers.addAll(coreHeaders);
+
+    if (coreHeaders.containsKey('Authorization')) {
+      final token = coreHeaders['Authorization']!;
+      final displayToken = token.length > 15 
+          ? '...${token.substring(token.length - 10)}' 
+          : '***';
+      _logger.info('🔑 Injected Authorization header for: ${options.path} (Token ends with: $displayToken)');
+    } else {
+      _logger.warning('🚫 No access token found in HttpClient for request: ${options.path}');
+      // Also log if we have a device ID but no token, to confirm it's not a complete header failure
+      if (coreHeaders.containsKey(NetworkConstants.deviceIdHeader)) {
+        _logger.debug('📡 Device ID was found and injected: ${coreHeaders[NetworkConstants.deviceIdHeader]}');
+      }
     }
 
-    // 2. Add Device ID header if exists in default headers
-    final deviceId = _httpClient.getDefaultHeaders()['X-Device-Id'];
-    if (deviceId != null && deviceId.isNotEmpty) {
-      options.headers['X-Device-Id'] = deviceId;
-    }
-
-    // 3. Ensure Accept-Language is set
-    options.headers['Accept-Language'] = _httpClient.languageCode;
+    _logger.debug('Headers after injection: ${options.headers.keys.toList()}');
 
     return handler.next(options);
   }

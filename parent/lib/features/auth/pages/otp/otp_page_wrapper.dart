@@ -48,12 +48,10 @@ class _OtpPageWrapperState extends State<OtpPageWrapper> {
             final state = context.watch<OtpBloc>().state;
             final bloc = context.read<OtpBloc>();
 
-            final palette = MentorXThemeColorPalette.light;
-
             return OtpPage(
               backButton: IconButton(
                 onPressed: () => context.pop(),
-                icon: Icon(Icons.arrow_back_ios_new_rounded, color: palette.textPrimary, size: 20),
+                icon: Icon(Icons.arrow_back_ios_new_rounded, color: context.textPrimaryColor, size: 20),
               ),
               title: Text(
                 'Verify Your Number',
@@ -61,7 +59,7 @@ class _OtpPageWrapperState extends State<OtpPageWrapper> {
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.w900,
-                  color: palette.textPrimary,
+                  color: context.textPrimaryColor,
                   letterSpacing: -0.5,
                 ),
               ),
@@ -70,7 +68,7 @@ class _OtpPageWrapperState extends State<OtpPageWrapper> {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 15,
-                  color: palette.textSecondary,
+                  color: context.textSecondaryColor,
                   fontWeight: FontWeight.w500,
                   height: 1.5,
                 ),
@@ -114,7 +112,7 @@ class _OtpPageWrapperState extends State<OtpPageWrapper> {
                           ? 'Resend Code'
                           : 'Resend in ${state.resendCountdown}s',
                   style: TextStyle(
-                    color: state.canResend ? palette.brandPrimary : palette.textTertiary,
+                    color: state.canResend ? context.brandPrimaryColor : context.textTertiaryColor,
                     fontWeight: FontWeight.w800,
                     fontSize: 14,
                   ),

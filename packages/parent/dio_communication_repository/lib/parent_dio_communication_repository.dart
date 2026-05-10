@@ -8,6 +8,9 @@ final class DioParentCommunicationRepository
   final HttpClient httpClient;
 
   DioParentCommunicationRepository({required this.httpClient});
+  
+  @override
+  Future<void> initialize() async {}
 
   @override
   Never throwException(
@@ -20,9 +23,17 @@ final class DioParentCommunicationRepository
   @override
   Future<List<NotificationEntity>> getNotifications(String childId) async {
     try {
-      final response = await httpClient.get(
-        '/api/v1/parent/children/$childId/notifications',
-      );
+      HttpClientResponse response;
+      try {
+        response = await httpClient.get(
+          '/api/parent/children/$childId/notifications',
+        );
+      } on HttpClientResponse catch (e) {
+        if (e.statusCode != 404) rethrow;
+        response = await httpClient.get(
+          '/api/parent/dashboard/child/$childId/notifications',
+        );
+      }
 
       final data = asList(response.data);
       return data.map((e) => NotificationModel.fromJson(asMap(e))).toList();
@@ -37,9 +48,17 @@ final class DioParentCommunicationRepository
   @override
   Future<List<AnnouncementEntity>> getAnnouncements(String childId) async {
     try {
-      final response = await httpClient.get(
-        '/api/v1/parent/children/$childId/announcements',
-      );
+      HttpClientResponse response;
+      try {
+        response = await httpClient.get(
+          '/api/parent/children/$childId/announcements',
+        );
+      } on HttpClientResponse catch (e) {
+        if (e.statusCode != 404) rethrow;
+        response = await httpClient.get(
+          '/api/parent/dashboard/child/$childId/announcements',
+        );
+      }
 
       final data = asList(response.data);
       return data.map((e) => AnnouncementModel.fromJson(asMap(e))).toList();
@@ -54,9 +73,17 @@ final class DioParentCommunicationRepository
   @override
   Future<List<WhatsAppGroupEntity>> getWhatsAppGroups(String childId) async {
     try {
-      final response = await httpClient.get(
-        '/api/v1/parent/children/$childId/whatsapp-groups',
-      );
+      HttpClientResponse response;
+      try {
+        response = await httpClient.get(
+          '/api/parent/children/$childId/whatsapp-groups',
+        );
+      } on HttpClientResponse catch (e) {
+        if (e.statusCode != 404) rethrow;
+        response = await httpClient.get(
+          '/api/parent/dashboard/child/$childId/whatsapp-groups',
+        );
+      }
 
       final data = asList(response.data);
       return data.map((e) => WhatsAppGroupModel.fromJson(asMap(e))).toList();

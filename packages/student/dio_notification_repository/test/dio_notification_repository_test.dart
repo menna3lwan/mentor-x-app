@@ -31,7 +31,7 @@ void main() {
         };
 
         when(() => httpClient.get(
-          '/api/notifications',
+          '/api/notifications/my',
           queryParameters: any(named: 'queryParameters'),
         )).thenAnswer((_) async => HttpClientResponse(
           data: mockData,

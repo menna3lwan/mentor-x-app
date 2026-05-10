@@ -25,7 +25,6 @@ part 'extensions/assets_extensions.dart';
 part 'extensions/string_extensions.dart';
 
 /// Theming
-part 'theming/mentorx_theme_color_palette.dart';
 part 'theming/mentorx_theme_extension.dart';
 part 'theming/mentorx_theme_provider.dart';
 part 'theming/mentorx_theme_tokens.dart';

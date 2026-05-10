@@ -2,12 +2,12 @@ import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-
+import 'package:mentorx_ui/mentorx_ui.dart';
 import '../../../../core/core.dart';
 import 'bloc/reset_password_bloc.dart';
 import 'reset_password_page.dart';
 
-class ResetPasswordPageWrapper extends StatefulWidget {
+final class ResetPasswordPageWrapper extends StatefulWidget {
   final String phoneNumber;
 
   const ResetPasswordPageWrapper({super.key, required this.phoneNumber});
@@ -17,7 +17,8 @@ class ResetPasswordPageWrapper extends StatefulWidget {
       _ResetPasswordPageWrapperState();
 }
 
-class _ResetPasswordPageWrapperState extends State<ResetPasswordPageWrapper> {
+final class _ResetPasswordPageWrapperState
+    extends State<ResetPasswordPageWrapper> {
   final _formKey = GlobalKey<FormState>();
   final _otpController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -45,10 +46,8 @@ class _ResetPasswordPageWrapperState extends State<ResetPasswordPageWrapper> {
           >(
             listener: (context, event) {
               if (event is ResetPasswordSuccessPresentationEvent) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Password reset successfully!')),
-                );
-                context.go('/login');
+                context.showSuccessSnackBar('Password reset successfully!');
+                const LoginPageRoute().go(context);
               }
             },
             child: BlocBuilder<ResetPasswordBloc, ResetPasswordState>(

@@ -3,30 +3,30 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pinput/pinput.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:gap/gap.dart';
 import '../bloc/student_registration_bloc.dart';
 
-class OtpStep extends StatelessWidget {
+final class OtpStep extends StatelessWidget {
   const OtpStep({super.key});
 
   @override
   Widget build(BuildContext context) {
     final t = context.t.student;
-    final palette = MentorXThemeColorPalette.light;
     final bloc = context.read<StudentRegistrationBloc>();
 
     final defaultPinTheme = PinTheme(
-      width: 56,
-      height: 60,
+      width: 52,
+      height: 64,
       textStyle: TextStyle(
-        fontSize: 22,
-        color: palette.textPrimary,
+        fontSize: 24,
+        color: context.textPrimaryColor,
         fontWeight: FontWeight.w900,
       ),
       decoration: BoxDecoration(
-        color: palette.backgroundSecondary,
+        color: context.backgroundSecondaryColor,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: palette.textTertiary.withValues(alpha: 0.1),
+          color: context.borderPrimaryColor.withValues(alpha: 0.1),
           width: 2,
         ),
       ),
@@ -34,12 +34,12 @@ class OtpStep extends StatelessWidget {
 
     final focusedPinTheme = defaultPinTheme.copyWith(
       decoration: defaultPinTheme.decoration!.copyWith(
-        border: Border.all(color: palette.brandPrimary, width: 2),
+        border: Border.all(color: context.brandPrimaryColor, width: 2),
         boxShadow: [
           BoxShadow(
-            color: palette.brandPrimary.withValues(alpha: 0.1),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
+            color: context.brandPrimaryColor.withValues(alpha: 0.1),
+            blurRadius: 15,
+            offset: const Offset(0, 8),
           ),
         ],
       ),
@@ -53,45 +53,65 @@ class OtpStep extends StatelessWidget {
             FadeInDown(
               duration: const Duration(milliseconds: 600),
               child: Container(
-                padding: const EdgeInsets.all(24),
+                padding: const EdgeInsets.all(28),
                 decoration: BoxDecoration(
-                  color: palette.brandPrimary.withValues(alpha: 0.1),
+                  color: context.brandPrimaryColor.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
+                  border: Border.all(
+                    color: context.brandPrimaryColor.withValues(alpha: 0.1),
+                  ),
                 ),
                 child: Icon(
-                  Icons.mark_email_read_outlined,
+                  Icons.mark_chat_read_rounded,
                   size: 64,
-                  color: palette.brandPrimary,
+                  color: context.brandPrimaryColor,
                 ),
               ),
             ),
-            const SizedBox(height: 32),
+            const Gap(32),
             FadeInDown(
               duration: const Duration(milliseconds: 500),
               delay: const Duration(milliseconds: 200),
               child: Text(
                 t['otpVerifyTitle'] ?? 'Verification Code',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                style: TextStyle(
+                  fontSize: 24,
                   fontWeight: FontWeight.w900,
-                  color: palette.textPrimary,
+                  color: context.textPrimaryColor,
+                  letterSpacing: -0.5,
                 ),
               ),
             ),
-            const SizedBox(height: 12),
+            const Gap(12),
             FadeInDown(
               duration: const Duration(milliseconds: 500),
               delay: const Duration(milliseconds: 300),
-              child: Text(
-                '${t['otpSentWhatsapp'] ?? "We've sent a 6-digit code to"}\n${state.phone}',
+              child: RichText(
                 textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: palette.textSecondary,
-                  height: 1.5,
-                  fontWeight: FontWeight.w600,
+                text: TextSpan(
+                  style: TextStyle(
+                    color: context.textSecondaryColor,
+                    fontSize: 15,
+                    height: 1.6,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  children: [
+                    TextSpan(
+                      text:
+                          '${t['otpSentWhatsapp'] ?? "We've sent a 6-digit code to"}\n',
+                    ),
+                    TextSpan(
+                      text: state.phone,
+                      style: TextStyle(
+                        color: context.textPrimaryColor,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
-            const SizedBox(height: 40),
+            const Gap(48),
             FadeInUp(
               duration: const Duration(milliseconds: 600),
               delay: const Duration(milliseconds: 400),
@@ -99,11 +119,11 @@ class OtpStep extends StatelessWidget {
                 length: 6,
                 defaultPinTheme: defaultPinTheme,
                 focusedPinTheme: focusedPinTheme,
-                separatorBuilder: (index) => const SizedBox(width: 8),
+                separatorBuilder: (index) => const Gap(8),
                 onChanged: (v) => bloc.add(StudentRegistrationOtpChanged(v)),
               ),
             ),
-            const SizedBox(height: 32),
+            const Gap(40),
             FadeInUp(
               duration: const Duration(milliseconds: 600),
               delay: const Duration(milliseconds: 500),
@@ -113,8 +133,8 @@ class OtpStep extends StatelessWidget {
                   Text(
                     '${t['didNotReceiveCode'] ?? "Didn't receive a code?"} ',
                     style: TextStyle(
-                      color: palette.textSecondary,
-                      fontWeight: FontWeight.w600,
+                      color: context.textSecondaryColor,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                   TextButton(
@@ -123,8 +143,9 @@ class OtpStep extends StatelessWidget {
                     child: Text(
                       t['resendCode'] ?? 'Resend',
                       style: TextStyle(
-                        color: palette.brandPrimary,
+                        color: context.brandPrimaryColor,
                         fontWeight: FontWeight.w900,
+                        letterSpacing: 0.5,
                       ),
                     ),
                   ),
@@ -136,5 +157,4 @@ class OtpStep extends StatelessWidget {
       },
     );
   }
-
 }

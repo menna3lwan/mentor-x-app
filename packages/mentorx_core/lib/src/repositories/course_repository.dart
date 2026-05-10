@@ -47,8 +47,11 @@ abstract interface class CourseRepository {
   /// Fetch full course detail by ID.
   Future<CourseEntity> getCourseDetail(String courseId);
 
-  /// Fetch sessions with items for a course.
+  /// Fetch sessions for a course.
   Future<List<SessionEntity>> getCourseSessions(String courseId);
+
+  /// Fetch weeks for a specific session.
+  Future<List<WeekEntity>> getSessionWeeks(String sessionId);
 
   /// Fetch items for a specific session.
   Future<List<SessionItemEntity>> getSessionItems(String sessionId);

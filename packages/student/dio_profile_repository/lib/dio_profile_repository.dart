@@ -53,10 +53,9 @@ final class DioStudentProfileRepository
         queryParameters: {'status': 'pending'},
       );
 
-      final data = asList(asMap(response.data)['data'] ??
-          asMap(response.data)['content'] ??
-          response.data);
-      return data
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final list = asList(data is Map ? data['content'] : data);
+      return list
           .map(asMap)
           .map(ProfileEditRequestModel.fromJson)
           .toList();
@@ -108,7 +107,7 @@ final class DioStudentProfileRepository
   @override
   Future<StudentEntity> getProfile() async {
     try {
-      final response = await httpClient.get('/api/profile/student/details');
+      final response = await httpClient.get('/api/student/profile');
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return StudentProfileModel.fromJson(data);
     } on HttpClientResponse catch (e) {
@@ -133,6 +132,7 @@ final class DioStudentProfileRepository
   Future<List<DeviceEntity>> getDevices() async {
     try {
       final response = await httpClient.get('/api/auth/session-status');
+      
       final rootData = asMap(response.data);
 
       // Handle the case where session-status returns a single status object instead of a list
@@ -151,9 +151,10 @@ final class DioStudentProfileRepository
         ];
       }
 
-      final data = asList(rootData['data'] ?? rootData['content'] ?? response.data);
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final list = asList(data is Map ? data['content'] : rootData['content'] ?? response.data);
 
-      return data.map(asMap).map(DeviceModel.fromJson).toList();
+      return list.map(asMap).map(DeviceModel.fromJson).toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
@@ -196,7 +197,7 @@ final class DioStudentProfileRepository
   Future<StudentEntity> updateProfile(StudentEntity profile) async {
     try {
       final response = await httpClient.put(
-        '/api/profile/student/update',
+        '/api/student/profile',
         data: StudentProfileModel.fromEntity(profile).toJson(),
       );
       final data = asMap(response.data)['data'] ?? asMap(response.data);

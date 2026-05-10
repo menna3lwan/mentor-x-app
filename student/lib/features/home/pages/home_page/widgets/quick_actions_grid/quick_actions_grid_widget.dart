@@ -1,5 +1,7 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
+import 'package:gap/gap.dart';
 
 final class QuickActionsGridWidget extends StatelessWidget {
   final ValueChanged<int>? onActionTap;
@@ -8,7 +10,6 @@ final class QuickActionsGridWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = MentorXThemeColorPalette.light;
     final actions = [
       (context.t.home.dashboard.actions.myCourses, Icons.menu_book_rounded),
       (
@@ -20,64 +21,87 @@ final class QuickActionsGridWidget extends StatelessWidget {
       (context.t.home.dashboard.actions.assignments, Icons.assignment_rounded),
       (context.t.home.dashboard.actions.rewards, Icons.emoji_events_rounded),
       (context.t.home.dashboard.actions.marketplace, Icons.storefront_rounded),
+      (
+        context.t.home.dashboard.actions.analytics,
+        Icons.bar_chart_rounded,
+      ),
     ];
+
     return GridView.builder(
       itemCount: actions.length,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-        childAspectRatio: 0.9,
-        mainAxisSpacing: 16,
-        crossAxisSpacing: 16,
+        crossAxisCount: 4,
+        childAspectRatio: 0.75,
+        mainAxisSpacing: 20,
+        crossAxisSpacing: 12,
       ),
       itemBuilder: (context, index) {
         final action = actions[index];
-        return InkWell(
+        return GestureDetector(
           onTap: () => onActionTap?.call(index),
-          borderRadius: BorderRadius.circular(20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                width: 64,
-                height: 64,
+                width: 68,
+                height: 68,
                 decoration: BoxDecoration(
-                  color: palette.backgroundPrimary,
-                  borderRadius: BorderRadius.circular(20),
+                  color: context.backgroundSecondaryColor.withValues(alpha: 0.45),
+                  borderRadius: BorderRadius.circular(22),
+                  border: Border.all(
+                    color: context.borderPrimaryColor.withValues(alpha: 0.1),
+                  ),
                   boxShadow: [
                     BoxShadow(
-                      color: palette.textPrimary.withOpacity(0.04),
+                      color: Colors.black.withValues(alpha: 0.05),
                       blurRadius: 10,
                       offset: const Offset(0, 4),
                     ),
                   ],
                 ),
-                child: Center(
-                  child: Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: palette.brandTertiary.withOpacity(0.5),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      action.$2,
-                      color: palette.brandPrimary,
-                      size: 26,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(22),
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                    child: Center(
+                      child: Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              context.brandPrimaryColor.withValues(alpha: 0.2),
+                              context.brandPrimaryColor.withValues(alpha: 0.05),
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: context.brandPrimaryColor.withValues(alpha: 0.1),
+                          ),
+                        ),
+                        child: Icon(
+                          action.$2,
+                          color: context.brandPrimaryColor,
+                          size: 24,
+                        ),
+                      ),
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 12),
+              const Gap(12),
               Text(
                 action.$1,
                 textAlign: TextAlign.center,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  color: palette.textPrimary,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
+                  color: context.textPrimaryColor,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w900,
                   letterSpacing: -0.2,
                 ),
               ),

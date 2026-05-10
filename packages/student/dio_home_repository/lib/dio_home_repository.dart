@@ -21,7 +21,7 @@ final class DioStudentHomeRepository
   Future<WalletSummaryEntity> getWalletSummary() async {
     try {
       final response = await httpClient.get('/api/payment/wallet/balance');
-      final data = asMap(response.data)["content"] ?? asMap(response.data);
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
       return WalletSummaryModel.fromJson(data);
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
@@ -35,8 +35,8 @@ final class DioStudentHomeRepository
   Future<int> getUnreadNotificationsCount() async {
     try {
       final response = await httpClient.get('/api/notifications/unread-count');
-      final data = asMap(response.data)["content"] ?? asMap(response.data);
-      return intOrNull(data['count']) ?? 0;
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      return intOrNull(data['count'] ?? data['unreadCount']) ?? 0;
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
@@ -49,17 +49,18 @@ final class DioStudentHomeRepository
   @override
   Future<List<BannerEntity>> getHomeBanners({String? gradeId}) async {
     try {
+      final queryParams = {
+        'placement': 'home',
+        if (gradeId != null) 'grade_id': gradeId,
+      };
+
       final response = await httpClient.get(
         '/api/banners/active',
-        queryParameters: {
-          'placement': 'home',
-          if (gradeId != null) 'grade_id': gradeId,
-        },
+        queryParameters: queryParams,
       );
 
-      final list = asList(asMap(response.data)['data'] ??
-          asMap(response.data)['content'] ??
-          response.data);
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final list = asList(data is Map ? data['content'] : data);
       return list
           .map(asMap)
           .map(BannerModel.fromJson)
@@ -77,17 +78,18 @@ final class DioStudentHomeRepository
   @override
   Future<List<CourseSummaryEntity>> getContinueLearningCourses() async {
     try {
+      final queryParams = {
+        'size': 5,
+        'sort': 'lastAccessedAt,desc',
+      };
+
       final response = await httpClient.get(
         '/api/enrollments/my-enrollments',
-        queryParameters: {
-          'size': 5,
-          'sort': 'lastAccessedAt,desc',
-        },
+        queryParameters: queryParams,
       );
 
-      final content = asList(asMap(response.data)['data'] ??
-          asMap(response.data)['content'] ??
-          response.data);
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final content = asList(data is Map ? data['content'] : data);
       return content
           .map(asMap)
           .map(CourseModel.fromJson)
@@ -105,18 +107,19 @@ final class DioStudentHomeRepository
   Future<List<CourseSummaryEntity>> getFeaturedCourses(
       {String? gradeId}) async {
     try {
+      final queryParams = {
+        'featured': true,
+        if (gradeId != null) 'grade_id': gradeId,
+        'size': 6,
+      };
+
       final response = await httpClient.get(
         '/api/courses',
-        queryParameters: {
-          'featured': true,
-          if (gradeId != null) 'grade_id': gradeId,
-          'size': 6,
-        },
+        queryParameters: queryParams,
       );
 
-      final content = asList(asMap(response.data)['data'] ??
-          asMap(response.data)['content'] ??
-          response.data);
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final content = asList(data is Map ? data['content'] : data);
       return content
           .map(asMap)
           .map(CourseModel.fromJson)
@@ -132,14 +135,14 @@ final class DioStudentHomeRepository
   @override
   Future<List<AnnouncementEntity>> getRecentAnnouncements() async {
     try {
+      final queryParams = {'limit': 3};
       final response = await httpClient.get(
         '/api/announcements/active',
-        queryParameters: {'limit': 3},
+        queryParameters: queryParams,
       );
 
-      final list = asList(asMap(response.data)['data'] ??
-          asMap(response.data)['content'] ??
-          response.data);
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final list = asList(data is Map ? data['content'] : data);
 
       return list
           .map(asMap)

@@ -63,5 +63,7 @@ part '../../features/quizzes/pages/quiz_intro_page/quiz_intro_page_route.dart';
 part '../../features/ai_chat/pages/ai_conversations_page/ai_conversations_page_route.dart';
 part '../../features/ai_chat/pages/ai_chat_page/ai_chat_page_route.dart';
 part '../../features/notifications/pages/notifications_page/notifications_page_route.dart';
+part '../../features/analytics/pages/leaderboard_page/leaderboard_page_route.dart';
+part '../../features/analytics/pages/analytics_dashboard_page/analytics_dashboard_page_route.dart';
 part '../../features/onboarding/pages/walkthrough_page/walkthrough_page_route.dart';
 part '../../features/onboarding/pages/splash_page/splash_page_route.dart';

@@ -3,7 +3,7 @@ import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:gap/gap.dart';
 
-class EditProfilePage extends StatelessWidget {
+final class EditProfilePage extends StatelessWidget {
   final GlobalKey<FormState> formKey;
   final TextEditingController nameController;
   final TextEditingController phoneController;
@@ -30,37 +30,27 @@ class EditProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = context.t.student;
-    final palette = MentorXThemeColorPalette.light;
 
     return Scaffold(
-      backgroundColor: palette.backgroundSecondary,
+      backgroundColor: context.backgroundPrimaryColor,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(70),
         child: Container(
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                palette.brandPrimary,
-                palette.brandPrimary.withValues(alpha: 0.8),
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
+            color: context.backgroundSecondaryColor,
             borderRadius: const BorderRadius.vertical(
               bottom: Radius.circular(24),
             ),
-            boxShadow: [
-              BoxShadow(
-                color: palette.brandPrimary.withValues(alpha: 0.3),
-                blurRadius: 15,
-                offset: const Offset(0, 4),
+            border: Border(
+              bottom: BorderSide(
+                color: context.borderPrimaryColor.withValues(alpha: 0.05),
               ),
-            ],
+            ),
           ),
           child: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
-            foregroundColor: Colors.white,
+            foregroundColor: context.textPrimaryColor,
             centerTitle: true,
             title: Text(
               t['editProfile'] ?? 'Edit Profile',
@@ -87,7 +77,6 @@ class EditProfilePage extends StatelessWidget {
                   text:
                       t['editsNeedApproval'] ??
                       'Edits need admin approval and verification',
-                  palette: palette,
                 ),
               ),
               const Gap(32),
@@ -96,10 +85,9 @@ class EditProfilePage extends StatelessWidget {
                 duration: const Duration(milliseconds: 500),
                 child: _BuildSectionTitle(
                   title: t['personalInfo'] ?? 'Personal Information',
-                  palette: palette,
                 ),
               ),
-              const Gap(16),
+              const Gap(20),
 
               FadeInUp(
                 duration: const Duration(milliseconds: 500),
@@ -108,7 +96,6 @@ class EditProfilePage extends StatelessWidget {
                   label: t['name'] ?? 'Full Name',
                   controller: nameController,
                   icon: Icons.person_outline_rounded,
-                  palette: palette,
                   enabled: !isSubmitting,
                   validator: (v) =>
                       v == null || v.isEmpty ? t['requiredField'] : null,
@@ -122,7 +109,6 @@ class EditProfilePage extends StatelessWidget {
                   label: t['phone'] ?? 'Phone Number',
                   controller: phoneController,
                   icon: Icons.phone_android_rounded,
-                  palette: palette,
                   enabled: !isSubmitting,
                   keyboardType: TextInputType.phone,
                   validator: (v) =>
@@ -136,10 +122,9 @@ class EditProfilePage extends StatelessWidget {
                 delay: const Duration(milliseconds: 200),
                 child: _BuildSectionTitle(
                   title: t['academicInfo'] ?? 'Academic Details',
-                  palette: palette,
                 ),
               ),
-              const Gap(16),
+              const Gap(20),
 
               FadeInUp(
                 duration: const Duration(milliseconds: 500),
@@ -148,7 +133,6 @@ class EditProfilePage extends StatelessWidget {
                   label: t['grade'] ?? 'Grade',
                   controller: gradeController,
                   icon: Icons.school_outlined,
-                  palette: palette,
                   enabled: !isSubmitting,
                 ),
               ),
@@ -160,7 +144,6 @@ class EditProfilePage extends StatelessWidget {
                   label: t['center'] ?? 'Educational Center',
                   controller: centerController,
                   icon: Icons.business_rounded,
-                  palette: palette,
                   enabled: !isSubmitting,
                 ),
               ),
@@ -172,7 +155,6 @@ class EditProfilePage extends StatelessWidget {
                   label: t['school'] ?? 'School Name',
                   controller: schoolController,
                   icon: Icons.account_balance_rounded,
-                  palette: palette,
                   enabled: !isSubmitting,
                 ),
               ),
@@ -183,10 +165,9 @@ class EditProfilePage extends StatelessWidget {
                 delay: const Duration(milliseconds: 400),
                 child: _BuildSectionTitle(
                   title: t['reasonForEdit'] ?? 'Reason for this change',
-                  palette: palette,
                 ),
               ),
-              const Gap(16),
+              const Gap(20),
 
               FadeInUp(
                 duration: const Duration(milliseconds: 500),
@@ -197,37 +178,49 @@ class EditProfilePage extends StatelessWidget {
                   enabled: !isSubmitting,
                   validator: (v) =>
                       v == null || v.trim().isEmpty ? t['provideReason'] : null,
-                  style: const TextStyle(fontWeight: FontWeight.w600),
+                  style: TextStyle(
+                    fontWeight: FontWeight.w800,
+                    color: context.textPrimaryColor,
+                    fontSize: 14,
+                  ),
                   decoration: InputDecoration(
                     hintText:
                         t['reasonHint'] ??
                         'Briefly explain why you want to update your profile...',
                     hintStyle: TextStyle(
                       fontSize: 14,
-                      color: palette.textTertiary,
-                      fontWeight: FontWeight.w500,
+                      color: context.textTertiaryColor,
+                      fontWeight: FontWeight.w700,
                     ),
                     filled: true,
-                    fillColor: Colors.white,
+                    fillColor: context.backgroundSecondaryColor,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(24),
-                      borderSide: BorderSide.none,
+                      borderSide: BorderSide(
+                        color: context.borderPrimaryColor.withValues(
+                          alpha: 0.05,
+                        ),
+                      ),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(24),
-                      borderSide: BorderSide.none,
+                      borderSide: BorderSide(
+                        color: context.borderPrimaryColor.withValues(
+                          alpha: 0.05,
+                        ),
+                      ),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(24),
                       borderSide: BorderSide(
-                        color: palette.brandPrimary,
+                        color: context.brandPrimaryColor,
                         width: 2,
                       ),
                     ),
                     errorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(24),
-                      borderSide: const BorderSide(
-                        color: Colors.red,
+                      borderSide: BorderSide(
+                        color: context.statusDangerColor,
                         width: 1.5,
                       ),
                     ),
@@ -235,14 +228,14 @@ class EditProfilePage extends StatelessWidget {
                   ),
                 ),
               ),
-              const Gap(40),
+              const Gap(48),
 
               FadeInUp(
                 duration: const Duration(milliseconds: 500),
                 delay: const Duration(milliseconds: 500),
                 child: MentorXButton(
                   onPressed: isSubmitting ? null : onSubmit,
-                  text: t['sendRequest'] ?? 'Submit Changes',
+                  label: t['sendRequest'] ?? 'Submit Changes',
                   loading: isSubmitting,
                 ),
               ),
@@ -255,30 +248,30 @@ class EditProfilePage extends StatelessWidget {
   }
 }
 
-class _BuildSectionTitle extends StatelessWidget {
+final class _BuildSectionTitle extends StatelessWidget {
   final String title;
-  final MentorXThemeColorPalette palette;
-  const _BuildSectionTitle({required this.title, required this.palette});
+  const _BuildSectionTitle({required this.title});
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         Container(
-          width: 6,
-          height: 20,
+          width: 4,
+          height: 18,
           decoration: BoxDecoration(
-            color: palette.brandSecondary,
-            borderRadius: BorderRadius.circular(3),
+            color: context.brandSecondaryColor,
+            borderRadius: BorderRadius.circular(2),
           ),
         ),
-        const SizedBox(width: 10),
+        const Gap(10),
         Text(
-          title,
+          title.toUpperCase(),
           style: TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.w800,
-            color: palette.textPrimary,
+            fontSize: 12,
+            fontWeight: FontWeight.w900,
+            color: context.textPrimaryColor,
+            letterSpacing: 0.5,
           ),
         ),
       ],
@@ -286,35 +279,36 @@ class _BuildSectionTitle extends StatelessWidget {
   }
 }
 
-class _InfoBanner extends StatelessWidget {
+final class _InfoBanner extends StatelessWidget {
   final String text;
-  final MentorXThemeColorPalette palette;
-  const _InfoBanner({required this.text, required this.palette});
+  const _InfoBanner({required this.text});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: palette.brandPrimary.withOpacity(0.05),
+        color: context.brandPrimaryColor.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: palette.brandPrimary.withOpacity(0.1)),
+        border: Border.all(
+          color: context.brandPrimaryColor.withValues(alpha: 0.1),
+        ),
       ),
       child: Row(
         children: [
           Icon(
             Icons.info_outline_rounded,
-            color: palette.brandPrimary,
+            color: context.brandPrimaryColor,
             size: 24,
           ),
-          const SizedBox(width: 16),
+          const Gap(16),
           Expanded(
             child: Text(
               text,
               style: TextStyle(
                 fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: palette.brandPrimary,
+                fontWeight: FontWeight.w800,
+                color: context.brandPrimaryColor,
               ),
             ),
           ),
@@ -324,11 +318,10 @@ class _InfoBanner extends StatelessWidget {
   }
 }
 
-class _PremiumField extends StatelessWidget {
+final class _PremiumField extends StatelessWidget {
   final String label;
   final TextEditingController controller;
   final IconData icon;
-  final MentorXThemeColorPalette palette;
   final bool enabled;
   final TextInputType? keyboardType;
   final String? Function(String?)? validator;
@@ -337,7 +330,6 @@ class _PremiumField extends StatelessWidget {
     required this.label,
     required this.controller,
     required this.icon,
-    required this.palette,
     this.enabled = true,
     this.keyboardType,
     this.validator,
@@ -356,15 +348,15 @@ class _PremiumField extends StatelessWidget {
               label,
               style: TextStyle(
                 fontSize: 13,
-                fontWeight: FontWeight.w700,
-                color: palette.textSecondary,
+                fontWeight: FontWeight.w800,
+                color: context.textSecondaryColor,
               ),
             ),
           ),
           MentorXTextFormField(
-            label: label,
             controller: controller,
-            icon: icon,
+            label: label,
+            prefixIcon: icon,
             enabled: enabled,
             keyboardType: keyboardType ?? TextInputType.text,
             validator: validator,

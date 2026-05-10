@@ -1,7 +1,9 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:gap/gap.dart';
 
 import 'package:mentorx_core/mentorx_core.dart';
 import '../inline_section_error/inline_section_error_wrapper.dart';
@@ -26,7 +28,6 @@ final class AnnouncementsSectionWidget extends StatelessWidget {
       return InlineSectionError(onRetry: onRetry);
     }
 
-    final palette = MentorXThemeColorPalette.light;
     final announcementItems = announcements ?? const <AnnouncementEntity>[];
 
     return Skeletonizer(
@@ -35,7 +36,7 @@ final class AnnouncementsSectionWidget extends StatelessWidget {
         itemCount: announcementItems.isEmpty ? 2 : announcementItems.length,
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
-        separatorBuilder: (context, index) => const SizedBox(height: 12),
+        separatorBuilder: (context, index) => const Gap(16),
         itemBuilder: (context, index) {
           final announcement = announcementItems.isEmpty
               ? null
@@ -49,90 +50,93 @@ final class AnnouncementsSectionWidget extends StatelessWidget {
               context.t.home.dashboard.loadingAnnouncementDetails;
           final createdAt = announcement?.createdAt ?? DateTime.now();
 
-          return InkWell(
+          return GestureDetector(
             onTap: () {},
-            borderRadius: BorderRadius.circular(16),
             child: Container(
               decoration: BoxDecoration(
-                color: palette.backgroundPrimary,
-                borderRadius: BorderRadius.circular(16),
+                color: context.backgroundSecondaryColor.withValues(alpha: 0.45),
+                borderRadius: BorderRadius.circular(24),
                 border: Border.all(
                   color: isPinned
-                      ? palette.brandPrimary.withOpacity(0.2)
-                      : palette.backgroundTertiary,
+                      ? context.brandPrimaryColor.withValues(alpha: 0.4)
+                      : context.borderPrimaryColor.withValues(alpha: 0.1),
+                  width: isPinned ? 1.5 : 1,
                 ),
-                boxShadow: [
-                  BoxShadow(
-                    color: palette.textPrimary.withOpacity(0.02),
-                    blurRadius: 8,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
               ),
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: isPinned
-                              ? palette.brandTertiary
-                              : palette.backgroundTertiary,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          isPinned
-                              ? Icons.push_pin_rounded
-                              : Icons.campaign_rounded,
-                          size: 18,
-                          color: isPinned
-                              ? palette.brandPrimary
-                              : palette.textSecondary,
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(24),
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              title,
-                              style: TextStyle(
-                                color: palette.textPrimary,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 15,
+                            Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: isPinned
+                                    ? context.brandPrimaryColor.withValues(alpha: 0.1)
+                                    : context.backgroundPrimaryColor.withValues(alpha: 0.3),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                isPinned
+                                    ? Icons.push_pin_rounded
+                                    : Icons.campaign_rounded,
+                                size: 20,
+                                color: isPinned
+                                    ? context.brandPrimaryColor
+                                    : context.brandPrimaryColor.withValues(alpha: 0.5),
                               ),
                             ),
-                            const SizedBox(height: 4),
-                            Text(
-                              DateFormat.yMMMd().add_jm().format(createdAt),
-                              style: TextStyle(
-                                fontSize: 11,
-                                color: palette.textSecondary,
-                                fontWeight: FontWeight.w500,
+                            const Gap(16),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    title,
+                                    style: TextStyle(
+                                      color: context.textPrimaryColor,
+                                      fontWeight: FontWeight.w900,
+                                      fontSize: 16,
+                                      letterSpacing: -0.5,
+                                    ),
+                                  ),
+                                  const Gap(6),
+                                  Text(
+                                    DateFormat.yMMMd().add_jm().format(createdAt),
+                                    style: TextStyle(
+                                      fontSize: 11,
+                                      color: context.textTertiaryColor,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ],
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    preview,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: palette.textSecondary,
-                      height: 1.5,
-                      fontSize: 13,
+                        const Gap(16),
+                        Text(
+                          preview,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: context.textSecondaryColor,
+                            height: 1.5,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
+                ),
               ),
             ),
           );

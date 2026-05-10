@@ -1,19 +1,22 @@
 import 'dart:async';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:mentorx_student/core/core.dart';
+import 'package:gap/gap.dart';
+import 'package:animate_do/animate_do.dart';
 import 'bloc/quiz_taking_page_bloc.dart';
 
-class QuizTakingPage extends StatefulWidget {
+final class QuizTakingPage extends StatefulWidget {
   const QuizTakingPage({super.key});
   @override
   State<QuizTakingPage> createState() => _QuizTakingPageState();
 }
 
-class _QuizTakingPageState extends State<QuizTakingPage> {
+final class _QuizTakingPageState extends State<QuizTakingPage> {
   int _remainingSeconds = 0;
   Timer? _timer;
   bool _timerInitialized = false;
@@ -47,7 +50,6 @@ class _QuizTakingPageState extends State<QuizTakingPage> {
 
   @override
   Widget build(BuildContext context) {
-    final palette = MentorXThemeColorPalette.light;
     final t = context.t.student;
 
     return BlocConsumer<QuizTakingPageBloc, QuizTakingPageState>(
@@ -61,14 +63,15 @@ class _QuizTakingPageState extends State<QuizTakingPage> {
       },
       builder: (context, state) {
         if (state.isLoading) {
-          return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
+          return Scaffold(
+            backgroundColor: context.backgroundPrimaryColor,
+            body: const Center(child: CircularProgressIndicator()),
           );
         }
 
         if (state.errorMessage != null) {
           return Scaffold(
-            backgroundColor: palette.backgroundSecondary,
+            backgroundColor: context.backgroundPrimaryColor,
             body: Center(
               child: Padding(
                 padding: const EdgeInsets.all(24),
@@ -78,22 +81,24 @@ class _QuizTakingPageState extends State<QuizTakingPage> {
                     Icon(
                       Icons.error_outline_rounded,
                       size: 64,
-                      color: palette.statusDanger.withOpacity(0.5),
+                      color: context.statusDangerColor.withValues(alpha: 0.5),
                     ),
-                    const SizedBox(height: 24),
+                    const Gap(24),
                     Text(
                       state.errorMessage!,
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: palette.textSecondary,
+                        fontWeight: FontWeight.w800,
+                        color: context.textSecondaryColor,
                       ),
                     ),
-                    const SizedBox(height: 32),
-                    MentorXButton(
-                      text: t['commonBack']!,
-                      onPressed: () => context.pop(),
+                    const Gap(32),
+                    SizedBox(
+                      width: 140,
+                      child: MentorXButton(
+                        label: t['commonBack']!,
+                        onPressed: () => context.pop(),
+                      ),
                     ),
                   ],
                 ),
@@ -104,8 +109,16 @@ class _QuizTakingPageState extends State<QuizTakingPage> {
 
         if (state.quiz == null) {
           return Scaffold(
-            backgroundColor: palette.backgroundSecondary,
-            body: Center(child: Text(t['quizNotFound'] ?? 'Quiz not found')),
+            backgroundColor: context.backgroundPrimaryColor,
+            body: Center(
+              child: Text(
+                t['quizNotFound'] ?? 'Quiz not found',
+                style: TextStyle(
+                  color: context.textPrimaryColor,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+            ),
           );
         }
 
@@ -118,51 +131,58 @@ class _QuizTakingPageState extends State<QuizTakingPage> {
 
         return AnnotatedRegion<SystemUiOverlayStyle>(
           value: SystemUiOverlayStyle.light.copyWith(
-            statusBarColor: palette.brandPrimary,
+            statusBarColor: Colors.transparent,
             statusBarIconBrightness: Brightness.light,
           ),
           child: PopScope(
             canPop: false,
             child: Scaffold(
-              backgroundColor: palette.backgroundSecondary,
-              body: Column(
+              backgroundColor: context.backgroundPrimaryColor,
+              body: Stack(
                 children: [
-                  _BuildHeader(
-                    title: state.quiz!.title,
-                    timerText: _timerText,
-                    showTimer: state.quiz!.timeRestricted,
-                    progress: progress,
-                    current: currentQuestionIndex + 1,
-                    total: totalQuestions,
-                    palette: palette,
-                    t: t,
-                  ),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      padding: const EdgeInsets.fromLTRB(20, 24, 20, 32),
-                      child: q != null
-                          ? _QuestionCard(
-                              q: q,
-                              current: currentQuestionIndex + 1,
-                              total: totalQuestions,
-                              selectedAnswer: state.answers[q.id],
-                              palette: palette,
-                              t: t,
-                            )
-                          : Center(
-                              child: Text(
-                                t['noQuestions'] ?? 'No questions available',
-                                style: TextStyle(color: palette.textTertiary),
-                              ),
-                            ),
-                    ),
-                  ),
-                  _BuildNavigation(
-                    isFirst: currentQuestionIndex == 0,
-                    isLast: currentQuestionIndex == totalQuestions - 1,
-                    isSubmitting: state.isSubmitting,
-                    palette: palette,
-                    t: t,
+                  const _BackgroundDecorations(),
+                  Column(
+                    children: [
+                      _BuildHeader(
+                        title: state.quiz!.title,
+                        timerText: _timerText,
+                        showTimer: state.quiz!.timeRestricted,
+                        progress: progress,
+                        current: currentQuestionIndex + 1,
+                        total: totalQuestions,
+                        t: t,
+                      ),
+                      Expanded(
+                        child: SingleChildScrollView(
+                          physics: const BouncingScrollPhysics(),
+                          padding: const EdgeInsets.fromLTRB(20, 24, 20, 32),
+                          child: q != null
+                              ? _QuestionCard(
+                                  q: q,
+                                  current: currentQuestionIndex + 1,
+                                  total: totalQuestions,
+                                  selectedAnswer: state.answers[q.id],
+                                  t: t,
+                                )
+                              : Center(
+                                  child: Text(
+                                    t['noQuestions'] ??
+                                        'No questions available',
+                                    style: TextStyle(
+                                      color: context.textTertiaryColor,
+                                      fontWeight: FontWeight.w800,
+                                    ),
+                                  ),
+                                ),
+                        ),
+                      ),
+                      _BuildNavigation(
+                        isFirst: currentQuestionIndex == 0,
+                        isLast: currentQuestionIndex == totalQuestions - 1,
+                        isSubmitting: state.isSubmitting,
+                        t: t,
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -174,14 +194,13 @@ class _QuizTakingPageState extends State<QuizTakingPage> {
   }
 }
 
-class _BuildHeader extends StatelessWidget {
+final class _BuildHeader extends StatelessWidget {
   final String title;
   final String timerText;
   final bool showTimer;
   final double progress;
   final int current;
   final int total;
-  final MentorXThemeColorPalette palette;
   final dynamic t;
 
   const _BuildHeader({
@@ -191,7 +210,6 @@ class _BuildHeader extends StatelessWidget {
     required this.progress,
     required this.current,
     required this.total,
-    required this.palette,
     required this.t,
   });
 
@@ -206,124 +224,139 @@ class _BuildHeader extends StatelessWidget {
         24,
       ),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [palette.brandPrimary, palette.brandPrimary.withOpacity(0.8)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        color: context.backgroundSecondaryColor.withValues(alpha: 0.45),
         borderRadius: const BorderRadius.vertical(bottom: Radius.circular(32)),
-        boxShadow: [
-          BoxShadow(
-            color: palette.brandPrimary.withOpacity(0.3),
-            blurRadius: 15,
-            offset: const Offset(0, 4),
+        border: Border(
+          bottom: BorderSide(
+            color: context.borderPrimaryColor.withValues(alpha: 0.1),
           ),
-        ],
+        ),
       ),
-      child: Column(
-        children: [
-          Row(
+      child: ClipRRect(
+        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(32)),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Column(
             children: [
-              IconButton(
-                onPressed: () => _showExitDialog(context, t, palette),
-                icon: const Icon(Icons.close_rounded, color: Colors.white),
-              ),
-              const SizedBox(width: 4),
-              Expanded(
-                child: Text(
-                  title,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w900,
+              Row(
+                children: [
+                  IconButton(
+                    onPressed: () => _showExitDialog(context, t),
+                    icon: Icon(
+                      Icons.close_rounded,
+                      color: context.textPrimaryColor,
+                    ),
                   ),
-                ),
-              ),
-              if (showTimer) ...[
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 6,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.15),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.white.withOpacity(0.2)),
-                  ),
-                  child: Row(
-                    children: [
-                      const Icon(
-                        Icons.timer_outlined,
-                        color: Colors.white,
-                        size: 14,
+                  const Gap(4),
+                  Expanded(
+                    child: Text(
+                      title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: context.textPrimaryColor,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: -0.5,
                       ),
-                      const SizedBox(width: 6),
-                      Text(
-                        timerText,
-                        style: const TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w900,
-                          color: Colors.white,
+                    ),
+                  ),
+                  if (showTimer) ...[
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: context.backgroundPrimaryColor
+                            .withValues(alpha: 0.4),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color:
+                              context.borderPrimaryColor.withValues(alpha: 0.1),
                         ),
                       ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 12),
-              ],
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 6,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  '$current / $total',
-                  style: const TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w900,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
-          Stack(
-            children: [
-              Container(
-                height: 8,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(4),
-                ),
-              ),
-              AnimatedFractionallySizedBox(
-                duration: const Duration(milliseconds: 300),
-                widthFactor: progress.clamp(0.0, 1.0),
-                child: Container(
-                  height: 8,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(4),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.white.withOpacity(0.3),
-                        blurRadius: 10,
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.timer_outlined,
+                            color: context.brandPrimaryColor,
+                            size: 14,
+                          ),
+                          const Gap(6),
+                          Text(
+                            timerText,
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w900,
+                              color: context.textPrimaryColor,
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
+                    const Gap(12),
+                  ],
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color:
+                          context.backgroundPrimaryColor.withValues(alpha: 0.4),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color:
+                            context.borderPrimaryColor.withValues(alpha: 0.1),
+                      ),
+                    ),
+                    child: Text(
+                      '$current / $total',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w900,
+                        color: context.textPrimaryColor,
+                      ),
+                    ),
                   ),
-                ),
+                ],
+              ),
+              const Gap(24),
+              Stack(
+                children: [
+                  Container(
+                    height: 8,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color:
+                          context.backgroundPrimaryColor.withValues(alpha: 0.5),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
+                  AnimatedFractionallySizedBox(
+                    duration: const Duration(milliseconds: 300),
+                    widthFactor: progress.clamp(0.0, 1.0),
+                    child: Container(
+                      height: 8,
+                      decoration: BoxDecoration(
+                        color: context.brandPrimaryColor,
+                        borderRadius: BorderRadius.circular(4),
+                        boxShadow: [
+                          BoxShadow(
+                            color:
+                                context.brandPrimaryColor.withValues(alpha: 0.3),
+                            blurRadius: 10,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -331,33 +364,48 @@ class _BuildHeader extends StatelessWidget {
   void _showExitDialog(
     BuildContext context,
     dynamic t,
-    MentorXThemeColorPalette palette,
   ) {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
+        backgroundColor: context.backgroundSecondaryColor.withValues(alpha: 0.9),
+        surfaceTintColor: Colors.transparent,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         title: Text(
           t['exitQuizTitle'] ?? 'Exit Quiz?',
-          style: const TextStyle(fontWeight: FontWeight.w900),
+          style: TextStyle(
+            fontWeight: FontWeight.w900,
+            color: context.textPrimaryColor,
+            letterSpacing: -0.5,
+          ),
         ),
         content: Text(
           t['exitQuizDesc'] ??
               'Your progress will not be saved. Are you sure you want to exit?',
+          style: TextStyle(
+            color: context.textSecondaryColor,
+            fontWeight: FontWeight.w600,
+          ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: Text(t['cancel'] ?? 'Cancel'),
+            child: Text(
+              t['cancel'] ?? 'Cancel',
+              style: TextStyle(
+                color: context.textTertiaryColor,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
           ),
           SizedBox(
-            width: 100,
+            width: 120,
             child: MentorXButton(
               onPressed: () {
                 Navigator.pop(ctx);
                 Navigator.pop(context);
               },
-              text: t['exit'] ?? 'Exit',
+              label: t['exit'] ?? 'Exit',
             ),
           ),
         ],
@@ -366,12 +414,11 @@ class _BuildHeader extends StatelessWidget {
   }
 }
 
-class _QuestionCard extends StatelessWidget {
+final class _QuestionCard extends StatelessWidget {
   final QuizQuestionEntity q;
   final int current;
   final int total;
   final String? selectedAnswer;
-  final MentorXThemeColorPalette palette;
   final dynamic t;
 
   const _QuestionCard({
@@ -379,7 +426,6 @@ class _QuestionCard extends StatelessWidget {
     required this.current,
     required this.total,
     required this.selectedAnswer,
-    required this.palette,
     required this.t,
   });
 
@@ -391,75 +437,87 @@ class _QuestionCard extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: context.backgroundSecondaryColor.withValues(alpha: 0.45),
             borderRadius: BorderRadius.circular(28),
+            border: Border.all(
+              color: context.borderPrimaryColor.withValues(alpha: 0.1),
+            ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.03),
+                color: Colors.black.withValues(alpha: 0.05),
                 blurRadius: 20,
                 offset: const Offset(0, 10),
               ),
             ],
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(28),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 4,
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color:
+                              context.brandPrimaryColor.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          '${t['questionLabel'] ?? 'QUESTION'} $current',
+                          style: TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w900,
+                            color: context.brandPrimaryColor,
+                            letterSpacing: 1,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Gap(20),
+                  Text(
+                    q.text,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w900,
+                      color: context.textPrimaryColor,
+                      height: 1.6,
+                      letterSpacing: -0.2,
                     ),
-                    decoration: BoxDecoration(
-                      color: palette.brandPrimary.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Text(
-                      'QUESTION $current',
-                      style: TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w900,
-                        color: palette.brandPrimary,
-                        letterSpacing: 1,
+                  ),
+                  if (q.imageUrl != null) ...[
+                    const Gap(24),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: Image.network(
+                        q.imageUrl!,
+                        fit: BoxFit.cover,
                       ),
                     ),
-                  ),
+                  ],
                 ],
               ),
-              const SizedBox(height: 16),
-              Text(
-                q.text,
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w800,
-                  color: palette.textPrimary,
-                  height: 1.6,
-                ),
-              ),
-              if (q.imageUrl != null) ...[
-                const SizedBox(height: 20),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: Image.network(
-                    q.imageUrl!,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ],
-            ],
+            ),
           ),
         ),
-        const SizedBox(height: 32),
+        const Gap(32),
         Text(
           t['chooseCorrect'] ?? 'Choose the correct answer:',
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w900,
-            color: palette.textSecondary,
+            color: context.textSecondaryColor,
+            letterSpacing: -0.2,
           ),
         ),
-        const SizedBox(height: 16),
+        const Gap(16),
         if (q.type == QuizQuestionType.multipleChoice ||
             q.type == QuizQuestionType.trueFalse)
           ...q.options.asMap().entries.map((entry) {
@@ -475,13 +533,12 @@ class _QuestionCard extends StatelessWidget {
               label: label,
               text: optionText,
               isSelected: isSelected,
-              palette: palette,
               onTap: () => context.read<QuizTakingPageBloc>().add(
-                QuizTakingPageAnswerSelected(
-                  questionId: q.id,
-                  selectedAnswer: optionText,
-                ),
-              ),
+                    QuizTakingPageAnswerSelected(
+                      questionId: q.id,
+                      selectedAnswer: optionText,
+                    ),
+                  ),
             );
           })
         else if (q.type == QuizQuestionType.shortAnswer ||
@@ -490,7 +547,6 @@ class _QuestionCard extends StatelessWidget {
             questionId: q.id,
             initialValue: selectedAnswer,
             isLong: q.type == QuizQuestionType.essay,
-            palette: palette,
             t: t,
           ),
       ],
@@ -498,18 +554,16 @@ class _QuestionCard extends StatelessWidget {
   }
 }
 
-class _TextAnswerField extends StatefulWidget {
+final class _TextAnswerField extends StatefulWidget {
   final String questionId;
   final String? initialValue;
   final bool isLong;
-  final MentorXThemeColorPalette palette;
   final dynamic t;
 
   const _TextAnswerField({
     required this.questionId,
     required this.initialValue,
     required this.isLong,
-    required this.palette,
     required this.t,
   });
 
@@ -517,7 +571,7 @@ class _TextAnswerField extends StatefulWidget {
   State<_TextAnswerField> createState() => _TextAnswerFieldState();
 }
 
-class _TextAnswerFieldState extends State<_TextAnswerField> {
+final class _TextAnswerFieldState extends State<_TextAnswerField> {
   late final TextEditingController _controller;
 
   @override
@@ -544,47 +598,54 @@ class _TextAnswerFieldState extends State<_TextAnswerField> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
+        color: context.backgroundSecondaryColor.withValues(alpha: 0.45),
+        borderRadius: BorderRadius.circular(28),
+        border: Border.all(
+          color: context.borderPrimaryColor.withValues(alpha: 0.1),
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.02),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
           ),
         ],
       ),
-      child: MentorXTextFormField(
-        controller: _controller,
-        icon: Icons.edit_note_rounded,
-        label: widget.t['yourAnswer'] ?? 'Your Answer',
-        hint: widget.t['typeAnswerHere'] ?? 'Type your answer here...',
-        maxLines: widget.isLong ? 6 : 1,
-        onChanged: (value) {
-          context.read<QuizTakingPageBloc>().add(
-            QuizTakingPageAnswerSelected(
-              questionId: widget.questionId,
-              selectedAnswer: value,
-            ),
-          );
-        },
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(28),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: MentorXTextFormField(
+            controller: _controller,
+            prefixIcon: Icons.edit_note_rounded,
+            label: widget.t['yourAnswer'] ?? 'Your Answer',
+            hintText: widget.t['typeAnswerHere'] ?? 'Type your answer here...',
+            maxLines: widget.isLong ? 6 : 1,
+            onChanged: (value) {
+              context.read<QuizTakingPageBloc>().add(
+                    QuizTakingPageAnswerSelected(
+                      questionId: widget.questionId,
+                      selectedAnswer: value,
+                    ),
+                  );
+            },
+          ),
+        ),
       ),
     );
   }
 }
 
-class _OptionTile extends StatelessWidget {
+final class _OptionTile extends StatelessWidget {
   final String label;
   final String text;
   final bool isSelected;
-  final MentorXThemeColorPalette palette;
   final VoidCallback onTap;
 
   const _OptionTile({
     required this.label,
     required this.text,
     required this.isSelected,
-    required this.palette,
     required this.onTap,
   });
 
@@ -592,78 +653,109 @@ class _OptionTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(20),
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
+      child: GestureDetector(
+        onTap: onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOutCubic,
+          decoration: BoxDecoration(
+            color: isSelected ? null : context.backgroundSecondaryColor.withValues(alpha: 0.45),
+            gradient: isSelected
+                ? LinearGradient(
+                    colors: [
+                      context.brandPrimaryColor,
+                      context.brandSecondaryColor.withValues(alpha: 0.8),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  )
+                : null,
+            borderRadius: BorderRadius.circular(24),
+            border: Border.all(
               color: isSelected
-                  ? palette.brandPrimary.withOpacity(0.05)
-                  : Colors.white,
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                color: isSelected ? palette.brandPrimary : Colors.transparent,
-                width: 2,
-              ),
-              boxShadow: [
-                if (!isSelected)
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.02),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  ),
-              ],
+                  ? context.brandPrimaryColor.withValues(alpha: 0.5)
+                  : context.borderPrimaryColor.withValues(alpha: 0.1),
+              width: 1.5,
             ),
-            child: Row(
-              children: [
-                Container(
-                  width: 32,
-                  height: 32,
-                  decoration: BoxDecoration(
-                    color: isSelected
-                        ? palette.brandPrimary
-                        : palette.backgroundSecondary,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Center(
-                    child: Text(
-                      label,
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w900,
+            boxShadow: isSelected
+                ? [
+                    BoxShadow(
+                      color: context.brandPrimaryColor.withValues(alpha: 0.25),
+                      blurRadius: 15,
+                      offset: const Offset(0, 8),
+                    ),
+                  ]
+                : [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.05),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(24),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
                         color: isSelected
-                            ? Colors.white
-                            : palette.textSecondary,
+                            ? Colors.white.withValues(alpha: 0.2)
+                            : context.backgroundPrimaryColor.withValues(alpha: 0.5),
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: isSelected
+                              ? Colors.white.withValues(alpha: 0.4)
+                              : context.borderPrimaryColor.withValues(alpha: 0.1),
+                        ),
+                      ),
+                      child: Center(
+                        child: Text(
+                          label,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w900,
+                            color: isSelected ? Colors.white : context.textPrimaryColor,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Text(
-                    text,
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: isSelected
-                          ? FontWeight.w800
-                          : FontWeight.w600,
-                      color: isSelected
-                          ? palette.brandPrimary
-                          : palette.textPrimary,
+                    const Gap(16),
+                    Expanded(
+                      child: Text(
+                        text,
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: isSelected ? FontWeight.w900 : FontWeight.w700,
+                          color: isSelected ? Colors.white : context.textPrimaryColor,
+                        ),
+                      ),
                     ),
-                  ),
+                    if (isSelected)
+                      FadeInRight(
+                        duration: const Duration(milliseconds: 300),
+                        child: Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            Icons.check_rounded,
+                            color: context.brandPrimaryColor,
+                            size: 16,
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
-                if (isSelected)
-                  Icon(
-                    Icons.check_circle_rounded,
-                    color: palette.brandPrimary,
-                    size: 24,
-                  ),
-              ],
+              ),
             ),
           ),
         ),
@@ -672,68 +764,143 @@ class _OptionTile extends StatelessWidget {
   }
 }
 
-class _BuildNavigation extends StatelessWidget {
+final class _BuildNavigation extends StatelessWidget {
   final bool isFirst;
   final bool isLast;
   final bool isSubmitting;
-  final MentorXThemeColorPalette palette;
   final dynamic t;
 
   const _BuildNavigation({
     required this.isFirst,
     required this.isLast,
     required this.isSubmitting,
-    required this.palette,
     required this.t,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
+      padding: EdgeInsets.fromLTRB(
+        20,
+        16,
+        20,
+        MediaQuery.of(context).padding.bottom + 16,
+      ),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.backgroundSecondaryColor.withValues(alpha: 0.45),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+        border: Border(
+          top: BorderSide(
+            color: context.borderPrimaryColor.withValues(alpha: 0.1),
+          ),
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 20,
             offset: const Offset(0, -5),
           ),
         ],
       ),
-      child: Row(
-        children: [
-          if (!isFirst) ...[
-            Expanded(
-              flex: 1,
-              child: MentorXButton(
-                onPressed: () => context.read<QuizTakingPageBloc>().add(
-                  const QuizTakingPagePreviousQuestion(),
+      child: ClipRRect(
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Row(
+            children: [
+              if (!isFirst) ...[
+                Expanded(
+                  flex: 1,
+                  child: MentorXButton(
+                    onPressed: () => context.read<QuizTakingPageBloc>().add(
+                          const QuizTakingPagePreviousQuestion(),
+                        ),
+                    label: t['commonPrevious']!,
+                    color: context.backgroundPrimaryColor,
+                  ),
                 ),
-                text: t['commonPrevious']!,
+                const Gap(12),
+              ],
+              Expanded(
+                flex: 2,
+                child: MentorXButton(
+                  loading: isSubmitting,
+                  onPressed: () {
+                    if (!isLast) {
+                      context.read<QuizTakingPageBloc>().add(
+                            const QuizTakingPageNextQuestion(),
+                          );
+                    } else {
+                      context.read<QuizTakingPageBloc>().add(
+                            const QuizTakingPageSubmit(),
+                          );
+                    }
+                  },
+                  label: isLast ? t['review']! : t['commonNext']!,
+                ),
               ),
-            ),
-            const SizedBox(width: 12),
-          ],
-          Expanded(
-            flex: 2,
-            child: MentorXButton(
-              loading: isSubmitting,
-              onPressed: () {
-                if (!isLast) {
-                  context.read<QuizTakingPageBloc>().add(
-                    const QuizTakingPageNextQuestion(),
-                  );
-                } else {
-                  context.read<QuizTakingPageBloc>().add(
-                    const QuizTakingPageSubmit(),
-                  );
-                }
-              },
-              text: isLast ? t['review']! : t['commonNext']!,
-            ),
+            ],
           ),
-        ],
+        ),
+      ),
+    );
+  }
+}
+
+class _BackgroundDecorations extends StatelessWidget {
+  const _BackgroundDecorations();
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Positioned(
+          top: -100,
+          right: -50,
+          child: _BlurredBlob(
+            color: context.brandPrimaryColor.withValues(alpha: 0.12),
+            size: 350,
+          ),
+        ),
+        Positioned(
+          top: 300,
+          left: -150,
+          child: _BlurredBlob(
+            color: context.brandSecondaryColor.withValues(alpha: 0.08),
+            size: 400,
+          ),
+        ),
+        Positioned(
+          bottom: -50,
+          right: -100,
+          child: _BlurredBlob(
+            color: context.brandPrimaryColor.withValues(alpha: 0.1),
+            size: 300,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _BlurredBlob extends StatelessWidget {
+  final Color color;
+  final double size;
+
+  const _BlurredBlob({required this.color, required this.size});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        color: color,
+        shape: BoxShape.circle,
+      ),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 70, sigmaY: 70),
+        child: const SizedBox.expand(),
       ),
     );
   }

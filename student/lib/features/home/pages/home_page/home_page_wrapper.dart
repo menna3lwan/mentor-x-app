@@ -33,140 +33,101 @@ final class _HomePageWrapperState extends State<HomePageWrapper> {
 
   Widget _buildContent(BuildContext context) {
     final bloc = context.read<HomePageBloc>();
+
     return AppRefreshListener(
       onRefresh: () => bloc.add(const HomePageRefreshedEvent()),
-      child: BlocBuilder<HomePageBloc, HomePageState>(
-        builder: (context, state) {
-          final palette = MentorXThemeColorPalette.light;
-          final isInitialLoading = state.isFirstLoading;
-          final hour = DateTime.now().hour;
-          final greeting = (hour >= 5 && hour < 12)
-              ? context.t.home.dashboard.greetingMorning
-              : context.t.home.dashboard.greetingEvening;
+      child: HomePagePage(
+        onRefresh: () async {
+          bloc.add(const HomePageRefreshedEvent());
+        },
+        appBar: FadeInDown(
+          duration: const Duration(milliseconds: 600),
+          child: const HomeHeaderWrapper(),
+        ),
+        content: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Builder(
+              builder: (context) {
+                final isRefreshing = context.select<HomePageBloc, bool>(
+                  (bloc) => bloc.state.isRefreshing,
+                );
+                final lastUpdatedAt = context.select<HomePageBloc, DateTime?>(
+                  (bloc) => bloc.state.lastUpdatedAt,
+                );
 
-          return HomePagePage(
-            backgroundColor: palette.backgroundSecondary,
-            onRefresh: () async {
-              bloc.add(const HomePageRefreshedEvent());
-            },
-            appBar: FadeInDown(
-              duration: const Duration(milliseconds: 600),
-              child: HomeHeader(
-                studentName: state.studentName,
-                greetingText: greeting,
-                unreadCount: state.unreadCountSection.data ?? 0,
-              ),
-            ),
-            content: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (state.isRefreshing && state.lastUpdatedAt != null)
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 8),
+                if (isRefreshing && lastUpdatedAt != null) {
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 12, left: 4),
                     child: Text(
                       context.t.home.dashboard.updatedAt(
-                        time: state.lastUpdatedAt!,
+                        time: lastUpdatedAt,
                       ),
-                      style: TextStyle(color: palette.textSecondary),
+                      style: TextStyle(
+                        color: context.textTertiaryColor,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
+                  );
+                }
+                return const SizedBox.shrink();
+              },
+            ),
+            FadeInUp(
+              duration: const Duration(milliseconds: 600),
+              child: const WalletQuickViewCardWrapper(),
+            ),
+            const Gap(24),
+            FadeInUp(
+              duration: const Duration(milliseconds: 600),
+              delay: const Duration(milliseconds: 100),
+              child: const BannersCarouselWrapper(),
+            ),
+            const Gap(32),
+            FadeInUp(
+              duration: const Duration(milliseconds: 600),
+              delay: const Duration(milliseconds: 200),
+              child: Column(
+                children: [
+                  SectionHeader(
+                    title: context.t.home.dashboard.continueLearning,
+                    onSeeAll: () =>
+                        const MyCoursesPageRoute().push(context),
                   ),
-                FadeInUp(
-                  duration: const Duration(milliseconds: 500),
-                  child:
-                      state.walletSection.isFailure &&
-                          state.walletSection.data == null
-                      ? InlineSectionError(
-                          onRetry: () => bloc.add(
-                            const HomePageRetrySectionEvent(HomeSection.wallet),
-                          ),
-                        )
-                      : WalletQuickViewCard(
-                          walletSummary: state.walletSection.data,
-                          isLoading:
-                              isInitialLoading || state.walletSection.isLoading,
-                        ),
-                ),
-                const Gap(16),
-                FadeInUp(
-                  duration: const Duration(milliseconds: 500),
-                  delay: const Duration(milliseconds: 100),
-                  child:
-                      state.bannersSection.isFailure &&
-                          state.bannersSection.data == null
-                      ? InlineSectionError(
-                          onRetry: () => bloc.add(
-                            const HomePageRetrySectionEvent(
-                              HomeSection.banners,
-                            ),
-                          ),
-                        )
-                      : BannersCarousel(
-                          banners: state.bannersSection.data ?? const [],
-                          isLoading:
-                              isInitialLoading ||
-                              state.bannersSection.isLoading,
-                          onTapBanner: (bannerId) =>
-                              bloc.add(HomePageBannerClickedEvent(bannerId)),
-                        ),
-                ),
-                const Gap(24),
-                FadeInUp(
-                  duration: const Duration(milliseconds: 500),
-                  delay: const Duration(milliseconds: 200),
-                  child: Column(
-                    children: [
-                      SectionHeader(
-                        title: context.t.home.dashboard.continueLearning,
-                        onSeeAll: () =>
-                            const MyCoursesPageRoute().push(context),
-                      ),
-                      const Gap(12),
-                      ContinueLearningSection(
-                        section: state.continueLearningSection,
-                        onTapCourse: (courseId) => CourseDetailPageRoute(
-                          courseId: courseId,
-                        ).push(context),
-                        onRetry: () => bloc.add(
-                          const HomePageRetrySectionEvent(
-                            HomeSection.continueLearning,
-                          ),
-                        ),
-                      ),
-                    ],
+                  const Gap(16),
+                  const ContinueLearningSectionWrapper(),
+                ],
+              ),
+            ),
+            const Gap(32),
+            FadeInUp(
+              duration: const Duration(milliseconds: 600),
+              delay: const Duration(milliseconds: 300),
+              child: Column(
+                children: [
+                  SectionHeader(
+                    title: context.t.home.dashboard.featuredCourses,
+                    onSeeAll: () =>
+                        const CourseCatalogPageRoute().push(context),
                   ),
-                ),
-                const Gap(24),
-                FadeInUp(
-                  duration: const Duration(milliseconds: 500),
-                  delay: const Duration(milliseconds: 300),
-                  child: Column(
-                    children: [
-                      SectionHeader(
-                        title: context.t.home.dashboard.featuredCourses,
-                        onSeeAll: () =>
-                            const CourseCatalogPageRoute().push(context),
-                      ),
-                      const Gap(12),
-                      FeaturedCoursesSection(
-                        section: state.featuredCoursesSection,
-                        onTapCourse: (courseId) => CourseDetailPageRoute(
-                          courseId: courseId,
-                        ).push(context),
-                        onRetry: () => bloc.add(
-                          const HomePageRetrySectionEvent(
-                            HomeSection.featuredCourses,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const Gap(24),
-                if ((state.announcementsSection.data?.isNotEmpty ?? false) ||
-                    state.announcementsSection.isLoading ||
-                    state.announcementsSection.isFailure) ...[
-                  FadeInUp(
-                    duration: const Duration(milliseconds: 500),
+                  const Gap(16),
+                  const FeaturedCoursesSectionWrapper(),
+                ],
+              ),
+            ),
+            const Gap(32),
+            Builder(
+              builder: (context) {
+                final announcementsSection = context.select<HomePageBloc, dynamic>(
+                  (bloc) => bloc.state.announcementsSection,
+                );
+
+                if ((announcementsSection.data?.isNotEmpty ?? false) ||
+                    announcementsSection.isLoading ||
+                    announcementsSection.isFailure) {
+                  return FadeInUp(
+                    duration: const Duration(milliseconds: 600),
                     delay: const Duration(milliseconds: 400),
                     child: Column(
                       children: [
@@ -174,67 +135,64 @@ final class _HomePageWrapperState extends State<HomePageWrapper> {
                           title: context.t.home.dashboard.announcements,
                           onSeeAll: () {},
                         ),
-                        const Gap(12),
-                        AnnouncementsSection(
-                          section: state.announcementsSection,
-                          onRetry: () => bloc.add(
-                            const HomePageRetrySectionEvent(
-                              HomeSection.announcements,
-                            ),
-                          ),
-                        ),
+                        const Gap(16),
+                        const AnnouncementsSectionWrapper(),
+                        const Gap(32),
                       ],
                     ),
-                  ),
-                  const Gap(24),
-                ],
-                FadeInUp(
-                  duration: const Duration(milliseconds: 500),
-                  delay: const Duration(milliseconds: 500),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SectionHeader(
-                        title: context.t.home.dashboard.quickActions,
-                      ),
-                      const Gap(12),
-                      QuickActionsGrid(
-                        onActionTap: (index) {
-                          switch (index) {
-                            case 0:
-                              const MyCoursesPageRoute().push(context);
-                              return;
-                            case 1:
-                              const AttendanceHistoryPageRoute().push(context);
-                              return;
-                            case 2:
-                              const MyGradesPageRoute().push(context);
-                              return;
-                            case 3:
-                              const AiConversationsPageRoute().push(context);
-                              return;
-                            case 4:
-                              const AssignmentsListPageRoute().push(context);
-                              return;
-                            case 5:
-                              const RewardsCatalogPageRoute().push(context);
-                              return;
-                            case 6:
-                              const MarketplaceGridPageRoute().push(context);
-                              return;
-                            default:
-                              return;
-                          }
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                const Gap(40),
-              ],
+                  );
+                }
+                return const SizedBox.shrink();
+              },
             ),
-          );
-        },
+            FadeInUp(
+              duration: const Duration(milliseconds: 600),
+              delay: const Duration(milliseconds: 500),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SectionHeader(
+                    title: context.t.home.dashboard.quickActions,
+                  ),
+                  const Gap(16),
+                  QuickActionsGrid(
+                    onActionTap: (index) {
+                      switch (index) {
+                        case 0:
+                          const MyCoursesPageRoute().push(context);
+                          return;
+                        case 1:
+                          const AttendanceHistoryPageRoute().push(context);
+                          return;
+                        case 2:
+                          const MyGradesPageRoute().push(context);
+                          return;
+                        case 3:
+                          const AiConversationsPageRoute().push(context);
+                          return;
+                        case 4:
+                          const AssignmentsListPageRoute().push(context);
+                          return;
+                        case 5:
+                          const RewardsCatalogPageRoute().push(context);
+                          return;
+                        case 6:
+                          const MarketplaceGridPageRoute().push(context);
+                          return;
+                        case 7:
+                          const AnalyticsDashboardPageRoute().push(context);
+                          return;
+                        default:
+                          return;
+                      }
+                    },
+                  ),
+                ],
+              ),
+            ),
+            const Gap(100),
+          ],
+        ),
       ),
     );
   }

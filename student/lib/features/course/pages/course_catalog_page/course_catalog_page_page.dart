@@ -1,6 +1,9 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
+import 'package:animate_do/animate_do.dart';
+import 'package:gap/gap.dart';
 
 import 'bloc/course_catalog_page_bloc.dart';
 import 'widgets/widgets.dart';
@@ -8,12 +11,15 @@ import 'widgets/widgets.dart';
 final class CourseCatalogPagePage extends StatelessWidget {
   final TextEditingController searchController;
   final List<CourseSummaryEntity> courses;
+  final List<GradeEntity> grades;
   final List<CategoryEntity> categories;
+  final String? selectedGradeId;
   final String? selectedCategoryId;
   final CatalogSortOption sortOption;
   final bool isLoading;
   final String? errorMessage;
   final ValueChanged<String> onSearchChanged;
+  final ValueChanged<String?> onGradeChanged;
   final ValueChanged<String?> onCategoryChanged;
   final ValueChanged<CatalogSortOption> onSortChanged;
   final Future<void> Function() onRefresh;
@@ -23,12 +29,15 @@ final class CourseCatalogPagePage extends StatelessWidget {
     super.key,
     required this.searchController,
     required this.courses,
+    required this.grades,
     required this.categories,
+    required this.selectedGradeId,
     required this.selectedCategoryId,
     required this.sortOption,
     required this.isLoading,
     required this.errorMessage,
     required this.onSearchChanged,
+    required this.onGradeChanged,
     required this.onCategoryChanged,
     required this.onSortChanged,
     required this.onRefresh,
@@ -37,95 +46,127 @@ final class CourseCatalogPagePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = MentorXThemeColorPalette.light;
-
     return Scaffold(
-      backgroundColor: palette.backgroundSecondary,
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(70),
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                palette.brandPrimary,
-                palette.brandPrimary.withOpacity(0.8),
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            borderRadius: const BorderRadius.vertical(
-              bottom: Radius.circular(24),
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: palette.brandPrimary.withOpacity(0.3),
-                blurRadius: 15,
-                offset: const Offset(0, 4),
+      backgroundColor: context.backgroundPrimaryColor,
+      body: Stack(
+        children: [
+          const _BackgroundDecorations(),
+          _buildContent(context),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildContent(BuildContext context) {
+    return Column(
+      children: [
+        Gap(MediaQuery.paddingOf(context).top + 20),
+        _buildHeader(context),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: _SearchBar(
+            controller: searchController,
+            onChanged: onSearchChanged,
+            t: context.t.student,
+          ),
+        ),
+        if (grades.isNotEmpty) ...[
+          const Gap(20),
+          LevelFilterChips(
+            grades: grades,
+            selectedGradeId: selectedGradeId,
+            onGradeChanged: onGradeChanged,
+          ),
+        ],
+        if (categories.isNotEmpty) ...[
+          const Gap(20),
+          CategoryFilterChips(
+            categories: categories,
+            selectedCategoryId: selectedCategoryId,
+            onCategoryChanged: onCategoryChanged,
+          ),
+        ],
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
+          child: Row(
+            children: [
+              Text(
+                context.t.course.catalog.coursesFound(count: courses.length),
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w900,
+                  color: context.textPrimaryColor.withValues(alpha: 0.6),
+                ),
+              ),
+              const Spacer(),
+              _SortDropdown(
+                sortOption: sortOption,
+                onChanged: onSortChanged,
               ),
             ],
           ),
-          child: AppBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            foregroundColor: Colors.white,
-            centerTitle: true,
-            title: Text(
-              context.t.course.courseCatalog,
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
-            ),
-          ),
         ),
-      ),
-      body: Column(
+        Expanded(
+          child: _buildBody(context),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildHeader(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
+      child: Row(
         children: [
-          const SizedBox(height: 16),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: _SearchBar(
-              controller: searchController,
-              onChanged: onSearchChanged,
-              palette: palette,
-              t: context.t.student,
+          IconButton(
+            onPressed: () => Navigator.of(context).pop(),
+            icon: Icon(Icons.arrow_back_ios_new_rounded, color: context.textPrimaryColor, size: 20),
+            style: IconButton.styleFrom(
+              backgroundColor: context.backgroundSecondaryColor,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              padding: const EdgeInsets.all(12),
             ),
           ),
-          if (categories.isNotEmpty) ...[
-            const SizedBox(height: 20),
-            CategoryFilterChips(
-              categories: categories,
-              selectedCategoryId: selectedCategoryId,
-              onCategoryChanged: onCategoryChanged,
-            ),
-          ],
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
-            child: Row(
+          const Gap(16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  '${courses.length} Courses Found',
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w700,
-                    color: palette.textSecondary,
+                FadeInLeft(
+                  duration: const Duration(milliseconds: 600),
+                  child: Text(
+                    'Academy',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w800,
+                      color: context.brandPrimaryColor,
+                      letterSpacing: 1.2,
+                    ),
                   ),
                 ),
-                const Spacer(),
-                _SortDropdown(
-                  sortOption: sortOption,
-                  onChanged: onSortChanged,
-                  palette: palette,
+                const Gap(2),
+                FadeInLeft(
+                  duration: const Duration(milliseconds: 800),
+                  delay: const Duration(milliseconds: 100),
+                  child: Text(
+                    context.t.course.courseCatalog,
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w900,
+                      color: context.textPrimaryColor,
+                      letterSpacing: -0.5,
+                    ),
+                  ),
                 ),
               ],
             ),
-          ),
-          Expanded(
-            child: _buildBody(context, palette),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildBody(BuildContext context, MentorXThemeColorPalette palette) {
+  Widget _buildBody(BuildContext context) {
     if (errorMessage != null) {
       return Center(
         child: Padding(
@@ -136,14 +177,14 @@ final class CourseCatalogPagePage extends StatelessWidget {
               Icon(
                 Icons.error_outline_rounded,
                 size: 64,
-                color: Colors.red.withOpacity(0.3),
+                color: context.statusDangerColor.withValues(alpha: 0.3),
               ),
-              const SizedBox(height: 24),
+              const Gap(24),
               Text(
                 errorMessage!,
                 style: TextStyle(
-                  color: palette.textSecondary,
-                  fontWeight: FontWeight.w600,
+                  color: context.textSecondaryColor,
+                  fontWeight: FontWeight.w700,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -158,14 +199,15 @@ final class CourseCatalogPagePage extends StatelessWidget {
     }
 
     if (courses.isEmpty) {
-      return _EmptyCatalog(palette: palette, t: context.t.student);
+      return _EmptyCatalog(t: context.t.student);
     }
 
     return RefreshIndicator(
-      color: palette.brandPrimary,
+      color: context.brandPrimaryColor,
       onRefresh: onRefresh,
       child: GridView.builder(
         padding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
+        physics: const BouncingScrollPhysics(),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           childAspectRatio: 0.72,
@@ -175,9 +217,13 @@ final class CourseCatalogPagePage extends StatelessWidget {
         itemCount: courses.length,
         itemBuilder: (context, index) {
           final course = courses[index];
-          return CatalogCourseCard(
-            course: course,
-            onTap: () => onCourseTap(course.id),
+          return FadeInUp(
+            duration: const Duration(milliseconds: 500),
+            delay: Duration(milliseconds: 50 * index),
+            child: CatalogCourseCard(
+              course: course,
+              onTap: () => onCourseTap(course.id),
+            ),
           );
         },
       ),
@@ -185,16 +231,65 @@ final class CourseCatalogPagePage extends StatelessWidget {
   }
 }
 
-class _SearchBar extends StatelessWidget {
+class _BackgroundDecorations extends StatelessWidget {
+  const _BackgroundDecorations();
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Positioned(
+          top: -50,
+          left: -50,
+          child: _BlurredBlob(
+            color: context.brandPrimaryColor.withValues(alpha: 0.1),
+            size: 300,
+          ),
+        ),
+        Positioned(
+          bottom: 100,
+          right: -100,
+          child: _BlurredBlob(
+            color: context.brandSecondaryColor.withValues(alpha: 0.08),
+            size: 400,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _BlurredBlob extends StatelessWidget {
+  final Color color;
+  final double size;
+
+  const _BlurredBlob({required this.color, required this.size});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        color: color,
+        shape: BoxShape.circle,
+      ),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 60, sigmaY: 60),
+        child: const SizedBox.expand(),
+      ),
+    );
+  }
+}
+
+final class _SearchBar extends StatelessWidget {
   final TextEditingController controller;
   final ValueChanged<String> onChanged;
-  final MentorXThemeColorPalette palette;
   final dynamic t;
 
   const _SearchBar({
     required this.controller,
     required this.onChanged,
-    required this.palette,
     required this.t,
   });
 
@@ -202,41 +297,43 @@ class _SearchBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 15,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: TextField(
-        controller: controller,
-        onChanged: onChanged,
-        style: TextStyle(
-          color: palette.textPrimary,
-          fontSize: 14,
-          fontWeight: FontWeight.w600,
+        color: context.backgroundSecondaryColor.withValues(alpha: 0.45),
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(
+          color: context.borderPrimaryColor.withValues(alpha: 0.1),
         ),
-        decoration: InputDecoration(
-          hintText: context.t.course.catalog.searchHint,
-          hintStyle: TextStyle(
-            color: palette.textTertiary,
-            fontWeight: FontWeight.w400,
-          ),
-          prefixIcon: Icon(
-            Icons.search_rounded,
-            color: palette.brandPrimary,
-            size: 22,
-          ),
-          filled: true,
-          fillColor: Colors.transparent,
-          contentPadding: const EdgeInsets.symmetric(vertical: 16),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20),
-            borderSide: BorderSide.none,
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(22),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: TextField(
+            controller: controller,
+            onChanged: onChanged,
+            style: TextStyle(
+              color: context.textPrimaryColor,
+              fontSize: 14,
+              fontWeight: FontWeight.w800,
+            ),
+            decoration: InputDecoration(
+              hintText: context.t.course.catalog.searchHint,
+              hintStyle: TextStyle(
+                color: context.textPrimaryColor.withValues(alpha: 0.3),
+                fontWeight: FontWeight.w600,
+              ),
+              prefixIcon: Icon(
+                Icons.search_rounded,
+                color: context.brandPrimaryColor,
+                size: 22,
+              ),
+              filled: true,
+              fillColor: Colors.transparent,
+              contentPadding: const EdgeInsets.symmetric(vertical: 16),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(22),
+                borderSide: BorderSide.none,
+              ),
+            ),
           ),
         ),
       ),
@@ -247,12 +344,10 @@ class _SearchBar extends StatelessWidget {
 final class _SortDropdown extends StatelessWidget {
   final CatalogSortOption sortOption;
   final ValueChanged<CatalogSortOption> onChanged;
-  final MentorXThemeColorPalette palette;
 
   const _SortDropdown({
     required this.sortOption,
     required this.onChanged,
-    required this.palette,
   });
 
   @override
@@ -260,24 +355,34 @@ final class _SortDropdown extends StatelessWidget {
     return PopupMenuButton<CatalogSortOption>(
       onSelected: onChanged,
       initialValue: sortOption,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      color: context.backgroundSecondaryColor,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+        side: BorderSide(
+          color: context.borderPrimaryColor.withValues(alpha: 0.05),
+        ),
+      ),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
-          color: palette.brandPrimary.withOpacity(0.08),
+          color: context.brandPrimaryColor.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.sort_rounded, size: 16, color: palette.brandPrimary),
-            const SizedBox(width: 6),
+            Icon(
+              Icons.sort_rounded,
+              size: 16,
+              color: context.brandPrimaryColor,
+            ),
+            const Gap(6),
             Text(
               context.t.course.catalog.sortBy,
               style: TextStyle(
                 fontSize: 12,
-                fontWeight: FontWeight.w800,
-                color: palette.brandPrimary,
+                fontWeight: FontWeight.w900,
+                color: context.brandPrimaryColor,
               ),
             ),
           ],
@@ -286,30 +391,53 @@ final class _SortDropdown extends StatelessWidget {
       itemBuilder: (context) => [
         PopupMenuItem(
           value: CatalogSortOption.newest,
-          child: Text(context.t.course.catalog.sortNewest),
+          child: Text(
+            context.t.course.catalog.sortNewest,
+            style: TextStyle(
+              color: context.textPrimaryColor,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
         ),
         PopupMenuItem(
           value: CatalogSortOption.priceAsc,
-          child: Text(context.t.course.catalog.sortPriceAsc),
+          child: Text(
+            context.t.course.catalog.sortPriceAsc,
+            style: TextStyle(
+              color: context.textPrimaryColor,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
         ),
         PopupMenuItem(
           value: CatalogSortOption.priceDesc,
-          child: Text(context.t.course.catalog.sortPriceDesc),
+          child: Text(
+            context.t.course.catalog.sortPriceDesc,
+            style: TextStyle(
+              color: context.textPrimaryColor,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
         ),
         PopupMenuItem(
           value: CatalogSortOption.popular,
-          child: Text(context.t.course.catalog.sortPopular),
+          child: Text(
+            context.t.course.catalog.sortPopular,
+            style: TextStyle(
+              color: context.textPrimaryColor,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
         ),
       ],
     );
   }
 }
 
-class _EmptyCatalog extends StatelessWidget {
-  final MentorXThemeColorPalette palette;
+final class _EmptyCatalog extends StatelessWidget {
   final dynamic t;
 
-  const _EmptyCatalog({required this.palette, required this.t});
+  const _EmptyCatalog({required this.t});
 
   @override
   Widget build(BuildContext context) {
@@ -320,35 +448,37 @@ class _EmptyCatalog extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(32),
             decoration: BoxDecoration(
-              color: palette.backgroundPrimary,
+              color: context.backgroundSecondaryColor,
               shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
-                  blurRadius: 20,
-                ),
-              ],
+              border: Border.all(
+                color: context.borderPrimaryColor.withValues(alpha: 0.05),
+              ),
             ),
             child: Icon(
               Icons.search_off_rounded,
               size: 80,
-              color: palette.textTertiary.withOpacity(0.2),
+              color: context.textTertiaryColor.withValues(alpha: 0.2),
             ),
           ),
-          const SizedBox(height: 32),
+          const Gap(32),
           Text(
             context.t.course.catalog.noCourses,
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w900,
-              color: palette.textPrimary,
+              color: context.textPrimaryColor,
+              letterSpacing: -0.5,
             ),
           ),
-          const SizedBox(height: 12),
+          const Gap(12),
           Text(
             context.t.course.catalog.noCoursesDescription,
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 14, color: palette.textSecondary),
+            style: TextStyle(
+              fontSize: 14,
+              color: context.textSecondaryColor,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ],
       ),

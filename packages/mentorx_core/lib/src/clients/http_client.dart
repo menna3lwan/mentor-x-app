@@ -127,6 +127,9 @@ abstract interface class HttpClient extends LocalizedClient {
   /// Clears all authentication tokens
   Future<void> clearTokens();
 
+  /// Initializes the client (e.g., loads cached tokens)
+  Future<void> initialize();
+
   Future<HttpClientResponse> get(
     String path, {
     Map<String, dynamic>? queryParameters,

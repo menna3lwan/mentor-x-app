@@ -42,13 +42,17 @@ final class _CourseCatalogPageWrapperState
           return CourseCatalogPagePage(
             searchController: _searchController,
             courses: state.courses,
+            grades: state.grades,
             categories: state.categories,
+            selectedGradeId: state.selectedGradeId,
             selectedCategoryId: state.selectedCategoryId,
             sortOption: state.sortOption,
             isLoading: state.isCoursesLoading,
             errorMessage: state.isCoursesFailure ? state.errorMessage : null,
             onSearchChanged: (query) =>
                 bloc.add(CourseCatalogPageSearchChanged(query)),
+            onGradeChanged: (gradeId) =>
+                bloc.add(CourseCatalogPageGradeChanged(gradeId)),
             onCategoryChanged: (categoryId) =>
                 bloc.add(CourseCatalogPageCategoryChanged(categoryId)),
             onSortChanged: (sort) =>

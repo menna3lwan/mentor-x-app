@@ -24,15 +24,17 @@ final class DioAttendanceRepository
     DateTime? to,
   }) async {
     try {
+      final queryParams = {
+        if (from != null) 'from': from.toIso8601String(),
+        if (to != null) 'to': to.toIso8601String(),
+      };
+
       final response = await httpClient.get(
         '/api/attendance/summary',
-        queryParameters: {
-          if (from != null) 'from': from.toIso8601String(),
-          if (to != null) 'to': to.toIso8601String(),
-        },
+        queryParameters: queryParams,
       );
 
-      final data = asMap(response.data['data'] ?? response.data);
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
       return AttendanceSummaryModel.fromJson(data);
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
@@ -50,19 +52,20 @@ final class DioAttendanceRepository
     MentorXPaginationInfo? paginationInfo,
   }) async {
     try {
+      final queryParams = {
+        if (from != null) 'from': from.toIso8601String(),
+        if (to != null) 'to': to.toIso8601String(),
+        if (courseId != null) 'course_id': courseId,
+        if (paginationInfo != null) ...paginationInfo.toJson(),
+      };
+
       final response = await httpClient.get(
-        '/api/attendance/records',
-        queryParameters: {
-          if (from != null) 'from': from.toIso8601String(),
-          if (to != null) 'to': to.toIso8601String(),
-          if (courseId != null) 'course_id': courseId,
-          if (paginationInfo != null) ...paginationInfo.toJson(),
-        },
+        '/api/attendance/my',
+        queryParameters: queryParams,
       );
 
-      final list = asList(asMap(response.data)['data'] ??
-          asMap(response.data)['content'] ??
-          response.data);
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final list = asList(data is Map ? data['content'] : data);
       return list.map((e) => AttendanceRecordModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(

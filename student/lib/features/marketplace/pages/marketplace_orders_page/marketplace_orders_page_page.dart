@@ -18,37 +18,27 @@ final class MarketplaceOrdersPagePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = context.t.student;
-    final palette = MentorXThemeColorPalette.light;
 
     return Scaffold(
-      backgroundColor: palette.backgroundSecondary,
+      backgroundColor: context.backgroundPrimaryColor,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(70),
         child: Container(
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                palette.brandPrimary,
-                palette.brandPrimary.withValues(alpha: 0.8),
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
+            color: context.backgroundSecondaryColor,
             borderRadius: const BorderRadius.vertical(
               bottom: Radius.circular(24),
             ),
-            boxShadow: [
-              BoxShadow(
-                color: palette.brandPrimary.withValues(alpha: 0.3),
-                blurRadius: 15,
-                offset: const Offset(0, 4),
+            border: Border(
+              bottom: BorderSide(
+                color: context.borderPrimaryColor.withValues(alpha: 0.05),
               ),
-            ],
+            ),
           ),
           child: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
-            foregroundColor: Colors.white,
+            foregroundColor: context.textPrimaryColor,
             centerTitle: true,
             title: Text(
               t['marketplaceOrders'] ?? 'Order History',
@@ -63,7 +53,8 @@ final class MarketplaceOrdersPagePage extends StatelessWidget {
       ),
       body: RefreshIndicator(
         onRefresh: () async => onRefresh(),
-        color: palette.brandPrimary,
+        color: context.brandPrimaryColor,
+        backgroundColor: context.backgroundSecondaryColor,
         child:
             state.loadingState == LoadingState.loading && state.orders.isEmpty
             ? const Center(child: CircularProgressIndicator())
@@ -72,10 +63,9 @@ final class MarketplaceOrdersPagePage extends StatelessWidget {
                 errorMessage: state.errorMessage,
                 onRefresh: onRefresh,
                 t: t,
-                palette: palette,
               )
             : state.orders.isEmpty
-            ? _EmptyView(t: t, palette: palette)
+            ? _EmptyView(t: t)
             : ListView.separated(
                 physics: const BouncingScrollPhysics(),
                 padding: const EdgeInsets.fromLTRB(20, 24, 20, 40),
@@ -86,7 +76,7 @@ final class MarketplaceOrdersPagePage extends StatelessWidget {
                   return FadeInUp(
                     duration: const Duration(milliseconds: 500),
                     delay: Duration(milliseconds: 50 * index),
-                    child: _OrderCard(order: order, palette: palette, t: t),
+                    child: _OrderCard(order: order, t: t),
                   );
                 },
               ),
@@ -95,17 +85,15 @@ final class MarketplaceOrdersPagePage extends StatelessWidget {
   }
 }
 
-class _ErrorView extends StatelessWidget {
+final class _ErrorView extends StatelessWidget {
   final String? errorMessage;
   final VoidCallback onRefresh;
   final dynamic t;
-  final MentorXThemeColorPalette palette;
 
   const _ErrorView({
     this.errorMessage,
     required this.onRefresh,
     required this.t,
-    required this.palette,
   });
 
   @override
@@ -118,16 +106,17 @@ class _ErrorView extends StatelessWidget {
             child: Icon(
               Icons.error_outline_rounded,
               size: 64,
-              color: Colors.red.withValues(alpha: 0.3),
+              color: context.statusDangerColor.withValues(alpha: 0.3),
             ),
           ),
-          const Gap(16),
+          const Gap(24),
           FadeInUp(
             child: Text(
               errorMessage ?? 'Unable to load orders.',
               style: TextStyle(
-                color: palette.textSecondary,
+                color: context.textSecondaryColor,
                 fontWeight: FontWeight.w800,
+                fontSize: 16,
               ),
             ),
           ),
@@ -135,7 +124,7 @@ class _ErrorView extends StatelessWidget {
           FadeInUp(
             delay: const Duration(milliseconds: 200),
             child: SizedBox(
-              width: 120,
+              width: 140,
               child: MentorXButton(
                 onPressed: onRefresh,
                 label: t['retry'] ?? 'Retry',
@@ -148,10 +137,9 @@ class _ErrorView extends StatelessWidget {
   }
 }
 
-class _EmptyView extends StatelessWidget {
+final class _EmptyView extends StatelessWidget {
   final dynamic t;
-  final MentorXThemeColorPalette palette;
-  const _EmptyView({required this.t, required this.palette});
+  const _EmptyView({required this.t});
 
   @override
   Widget build(BuildContext context) {
@@ -163,13 +151,16 @@ class _EmptyView extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.all(32),
               decoration: BoxDecoration(
-                color: palette.brandPrimary.withValues(alpha: 0.05),
+                color: context.backgroundSecondaryColor,
                 shape: BoxShape.circle,
+                border: Border.all(
+                  color: context.borderPrimaryColor.withValues(alpha: 0.05),
+                ),
               ),
               child: Icon(
                 Icons.shopping_bag_outlined,
                 size: 64,
-                color: palette.textTertiary.withValues(alpha: 0.3),
+                color: context.textTertiaryColor.withValues(alpha: 0.2),
               ),
             ),
           ),
@@ -178,8 +169,8 @@ class _EmptyView extends StatelessWidget {
             child: Text(
               t['noOrdersYet'] ?? "You haven't placed any orders yet.",
               style: TextStyle(
-                color: palette.textPrimary,
-                fontSize: 18,
+                color: context.textPrimaryColor,
+                fontSize: 20,
                 fontWeight: FontWeight.w900,
                 letterSpacing: -0.5,
               ),
@@ -193,9 +184,9 @@ class _EmptyView extends StatelessWidget {
                   "Explore our marketplace and place your first order!",
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: palette.textTertiary,
+                color: context.textSecondaryColor,
                 fontSize: 14,
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ),
@@ -207,12 +198,10 @@ class _EmptyView extends StatelessWidget {
 
 final class _OrderCard extends StatelessWidget {
   final MarketplaceOrderEntity order;
-  final MentorXThemeColorPalette palette;
   final dynamic t;
 
   const _OrderCard({
     required this.order,
-    required this.palette,
     required this.t,
   });
 
@@ -222,11 +211,14 @@ final class _OrderCard extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.backgroundSecondaryColor,
         borderRadius: BorderRadius.circular(28),
+        border: Border.all(
+          color: context.borderPrimaryColor.withValues(alpha: 0.05),
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 15,
             offset: const Offset(0, 8),
           ),
@@ -243,12 +235,12 @@ final class _OrderCard extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: palette.brandPrimary.withValues(alpha: 0.05),
+                      color: context.brandPrimaryColor.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(14),
                     ),
                     child: Icon(
                       Icons.receipt_long_rounded,
-                      color: palette.brandPrimary,
+                      color: context.brandPrimaryColor,
                       size: 22,
                     ),
                   ),
@@ -262,7 +254,7 @@ final class _OrderCard extends StatelessWidget {
                           style: TextStyle(
                             fontWeight: FontWeight.w900,
                             fontSize: 16,
-                            color: palette.textPrimary,
+                            color: context.textPrimaryColor,
                             letterSpacing: -0.3,
                           ),
                         ),
@@ -270,9 +262,9 @@ final class _OrderCard extends StatelessWidget {
                         Text(
                           '${order.createdAt.day}/${order.createdAt.month}/${order.createdAt.year}',
                           style: TextStyle(
-                            color: palette.textTertiary,
+                            color: context.textTertiaryColor,
                             fontSize: 12,
-                            fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
                       ],
@@ -282,7 +274,12 @@ final class _OrderCard extends StatelessWidget {
                 ],
               ),
             ),
-            const Divider(height: 1, indent: 20, endIndent: 20),
+            const Divider(
+              height: 1,
+              indent: 20,
+              endIndent: 20,
+              color: Color(0x0DFFFFFF),
+            ),
             Padding(
               padding: const EdgeInsets.all(20),
               child: Row(
@@ -294,9 +291,9 @@ final class _OrderCard extends StatelessWidget {
                       Text(
                         '${order.itemCount} ${t['items'] ?? 'items'}',
                         style: TextStyle(
-                          color: palette.textSecondary,
+                          color: context.textPrimaryColor,
                           fontSize: 14,
-                          fontWeight: FontWeight.w700,
+                          fontWeight: FontWeight.w800,
                         ),
                       ),
                       const Gap(6),
@@ -305,15 +302,15 @@ final class _OrderCard extends StatelessWidget {
                           Icon(
                             Icons.location_on_outlined,
                             size: 14,
-                            color: palette.textTertiary,
+                            color: context.textTertiaryColor,
                           ),
                           const Gap(4),
                           Text(
                             order.deliveryAddress ?? '',
                             style: TextStyle(
-                              color: palette.textTertiary,
+                              color: context.textTertiaryColor,
                               fontSize: 12,
-                              fontWeight: FontWeight.w600,
+                              fontWeight: FontWeight.w700,
                             ),
                           ),
                         ],
@@ -325,7 +322,7 @@ final class _OrderCard extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.w900,
-                      color: palette.brandPrimary,
+                      color: context.brandPrimaryColor,
                       letterSpacing: -0.5,
                     ),
                   ),
@@ -340,17 +337,17 @@ final class _OrderCard extends StatelessWidget {
 
   Color _statusColor(MarketplaceOrderStatus status) {
     return switch (status) {
-      MarketplaceOrderStatus.pending => Colors.orange,
-      MarketplaceOrderStatus.confirmed => Colors.blue,
-      MarketplaceOrderStatus.processing => Colors.purple,
-      MarketplaceOrderStatus.shipped => Colors.cyan,
-      MarketplaceOrderStatus.delivered => Colors.green,
-      MarketplaceOrderStatus.cancelled => Colors.red,
+      MarketplaceOrderStatus.pending => Colors.orangeAccent,
+      MarketplaceOrderStatus.confirmed => Colors.blueAccent,
+      MarketplaceOrderStatus.processing => Colors.purpleAccent,
+      MarketplaceOrderStatus.shipped => Colors.cyanAccent,
+      MarketplaceOrderStatus.delivered => Colors.greenAccent,
+      MarketplaceOrderStatus.cancelled => Colors.redAccent,
     };
   }
 }
 
-class _StatusBadge extends StatelessWidget {
+final class _StatusBadge extends StatelessWidget {
   final MarketplaceOrderStatus status;
   final Color color;
 
@@ -363,6 +360,7 @@ class _StatusBadge extends StatelessWidget {
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: color.withValues(alpha: 0.2)),
       ),
       child: Text(
         status.name.toUpperCase(),

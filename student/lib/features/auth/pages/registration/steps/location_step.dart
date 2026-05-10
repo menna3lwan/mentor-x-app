@@ -6,14 +6,13 @@ import 'package:mentorx_core/mentorx_core.dart';
 import 'package:animate_do/animate_do.dart';
 import '../bloc/student_registration_bloc.dart';
 
-class LocationStep extends StatelessWidget {
+final class LocationStep extends StatelessWidget {
   const LocationStep({super.key});
 
   @override
   Widget build(BuildContext context) {
     final t = context.t.student;
     final bloc = context.read<StudentRegistrationBloc>();
-    final palette = MentorXThemeColorPalette.light;
     return BlocBuilder<StudentRegistrationBloc, StudentRegistrationState>(
       builder: (context, state) {
         return Column(
@@ -23,29 +22,34 @@ class LocationStep extends StatelessWidget {
               duration: const Duration(milliseconds: 400),
               child: Text(
                 t['locationLabel'] ?? 'Location Details',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                style: TextStyle(
+                  fontSize: 28,
                   fontWeight: FontWeight.w900,
-                  color: palette.textPrimary,
+                  color: context.textPrimaryColor,
+                  letterSpacing: -1.0,
                 ),
               ),
             ),
-            const Gap(8),
+            const Gap(12),
             FadeInDown(
               duration: const Duration(milliseconds: 500),
               child: Text(
-                t['locationSubtitle'] ?? 'Help us know where you are from to suggest the nearest centers.',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: palette.textSecondary,
-                  height: 1.5,
+                t['locationSubtitle'] ??
+                    'Help us know where you are from to suggest the nearest centers.',
+                style: TextStyle(
+                  color: context.textSecondaryColor,
+                  fontSize: 15,
+                  height: 1.6,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ),
-            const Gap(32),
+            const Gap(40),
             FadeInUp(
               duration: const Duration(milliseconds: 400),
               child: _buildGovernoratePicker(context, state, bloc),
             ),
-            const Gap(24),
+            const Gap(32),
             FadeInUp(
               duration: const Duration(milliseconds: 500),
               child: _buildAreaPicker(context, state, bloc),
@@ -62,49 +66,68 @@ class LocationStep extends StatelessWidget {
     StudentRegistrationBloc bloc,
   ) {
     final t = context.t.student;
-    final palette = MentorXThemeColorPalette.light;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          t['governorateLabel'] ?? 'Governorate',
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            fontWeight: FontWeight.w800,
-            color: palette.textPrimary,
-          ),
+        Row(
+          children: [
+            Icon(Icons.map_rounded, color: context.brandPrimaryColor, size: 18),
+            const Gap(8),
+            Text(
+              t['governorateLabel'] ?? 'Governorate',
+              style: TextStyle(
+                fontWeight: FontWeight.w800,
+                color: context.textPrimaryColor,
+                fontSize: 14,
+              ),
+            ),
+          ],
         ),
-        const Gap(12),
+        const Gap(16),
         DropdownButtonFormField<GovernorateEntity>(
           value: state.selectedGovernorate,
+          dropdownColor: context.backgroundSecondaryColor,
           icon: Icon(
             Icons.keyboard_arrow_down_rounded,
-            color: palette.brandPrimary,
+            color: context.brandPrimaryColor,
+            size: 24,
+          ),
+          style: TextStyle(
+            color: context.textPrimaryColor,
+            fontWeight: FontWeight.w700,
+            fontSize: 15,
           ),
           decoration: InputDecoration(
             filled: true,
-            fillColor: palette.backgroundSecondary,
+            fillColor: context.backgroundSecondaryColor,
             contentPadding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 16,
+              horizontal: 20,
+              vertical: 18,
             ),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(20),
               borderSide: BorderSide.none,
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(20),
               borderSide: BorderSide(
-                color: palette.textTertiary.withValues(alpha: 0.1),
+                color: context.borderPrimaryColor.withValues(alpha: 0.1),
               ),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16),
-              borderSide: BorderSide(color: palette.brandPrimary, width: 2),
+              borderRadius: BorderRadius.circular(20),
+              borderSide: BorderSide(
+                color: context.brandPrimaryColor,
+                width: 2,
+              ),
             ),
           ),
           hint: Text(
             t['governorateHint'] ?? 'Select Governorate',
-            style: TextStyle(color: palette.textTertiary),
+            style: TextStyle(
+              color: context.textTertiaryColor,
+              fontWeight: FontWeight.w600,
+            ),
           ),
           items: state.governorates.map((gov) {
             return DropdownMenuItem(
@@ -112,8 +135,8 @@ class LocationStep extends StatelessWidget {
               child: Text(
                 gov.name,
                 style: TextStyle(
-                  color: palette.textPrimary,
-                  fontWeight: FontWeight.w600,
+                  color: context.textPrimaryColor,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
             );
@@ -131,49 +154,72 @@ class LocationStep extends StatelessWidget {
     StudentRegistrationBloc bloc,
   ) {
     final t = context.t.student;
-    final palette = MentorXThemeColorPalette.light;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          t['regionLabel'] ?? 'Area',
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            fontWeight: FontWeight.w800,
-            color: palette.textPrimary,
-          ),
+        Row(
+          children: [
+            Icon(
+              Icons.location_on_rounded,
+              color: context.brandPrimaryColor,
+              size: 18,
+            ),
+            const Gap(8),
+            Text(
+              t['regionLabel'] ?? 'Area',
+              style: TextStyle(
+                fontWeight: FontWeight.w800,
+                color: context.textPrimaryColor,
+                fontSize: 14,
+              ),
+            ),
+          ],
         ),
-        const Gap(12),
+        const Gap(16),
         DropdownButtonFormField<String>(
           value: state.selectedArea,
+          dropdownColor: context.backgroundSecondaryColor,
           icon: Icon(
             Icons.keyboard_arrow_down_rounded,
-            color: palette.brandPrimary,
+            color: context.brandPrimaryColor,
+            size: 24,
+          ),
+          style: TextStyle(
+            color: context.textPrimaryColor,
+            fontWeight: FontWeight.w700,
+            fontSize: 15,
           ),
           decoration: InputDecoration(
             filled: true,
-            fillColor: palette.backgroundSecondary,
+            fillColor: context.backgroundSecondaryColor,
             contentPadding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 16,
+              horizontal: 20,
+              vertical: 18,
             ),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(20),
               borderSide: BorderSide.none,
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(20),
               borderSide: BorderSide(
-                color: palette.textTertiary.withValues(alpha: 0.1),
+                color: context.borderPrimaryColor.withValues(alpha: 0.1),
               ),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16),
-              borderSide: BorderSide(color: palette.brandPrimary, width: 2),
+              borderRadius: BorderRadius.circular(20),
+              borderSide: BorderSide(
+                color: context.brandPrimaryColor,
+                width: 2,
+              ),
             ),
           ),
           hint: Text(
             t['regionHint'] ?? 'Select Area',
-            style: TextStyle(color: palette.textTertiary),
+            style: TextStyle(
+              color: context.textTertiaryColor,
+              fontWeight: FontWeight.w600,
+            ),
           ),
           items: state.areas.map((area) {
             return DropdownMenuItem(
@@ -181,8 +227,8 @@ class LocationStep extends StatelessWidget {
               child: Text(
                 area,
                 style: TextStyle(
-                  color: palette.textPrimary,
-                  fontWeight: FontWeight.w600,
+                  color: context.textPrimaryColor,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
             );

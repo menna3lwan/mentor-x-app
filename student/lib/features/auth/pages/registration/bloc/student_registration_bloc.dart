@@ -162,8 +162,9 @@ final class StudentRegistrationBloc
       emit(
         state.copyWith(
           loadingState: LoadingState.error,
-          errorMessage:
-              MentorXNullableValue('Failed to load application data: $e'),
+          errorMessage: MentorXNullableValue(
+            'Failed to load application data: $e',
+          ),
         ),
       );
       emitPresentation(
@@ -388,16 +389,20 @@ final class StudentRegistrationBloc
           return t.student['firstNameRequired'] ?? 'First name is required.';
         }
         if (!_isValidEgyptPhone(state.phone)) {
-          return t.student['invalidPhone'] ?? 'Please enter a valid phone number.';
+          return t.student['invalidPhone'] ??
+              'Please enter a valid phone number.';
         }
         if (!state.isPhoneUnique) {
-          return t.student['phoneAlreadyRegistered'] ?? 'This phone number is already registered.';
+          return t.student['phoneAlreadyRegistered'] ??
+              'This phone number is already registered.';
         }
         if (!_isValidEgyptPhone(state.parentPhone)) {
-          return t.student['invalidParentPhone'] ?? 'Please enter a valid parent phone number.';
+          return t.student['invalidParentPhone'] ??
+              'Please enter a valid parent phone number.';
         }
         if (state.parentPhone == state.phone) {
-          return t.student['parentPhoneDifferent'] ?? 'Parent phone number must be different from student phone.';
+          return t.student['parentPhoneDifferent'] ??
+              'Parent phone number must be different from student phone.';
         }
         break;
       case 1:
@@ -406,21 +411,29 @@ final class StudentRegistrationBloc
         }
         break;
       case 2:
-        if (state.secondName.trim().isEmpty) return t.student['secondNameRequired'] ?? 'Second name is required.';
-        if (state.thirdName.trim().isEmpty) return t.student['thirdNameRequired'] ?? 'Third name is required.';
-        if (state.fourthName.trim().isEmpty) return t.student['fourthNameRequired'] ?? 'Fourth name is required.';
+        if (state.secondName.trim().isEmpty) {
+          return t.student['secondNameRequired'] ?? 'Second name is required.';
+        }
+        if (state.thirdName.trim().isEmpty) {
+          return t.student['thirdNameRequired'] ?? 'Third name is required.';
+        }
+        if (state.fourthName.trim().isEmpty) {
+          return t.student['fourthNameRequired'] ?? 'Fourth name is required.';
+        }
         break;
       case 3:
         if (state.selectedGrade == null) {
           return t.student['gradeRequired'] ?? 'Please select your grade.';
         }
         if (!state.isOnline && (state.centerName?.isEmpty ?? true)) {
-          return t.student['centerNameRequired'] ?? 'Please enter the center name.';
+          return t.student['centerNameRequired'] ??
+              'Please enter the center name.';
         }
         break;
       case 4:
         if (state.selectedGovernorate == null) {
-          return t.student['governorateRequired'] ?? 'Please select your governorate.';
+          return t.student['governorateRequired'] ??
+              'Please select your governorate.';
         }
         if (state.selectedArea == null) {
           return t.student['areaRequired'] ?? 'Please select your area.';
@@ -431,7 +444,8 @@ final class StudentRegistrationBloc
           return t.student['passwordMismatch'] ?? 'Passwords do not match.';
         }
         if (state.password.length < 6) {
-          return t.student['passwordLength'] ?? 'Password must be at least 6 characters.';
+          return t.student['passwordLength'] ??
+              'Password must be at least 6 characters.';
         }
         break;
     }

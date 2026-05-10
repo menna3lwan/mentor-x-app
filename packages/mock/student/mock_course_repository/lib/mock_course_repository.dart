@@ -192,4 +192,10 @@ final class MockCourseRepository implements CourseRepository {
   Future<void> cancelAllStudentEnrollments(String studentId) async {
     await Future<void>.delayed(delay);
   }
+
+  @override
+  Future<List<WeekEntity>> getSessionWeeks(String sessionId) async {
+    await Future<void>.delayed(delay ~/ 2);
+    return MockCourseGenerator.sessionWeeks(sessionId);
+  }
 }

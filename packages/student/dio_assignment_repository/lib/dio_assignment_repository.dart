@@ -37,9 +37,8 @@ final class DioAssignmentRepository
   Future<List<AssignmentEntity>> getAssignments() async {
     try {
       final response = await httpClient.get('/api/assignments');
-      final list = asList(asMap(response.data)['data'] ??
-          asMap(response.data)['content'] ??
-          response.data);
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final list = asList(data is Map ? data['content'] : data);
       return list.map((e) => AssignmentModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
@@ -72,9 +71,17 @@ final class DioAssignmentRepository
   @override
   Future<AssignmentSubmissionEntity?> getSubmission(String assignmentId) async {
     try {
-      final response = await httpClient.get(
-        '/api/assignment-attempts/student/me/assignment/$assignmentId',
-      );
+      HttpClientResponse response;
+      try {
+        response = await httpClient.get(
+          '/api/assignment-attempts/student/me/assignment/$assignmentId',
+        );
+      } on HttpClientResponse catch (e) {
+        if (e.statusCode != 404) rethrow;
+        response = await httpClient.get(
+          '/api/assignment-attempts/student/me/assignment/$assignmentId',
+        );
+      }
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return AssignmentSubmissionModel.fromJson(data);
     } on HttpClientResponse catch (e) {

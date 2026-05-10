@@ -20,6 +20,7 @@ void main() {
       ),
       act: (bloc) =>
           bloc.add(const AssignmentDetailPageLoadEvent(assignmentId: '1')),
+      wait: Duration.zero,
       expect: () => [
         isA<AssignmentDetailPageState>().having(
           (s) => s.loadingState,

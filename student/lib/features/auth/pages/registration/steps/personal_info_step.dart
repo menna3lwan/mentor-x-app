@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -8,14 +7,14 @@ import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 import '../bloc/student_registration_bloc.dart';
 
-class PersonalInfoStep extends StatefulWidget {
+final class PersonalInfoStep extends StatefulWidget {
   const PersonalInfoStep({super.key});
 
   @override
   State<PersonalInfoStep> createState() => _PersonalInfoStepState();
 }
 
-class _PersonalInfoStepState extends State<PersonalInfoStep> {
+final class _PersonalInfoStepState extends State<PersonalInfoStep> {
   final ImagePicker _imagePicker = ImagePicker();
   late final TextEditingController _secondNameController;
   late final TextEditingController _thirdNameController;
@@ -42,7 +41,6 @@ class _PersonalInfoStepState extends State<PersonalInfoStep> {
   Widget build(BuildContext context) {
     final t = context.t.student;
     final bloc = context.read<StudentRegistrationBloc>();
-    final palette = MentorXThemeColorPalette.light;
     return BlocBuilder<StudentRegistrationBloc, StudentRegistrationState>(
       builder: (context, state) {
         return Column(
@@ -52,29 +50,34 @@ class _PersonalInfoStepState extends State<PersonalInfoStep> {
               duration: const Duration(milliseconds: 400),
               child: Text(
                 t['completeProfileTitle'] ?? 'Complete Your Profile',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                style: TextStyle(
+                  fontSize: 28,
                   fontWeight: FontWeight.w900,
-                  color: palette.textPrimary,
+                  color: context.textPrimaryColor,
+                  letterSpacing: -1.0,
                 ),
               ),
             ),
-            const Gap(8),
+            const Gap(12),
             FadeInDown(
               duration: const Duration(milliseconds: 500),
               child: Text(
-                t['completeProfileSubtitle'] ?? 'Please provide your full name as it appears in your official documents.',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: palette.textSecondary,
-                  height: 1.5,
+                t['completeProfileSubtitle'] ??
+                    'Please provide your full name as it appears in your official documents.',
+                style: TextStyle(
+                  color: context.textSecondaryColor,
+                  fontSize: 15,
+                  height: 1.6,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ),
-            const Gap(32),
+            const Gap(40),
             ZoomIn(
               duration: const Duration(milliseconds: 500),
               child: _buildPhotoPicker(context, state, bloc),
             ),
-            const Gap(32),
+            const Gap(48),
             FadeInUp(
               duration: const Duration(milliseconds: 400),
               child: MentorXTextFormField(
@@ -86,7 +89,7 @@ class _PersonalInfoStepState extends State<PersonalInfoStep> {
                     bloc.add(StudentRegistrationSecondNameChanged(value)),
               ),
             ),
-            const Gap(16),
+            const Gap(20),
             FadeInUp(
               duration: const Duration(milliseconds: 500),
               child: MentorXTextFormField(
@@ -98,7 +101,7 @@ class _PersonalInfoStepState extends State<PersonalInfoStep> {
                     bloc.add(StudentRegistrationThirdNameChanged(value)),
               ),
             ),
-            const Gap(16),
+            const Gap(20),
             FadeInUp(
               duration: const Duration(milliseconds: 600),
               child: MentorXTextFormField(
@@ -116,31 +119,29 @@ class _PersonalInfoStepState extends State<PersonalInfoStep> {
     );
   }
 
-
   Widget _buildPhotoPicker(
     BuildContext context,
     StudentRegistrationState state,
     StudentRegistrationBloc bloc,
   ) {
-    final palette = MentorXThemeColorPalette.light;
     return Center(
       child: Stack(
         children: [
           Container(
-            width: 110,
-            height: 110,
+            width: 120,
+            height: 120,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: palette.backgroundSecondary,
+              color: context.backgroundSecondaryColor,
               border: Border.all(
-                color: palette.brandPrimary.withValues(alpha: 0.2),
-                width: 3,
+                color: context.brandPrimaryColor.withValues(alpha: 0.2),
+                width: 4,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.05),
-                  blurRadius: 20,
-                  offset: const Offset(0, 10),
+                  color: Colors.black.withValues(alpha: 0.2),
+                  blurRadius: 25,
+                  offset: const Offset(0, 12),
                 ),
               ],
               image: state.profilePhotoPath != null
@@ -153,34 +154,37 @@ class _PersonalInfoStepState extends State<PersonalInfoStep> {
             child: state.profilePhotoPath == null
                 ? Icon(
                     Icons.person_add_rounded,
-                    size: 40,
-                    color: palette.brandPrimary.withValues(alpha: 0.5),
+                    size: 48,
+                    color: context.brandPrimaryColor.withValues(alpha: 0.5),
                   )
                 : null,
           ),
           Positioned(
-            bottom: 0,
-            right: 0,
+            bottom: 4,
+            right: 4,
             child: GestureDetector(
               onTap: () => _showPhotoSourcePicker(context, bloc),
               child: Container(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: palette.brandPrimary,
+                  color: context.brandPrimaryColor,
                   shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white, width: 2.5),
+                  border: Border.all(
+                    color: context.backgroundPrimaryColor,
+                    width: 3,
+                  ),
                   boxShadow: [
                     BoxShadow(
-                      color: palette.brandPrimary.withValues(alpha: 0.3),
+                      color: context.brandPrimaryColor.withValues(alpha: 0.4),
                       blurRadius: 10,
                       offset: const Offset(0, 4),
                     ),
                   ],
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.camera_alt_rounded,
-                  size: 18,
-                  color: palette.textForeground,
+                  size: 20,
+                  color: Colors.white,
                 ),
               ),
             ),
@@ -195,29 +199,41 @@ class _PersonalInfoStepState extends State<PersonalInfoStep> {
     StudentRegistrationBloc bloc,
   ) async {
     final t = context.t.student;
-    final palette = MentorXThemeColorPalette.light;
     final source = await showModalBottomSheet<ImageSource>(
       context: context,
       backgroundColor: Colors.transparent,
       builder: (context) {
         return Container(
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
+          decoration: BoxDecoration(
+            color: context.backgroundSecondaryColor,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+            border: Border.all(
+              color: context.borderPrimaryColor.withValues(alpha: 0.05),
+            ),
           ),
-          padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 24),
+          padding: const EdgeInsets.fromLTRB(24, 32, 24, 48),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: context.textTertiaryColor.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const Gap(32),
               Text(
                 t['personalPhotoLabel'] ?? 'Profile Photo',
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 20,
                   fontWeight: FontWeight.w900,
-                  color: palette.textPrimary,
+                  color: context.textPrimaryColor,
+                  letterSpacing: -0.5,
                 ),
               ),
-              const Gap(24),
+              const Gap(40),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -225,13 +241,11 @@ class _PersonalInfoStepState extends State<PersonalInfoStep> {
                     icon: Icons.photo_library_outlined,
                     label: t['gallery'] ?? 'Gallery',
                     onTap: () => Navigator.of(context).pop(ImageSource.gallery),
-                    palette: palette,
                   ),
                   _PhotoSourceOption(
                     icon: Icons.camera_alt_outlined,
                     label: t['camera'] ?? 'Camera',
                     onTap: () => Navigator.of(context).pop(ImageSource.camera),
-                    palette: palette,
                   ),
                 ],
               ),
@@ -240,7 +254,6 @@ class _PersonalInfoStepState extends State<PersonalInfoStep> {
         );
       },
     );
-
 
     if (source == null) return;
 
@@ -257,17 +270,15 @@ class _PersonalInfoStepState extends State<PersonalInfoStep> {
   }
 }
 
-class _PhotoSourceOption extends StatelessWidget {
+final class _PhotoSourceOption extends StatelessWidget {
   final IconData icon;
   final String label;
   final VoidCallback onTap;
-  final MentorXThemeColorPalette palette;
 
   const _PhotoSourceOption({
     required this.icon,
     required this.label,
     required this.onTap,
-    required this.palette,
   });
 
   @override
@@ -277,19 +288,23 @@ class _PhotoSourceOption extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
-              color: palette.brandPrimary.withValues(alpha: 0.1),
-              shape: BoxShape.circle,
+              color: context.brandPrimaryColor.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(24),
+              border: Border.all(
+                color: context.brandPrimaryColor.withValues(alpha: 0.1),
+              ),
             ),
-            child: Icon(icon, color: palette.brandPrimary, size: 32),
+            child: Icon(icon, color: context.brandPrimaryColor, size: 36),
           ),
-          const Gap(12),
+          const Gap(16),
           Text(
             label,
             style: TextStyle(
+              fontSize: 15,
               fontWeight: FontWeight.w800,
-              color: palette.textPrimary,
+              color: context.textPrimaryColor,
             ),
           ),
         ],

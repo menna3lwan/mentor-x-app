@@ -19,6 +19,9 @@ part 'src/utils/repository_mode.dart';
 part 'src/utils/data_parsing_mixin.dart';
 part 'src/utils/model_parser.dart';
 
+// ——— Constants ———
+part 'src/constants/network_constants.dart';
+
 // ——— Clients ———
 part 'src/clients/http_client.dart';
 
@@ -53,6 +56,7 @@ part 'src/entities/course_entity.dart';
 part 'src/entities/course_summary_entity.dart';
 part 'src/entities/session_entity.dart';
 part 'src/entities/session_item_entity.dart';
+part 'src/entities/week_entity.dart';
 part 'src/entities/enrollment_entity.dart';
 
 // Home / Dashboard
@@ -101,18 +105,15 @@ part 'src/entities/profile_edit_request_entity.dart';
 part 'src/entities/national_id_verification_entity.dart';
 part 'src/entities/code_redemption_entity.dart';
 part 'src/entities/leaderboard_entry_entity.dart';
+part 'src/entities/student_analytics_entity.dart';
 
 // ——————————————————————————————————————————————
 // Repositories — Common interfaces
 // ——————————————————————————————————————————————
 part 'src/repositories/cache_repository.dart';
-part 'src/models/parent_model.dart';
-part 'src/models/student_registration_response_entity.dart';
-part 'src/models/student/application_info_model.dart';
-part 'src/models/student/support_info_model.dart';
-part 'src/models/student/registration_step_model.dart';
-part 'src/models/student/grade_model.dart';
-part 'src/models/student/governorate_model.dart';
+
+part 'src/entities/student_registration_response_entity.dart';
+
 part 'src/repositories/http_client_repository.dart';
 part 'src/repositories/authentication_repository.dart';
 part 'src/repositories/student_authentication_repository.dart';
@@ -144,3 +145,4 @@ part 'src/repositories/ai_repository.dart';
 part 'src/repositories/marketplace_repository.dart';
 part 'src/repositories/rewards_repository.dart';
 part 'src/repositories/leaderboard_repository.dart';
+part 'src/repositories/student_analytics_repository.dart';

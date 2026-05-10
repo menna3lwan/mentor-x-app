@@ -80,7 +80,11 @@ final class SplashPageBloc extends Bloc<SplashPageEvent, SplashPageState>
         user = await _authenticationRepository.getAccountStatus().timeout(
           const Duration(seconds: 3),
         );
-      } catch (_) {
+      } catch (e) {
+        if (e is AuthenticationRepositoryException &&
+            e.code == AuthenticationRepositoryExceptionCode.invalidCredentials) {
+          return '/login';
+        }
         // Fallback to cached user in unstable network conditions.
       }
 

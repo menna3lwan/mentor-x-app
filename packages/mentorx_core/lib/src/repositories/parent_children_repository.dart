@@ -17,6 +17,8 @@ final class ParentChildrenRepositoryException
 // ——— Repository ———
 
 abstract interface class ParentChildrenRepository {
+  Future<void> initialize();
+
   Future<List<ParentChildEntity>> getChildren();
 
   Future<ParentStudentLookupEntity> findStudentByChildQuery({

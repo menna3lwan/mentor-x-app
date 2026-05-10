@@ -8,6 +8,9 @@ final class MockParentAttendanceRepository implements ParentAttendanceRepository
   });
 
   @override
+  Future<void> initialize() async {}
+
+  @override
   Future<List<AttendanceRecordEntity>> getAttendance(
     String childId, {
     DateTime? from,

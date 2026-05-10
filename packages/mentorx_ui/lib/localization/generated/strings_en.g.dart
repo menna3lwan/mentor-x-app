@@ -254,11 +254,12 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final TranslationsCartEn cart = TranslationsCartEn._(_root);
 	late final TranslationsSettingsEn settings = TranslationsSettingsEn._(_root);
 	late final TranslationsCourseEn course = TranslationsCourseEn._(_root);
-	Map<String, String> get student => {
+	Map<String, dynamic> get student => {
 		'aiAssistant': 'AI Assistant',
 		'aiSubtitle': 'AI Physics Assistant',
 		'aiWelcome': 'Hello! I am the AI Physics assistant. Ask me any question!',
 		'typeQuestion': 'Type your question here...',
+		'analytics': TranslationsStudentAnalyticsEn._(_root),
 		'assignmentDetail': 'Assignment Details',
 		'assignmentTitle': 'Waves Assignment',
 		'assignmentUnit': 'Unit 3 - Session 2',
@@ -278,6 +279,29 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 		'registerAttendance': 'Register Attendance',
 		'attendanceHistory': 'Attendance History',
 		'yourAttendanceCode': 'Your Attendance Code',
+		'exitQuizTitle': 'Exit Assignment?',
+		'exitQuizDesc': 'Your progress will not be saved. Are you sure you want to exit?',
+		'cancel': 'Cancel',
+		'exit': 'Exit',
+		'yourResponse': 'Your Response',
+		'writeResponse': 'Write your response here...',
+		'responseHint': 'Start typing...',
+		'attachments': 'Attachments',
+		'noFiles': 'No files attached yet',
+		'chooseCorrect': 'Choose the correct answer:',
+		'questionLabel': 'QUESTION',
+		'assignmentSubmitted': 'Assignment submitted successfully',
+		'alreadySubmitted': 'You have already submitted this assignment',
+		'assignmentNotFound': 'Assignment not found',
+		'commonBack': 'Back',
+		'commonNext': 'Next',
+		'commonPrevious': 'Previous',
+		'commonSubmit': 'Submit',
+		'review': 'Review',
+		'quizNotFound': 'Quiz not found',
+		'noQuestions': 'No questions available',
+		'yourAnswer': 'Your answer:',
+		'typeAnswerHere': 'Type your answer here...',
 		'showCodeInstruction': 'Show the code to the instructor or assistant to register your attendance',
 		'codeValidFor': 'Code valid for 5 minutes',
 		'viewAttendance': 'Attendance Record',
@@ -430,11 +454,8 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 		'platformTagline': 'Egyptian Education Platform',
 		'splashTagline': 'TEACH • MANAGE • REACH',
 		'commonSkip': 'Skip',
-		'commonNext': 'Next',
-		'commonPrevious': 'Previous',
 		'commonStartNow': 'Start Now',
 		'commonOr': 'Or',
-		'commonBack': 'Back',
 		'commonSave': 'Save',
 		'commonCancel': 'Cancel',
 		'commonConfirm': 'Confirm',
@@ -447,7 +468,6 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 		'commonRetry': 'Retry',
 		'commonYes': 'Yes',
 		'commonNo': 'No',
-		'commonSubmit': 'Submit',
 		'commonDelete': 'Delete',
 		'commonEdit': 'Edit',
 		'egp': 'EGP',
@@ -580,7 +600,6 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 		'instructionNoReturn': 'You cannot return after submitting the quiz',
 		'startQuiz': 'Start Quiz',
 		'questionOf': 'Question %s of %s',
-		'review': 'Review',
 		'submitQuiz': 'Submit Quiz',
 		'backToQuestions': 'Back to Questions',
 		'answeredCount': 'Answered',
@@ -596,7 +615,6 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 		'wrongAnswers': 'Wrong answers',
 		'timeTaken': 'Time taken',
 		'reviewAnswers': 'Review Answers',
-		'yourAnswer': 'Your answer:',
 		'correctAnswer': 'Correct answer:',
 		'minutesShort': 'min',
 		'claimReward': 'Claim Your Reward',
@@ -682,6 +700,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 		'yesterday': 'Yesterday',
 	};
 	late final TranslationsParentEn parent = TranslationsParentEn._(_root);
+	late final TranslationsAssignmentsEn assignments = TranslationsAssignmentsEn._(_root);
 }
 
 // Path: ui
@@ -1095,6 +1114,78 @@ class TranslationsCourseEn {
 	late final TranslationsCourseErrorsEn errors = TranslationsCourseErrorsEn._(_root);
 }
 
+// Path: student.analytics
+class TranslationsStudentAnalyticsEn {
+	TranslationsStudentAnalyticsEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Performance Analytics'
+	String get title => 'Performance Analytics';
+
+	/// en: 'Grade vs Peers'
+	String get gradeVsPeers => 'Grade vs Peers';
+
+	/// en: 'Rank: #${rank}'
+	String rank({required Object rank}) => 'Rank: #${rank}';
+
+	/// en: 'Your Score'
+	String get yourScore => 'Your Score';
+
+	/// en: 'Class Average'
+	String get classAverage => 'Class Average';
+
+	/// en: 'out of ${count} students'
+	String studentsCount({required Object count}) => 'out of ${count} students';
+
+	/// en: 'Above Average'
+	String get aboveAverage => 'Above Average';
+
+	/// en: 'Below Average'
+	String get belowAverage => 'Below Average';
+
+	/// en: 'Performance Trend'
+	String get performanceTrend => 'Performance Trend';
+
+	/// en: 'Study Peak Hours'
+	String get studyPeakHours => 'Study Peak Hours';
+
+	/// en: 'Badges & Achievements'
+	String get badgesAndAchievements => 'Badges & Achievements';
+
+	/// en: 'Engagement Streak'
+	String get streakTitle => 'Engagement Streak';
+
+	/// en: '${count} Days Streak'
+	String streakDays({required Object count}) => '${count} Days Streak';
+
+	/// en: 'Keep it up! You are making steady progress'
+	String get streakEncouragement => 'Keep it up! You are making steady progress';
+
+	/// en: 'Best Streak'
+	String get bestStreak => 'Best Streak';
+
+	/// en: 'Quiz Speed Metrics'
+	String get quizSpeedMetrics => 'Quiz Speed Metrics';
+
+	/// en: 'sec/question'
+	String get secondsPerQuestion => 'sec/question';
+
+	/// en: 'Your Avg'
+	String get yourAverage => 'Your Avg';
+
+	/// en: 'Peer Avg'
+	String get peerAverage => 'Peer Avg';
+
+	/// en: 'You are 15% faster than peer average! keep up the pace.'
+	String get speedEncouragement => 'You are 15% faster than peer average! keep up the pace.';
+
+	/// en: 'All Courses'
+	String get allCourses => 'All Courses';
+}
+
 // Path: parent
 class TranslationsParentEn {
 	TranslationsParentEn._(this._root);
@@ -1179,6 +1270,42 @@ class TranslationsParentEn {
 	String get pointsEarned => 'Points Earned';
 }
 
+// Path: assignments
+class TranslationsAssignmentsEn {
+	TranslationsAssignmentsEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Assignments'
+	String get listTitle => 'Assignments';
+
+	/// en: 'Due: ${date}'
+	String dueAt({required Object date}) => 'Due: ${date}';
+
+	/// en: 'No deadline'
+	String get noDeadline => 'No deadline';
+
+	/// en: 'Submit Assignment'
+	String get submitAssignment => 'Submit Assignment';
+
+	/// en: 'View Feedback'
+	String get viewFeedback => 'View Feedback';
+
+	/// en: 'Submitted'
+	String get submitted => 'Submitted';
+
+	/// en: 'Not submitted'
+	String get notSubmitted => 'Not submitted';
+
+	/// en: 'Grading'
+	String get grading => 'Grading';
+
+	/// en: 'Graded'
+	String get graded => 'Graded';
+}
+
 // Path: ui.common
 class TranslationsUiCommonEn {
 	TranslationsUiCommonEn._(this._root);
@@ -1219,6 +1346,12 @@ class TranslationsUiCommonEn {
 
 	/// en: 'No results found'
 	String get noResults => 'No results found';
+
+	/// en: 'Opening: ${url}'
+	String opening({required Object url}) => 'Opening: ${url}';
+
+	/// en: 'Coming soon'
+	String get comingSoon => 'Coming soon';
 }
 
 // Path: ui.errors
@@ -1568,6 +1701,9 @@ class TranslationsCourseCatalogEn {
 	/// en: 'All'
 	String get allCategories => 'All';
 
+	/// en: 'All Levels'
+	String get allLevels => 'All Levels';
+
 	/// en: 'Sort by'
 	String get sortBy => 'Sort by';
 
@@ -1588,6 +1724,9 @@ class TranslationsCourseCatalogEn {
 
 	/// en: 'Try adjusting your search or filters.'
 	String get noCoursesDescription => 'Try adjusting your search or filters.';
+
+	/// en: '${count} Courses Found'
+	String coursesFound({required Object count}) => '${count} Courses Found';
 }
 
 // Path: course.detail
@@ -1642,6 +1781,18 @@ class TranslationsCourseDetailEn {
 
 	/// en: 'Free'
 	String get sessionFree => 'Free';
+
+	/// en: '${mins}m ${secs}s'
+	String durationShort({required Object mins, required Object secs}) => '${mins}m ${secs}s';
+
+	/// en: '${count} pages'
+	String pagesCount({required Object count}) => '${count} pages';
+
+	/// en: 'YOUR PROGRESS'
+	String get yourProgress => 'YOUR PROGRESS';
+
+	/// en: '${percent}% Complete'
+	String completePercent({required Object percent}) => '${percent}% Complete';
 
 	/// en: 'Enrolling...'
 	String get enrolling => 'Enrolling...';
@@ -1816,6 +1967,9 @@ class TranslationsHomeDashboardActionsEn {
 
 	/// en: 'Marketplace'
 	String get marketplace => 'Marketplace';
+
+	/// en: 'Performance Analytics'
+	String get analytics => 'Performance Analytics';
 }
 
 /// The flat map containing all translations for locale <en>.
@@ -1837,6 +1991,8 @@ extension on Translations {
 			'ui.common.getStarted' => 'Get Started',
 			'ui.common.backToLogin' => 'Back to Login',
 			'ui.common.noResults' => 'No results found',
+			'ui.common.opening' => ({required Object url}) => 'Opening: ${url}',
+			'ui.common.comingSoon' => 'Coming soon',
 			'ui.errors.somethingWentWrong' => 'Something went wrong',
 			'ui.errors.retry' => 'Retry',
 			'ui.dateTime.yesterday' => 'Yesterday',
@@ -1912,6 +2068,7 @@ extension on Translations {
 			'home.dashboard.actions.assignments' => 'Assignments',
 			'home.dashboard.actions.rewards' => 'Rewards',
 			'home.dashboard.actions.marketplace' => 'Marketplace',
+			'home.dashboard.actions.analytics' => 'Performance Analytics',
 			'home.errors.failedToLoadUpcomingEvents' => 'Failed to load upcoming events',
 			'home.errors.failedToLoadVendors' => 'Failed to load service providers',
 			'home.errors.failedToLoadOccasions' => 'Failed to load occasions',
@@ -2214,6 +2371,7 @@ extension on Translations {
 			'course.tabs.sessions' => 'Sessions',
 			'course.catalog.searchHint' => 'Search courses...',
 			'course.catalog.allCategories' => 'All',
+			'course.catalog.allLevels' => 'All Levels',
 			'course.catalog.sortBy' => 'Sort by',
 			'course.catalog.sortNewest' => 'Newest',
 			'course.catalog.sortPriceAsc' => 'Price: Low to High',
@@ -2221,6 +2379,7 @@ extension on Translations {
 			'course.catalog.sortPopular' => 'Most Popular',
 			'course.catalog.noCourses' => 'No courses found',
 			'course.catalog.noCoursesDescription' => 'Try adjusting your search or filters.',
+			'course.catalog.coursesFound' => ({required Object count}) => '${count} Courses Found',
 			'course.detail.aboutCourse' => 'About this Course',
 			'course.detail.sessions' => 'Sessions',
 			'course.detail.items' => 'items',
@@ -2236,6 +2395,10 @@ extension on Translations {
 			'course.detail.minutes' => 'min',
 			'course.detail.hours' => 'hours',
 			'course.detail.sessionFree' => 'Free',
+			'course.detail.durationShort' => ({required Object mins, required Object secs}) => '${mins}m ${secs}s',
+			'course.detail.pagesCount' => ({required Object count}) => '${count} pages',
+			'course.detail.yourProgress' => 'YOUR PROGRESS',
+			'course.detail.completePercent' => ({required Object percent}) => '${percent}% Complete',
 			'course.detail.enrolling' => 'Enrolling...',
 			'course.detail.enrollSuccess' => 'Successfully enrolled!',
 			'course.detail.enrollFailed' => 'Failed to enroll. Please try again.',
@@ -2261,6 +2424,27 @@ extension on Translations {
 			'student.aiSubtitle' => 'AI Physics Assistant',
 			'student.aiWelcome' => 'Hello! I am the AI Physics assistant. Ask me any question!',
 			'student.typeQuestion' => 'Type your question here...',
+			'student.analytics.title' => 'Performance Analytics',
+			'student.analytics.gradeVsPeers' => 'Grade vs Peers',
+			'student.analytics.rank' => ({required Object rank}) => 'Rank: #${rank}',
+			'student.analytics.yourScore' => 'Your Score',
+			'student.analytics.classAverage' => 'Class Average',
+			'student.analytics.studentsCount' => ({required Object count}) => 'out of ${count} students',
+			'student.analytics.aboveAverage' => 'Above Average',
+			'student.analytics.belowAverage' => 'Below Average',
+			'student.analytics.performanceTrend' => 'Performance Trend',
+			'student.analytics.studyPeakHours' => 'Study Peak Hours',
+			'student.analytics.badgesAndAchievements' => 'Badges & Achievements',
+			'student.analytics.streakTitle' => 'Engagement Streak',
+			'student.analytics.streakDays' => ({required Object count}) => '${count} Days Streak',
+			'student.analytics.streakEncouragement' => 'Keep it up! You are making steady progress',
+			'student.analytics.bestStreak' => 'Best Streak',
+			'student.analytics.quizSpeedMetrics' => 'Quiz Speed Metrics',
+			'student.analytics.secondsPerQuestion' => 'sec/question',
+			'student.analytics.yourAverage' => 'Your Avg',
+			'student.analytics.peerAverage' => 'Peer Avg',
+			'student.analytics.speedEncouragement' => 'You are 15% faster than peer average! keep up the pace.',
+			'student.analytics.allCourses' => 'All Courses',
 			'student.assignmentDetail' => 'Assignment Details',
 			'student.assignmentTitle' => 'Waves Assignment',
 			'student.assignmentUnit' => 'Unit 3 - Session 2',
@@ -2280,11 +2464,36 @@ extension on Translations {
 			'student.registerAttendance' => 'Register Attendance',
 			'student.attendanceHistory' => 'Attendance History',
 			'student.yourAttendanceCode' => 'Your Attendance Code',
+			'student.exitQuizTitle' => 'Exit Assignment?',
+			'student.exitQuizDesc' => 'Your progress will not be saved. Are you sure you want to exit?',
+			'student.cancel' => 'Cancel',
+			'student.exit' => 'Exit',
+			'student.yourResponse' => 'Your Response',
+			'student.writeResponse' => 'Write your response here...',
+			'student.responseHint' => 'Start typing...',
+			'student.attachments' => 'Attachments',
+			'student.noFiles' => 'No files attached yet',
+			'student.chooseCorrect' => 'Choose the correct answer:',
+			'student.questionLabel' => 'QUESTION',
+			'student.assignmentSubmitted' => 'Assignment submitted successfully',
+			'student.alreadySubmitted' => 'You have already submitted this assignment',
+			'student.assignmentNotFound' => 'Assignment not found',
+			'student.commonBack' => 'Back',
+			'student.commonNext' => 'Next',
+			'student.commonPrevious' => 'Previous',
+			'student.commonSubmit' => 'Submit',
+			'student.review' => 'Review',
+			'student.quizNotFound' => 'Quiz not found',
+			'student.noQuestions' => 'No questions available',
+			'student.yourAnswer' => 'Your answer:',
+			'student.typeAnswerHere' => 'Type your answer here...',
 			'student.showCodeInstruction' => 'Show the code to the instructor or assistant to register your attendance',
 			'student.codeValidFor' => 'Code valid for 5 minutes',
 			'student.viewAttendance' => 'Attendance Record',
 			'student.totalAttendance' => 'Total attendance rate',
 			'student.present' => 'Present',
+			_ => null,
+		} ?? switch (path) {
 			'student.absent' => 'Absent',
 			'student.presentCount' => '%s present',
 			'student.absentCount' => '%s absent',
@@ -2338,8 +2547,6 @@ extension on Translations {
 			'student.passwordRulesHint' => 'Minimum 8 characters, letters or numbers only.',
 			'student.uploadPhotosLabel' => 'Upload Required Images',
 			'student.personalPhotoLabel' => 'Personal Photo',
-			_ => null,
-		} ?? switch (path) {
 			'student.nationalIdPhotoLabel' => 'Student ID Photo',
 			'student.studyTypeLabel' => 'Select Study Type',
 			'student.studyTypeCenter' => 'Center Student (Offline)',
@@ -2434,11 +2641,8 @@ extension on Translations {
 			'student.platformTagline' => 'Egyptian Education Platform',
 			'student.splashTagline' => 'TEACH • MANAGE • REACH',
 			'student.commonSkip' => 'Skip',
-			'student.commonNext' => 'Next',
-			'student.commonPrevious' => 'Previous',
 			'student.commonStartNow' => 'Start Now',
 			'student.commonOr' => 'Or',
-			'student.commonBack' => 'Back',
 			'student.commonSave' => 'Save',
 			'student.commonCancel' => 'Cancel',
 			'student.commonConfirm' => 'Confirm',
@@ -2451,7 +2655,6 @@ extension on Translations {
 			'student.commonRetry' => 'Retry',
 			'student.commonYes' => 'Yes',
 			'student.commonNo' => 'No',
-			'student.commonSubmit' => 'Submit',
 			'student.commonDelete' => 'Delete',
 			'student.commonEdit' => 'Edit',
 			'student.egp' => 'EGP',
@@ -2584,7 +2787,6 @@ extension on Translations {
 			'student.instructionNoReturn' => 'You cannot return after submitting the quiz',
 			'student.startQuiz' => 'Start Quiz',
 			'student.questionOf' => 'Question %s of %s',
-			'student.review' => 'Review',
 			'student.submitQuiz' => 'Submit Quiz',
 			'student.backToQuestions' => 'Back to Questions',
 			'student.answeredCount' => 'Answered',
@@ -2600,7 +2802,6 @@ extension on Translations {
 			'student.wrongAnswers' => 'Wrong answers',
 			'student.timeTaken' => 'Time taken',
 			'student.reviewAnswers' => 'Review Answers',
-			'student.yourAnswer' => 'Your answer:',
 			'student.correctAnswer' => 'Correct answer:',
 			'student.minutesShort' => 'min',
 			'student.claimReward' => 'Claim Your Reward',
@@ -2709,6 +2910,15 @@ extension on Translations {
 			'parent.spentThisMonth' => 'Spent This Month',
 			'parent.transactionHistory' => 'Transaction History',
 			'parent.pointsEarned' => 'Points Earned',
+			'assignments.listTitle' => 'Assignments',
+			'assignments.dueAt' => ({required Object date}) => 'Due: ${date}',
+			'assignments.noDeadline' => 'No deadline',
+			'assignments.submitAssignment' => 'Submit Assignment',
+			'assignments.viewFeedback' => 'View Feedback',
+			'assignments.submitted' => 'Submitted',
+			'assignments.notSubmitted' => 'Not submitted',
+			'assignments.grading' => 'Grading',
+			'assignments.graded' => 'Graded',
 			_ => null,
 		};
 	}

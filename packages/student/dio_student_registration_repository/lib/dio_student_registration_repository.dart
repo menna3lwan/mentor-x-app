@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'package:mentorx_core/mentorx_core.dart';
+import 'package:device_info_service/device_info_service.dart';
+import 'src/models/registration_models.dart';
 
 typedef _Exception = StudentRegistrationException;
 typedef _ExceptionCode = StudentRegistrationExceptionCode;
@@ -14,8 +16,15 @@ final class DioStudentRegistrationRepository
   }) => throw _Exception(code: code, message: message);
 
   final HttpClient httpClient;
+  final DeviceInfoService deviceInfoService;
 
-  DioStudentRegistrationRepository({required this.httpClient});
+  DioStudentRegistrationRepository({
+    required this.httpClient,
+    DeviceInfoService? deviceInfoService,
+  }) : deviceInfoService = deviceInfoService ?? DeviceInfoServiceImpl();
+
+  @override
+  Future<void> initialize() async {}
 
   @override
   Future<void> startRegistration({
@@ -110,6 +119,9 @@ final class DioStudentRegistrationRepository
         'parentPhone': parentPhone,
         'phone': phone,
         'password': password,
+        'device_name': await deviceInfoService.getDeviceName(),
+        'device_hash': await deviceInfoService.getDeviceHash(),
+        'app_version': await deviceInfoService.getAppVersion(),
         if (schoolName != null) 'schoolName': schoolName,
         if (educationDepartment != null) 'educationDepartment': educationDepartment,
         if (centerName != null) 'centerName': centerName,

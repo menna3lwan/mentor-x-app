@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
+import 'package:animate_do/animate_do.dart';
+import 'package:gap/gap.dart';
 
 final class VideoPlayerPagePage extends StatelessWidget {
   final String title;
@@ -29,55 +31,48 @@ final class VideoPlayerPagePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = MentorXThemeColorPalette.light;
     final t = context.t.student;
 
     return Scaffold(
-      backgroundColor: palette.backgroundSecondary,
+      backgroundColor: context.backgroundPrimaryColor,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(70),
         child: Container(
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                palette.brandPrimary,
-                palette.brandPrimary.withOpacity(0.8),
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
+            color: context.backgroundSecondaryColor,
             borderRadius: const BorderRadius.vertical(
               bottom: Radius.circular(24),
             ),
-            boxShadow: [
-              BoxShadow(
-                color: palette.brandPrimary.withOpacity(0.3),
-                blurRadius: 15,
-                offset: const Offset(0, 4),
+            border: Border(
+              bottom: BorderSide(
+                color: context.borderPrimaryColor.withValues(alpha: 0.05),
               ),
-            ],
+            ),
           ),
           child: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
-            foregroundColor: Colors.white,
+            foregroundColor: context.textPrimaryColor,
             centerTitle: true,
             title: Text(
               title,
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w900,
+                letterSpacing: -0.5,
+              ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
           ),
         ),
       ),
-      body: _buildBody(context, palette, t),
+      body: _buildBody(context, t),
     );
   }
 
   Widget _buildBody(
     BuildContext context,
-    MentorXThemeColorPalette palette,
     dynamic t,
   ) {
     if (errorMessage != null) {
@@ -87,19 +82,31 @@ final class VideoPlayerPagePage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                Icons.error_outline_rounded,
-                size: 64,
-                color: Colors.red.withOpacity(0.3),
-              ),
-              const SizedBox(height: 24),
-              Text(
-                errorMessage!,
-                style: TextStyle(
-                  color: palette.textSecondary,
-                  fontWeight: FontWeight.w600,
+              FadeInDown(
+                child: Container(
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    color: context.statusDangerColor.withValues(alpha: 0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.error_outline_rounded,
+                    size: 64,
+                    color: context.statusDangerColor,
+                  ),
                 ),
-                textAlign: TextAlign.center,
+              ),
+              const Gap(32),
+              FadeInUp(
+                child: Text(
+                  errorMessage!,
+                  style: TextStyle(
+                    color: context.textPrimaryColor,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 16,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
               ),
             ],
           ),
@@ -115,112 +122,128 @@ final class VideoPlayerPagePage extends StatelessWidget {
       children: [
         // Video Player Placeholder
         Padding(
-          padding: const EdgeInsets.all(20),
-          child: AspectRatio(
-            aspectRatio: 16 / 9,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.black,
-                borderRadius: BorderRadius.circular(24),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
-                    blurRadius: 20,
-                    offset: const Offset(0, 10),
+          padding: const EdgeInsets.all(24),
+          child: FadeInDown(
+            duration: const Duration(milliseconds: 600),
+            child: AspectRatio(
+              aspectRatio: 16 / 9,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: BorderRadius.circular(32),
+                  border: Border.all(
+                    color: context.borderPrimaryColor.withValues(alpha: 0.1),
                   ),
-                ],
-              ),
-              clipBehavior: Clip.antiAlias,
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  // Gradient Background
-                  Container(
-                    decoration: BoxDecoration(
-                      gradient: RadialGradient(
-                        colors: [
-                          palette.brandPrimary.withOpacity(0.2),
-                          Colors.transparent,
-                        ],
-                        radius: 1,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.3),
+                      blurRadius: 30,
+                      offset: const Offset(0, 15),
+                    ),
+                  ],
+                ),
+                clipBehavior: Clip.antiAlias,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    // Gradient Background
+                    Container(
+                      decoration: BoxDecoration(
+                        gradient: RadialGradient(
+                          colors: [
+                            context.brandPrimaryColor.withValues(alpha: 0.2),
+                            Colors.transparent,
+                          ],
+                          radius: 1.2,
+                        ),
                       ),
                     ),
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(12),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ZoomIn(
+                          duration: const Duration(milliseconds: 600),
+                          child: Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.2),
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: Colors.white.withValues(alpha: 0.3),
+                              ),
+                            ),
+                            child: const Icon(
+                              Icons.play_arrow_rounded,
+                              size: 56,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                        const Gap(20),
+                        Text(
+                          context.t.course.player.title,
+                          style: TextStyle(
+                            color: Colors.white.withValues(alpha: 0.7),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 1.2,
+                          ),
+                        ),
+                      ],
+                    ),
+                    // Progress Overlay
+                    Positioned(
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      child: Container(
+                        padding: const EdgeInsets.fromLTRB(20, 32, 20, 20),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.15),
-                          shape: BoxShape.circle,
+                          gradient: LinearGradient(
+                            colors: [
+                              Colors.transparent,
+                              Colors.black.withValues(alpha: 0.8),
+                            ],
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                          ),
                         ),
-                        child: Icon(
-                          Icons.play_arrow_rounded,
-                          size: 48,
-                          color: Colors.white,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        context.t.course.player.title,
-                        style: TextStyle(
-                          color: Colors.white.withOpacity(0.7),
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-                  // Progress Overlay (Glassmorphic)
-                  Positioned(
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    child: Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            Colors.transparent,
-                            Colors.black.withOpacity(0.5),
-                          ],
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                        ),
-                      ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(4),
-                              child: LinearProgressIndicator(
-                                value: totalDurationSeconds > 0
-                                    ? currentPositionSeconds /
-                                          totalDurationSeconds
-                                    : 0,
-                                minHeight: 4,
-                                backgroundColor: Colors.white.withOpacity(0.2),
-                                valueColor: AlwaysStoppedAnimation(
-                                  palette.brandPrimary,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(5),
+                                child: LinearProgressIndicator(
+                                  value: totalDurationSeconds > 0
+                                      ? currentPositionSeconds /
+                                            totalDurationSeconds
+                                      : 0,
+                                  minHeight: 6,
+                                  backgroundColor: Colors.white.withValues(
+                                    alpha: 0.2,
+                                  ),
+                                  valueColor: AlwaysStoppedAnimation(
+                                    context.brandPrimaryColor,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          const SizedBox(width: 12),
-                          Text(
-                            '${_formatTime(currentPositionSeconds)} / ${_formatTime(totalDurationSeconds)}',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 10,
-                              fontWeight: FontWeight.w700,
+                            const Gap(20),
+                            Text(
+                              '${_formatTime(currentPositionSeconds)} / ${_formatTime(totalDurationSeconds)}',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w900,
+                                letterSpacing: 0.5,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -228,86 +251,99 @@ final class VideoPlayerPagePage extends StatelessWidget {
 
         // Video Info Section
         Expanded(
-          child: Container(
-            width: double.infinity,
-            margin: const EdgeInsets.symmetric(horizontal: 20),
-            padding: const EdgeInsets.all(24),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(32),
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.03),
-                  blurRadius: 15,
-                  offset: const Offset(0, -5),
+          child: FadeInUp(
+            duration: const Duration(milliseconds: 600),
+            child: Container(
+              width: double.infinity,
+              margin: const EdgeInsets.symmetric(horizontal: 24),
+              padding: const EdgeInsets.all(32),
+              decoration: BoxDecoration(
+                color: context.backgroundSecondaryColor,
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(40),
                 ),
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        title,
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w900,
-                          color: palette.textPrimary,
+                border: Border.all(
+                  color: context.borderPrimaryColor.withValues(alpha: 0.05),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.1),
+                    blurRadius: 20,
+                    offset: const Offset(0, -10),
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          title,
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.w900,
+                            color: context.textPrimaryColor,
+                            letterSpacing: -0.5,
+                          ),
                         ),
                       ),
-                    ),
-                    if (isCompleted)
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.green.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Row(
-                          children: [
-                            const Icon(
-                              Icons.check_circle_rounded,
-                              color: Colors.green,
-                              size: 14,
+                      if (isCompleted)
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 14,
+                            vertical: 8,
+                          ),
+                          decoration: BoxDecoration(
+                            color: context.statusSuccessColor.withValues(
+                              alpha: 0.1,
                             ),
-                            const SizedBox(width: 4),
-                            Text(
-                              context.t.course.player.completed,
-                              style: const TextStyle(
-                                color: Colors.green,
-                                fontSize: 11,
-                                fontWeight: FontWeight.bold,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: context.statusSuccessColor.withValues(
+                                alpha: 0.1,
                               ),
                             ),
-                          ],
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.check_circle_rounded,
+                                color: context.statusSuccessColor,
+                                size: 16,
+                              ),
+                              const Gap(8),
+                              Text(
+                                context.t.course.player.completed.toUpperCase(),
+                                style: TextStyle(
+                                  color: context.statusSuccessColor,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w900,
+                                  letterSpacing: 1.0,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                _InfoTile(
-                  label: t['videoDuration'] ?? 'Duration',
-                  value: _formatTime(totalDurationSeconds),
-                  icon: Icons.timer_rounded,
-                  palette: palette,
-                ),
-                const SizedBox(height: 12),
-                _InfoTile(
-                  label: t['videoStatus'] ?? 'Status',
-                  value: isCompleted
-                      ? (t['videoCompleted'] ?? 'Completed')
-                      : (t['videoWatching'] ?? 'Watching'),
-                  icon: Icons.info_outline_rounded,
-                  palette: palette,
-                ),
-              ],
+                    ],
+                  ),
+                  const Gap(40),
+                  _InfoTile(
+                    label: t['videoDuration'] ?? 'Duration',
+                    value: _formatTime(totalDurationSeconds),
+                    icon: Icons.timer_rounded,
+                  ),
+                  const Gap(16),
+                  _InfoTile(
+                    label: t['videoStatus'] ?? 'Status',
+                    value: isCompleted
+                        ? (t['videoCompleted'] ?? 'Completed')
+                        : (t['videoWatching'] ?? 'Watching'),
+                    icon: Icons.info_outline_rounded,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -322,46 +358,54 @@ final class VideoPlayerPagePage extends StatelessWidget {
   }
 }
 
-class _InfoTile extends StatelessWidget {
+final class _InfoTile extends StatelessWidget {
   final String label;
   final String value;
   final IconData icon;
-  final MentorXThemeColorPalette palette;
 
   const _InfoTile({
     required this.label,
     required this.value,
     required this.icon,
-    required this.palette,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: palette.backgroundSecondary,
-        borderRadius: BorderRadius.circular(16),
+        color: context.backgroundPrimaryColor,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: context.borderPrimaryColor.withValues(alpha: 0.05),
+        ),
       ),
       child: Row(
         children: [
-          Icon(icon, color: palette.textTertiary, size: 20),
-          const SizedBox(width: 12),
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: context.brandPrimaryColor.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(icon, color: context.brandPrimaryColor, size: 22),
+          ),
+          const Gap(16),
           Text(
             label,
             style: TextStyle(
-              color: palette.textSecondary,
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
+              color: context.textSecondaryColor,
+              fontSize: 14,
+              fontWeight: FontWeight.w700,
             ),
           ),
           const Spacer(),
           Text(
             value,
             style: TextStyle(
-              color: palette.textPrimary,
-              fontSize: 13,
-              fontWeight: FontWeight.w800,
+              color: context.textPrimaryColor,
+              fontSize: 15,
+              fontWeight: FontWeight.w900,
             ),
           ),
         ],

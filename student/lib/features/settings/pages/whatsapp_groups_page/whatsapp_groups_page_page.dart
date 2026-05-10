@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:gap/gap.dart';
-
 import 'bloc/whatsapp_groups_page_bloc.dart';
 
 final class WhatsappGroupsPagePage extends StatelessWidget {
@@ -20,25 +19,38 @@ final class WhatsappGroupsPagePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = MentorXThemeColorPalette.light;
+    final t = context.t.student;
 
     return Scaffold(
-      backgroundColor: palette.backgroundSecondary,
+      backgroundColor: context.backgroundPrimaryColor,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(70),
         child: FadeInDown(
           duration: const Duration(milliseconds: 500),
-          child: AppBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            foregroundColor: palette.textPrimary,
-            centerTitle: true,
-            title: const Text(
-              'WhatsApp Groups',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w900,
-                letterSpacing: -0.5,
+          child: Container(
+            decoration: BoxDecoration(
+              color: context.backgroundSecondaryColor,
+              borderRadius: const BorderRadius.vertical(
+                bottom: Radius.circular(28),
+              ),
+              border: Border(
+                bottom: BorderSide(
+                  color: context.borderPrimaryColor.withValues(alpha: 0.05),
+                ),
+              ),
+            ),
+            child: AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              foregroundColor: context.textPrimaryColor,
+              centerTitle: true,
+              title: Text(
+                t['whatsappGroups'] ?? 'WhatsApp Groups',
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: -0.5,
+                ),
               ),
             ),
           ),
@@ -46,13 +58,15 @@ final class WhatsappGroupsPagePage extends StatelessWidget {
       ),
       body: RefreshIndicator(
         onRefresh: () async => onRefresh(),
+        color: context.brandPrimaryColor,
+        backgroundColor: context.backgroundSecondaryColor,
         child: state.isLoading
             ? const Center(child: CircularProgressIndicator())
             : ListView(
                 physics: const BouncingScrollPhysics(),
                 padding: const EdgeInsets.symmetric(
                   horizontal: 20,
-                  vertical: 16,
+                  vertical: 24,
                 ),
                 children: [
                   FadeInUp(
@@ -60,17 +74,21 @@ final class WhatsappGroupsPagePage extends StatelessWidget {
                     child: Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: palette.brandPrimary.withValues(alpha: 0.1),
+                        color: context.brandPrimaryColor.withValues(
+                          alpha: 0.05,
+                        ),
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(
-                          color: palette.brandPrimary.withValues(alpha: 0.2),
+                          color: context.brandPrimaryColor.withValues(
+                            alpha: 0.1,
+                          ),
                         ),
                       ),
                       child: Row(
                         children: [
                           Icon(
                             Icons.info_outline_rounded,
-                            color: palette.brandPrimary,
+                            color: context.brandPrimaryColor,
                             size: 20,
                           ),
                           const Gap(12),
@@ -78,8 +96,8 @@ final class WhatsappGroupsPagePage extends StatelessWidget {
                             child: Text(
                               'Join official study groups to receive instant updates.',
                               style: TextStyle(
-                                color: palette.brandPrimary,
-                                fontWeight: FontWeight.w700,
+                                color: context.brandPrimaryColor,
+                                fontWeight: FontWeight.w800,
                                 fontSize: 13,
                               ),
                             ),
@@ -88,7 +106,7 @@ final class WhatsappGroupsPagePage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const Gap(20),
+                  const Gap(24),
                   ...state.groups.asMap().entries.map(
                     (entry) => FadeInUp(
                       duration: const Duration(milliseconds: 500),
@@ -128,18 +146,21 @@ final class _GroupCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = MentorXThemeColorPalette.light;
+    const waColor = Color(0xFF25D366);
 
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: palette.backgroundPrimary,
-        borderRadius: BorderRadius.circular(24),
+        color: context.backgroundSecondaryColor,
+        borderRadius: BorderRadius.circular(28),
+        border: Border.all(
+          color: context.borderPrimaryColor.withValues(alpha: 0.05),
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 15,
+            offset: const Offset(0, 8),
           ),
         ],
       ),
@@ -148,23 +169,21 @@ final class _GroupCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              ZoomIn(
-                duration: const Duration(milliseconds: 400),
-                child: Container(
-                  width: 48,
-                  height: 48,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF25D366).withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: const Icon(
-                    Icons.chat_rounded,
-                    color: Color(0xFF25D366),
-                    size: 28,
-                  ),
+              Container(
+                width: 52,
+                height: 52,
+                decoration: BoxDecoration(
+                  color: waColor.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: waColor.withValues(alpha: 0.2)),
+                ),
+                child: const Icon(
+                  Icons.chat_rounded,
+                  color: waColor,
+                  size: 28,
                 ),
               ),
-              const Gap(14),
+              const Gap(16),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -174,7 +193,7 @@ final class _GroupCard extends StatelessWidget {
                       style: TextStyle(
                         fontWeight: FontWeight.w900,
                         fontSize: 16,
-                        color: palette.textPrimary,
+                        color: context.textPrimaryColor,
                         letterSpacing: -0.5,
                       ),
                     ),
@@ -182,9 +201,9 @@ final class _GroupCard extends StatelessWidget {
                     Text(
                       '${group.participantsCount} members active',
                       style: TextStyle(
-                        color: palette.textSecondary,
+                        color: context.textTertiaryColor,
                         fontSize: 12,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w800,
                       ),
                     ),
                   ],
@@ -196,19 +215,19 @@ final class _GroupCard extends StatelessWidget {
           Text(
             group.description,
             style: TextStyle(
-              color: palette.textSecondary,
+              color: context.textSecondaryColor,
               fontSize: 14,
               height: 1.5,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w700,
             ),
           ),
-          const Gap(20),
+          const Gap(24),
           SizedBox(
             width: double.infinity,
             child: MentorXButton(
               onPressed: onJoin,
               label: isJoined ? 'Link Copied' : 'Copy Invite Link',
-              color: isJoined ? palette.statusSuccess : const Color(0xFF25D366),
+              color: isJoined ? context.statusSuccessColor : waColor,
               icon: isJoined
                   ? Icons.check_circle_rounded
                   : Icons.content_copy_rounded,

@@ -26,7 +26,7 @@ void main() {
         };
 
         when(() => httpClient.get(
-          '/api/profile/student/details',
+          '/api/student/profile',
           queryParameters: any(named: 'queryParameters'),
           headers: any(named: 'headers'),
         )).thenAnswer((_) async => HttpClientResponse(

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
-
 import '../../../../app/student_app.dart';
 import '../../../../core/core.dart';
 import 'bloc/otp_bloc.dart';
@@ -26,12 +25,7 @@ final class _OtpPageWrapperState extends State<OtpPageWrapper> {
             _handleAuthenticatedUser(context, user);
           case OtpFailurePresentationEvent(:final message):
             if (message.trim().isEmpty) return;
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(message),
-                backgroundColor: MentorXThemeColorPalette.light.statusDanger,
-              ),
-            );
+            context.showErrorSnackBar(message);
         }
       },
       child: BlocBuilder<OtpBloc, OtpState>(

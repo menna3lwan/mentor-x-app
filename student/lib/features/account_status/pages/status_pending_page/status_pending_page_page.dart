@@ -20,12 +20,11 @@ final class StatusPendingPagePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = MentorXThemeColorPalette.light;
     final t = context.t.accountStatus;
 
     return StatusLayout(
       icon: Icons.hourglass_top_rounded,
-      iconBackground: palette.brandSecondary,
+      iconBackground: context.statusWarningColor,
       title: t.pendingTitle,
       description: t.pendingDescription,
       extra: Column(
@@ -35,21 +34,18 @@ final class StatusPendingPagePage extends StatelessWidget {
               duration: const Duration(milliseconds: 600),
               child: Container(
                 width: double.infinity,
-                padding: const EdgeInsets.symmetric(
-                  vertical: 24,
-                  horizontal: 24,
-                ),
+                padding: const EdgeInsets.all(28),
                 decoration: BoxDecoration(
-                  color: palette.backgroundSecondary,
-                  borderRadius: BorderRadius.circular(28),
+                  color: context.backgroundSecondaryColor,
+                  borderRadius: BorderRadius.circular(32),
                   border: Border.all(
-                    color: palette.brandPrimary.withValues(alpha: 0.1),
+                    color: context.borderPrimaryColor.withValues(alpha: 0.05),
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: palette.brandPrimary.withValues(alpha: 0.03),
-                      blurRadius: 12,
-                      offset: const Offset(0, 4),
+                      color: Colors.black.withValues(alpha: 0.1),
+                      blurRadius: 20,
+                      offset: const Offset(0, 10),
                     ),
                   ],
                 ),
@@ -58,20 +54,20 @@ final class StatusPendingPagePage extends StatelessWidget {
                     Text(
                       context.t.student['studentCodeLabel'] ?? 'STUDENT CODE',
                       style: TextStyle(
-                        fontSize: 11,
+                        fontSize: 12,
                         fontWeight: FontWeight.w900,
-                        color: palette.textTertiary,
-                        letterSpacing: 1.2,
+                        color: context.textTertiaryColor,
+                        letterSpacing: 1.5,
                       ),
                     ),
-                    const Gap(10),
+                    const Gap(12),
                     Text(
                       studentCode!,
                       style: TextStyle(
-                        fontSize: 24,
+                        fontSize: 28,
                         fontWeight: FontWeight.w900,
-                        color: palette.brandPrimary,
-                        letterSpacing: 3,
+                        color: context.brandPrimaryColor,
+                        letterSpacing: 4,
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -79,7 +75,7 @@ final class StatusPendingPagePage extends StatelessWidget {
                 ),
               ),
             ),
-            const Gap(24),
+            const Gap(32),
           ],
           FadeInUp(
             duration: const Duration(milliseconds: 600),
@@ -88,9 +84,9 @@ final class StatusPendingPagePage extends StatelessWidget {
               t.pendingSupportInfo,
               style: TextStyle(
                 fontSize: 14,
-                color: palette.textTertiary,
-                fontWeight: FontWeight.w600,
-                height: 1.5,
+                color: context.textTertiaryColor,
+                fontWeight: FontWeight.w700,
+                height: 1.6,
               ),
               textAlign: TextAlign.center,
             ),
@@ -107,7 +103,6 @@ final class StatusPendingPagePage extends StatelessWidget {
             label: 'Refresh Status',
           ),
         ),
-
         const Gap(20),
         FadeInUp(
           duration: const Duration(milliseconds: 500),
@@ -117,8 +112,9 @@ final class StatusPendingPagePage extends StatelessWidget {
             child: Text(
               context.t.student['logoutSetting'] ?? 'Logout',
               style: TextStyle(
-                color: palette.textTertiary,
-                fontWeight: FontWeight.w800,
+                color: context.textTertiaryColor,
+                fontWeight: FontWeight.w900,
+                fontSize: 15,
               ),
             ),
           ),

@@ -9,44 +9,34 @@ import '../../../../core/core.dart';
 import '../../cubit/marketplace_cart_cubit.dart';
 import 'bloc/marketplace_cart_page_bloc.dart';
 
-class MarketplaceCartPage extends StatelessWidget {
+final class MarketplaceCartPage extends StatelessWidget {
   const MarketplaceCartPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     final t = context.t.student;
-    final palette = MentorXThemeColorPalette.light;
     final cartState = context.watch<MarketplaceCartCubit>().state;
 
     return Scaffold(
-      backgroundColor: palette.backgroundSecondary,
+      backgroundColor: context.backgroundPrimaryColor,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(70),
         child: Container(
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                palette.brandPrimary,
-                palette.brandPrimary.withValues(alpha: 0.8),
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
+            color: context.backgroundSecondaryColor,
             borderRadius: const BorderRadius.vertical(
               bottom: Radius.circular(24),
             ),
-            boxShadow: [
-              BoxShadow(
-                color: palette.brandPrimary.withValues(alpha: 0.3),
-                blurRadius: 15,
-                offset: const Offset(0, 4),
+            border: Border(
+              bottom: BorderSide(
+                color: context.borderPrimaryColor.withValues(alpha: 0.05),
               ),
-            ],
+            ),
           ),
           child: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
-            foregroundColor: Colors.white,
+            foregroundColor: context.textPrimaryColor,
             centerTitle: true,
             title: Text(
               t['marketplaceCart']!,
@@ -70,8 +60,13 @@ class MarketplaceCartPage extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.all(32),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: context.backgroundSecondaryColor,
                           shape: BoxShape.circle,
+                          border: Border.all(
+                            color: context.borderPrimaryColor.withValues(
+                              alpha: 0.05,
+                            ),
+                          ),
                           boxShadow: [
                             BoxShadow(
                               color: Colors.black.withValues(alpha: 0.05),
@@ -82,7 +77,9 @@ class MarketplaceCartPage extends StatelessWidget {
                         child: Icon(
                           Icons.shopping_bag_outlined,
                           size: 80,
-                          color: palette.textTertiary.withValues(alpha: 0.2),
+                          color: context.textTertiaryColor.withValues(
+                            alpha: 0.2,
+                          ),
                         ),
                       ),
                       const Gap(32),
@@ -91,7 +88,8 @@ class MarketplaceCartPage extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.w900,
-                          color: palette.textPrimary,
+                          color: context.textPrimaryColor,
+                          letterSpacing: -0.5,
                         ),
                       ),
                       const Gap(12),
@@ -100,8 +98,8 @@ class MarketplaceCartPage extends StatelessWidget {
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 14,
-                          color: palette.textSecondary,
-                          fontWeight: FontWeight.w500,
+                          color: context.textSecondaryColor,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                       const Gap(40),
@@ -109,7 +107,7 @@ class MarketplaceCartPage extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(horizontal: 40),
                         child: MentorXButton(
                           onPressed: () => Navigator.of(context).pop(),
-                          text: t['startShopping']!,
+                          label: t['startShopping']!,
                         ),
                       ),
                     ],
@@ -121,9 +119,10 @@ class MarketplaceCartPage extends StatelessWidget {
               children: [
                 Expanded(
                   child: ListView.separated(
-                    padding: const EdgeInsets.all(20),
+                    padding: const EdgeInsets.fromLTRB(20, 24, 20, 100),
+                    physics: const BouncingScrollPhysics(),
                     itemCount: cartState.items.length,
-                    separatorBuilder: (context, index) => const Gap(12),
+                    separatorBuilder: (context, index) => const Gap(16),
                     itemBuilder: (context, index) {
                       final cartItem = cartState.items[index];
                       return FadeInUp(
@@ -131,7 +130,6 @@ class MarketplaceCartPage extends StatelessWidget {
                         delay: Duration(milliseconds: 50 * index),
                         child: _MarketplaceCartItemTile(
                           cartItem: cartItem,
-                          palette: palette,
                         ),
                       );
                     },
@@ -141,8 +139,7 @@ class MarketplaceCartPage extends StatelessWidget {
                   duration: const Duration(milliseconds: 600),
                   child: _OrderSummary(
                     subtotal: cartState.subtotal,
-                    palette: palette,
-                    onCheckout: () => _showCheckoutSheet(context, palette),
+                    onCheckout: () => _showCheckoutSheet(context),
                   ),
                 ),
               ],
@@ -152,7 +149,6 @@ class MarketplaceCartPage extends StatelessWidget {
 
   void _showCheckoutSheet(
     BuildContext context,
-    MentorXThemeColorPalette palette,
   ) {
     final user = context.read<AppAuthenticationCubit>().state;
     final addressController = TextEditingController(text: user?.address ?? '');
@@ -166,9 +162,12 @@ class MarketplaceCartPage extends StatelessWidget {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
+        decoration: BoxDecoration(
+          color: context.backgroundSecondaryColor,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+          border: Border.all(
+            color: context.borderPrimaryColor.withValues(alpha: 0.05),
+          ),
         ),
         padding: EdgeInsets.only(
           bottom: MediaQuery.of(context).viewInsets.bottom + 32,
@@ -185,7 +184,7 @@ class MarketplaceCartPage extends StatelessWidget {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: palette.textTertiary.withValues(alpha: 0.2),
+                  color: context.textTertiaryColor.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -196,30 +195,31 @@ class MarketplaceCartPage extends StatelessWidget {
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w900,
-                color: palette.textPrimary,
+                color: context.textPrimaryColor,
+                letterSpacing: -0.5,
               ),
             ),
             const Gap(24),
             MentorXTextFormField(
               label: 'Delivery Address',
               controller: addressController,
-              hint: 'Delivery Address',
-              icon: Icons.location_on_rounded,
+              hintText: 'Delivery Address',
+              prefixIcon: Icons.location_on_rounded,
             ),
             const Gap(16),
             MentorXTextFormField(
               label: 'Phone Number',
               controller: phoneController,
-              hint: 'Phone Number',
-              icon: Icons.phone_rounded,
+              hintText: 'Phone Number',
+              prefixIcon: Icons.phone_rounded,
               keyboardType: TextInputType.phone,
             ),
             const Gap(16),
             MentorXTextFormField(
               label: 'Delivery Notes',
               controller: notesController,
-              hint: 'Delivery Notes (Optional)',
-              icon: Icons.note_rounded,
+              hintText: 'Delivery Notes (Optional)',
+              prefixIcon: Icons.note_rounded,
               maxLines: 2,
             ),
             const Gap(32),
@@ -243,7 +243,7 @@ class MarketplaceCartPage extends StatelessWidget {
                       notesController.text,
                     );
                   },
-                  text: context.t.student['confirmOrder']!,
+                  label: context.t.student['confirmOrder']!,
                 );
               },
             ),
@@ -274,13 +274,11 @@ class MarketplaceCartPage extends StatelessWidget {
   }
 }
 
-class _MarketplaceCartItemTile extends StatelessWidget {
+final class _MarketplaceCartItemTile extends StatelessWidget {
   final MarketplaceCartItem cartItem;
-  final MentorXThemeColorPalette palette;
 
   const _MarketplaceCartItemTile({
     required this.cartItem,
-    required this.palette,
   });
 
   @override
@@ -290,11 +288,14 @@ class _MarketplaceCartItemTile extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.backgroundSecondaryColor,
         borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: context.borderPrimaryColor.withValues(alpha: 0.05),
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -310,10 +311,13 @@ class _MarketplaceCartItemTile extends StatelessWidget {
               height: 80,
               fit: BoxFit.cover,
               placeholder: (context, url) =>
-                  Container(color: palette.backgroundSecondary),
+                  Container(color: context.backgroundPrimaryColor),
               errorWidget: (context, url, error) => Container(
-                color: palette.backgroundSecondary,
-                child: const Icon(Icons.image_rounded, color: Colors.grey),
+                color: context.backgroundPrimaryColor,
+                child: Icon(
+                  Icons.image_rounded,
+                  color: context.textTertiaryColor.withValues(alpha: 0.2),
+                ),
               ),
             ),
           ),
@@ -327,7 +331,8 @@ class _MarketplaceCartItemTile extends StatelessWidget {
                   style: TextStyle(
                     fontWeight: FontWeight.w900,
                     fontSize: 14,
-                    color: palette.textPrimary,
+                    color: context.textPrimaryColor,
+                    letterSpacing: -0.2,
                   ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
@@ -336,7 +341,7 @@ class _MarketplaceCartItemTile extends StatelessWidget {
                 Text(
                   '${item.price.toStringAsFixed(0)} EGP',
                   style: TextStyle(
-                    color: palette.brandPrimary,
+                    color: context.brandPrimaryColor,
                     fontWeight: FontWeight.w900,
                     fontSize: 16,
                   ),
@@ -344,11 +349,14 @@ class _MarketplaceCartItemTile extends StatelessWidget {
               ],
             ),
           ),
-          const Gap(8),
+          const Gap(12),
           Container(
             decoration: BoxDecoration(
-              color: palette.backgroundSecondary,
+              color: context.backgroundPrimaryColor,
               borderRadius: BorderRadius.circular(14),
+              border: Border.all(
+                color: context.borderPrimaryColor.withValues(alpha: 0.05),
+              ),
             ),
             child: Row(
               children: [
@@ -363,7 +371,7 @@ class _MarketplaceCartItemTile extends StatelessWidget {
                   style: TextStyle(
                     fontWeight: FontWeight.w900,
                     fontSize: 14,
-                    color: palette.textPrimary,
+                    color: context.textPrimaryColor,
                   ),
                 ),
                 _IconButton(
@@ -381,7 +389,7 @@ class _MarketplaceCartItemTile extends StatelessWidget {
   }
 }
 
-class _IconButton extends StatelessWidget {
+final class _IconButton extends StatelessWidget {
   final IconData icon;
   final VoidCallback onPressed;
 
@@ -391,7 +399,7 @@ class _IconButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
       onPressed: onPressed,
-      icon: Icon(icon, size: 18),
+      icon: Icon(icon, size: 18, color: context.textPrimaryColor),
       padding: EdgeInsets.zero,
       constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
       splashRadius: 18,
@@ -399,14 +407,12 @@ class _IconButton extends StatelessWidget {
   }
 }
 
-class _OrderSummary extends StatelessWidget {
+final class _OrderSummary extends StatelessWidget {
   final double subtotal;
-  final MentorXThemeColorPalette palette;
   final VoidCallback onCheckout;
 
   const _OrderSummary({
     required this.subtotal,
-    required this.palette,
     required this.onCheckout,
   });
 
@@ -421,11 +427,14 @@ class _OrderSummary extends StatelessWidget {
         return Container(
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: context.backgroundSecondaryColor,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+            border: Border.all(
+              color: context.borderPrimaryColor.withValues(alpha: 0.05),
+            ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.06),
+                color: Colors.black.withValues(alpha: 0.1),
                 blurRadius: 20,
                 offset: const Offset(0, -10),
               ),
@@ -439,8 +448,8 @@ class _OrderSummary extends StatelessWidget {
                   label: 'Wallet Balance',
                   value: '${walletBalance.toStringAsFixed(2)} EGP',
                   valueColor: isBalanceSufficient
-                      ? palette.statusSuccess
-                      : palette.statusDanger,
+                      ? context.statusSuccessColor
+                      : context.statusDangerColor,
                   isBold: true,
                 ),
                 const Gap(12),
@@ -452,7 +461,7 @@ class _OrderSummary extends StatelessWidget {
                 _SummaryRow(
                   label: 'Delivery',
                   value: 'Free',
-                  valueColor: palette.statusSuccess,
+                  valueColor: context.statusSuccessColor,
                 ),
                 const Padding(
                   padding: EdgeInsets.symmetric(vertical: 16),
@@ -466,7 +475,8 @@ class _OrderSummary extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w900,
-                        color: palette.textPrimary,
+                        color: context.textPrimaryColor,
+                        letterSpacing: -0.5,
                       ),
                     ),
                     Text(
@@ -474,7 +484,8 @@ class _OrderSummary extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.w900,
-                        color: palette.brandPrimary,
+                        color: context.brandPrimaryColor,
+                        letterSpacing: -0.5,
                       ),
                     ),
                   ],
@@ -484,15 +495,15 @@ class _OrderSummary extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: palette.statusDanger.withValues(alpha: 0.05),
+                      color: context.statusDangerColor.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
                       'Insufficient balance. Top up ${deficit.toStringAsFixed(2)} EGP to place order.',
                       style: TextStyle(
-                        color: palette.statusDanger,
+                        color: context.statusDangerColor,
                         fontSize: 12,
-                        fontWeight: FontWeight.w700,
+                        fontWeight: FontWeight.w800,
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -501,7 +512,7 @@ class _OrderSummary extends StatelessWidget {
                 const Gap(24),
                 MentorXButton(
                   onPressed: isBalanceSufficient ? onCheckout : null,
-                  text: isBalanceSufficient
+                  label: isBalanceSufficient
                       ? context.t.student['checkout']!
                       : 'Insufficient Balance',
                 ),
@@ -514,7 +525,7 @@ class _OrderSummary extends StatelessWidget {
   }
 }
 
-class _SummaryRow extends StatelessWidget {
+final class _SummaryRow extends StatelessWidget {
   final String label;
   final String value;
   final Color? valueColor;
@@ -534,17 +545,17 @@ class _SummaryRow extends StatelessWidget {
       children: [
         Text(
           label,
-          style: const TextStyle(
-            color: Colors.grey,
+          style: TextStyle(
+            color: context.textTertiaryColor,
             fontSize: 14,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w700,
           ),
         ),
         Text(
           value,
           style: TextStyle(
-            color: valueColor ?? Colors.black,
-            fontWeight: isBold ? FontWeight.w900 : FontWeight.w700,
+            color: valueColor ?? context.textPrimaryColor,
+            fontWeight: isBold ? FontWeight.w900 : FontWeight.w800,
             fontSize: 14,
           ),
         ),

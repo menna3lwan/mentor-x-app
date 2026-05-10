@@ -9,108 +9,49 @@ class LinkedChildrenManagementPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = MentorXThemeColorPalette.light;
-
     return BlocProvider(
       create: (context) => ChildrenBloc(
         childrenRepository: context.read<ParentChildrenRepository>(),
       )..add(ChildrenStarted()),
-      child: Scaffold(
-        backgroundColor: palette.backgroundSecondary,
-        body: Column(
-          children: [
-            // Premium Header
-            _BuildHeader(palette: palette),
-            
-            const Expanded(
-              child: LinkedChildrenListView(),
-            ),
-          ],
-        ),
-        floatingActionButton: Container(
-          decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: palette.brandPrimary.withOpacity(0.3),
-                blurRadius: 12,
-                offset: const Offset(0, 4),
+      child: BlocBuilder<ChildrenBloc, ChildrenState>(
+        builder: (context, state) {
+          return AppDashboardScaffold(
+            title: 'Linked Children',
+            body: const LinkedChildrenListView(),
+            floatingActionButton: Container(
+              decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: context.brandPrimaryColor.withValues(alpha: 0.3),
+                    blurRadius: 12,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
               ),
-            ],
-          ),
-          child: FloatingActionButton.extended(
-            onPressed: () => const AddChildLinkRoute().go(context),
-            backgroundColor: palette.brandPrimary,
-            foregroundColor: Colors.white,
-            elevation: 0,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-            icon: const Icon(Icons.person_add_rounded),
-            label: const Text('Link New Child', style: TextStyle(fontWeight: FontWeight.w700)),
-          ),
-        ),
+              child: FloatingActionButton.extended(
+                onPressed: () => const AddChildLinkRoute().go(context),
+                backgroundColor: context.brandPrimaryColor,
+                foregroundColor: Colors.white,
+                elevation: 0,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                icon: const Icon(Icons.person_add_rounded),
+                label: const Text('Link New Child', style: TextStyle(fontWeight: FontWeight.w700)),
+              ),
+            ),
+          );
+        },
       ),
     );
   }
 }
 
-class _BuildHeader extends StatelessWidget {
-  final MentorXThemeColorPalette palette;
-  const _BuildHeader({required this.palette});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(
-        top: MediaQuery.of(context).padding.top + 10,
-        bottom: 24,
-        left: 20,
-        right: 20,
-      ),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [palette.brandPrimary, palette.brandPrimary.withOpacity(0.8)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(32)),
-        boxShadow: [
-          BoxShadow(
-            color: palette.brandPrimary.withOpacity(0.3),
-            blurRadius: 15,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          IconButton(
-            onPressed: () => Navigator.pop(context),
-            icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 20),
-          ),
-          const Expanded(
-            child: Text(
-              'Linked Children',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w800,
-                color: Colors.white,
-              ),
-            ),
-          ),
-          const SizedBox(width: 48), // Spacer
-        ],
-      ),
-    );
-  }
-}
+// Removed _BuildHeader in favor of AppDashboardScaffold
 
 class LinkedChildrenListView extends StatelessWidget {
   const LinkedChildrenListView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final palette = MentorXThemeColorPalette.light;
-
     return BlocBuilder<ChildrenBloc, ChildrenState>(
       builder: (context, state) {
         if (state.status == ChildrenStatus.loading) {
@@ -118,22 +59,12 @@ class LinkedChildrenListView extends StatelessWidget {
         }
 
         if (state.children.isEmpty) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.people_outline_rounded, size: 64, color: palette.textTertiary.withOpacity(0.2)),
-                const SizedBox(height: 16),
-                Text(
-                  'No children linked yet',
-                  style: TextStyle(
-                    color: palette.textSecondary,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
+          return AppEmptyView(
+            title: 'No Children Linked',
+            message: 'You haven\'t linked any children to your account yet.',
+            icon: Icons.people_outline_rounded,
+            onAction: () => const AddChildLinkRoute().go(context),
+            actionLabel: 'Link Child',
           );
         }
 
@@ -142,7 +73,7 @@ class LinkedChildrenListView extends StatelessWidget {
           itemCount: state.children.length,
           itemBuilder: (context, index) {
             final child = state.children[index];
-            return _ChildManagementCard(child: child, palette: palette);
+            return _ChildManagementCard(child: child);
           },
         );
       },
@@ -152,25 +83,18 @@ class LinkedChildrenListView extends StatelessWidget {
 
 class _ChildManagementCard extends StatelessWidget {
   final ParentChildEntity child;
-  final MentorXThemeColorPalette palette;
 
-  const _ChildManagementCard({required this.child, required this.palette});
+  const _ChildManagementCard({required this.child});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
+      margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.backgroundSecondaryColor,
         borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.03),
-            blurRadius: 15,
-            offset: const Offset(0, 8),
-          ),
-        ],
+        border: Border.all(color: context.textTertiaryColor.withValues(alpha: 0.1)),
       ),
       child: Row(
         children: [
@@ -178,14 +102,19 @@ class _ChildManagementCard extends StatelessWidget {
             padding: const EdgeInsets.all(2),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(color: palette.brandPrimary.withOpacity(0.2), width: 2),
+              border: Border.all(
+                  color: context.brandPrimaryColor.withValues(alpha: 0.2),
+                  width: 2),
             ),
             child: CircleAvatar(
               radius: 28,
-              backgroundColor: palette.backgroundSecondary,
-              backgroundImage: child.profileImageUrl != null ? NetworkImage(child.profileImageUrl!) : null,
-              child: child.profileImageUrl == null 
-                  ? Icon(Icons.person_rounded, color: palette.brandPrimary, size: 32)
+              backgroundColor: context.backgroundSecondaryColor,
+              backgroundImage: child.profileImageUrl != null
+                  ? NetworkImage(child.profileImageUrl!)
+                  : null,
+              child: child.profileImageUrl == null
+                  ? Icon(Icons.person_rounded,
+                      color: context.brandPrimaryColor, size: 32)
                   : null,
             ),
           ),
@@ -199,7 +128,7 @@ class _ChildManagementCard extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w800,
-                    color: palette.textPrimary,
+                    color: context.textPrimaryColor,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -207,7 +136,7 @@ class _ChildManagementCard extends StatelessWidget {
                   'Student ID: ${child.id}',
                   style: TextStyle(
                     fontSize: 12,
-                    color: palette.textTertiary,
+                    color: context.textTertiaryColor,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -216,7 +145,8 @@ class _ChildManagementCard extends StatelessWidget {
           ),
           IconButton(
             onPressed: () {},
-            icon: Icon(Icons.settings_outlined, color: palette.textTertiary, size: 20),
+            icon: Icon(Icons.settings_outlined,
+                color: context.textTertiaryColor, size: 20),
           ),
         ],
       ),

@@ -34,9 +34,8 @@ final class DioCourseRepository
         },
       );
 
-      final list = asList(asMap(response.data)['data'] ??
-          asMap(response.data)['content'] ??
-          response.data);
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final list = asList(data is Map ? data['content'] : data);
 
       return list
           .map(asMap)
@@ -72,9 +71,8 @@ final class DioCourseRepository
         },
       );
 
-      final list = asList(asMap(response.data)['data'] ??
-          asMap(response.data)['content'] ??
-          response.data);
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final list = asList(data is Map ? data['content'] : data);
 
       return list
           .map(asMap)
@@ -149,6 +147,27 @@ final class DioCourseRepository
   }
 
   @override
+  Future<List<WeekEntity>> getSessionWeeks(String sessionId) async {
+    try {
+      final response = await httpClient.get('/api/weeks/session/$sessionId');
+
+      final list = asList(asMap(response.data)['data'] ??
+          asMap(response.data)['content'] ??
+          response.data);
+
+      return list
+          .map(asMap)
+          .map(WeekModel.fromJson)
+          .toList();
+    } on HttpClientResponse catch (e) {
+      return handleHttpClientErrorResponse(
+        e,
+        defaultCode: CourseRepositoryExceptionCode.failedToLoadSessions,
+      );
+    }
+  }
+
+  @override
   Future<List<SessionItemEntity>> getSessionItems(String sessionId) async {
     try {
       final response = await httpClient.get('/api/weeks/session/$sessionId');
@@ -156,6 +175,16 @@ final class DioCourseRepository
       final list = asList(asMap(response.data)['data'] ??
           asMap(response.data)['content'] ??
           response.data);
+
+      // Try to parse as weeks first, then flatten items
+      try {
+        final weeks = list.map(asMap).map(WeekModel.fromJson).toList();
+        if (weeks.isNotEmpty && weeks.any((w) => w.items.isNotEmpty)) {
+          return weeks.expand((w) => w.items).toList();
+        }
+      } catch (_) {
+        // Fallback to direct item parsing if it's not a list of weeks
+      }
 
       return list
           .map(asMap)
@@ -172,7 +201,7 @@ final class DioCourseRepository
   @override
   Future<EnrollmentEntity?> getCourseProgress(String courseId) async {
     try {
-      final response = await httpClient.get('/api/enrollments/check/$courseId');
+      final response = await httpClient.get('/api/enrollments/course/$courseId/progress');
 
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return EnrollmentModel.fromJson(data);

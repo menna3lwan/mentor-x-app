@@ -1,11 +1,9 @@
 import 'dart:async';
-
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
-
 import '../../../../app/student_app.dart';
 import '../../../../core/core.dart';
 import 'bloc/login_bloc.dart';
@@ -77,9 +75,7 @@ final class _LoginPageWrapperState extends State<LoginPageWrapper> {
     final tenantLogoUrl = await cacheRepository.get(CacheKeys.tenantLogoUrl);
     final biometricEnabled = await cacheRepository.get('biometric_enabled');
 
-    if (!mounted) {
-      return;
-    }
+    if (!mounted) return;
 
     if (rememberedPhone != null && rememberedPhone.trim().isNotEmpty) {
       final trimmedPhone = rememberedPhone.trim();
@@ -114,20 +110,10 @@ final class _LoginPageWrapperState extends State<LoginPageWrapper> {
             otpDurationSeconds: event.otpDuration?.inSeconds,
           ).push(context);
         } else if (event is LoginDeviceLimitReachedPresentationEvent) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(event.message),
-              backgroundColor: MentorXThemeColorPalette.light.statusWarning,
-            ),
-          );
+          context.showErrorSnackBar(event.message);
           const DeviceManagementPageRoute().go(context);
         } else if (event is LoginFailurePresentationEvent) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(event.message),
-              backgroundColor: MentorXThemeColorPalette.light.statusDanger,
-            ),
-          );
+          context.showErrorSnackBar(event.message);
         }
       },
       child: BlocBuilder<LoginBloc, LoginState>(
@@ -139,7 +125,9 @@ final class _LoginPageWrapperState extends State<LoginPageWrapper> {
             passwordController: _passwordController,
             isLoading: state.isLoading,
             obscurePassword: state.obscurePassword,
-            errorMessage: state.loadingState.isError ? state.errorMessage : null,
+            errorMessage: state.loadingState.isError
+                ? state.errorMessage
+                : null,
             inputFormatters: [
               FilteringTextInputFormatter.digitsOnly,
               LengthLimitingTextInputFormatter(11),
@@ -163,12 +151,8 @@ final class _LoginPageWrapperState extends State<LoginPageWrapper> {
             tenantLogoUrl: _tenantLogoUrl,
             showBiometricLogin: _showBiometricLogin,
             onBiometricLogin: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text(
-                    'Biometric login will be available after your first successful login on this device.',
-                  ),
-                ),
+              context.showInfoSnackBar(
+                'Biometric login will be available after your first successful login on this device.',
               );
             },
           );

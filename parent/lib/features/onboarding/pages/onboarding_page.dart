@@ -36,8 +36,6 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
   @override
   Widget build(BuildContext context) {
-    final palette = MentorXThemeColorPalette.light;
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
@@ -52,7 +50,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
               height: 400,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: _slides[_currentPage].color.withOpacity(0.05),
+                color: _slides[_currentPage].color.withValues(alpha: 0.05),
               ),
             ),
           ),
@@ -74,7 +72,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                           Container(
                             padding: const EdgeInsets.all(32),
                             decoration: BoxDecoration(
-                              color: slide.color.withOpacity(0.1),
+                              color: slide.color.withValues(alpha: 0.1),
                               shape: BoxShape.circle,
                             ),
                             child: Icon(slide.icon, size: 80, color: slide.color),
@@ -85,7 +83,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                             style: TextStyle(
                               fontSize: 32,
                               fontWeight: FontWeight.w900,
-                              color: palette.textPrimary,
+                              color: context.textPrimaryColor,
                               letterSpacing: -1,
                             ),
                             textAlign: TextAlign.center,
@@ -95,7 +93,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                             slide.description,
                             style: TextStyle(
                               fontSize: 16,
-                              color: palette.textSecondary,
+                              color: context.textSecondaryColor,
                               height: 1.6,
                               fontWeight: FontWeight.w500,
                             ),
@@ -125,7 +123,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                           decoration: BoxDecoration(
                             color: index == _currentPage 
                                 ? _slides[_currentPage].color 
-                                : palette.textTertiary.withOpacity(0.2),
+                                : context.textTertiaryColor.withValues(alpha: 0.2),
                             borderRadius: BorderRadius.circular(4),
                           ),
                         );
@@ -147,7 +145,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                             child: Text(
                               'Skip',
                               style: TextStyle(
-                                color: palette.textTertiary,
+                                color: context.textTertiaryColor,
                                 fontWeight: FontWeight.w700,
                               ),
                             ),
@@ -164,7 +162,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                                 shape: BoxShape.circle,
                                 boxShadow: [
                                   BoxShadow(
-                                    color: _slides[_currentPage].color.withOpacity(0.3),
+                                    color: _slides[_currentPage].color.withValues(alpha: 0.3),
                                     blurRadius: 15,
                                     offset: const Offset(0, 5),
                                   ),

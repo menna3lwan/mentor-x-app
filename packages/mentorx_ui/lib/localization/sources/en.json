@@ -11,7 +11,9 @@
             "next": "Next",
             "getStarted": "Get Started",
             "backToLogin": "Back to Login",
-            "noResults": "No results found"
+            "noResults": "No results found",
+            "opening": "Opening: ${url}",
+            "comingSoon": "Coming soon"
         },
         "errors": {
             "somethingWentWrong": "Something went wrong",
@@ -121,7 +123,8 @@
                 "aiAssistant": "AI Assistant",
                 "assignments": "Assignments",
                 "rewards": "Rewards",
-                "marketplace": "Marketplace"
+                "marketplace": "Marketplace",
+                "analytics": "Performance Analytics"
             }
         },
         "errors": {
@@ -462,13 +465,15 @@
         "catalog": {
             "searchHint": "Search courses...",
             "allCategories": "All",
+            "allLevels": "All Levels",
             "sortBy": "Sort by",
             "sortNewest": "Newest",
             "sortPriceAsc": "Price: Low to High",
             "sortPriceDesc": "Price: High to Low",
             "sortPopular": "Most Popular",
             "noCourses": "No courses found",
-            "noCoursesDescription": "Try adjusting your search or filters."
+            "noCoursesDescription": "Try adjusting your search or filters.",
+            "coursesFound": "${count} Courses Found"
         },
         "detail": {
             "aboutCourse": "About this Course",
@@ -486,6 +491,10 @@
             "minutes": "min",
             "hours": "hours",
             "sessionFree": "Free",
+            "durationShort": "${mins}m ${secs}s",
+            "pagesCount": "${count} pages",
+            "yourProgress": "YOUR PROGRESS",
+            "completePercent": "${percent}% Complete",
             "enrolling": "Enrolling...",
             "enrollSuccess": "Successfully enrolled!",
             "enrollFailed": "Failed to enroll. Please try again."
@@ -522,6 +531,29 @@
         "aiSubtitle": "AI Physics Assistant",
         "aiWelcome": "Hello! I am the AI Physics assistant. Ask me any question!",
         "typeQuestion": "Type your question here...",
+        "analytics": {
+            "title": "Performance Analytics",
+            "gradeVsPeers": "Grade vs Peers",
+            "rank": "Rank: #${rank}",
+            "yourScore": "Your Score",
+            "classAverage": "Class Average",
+            "studentsCount": "out of ${count} students",
+            "aboveAverage": "Above Average",
+            "belowAverage": "Below Average",
+            "performanceTrend": "Performance Trend",
+            "studyPeakHours": "Study Peak Hours",
+            "badgesAndAchievements": "Badges & Achievements",
+            "streakTitle": "Engagement Streak",
+            "streakDays": "${count} Days Streak",
+            "streakEncouragement": "Keep it up! You are making steady progress",
+            "bestStreak": "Best Streak",
+            "quizSpeedMetrics": "Quiz Speed Metrics",
+            "secondsPerQuestion": "sec/question",
+            "yourAverage": "Your Avg",
+            "peerAverage": "Peer Avg",
+            "speedEncouragement": "You are 15% faster than peer average! keep up the pace.",
+            "allCourses": "All Courses"
+        },
         "assignmentDetail": "Assignment Details",
         "assignmentTitle": "Waves Assignment",
         "assignmentUnit": "Unit 3 - Session 2",
@@ -541,6 +573,29 @@
         "registerAttendance": "Register Attendance",
         "attendanceHistory": "Attendance History",
         "yourAttendanceCode": "Your Attendance Code",
+        "exitQuizTitle": "Exit Assignment?",
+        "exitQuizDesc": "Your progress will not be saved. Are you sure you want to exit?",
+        "cancel": "Cancel",
+        "exit": "Exit",
+        "yourResponse": "Your Response",
+        "writeResponse": "Write your response here...",
+        "responseHint": "Start typing...",
+        "attachments": "Attachments",
+        "noFiles": "No files attached yet",
+        "chooseCorrect": "Choose the correct answer:",
+        "questionLabel": "QUESTION",
+        "assignmentSubmitted": "Assignment submitted successfully",
+        "alreadySubmitted": "You have already submitted this assignment",
+        "assignmentNotFound": "Assignment not found",
+        "commonBack": "Back",
+        "commonNext": "Next",
+        "commonPrevious": "Previous",
+        "commonSubmit": "Submit",
+        "review": "Review Answers",
+        "quizNotFound": "Quiz not found",
+        "noQuestions": "No questions available",
+        "yourAnswer": "Your Answer",
+        "typeAnswerHere": "Type your answer here...",
         "showCodeInstruction": "Show the code to the instructor or assistant to register your attendance",
         "codeValidFor": "Code valid for 5 minutes",
         "viewAttendance": "Attendance Record",
@@ -639,7 +694,6 @@
         "schoolNameHint": "Enter school name",
         "educationAdminLabel": "Educational Administration",
         "educationAdminHint": "Enter administration",
-
         "contactInfoLabel": "Contact Info",
         "passwordAndPhotosLabel": "Password & Photos",
         "confirmAndCreateAccount": "Confirm & Create Account",
@@ -971,5 +1025,16 @@
         "spentThisMonth": "Spent This Month",
         "transactionHistory": "Transaction History",
         "pointsEarned": "Points Earned"
+    },
+    "assignments": {
+        "listTitle": "Assignments",
+        "dueAt": "Due: ${date}",
+        "noDeadline": "No deadline",
+        "submitAssignment": "Submit Assignment",
+        "viewFeedback": "View Feedback",
+        "submitted": "Submitted",
+        "notSubmitted": "Not submitted",
+        "grading": "Grading",
+        "graded": "Graded"
     }
 }

@@ -9,12 +9,11 @@ final class StatusBlockedPagePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = MentorXThemeColorPalette.light;
     final t = context.t.accountStatus;
 
     return StatusLayout(
       icon: Icons.lock_rounded,
-      iconBackground: palette.statusDanger,
+      iconBackground: context.statusDangerColor,
       title: t.blockedTitle,
       description: t.blockedDescription,
       extra: FadeInUp(
@@ -22,10 +21,10 @@ final class StatusBlockedPagePage extends StatelessWidget {
         child: Text(
           t.blockedSupportInfo,
           style: TextStyle(
-            fontSize: 14,
-            color: palette.textTertiary,
-            fontWeight: FontWeight.w600,
-            height: 1.5,
+            fontSize: 15,
+            color: context.textTertiaryColor,
+            fontWeight: FontWeight.w700,
+            height: 1.6,
           ),
           textAlign: TextAlign.center,
         ),
@@ -37,7 +36,6 @@ final class StatusBlockedPagePage extends StatelessWidget {
           child: MentorXButton(
             onPressed: () => const LoginPageRoute().go(context),
             label: context.t.ui.common.backToLogin,
-            color: palette.statusDanger,
           ),
         ),
       ],

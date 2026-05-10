@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mentorx_core/mentorx_core.dart';
+import 'package:mentorx_ui/mentorx_ui.dart';
+import 'package:animate_do/animate_do.dart';
+import 'package:gap/gap.dart';
 
 class AssignmentGradeDetailParentViewPage extends StatelessWidget {
   final QuizAttemptEntity attempt;
@@ -11,47 +14,79 @@ class AssignmentGradeDetailParentViewPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Grade Details'),
-        elevation: 0,
-      ),
+    return AppDashboardScaffold(
+      title: 'Grade Details',
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
+            FadeInDown(
+              duration: const Duration(milliseconds: 600),
+              child: AppHeroCard(
+                title: 'ASSESSMENT INFO',
+                icon: Icons.assignment_turned_in_rounded,
+                stats: [
+                  AppHeroStatItem(
+                    label: 'Score',
+                    value: '${attempt.score}/${attempt.totalMarks}',
+                    onTap: () {},
+                  ),
+                  AppHeroStatItem(
+                    label: 'Percentage',
+                    value: '${attempt.percentage.toInt()}%',
+                    onTap: () {},
+                  ),
+                  AppHeroStatItem(
+                    label: 'Status',
+                    value: attempt.status.name.toUpperCase(),
+                    onTap: () {},
+                  ),
+                ],
+              ),
+            ),
+            const Gap(32),
+            
+            FadeInLeft(
+              duration: const Duration(milliseconds: 500),
+              child: const AppSectionHeader(title: 'Additional Details'),
+            ),
+            const Gap(16),
+            
+            FadeInUp(
+              duration: const Duration(milliseconds: 500),
+              child: Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: context.backgroundSecondaryColor,
+                  borderRadius: BorderRadius.circular(24),
+                  border: Border.all(color: context.textTertiaryColor.withValues(alpha: 0.1)),
+                ),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Quiz Info',
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
                     _InfoRow(label: 'Quiz ID', value: attempt.quizId),
-                    _InfoRow(label: 'Score', value: '${attempt.score}/${attempt.totalMarks}'),
-                    _InfoRow(label: 'Percentage', value: '${attempt.percentage.toStringAsFixed(1)}%'),
-                    _InfoRow(label: 'Status', value: _getStatusLabel(attempt.status)),
-                    if (attempt.submittedAt != null)
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 16),
+                      child: Divider(),
+                    ),
+                    if (attempt.submittedAt != null) ...[
                       _InfoRow(label: 'Submitted At', value: _formatDate(attempt.submittedAt!)),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 16),
+                        child: Divider(),
+                      ),
+                    ],
+                    _InfoRow(label: 'Pass Criteria', value: '50%'),
                   ],
                 ),
               ),
             ),
+            
+            const Gap(40),
           ],
         ),
       ),
     );
-  }
-
-  String _getStatusLabel(QuizAttemptStatus status) {
-    return status.name.toUpperCase();
   }
 
   String _formatDate(DateTime date) {
@@ -67,15 +102,26 @@ class _InfoRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(label, style: Theme.of(context).textTheme.bodyMedium),
-          Text(value, style: const TextStyle(fontWeight: FontWeight.bold)),
-        ],
-      ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            color: context.textSecondaryColor,
+            fontWeight: FontWeight.w600,
+            fontSize: 14,
+          ),
+        ),
+        Text(
+          value,
+          style: TextStyle(
+            color: context.textPrimaryColor,
+            fontWeight: FontWeight.w800,
+            fontSize: 14,
+          ),
+        ),
+      ],
     );
   }
 }

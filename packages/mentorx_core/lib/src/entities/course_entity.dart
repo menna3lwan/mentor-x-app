@@ -4,7 +4,7 @@ enum CourseType { online, center, both }
 
 enum OrderingMode { free, sequential, lockSession, lockItem }
 
-class CourseEntity extends Equatable {
+base class CourseEntity extends Equatable {
   final String id;
   final String title;
   final String? description;
@@ -98,20 +98,20 @@ class CourseEntity extends Equatable {
   CourseEntity copyWith({
     String? id,
     String? title,
-    String? description,
-    String? subtitle,
-    String? imageUrl,
+    MentorXNullableValue<String?>? description,
+    MentorXNullableValue<String?>? subtitle,
+    MentorXNullableValue<String?>? imageUrl,
     double? price,
-    double? oldPrice,
+    MentorXNullableValue<double?>? oldPrice,
     bool? isFree,
     bool? isActive,
     int? orderNumber,
     CourseType? type,
     OrderingMode? orderingMode,
-    int? durationDays,
+    MentorXNullableValue<int?>? durationDays,
     int? pointsReward,
-    String? gradeId,
-    String? categoryId,
+    MentorXNullableValue<String?>? gradeId,
+    MentorXNullableValue<String?>? categoryId,
     List<String>? categoryIds,
     int? totalSessions,
     int? totalVideos,
@@ -119,26 +119,26 @@ class CourseEntity extends Equatable {
     int? enrolledCount,
     bool? featured,
     bool? pinned,
-    DateTime? createdAt,
-    DateTime? updatedAt,
+    MentorXNullableValue<DateTime?>? createdAt,
+    MentorXNullableValue<DateTime?>? updatedAt,
   }) {
     return CourseEntity(
       id: id ?? this.id,
       title: title ?? this.title,
-      description: description ?? this.description,
-      subtitle: subtitle ?? this.subtitle,
-      imageUrl: imageUrl ?? this.imageUrl,
+      description: description != null ? description.value : this.description,
+      subtitle: subtitle != null ? subtitle.value : this.subtitle,
+      imageUrl: imageUrl != null ? imageUrl.value : this.imageUrl,
       price: price ?? this.price,
-      oldPrice: oldPrice ?? this.oldPrice,
+      oldPrice: oldPrice != null ? oldPrice.value : this.oldPrice,
       isFree: isFree ?? this.isFree,
       isActive: isActive ?? this.isActive,
       orderNumber: orderNumber ?? this.orderNumber,
       type: type ?? this.type,
       orderingMode: orderingMode ?? this.orderingMode,
-      durationDays: durationDays ?? this.durationDays,
+      durationDays: durationDays != null ? durationDays.value : this.durationDays,
       pointsReward: pointsReward ?? this.pointsReward,
-      gradeId: gradeId ?? this.gradeId,
-      categoryId: categoryId ?? this.categoryId,
+      gradeId: gradeId != null ? gradeId.value : this.gradeId,
+      categoryId: categoryId != null ? categoryId.value : this.categoryId,
       categoryIds: categoryIds ?? this.categoryIds,
       totalSessions: totalSessions ?? this.totalSessions,
       totalVideos: totalVideos ?? this.totalVideos,
@@ -146,8 +146,8 @@ class CourseEntity extends Equatable {
       enrolledCount: enrolledCount ?? this.enrolledCount,
       featured: featured ?? this.featured,
       pinned: pinned ?? this.pinned,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
+      createdAt: createdAt != null ? createdAt.value : this.createdAt,
+      updatedAt: updatedAt != null ? updatedAt.value : this.updatedAt,
     );
   }
 }

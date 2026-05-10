@@ -13,6 +13,8 @@ final class ParentHomeRepositoryException
 }
 
 abstract interface class ParentHomeRepository {
+  Future<void> initialize();
+
   Future<ParentHomeSummaryEntity> getSummary(String studentId);
 
   Future<List<ParentRecentActivityEntity>> getRecentActivity(

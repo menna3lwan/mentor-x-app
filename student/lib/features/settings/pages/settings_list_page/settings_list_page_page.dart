@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -6,199 +7,198 @@ import 'package:animate_do/animate_do.dart';
 import 'package:gap/gap.dart';
 import '../../../../core/core.dart';
 
-class SettingsListPage extends StatelessWidget {
+final class SettingsListPage extends StatelessWidget {
   const SettingsListPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final t = context.t.student;
     final isAr = context.isArabic;
-    final palette = MentorXThemeColorPalette.light;
+    final t = context.t.student;
 
     return Scaffold(
-      backgroundColor: palette.backgroundSecondary,
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(70),
-        child: FadeInDown(
-          duration: const Duration(milliseconds: 500),
-          child: Container(
-            decoration: BoxDecoration(
-              color: palette.backgroundPrimary,
-              borderRadius: const BorderRadius.vertical(
-                bottom: Radius.circular(28),
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.03),
-                  blurRadius: 12,
-                  offset: const Offset(0, 4),
+      backgroundColor: context.backgroundPrimaryColor,
+      body: Stack(
+        children: [
+          const _BackgroundDecorations(),
+          CustomScrollView(
+            physics: const BouncingScrollPhysics(),
+            slivers: [
+              SliverAppBar(
+                expandedHeight: 120,
+                collapsedHeight: 80,
+                pinned: true,
+                floating: true,
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                surfaceTintColor: Colors.transparent,
+                flexibleSpace: ClipRRect(
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                    child: FlexibleSpaceBar(
+                      centerTitle: true,
+                      title: Text(
+                        t['settingsTitle'] ?? 'Settings',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w900,
+                          color: context.textPrimaryColor,
+                          letterSpacing: -0.5,
+                        ),
+                      ),
+                      background: Container(
+                        decoration: BoxDecoration(
+                          color: context.backgroundSecondaryColor.withValues(
+                            alpha: 0.45,
+                          ),
+                          border: Border(
+                            bottom: BorderSide(
+                              color: context.borderPrimaryColor.withValues(
+                                alpha: 0.1,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
-              ],
-            ),
-            child: AppBar(
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              foregroundColor: palette.textPrimary,
-              centerTitle: true,
-              title: Text(
-                t['settingsTitle'] ?? 'Settings',
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w900,
-                  letterSpacing: -0.5,
+              ),
+              SliverPadding(
+                padding: const EdgeInsets.fromLTRB(20, 24, 20, 40),
+                sliver: SliverList(
+                  delegate: SliverChildListDelegate([
+                    // ── Language Section ─────────────────────────────────────────
+                    FadeInUp(
+                      duration: const Duration(milliseconds: 500),
+                      child: _SectionTitle(
+                        title: t['language'] ?? 'Language',
+                      ),
+                    ),
+                    const Gap(12),
+                    FadeInUp(
+                      duration: const Duration(milliseconds: 500),
+                      delay: const Duration(milliseconds: 100),
+                      child: _LanguageSwitcher(isAr: isAr),
+                    ),
+                    const Gap(32),
+
+                    // ── Account Section ─────────────────────────────────────────
+                    FadeInUp(
+                      duration: const Duration(milliseconds: 500),
+                      delay: const Duration(milliseconds: 200),
+                      child: _SectionTitle(
+                        title: t['account'] ?? 'Account',
+                      ),
+                    ),
+                    const Gap(12),
+                    FadeInUp(
+                      duration: const Duration(milliseconds: 500),
+                      delay: const Duration(milliseconds: 300),
+                      child: _SettingsGroup(
+                        children: [
+                          _SettingsItem(
+                            icon: Icons.lock_person_rounded,
+                            label: t['changePasswordSetting'] ??
+                                'Change Password',
+                            color: context.brandPrimaryColor,
+                            onTap: () => context.push('/change-password'),
+                          ),
+                          _SettingsItem(
+                            icon: Icons.devices_other_rounded,
+                            label: t['deviceManagement'] ?? 'Device Management',
+                            color: context.brandSecondaryColor,
+                            onTap: () => context.push('/device-management'),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Gap(32),
+
+                    // ── Communication Section ───────────────────────────────────
+                    FadeInUp(
+                      duration: const Duration(milliseconds: 500),
+                      delay: const Duration(milliseconds: 400),
+                      child: _SectionTitle(
+                        title: t['communication'] ?? 'Communication',
+                      ),
+                    ),
+                    const Gap(12),
+                    FadeInUp(
+                      duration: const Duration(milliseconds: 500),
+                      delay: const Duration(milliseconds: 500),
+                      child: _SettingsGroup(
+                        children: [
+                          _SettingsItem(
+                            icon: Icons.notifications_active_rounded,
+                            label: t['notificationsSetting'] ?? 'Notifications',
+                            color: Colors.orange,
+                            onTap: () => context.push('/notifications'),
+                          ),
+                          _SettingsItem(
+                            icon: Icons.groups_rounded,
+                            label: t['whatsappGroups'] ?? 'WhatsApp Groups',
+                            color: const Color(0xFF25D366),
+                            onTap: () => context.push('/whatsapp-groups'),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Gap(32),
+
+                    // ── Help & Info Section ─────────────────────────────────────
+                    FadeInUp(
+                      duration: const Duration(milliseconds: 500),
+                      delay: const Duration(milliseconds: 600),
+                      child: _SectionTitle(
+                        title: t['helpAndInfo'] ?? 'Help & Info',
+                      ),
+                    ),
+                    const Gap(12),
+                    FadeInUp(
+                      duration: const Duration(milliseconds: 500),
+                      delay: const Duration(milliseconds: 700),
+                      child: _SettingsGroup(
+                        children: [
+                          _SettingsItem(
+                            icon: Icons.info_rounded,
+                            label: t['aboutSetting'] ?? 'About',
+                            color: context.textTertiaryColor,
+                            onTap: () => context.push('/about'),
+                            isLast: true,
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Gap(40),
+
+                    // ── Logout ──────────────────────────────────────────────────
+                    FadeInUp(
+                      duration: const Duration(milliseconds: 500),
+                      delay: const Duration(milliseconds: 800),
+                      child: _SettingsGroup(
+                        children: [
+                          _SettingsItem(
+                            icon: Icons.logout_rounded,
+                            label: t['logoutSetting'] ?? 'Log Out',
+                            color: context.statusDangerColor,
+                            onTap: () => _showLogoutDialog(context, t),
+                            isLast: true,
+                            isDestructive: true,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ]),
                 ),
               ),
-            ),
+            ],
           ),
-        ),
-      ),
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.fromLTRB(20, 24, 20, 40),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // ── Language Section ─────────────────────────────────────────
-            FadeInUp(
-              duration: const Duration(milliseconds: 500),
-              child: _SectionTitle(
-                title: t['language'] ?? 'Language',
-                palette: palette,
-              ),
-            ),
-            const Gap(12),
-            FadeInUp(
-              duration: const Duration(milliseconds: 500),
-              delay: const Duration(milliseconds: 100),
-              child: _LanguageSwitcher(isAr: isAr, palette: palette),
-            ),
-            const Gap(32),
-
-            // ── Account Section ─────────────────────────────────────────
-            FadeInUp(
-              duration: const Duration(milliseconds: 500),
-              delay: const Duration(milliseconds: 200),
-              child: _SectionTitle(
-                title: t['account'] ?? 'Account',
-                palette: palette,
-              ),
-            ),
-            const Gap(12),
-            FadeInUp(
-              duration: const Duration(milliseconds: 500),
-              delay: const Duration(milliseconds: 300),
-              child: _SettingsGroup(
-                palette: palette,
-                children: [
-                  _SettingsItem(
-                    icon: Icons.lock_person_rounded,
-                    label: t['changePasswordSetting'] ?? 'Change Password',
-                    color: palette.brandPrimary,
-                    onTap: () => context.push('/change-password'),
-                    palette: palette,
-                  ),
-                  _SettingsItem(
-                    icon: Icons.devices_other_rounded,
-                    label: t['deviceManagement'] ?? 'Device Management',
-                    color: palette.brandSecondary,
-                    onTap: () => context.push('/device-management'),
-                    palette: palette,
-                  ),
-                ],
-              ),
-            ),
-            const Gap(32),
-
-            // ── Communication Section ───────────────────────────────────
-            FadeInUp(
-              duration: const Duration(milliseconds: 500),
-              delay: const Duration(milliseconds: 400),
-              child: _SectionTitle(
-                title: t['communication'] ?? 'Communication',
-                palette: palette,
-              ),
-            ),
-            const Gap(12),
-            FadeInUp(
-              duration: const Duration(milliseconds: 500),
-              delay: const Duration(milliseconds: 500),
-              child: _SettingsGroup(
-                palette: palette,
-                children: [
-                  _SettingsItem(
-                    icon: Icons.notifications_active_rounded,
-                    label: t['notificationsSetting'] ?? 'Notifications',
-                    color: Colors.orange,
-                    onTap: () => context.push('/notifications'),
-                    palette: palette,
-                  ),
-                  _SettingsItem(
-                    icon: Icons.groups_rounded,
-                    label: t['whatsappGroups'] ?? 'WhatsApp Groups',
-                    color: const Color(0xFF25D366),
-                    onTap: () => context.push('/whatsapp-groups'),
-                    palette: palette,
-                  ),
-                ],
-              ),
-            ),
-            const Gap(32),
-
-            // ── Help & Info Section ─────────────────────────────────────
-            FadeInUp(
-              duration: const Duration(milliseconds: 500),
-              delay: const Duration(milliseconds: 600),
-              child: _SectionTitle(
-                title: t['helpAndInfo'] ?? 'Help & Info',
-                palette: palette,
-              ),
-            ),
-            const Gap(12),
-            FadeInUp(
-              duration: const Duration(milliseconds: 500),
-              delay: const Duration(milliseconds: 700),
-              child: _SettingsGroup(
-                palette: palette,
-                children: [
-                  _SettingsItem(
-                    icon: Icons.info_rounded,
-                    label: t['aboutSetting'] ?? 'About',
-                    color: palette.textTertiary,
-                    onTap: () => context.push('/about'),
-                    palette: palette,
-                    isLast: true,
-                  ),
-                ],
-              ),
-            ),
-            const Gap(40),
-
-            // ── Logout ──────────────────────────────────────────────────
-            FadeInUp(
-              duration: const Duration(milliseconds: 500),
-              delay: const Duration(milliseconds: 800),
-              child: _SettingsGroup(
-                palette: palette,
-                children: [
-                  _SettingsItem(
-                    icon: Icons.logout_rounded,
-                    label: t['logoutSetting'] ?? 'Log Out',
-                    color: palette.statusDanger,
-                    onTap: () => _showLogoutDialog(context, t),
-                    palette: palette,
-                    isLast: true,
-                    isDestructive: true,
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+        ],
       ),
     );
   }
 
-  void _showLogoutDialog(BuildContext context, Map<String, String> t) {
+  void _showLogoutDialog(BuildContext context, dynamic t) {
     showDialog(
       context: context,
       builder: (ctx) => ZoomIn(
@@ -207,18 +207,19 @@ class SettingsListPage extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(28),
           ),
-          backgroundColor: MentorXThemeColorPalette.light.backgroundPrimary,
+          backgroundColor: context.backgroundSecondaryColor,
           title: Text(
             t['logoutConfirmTitle'] ?? 'Log Out',
-            style: const TextStyle(
+            style: TextStyle(
               fontWeight: FontWeight.w900,
               letterSpacing: -0.5,
+              color: context.textPrimaryColor,
             ),
           ),
           content: Text(
             t['logoutConfirmDesc'] ?? 'Are you sure you want to log out?',
             style: TextStyle(
-              color: MentorXThemeColorPalette.light.textSecondary,
+              color: context.textSecondaryColor,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -228,7 +229,7 @@ class SettingsListPage extends StatelessWidget {
               child: Text(
                 t['cancel'] ?? 'Cancel',
                 style: TextStyle(
-                  color: MentorXThemeColorPalette.light.textTertiary,
+                  color: context.textTertiaryColor,
                   fontWeight: FontWeight.w800,
                 ),
               ),
@@ -242,7 +243,7 @@ class SettingsListPage extends StatelessWidget {
                   context.go('/login');
                 },
                 label: t['logoutSetting'] ?? 'Log Out',
-                color: MentorXThemeColorPalette.light.statusDanger,
+                color: context.statusDangerColor,
               ),
             ),
           ],
@@ -253,10 +254,9 @@ class SettingsListPage extends StatelessWidget {
   }
 }
 
-class _SectionTitle extends StatelessWidget {
+final class _SectionTitle extends StatelessWidget {
   final String title;
-  final MentorXThemeColorPalette palette;
-  const _SectionTitle({required this.title, required this.palette});
+  const _SectionTitle({required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -270,8 +270,8 @@ class _SectionTitle extends StatelessWidget {
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [
-                palette.brandPrimary,
-                palette.brandPrimary.withValues(alpha: 0.7),
+                context.brandPrimaryColor,
+                context.brandPrimaryColor.withValues(alpha: 0.7),
               ],
             ),
             borderRadius: BorderRadius.circular(3),
@@ -283,7 +283,7 @@ class _SectionTitle extends StatelessWidget {
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w900,
-            color: palette.textPrimary,
+            color: context.textPrimaryColor,
             letterSpacing: -0.3,
           ),
         ),
@@ -292,65 +292,63 @@ class _SectionTitle extends StatelessWidget {
   }
 }
 
-class _LanguageSwitcher extends StatelessWidget {
-  const _LanguageSwitcher({required this.isAr, required this.palette});
+final class _LanguageSwitcher extends StatelessWidget {
+  const _LanguageSwitcher({required this.isAr});
   final bool isAr;
-  final MentorXThemeColorPalette palette;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        color: palette.backgroundPrimary,
+        color: context.backgroundSecondaryColor.withValues(alpha: 0.45),
         borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
-            blurRadius: 10,
-          ),
-        ],
+        border: Border.all(
+          color: context.borderPrimaryColor.withValues(alpha: 0.1),
+        ),
       ),
-      child: Row(
-        children: [
-          Expanded(
-            child: _LanguageOption(
-              label: 'العربية',
-              isSelected: isAr,
-              onTap: () {
-                if (!isAr) LocaleSettings.setLocaleRaw('ar');
-              },
-              palette: palette,
-            ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(24),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Row(
+            children: [
+              Expanded(
+                child: _LanguageOption(
+                  label: 'العربية',
+                  isSelected: isAr,
+                  onTap: () {
+                    if (!isAr) LocaleSettings.setLocaleRaw('ar');
+                  },
+                ),
+              ),
+              const Gap(10),
+              Expanded(
+                child: _LanguageOption(
+                  label: 'English',
+                  isSelected: !isAr,
+                  onTap: () {
+                    if (isAr) LocaleSettings.setLocaleRaw('en');
+                  },
+                ),
+              ),
+            ],
           ),
-          const Gap(10),
-          Expanded(
-            child: _LanguageOption(
-              label: 'English',
-              isSelected: !isAr,
-              onTap: () {
-                if (isAr) LocaleSettings.setLocaleRaw('en');
-              },
-              palette: palette,
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
 }
 
-class _LanguageOption extends StatelessWidget {
+final class _LanguageOption extends StatelessWidget {
   const _LanguageOption({
     required this.label,
     required this.isSelected,
     required this.onTap,
-    required this.palette,
   });
   final String label;
   final bool isSelected;
   final VoidCallback onTap;
-  final MentorXThemeColorPalette palette;
 
   @override
   Widget build(BuildContext context) {
@@ -364,8 +362,8 @@ class _LanguageOption extends StatelessWidget {
           gradient: isSelected
               ? LinearGradient(
                   colors: [
-                    palette.brandPrimary,
-                    palette.brandPrimary.withValues(alpha: 0.8),
+                    context.brandPrimaryColor,
+                    context.brandPrimaryColor.withValues(alpha: 0.8),
                   ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
@@ -376,7 +374,7 @@ class _LanguageOption extends StatelessWidget {
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                    color: palette.brandPrimary.withValues(alpha: 0.25),
+                    color: context.brandPrimaryColor.withValues(alpha: 0.25),
                     blurRadius: 12,
                     offset: const Offset(0, 6),
                   ),
@@ -389,7 +387,9 @@ class _LanguageOption extends StatelessWidget {
             style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.w900,
-              color: isSelected ? palette.textForeground : palette.textTertiary,
+              color: isSelected
+                  ? context.textForegroundColor
+                  : context.textTertiaryColor,
             ),
           ),
         ),
@@ -398,38 +398,39 @@ class _LanguageOption extends StatelessWidget {
   }
 }
 
-class _SettingsGroup extends StatelessWidget {
+final class _SettingsGroup extends StatelessWidget {
   final List<_SettingsItem> children;
-  final MentorXThemeColorPalette palette;
-  const _SettingsGroup({required this.children, required this.palette});
+  const _SettingsGroup({required this.children});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: palette.backgroundPrimary,
+        color: context.backgroundSecondaryColor.withValues(alpha: 0.45),
         borderRadius: BorderRadius.circular(28),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
-            blurRadius: 12,
-          ),
-        ],
+        border: Border.all(
+          color: context.borderPrimaryColor.withValues(alpha: 0.1),
+        ),
       ),
-      child: Column(
-        children: children,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(28),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Column(
+            children: children,
+          ),
+        ),
       ),
     );
   }
 }
 
-class _SettingsItem extends StatelessWidget {
+final class _SettingsItem extends StatelessWidget {
   const _SettingsItem({
     required this.icon,
     required this.label,
     required this.color,
     required this.onTap,
-    required this.palette,
     this.isLast = false,
     this.isDestructive = false,
   });
@@ -437,60 +438,115 @@ class _SettingsItem extends StatelessWidget {
   final String label;
   final Color color;
   final VoidCallback onTap;
-  final MentorXThemeColorPalette palette;
   final bool isLast;
   final bool isDestructive;
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(28),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
-          decoration: BoxDecoration(
-            border: isLast
-                ? null
-                : Border(
-                    bottom: BorderSide(
-                      color: palette.backgroundSecondary,
-                      width: 1.5,
-                    ),
-                  ),
-          ),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: color.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Icon(icon, size: 22, color: color),
-              ),
-              const Gap(16),
-              Expanded(
-                child: Text(
-                  label,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w800,
-                    color: isDestructive
-                        ? palette.statusDanger
-                        : palette.textPrimary,
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+        decoration: BoxDecoration(
+          color: Colors.transparent,
+          border: isLast
+              ? null
+              : Border(
+                  bottom: BorderSide(
+                    color: context.borderPrimaryColor.withValues(alpha: 0.05),
+                    width: 1,
                   ),
                 ),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(16),
               ),
-              Icon(
-                Icons.chevron_right_rounded,
-                size: 20,
-                color: palette.textTertiary.withOpacity(0.5),
+              child: Icon(icon, size: 22, color: color),
+            ),
+            const Gap(16),
+            Expanded(
+              child: Text(
+                label,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w800,
+                  color: isDestructive
+                      ? context.statusDangerColor
+                      : context.textPrimaryColor,
+                ),
               ),
-            ],
+            ),
+            Icon(
+              Icons.chevron_right_rounded,
+              size: 20,
+              color: context.textTertiaryColor.withValues(alpha: 0.5),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _BackgroundDecorations extends StatelessWidget {
+  const _BackgroundDecorations();
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Positioned(
+          top: -100,
+          right: -50,
+          child: _BlurredBlob(
+            color: context.brandPrimaryColor.withValues(alpha: 0.12),
+            size: 350,
           ),
         ),
+        Positioned(
+          top: 300,
+          left: -150,
+          child: _BlurredBlob(
+            color: context.brandSecondaryColor.withValues(alpha: 0.08),
+            size: 400,
+          ),
+        ),
+        Positioned(
+          bottom: -50,
+          right: -100,
+          child: _BlurredBlob(
+            color: context.brandPrimaryColor.withValues(alpha: 0.1),
+            size: 300,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _BlurredBlob extends StatelessWidget {
+  final Color color;
+  final double size;
+
+  const _BlurredBlob({required this.color, required this.size});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        color: color,
+        shape: BoxShape.circle,
+      ),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 70, sigmaY: 70),
+        child: const SizedBox.expand(),
       ),
     );
   }

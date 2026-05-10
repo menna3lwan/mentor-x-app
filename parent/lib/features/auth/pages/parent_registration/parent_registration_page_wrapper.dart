@@ -105,8 +105,6 @@ class __ParentRegistrationPageContentState
 
   @override
   Widget build(BuildContext context) {
-    final palette = MentorXThemeColorPalette.light;
-
     return BlocPresentationListener<
       ParentRegistrationBloc,
       ParentRegistrationPresentationEvent
@@ -141,13 +139,12 @@ class __ParentRegistrationPageContentState
                 }
                 bloc.add(const ParentRegistrationBackStepRequested());
               },
-              icon: Icon(Icons.arrow_back_ios_new_rounded, color: palette.textPrimary, size: 20),
+              icon: Icon(Icons.arrow_back_ios_new_rounded, color: context.textPrimaryColor, size: 20),
             ),
             title: _titleForStep(state.currentStep),
             currentStep: state.currentStep,
             body: _StepBody(
               state: state,
-              palette: palette,
               lookupController: _lookupController,
               firstNameController: _firstNameController,
               lastNameController: _lastNameController,
@@ -189,7 +186,7 @@ class __ParentRegistrationPageContentState
               child: Text(
                 'Already have an account? Login',
                 style: TextStyle(
-                  color: palette.brandPrimary,
+                  color: context.brandPrimaryColor,
                   fontWeight: FontWeight.w800,
                   fontSize: 14,
                 ),
@@ -229,7 +226,6 @@ class __ParentRegistrationPageContentState
 
 final class _StepBody extends StatelessWidget {
   final ParentRegistrationState state;
-  final MentorXThemeColorPalette palette;
   final TextEditingController lookupController;
   final TextEditingController firstNameController;
   final TextEditingController lastNameController;
@@ -240,7 +236,6 @@ final class _StepBody extends StatelessWidget {
 
   const _StepBody({
     required this.state,
-    required this.palette,
     required this.lookupController,
     required this.firstNameController,
     required this.lastNameController,
@@ -307,7 +302,6 @@ final class _StepBody extends StatelessWidget {
                 child: _StudentPreviewCard(
                   student: state.foundStudent!,
                   isConfirmed: state.isStudentConfirmed,
-                  palette: palette,
                 ),
               ),
           ],
@@ -345,7 +339,7 @@ final class _StepBody extends StatelessWidget {
               keyboardType: TextInputType.emailAddress,
             ),
             const Gap(20),
-            _RelationshipDropdown(state: state, bloc: bloc, palette: palette),
+            _RelationshipDropdown(state: state, bloc: bloc),
           ],
         );
       case 2:
@@ -356,7 +350,7 @@ final class _StepBody extends StatelessWidget {
               'Set a secure password to protect your account access.',
               style: TextStyle(
                 fontSize: 14,
-                color: palette.textSecondary,
+                color: context.textSecondaryColor,
                 height: 1.5,
               ),
               textAlign: TextAlign.center,
@@ -387,12 +381,10 @@ class _RelationshipDropdown extends StatelessWidget {
   const _RelationshipDropdown({
     required this.state,
     required this.bloc,
-    required this.palette,
   });
 
   final ParentRegistrationState state;
   final ParentRegistrationBloc bloc;
-  final MentorXThemeColorPalette palette;
 
   @override
   Widget build(BuildContext context) {
@@ -401,7 +393,7 @@ class _RelationshipDropdown extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: palette.borderPrimary.withValues(alpha: 0.5)),
+        border: Border.all(color: context.borderPrimaryColor.withValues(alpha: 0.5)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.02),
@@ -414,19 +406,19 @@ class _RelationshipDropdown extends StatelessWidget {
         child: DropdownButtonFormField<String>(
           value: state.relationship.isEmpty ? null : state.relationship,
           style: TextStyle(
-            color: palette.textPrimary,
+            color: context.textPrimaryColor,
             fontSize: 15,
             fontWeight: FontWeight.w600,
           ),
           decoration: InputDecoration(
             labelText: 'Relationship to Child',
             labelStyle: TextStyle(
-              color: palette.textTertiary,
+              color: context.textTertiaryColor,
               fontSize: 14,
               fontWeight: FontWeight.w500,
             ),
             border: InputBorder.none,
-            prefixIcon: Icon(Icons.people_alt_rounded, color: palette.brandPrimary, size: 20),
+            prefixIcon: Icon(Icons.people_alt_rounded, color: context.brandPrimaryColor, size: 20),
           ),
           items: const [
             DropdownMenuItem(value: 'father', child: Text('Father')),
@@ -453,7 +445,6 @@ class _TabButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = MentorXThemeColorPalette.light;
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
@@ -461,11 +452,11 @@ class _TabButton extends StatelessWidget {
         duration: const Duration(milliseconds: 300),
         padding: const EdgeInsets.symmetric(vertical: 14),
         decoration: BoxDecoration(
-          color: isActive ? palette.brandPrimary : Colors.transparent,
+          color: isActive ? context.brandPrimaryColor : Colors.transparent,
           borderRadius: BorderRadius.circular(16),
           boxShadow: isActive ? [
             BoxShadow(
-              color: palette.brandPrimary.withValues(alpha: 0.2),
+              color: context.brandPrimaryColor.withValues(alpha: 0.2),
               blurRadius: 8,
               offset: const Offset(0, 4),
             ),
@@ -476,14 +467,14 @@ class _TabButton extends StatelessWidget {
           children: [
             Icon(
               icon, 
-              color: isActive ? Colors.white : palette.textTertiary, 
+              color: isActive ? Colors.white : context.textTertiaryColor, 
               size: 18,
             ),
             const Gap(10),
             Text(
               label,
               style: TextStyle(
-                color: isActive ? Colors.white : palette.textTertiary,
+                color: isActive ? Colors.white : context.textTertiaryColor,
                 fontWeight: FontWeight.w800,
                 fontSize: 14,
                 letterSpacing: 0.2,
@@ -496,12 +487,11 @@ class _TabButton extends StatelessWidget {
   }
 }
 
-final class _StudentPreviewCard extends StatelessWidget {
+class _StudentPreviewCard extends StatelessWidget {
   final ParentStudentLookupEntity student;
   final bool isConfirmed;
-  final MentorXThemeColorPalette palette;
 
-  const _StudentPreviewCard({required this.student, required this.isConfirmed, required this.palette});
+  const _StudentPreviewCard({required this.student, required this.isConfirmed});
 
   @override
   Widget build(BuildContext context) {
@@ -527,10 +517,10 @@ final class _StudentPreviewCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: palette.brandPrimary.withValues(alpha: 0.1),
+                  color: context.brandPrimaryColor.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(Icons.person_rounded, color: palette.brandPrimary, size: 28),
+                child: Icon(Icons.person_rounded, color: context.brandPrimaryColor, size: 28),
               ),
               const Gap(16),
               Expanded(
@@ -542,7 +532,7 @@ final class _StudentPreviewCard extends StatelessWidget {
                       style: TextStyle(
                         fontWeight: FontWeight.w900, 
                         fontSize: 18, 
-                        color: palette.textPrimary,
+                        color: context.textPrimaryColor,
                         letterSpacing: -0.5,
                       ),
                     ),
@@ -551,7 +541,7 @@ final class _StudentPreviewCard extends StatelessWidget {
                       '${student.gradeName} • ${student.centerName}',
                       style: TextStyle(
                         fontSize: 13, 
-                        color: palette.textSecondary,
+                        color: context.textSecondaryColor,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -566,20 +556,20 @@ final class _StudentPreviewCard extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: BoxDecoration(
               color: isConfirmed 
-                  ? palette.statusSuccess.withValues(alpha: 0.1) 
-                  : palette.statusWarning.withValues(alpha: 0.1),
+                  ? context.statusSuccessColor.withValues(alpha: 0.1) 
+                  : context.statusWarningColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
                 color: isConfirmed 
-                    ? palette.statusSuccess.withValues(alpha: 0.2) 
-                    : palette.statusWarning.withValues(alpha: 0.2),
+                    ? context.statusSuccessColor.withValues(alpha: 0.2) 
+                    : context.statusWarningColor.withValues(alpha: 0.2),
               ),
             ),
             child: Row(
               children: [
                 Icon(
                   isConfirmed ? Icons.check_circle_rounded : Icons.info_outline_rounded,
-                  color: isConfirmed ? palette.statusSuccess : palette.statusWarning,
+                  color: isConfirmed ? context.statusSuccessColor : context.statusWarningColor,
                   size: 20,
                 ),
                 const Gap(12),
@@ -587,7 +577,7 @@ final class _StudentPreviewCard extends StatelessWidget {
                   child: Text(
                     isConfirmed ? 'Child confirmed successfully' : 'Confirm if this is your child',
                     style: TextStyle(
-                      color: isConfirmed ? palette.statusSuccess : palette.statusWarning,
+                      color: isConfirmed ? context.statusSuccessColor : context.statusWarningColor,
                       fontWeight: FontWeight.w800,
                       fontSize: 13,
                     ),

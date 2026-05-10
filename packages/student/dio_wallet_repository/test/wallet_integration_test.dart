@@ -19,7 +19,7 @@ void main() {
       baseUrl: IntegrationConfig.baseUrl,
       cacheRepository: cacheRepository,
     );
-    httpClient.setDefaultHeader('X-Device-Id', 'student-app');
+    httpClient.setDefaultHeader(NetworkConstants.deviceIdHeader, 'student-app');
     repository = DioWalletRepository(httpClient: httpClient);
   });
 

@@ -10,24 +10,23 @@ final class StatusRejectedPagePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = MentorXThemeColorPalette.light;
     final t = context.t.accountStatus;
 
     return StatusLayout(
       icon: Icons.close_rounded,
-      iconBackground: palette.statusDanger,
+      iconBackground: context.statusDangerColor,
       title: t.rejectedTitle,
       description: t.rejectedDescription,
       extra: FadeInUp(
         duration: const Duration(milliseconds: 600),
         child: Container(
           width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 24),
+          padding: const EdgeInsets.all(28),
           decoration: BoxDecoration(
-            color: palette.statusDanger.withValues(alpha: 0.05),
-            borderRadius: BorderRadius.circular(28),
+            color: context.statusDangerColor.withValues(alpha: 0.05),
+            borderRadius: BorderRadius.circular(32),
             border: Border.all(
-              color: palette.statusDanger.withValues(alpha: 0.1),
+              color: context.statusDangerColor.withValues(alpha: 0.1),
             ),
           ),
           child: Column(
@@ -35,19 +34,19 @@ final class StatusRejectedPagePage extends StatelessWidget {
               Text(
                 'REJECTION REASON',
                 style: TextStyle(
-                  fontSize: 11,
+                  fontSize: 12,
                   fontWeight: FontWeight.w900,
-                  color: palette.statusDanger.withValues(alpha: 0.6),
-                  letterSpacing: 1.2,
+                  color: context.statusDangerColor.withValues(alpha: 0.6),
+                  letterSpacing: 1.5,
                 ),
               ),
-              const Gap(12),
+              const Gap(16),
               Text(
                 t.rejectedReason,
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w800,
-                  color: palette.statusDanger,
+                  color: context.statusDangerColor,
                   height: 1.6,
                 ),
                 textAlign: TextAlign.center,
@@ -63,7 +62,6 @@ final class StatusRejectedPagePage extends StatelessWidget {
           child: MentorXButton(
             onPressed: () => const LoginPageRoute().go(context),
             label: context.t.ui.common.backToLogin,
-            color: palette.statusDanger,
           ),
         ),
       ],

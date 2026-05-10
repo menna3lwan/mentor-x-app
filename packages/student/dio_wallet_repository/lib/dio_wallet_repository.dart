@@ -38,19 +38,18 @@ final class DioWalletRepository
     MentorXPaginationInfo? paginationInfo,
   }) async {
     try {
+      final queryParams = {
+        if (type != null) 'type': type,
+        if (paginationInfo != null) ...paginationInfo.toJson(),
+      };
+
       final response = await httpClient.get(
         '/api/payment/wallet/transactions',
-        queryParameters: {
-          if (type != null) 'type': type,
-          if (paginationInfo != null) ...paginationInfo.toJson(),
-        },
+        queryParameters: queryParams,
       );
 
-      final list = asList(
-        asMap(response.data)['data'] ??
-            asMap(response.data)['content'] ??
-            response.data,
-      );
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final list = asList(data is Map ? data['content'] : data);
 
       return list
           .map((e) => WalletTransactionModel.fromJson(asMap(e)))
@@ -113,7 +112,7 @@ final class DioWalletRepository
   Future<Map<String, dynamic>> redeemCode(String code) async {
     try {
       final response = await httpClient.post(
-        '/api/v1/access-codes/redeem',
+        '/api/access-codes/redeem',
         data: {'code': code},
       );
       return asMap(response.data)['data'] ?? asMap(response.data);
@@ -131,17 +130,14 @@ final class DioWalletRepository
   }) async {
     try {
       final response = await httpClient.get(
-        '/api/v1/access-codes/my-codes',
+        '/api/access-codes/my-codes',
         queryParameters: {
           if (paginationInfo != null) ...paginationInfo.toJson(),
         },
       );
 
-      final list = asList(
-        asMap(response.data)['data'] ??
-            asMap(response.data)['content'] ??
-            response.data,
-      );
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final list = asList(data is Map ? data['content'] : data);
 
       return list.map((e) => asMap(e)).toList();
     } on HttpClientResponse catch (e) {
@@ -247,11 +243,10 @@ final class DioWalletRepository
           if (paginationInfo != null) ...paginationInfo.toJson(),
         },
       );
-      final data = asList(asMap(response.data)['data'] ??
-          asMap(response.data)['content'] ??
-          response.data);
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final list = asList(data is Map ? data['content'] : data);
 
-      return data.map((e) => PaymentOrderModel.fromJson(asMap(e))).toList();
+      return list.map((e) => PaymentOrderModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
@@ -303,13 +298,24 @@ final class DioWalletRepository
     required PaymentMethod method,
   }) async {
     try {
-      final response = await httpClient.post(
-        '/api/payment/wallet/deposit',
-        data: {
-          'amount': amount,
-          'paymentMethod': method.name.toUpperCase(),
-        },
-      );
+      final payload = {
+        'amount': amount,
+        'paymentMethod': method.name.toUpperCase(),
+      };
+
+      HttpClientResponse response;
+      try {
+        response = await httpClient.post(
+          '/api/payment/wallet/deposit',
+          data: payload,
+        );
+      } on HttpClientResponse catch (e) {
+        if (e.statusCode != 404) rethrow;
+        response = await httpClient.post(
+          '/api/wallet/top-up',
+          data: payload,
+        );
+      }
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return PaymentModel.fromJson(data);
     } on HttpClientResponse catch (e) {

@@ -69,7 +69,7 @@ void main() {
         };
 
         when(() => httpClient.post(
-          '/api/v1/access-codes/redeem',
+          '/api/access-codes/redeem',
           data: any(named: 'data'),
         )).thenAnswer((_) async => HttpClientResponse(
           data: mockData,

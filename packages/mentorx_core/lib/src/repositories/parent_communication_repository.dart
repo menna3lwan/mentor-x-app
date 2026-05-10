@@ -15,6 +15,7 @@ final class ParentCommunicationRepositoryException
 // ——— Repository ———
 
 abstract interface class ParentCommunicationRepository {
+  Future<void> initialize();
   Future<List<NotificationEntity>> getNotifications(String childId);
   Future<List<AnnouncementEntity>> getAnnouncements(String childId);
   Future<List<WhatsAppGroupEntity>> getWhatsAppGroups(String childId);

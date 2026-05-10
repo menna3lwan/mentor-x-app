@@ -24,7 +24,13 @@ final class DioHttpClient implements HttpClient {
   }) : _dio = Dio(BaseOptions(baseUrl: baseUrl)),
        _cacheRepository = cacheRepository {
     _registerInterceptors(baseUrl);
-    _loadCachedToken();
+  }
+
+  static final MentorXLogger _logger = MentorXLogger('DioHttpClient');
+
+  @override
+  Future<void> initialize() async {
+    await _loadCachedToken();
   }
 
   void _registerInterceptors(String baseUrl) {
@@ -37,10 +43,12 @@ final class DioHttpClient implements HttpClient {
         dio: _dio,
         cacheRepository: _cacheRepository,
         baseUrl: baseUrl,
-        onTokensUpdated: (token, refreshToken) =>
-            setAccessToken(token).then((_) {
-              if (refreshToken != null) setRefreshToken(refreshToken);
-            }),
+        onTokensUpdated: (token, refreshToken) {
+          _logger.info('Tokens updated via RefreshTokenInterceptor');
+          return setAccessToken(token).then((_) {
+            if (refreshToken != null) return setRefreshToken(refreshToken);
+          });
+        },
       ),
     );
   }
@@ -72,7 +80,7 @@ final class DioHttpClient implements HttpClient {
     final cachedDeviceId = await _cacheRepository.get(CacheKeys.deviceId);
 
     if (cachedDeviceId != null && cachedDeviceId.isNotEmpty) {
-      setDefaultHeader('X-Device-Id', cachedDeviceId);
+      setDefaultHeader(NetworkConstants.deviceIdHeader, cachedDeviceId);
     }
 
     if (cachedToken != null && cachedToken.isNotEmpty) {
@@ -90,7 +98,7 @@ final class DioHttpClient implements HttpClient {
   }
 
   /// Processes response and caches token if present
-  Future<void> _processResponse(dynamic responseData) async {
+  Future<void> _processResponse(dynamic responseData, String path) async {
     if (responseData is! Map) {
       return;
     }
@@ -123,22 +131,35 @@ final class DioHttpClient implements HttpClient {
     );
 
     if (deviceId != null && deviceId.isNotEmpty) {
-      setDefaultHeader('X-Device-Id', deviceId);
+      setDefaultHeader(NetworkConstants.deviceIdHeader, deviceId);
       _cacheRepository.put(CacheKeys.deviceId, deviceId).ignore();
     }
 
+    // Only update tokens if they are valid JWTs.
+    // We are also more selective: we only update if we are on an auth endpoint
+    // OR if the response contains both a token and user data (typical for login/refresh).
+    final bool isAuthPath = path.contains('/auth/') || path.contains('/login') || path.contains('/register');
+    final bool hasUserData = data.containsKey('user') || root.containsKey('user');
+
     if (accessToken != null && _isJwtToken(accessToken)) {
       if (_isJwtTokenExpired(accessToken)) {
+        _logger.warning('Found expired token in response from $path, clearing tokens');
         clearTokens();
         return;
       }
-      setAccessToken(accessToken);
-      if (refreshToken != null) setRefreshToken(refreshToken);
-      return;
-    }
-
-    if (refreshToken != null) {
-      _cacheRepository.put(CacheKeys.refreshToken, refreshToken).ignore();
+      
+      if (isAuthPath || hasUserData) {
+        _logger.info('Updating access token from response: $path (isAuthPath: $isAuthPath, hasUserData: $hasUserData)');
+        await setAccessToken(accessToken);
+        if (refreshToken != null) await setRefreshToken(refreshToken);
+      } else {
+        _logger.debug('Token found in response from $path but not updating (not auth path and no user data)');
+      }
+    } else if (refreshToken != null && isAuthPath) {
+      _logger.info('Updating refresh token from response: $path');
+      await setRefreshToken(refreshToken);
+    } else {
+      _logger.debug('No valid JWT access token found in response from $path');
     }
   }
 
@@ -348,11 +369,17 @@ final class DioHttpClient implements HttpClient {
 
   @override
   Future<void> setAccessToken(String token) async {
+    _logger.debug('Setting new access token (length: ${token.length})');
     _accessToken = token;
     _userId = _extractUserIdFromJwt(token);
-    _dio.options.headers['Authorization'] = 'Bearer $token';
-    _defaultHeaders['Authorization'] = 'Bearer $token';
+
+    // We no longer set 'Authorization' in _defaultHeaders or _dio.options.headers.
+    // Instead, we rely on the HeaderInterceptor to inject it into every request
+    // made via the main _dio instance. This ensures a single source of truth.
+    // For custom baseUrl requests, we inject it manually in the request methods.
+
     await _cacheRepository.put(CacheKeys.accessToken, token);
+    _logger.info('Access token updated in memory and cache');
   }
 
   @override
@@ -363,13 +390,18 @@ final class DioHttpClient implements HttpClient {
 
   @override
   Future<void> clearTokens() async {
+    _logger.info('Clearing all authentication tokens');
     _accessToken = null;
     _refreshToken = null;
     _userId = null;
-    _dio.options.headers.remove('Authorization');
+    
+    // Clear any potentially lingering Authorization headers
     _defaultHeaders.remove('Authorization');
+    _dio.options.headers.remove('Authorization');
+    
     await _cacheRepository.remove(CacheKeys.accessToken);
     await _cacheRepository.remove(CacheKeys.refreshToken);
+    _logger.debug('Tokens cleared from memory and cache');
   }
 
 
@@ -392,12 +424,39 @@ final class DioHttpClient implements HttpClient {
       _accessToken = cachedToken;
       _refreshToken = cachedRefreshToken;
       _userId = _extractUserIdFromJwt(cachedToken);
-      _dio.options.headers['Authorization'] = 'Bearer $cachedToken';
-      _defaultHeaders['Authorization'] = 'Bearer $cachedToken';
       
       return true;
     }
     return false;
+  }
+
+  /// Returns the core headers required for every request:
+  /// Authorization, Device ID, and Accept-Language.
+  Map<String, String> _getCoreHeaders() {
+    final headers = <String, String>{
+      'Accept-Language': _languageCode,
+    };
+
+    if (_accessToken != null && _accessToken!.isNotEmpty) {
+      headers['Authorization'] = 'Bearer $_accessToken';
+    }
+
+    final deviceId = _defaultHeaders[NetworkConstants.deviceIdHeader];
+    if (deviceId != null && deviceId.isNotEmpty) {
+      headers[NetworkConstants.deviceIdHeader] = deviceId;
+    }
+
+    return headers;
+  }
+
+  /// Merges default headers with core headers and request-specific headers.
+  Map<String, String> _buildMergedHeaders(Map<String, String>? requestHeaders) {
+    final merged = Map<String, String>.from(_defaultHeaders);
+    merged.addAll(_getCoreHeaders());
+    if (requestHeaders != null) {
+      merged.addAll(requestHeaders);
+    }
+    return merged;
   }
 
   /// Creates a new Dio instance with custom base URL and same configuration
@@ -409,16 +468,6 @@ final class DioHttpClient implements HttpClient {
     return customDio;
   }
 
-  /// Merges default headers with request-specific headers
-  /// Request-specific headers take precedence over default headers
-  Map<String, String> _mergeHeaders(Map<String, String>? requestHeaders) {
-    final mergedHeaders = Map<String, String>.from(_defaultHeaders);
-    if (requestHeaders != null) {
-      mergedHeaders.addAll(requestHeaders);
-    }
-    return mergedHeaders;
-  }
-
   @override
   Future<HttpClientResponse> get(
     String path, {
@@ -427,18 +476,20 @@ final class DioHttpClient implements HttpClient {
     String? baseUrl,
   }) async {
     try {
+      final mergedHeaders = _buildMergedHeaders(headers);
+
       final Dio dioInstance = baseUrl != null
-          ? _createDioInstanceWithBaseUrl(baseUrl, headers)
+          ? _createDioInstanceWithBaseUrl(baseUrl, mergedHeaders)
           : _dio;
 
       final response = await dioInstance.get(
         _resolvePath(path),
         queryParameters: queryParameters,
-        options: Options(headers: _mergeHeaders(headers)),
+        options: Options(headers: mergedHeaders),
       );
 
       // Process response for token caching
-      await _processResponse(response.data);
+      await _processResponse(response.data, path);
 
       return _createResponse(response);
     } on DioException catch (e) {
@@ -461,8 +512,10 @@ final class DioHttpClient implements HttpClient {
           ? FormData.fromMap(data.map((k, v) => MapEntry(k, v ?? '')))
           : data;
 
+      final mergedHeaders = mergeHeaders ? _buildMergedHeaders(headers) : (headers ?? {});
+
       final Dio dioInstance = baseUrl != null
-          ? _createDioInstanceWithBaseUrl(baseUrl, headers)
+          ? _createDioInstanceWithBaseUrl(baseUrl, mergedHeaders)
           : _dio;
 
       final response = await dioInstance.post(
@@ -470,12 +523,12 @@ final class DioHttpClient implements HttpClient {
         data: requestData,
         queryParameters: queryParameters,
         options: Options(
-          headers: mergeHeaders ? _mergeHeaders(headers) : headers,
+          headers: mergedHeaders,
         ),
       );
 
       // Process response for token caching
-      await _processResponse(response.data);
+      await _processResponse(response.data, path);
 
       return _createResponse(response);
     } on DioException catch (e) {
@@ -496,15 +549,17 @@ final class DioHttpClient implements HttpClient {
           ? FormData.fromMap(data.map((k, v) => MapEntry(k, v ?? '')))
           : data;
 
+      final mergedHeaders = _buildMergedHeaders(headers);
+
       final response = await _dio.put(
         _resolvePath(path),
         data: requestData,
         queryParameters: queryParameters,
-        options: Options(headers: _mergeHeaders(headers)),
+        options: Options(headers: mergedHeaders),
       );
 
       // Process response for token caching
-      await _processResponse(response.data);
+      await _processResponse(response.data, path);
 
       return _createResponse(response);
     } on DioException catch (e) {
@@ -525,15 +580,17 @@ final class DioHttpClient implements HttpClient {
           ? FormData.fromMap(data.map((k, v) => MapEntry(k, v ?? '')))
           : data;
 
+      final mergedHeaders = _buildMergedHeaders(headers);
+
       final response = await _dio.delete(
         _resolvePath(path),
         data: requestData,
         queryParameters: queryParameters,
-        options: Options(headers: _mergeHeaders(headers)),
+        options: Options(headers: mergedHeaders),
       );
 
       // Process response for token caching
-      await _processResponse(response.data);
+      await _processResponse(response.data, path);
 
       return _createResponse(response);
     } on DioException catch (e) {
@@ -554,15 +611,17 @@ final class DioHttpClient implements HttpClient {
           ? FormData.fromMap(data.map((k, v) => MapEntry(k, v ?? '')))
           : data;
 
+      final mergedHeaders = _buildMergedHeaders(headers);
+
       final response = await _dio.patch(
         _resolvePath(path),
         data: requestData,
         queryParameters: queryParameters,
-        options: Options(headers: _mergeHeaders(headers)),
+        options: Options(headers: mergedHeaders),
       );
 
       // Process response for token caching
-      await _processResponse(response.data);
+      await _processResponse(response.data, path);
 
       return _createResponse(response);
     } on DioException catch (e) {
@@ -604,15 +663,17 @@ final class DioHttpClient implements HttpClient {
         }
       }
 
+      final mergedHeaders = _buildMergedHeaders(headers);
+
       final response = await _dio.post(
         path,
         data: formData,
         queryParameters: queryParameters,
-        options: Options(headers: _mergeHeaders(headers)),
+        options: Options(headers: mergedHeaders),
       );
 
       // Process response for token caching
-      await _processResponse(response.data);
+      await _processResponse(response.data, path);
 
       return _createResponse(response);
     } on DioException catch (e) {
@@ -626,17 +687,34 @@ final class DioHttpClient implements HttpClient {
     await _cacheRepository.remove(CacheKeys.refreshToken);
     await _cacheRepository.remove(CacheKeys.deviceId);
     await clearTokens();
-    removeDefaultHeader('X-Device-Id');
+    removeDefaultHeader(NetworkConstants.deviceIdHeader);
   }
 
   @override
   /// Extracts error message from HttpClientResponse
   ///
-  /// If the response data is a map with 'error' or 'message' key, it returns the value of that key.
-  /// If the response data is not a map, it returns null.
+  /// If the response data is a map, it looks for 'message', then 'error'.
+  /// This order is preferred because 'message' usually contains more descriptive
+  /// user-facing information in the current backend implementation.
   String? extractErrorMessage(HttpClientResponse errorResponse) {
     final data = errorResponse.data;
-    if (data is Map<String, dynamic>) return data['error'] ?? data['message'];
+    if (data is Map<String, dynamic>) {
+      // Prefer 'message' as it's typically more descriptive
+      final message = _stringOrNull(data['message'] ?? data['error']);
+      if (message != null) return message;
+
+      // Check for nested errors (e.g., from validation)
+      if (data['errors'] is Map) {
+        final errors = data['errors'] as Map;
+        if (errors.isNotEmpty) {
+          final firstError = errors.values.first;
+          if (firstError is List && firstError.isNotEmpty) {
+            return _stringOrNull(firstError.first);
+          }
+          return _stringOrNull(firstError);
+        }
+      }
+    }
     return null;
   }
 }
