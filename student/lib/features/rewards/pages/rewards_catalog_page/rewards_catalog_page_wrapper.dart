@@ -2,7 +2,7 @@ import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
-import 'package:mentorx_core/mentorx_core.dart';
+import 'package:mentorx_student/core/core.dart';
 import 'bloc/rewards_page_bloc.dart';
 import 'rewards_catalog_page_page.dart';
 
@@ -15,6 +15,7 @@ class RewardsCatalogPageWrapper extends StatelessWidget {
       create: (context) => RewardsPageBloc(
         rewardsRepository: context.read<RewardsRepository>(),
         walletRepository: context.read<WalletRepository>(),
+        analyticsService: context.read<AnalyticsService>(),
       )..add(const RewardsPageStartedEvent()),
       child:
           BlocPresentationListener<

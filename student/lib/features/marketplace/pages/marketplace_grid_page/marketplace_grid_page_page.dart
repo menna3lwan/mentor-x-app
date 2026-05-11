@@ -1,5 +1,4 @@
 import 'dart:ui';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
@@ -409,38 +408,13 @@ final class _ProductCard extends StatelessWidget {
                           borderRadius: const BorderRadius.vertical(
                             top: Radius.circular(28),
                           ),
-                          child: item.imageUrls.isNotEmpty
-                              ? CachedNetworkImage(
-                                  imageUrl: item.imageUrls.first,
-                                  fit: BoxFit.cover,
-                                  placeholder: (context, url) => Container(
-                                    color: context.backgroundPrimaryColor,
-                                    child: Center(
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                        color: context.brandPrimaryColor.withValues(alpha: 0.3),
-                                      ),
-                                    ),
-                                  ),
-                                  errorWidget: (context, url, error) => Container(
-                                    color: context.backgroundPrimaryColor,
-                                    child: Icon(
-                                      Icons.broken_image_outlined,
-                                      color: context.statusDangerColor.withValues(
-                                        alpha: 0.5,
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              : Container(
-                                  color: context.backgroundPrimaryColor,
-                                  child: Icon(
-                                    Icons.image_outlined,
-                                    color: context.textTertiaryColor.withValues(
-                                      alpha: 0.2,
-                                    ),
-                                  ),
-                                ),
+                          child: AppDynamicImage(
+                            item.imageUrls.firstOrNull ?? '',
+                            fit: BoxFit.cover,
+                            borderRadius: const BorderRadius.vertical(
+                              top: Radius.circular(28),
+                            ),
+                          ),
                         ),
                       ),
                       if (item.isFeatured)

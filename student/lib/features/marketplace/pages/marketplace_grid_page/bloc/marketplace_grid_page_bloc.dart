@@ -21,14 +21,17 @@ final class MarketplaceGridPageBloc
           MarketplaceGridPageState,
           MarketplaceGridPagePresentationEvent
         > {
-  MarketplaceGridPageBloc({required this.marketplaceRepository})
-    : super(MarketplaceGridPageState.initial) {
+  MarketplaceGridPageBloc({
+    required this.marketplaceRepository,
+    required this.analyticsService,
+  }) : super(MarketplaceGridPageState.initial) {
     on<MarketplaceGridPageLoadEvent>(_onLoad);
     on<MarketplaceGridPageCategorySelectedEvent>(_onCategorySelected);
     on<MarketplaceGridPageSearchQueryChangedEvent>(_onSearchQueryChanged);
   }
 
   final MarketplaceRepository marketplaceRepository;
+  final AnalyticsService analyticsService;
 
   Future<void> _onLoad(
     MarketplaceGridPageLoadEvent event,
@@ -72,6 +75,10 @@ final class MarketplaceGridPageBloc
         search: state.searchQuery,
       );
       emit(state.copyWith(loadingState: LoadingState.loaded, items: items));
+      analyticsService.logEvent(
+        name: 'marketplace_category_view',
+        parameters: {'category_id': event.categoryId},
+      );
     } catch (e) {
       emit(state.copyWith(loadingState: LoadingState.error));
     }
@@ -93,6 +100,10 @@ final class MarketplaceGridPageBloc
         search: event.searchQuery,
       );
       emit(state.copyWith(loadingState: LoadingState.loaded, items: items));
+      analyticsService.logEvent(
+        name: 'marketplace_search',
+        parameters: {'query': event.searchQuery},
+      );
     } catch (e) {
       emit(state.copyWith(loadingState: LoadingState.error));
     }

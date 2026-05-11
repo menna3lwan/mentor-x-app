@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
-import 'package:animate_do/animate_do.dart';
-import 'package:gap/gap.dart';
 
 class ParentQuickActionsGrid extends StatelessWidget {
   const ParentQuickActionsGrid({super.key});

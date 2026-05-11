@@ -100,6 +100,9 @@ abstract interface class HttpClient extends LocalizedClient {
   /// Returns the current refresh token if available
   String? get refreshToken;
 
+  /// Returns the current device ID if available
+  String? get deviceId;
+
   /// Checks if the client is authenticated (has a valid access token)
   bool get isAuthenticated;
 

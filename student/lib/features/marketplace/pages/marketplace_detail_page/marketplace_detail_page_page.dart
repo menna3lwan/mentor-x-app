@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
@@ -59,26 +58,13 @@ final class MarketplaceDetailPage extends StatelessWidget {
                   ? PageView.builder(
                       itemCount: item.imageUrls.length,
                       itemBuilder: (context, index) {
-                        return CachedNetworkImage(
-                          imageUrl: item.imageUrls[index],
+                        return AppDynamicImage(
+                          item.imageUrls[index],
                           fit: BoxFit.cover,
-                          placeholder: (context, url) => Container(
-                            color: context.backgroundPrimaryColor,
-                            child: const Center(
-                              child: CircularProgressIndicator(),
-                            ),
-                          ),
                         );
                       },
                     )
-                  : Container(
-                      color: context.backgroundPrimaryColor,
-                      child: Icon(
-                        Icons.image,
-                        size: 100,
-                        color: context.textTertiaryColor.withValues(alpha: 0.2),
-                      ),
-                    ),
+                  : const Center(child: MentorXLogo(size: 80)),
             ),
           ),
           SliverToBoxAdapter(

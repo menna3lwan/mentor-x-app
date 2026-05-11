@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:mentorx_core/mentorx_core.dart';
+import 'package:analytics_service/analytics_service.dart';
 
 part 'course_detail_page_event.dart';
 part 'course_detail_page_state.dart';
@@ -34,11 +35,14 @@ final class CourseDetailPageBloc
           CourseDetailPagePresentationEvent
         > {
   final CourseRepository _courseRepository;
+  final AnalyticsService _analyticsService;
 
   CourseDetailPageBloc({
     required CourseRepository courseRepository,
+    required AnalyticsService analyticsService,
     required String courseId,
   }) : _courseRepository = courseRepository,
+       _analyticsService = analyticsService,
        super(CourseDetailPageState(courseId: courseId)) {
     on<CourseDetailPageInitialized>(_onInitialized);
     on<CourseDetailPageTabChanged>(_onTabChanged);
@@ -73,6 +77,13 @@ final class CourseDetailPageBloc
           enrollStatus: EnrollActionStatus.success,
           enrollment: enrollment,
         ),
+      );
+      _analyticsService.logEvent(
+        name: 'course_enroll_success',
+        parameters: {
+          'course_id': state.courseId,
+          'course_title': state.course?.title,
+        },
       );
       emitPresentation(const CourseDetailPageEnrollSuccessPresentationEvent());
     } on CourseRepositoryException catch (e) {
@@ -129,6 +140,13 @@ final class CourseDetailPageBloc
           courseStatus: DetailSectionStatus.loaded,
           course: course,
         ),
+      );
+      _analyticsService.logEvent(
+        name: 'course_detail_view',
+        parameters: {
+          'course_id': state.courseId,
+          'course_title': course.title,
+        },
       );
     } catch (e) {
       emit(

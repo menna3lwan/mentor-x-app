@@ -1,6 +1,7 @@
 import 'dart:ui' as ui;
 
 // import 'package:mentorx_ui/assets/gen/assets.gen.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:gap/gap.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 import 'package:flutter/foundation.dart';
@@ -11,6 +12,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mix/mix.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:vector_graphics/vector_graphics.dart';
 
 import 'localization/generated/strings.g.dart';
 
@@ -64,9 +66,13 @@ part 'widgets/app_summary_card.dart';
 part 'widgets/attendance_rate_card.dart';
 part 'widgets/status_badge.dart';
 part 'widgets/generic_list_tile.dart';
+part 'widgets/app_dynamic_image.dart';
 
 final class MentorXUI {
   MentorXUI._();
+
+  static void Function(String name, Map<String, dynamic>? parameters)?
+  onAnalyticsEvent;
 
   static void showToast({required String message, bool isError = false}) {
     Fluttertoast.showToast(

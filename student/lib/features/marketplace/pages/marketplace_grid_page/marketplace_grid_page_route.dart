@@ -13,6 +13,7 @@ final class MarketplaceGridPageRoute extends GoRouteData
     return BlocProvider<MarketplaceGridPageBloc>(
       create: (context) => MarketplaceGridPageBloc(
         marketplaceRepository: context.read<MarketplaceRepository>(),
+        analyticsService: context.read<AnalyticsService>(),
       )..add(const MarketplaceGridPageLoadEvent()),
       child: const MarketplaceGridPageWrapper(),
     );

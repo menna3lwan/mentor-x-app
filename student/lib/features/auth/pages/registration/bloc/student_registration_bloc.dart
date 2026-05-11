@@ -35,11 +35,14 @@ final class StudentRegistrationBloc
           StudentRegistrationPresentationEvent
         > {
   final StudentRegistrationRepository _registrationRepository;
+  final AnalyticsService _analyticsService;
 
   StudentRegistrationBloc({
     required StudentRegistrationRepository registrationRepository,
+    required AnalyticsService analyticsService,
     required String tenantId,
   }) : _registrationRepository = registrationRepository,
+       _analyticsService = analyticsService,
        super(StudentRegistrationState(tenantId: int.tryParse(tenantId))) {
     on<StudentRegistrationBootstrapRequested>(_onBootstrapRequested);
     on<StudentRegistrationStepChanged>(_onStepChanged);
@@ -204,6 +207,10 @@ final class StudentRegistrationBloc
           currentStep: 1, // Move to OTP
         ),
       );
+      _analyticsService.logEvent(
+        name: 'registration_start',
+        parameters: {'phone': state.phone},
+      );
       emitPresentation(StudentRegistrationOtpSentPresentationEvent());
     } catch (e) {
       emit(
@@ -249,6 +256,10 @@ final class StudentRegistrationBloc
           currentStep: 2, // Move to Profile
         ),
       );
+      _analyticsService.logEvent(
+        name: 'registration_otp_verified',
+        parameters: {'phone': state.phone},
+      );
     } catch (e) {
       emit(
         state.copyWith(
@@ -285,7 +296,15 @@ final class StudentRegistrationBloc
     }
 
     if (state.currentStep < 5) {
-      emit(state.copyWith(currentStep: state.currentStep + 1));
+      final nextStep = state.currentStep + 1;
+      _analyticsService.logEvent(
+        name: 'registration_step_complete',
+        parameters: {
+          'step': state.currentStep,
+          'next_step': nextStep,
+        },
+      );
+      emit(state.copyWith(currentStep: nextStep));
     }
   }
 
@@ -364,6 +383,13 @@ final class StudentRegistrationBloc
       );
 
       emit(state.copyWith(loadingState: LoadingState.loaded));
+      _analyticsService.logEvent(
+        name: 'registration_submit_success',
+        parameters: {
+          'student_code': response.studentCode,
+          'grade': state.selectedGrade?.name,
+        },
+      );
       emitPresentation(
         StudentRegistrationSuccessPresentationEvent(
           studentCode: response.studentCode,

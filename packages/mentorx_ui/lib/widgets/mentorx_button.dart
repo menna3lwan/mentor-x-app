@@ -17,6 +17,7 @@ class MentorXButton extends StatelessWidget {
     this.variant = MentorXButtonVariant.filled,
     this.size = MentorXButtonSize.medium,
     this.width,
+    this.analyticsName,
   });
 
   final String? text;
@@ -29,6 +30,7 @@ class MentorXButton extends StatelessWidget {
   final MentorXButtonVariant variant;
   final MentorXButtonSize size;
   final double? width;
+  final String? analyticsName;
 
   String get _displayText => label ?? text ?? '';
 
@@ -97,7 +99,18 @@ class MentorXButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PressableBox(
-      onPress: loading ? null : onPressed,
+      onPress:
+          loading
+              ? null
+              : () {
+                if (analyticsName != null) {
+                  MentorXUI.onAnalyticsEvent?.call('button_click', {
+                    'button_name': analyticsName,
+                    'button_text': _displayText,
+                  });
+                }
+                onPressed?.call();
+              },
       style: _defaultStyle(context).merge(style),
       child: loading
           ? SizedBox(

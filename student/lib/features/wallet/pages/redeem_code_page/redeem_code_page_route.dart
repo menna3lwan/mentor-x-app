@@ -9,6 +9,7 @@ final class RedeemCodePageRoute extends GoRouteData with $RedeemCodePageRoute {
     return BlocProvider<RedeemCodePageBloc>(
       create: (context) => RedeemCodePageBloc(
         walletRepository: context.read<WalletRepository>(),
+        analyticsService: context.read<AnalyticsService>(),
       )..add(const RedeemCodePageLoadEvent()),
       child: const RedeemCodePageWrapper(),
     );

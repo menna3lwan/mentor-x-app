@@ -420,8 +420,7 @@ final class _DetailChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
+    return Container(
         decoration: BoxDecoration(
           color: context.backgroundSecondaryColor.withValues(alpha: 0.45),
           borderRadius: BorderRadius.circular(24),
@@ -485,8 +484,7 @@ final class _DetailChip extends StatelessWidget {
             ),
           ),
         ),
-      ),
-    );
+      );
   }
 }
 

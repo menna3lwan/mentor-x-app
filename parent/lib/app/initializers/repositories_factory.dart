@@ -12,6 +12,7 @@ import 'package:parent_dio_course_repository/parent_dio_course_repository.dart';
 import 'package:parent_dio_financial_repository/parent_dio_financial_repository.dart';
 import 'package:parent_dio_grade_repository/parent_dio_grade_repository.dart';
 import 'package:parent_dio_communication_repository/parent_dio_communication_repository.dart';
+import 'package:device_info_service/device_info_service.dart';
 
 import 'package:parent_mock_authentication_repository/parent_mock_authentication_repository.dart';
 import 'package:parent_mock_home_repository/parent_mock_home_repository.dart';
@@ -95,6 +96,11 @@ final class RepositoriesFactory {
   static late final String initialLanguageCode;
 
   static CacheRepository? _cacheRepository;
+  static DeviceInfoService? _deviceInfoService;
+
+  static DeviceInfoService _initDeviceInfoService() {
+    return _deviceInfoService ??= DeviceInfoServiceImpl();
+  }
 
   static Future<CacheRepository> _initCacheRepository() async {
     if (_cacheRepository != null) return _cacheRepository!;
@@ -118,6 +124,18 @@ final class RepositoriesFactory {
       cacheRepository: cacheRepository,
     );
     _httpClient = httpClient;
+    await httpClient.initialize();
+
+    // Use DeviceInfoService to get the hardware identifier as a fallback.
+    final deviceInfoService = _initDeviceInfoService();
+    final hardwareId = await deviceInfoService.getDeviceHash();
+    
+    // Only set the hardware ID as default if we don't already have a cached one 
+    // (e.g., a server-generated hash from a previous session).
+    if (httpClient.deviceId == null || httpClient.deviceId!.isEmpty) {
+      httpClient.setDefaultHeader(NetworkConstants.deviceIdHeader, hardwareId);
+    }
+
     isHttpClientInitialized = true;
     return httpClient;
   }

@@ -166,6 +166,7 @@ final class LoginPage extends StatelessWidget {
                             onPressed: isLoading ? null : onSubmit,
                             label: 'Sign In',
                             loading: isLoading,
+                            analyticsName: 'login_submit',
                           ),
                         ],
                       ),
@@ -266,7 +267,6 @@ final class _TenantHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final hasLogo = logoUrl != null && logoUrl!.trim().isNotEmpty;
     return Column(
       children: [
         Container(
@@ -287,21 +287,11 @@ final class _TenantHeader extends StatelessWidget {
             ],
           ),
           clipBehavior: Clip.antiAlias,
-          child: hasLogo
-              ? Image.network(
-                  logoUrl!,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => Icon(
-                    Icons.school_rounded,
-                    color: context.brandPrimaryColor,
-                    size: 48,
-                  ),
-                )
-              : Icon(
-                  Icons.school_rounded,
-                  color: context.brandPrimaryColor,
-                  size: 48,
-                ),
+          child: AppDynamicImage(
+            logoUrl ?? '',
+            fit: BoxFit.cover,
+            borderRadius: BorderRadius.circular(36),
+          ),
         ),
         if (tenantName != null && tenantName!.trim().isNotEmpty) ...[
           const Gap(20),

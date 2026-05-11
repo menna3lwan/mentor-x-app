@@ -5,8 +5,6 @@ import 'package:mentorx_core/mentorx_core.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:gap/gap.dart';
 import '../bloc/assessments_bloc.dart';
-import 'package:animate_do/animate_do.dart';
-import 'package:gap/gap.dart';
 
 final class QuizGradeDetailParentViewPage extends StatelessWidget {
   final String assessmentId;

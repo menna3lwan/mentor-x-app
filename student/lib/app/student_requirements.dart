@@ -8,6 +8,8 @@ import 'package:flutter/services.dart';
 
 import '../core/core.dart';
 import 'initializers/initializers.dart';
+import 'package:firebase_core/firebase_core.dart';
+import '../firebase_options.dart';
 
 final class StudentRequirements {
   /// The application's current locale
@@ -42,6 +44,9 @@ final class StudentRequirements {
   static Future<StudentRequirements> initialize() async {
     MentorXLogger.enabled = kDebugMode;
     await _initSystemUIStyle();
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
     final (:repositories, :localizedClients) =
         await RepositoriesFactory.initRepositories();
     final languageCode = RepositoriesFactory.initialLanguageCode;
@@ -52,12 +57,29 @@ final class StudentRequirements {
       'Initializing the application with language $languageCode, brightness $initalBrightness',
     );
     await LocaleSettings.setLocaleRaw(languageCode);
+    MentorXLogger.onError = (message, error, stackTrace) {
+      repositories.errorTrackingService.captureException(
+        error ?? message,
+        stackTrace: stackTrace,
+        hint: error == null ? null : message,
+      );
+    };
+    MentorXUI.onAnalyticsEvent = (name, parameters) {
+      repositories.analyticsService.logEvent(
+        name: name,
+        parameters: parameters?.cast<String, Object?>(),
+      );
+    };
 
     StudentEntity? user;
     try {
       user = await repositories.authenticationRepository.getCachedUser();
     } catch (e, s) {
       _logger.error('Failed to get cached user: ', e, s);
+    }
+    if (user != null) {
+      repositories.analyticsService.setUserId(user.id);
+      repositories.errorTrackingService.setUserId(user.id);
     }
 
     final blocs = await BlocsFactory.initBlocs(
@@ -66,12 +88,15 @@ final class StudentRequirements {
       brightness: initalBrightness,
       cacheRepository: repositories.cacheRepository,
       authenticationRepository: repositories.authenticationRepository,
+      analyticsService: repositories.analyticsService,
+      errorTrackingService: repositories.errorTrackingService,
       localizedClients: localizedClients,
     );
 
     final AppRouter appRouter = AppRouter(
       navigatorKey: rootNavigatorKey,
       initialLocation: '/splash',
+      analyticsService: repositories.analyticsService,
     );
     return StudentRequirements(
       blocs: blocs,

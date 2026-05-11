@@ -18,6 +18,16 @@ final class HeaderInterceptor extends Interceptor {
 
     // Inject core headers (Token, Device ID, Locale)
     final coreHeaders = _httpClient._getCoreHeaders();
+
+    // Proactively remove any legacy or variant device ID headers to ensure consistency
+    // and prevent duplicate headers (e.g. device-id vs X-Device-Id)
+    final variants = ['device-id', 'device_id', 'deviceId', 'x-device-id'];
+    for (final variant in variants) {
+      if (variant != NetworkConstants.deviceIdHeader) {
+        options.headers.remove(variant);
+      }
+    }
+
     options.headers.addAll(coreHeaders);
 
     if (coreHeaders.containsKey('Authorization')) {

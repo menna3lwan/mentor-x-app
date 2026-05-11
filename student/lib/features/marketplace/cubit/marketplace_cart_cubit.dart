@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mentorx_core/mentorx_core.dart';
+import 'package:mentorx_student/core/core.dart';
 
 final class MarketplaceCartItem extends Equatable {
   final MarketplaceItemEntity item;
@@ -32,7 +32,10 @@ final class MarketplaceCartState extends Equatable {
 }
 
 final class MarketplaceCartCubit extends Cubit<MarketplaceCartState> {
-  MarketplaceCartCubit() : super(const MarketplaceCartState());
+  MarketplaceCartCubit({required this.analyticsService})
+    : super(const MarketplaceCartState());
+
+  final AnalyticsService analyticsService;
 
   void addItem(MarketplaceItemEntity item) {
     final existingIndex = state.items.indexWhere((i) => i.item.id == item.id);
@@ -52,6 +55,14 @@ final class MarketplaceCartCubit extends Cubit<MarketplaceCartState> {
         ),
       );
     }
+    analyticsService.logEvent(
+      name: 'marketplace_add_to_cart',
+      parameters: {
+        'item_id': item.id,
+        'item_name': item.title,
+        'price': item.price,
+      },
+    );
   }
 
   void removeItem(String itemId) {

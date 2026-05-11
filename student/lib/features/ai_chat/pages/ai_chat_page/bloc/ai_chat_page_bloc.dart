@@ -15,13 +15,16 @@ final class AiChatPageNavigateBack extends AiChatPagePresentationEvent {
 
 final class AiChatPageBloc extends Bloc<AiChatPageEvent, AiChatPageState>
     with BlocPresentationMixin<AiChatPageState, AiChatPagePresentationEvent> {
-  AiChatPageBloc({required this.aiRepository})
-    : super(AiChatPageState.initial) {
+  AiChatPageBloc({
+    required this.aiRepository,
+    required this.analyticsService,
+  }) : super(AiChatPageState.initial) {
     on<AiChatPageLoadEvent>(_onLoad);
     on<AiChatPageSendMessage>(_onSendMessage);
   }
 
   final AIRepository aiRepository;
+  final AnalyticsService analyticsService;
 
   Future<void> _onLoad(
     AiChatPageLoadEvent event,
@@ -85,6 +88,12 @@ final class AiChatPageBloc extends Bloc<AiChatPageEvent, AiChatPageState>
           messages: [...state.messages, responseMessage],
           isTyping: false,
         ),
+      );
+      analyticsService.logEvent(
+        name: 'ai_message_sent',
+        parameters: {
+          'conversation_id': state.conversationId,
+        },
       );
     } catch (e) {
       emit(

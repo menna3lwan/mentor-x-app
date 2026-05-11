@@ -1,6 +1,5 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:gap/gap.dart';
@@ -333,12 +332,9 @@ final class _PodiumSpot extends StatelessWidget {
                 ],
               ),
               child: ClipOval(
-                child: CachedNetworkImage(
-                  imageUrl:
-                      'https://ui-avatars.com/api/?name=${entry.studentName}&background=random&color=fff&size=128',
+                child: AppDynamicImage(
+                  'https://ui-avatars.com/api/?name=${entry.studentName}&background=random&color=fff&size=128',
                   fit: BoxFit.cover,
-                  placeholder: (context, url) =>
-                      Container(color: context.backgroundSecondaryColor),
                 ),
               ),
             ),
@@ -497,11 +493,12 @@ final class _LeaderboardTile extends StatelessWidget {
                   ),
                 ),
                 const Gap(16),
-                CircleAvatar(
-                  radius: 20,
-                  backgroundColor: context.backgroundTertiaryColor,
-                  backgroundImage: NetworkImage(
+                SizedBox(
+                  width: 40,
+                  height: 40,
+                  child: AppDynamicImage(
                     'https://ui-avatars.com/api/?name=${entry.studentName}&background=random&color=fff',
+                    borderRadius: BorderRadius.circular(20),
                   ),
                 ),
                 const Gap(12),

@@ -1,17 +1,27 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mock_authentication_repository/mock_authentication_repository.dart';
+import 'package:mocktail/mocktail.dart';
 
 import 'package:mentorx_student/core/core.dart';
 import 'package:mentorx_student/features/auth/pages/login/bloc/login_bloc.dart';
 
+class MockAnalyticsService extends Mock implements AnalyticsService {}
+
 void main() {
   late MockAuthenticationRepository authRepository;
   late MockAuthenticationRepository uninitializedAuthRepository;
+  late MockAnalyticsService analyticsService;
 
   setUp(() async {
     authRepository = MockAuthenticationRepository(delay: Duration.zero);
     await authRepository.initialize();
+
+    analyticsService = MockAnalyticsService();
+    when(() => analyticsService.logEvent(
+      name: any(named: 'name'),
+      parameters: any(named: 'parameters'),
+    )).thenAnswer((_) async {});
 
     // NOT initialized -- sendOtp will throw AuthenticationRepositoryException
     uninitializedAuthRepository = MockAuthenticationRepository(
@@ -22,7 +32,10 @@ void main() {
   group('LoginBloc', () {
     // ── 1. Initial state ────────────────────────────────────────────────
     test('initial state is correct', () {
-      final bloc = LoginBloc(authRepository: authRepository);
+      final bloc = LoginBloc(
+        authRepository: authRepository,
+        analyticsService: analyticsService,
+      );
 
       expect(bloc.state, LoginState.initial);
       expect(bloc.state.phoneNumber, '');
@@ -36,7 +49,10 @@ void main() {
     // ── 2. PhoneChanged happy path ──────────────────────────────────────
     blocTest<LoginBloc, LoginState>(
       'emits state with updated phone number when PhoneChanged is added',
-      build: () => LoginBloc(authRepository: authRepository),
+      build: () => LoginBloc(
+        authRepository: authRepository,
+        analyticsService: analyticsService,
+      ),
       act: (bloc) => bloc.add(const LoginPhoneChanged('0501234567')),
       expect: () => [
         isA<LoginState>()
@@ -53,7 +69,10 @@ void main() {
     // ── 3. PhoneChanged clears previous error message ───────────────────
     blocTest<LoginBloc, LoginState>(
       'PhoneChanged clears previous error message',
-      build: () => LoginBloc(authRepository: authRepository),
+      build: () => LoginBloc(
+        authRepository: authRepository,
+        analyticsService: analyticsService,
+      ),
       seed: () => const LoginState(
         phoneNumber: '0501234567',
         password: '',
@@ -77,7 +96,10 @@ void main() {
     // ── 4. Submitted with empty phone number does nothing ───────────────
     blocTest<LoginBloc, LoginState>(
       'does nothing when submitted with empty phone number',
-      build: () => LoginBloc(authRepository: authRepository),
+      build: () => LoginBloc(
+        authRepository: authRepository,
+        analyticsService: analyticsService,
+      ),
       // state.phoneNumber is '' by default (LoginState.initial)
       act: (bloc) => bloc.add(const LoginSubmitted()),
       expect: () => <LoginState>[],
@@ -86,7 +108,10 @@ void main() {
     // ── 5. Submitted with whitespace-only phone number does nothing ─────
     blocTest<LoginBloc, LoginState>(
       'does nothing when submitted with whitespace-only phone number',
-      build: () => LoginBloc(authRepository: authRepository),
+      build: () => LoginBloc(
+        authRepository: authRepository,
+        analyticsService: analyticsService,
+      ),
       seed: () => const LoginState(
         phoneNumber: '   ',
         password: '',
@@ -100,7 +125,10 @@ void main() {
     // ── 6. Submitted happy path: loading -> loaded ──────────────────────
     blocTest<LoginBloc, LoginState>(
       'emits [loading, loaded] when submitted with valid phone number',
-      build: () => LoginBloc(authRepository: authRepository),
+      build: () => LoginBloc(
+        authRepository: authRepository,
+        analyticsService: analyticsService,
+      ),
       seed: () => const LoginState(
         phoneNumber: '0501234567',
         password: 'password123',
@@ -129,7 +157,10 @@ void main() {
     // ── 7. Error state when repository is not initialized ───────────────
     blocTest<LoginBloc, LoginState>(
       'emits error state when repository is not initialized',
-      build: () => LoginBloc(authRepository: uninitializedAuthRepository),
+      build: () => LoginBloc(
+        authRepository: uninitializedAuthRepository,
+        analyticsService: analyticsService,
+      ),
       seed: () => const LoginState(
         phoneNumber: '0501234567',
         password: 'password123',
@@ -160,7 +191,10 @@ void main() {
     // ── 8. Error cleared after phone change following error ─────────────
     blocTest<LoginBloc, LoginState>(
       'clears error after phone change following error',
-      build: () => LoginBloc(authRepository: uninitializedAuthRepository),
+      build: () => LoginBloc(
+        authRepository: uninitializedAuthRepository,
+        analyticsService: analyticsService,
+      ),
       seed: () => const LoginState(
         phoneNumber: '0501234567',
         password: '',

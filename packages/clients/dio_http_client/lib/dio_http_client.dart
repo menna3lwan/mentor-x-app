@@ -117,29 +117,34 @@ final class DioHttpClient implements HttpClient {
           root['accessToken'] ??
           root['access_token'],
     );
-    final refreshToken = _stringOrNull(
-      data['refreshToken'] ??
-          data['refresh_token'] ??
-          root['refreshToken'] ??
-          root['refresh_token'],
-    );
     final deviceId = _stringOrNull(
       data['deviceId'] ??
           data['device_id'] ??
+          data['device-id'] ??
+          data['device_hash'] ??
+          data['deviceHash'] ??
           root['deviceId'] ??
-          root['device_id'],
+          root['device_id'] ??
+          root['device-id'] ?? // Fallback variations
+          root['device_hash'] ??
+          root['deviceHash'],
     );
 
     if (deviceId != null && deviceId.isNotEmpty) {
       setDefaultHeader(NetworkConstants.deviceIdHeader, deviceId);
       _cacheRepository.put(CacheKeys.deviceId, deviceId).ignore();
     }
+    final refreshToken = _stringOrNull(
+      data['refreshToken'] ??
+          data['refresh_token'] ??
+          root['refreshToken'] ??
+          root['refresh_token'],
+    );
 
     // Only update tokens if they are valid JWTs.
     // We are also more selective: we only update if we are on an auth endpoint
     // OR if the response contains both a token and user data (typical for login/refresh).
     final bool isAuthPath = path.contains('/auth/') || path.contains('/login') || path.contains('/register');
-    final bool hasUserData = data.containsKey('user') || root.containsKey('user');
 
     if (accessToken != null && _isJwtToken(accessToken)) {
       if (_isJwtTokenExpired(accessToken)) {
@@ -148,18 +153,18 @@ final class DioHttpClient implements HttpClient {
         return;
       }
       
-      if (isAuthPath || hasUserData) {
-        _logger.info('Updating access token from response: $path (isAuthPath: $isAuthPath, hasUserData: $hasUserData)');
+      final bool isNewToken = accessToken != _accessToken;
+      
+      if (isNewToken || isAuthPath) {
+        _logger.info('Updating access token from response: $path (isNewToken: $isNewToken, isAuthPath: $isAuthPath)');
         await setAccessToken(accessToken);
         if (refreshToken != null) await setRefreshToken(refreshToken);
       } else {
-        _logger.debug('Token found in response from $path but not updating (not auth path and no user data)');
+        _logger.debug('Token in response from $path is identical to current token, skipping update');
       }
-    } else if (refreshToken != null && isAuthPath) {
+    } else if (refreshToken != null && (isAuthPath || refreshToken != _refreshToken)) {
       _logger.info('Updating refresh token from response: $path');
       await setRefreshToken(refreshToken);
-    } else {
-      _logger.debug('No valid JWT access token found in response from $path');
     }
   }
 
@@ -368,6 +373,9 @@ final class DioHttpClient implements HttpClient {
   bool get isAuthenticated => _accessToken != null && !(_isJwtTokenExpired(_accessToken!));
 
   @override
+  String? get deviceId => _defaultHeaders[NetworkConstants.deviceIdHeader];
+
+  @override
   Future<void> setAccessToken(String token) async {
     _logger.debug('Setting new access token (length: ${token.length})');
     _accessToken = token;
@@ -446,6 +454,7 @@ final class DioHttpClient implements HttpClient {
       headers[NetworkConstants.deviceIdHeader] = deviceId;
     }
 
+    _logger.debug('Generated core headers: ${headers.keys.toList()} (Token present: ${_accessToken != null})');
     return headers;
   }
 
@@ -666,7 +675,7 @@ final class DioHttpClient implements HttpClient {
       final mergedHeaders = _buildMergedHeaders(headers);
 
       final response = await _dio.post(
-        path,
+        _resolvePath(path),
         data: formData,
         queryParameters: queryParameters,
         options: Options(headers: mergedHeaders),

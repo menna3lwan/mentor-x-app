@@ -8,10 +8,12 @@ environment:
   sdk: ^3.11.4
 
 dependencies:
+  sentry_flutter: ^9.20.0
   flutter:
     sdk: flutter
 
-  firebase_core: ^4.5.0
+  firebase_core: any
+  firebase_analytics: any
 
   # State Management
   bloc: ^9.2.0
@@ -115,6 +117,10 @@ dependencies:
   # Services
   device_info_service:
     path: ../packages/services/device_info_service
+  analytics_service:
+    path: ../packages/services/analytics_service
+  error_tracking_service:
+    path: ../packages/services/error_tracking_service
 
   # Dio Repositories
   dio_authentication_repository:
@@ -158,6 +164,7 @@ dependencies:
   animate_do: ^5.1.0
 
 dev_dependencies:
+  sentry_dart_plugin: ^3.3.0
   # Testing
   flutter_test:
     sdk: flutter
@@ -213,3 +220,9 @@ patrol:
     package_name: com.mentorx.student
   ios:
     bundle_id: com.mentorx.student
+
+sentry:
+  upload_debug_symbols: true
+  upload_source_maps: true
+  project: flutter
+  org: mentorx-e9

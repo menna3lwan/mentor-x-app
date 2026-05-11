@@ -52,13 +52,16 @@ final class LoginBloc extends Bloc<LoginEvent, LoginState>
   static const Duration _lockoutDuration = Duration(minutes: 15);
 
   final StudentAuthenticationRepository _authRepository;
+  final AnalyticsService _analyticsService;
   int _failedAttempts = 0;
   DateTime? _lockedUntil;
   String? _attemptPhoneNumber;
 
   LoginBloc({
     required StudentAuthenticationRepository authRepository,
+    required AnalyticsService analyticsService,
   }) : _authRepository = authRepository,
+       _analyticsService = analyticsService,
        super(LoginState.initial) {
     on<LoginPhoneChanged>(_onPhoneChanged);
     on<LoginPasswordChanged>(_onPasswordChanged);
@@ -130,6 +133,11 @@ final class LoginBloc extends Bloc<LoginEvent, LoginState>
         password: state.password.trim(),
       );
       _resetFailedAttempts();
+      _analyticsService.logEvent(
+        name: 'login_success',
+        parameters: {'user_id': user.id},
+      );
+      _analyticsService.setUserId(user.id.toString());
       emit(state.copyWith(loadingState: LoadingState.loaded));
       emitPresentation(
         LoginSuccessPresentationEvent(user: user),
@@ -176,6 +184,10 @@ final class LoginBloc extends Bloc<LoginEvent, LoginState>
         ),
       );
       emitPresentation(LoginFailurePresentationEvent(message: message));
+      _analyticsService.logEvent(
+        name: 'login_failure',
+        parameters: {'error': message, 'type': 'auth_repo_exception'},
+      );
     } catch (e) {
       final message = _registerFailedAttempt(fallbackMessage: e.toString());
       emit(
@@ -185,6 +197,10 @@ final class LoginBloc extends Bloc<LoginEvent, LoginState>
         ),
       );
       emitPresentation(LoginFailurePresentationEvent(message: message));
+      _analyticsService.logEvent(
+        name: 'login_failure',
+        parameters: {'error': message, 'type': 'generic_exception'},
+      );
     }
   }
 

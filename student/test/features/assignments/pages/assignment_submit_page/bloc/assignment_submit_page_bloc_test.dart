@@ -5,12 +5,29 @@ import 'package:mock_assignment_repository/mock_assignment_repository.dart';
 import 'package:mentorx_student/core/core.dart';
 import 'package:mentorx_student/features/assignments/pages/assignment_submit_page/bloc/assignment_submit_page_bloc.dart';
 
+class _MockAnalyticsService implements AnalyticsService {
+  @override
+  Future<void> initialize() async {}
+  @override
+  Future<void> logEvent({required String name, Map<String, Object?>? parameters}) async {}
+  @override
+  Future<void> setCurrentScreen({required String screenName, String? screenClassOverride}) async {}
+  @override
+  Future<void> setUserId(String? id) async {}
+  @override
+  Future<void> setUserProperty({required String name, required String? value}) async {}
+  @override
+  Future<void> resetAnalyticsData() async {}
+}
+
 void main() {
   late MockAssignmentRepository assignmentRepository;
+  late _MockAnalyticsService analyticsService;
   const testId = 'assignment-123';
 
   setUp(() {
     assignmentRepository = const MockAssignmentRepository(delay: Duration.zero);
+    analyticsService = _MockAnalyticsService();
   });
 
   group('AssignmentSubmitPageBloc', () {
@@ -18,6 +35,7 @@ void main() {
       'emits [loading, loaded] when load event is added',
       build: () => AssignmentSubmitPageBloc(
         assignmentRepository: assignmentRepository,
+        analyticsService: analyticsService,
         assignmentId: testId,
       ),
       act: (bloc) => bloc.add(const AssignmentSubmitPageLoadEvent()),
@@ -39,6 +57,7 @@ void main() {
       'initial state is correct',
       build: () => AssignmentSubmitPageBloc(
         assignmentRepository: assignmentRepository,
+        analyticsService: analyticsService,
         assignmentId: testId,
       ),
       verify: (bloc) {

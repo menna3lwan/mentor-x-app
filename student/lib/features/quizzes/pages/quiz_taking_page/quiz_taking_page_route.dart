@@ -14,6 +14,7 @@ final class QuizTakingPageRoute extends GoRouteData with $QuizTakingPageRoute {
     return BlocProvider<QuizTakingPageBloc>(
       create: (context) => QuizTakingPageBloc(
         quizRepository: context.read<QuizRepository>(),
+        analyticsService: context.read<AnalyticsService>(),
         quizId: quizId,
       )..add(const QuizTakingPageLoadEvent()),
       child: const QuizTakingPageWrapper(),

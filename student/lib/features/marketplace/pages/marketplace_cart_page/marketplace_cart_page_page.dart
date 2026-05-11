@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
@@ -303,23 +302,12 @@ final class _MarketplaceCartItemTile extends StatelessWidget {
       ),
       child: Row(
         children: [
-          ClipRRect(
+          AppDynamicImage(
+            item.imageUrls.isNotEmpty ? item.imageUrls.first : '',
+            width: 80,
+            height: 80,
+            fit: BoxFit.cover,
             borderRadius: BorderRadius.circular(16),
-            child: CachedNetworkImage(
-              imageUrl: item.imageUrls.isNotEmpty ? item.imageUrls.first : '',
-              width: 80,
-              height: 80,
-              fit: BoxFit.cover,
-              placeholder: (context, url) =>
-                  Container(color: context.backgroundPrimaryColor),
-              errorWidget: (context, url, error) => Container(
-                color: context.backgroundPrimaryColor,
-                child: Icon(
-                  Icons.image_rounded,
-                  color: context.textTertiaryColor.withValues(alpha: 0.2),
-                ),
-              ),
-            ),
           ),
           const Gap(16),
           Expanded(

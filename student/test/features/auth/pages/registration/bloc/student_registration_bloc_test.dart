@@ -8,8 +8,11 @@ import 'package:mentorx_student/features/auth/pages/registration/bloc/student_re
 class MockStudentRegistrationRepository extends Mock
     implements StudentRegistrationRepository {}
 
+class MockAnalyticsService extends Mock implements AnalyticsService {}
+
 void main() {
   late StudentRegistrationRepository repo;
+  late AnalyticsService analytics;
   const tenantId = 'test-tenant';
 
   setUpAll(() {
@@ -18,6 +21,7 @@ void main() {
 
   setUp(() {
     repo = MockStudentRegistrationRepository();
+    analytics = MockAnalyticsService();
     when(() => repo.getGovernorates()).thenAnswer((_) async => []);
     when(() => repo.getApplicationInfo()).thenAnswer(
       (_) async => const StudentApplicationInfoEntity(
@@ -33,8 +37,11 @@ void main() {
     );
   });
 
-  StudentRegistrationBloc buildBloc() =>
-      StudentRegistrationBloc(registrationRepository: repo, tenantId: tenantId);
+  StudentRegistrationBloc buildBloc() => StudentRegistrationBloc(
+        registrationRepository: repo,
+        analyticsService: analytics,
+        tenantId: tenantId,
+      );
 
   group('StudentRegistrationBloc', () {
     // ── Initial state ─────────────────────────────────────────────────

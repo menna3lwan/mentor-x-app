@@ -50,7 +50,7 @@ final class WalletMainPage extends StatelessWidget {
               children: [
                 Gap(MediaQuery.paddingOf(context).top + 20),
                 _buildHeader(context, t),
-                
+
                 // Balance Card
                 FadeInDown(
                   duration: const Duration(milliseconds: 600),
@@ -67,124 +67,131 @@ final class WalletMainPage extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Row(
                     children: [
-                      FadeInUp(
-                        duration: const Duration(milliseconds: 500),
-                        delay: const Duration(milliseconds: 100),
-                        child: _ActionButton(
-                          icon: Icons.add_rounded,
-                          label: t['addBalance']!,
-                          onTap: () => context.push('/add-balance'),
-                          color: context.brandPrimaryColor,
+                      Expanded(
+                        child: FadeInUp(
+                          duration: const Duration(milliseconds: 500),
+                          delay: const Duration(milliseconds: 100),
+                          child: _ActionButton(
+                            icon: Icons.add_rounded,
+                            label: t['addBalance']!,
+                            onTap: () => context.push('/add-balance'),
+                            color: context.brandPrimaryColor,
+                          ),
                         ),
                       ),
                       const Gap(12),
-                      FadeInUp(
-                        duration: const Duration(milliseconds: 500),
-                        delay: const Duration(milliseconds: 200),
-                        child: _ActionButton(
-                          icon: Icons.qr_code_scanner_rounded,
-                          label: t['redeemCode']!,
-                          onTap: () => context.push('/redeem-code'),
-                          color: context.brandSecondaryColor,
+                      Expanded(
+                        child: FadeInUp(
+                          duration: const Duration(milliseconds: 500),
+                          delay: const Duration(milliseconds: 200),
+                          child: _ActionButton(
+                            icon: Icons.qr_code_scanner_rounded,
+                            label: t['redeemCode']!,
+                            onTap: () => context.push('/redeem-code'),
+                            color: context.brandSecondaryColor,
+                          ),
                         ),
                       ),
                       const Gap(12),
-                      FadeInUp(
-                        duration: const Duration(milliseconds: 500),
-                        delay: const Duration(milliseconds: 300),
-                        child: _ActionButton(
-                          icon: Icons.history_rounded,
-                          label: t['myOrders'] ?? 'Orders',
-                          onTap: () => const WalletOrdersPageRoute().push(context),
-                          color: context.statusSuccessColor,
+                      Expanded(
+                        child: FadeInUp(
+                          duration: const Duration(milliseconds: 500),
+                          delay: const Duration(milliseconds: 300),
+                          child: _ActionButton(
+                            icon: Icons.history_rounded,
+                            label: t['myOrders'] ?? 'Orders',
+                            onTap: () =>
+                                const WalletOrdersPageRoute().push(context),
+                            color: context.statusSuccessColor,
+                          ),
                         ),
                       ),
                     ],
                   ),
                 ),
 
-                  const Gap(40),
-                  FadeInUp(
-                    duration: const Duration(milliseconds: 500),
-                    delay: const Duration(milliseconds: 400),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            t['recentTransactions']!,
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w900,
-                              color: context.textPrimaryColor,
-                            ),
+                const Gap(40),
+                FadeInUp(
+                  duration: const Duration(milliseconds: 500),
+                  delay: const Duration(milliseconds: 400),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          t['recentTransactions']!,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w900,
+                            color: context.textPrimaryColor,
                           ),
-                          TextButton(
-                            onPressed: () =>
-                                context.push('/transactions-history'),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  t['seeAll'] ?? 'See All',
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w900,
-                                    color: context.brandPrimaryColor,
-                                  ),
-                                ),
-                                const Gap(4),
-                                Icon(
-                                  Icons.arrow_forward_ios_rounded,
-                                  size: 10,
+                        ),
+                        TextButton(
+                          onPressed: () =>
+                              context.push('/transactions-history'),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                t['seeAll'] ?? 'See All',
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w900,
                                   color: context.brandPrimaryColor,
                                 ),
-                              ],
-                            ),
+                              ),
+                              const Gap(4),
+                              Icon(
+                                Icons.arrow_forward_ios_rounded,
+                                size: 10,
+                                color: context.brandPrimaryColor,
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
-                  const Gap(8),
-                ],
+                ),
+                const Gap(8),
+              ],
+            ),
+          ),
+          if (isLoading && transactions.isEmpty)
+            const SliverFillRemaining(
+              child: Center(child: CircularProgressIndicator()),
+            )
+          else if (transactions.isEmpty)
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: FadeIn(
+                child: _EmptyTransactions(t: t),
+              ),
+            )
+          else
+            SliverPadding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              sliver: SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    return FadeInUp(
+                      duration: const Duration(milliseconds: 500),
+                      delay: Duration(milliseconds: 450 + (50 * index)),
+                      child: _TransactionItem(
+                        transaction: transactions[index],
+                        t: t,
+                      ),
+                    );
+                  },
+                  childCount: transactions.length,
+                ),
               ),
             ),
-            if (isLoading && transactions.isEmpty)
-              const SliverFillRemaining(
-                child: Center(child: CircularProgressIndicator()),
-              )
-            else if (transactions.isEmpty)
-              SliverFillRemaining(
-                hasScrollBody: false,
-                child: FadeIn(
-                  child: _EmptyTransactions(t: t),
-                ),
-              )
-            else
-              SliverPadding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                sliver: SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      return FadeInUp(
-                        duration: const Duration(milliseconds: 500),
-                        delay: Duration(milliseconds: 450 + (50 * index)),
-                        child: _TransactionItem(
-                          transaction: transactions[index],
-                          t: t,
-                        ),
-                      );
-                    },
-                    childCount: transactions.length,
-                  ),
-                ),
-              ),
-            const SliverToBoxAdapter(child: Gap(40)),
-          ],
-        ),
-      );
+          const SliverToBoxAdapter(child: Gap(40)),
+        ],
+      ),
+    );
   }
 
   Widget _buildHeader(BuildContext context, dynamic t) {
@@ -232,9 +239,14 @@ final class WalletMainPage extends StatelessWidget {
               decoration: BoxDecoration(
                 color: context.backgroundSecondaryColor,
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: context.borderPrimaryColor.withValues(alpha: 0.05)),
+                border: Border.all(
+                  color: context.borderPrimaryColor.withValues(alpha: 0.05),
+                ),
               ),
-              child: Icon(Icons.settings_outlined, color: context.textPrimaryColor),
+              child: Icon(
+                Icons.settings_outlined,
+                color: context.textPrimaryColor,
+              ),
             ),
           ),
         ],
@@ -310,7 +322,11 @@ final class _BalanceCard extends StatelessWidget {
                       letterSpacing: 2,
                     ),
                   ),
-                  const Icon(Icons.contactless_outlined, color: Colors.white, size: 24),
+                  const Icon(
+                    Icons.contactless_outlined,
+                    color: Colors.white,
+                    size: 24,
+                  ),
                 ],
               ),
               const Gap(12),
@@ -445,47 +461,45 @@ final class _ActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Material(
-        color: context.backgroundSecondaryColor.withValues(alpha: 0.5),
+    return Material(
+      color: context.backgroundSecondaryColor.withValues(alpha: 0.5),
+      borderRadius: BorderRadius.circular(24),
+      child: ClipRRect(
         borderRadius: BorderRadius.circular(24),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(24),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-            child: InkWell(
-              onTap: onTap,
-              child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 20),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(24),
-                  border: Border.all(
-                    color: context.borderPrimaryColor.withValues(alpha: 0.1),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: InkWell(
+            onTap: onTap,
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(24),
+                border: Border.all(
+                  color: context.borderPrimaryColor.withValues(alpha: 0.1),
+                ),
+              ),
+              child: Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: color.withValues(alpha: 0.1),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(icon, color: color, size: 24),
                   ),
-                ),
-                child: Column(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: color.withValues(alpha: 0.1),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(icon, color: color, size: 24),
+                  const Gap(12),
+                  Text(
+                    label,
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w800,
+                      color: context.textPrimaryColor,
                     ),
-                    const Gap(12),
-                    Text(
-                      label,
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w800,
-                        color: context.textPrimaryColor,
-                      ),
-                      textAlign: TextAlign.center,
-                      maxLines: 1,
-                    ),
-                  ],
-                ),
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                  ),
+                ],
               ),
             ),
           ),
@@ -580,16 +594,21 @@ final class _TransactionItem extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
-                  color: (isCredit
-                          ? context.statusSuccessColor
-                          : context.statusDangerColor)
-                      .withValues(alpha: 0.12),
+                  color:
+                      (isCredit
+                              ? context.statusSuccessColor
+                              : context.statusDangerColor)
+                          .withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(18),
                 ),
                 child: Icon(
-                  isCredit ? Icons.arrow_downward_rounded : Icons.arrow_upward_rounded,
+                  isCredit
+                      ? Icons.arrow_downward_rounded
+                      : Icons.arrow_upward_rounded,
                   size: 22,
-                  color: isCredit ? context.statusSuccessColor : context.statusDangerColor,
+                  color: isCredit
+                      ? context.statusSuccessColor
+                      : context.statusDangerColor,
                 ),
               ),
               const Gap(16),
@@ -640,7 +659,9 @@ final class _TransactionItem extends StatelessWidget {
                       fontSize: 11,
                       fontWeight: FontWeight.w900,
                       color:
-                          (isCredit ? context.statusSuccessColor : context.statusDangerColor)
+                          (isCredit
+                                  ? context.statusSuccessColor
+                                  : context.statusDangerColor)
                               .withValues(alpha: 0.6),
                     ),
                   ),

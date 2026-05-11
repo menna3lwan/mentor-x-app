@@ -29,14 +29,11 @@ final class CourseInfoHeader extends StatelessWidget {
                   aspectRatio: 16 / 9,
                   child: Hero(
                     tag: 'catalog_course_${course.id}',
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: context.backgroundSecondaryColor,
-                        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(32)),
-                        image: DecorationImage(
-                          image: NetworkImage(course.imageUrl!),
-                          fit: BoxFit.cover,
-                        ),
+                    child: AppDynamicImage(
+                      course.imageUrl ?? '',
+                      fit: BoxFit.cover,
+                      borderRadius: const BorderRadius.vertical(
+                        bottom: Radius.circular(32),
                       ),
                     ),
                   ),

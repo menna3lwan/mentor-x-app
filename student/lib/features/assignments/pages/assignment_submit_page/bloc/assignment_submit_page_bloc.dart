@@ -23,6 +23,7 @@ final class AssignmentSubmitPageBloc
         > {
   AssignmentSubmitPageBloc({
     required this.assignmentRepository,
+    required this.analyticsService,
     required String assignmentId,
   }) : super(AssignmentSubmitPageState(assignmentId: assignmentId)) {
     on<AssignmentSubmitPageLoadEvent>(_onLoad);
@@ -36,6 +37,7 @@ final class AssignmentSubmitPageBloc
   }
 
   final AssignmentRepository assignmentRepository;
+  final AnalyticsService analyticsService;
 
   void _onFileAdded(
     AssignmentSubmitPageFileAdded event,
@@ -134,6 +136,12 @@ final class AssignmentSubmitPageBloc
           loadingState: LoadingState.success,
           result: result,
         ),
+      );
+      analyticsService.logEvent(
+        name: 'assignment_submit_success',
+        parameters: {
+          'assignment_id': state.assignmentId,
+        },
       );
     } catch (e) {
       emit(

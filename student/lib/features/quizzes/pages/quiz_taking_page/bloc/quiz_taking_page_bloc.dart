@@ -22,6 +22,7 @@ final class QuizTakingPageBloc
         > {
   QuizTakingPageBloc({
     required this.quizRepository,
+    required this.analyticsService,
     required String quizId,
   }) : super(QuizTakingPageState(quizId: quizId)) {
     on<QuizTakingPageLoadEvent>(_onLoad);
@@ -32,6 +33,7 @@ final class QuizTakingPageBloc
   }
 
   final QuizRepository quizRepository;
+  final AnalyticsService analyticsService;
 
   Future<void> _onLoad(
     QuizTakingPageLoadEvent event,
@@ -40,6 +42,13 @@ final class QuizTakingPageBloc
     emit(state.copyWith(loadingState: LoadingState.loading));
     try {
       final quiz = await quizRepository.getQuiz(state.quizId);
+      analyticsService.logEvent(
+        name: 'quiz_start',
+        parameters: {
+          'quiz_id': state.quizId,
+          'quiz_title': quiz.title,
+        },
+      );
       emit(
         state.copyWith(
           loadingState: LoadingState.loaded,
@@ -53,6 +62,13 @@ final class QuizTakingPageBloc
           loadingState: LoadingState.error,
           errorMessage: e.toString(),
         ),
+      );
+      analyticsService.logEvent(
+        name: 'quiz_submit_failure',
+        parameters: {
+          'quiz_id': state.quizId,
+          'error': e.toString(),
+        },
       );
     }
   }
@@ -98,6 +114,13 @@ final class QuizTakingPageBloc
         state.quizId,
         answers: state.answers,
       );
+      analyticsService.logEvent(
+        name: 'quiz_submit_success',
+        parameters: {
+          'quiz_id': state.quizId,
+          'score': result.score,
+        },
+      );
       emit(
         state.copyWith(
           loadingState: LoadingState.success,
@@ -110,6 +133,13 @@ final class QuizTakingPageBloc
           loadingState: LoadingState.error,
           errorMessage: e.toString(),
         ),
+      );
+      analyticsService.logEvent(
+        name: 'quiz_submit_failure',
+        parameters: {
+          'quiz_id': state.quizId,
+          'error': e.toString(),
+        },
       );
     }
   }

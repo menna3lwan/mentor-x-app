@@ -25,13 +25,16 @@ final class EditProfilePageBloc
           EditProfilePageState,
           EditProfilePagePresentationEvent
         > {
-  EditProfilePageBloc({required this.profileRepository})
-    : super(EditProfilePageState.initial) {
+  EditProfilePageBloc({
+    required this.profileRepository,
+    required this.analyticsService,
+  }) : super(EditProfilePageState.initial) {
     on<EditProfilePageLoadEvent>(_onLoad);
     on<EditProfilePageSubmitRequestEvent>(_onSubmitRequest);
   }
 
   final ProfileRepository profileRepository;
+  final AnalyticsService analyticsService;
 
   Future<void> _onLoad(
     EditProfilePageLoadEvent event,
@@ -71,6 +74,12 @@ final class EditProfilePageBloc
         reason: event.reason,
       );
       emit(state.copyWith(loadingState: LoadingState.loaded));
+      analyticsService.logEvent(
+        name: 'profile_edit_request',
+        parameters: {
+          'field_name': event.fieldName,
+        },
+      );
       emitPresentation(const EditProfilePageSuccess());
     } on MentorXException catch (e) {
       emit(

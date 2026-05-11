@@ -15,6 +15,7 @@ final class AssignmentSubmitPageRoute extends GoRouteData
     return BlocProvider<AssignmentSubmitPageBloc>(
       create: (context) => AssignmentSubmitPageBloc(
         assignmentRepository: context.read<AssignmentRepository>(),
+        analyticsService: context.read<AnalyticsService>(),
         assignmentId: assignmentId,
       )..add(const AssignmentSubmitPageLoadEvent()),
       child: const AssignmentSubmitPageWrapper(),
