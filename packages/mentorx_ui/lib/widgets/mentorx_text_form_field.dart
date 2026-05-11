@@ -53,12 +53,6 @@ class _MentorXTextFormFieldState extends State<MentorXTextFormField> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = MentorXThemeProvider.of(context);
-    final brandPrimary = theme.colors[$mentorxToken.color.brandPrimary]!;
-    final textPrimary = theme.colors[$mentorxToken.color.textPrimary]!;
-    final textSecondary = theme.colors[$mentorxToken.color.textSecondary]!;
-    final backgroundSecondary = theme.colors[$mentorxToken.color.backgroundSecondary]!;
-
     final effectiveObscure = widget.obscurePassword ?? obscure;
 
     return TextFormField(
@@ -73,34 +67,41 @@ class _MentorXTextFormFieldState extends State<MentorXTextFormField> {
       enabled: widget.enabled,
       readOnly: widget.readOnly,
       obscureText: widget.isPassword ? effectiveObscure : false,
-      cursorColor: brandPrimary,
-      style: TextStyle(
-        fontSize: 16,
-        fontWeight: FontWeight.w600,
-        color: textPrimary,
+      cursorColor: context.brandPrimaryColor,
+      style: context.bodyPrimaryStyle.copyWith(
+        fontWeight: FontWeight.w700,
       ),
       decoration: InputDecoration(
         labelText: widget.label,
-        hintText: widget.hintText ?? widget.hint,
-        errorText: widget.errorText,
-        hintStyle: TextStyle(
-          color: textSecondary,
+        labelStyle: context.bodyPrimaryStyle.copyWith(
+          color: context.textSecondaryColor,
           fontWeight: FontWeight.w500,
         ),
+        hintText: widget.hintText ?? widget.hint,
+        errorText: widget.errorText,
+        hintStyle: context.bodyPrimaryStyle.copyWith(
+          color: context.textTertiaryColor,
+          fontWeight: FontWeight.w500,
+        ),
+        errorStyle: context.smallTextStyle.copyWith(
+          color: context.statusDangerColor,
+          fontWeight: FontWeight.w600,
+        ),
         filled: true,
-        fillColor: backgroundSecondary,
+        fillColor: context.backgroundSecondaryColor,
         contentPadding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 18,
+          horizontal: 20,
+          vertical: 20,
         ),
         prefixIcon: (widget.prefixIcon ?? widget.icon) != null
-            ? Icon(widget.prefixIcon ?? widget.icon, color: textSecondary)
+            ? Icon(widget.prefixIcon ?? widget.icon, color: context.textSecondaryColor, size: 20)
             : null,
         suffixIcon: widget.isPassword
             ? IconButton(
                 icon: Icon(
-                  effectiveObscure ? Icons.visibility_off : Icons.visibility,
-                  color: textSecondary,
+                  effectiveObscure ? Icons.visibility_off_rounded : Icons.visibility_rounded,
+                  color: context.textSecondaryColor,
+                  size: 20,
                 ),
                 onPressed: () {
                   if (widget.onObscureTextToggled != null) {
@@ -112,20 +113,39 @@ class _MentorXTextFormFieldState extends State<MentorXTextFormField> {
               )
             : null,
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(18),
-          borderSide: BorderSide(color: textSecondary.withValues(alpha: 0.3), width: 1.2),
+          borderRadius: BorderRadius.circular(20),
+          borderSide: BorderSide(
+            color: context.borderPrimaryColor.withValues(alpha: 0.1),
+            width: 1.5,
+          ),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(18),
-          borderSide: BorderSide(color: brandPrimary, width: 1.5),
+          borderRadius: BorderRadius.circular(20),
+          borderSide: BorderSide(
+            color: context.brandPrimaryColor,
+            width: 1.5,
+          ),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(18),
-          borderSide: const BorderSide(color: Colors.red, width: 1.2),
+          borderRadius: BorderRadius.circular(20),
+          borderSide: BorderSide(
+            color: context.statusDangerColor.withValues(alpha: 0.5),
+            width: 1.5,
+          ),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(18),
-          borderSide: const BorderSide(color: Colors.red, width: 1.5),
+          borderRadius: BorderRadius.circular(20),
+          borderSide: BorderSide(
+            color: context.statusDangerColor,
+            width: 1.5,
+          ),
+        ),
+        disabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20),
+          borderSide: BorderSide(
+            color: context.borderPrimaryColor.withValues(alpha: 0.05),
+            width: 1.5,
+          ),
         ),
       ),
     );

@@ -14,122 +14,128 @@ final class RewardsCatalogPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = context.t.student;
 
-    return BlocBuilder<RewardsPageBloc, RewardsPageState>(
-      builder: (context, state) {
-        return Scaffold(
-          backgroundColor: context.backgroundPrimaryColor,
-          appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(70),
-            child: Container(
-              decoration: BoxDecoration(
-                color: context.backgroundSecondaryColor,
-                borderRadius: const BorderRadius.vertical(
-                  bottom: Radius.circular(24),
-                ),
-                border: Border(
-                  bottom: BorderSide(
-                    color: context.borderPrimaryColor.withValues(alpha: 0.05),
-                  ),
-                ),
-              ),
-              child: AppBar(
-                backgroundColor: Colors.transparent,
-                elevation: 0,
-                foregroundColor: context.textPrimaryColor,
-                centerTitle: true,
-                title: Text(
-                  t['rewardsTitle'] ?? 'Rewards Catalog',
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: -0.5,
-                  ),
-                ),
-                actions: [
-                  IconButton(
-                    icon: const Icon(Icons.history_rounded, size: 22),
-                    onPressed: () =>
-                        const RewardsHistoryPageRoute().push(context),
-                  ),
-                  const Gap(8),
-                ],
+    return Scaffold(
+      backgroundColor: context.backgroundPrimaryColor,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(70),
+        child: Container(
+          decoration: BoxDecoration(
+            color: context.backgroundSecondaryColor,
+            borderRadius: const BorderRadius.vertical(
+              bottom: Radius.circular(24),
+            ),
+            border: Border(
+              bottom: BorderSide(
+                color: context.borderPrimaryColor.withValues(alpha: 0.05),
               ),
             ),
           ),
-          body: _buildBody(context, state, t),
-        );
-      },
-    );
-  }
-
-  Widget _buildBody(
-    BuildContext context,
-    RewardsPageState state,
-    dynamic t,
-  ) {
-    if (state.isFirstLoading) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
-    final items = state.itemsSection.data ?? [];
-
-    return RefreshIndicator(
-      color: context.brandPrimaryColor,
-      onRefresh: () async {
-        context.read<RewardsPageBloc>().add(RewardsPageStartedEvent());
-      },
-      child: CustomScrollView(
-        physics: const BouncingScrollPhysics(),
-        slivers: [
-          SliverToBoxAdapter(
-            child: FadeInDown(
-              duration: const Duration(milliseconds: 600),
-              child: _PointsHeader(
-                points: state.pointsSection.data ?? 0,
-                t: t,
+          child: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            foregroundColor: context.textPrimaryColor,
+            centerTitle: true,
+            title: Text(
+              t['rewardsTitle'] ?? 'Rewards Catalog',
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w900,
+                letterSpacing: -0.5,
               ),
             ),
-          ),
-          if (items.isEmpty)
-            SliverFillRemaining(
-              hasScrollBody: false,
-              child: FadeInUp(
-                child: _EmptyRewards(t: t),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.history_rounded, size: 22),
+                onPressed: () => const RewardsHistoryPageRoute().push(context),
               ),
-            )
-          else
-            SliverPadding(
-              padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
-              sliver: SliverGrid(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 0.72,
-                  mainAxisSpacing: 16,
-                  crossAxisSpacing: 16,
+              const Gap(8),
+            ],
+          ),
+        ),
+      ),
+      body: Builder(
+        builder: (context) {
+          final isFirstLoading = context.select(
+            (RewardsPageBloc bloc) => bloc.state.isFirstLoading,
+          );
+
+          if (isFirstLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          return RefreshIndicator(
+            color: context.brandPrimaryColor,
+            onRefresh: () async {
+              context.read<RewardsPageBloc>().add(RewardsPageStartedEvent());
+            },
+            child: CustomScrollView(
+              physics: const BouncingScrollPhysics(),
+              slivers: [
+                SliverToBoxAdapter(
+                  child: FadeInDown(
+                    duration: const Duration(milliseconds: 600),
+                    child: Builder(
+                      builder: (context) {
+                        final points = context.select(
+                          (RewardsPageBloc bloc) =>
+                              bloc.state.pointsSection.data ?? 0,
+                        );
+                        return _PointsHeader(points: points, t: t);
+                      },
+                    ),
+                  ),
                 ),
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    final item = items[index];
-                    return FadeInUp(
-                      duration: const Duration(milliseconds: 500),
-                      delay: Duration(milliseconds: 100 * index),
-                      child: _RewardItemCard(
-                        item: item,
-                        t: t,
-                        onRedeem: () {
-                          context.read<RewardsPageBloc>().add(
-                            RewardsPageClaimRequestedEvent(item.id),
-                          );
-                        },
+                Builder(
+                  builder: (context) {
+                    final items = context.select(
+                      (RewardsPageBloc bloc) =>
+                          bloc.state.itemsSection.data ?? [],
+                    );
+
+                    if (items.isEmpty) {
+                      return SliverFillRemaining(
+                        hasScrollBody: false,
+                        child: FadeInUp(child: _EmptyRewards(t: t)),
+                      );
+                    }
+                    return SliverPadding(
+                      padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
+                      sliver: SliverGrid(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          childAspectRatio: 0.72,
+                          mainAxisSpacing: 16,
+                          crossAxisSpacing: 16,
+                        ),
+                        delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                            final item = items[index];
+                            return FadeInUp(
+                              duration: const Duration(milliseconds: 500),
+                              delay: Duration(milliseconds: 100 * index),
+                              child: _RewardItemCard(
+                                item: item,
+                                t: t,
+                                onRedeem: () {
+                                  context.read<RewardsPageBloc>().add(
+                                    RewardsPageClaimRequestedEvent(item.id),
+                                  );
+                                },
+                              ),
+                            );
+                          },
+                          childCount: items.length,
+                        ),
                       ),
                     );
                   },
-                  childCount: items.length,
                 ),
-              ),
+                const SliverToBoxAdapter(child: Gap(40)),
+              ],
             ),
-          const SliverToBoxAdapter(child: Gap(40)),
-        ],
+          );
+        },
       ),
     );
   }
@@ -272,21 +278,9 @@ final class _RewardItemCard extends StatelessWidget {
                     borderRadius: const BorderRadius.vertical(
                       top: Radius.circular(28),
                     ),
-                    child: Image.network(
+                    child: AppDynamicImage(
                       item.imageUrl ?? '',
                       fit: BoxFit.cover,
-                      errorBuilder: (_, _, _) => Container(
-                        color: context.brandPrimaryColor.withValues(
-                          alpha: 0.05,
-                        ),
-                        child: Icon(
-                          Icons.card_giftcard_rounded,
-                          color: context.brandPrimaryColor.withValues(
-                            alpha: 0.2,
-                          ),
-                          size: 48,
-                        ),
-                      ),
                     ),
                   ),
                 ),

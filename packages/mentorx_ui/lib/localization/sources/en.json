@@ -14,7 +14,7 @@
             "noResults": "No results found",
             "opening": "Opening: ${url}",
             "comingSoon": "Coming soon"
-        },
+        }, 
         "errors": {
             "somethingWentWrong": "Something went wrong",
             "retry": "Retry"
@@ -869,6 +869,8 @@
         "orderSummary": "Order Summary",
         "profileTitle": "My Profile",
         "personalData": "Personal Data",
+        "identityVerification": "Identity Verification",
+        "verifyNowDesc": "Verify your identity now",
         "name": "Name",
         "phone": "Phone",
         "grade": "Grade",

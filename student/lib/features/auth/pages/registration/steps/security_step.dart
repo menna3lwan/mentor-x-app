@@ -40,8 +40,18 @@ final class _SecurityStepState extends State<SecurityStep> {
   Widget build(BuildContext context) {
     final t = context.t.student;
     final bloc = context.read<StudentRegistrationBloc>();
-    return BlocBuilder<StudentRegistrationBloc, StudentRegistrationState>(
-      builder: (context, state) {
+    return Builder(
+      builder: (context) {
+        final password = context.select(
+          (StudentRegistrationBloc bloc) => bloc.state.password,
+        );
+        final confirmPassword = context.select(
+          (StudentRegistrationBloc bloc) => bloc.state.confirmPassword,
+        );
+        final idCardPhotoPath = context.select(
+          (StudentRegistrationBloc bloc) => bloc.state.idCardPhotoPath,
+        );
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -87,7 +97,7 @@ final class _SecurityStepState extends State<SecurityStep> {
             const Gap(16),
             FadeInUp(
               duration: const Duration(milliseconds: 500),
-              child: _buildPasswordStrength(context, state.password),
+              child: _buildPasswordStrength(context, password),
             ),
             const Gap(24),
             FadeInUp(
@@ -99,10 +109,9 @@ final class _SecurityStepState extends State<SecurityStep> {
                 controller: _confirmPasswordController,
                 isPassword: true,
                 errorText:
-                    state.password != state.confirmPassword &&
-                        state.confirmPassword.isNotEmpty
-                    ? (t['passwordMismatch'] ?? 'Passwords do not match')
-                    : null,
+                    password != confirmPassword && confirmPassword.isNotEmpty
+                        ? (t['passwordMismatch'] ?? 'Passwords do not match')
+                        : null,
                 onChanged: (value) =>
                     bloc.add(StudentRegistrationConfirmPasswordChanged(value)),
               ),
@@ -110,7 +119,7 @@ final class _SecurityStepState extends State<SecurityStep> {
             const Gap(48),
             FadeInUp(
               duration: const Duration(milliseconds: 700),
-              child: _buildIdCardUpload(context, state, bloc),
+              child: _buildIdCardUpload(context, idCardPhotoPath, bloc),
             ),
           ],
         );
@@ -183,7 +192,7 @@ final class _SecurityStepState extends State<SecurityStep> {
 
   Widget _buildIdCardUpload(
     BuildContext context,
-    StudentRegistrationState state,
+    String? idCardPhotoPath,
     StudentRegistrationBloc bloc,
   ) {
     final t = context.t.student;
@@ -232,7 +241,7 @@ final class _SecurityStepState extends State<SecurityStep> {
                   ),
                 ],
               ),
-              child: state.idCardPhotoPath == null
+              child: idCardPhotoPath == null
                   ? Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -267,7 +276,7 @@ final class _SecurityStepState extends State<SecurityStep> {
                         ClipRRect(
                           borderRadius: BorderRadius.circular(22),
                           child: Image.file(
-                            File(state.idCardPhotoPath!),
+                            File(idCardPhotoPath),
                             fit: BoxFit.cover,
                           ),
                         ),

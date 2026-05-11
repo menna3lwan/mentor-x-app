@@ -10,6 +10,10 @@ class MockQuizRepo extends Mock implements QuizRepository {}
 class MockLeaderboardRepo extends Mock implements LeaderboardRepository {}
 
 void main() {
+  setUpAll(() {
+    registerFallbackValue('');
+  });
+
   late MockQuizRepo quizRepository;
   late MockLeaderboardRepo leaderboardRepository;
 

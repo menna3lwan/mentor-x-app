@@ -14,9 +14,12 @@ final class AttendanceQrPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = context.t.student;
 
-    return BlocBuilder<AppSessionCubit, AppSessionState>(
-      builder: (context, state) {
-        final code = state.studentCode.isNotEmpty ? state.studentCode : 'NO-CODE';
+    return Builder(
+      builder: (context) {
+        final studentCode = context.select<AppSessionCubit, String>(
+          (cubit) => cubit.state.studentCode,
+        );
+        final code = studentCode.isNotEmpty ? studentCode : 'NO-CODE';
 
         return Scaffold(
           backgroundColor: context.backgroundPrimaryColor,

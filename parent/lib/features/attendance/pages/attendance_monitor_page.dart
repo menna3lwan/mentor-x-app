@@ -20,8 +20,8 @@ class AttendanceMonitorPage extends StatelessWidget {
       create: (context) => AttendanceBloc(
         repository: context.read<ParentAttendanceRepository>(),
       )..add(AttendanceStarted(childId)),
-      child: BlocBuilder<AttendanceBloc, AttendanceState>(
-        builder: (context, state) {
+      child: Builder(
+        builder: (context) {
           return AppDashboardScaffold(
             title: 'Attendance Monitor',
             onRefresh: () async {
@@ -33,26 +33,37 @@ class AttendanceMonitorPage extends StatelessWidget {
                 icon: const Icon(Icons.refresh_rounded),
               ),
             ],
-            body: _buildBody(context, state),
+            body: _buildBody(context),
           );
         },
       ),
     );
   }
 
-  Widget _buildBody(BuildContext context, AttendanceState state) {
-    if (state.status == AttendanceBlocStatus.loading) {
+  Widget _buildBody(BuildContext context) {
+    final status = context.select<AttendanceBloc, AttendanceBlocStatus>(
+      (bloc) => bloc.state.status,
+    );
+    final errorMessage = context.select<AttendanceBloc, String?>(
+      (bloc) => bloc.state.errorMessage,
+    );
+
+    if (status == AttendanceBlocStatus.loading) {
       return const Center(child: CircularProgressIndicator());
     }
 
-    if (state.status == AttendanceBlocStatus.failure) {
+    if (status == AttendanceBlocStatus.failure) {
       return AppErrorView(
-        message: state.errorMessage ?? 'Failed to load attendance data',
+        message: errorMessage ?? 'Failed to load attendance data',
         onRetry: () => context.read<AttendanceBloc>().add(AttendanceStarted(childId)),
       );
     }
 
-    if (state.attendanceRecords.isEmpty) {
+    final attendanceRecords = context.select<AttendanceBloc, List<AttendanceRecordEntity>>(
+      (bloc) => bloc.state.attendanceRecords,
+    );
+
+    if (attendanceRecords.isEmpty) {
       return AppEmptyView(
         title: 'No Records',
         message: 'No attendance records found for this student.',
@@ -62,34 +73,38 @@ class AttendanceMonitorPage extends StatelessWidget {
       );
     }
 
+    final attendanceSummary = context.select<AttendanceBloc, AttendanceSummaryEntity?>(
+      (bloc) => bloc.state.attendanceSummary,
+    );
+
     return ListView(
       physics: const BouncingScrollPhysics(),
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       children: [
-        if (state.attendanceSummary != null) ...[
+        if (attendanceSummary != null) ...[
           FadeInDown(
             duration: const Duration(milliseconds: 600),
             child: AttendanceRateCard(
-              rate: state.attendanceSummary!.attendanceRate,
+              rate: attendanceSummary.attendanceRate,
               stats: [
                 AttendanceSummaryStat(
                   label: 'Present',
-                  value: state.attendanceSummary!.present.toString(),
+                  value: attendanceSummary.present.toString(),
                   color: context.statusSuccessColor,
                 ),
                 AttendanceSummaryStat(
                   label: 'Absent',
-                  value: state.attendanceSummary!.absent.toString(),
+                  value: attendanceSummary.absent.toString(),
                   color: context.statusDangerColor,
                 ),
                 AttendanceSummaryStat(
                   label: 'Late',
-                  value: state.attendanceSummary!.late.toString(),
+                  value: attendanceSummary.late.toString(),
                   color: context.statusWarningColor,
                 ),
                 AttendanceSummaryStat(
                   label: 'Excused',
-                  value: state.attendanceSummary!.excused.toString(),
+                  value: attendanceSummary.excused.toString(),
                   color: context.brandPrimaryColor,
                 ),
               ],
@@ -104,7 +119,7 @@ class AttendanceMonitorPage extends StatelessWidget {
         ),
         const Gap(16),
         
-        ...state.attendanceRecords.asMap().entries.map(
+        ...attendanceRecords.asMap().entries.map(
           (entry) => FadeInUp(
             duration: const Duration(milliseconds: 500),
             delay: Duration(milliseconds: 50 * entry.key),

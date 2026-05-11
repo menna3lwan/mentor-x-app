@@ -187,4 +187,27 @@ final class MockWalletRepository implements WalletRepository {
       createdAt: DateTime.now(),
     );
   }
+
+  @override
+  Future<List<CouponEntity>> getValidCoupons() async {
+    await Future<void>.delayed(delay);
+    return [
+      CouponEntity(
+        id: '1',
+        code: 'DISCOUNT10',
+        discountPercentage: 10.0,
+        isActive: true,
+        type: 'percentage',
+        validUntil: DateTime.now().add(const Duration(days: 30)),
+      ),
+      CouponEntity(
+        id: '2',
+        code: 'SAVE50',
+        discountAmount: 50.0,
+        isActive: true,
+        type: 'fixed',
+        minOrderAmount: 200.0,
+      ),
+    ];
+  }
 }

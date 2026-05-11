@@ -1,24 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import '../../../../core/core.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:gap/gap.dart';
+import 'bloc/transactions_history_page_bloc.dart';
 
 final class TransactionsHistoryPage extends StatelessWidget {
-  final List<WalletTransactionEntity> transactions;
-  final bool hasMore;
-  final bool isLoading;
-  final bool isInitialLoading;
   final ScrollController scrollController;
   final Future<void> Function() onRefresh;
 
   const TransactionsHistoryPage({
     super.key,
-    required this.transactions,
-    required this.hasMore,
-    required this.isLoading,
-    required this.isInitialLoading,
     required this.scrollController,
     required this.onRefresh,
   });
@@ -26,6 +20,18 @@ final class TransactionsHistoryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = context.t.student;
+
+    final transactions = context.select(
+      (TransactionsHistoryPageBloc bloc) => bloc.state.transactions,
+    );
+    final hasMore = context.select(
+      (TransactionsHistoryPageBloc bloc) => bloc.state.hasMore,
+    );
+    final loadingState = context.select(
+      (TransactionsHistoryPageBloc bloc) => bloc.state.loadingState,
+    );
+    final isLoading = loadingState == LoadingState.loading;
+    final isInitialLoading = isLoading && transactions.isEmpty;
 
     return Scaffold(
       backgroundColor: context.backgroundPrimaryColor,

@@ -65,98 +65,107 @@ final class FeaturedCoursesSectionWidget extends StatelessWidget {
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(24),
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: Stack(
-                            fit: StackFit.expand,
-                            children: [
-                              Image.network(thumbnailUrl, fit: BoxFit.cover),
-                              Positioned(
-                                top: 12,
-                                left: 12,
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 10,
-                                    vertical: 6,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: context.backgroundPrimaryColor
-                                        .withValues(alpha: 0.8),
-                                    borderRadius: BorderRadius.circular(10),
-                                    border: Border.all(
-                                      color: context.borderPrimaryColor
-                                          .withValues(alpha: 0.1),
-                                    ),
-                                  ),
-                                  child: Text(
-                                    isFree
-                                        ? context.t.home.dashboard.free
-                                        : context.t.core.price(amount: price),
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: context.brandPrimaryColor,
-                                      fontWeight: FontWeight.w900,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
+                  child: Stack(
+                    children: [
+                      Positioned.fill(
+                        child: ExcludeSemantics(
+                          child: BackdropFilter(
+                            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                            child: const SizedBox.expand(),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                title,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: context.textPrimaryColor,
-                                  fontWeight: FontWeight.w900,
-                                  fontSize: 15,
-                                  height: 1.3,
-                                  letterSpacing: -0.3,
-                                ),
-                              ),
-                              const Gap(12),
-                              Row(
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.all(6),
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: Stack(
+                              fit: StackFit.expand,
+                              children: [
+                              AppDynamicImage(thumbnailUrl, fit: BoxFit.cover),
+                                Positioned(
+                                  top: 12,
+                                  left: 12,
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 10,
+                                      vertical: 6,
+                                    ),
                                     decoration: BoxDecoration(
-                                      color: context.brandPrimaryColor.withValues(
-                                        alpha: 0.1,
+                                      color: context.backgroundPrimaryColor
+                                          .withValues(alpha: 0.8),
+                                      borderRadius: BorderRadius.circular(10),
+                                      border: Border.all(
+                                        color: context.borderPrimaryColor
+                                            .withValues(alpha: 0.1),
                                       ),
-                                      shape: BoxShape.circle,
                                     ),
-                                    child: Icon(
-                                      Icons.people_alt_rounded,
-                                      size: 14,
-                                      color: context.brandPrimaryColor,
-                                    ),
-                                  ),
-                                  const Gap(8),
-                                  Text(
-                                    '$enrolledCount ${context.t.course.detail.students}',
-                                    style: TextStyle(
-                                      color: context.textSecondaryColor,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w700,
+                                    child: Text(
+                                      isFree
+                                          ? context.t.home.dashboard.free
+                                          : context.t.core.price(amount: price),
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: context.brandPrimaryColor,
+                                        fontWeight: FontWeight.w900,
+                                      ),
                                     ),
                                   ),
-                                ],
-                              ),
-                            ],
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
+                          Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  title,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color: context.textPrimaryColor,
+                                    fontWeight: FontWeight.w900,
+                                    fontSize: 15,
+                                    height: 1.3,
+                                    letterSpacing: -0.3,
+                                  ),
+                                ),
+                                const Gap(12),
+                                Row(
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.all(6),
+                                      decoration: BoxDecoration(
+                                        color: context.brandPrimaryColor.withValues(
+                                          alpha: 0.1,
+                                        ),
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Icon(
+                                        Icons.people_alt_rounded,
+                                        size: 14,
+                                        color: context.brandPrimaryColor,
+                                      ),
+                                    ),
+                                    const Gap(8),
+                                    Text(
+                                      '$enrolledCount ${context.t.course.detail.students}',
+                                      style: TextStyle(
+                                        color: context.textSecondaryColor,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
               ),

@@ -805,7 +805,7 @@ final class _QuestionCard extends StatelessWidget {
                       const Gap(24),
                       ClipRRect(
                         borderRadius: BorderRadius.circular(24),
-                        child: Image.network(
+                        child: AppDynamicImage(
                           q.imageUrl!,
                           fit: BoxFit.cover,
                         ),

@@ -45,8 +45,12 @@ final class OtpStep extends StatelessWidget {
       ),
     );
 
-    return BlocBuilder<StudentRegistrationBloc, StudentRegistrationState>(
-      builder: (context, state) {
+    return Builder(
+      builder: (context) {
+        final phone = context.select(
+          (StudentRegistrationBloc bloc) => bloc.state.phone,
+        );
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -101,7 +105,7 @@ final class OtpStep extends StatelessWidget {
                           '${t['otpSentWhatsapp'] ?? "We've sent a 6-digit code to"}\n',
                     ),
                     TextSpan(
-                      text: state.phone,
+                      text: phone,
                       style: TextStyle(
                         color: context.textPrimaryColor,
                         fontWeight: FontWeight.w900,

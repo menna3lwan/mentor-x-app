@@ -14,7 +14,18 @@ final class MarketplaceCartPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = context.t.student;
-    final cartState = context.watch<MarketplaceCartCubit>().state;
+    final cartItems = context.select(
+      (MarketplaceCartCubit cubit) => cubit.state.items,
+    );
+    final cartSubtotal = context.select(
+      (MarketplaceCartCubit cubit) => cubit.state.subtotal,
+    );
+    final cartDiscountAmount = context.select(
+      (MarketplaceCartCubit cubit) => cubit.state.discountAmount,
+    );
+    final cartTotal = context.select(
+      (MarketplaceCartCubit cubit) => cubit.state.total,
+    );
 
     return Scaffold(
       backgroundColor: context.backgroundPrimaryColor,
@@ -48,7 +59,7 @@ final class MarketplaceCartPage extends StatelessWidget {
           ),
         ),
       ),
-      body: cartState.items.isEmpty
+      body: cartItems.isEmpty
           ? Center(
               child: FadeInUp(
                 child: Padding(
@@ -118,13 +129,14 @@ final class MarketplaceCartPage extends StatelessWidget {
               children: [
                 Expanded(
                   child: ListView.separated(
-                    padding: const EdgeInsets.fromLTRB(20, 24, 20, 100),
+                    padding: const EdgeInsets.fromLTRB(20, 24, 20, 24),
                     physics: const BouncingScrollPhysics(),
-                    itemCount: cartState.items.length,
+                    itemCount: cartItems.length,
                     separatorBuilder: (context, index) => const Gap(16),
                     itemBuilder: (context, index) {
-                      final cartItem = cartState.items[index];
+                      final cartItem = cartItems[index];
                       return FadeInUp(
+                        key: ValueKey('cart_item_${cartItem.item.id}'),
                         duration: const Duration(milliseconds: 500),
                         delay: Duration(milliseconds: 50 * index),
                         child: _MarketplaceCartItemTile(
@@ -135,9 +147,18 @@ final class MarketplaceCartPage extends StatelessWidget {
                   ),
                 ),
                 FadeInUp(
+                  key: const ValueKey('cart_coupon_section'),
+                  duration: const Duration(milliseconds: 600),
+                  child: _CouponSection(),
+                ),
+                const Gap(16),
+                FadeInUp(
+                  key: const ValueKey('cart_order_summary'),
                   duration: const Duration(milliseconds: 600),
                   child: _OrderSummary(
-                    subtotal: cartState.subtotal,
+                    subtotal: cartSubtotal,
+                    discountAmount: cartDiscountAmount,
+                    total: cartTotal,
                     onCheckout: () => _showCheckoutSheet(context),
                   ),
                 ),
@@ -160,7 +181,9 @@ final class MarketplaceCartPage extends StatelessWidget {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => Container(
+      builder: (_) => BlocProvider.value(
+        value: context.read<MarketplaceCartPageBloc>(),
+        child: Container(
         decoration: BoxDecoration(
           color: context.backgroundSecondaryColor,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
@@ -222,10 +245,13 @@ final class MarketplaceCartPage extends StatelessWidget {
               maxLines: 2,
             ),
             const Gap(32),
-            BlocBuilder<MarketplaceCartPageBloc, MarketplaceCartPageState>(
-              builder: (context, state) {
+            Builder(
+              builder: (context) {
+                final loadingState = context.select(
+                  (MarketplaceCartPageBloc bloc) => bloc.state.loadingState,
+                );
                 return MentorXButton(
-                  loading: state.loadingState == LoadingState.loading,
+                  loading: loadingState == LoadingState.loading,
                   onPressed: () {
                     if (addressController.text.isEmpty ||
                         phoneController.text.isEmpty) {
@@ -249,7 +275,7 @@ final class MarketplaceCartPage extends StatelessWidget {
           ],
         ),
       ),
-    );
+    ));
   }
 
   void _placeOrder(
@@ -397,112 +423,320 @@ final class _IconButton extends StatelessWidget {
 
 final class _OrderSummary extends StatelessWidget {
   final double subtotal;
+  final double discountAmount;
+  final double total;
   final VoidCallback onCheckout;
 
   const _OrderSummary({
     required this.subtotal,
+    required this.discountAmount,
+    required this.total,
     required this.onCheckout,
   });
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<MarketplaceCartPageBloc, MarketplaceCartPageState>(
-      builder: (context, state) {
-        final walletBalance = state.walletSummary?.walletBalance ?? 0.0;
-        final isBalanceSufficient = walletBalance >= subtotal;
-        final deficit = subtotal - walletBalance;
+    final walletBalance = context.select(
+      (MarketplaceCartPageBloc bloc) =>
+          bloc.state.walletSummary?.walletBalance ?? 0.0,
+    );
+    final isBalanceSufficient = walletBalance >= total;
+    final deficit = total - walletBalance;
 
-        return Container(
-          padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(
-            color: context.backgroundSecondaryColor,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
-            border: Border.all(
-              color: context.borderPrimaryColor.withValues(alpha: 0.05),
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: context.backgroundSecondaryColor,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+        border: Border.all(
+          color: context.borderPrimaryColor.withValues(alpha: 0.05),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 20,
+            offset: const Offset(0, -10),
+          ),
+        ],
+      ),
+      child: SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _SummaryRow(
+              label: 'Wallet Balance',
+              value: '${walletBalance.toStringAsFixed(2)} EGP',
+              valueColor: isBalanceSufficient
+                  ? context.statusSuccessColor
+                  : context.statusDangerColor,
+              isBold: true,
             ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.1),
-                blurRadius: 20,
-                offset: const Offset(0, -10),
+            const Gap(12),
+            _SummaryRow(
+              label: 'Subtotal',
+              value: '${subtotal.toStringAsFixed(2)} EGP',
+            ),
+            if (discountAmount > 0) ...[
+              const Gap(8),
+              _SummaryRow(
+                label: 'Discount',
+                value: '-${discountAmount.toStringAsFixed(2)} EGP',
+                valueColor: context.statusSuccessColor,
               ),
             ],
-          ),
-          child: SafeArea(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
+            const Gap(8),
+            _SummaryRow(
+              label: 'Delivery',
+              value: 'Free',
+              valueColor: context.statusSuccessColor,
+            ),
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 16),
+              child: Divider(height: 1),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _SummaryRow(
-                  label: 'Wallet Balance',
-                  value: '${walletBalance.toStringAsFixed(2)} EGP',
-                  valueColor: isBalanceSufficient
-                      ? context.statusSuccessColor
-                      : context.statusDangerColor,
-                  isBold: true,
+                Text(
+                  'Total',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w900,
+                    color: context.textPrimaryColor,
+                    letterSpacing: -0.5,
+                  ),
                 ),
-                const Gap(12),
-                _SummaryRow(
-                  label: 'Subtotal',
-                  value: '${subtotal.toStringAsFixed(2)} EGP',
+                Text(
+                  '${total.toStringAsFixed(2)} EGP',
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w900,
+                    color: context.brandPrimaryColor,
+                    letterSpacing: -0.5,
+                  ),
                 ),
-                const Gap(8),
-                _SummaryRow(
-                  label: 'Delivery',
-                  value: 'Free',
-                  valueColor: context.statusSuccessColor,
+              ],
+            ),
+            if (!isBalanceSufficient) ...[
+              const Gap(16),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: context.statusDangerColor.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 16),
-                  child: Divider(height: 1),
+                child: Text(
+                  'Insufficient balance. Top up ${deficit.toStringAsFixed(2)} EGP to place order.',
+                  style: TextStyle(
+                    color: context.statusDangerColor,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w800,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Total',
+              ),
+            ],
+            const Gap(24),
+            MentorXButton(
+              onPressed: isBalanceSufficient ? onCheckout : null,
+              label: isBalanceSufficient
+                  ? context.t.student['checkout']!
+                  : 'Insufficient Balance',
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+final class _CouponSection extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final cartCubit = context.watch<MarketplaceCartCubit>();
+    final appliedCoupon = cartCubit.state.appliedCoupon;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: context.backgroundSecondaryColor,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: context.borderPrimaryColor.withValues(alpha: 0.05),
+          ),
+        ),
+        child: appliedCoupon == null
+            ? Row(
+                key: const ValueKey('coupon_input'),
+                children: [
+                  Icon(Icons.local_offer_rounded, color: context.brandPrimaryColor),
+                  const Gap(12),
+                  Expanded(
+                    child: Text(
+                      'Have a coupon code?',
                       style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w900,
+                        fontWeight: FontWeight.w800,
+                        fontSize: 14,
                         color: context.textPrimaryColor,
-                        letterSpacing: -0.5,
                       ),
                     ),
-                    Text(
-                      '${subtotal.toStringAsFixed(2)} EGP',
+                  ),
+                  TextButton(
+                    onPressed: () => _showCouponsSheet(context),
+                    child: Text(
+                      'View Codes',
                       style: TextStyle(
-                        fontSize: 22,
                         fontWeight: FontWeight.w900,
                         color: context.brandPrimaryColor,
-                        letterSpacing: -0.5,
                       ),
-                    ),
-                  ],
-                ),
-                if (!isBalanceSufficient) ...[
-                  const Gap(16),
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: context.statusDangerColor.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      'Insufficient balance. Top up ${deficit.toStringAsFixed(2)} EGP to place order.',
-                      style: TextStyle(
-                        color: context.statusDangerColor,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w800,
-                      ),
-                      textAlign: TextAlign.center,
                     ),
                   ),
                 ],
+              )
+            : Row(
+                key: const ValueKey('applied_coupon'),
+                children: [
+                  Icon(Icons.check_circle_rounded, color: context.statusSuccessColor),
+                  const Gap(12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Coupon Applied!',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w900,
+                            fontSize: 14,
+                            color: context.statusSuccessColor,
+                          ),
+                        ),
+                        Text(
+                          appliedCoupon.code,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 12,
+                            color: context.textSecondaryColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.close_rounded, color: context.statusDangerColor),
+                    onPressed: () => cartCubit.removeCoupon(),
+                  ),
+                ],
+              ),
+      ),
+    );
+  }
+
+  void _showCouponsSheet(BuildContext context) {
+    final cartCubit = context.read<MarketplaceCartCubit>();
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (_) {
+        return BlocProvider.value(
+          value: context.read<MarketplaceCartPageBloc>(),
+          child: Container(
+            height: MediaQuery.of(context).size.height * 0.6,
+            decoration: BoxDecoration(
+              color: context.backgroundSecondaryColor,
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+            ),
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Container(
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: context.textTertiaryColor.withValues(alpha: 0.2),
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                ),
                 const Gap(24),
-                MentorXButton(
-                  onPressed: isBalanceSufficient ? onCheckout : null,
-                  label: isBalanceSufficient
-                      ? context.t.student['checkout']!
-                      : 'Insufficient Balance',
+                Text(
+                  'Available Coupons',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w900,
+                    color: context.textPrimaryColor,
+                  ),
+                ),
+                const Gap(16),
+                Expanded(
+                  child: Builder(
+                    builder: (context) {
+                      final loadingState = context.select(
+                        (MarketplaceCartPageBloc bloc) => bloc.state.loadingState,
+                      );
+                      final validCoupons = context.select(
+                        (MarketplaceCartPageBloc bloc) => bloc.state.validCoupons,
+                      );
+
+                      if (loadingState == LoadingState.loading &&
+                          validCoupons.isEmpty) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+                      if (validCoupons.isEmpty) {
+                        return Center(
+                          child: Text(
+                            'No valid coupons found.',
+                            style: TextStyle(color: context.textSecondaryColor),
+                          ),
+                        );
+                      }
+                      return ListView.separated(
+                        itemCount: validCoupons.length,
+                        separatorBuilder: (_, _) => const Gap(12),
+                        itemBuilder: (context, index) {
+                          final coupon = validCoupons[index];
+                          return Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: context.borderPrimaryColor.withValues(
+                                  alpha: 0.1,
+                                ),
+                              ),
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: ListTile(
+                              leading: Icon(
+                                Icons.local_offer,
+                                color: context.brandPrimaryColor,
+                              ),
+                              title: Text(
+                                coupon.code,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              ),
+                              subtitle: Text(
+                                coupon.type == 'percentage'
+                                    ? '${coupon.discountPercentage}% OFF'
+                                    : '${coupon.discountAmount} EGP OFF',
+                              ),
+                              trailing: TextButton(
+                                onPressed: () {
+                                  cartCubit.applyCoupon(coupon);
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('Apply'),
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
                 ),
               ],
             ),

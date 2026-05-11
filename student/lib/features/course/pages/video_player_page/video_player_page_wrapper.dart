@@ -25,18 +25,46 @@ final class _VideoPlayerPageWrapperState extends State<VideoPlayerPageWrapper> {
             MentorXUI.showToast(message: message);
         }
       },
-      child: BlocBuilder<VideoPlayerPageBloc, VideoPlayerPageState>(
-        builder: (context, state) {
+      child: Builder(
+        builder: (context) {
           final bloc = context.read<VideoPlayerPageBloc>();
+          final title = context.select(
+            (VideoPlayerPageBloc bloc) => bloc.state.title,
+          );
+          final streamUrl = context.select(
+            (VideoPlayerPageBloc bloc) => bloc.state.streamUrl,
+          );
+          final isLoading = context.select(
+            (VideoPlayerPageBloc bloc) => bloc.state.isLoading,
+          );
+          final isReady = context.select(
+            (VideoPlayerPageBloc bloc) => bloc.state.isReady,
+          );
+          final isCompleted = context.select(
+            (VideoPlayerPageBloc bloc) => bloc.state.isCompleted,
+          );
+          final isFailure = context.select(
+            (VideoPlayerPageBloc bloc) => bloc.state.isFailure,
+          );
+          final errorMessage = context.select(
+            (VideoPlayerPageBloc bloc) => bloc.state.errorMessage,
+          );
+          final currentPositionSeconds = context.select(
+            (VideoPlayerPageBloc bloc) => bloc.state.currentPositionSeconds,
+          );
+          final totalDurationSeconds = context.select(
+            (VideoPlayerPageBloc bloc) => bloc.state.totalDurationSeconds,
+          );
+
           return VideoPlayerPagePage(
-            title: state.title,
-            streamUrl: state.streamUrl,
-            isLoading: state.isLoading,
-            isReady: state.isReady,
-            isCompleted: state.isCompleted,
-            errorMessage: state.isFailure ? state.errorMessage : null,
-            currentPositionSeconds: state.currentPositionSeconds,
-            totalDurationSeconds: state.totalDurationSeconds,
+            title: title,
+            streamUrl: streamUrl,
+            isLoading: isLoading,
+            isReady: isReady,
+            isCompleted: isCompleted,
+            errorMessage: isFailure ? errorMessage : null,
+            currentPositionSeconds: currentPositionSeconds,
+            totalDurationSeconds: totalDurationSeconds,
             onProgressChanged: (position, total) => bloc.add(
               VideoPlayerPageProgressUpdated(
                 positionSeconds: position,

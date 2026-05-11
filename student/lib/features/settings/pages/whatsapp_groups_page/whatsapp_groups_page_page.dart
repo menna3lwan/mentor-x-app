@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:gap/gap.dart';
 import 'bloc/whatsapp_groups_page_bloc.dart';
 
 final class WhatsappGroupsPagePage extends StatelessWidget {
-  final WhatsappGroupsPageState state;
   final VoidCallback onRefresh;
   final ValueChanged<String> onJoinGroup;
 
   const WhatsappGroupsPagePage({
     super.key,
-    required this.state,
     required this.onRefresh,
     required this.onJoinGroup,
   });
@@ -21,114 +20,123 @@ final class WhatsappGroupsPagePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = context.t.student;
 
-    return Scaffold(
-      backgroundColor: context.backgroundPrimaryColor,
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(70),
-        child: FadeInDown(
-          duration: const Duration(milliseconds: 500),
-          child: Container(
-            decoration: BoxDecoration(
-              color: context.backgroundSecondaryColor,
-              borderRadius: const BorderRadius.vertical(
-                bottom: Radius.circular(28),
-              ),
-              border: Border(
-                bottom: BorderSide(
-                  color: context.borderPrimaryColor.withValues(alpha: 0.05),
+    return BlocBuilder<WhatsappGroupsPageBloc, WhatsappGroupsPageState>(
+      builder: (context, state) {
+        final isLoading = state.isLoading;
+
+        return Scaffold(
+          backgroundColor: context.backgroundPrimaryColor,
+          appBar: PreferredSize(
+            preferredSize: const Size.fromHeight(70),
+            child: FadeInDown(
+              key: const ValueKey('whatsapp_app_bar_fade'),
+              duration: const Duration(milliseconds: 500),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: context.backgroundSecondaryColor,
+                  borderRadius: const BorderRadius.vertical(
+                    bottom: Radius.circular(28),
+                  ),
+                  border: Border(
+                    bottom: BorderSide(
+                      color: context.borderPrimaryColor.withValues(alpha: 0.05),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            child: AppBar(
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              foregroundColor: context.textPrimaryColor,
-              centerTitle: true,
-              title: Text(
-                t['whatsappGroups'] ?? 'WhatsApp Groups',
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w900,
-                  letterSpacing: -0.5,
+                child: AppBar(
+                  backgroundColor: Colors.transparent,
+                  elevation: 0,
+                  foregroundColor: context.textPrimaryColor,
+                  centerTitle: true,
+                  title: Text(
+                    t['whatsappGroups'] ?? 'WhatsApp Groups',
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: -0.5,
+                    ),
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-      ),
-      body: RefreshIndicator(
-        onRefresh: () async => onRefresh(),
-        color: context.brandPrimaryColor,
-        backgroundColor: context.backgroundSecondaryColor,
-        child: state.isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : ListView(
-                physics: const BouncingScrollPhysics(),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 24,
-                ),
-                children: [
-                  FadeInUp(
-                    duration: const Duration(milliseconds: 500),
-                    child: Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: context.brandPrimaryColor.withValues(
-                          alpha: 0.05,
-                        ),
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(
-                          color: context.brandPrimaryColor.withValues(
-                            alpha: 0.1,
-                          ),
-                        ),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.info_outline_rounded,
-                            color: context.brandPrimaryColor,
-                            size: 20,
-                          ),
-                          const Gap(12),
-                          Expanded(
-                            child: Text(
-                              'Join official study groups to receive instant updates.',
-                              style: TextStyle(
-                                color: context.brandPrimaryColor,
-                                fontWeight: FontWeight.w800,
-                                fontSize: 13,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const Gap(24),
-                  ...state.groups.asMap().entries.map(
-                    (entry) => FadeInUp(
-                      duration: const Duration(milliseconds: 500),
-                      delay: Duration(milliseconds: 100 * entry.key),
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: 16),
-                        child: _GroupCard(
-                          group: entry.value,
-                          isJoined: state.joinedGroupId == entry.value.id,
-                          onJoin: () async {
-                            await Clipboard.setData(
-                              ClipboardData(text: entry.value.inviteLink),
-                            );
-                            onJoinGroup(entry.value.id);
-                          },
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+          body: RefreshIndicator(
+            onRefresh: () async => onRefresh(),
+            color: context.brandPrimaryColor,
+            backgroundColor: context.backgroundSecondaryColor,
+            child: isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : _buildList(context, state),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildList(BuildContext context, WhatsappGroupsPageState state) {
+    final groups = state.groups;
+    final joinedGroupId = state.joinedGroupId;
+
+    return ListView(
+      physics: const BouncingScrollPhysics(),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+      children: [
+        FadeInUp(
+          key: const ValueKey('whatsapp_info_banner_fade'),
+          duration: const Duration(milliseconds: 500),
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: context.brandPrimaryColor.withValues(alpha: 0.05),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: context.brandPrimaryColor.withValues(alpha: 0.1),
               ),
-      ),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.info_outline_rounded,
+                  color: context.brandPrimaryColor,
+                  size: 20,
+                ),
+                const Gap(12),
+                Expanded(
+                  child: Text(
+                    'Join official study groups to receive instant updates.',
+                    style: TextStyle(
+                      color: context.brandPrimaryColor,
+                      fontWeight: FontWeight.w800,
+                      fontSize: 13,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        const Gap(24),
+        ...groups.asMap().entries.map(
+          (entry) => FadeInUp(
+            key: ValueKey('whatsapp_group_fade_${entry.value.id}'),
+            duration: const Duration(milliseconds: 500),
+            delay: Duration(milliseconds: (100 * entry.key).toInt()),
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 16),
+              child: _GroupCard(
+                group: entry.value,
+                isJoined: joinedGroupId == entry.value.id,
+                onJoin: () async {
+                  await Clipboard.setData(
+                    ClipboardData(text: entry.value.inviteLink),
+                  );
+                  onJoinGroup(entry.value.id);
+                },
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

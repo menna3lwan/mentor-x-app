@@ -31,7 +31,7 @@ class AppHeroCard extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                style: context.bodyPrimaryStyle.copyWith(
                       color: context.backgroundSecondaryColor,
                       fontWeight: FontWeight.w700,
                     ),
@@ -79,7 +79,7 @@ class _StatItem extends StatelessWidget {
         children: [
           Text(
             stat.value,
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+            style: context.titleH2Style.copyWith(
                   fontWeight: FontWeight.w800,
                   color: context.backgroundSecondaryColor,
                 ),
@@ -87,7 +87,7 @@ class _StatItem extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             stat.label,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+            style: context.smallTextStyle.copyWith(
                   color: context.backgroundSecondaryColor.withValues(alpha: 0.7),
                 ),
           ),

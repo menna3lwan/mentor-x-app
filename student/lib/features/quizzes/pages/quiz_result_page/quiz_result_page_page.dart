@@ -18,14 +18,20 @@ final class QuizResultPage extends StatelessWidget {
 
     return BlocBuilder<QuizResultPageBloc, QuizResultPageState>(
       builder: (context, state) {
-        if (state.loadingState == LoadingState.loading) {
+        final loadingState = state.loadingState;
+        final errorMessage = state.errorMessage;
+        final result = state.result;
+        final leaderboard = state.leaderboard;
+        final myRank = state.myRank;
+
+        if (loadingState == LoadingState.loading) {
           return Scaffold(
             backgroundColor: context.backgroundPrimaryColor,
             body: const Center(child: CircularProgressIndicator()),
           );
         }
 
-        if (state.errorMessage != null) {
+        if (errorMessage != null) {
           return Scaffold(
             backgroundColor: context.backgroundPrimaryColor,
             body: Center(
@@ -35,6 +41,7 @@ final class QuizResultPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     FadeInDown(
+                      key: const ValueKey('quiz_result_error_icon_fade'),
                       child: Icon(
                         Icons.error_outline_rounded,
                         size: 64,
@@ -43,8 +50,9 @@ final class QuizResultPage extends StatelessWidget {
                     ),
                     const Gap(24),
                     FadeInUp(
+                      key: const ValueKey('quiz_result_error_text_fade'),
                       child: Text(
-                        state.errorMessage!,
+                        errorMessage,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 16,
@@ -55,6 +63,7 @@ final class QuizResultPage extends StatelessWidget {
                     ),
                     const Gap(32),
                     FadeInUp(
+                      key: const ValueKey('quiz_result_error_btn_fade'),
                       delay: const Duration(milliseconds: 200),
                       child: SizedBox(
                         width: 140,
@@ -71,7 +80,6 @@ final class QuizResultPage extends StatelessWidget {
           );
         }
 
-        final result = state.result;
         if (result == null) {
           return Scaffold(
             backgroundColor: context.backgroundPrimaryColor,
@@ -124,6 +132,7 @@ final class QuizResultPage extends StatelessWidget {
                         child: Column(
                           children: [
                             FadeInDown(
+                              key: const ValueKey('quiz_result_circle_fade'),
                               duration: const Duration(milliseconds: 800),
                               child: _BuildResultCircle(
                                 percent: percent,
@@ -136,6 +145,7 @@ final class QuizResultPage extends StatelessWidget {
                             ),
                             const Gap(40),
                             FadeInUp(
+                              key: const ValueKey('quiz_result_congrats_fade'),
                               duration: const Duration(milliseconds: 600),
                               delay: const Duration(milliseconds: 200),
                               child: Text(
@@ -154,6 +164,7 @@ final class QuizResultPage extends StatelessWidget {
                             ),
                             const Gap(8),
                             FadeInUp(
+                              key: const ValueKey('quiz_result_score_text_fade'),
                               duration: const Duration(milliseconds: 600),
                               delay: const Duration(milliseconds: 300),
                               child: Text(
@@ -171,6 +182,7 @@ final class QuizResultPage extends StatelessWidget {
                               children: [
                                 Expanded(
                                   child: FadeInUp(
+                                    key: const ValueKey('quiz_result_stat_correct_fade'),
                                     duration: const Duration(milliseconds: 500),
                                     delay: const Duration(milliseconds: 400),
                                     child: _StatBox(
@@ -183,6 +195,7 @@ final class QuizResultPage extends StatelessWidget {
                                 const Gap(12),
                                 Expanded(
                                   child: FadeInUp(
+                                    key: const ValueKey('quiz_result_stat_wrong_fade'),
                                     duration: const Duration(milliseconds: 500),
                                     delay: const Duration(milliseconds: 500),
                                     child: _StatBox(
@@ -195,6 +208,7 @@ final class QuizResultPage extends StatelessWidget {
                                 const Gap(12),
                                 Expanded(
                                   child: FadeInUp(
+                                    key: const ValueKey('quiz_result_stat_time_fade'),
                                     duration: const Duration(milliseconds: 500),
                                     delay: const Duration(milliseconds: 600),
                                     child: _StatBox(
@@ -208,16 +222,18 @@ final class QuizResultPage extends StatelessWidget {
                             ),
                             const Gap(40),
                             FadeInUp(
+                              key: const ValueKey('quiz_result_leaderboard_fade'),
                               duration: const Duration(milliseconds: 600),
                               delay: const Duration(milliseconds: 700),
                               child: _BuildLeaderboard(
-                                leaderboard: state.leaderboard,
-                                myRank: state.myRank,
+                                leaderboard: leaderboard,
+                                myRank: myRank,
                                 t: t,
                               ),
                             ),
                             const Gap(40),
                             FadeInUp(
+                              key: const ValueKey('quiz_result_review_btn_fade'),
                               duration: const Duration(milliseconds: 600),
                               delay: const Duration(milliseconds: 800),
                               child: MentorXButton(
@@ -231,6 +247,7 @@ final class QuizResultPage extends StatelessWidget {
                             if (percent >= 0.85) ...[
                               const Gap(12),
                               FadeInUp(
+                                key: const ValueKey('quiz_result_claim_btn_fade'),
                                 duration: const Duration(milliseconds: 600),
                                 delay: const Duration(milliseconds: 900),
                                 child: MentorXButton(
@@ -243,6 +260,7 @@ final class QuizResultPage extends StatelessWidget {
                             ],
                             const Gap(24),
                             FadeInUp(
+                              key: const ValueKey('quiz_result_back_btn_fade'),
                               duration: const Duration(milliseconds: 600),
                               delay: const Duration(milliseconds: 1000),
                               child: TextButton(

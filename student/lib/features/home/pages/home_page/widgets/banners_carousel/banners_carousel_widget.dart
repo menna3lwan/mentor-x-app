@@ -109,20 +109,9 @@ final class _BannersCarouselWidgetState extends State<BannersCarouselWidget> {
                       child: Stack(
                         fit: StackFit.expand,
                         children: [
-                          Image.network(
+                          AppDynamicImage(
                             bannerImageUrl,
                             fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) =>
-                                ColoredBox(
-                                  color: context.backgroundSecondaryColor,
-                                  child: Icon(
-                                    Icons.image_not_supported_outlined,
-                                    color: context.textTertiaryColor.withValues(
-                                      alpha: 0.3,
-                                    ),
-                                    size: 40,
-                                  ),
-                                ),
                           ),
                           // Premium Gradient Overlay
                           DecoratedBox(

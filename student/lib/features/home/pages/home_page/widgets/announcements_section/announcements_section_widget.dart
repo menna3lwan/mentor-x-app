@@ -65,77 +65,86 @@ final class AnnouncementsSectionWidget extends StatelessWidget {
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(24),
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                  child: Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: isPinned
-                                    ? context.brandPrimaryColor.withValues(alpha: 0.1)
-                                    : context.backgroundPrimaryColor.withValues(alpha: 0.3),
-                                shape: BoxShape.circle,
-                              ),
-                              child: Icon(
-                                isPinned
-                                    ? Icons.push_pin_rounded
-                                    : Icons.campaign_rounded,
-                                size: 20,
-                                color: isPinned
-                                    ? context.brandPrimaryColor
-                                    : context.brandPrimaryColor.withValues(alpha: 0.5),
-                              ),
-                            ),
-                            const Gap(16),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    title,
-                                    style: TextStyle(
-                                      color: context.textPrimaryColor,
-                                      fontWeight: FontWeight.w900,
-                                      fontSize: 16,
-                                      letterSpacing: -0.5,
-                                    ),
-                                  ),
-                                  const Gap(6),
-                                  Text(
-                                    DateFormat.yMMMd().add_jm().format(createdAt),
-                                    style: TextStyle(
-                                      fontSize: 11,
-                                      color: context.textTertiaryColor,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
+                child: Stack(
+                  children: [
+                    Positioned.fill(
+                      child: ExcludeSemantics(
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                          child: const SizedBox.expand(),
                         ),
-                        const Gap(16),
-                        Text(
-                          preview,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            color: context.textSecondaryColor,
-                            height: 1.5,
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
+                    Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: isPinned
+                                      ? context.brandPrimaryColor.withValues(alpha: 0.1)
+                                      : context.backgroundPrimaryColor.withValues(alpha: 0.3),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  isPinned
+                                      ? Icons.push_pin_rounded
+                                      : Icons.campaign_rounded,
+                                  size: 20,
+                                  color: isPinned
+                                      ? context.brandPrimaryColor
+                                      : context.brandPrimaryColor.withValues(alpha: 0.5),
+                                ),
+                              ),
+                              const Gap(16),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      title,
+                                      style: TextStyle(
+                                        color: context.textPrimaryColor,
+                                        fontWeight: FontWeight.w900,
+                                        fontSize: 16,
+                                        letterSpacing: -0.5,
+                                      ),
+                                    ),
+                                    const Gap(6),
+                                    Text(
+                                      DateFormat.yMMMd().add_jm().format(createdAt),
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        color: context.textTertiaryColor,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          const Gap(16),
+                          Text(
+                            preview,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              color: context.textSecondaryColor,
+                              height: 1.5,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),

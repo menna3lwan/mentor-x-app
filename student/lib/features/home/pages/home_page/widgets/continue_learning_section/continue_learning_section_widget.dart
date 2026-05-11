@@ -103,92 +103,101 @@ final class ContinueLearningSectionWidget extends StatelessWidget {
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(24),
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: Stack(
-                            fit: StackFit.expand,
-                            children: [
-                              Image.network(
-                                thumbnailUrl,
-                                fit: BoxFit.cover,
-                              ),
-                              Positioned(
-                                top: 12,
-                                right: 12,
-                                child: Container(
-                                  padding: const EdgeInsets.all(8),
-                                  decoration: BoxDecoration(
-                                    color: context.backgroundPrimaryColor
-                                        .withValues(alpha: 0.8),
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                      color: context.borderPrimaryColor
-                                          .withValues(alpha: 0.1),
-                                    ),
-                                  ),
-                                  child: Icon(
-                                    Icons.play_arrow_rounded,
-                                    color: context.brandPrimaryColor,
-                                    size: 20,
-                                  ),
-                                ),
-                              ),
-                            ],
+                  child: Stack(
+                    children: [
+                      Positioned.fill(
+                        child: ExcludeSemantics(
+                          child: BackdropFilter(
+                            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                            child: const SizedBox.expand(),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                title,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: context.textPrimaryColor,
-                                  fontWeight: FontWeight.w900,
-                                  fontSize: 16,
-                                  letterSpacing: -0.5,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: Stack(
+                              fit: StackFit.expand,
+                              children: [
+                                AppDynamicImage(
+                                  thumbnailUrl,
+                                  fit: BoxFit.cover,
                                 ),
-                              ),
-                              const Gap(12),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(4),
-                                      child: LinearProgressIndicator(
-                                        value: progressPercent / 100,
-                                        minHeight: 6,
-                                        backgroundColor:
-                                            context.backgroundPrimaryColor.withValues(alpha: 0.3),
-                                        valueColor: AlwaysStoppedAnimation<Color>(
-                                          context.brandPrimaryColor,
+                                Positioned(
+                                  top: 12,
+                                  right: 12,
+                                  child: Container(
+                                    padding: const EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      color: context.backgroundPrimaryColor
+                                          .withValues(alpha: 0.8),
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                        color: context.borderPrimaryColor
+                                            .withValues(alpha: 0.1),
+                                      ),
+                                    ),
+                                    child: Icon(
+                                      Icons.play_arrow_rounded,
+                                      color: context.brandPrimaryColor,
+                                      size: 20,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  title,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color: context.textPrimaryColor,
+                                    fontWeight: FontWeight.w900,
+                                    fontSize: 16,
+                                    letterSpacing: -0.5,
+                                  ),
+                                ),
+                                const Gap(12),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(4),
+                                        child: LinearProgressIndicator(
+                                          value: progressPercent / 100,
+                                          minHeight: 6,
+                                          backgroundColor:
+                                              context.backgroundPrimaryColor.withValues(alpha: 0.3),
+                                          valueColor: AlwaysStoppedAnimation<Color>(
+                                            context.brandPrimaryColor,
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  const Gap(12),
-                                  Text(
-                                    '${progressPercent.toInt()}%',
-                                    style: TextStyle(
-                                      color: context.brandPrimaryColor,
-                                      fontWeight: FontWeight.w900,
-                                      fontSize: 12,
+                                    const Gap(12),
+                                    Text(
+                                      '${progressPercent.toInt()}%',
+                                      style: TextStyle(
+                                        color: context.brandPrimaryColor,
+                                        fontWeight: FontWeight.w900,
+                                        fontSize: 12,
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
               ),

@@ -28,20 +28,15 @@ final class _DeviceManagementPageWrapperState
             MentorXUI.showToast(message: message);
         }
       },
-      child: BlocBuilder<DeviceManagementPageBloc, DeviceManagementPageState>(
-        builder: (context, state) {
-          return DeviceManagementPagePage(
-            state: state,
-            onRefresh: () {
-              context.read<DeviceManagementPageBloc>().add(
-                const DeviceManagementPageRefreshed(),
-              );
-            },
-            onDeactivateTapped: (deviceId) {
-              context.read<DeviceManagementPageBloc>().add(
-                DeviceManagementPageDeactivateRequested(deviceId: deviceId),
-              );
-            },
+      child: DeviceManagementPagePage(
+        onRefresh: () {
+          context.read<DeviceManagementPageBloc>().add(
+            const DeviceManagementPageRefreshed(),
+          );
+        },
+        onDeactivateTapped: (deviceId) {
+          context.read<DeviceManagementPageBloc>().add(
+            DeviceManagementPageDeactivateRequested(deviceId: deviceId),
           );
         },
       ),

@@ -1,6 +1,5 @@
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'bloc/payment_success_page_bloc.dart';
 import 'payment_success_page_page.dart';
@@ -27,11 +26,7 @@ class _PaymentSuccessPageWrapperState extends State<PaymentSuccessPageWrapper> {
             Navigator.of(context).pop();
         }
       },
-      child: BlocBuilder<PaymentSuccessPageBloc, PaymentSuccessPageState>(
-        builder: (context, state) {
-          return PaymentSuccessPage(amount: widget.amount);
-        },
-      ),
+      child: PaymentSuccessPage(amount: widget.amount),
     );
   }
 }

@@ -23,12 +23,16 @@ final class QuizRewardsPage extends StatelessWidget {
             children: [
               _BuildHeader(t: t),
               Expanded(
-                child: BlocBuilder<QuizRewardsPageBloc, QuizRewardsPageState>(
-                  builder: (context, state) {
-                    if (state.loadingState == LoadingState.loading) {
+                child: Builder(
+                  builder: (context) {
+                    final loadingState = context.select(
+                      (QuizRewardsPageBloc bloc) => bloc.state.loadingState,
+                    );
+
+                    if (loadingState == LoadingState.loading) {
                       return const Center(child: CircularProgressIndicator());
                     }
-                    if (state.loadingState == LoadingState.error) {
+                    if (loadingState == LoadingState.error) {
                       return Center(
                         child: Text(
                           'Failed to load rewards',
@@ -70,9 +74,17 @@ final class QuizRewardsPage extends StatelessWidget {
                           const Gap(16),
                           FadeInUp(
                             delay: const Duration(milliseconds: 500),
-                            child: _LeaderboardSection(
-                              t: t,
-                              entries: state.leaderboardEntries,
+                            child: Builder(
+                              builder: (context) {
+                                final leaderboardEntries = context.select(
+                                  (QuizRewardsPageBloc bloc) =>
+                                      bloc.state.leaderboardEntries,
+                                );
+                                return _LeaderboardSection(
+                                  t: t,
+                                  entries: leaderboardEntries,
+                                );
+                              },
                             ),
                           ),
                           const Gap(40),

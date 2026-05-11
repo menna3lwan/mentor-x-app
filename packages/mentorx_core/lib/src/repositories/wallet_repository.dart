@@ -68,6 +68,9 @@ abstract interface class WalletRepository {
     required PaymentMethod method,
   });
 
+  /// Get valid coupons for the student.
+  Future<List<CouponEntity>> getValidCoupons();
+
   // Pro Features
   Future<void> transferFunds(String recipientPhone, double amount);
   Future<void> creditWallet(String studentId, double amount, String reason);

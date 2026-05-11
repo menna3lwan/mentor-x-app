@@ -42,10 +42,19 @@ final class _NotificationsPageState extends State<NotificationsPage> {
   Widget build(BuildContext context) {
     final t = context.t.student;
 
-    return BlocBuilder<NotificationsPageBloc, NotificationsPageState>(
-      builder: (context, state) {
-        final notifications = state.notifications;
-        final isLoading = state.loadingState == LoadingState.loading;
+    return Builder(
+      builder: (context) {
+        final notifications = context.select<NotificationsPageBloc, List<NotificationEntity>>(
+          (bloc) => bloc.state.notifications,
+        );
+        final loadingState = context.select<NotificationsPageBloc, LoadingState>(
+          (bloc) => bloc.state.loadingState,
+        );
+        final hasMore = context.select<NotificationsPageBloc, bool>(
+          (bloc) => bloc.state.hasMore,
+        );
+
+        final isLoading = loadingState == LoadingState.loading;
         final isInitialLoading = isLoading && notifications.isEmpty;
 
         return Scaffold(
@@ -78,7 +87,7 @@ final class _NotificationsPageState extends State<NotificationsPage> {
                                     horizontal: 20,
                                     vertical: 24,
                                   ),
-                                  itemCount: notifications.length + (state.hasMore ? 1 : 0),
+                                  itemCount: notifications.length + (hasMore ? 1 : 0),
                                   itemBuilder: (context, i) {
                                     if (i == notifications.length) {
                                       return const Center(

@@ -31,19 +31,29 @@ final class WalletOrdersPage extends StatelessWidget {
         Gap(MediaQuery.paddingOf(context).top + 20),
         _buildHeader(context, t),
         Expanded(
-          child: BlocBuilder<WalletOrdersPageBloc, WalletOrdersPageState>(
-            builder: (context, state) {
-              if (state.loadingState == LoadingState.loading) {
+          child: Builder(
+            builder: (context) {
+              final loadingState = context.select<WalletOrdersPageBloc, LoadingState>(
+                (bloc) => bloc.state.loadingState,
+              );
+              final errorMessage = context.select<WalletOrdersPageBloc, String?>(
+                (bloc) => bloc.state.errorMessage,
+              );
+              final orders = context.select<WalletOrdersPageBloc, List<PaymentOrderEntity>>(
+                (bloc) => bloc.state.orders,
+              );
+
+              if (loadingState == LoadingState.loading) {
                 return const Center(child: CircularProgressIndicator());
               }
 
-              if (state.loadingState == LoadingState.error) {
+              if (loadingState == LoadingState.error) {
                 return Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       StatusBadge(
-                        message: state.errorMessage ?? 'Failed to load orders',
+                        message: errorMessage ?? 'Failed to load orders',
                         status: StatusBadgeType.danger,
                       ),
                       const Gap(16),
@@ -59,7 +69,7 @@ final class WalletOrdersPage extends StatelessWidget {
                 );
               }
 
-              if (state.orders.isEmpty) {
+              if (orders.isEmpty) {
                 return Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -85,10 +95,10 @@ final class WalletOrdersPage extends StatelessWidget {
 
               return ListView.separated(
                 padding: const EdgeInsets.all(24),
-                itemCount: state.orders.length,
+                itemCount: orders.length,
                 separatorBuilder: (context, index) => const Gap(16),
                 itemBuilder: (context, index) {
-                  final order = state.orders[index];
+                  final order = orders[index];
                   return FadeInUp(
                     duration: Duration(milliseconds: 300 + (index % 5) * 100),
                     child: _OrderCard(order: order),

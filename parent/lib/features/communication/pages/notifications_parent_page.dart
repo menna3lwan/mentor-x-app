@@ -31,18 +31,26 @@ class NotificationsParentPage extends StatelessWidget {
             ),
           ],
         ),
-        body: BlocBuilder<CommunicationBloc, CommunicationState>(
-          builder: (context, state) {
-            if (state.status == CommunicationStatus.loading) {
+        body: Builder(
+          builder: (context) {
+            final status = context.select<CommunicationBloc, CommunicationStatus>(
+              (bloc) => bloc.state.status,
+            );
+
+            if (status == CommunicationStatus.loading) {
               return const Center(child: CircularProgressIndicator());
             }
 
-            if (state.status == CommunicationStatus.failure) {
+            final errorMessage = context.select<CommunicationBloc, String?>(
+              (bloc) => bloc.state.errorMessage,
+            );
+
+            if (status == CommunicationStatus.failure) {
               return Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('Failed to load notifications: ${state.errorMessage}'),
+                    Text('Failed to load notifications: $errorMessage'),
                     ElevatedButton(
                       onPressed: () {
                         context.read<CommunicationBloc>().add(CommunicationStarted(childId));
@@ -54,7 +62,11 @@ class NotificationsParentPage extends StatelessWidget {
               );
             }
 
-            if (state.notifications.isEmpty) {
+            final notifications = context.select<CommunicationBloc, List<NotificationEntity>>(
+              (bloc) => bloc.state.notifications,
+            );
+
+            if (notifications.isEmpty) {
               return const Center(child: Text('No new notifications.'));
             }
 
@@ -63,10 +75,10 @@ class NotificationsParentPage extends StatelessWidget {
                 context.read<CommunicationBloc>().add(CommunicationRefreshRequested(childId));
               },
               child: ListView.separated(
-                itemCount: state.notifications.length,
+                itemCount: notifications.length,
                 separatorBuilder: (_, _) => const Divider(),
                 itemBuilder: (context, index) {
-                  final notification = state.notifications[index];
+                  final notification = notifications[index];
                   return ListTile(
                     leading: const CircleAvatar(child: Icon(Icons.notifications_active)),
                     title: Text(notification.title),

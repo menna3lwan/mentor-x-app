@@ -13,8 +13,8 @@ class LinkedChildrenManagementPage extends StatelessWidget {
       create: (context) => ChildrenBloc(
         childrenRepository: context.read<ParentChildrenRepository>(),
       )..add(ChildrenStarted()),
-      child: BlocBuilder<ChildrenBloc, ChildrenState>(
-        builder: (context, state) {
+      child: Builder(
+        builder: (context) {
           return AppDashboardScaffold(
             title: 'Linked Children',
             body: const LinkedChildrenListView(),
@@ -52,13 +52,21 @@ class LinkedChildrenListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ChildrenBloc, ChildrenState>(
-      builder: (context, state) {
-        if (state.status == ChildrenStatus.loading) {
+    return Builder(
+      builder: (context) {
+        final status = context.select<ChildrenBloc, ChildrenStatus>(
+          (bloc) => bloc.state.status,
+        );
+
+        if (status == ChildrenStatus.loading) {
           return const Center(child: CircularProgressIndicator());
         }
 
-        if (state.children.isEmpty) {
+        final children = context.select<ChildrenBloc, List<ParentChildEntity>>(
+          (bloc) => bloc.state.children,
+        );
+
+        if (children.isEmpty) {
           return AppEmptyView(
             title: 'No Children Linked',
             message: 'You haven\'t linked any children to your account yet.',
@@ -70,9 +78,9 @@ class LinkedChildrenListView extends StatelessWidget {
 
         return ListView.builder(
           padding: const EdgeInsets.all(20),
-          itemCount: state.children.length,
+          itemCount: children.length,
           itemBuilder: (context, index) {
-            final child = state.children[index];
+            final child = children[index];
             return _ChildManagementCard(child: child);
           },
         );

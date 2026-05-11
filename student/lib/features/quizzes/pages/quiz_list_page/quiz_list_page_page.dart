@@ -15,8 +15,15 @@ final class QuizListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = context.t.student;
 
-    return BlocBuilder<QuizListPageBloc, QuizListPageState>(
-      builder: (context, state) {
+    return Builder(
+      builder: (context) {
+        final loadingState = context.select<QuizListPageBloc, LoadingState>(
+          (bloc) => bloc.state.loadingState,
+        );
+        final quizzes = context.select<QuizListPageBloc, List<dynamic>>(
+          (bloc) => bloc.state.quizzes,
+        );
+
         return Scaffold(
           backgroundColor: context.backgroundPrimaryColor,
           body: Stack(
@@ -63,7 +70,7 @@ final class QuizListPage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  _buildBody(context, state, t),
+                  _buildBody(context, loadingState, quizzes, t),
                 ],
               ),
             ],
@@ -75,16 +82,17 @@ final class QuizListPage extends StatelessWidget {
 
   Widget _buildBody(
     BuildContext context,
-    QuizListPageState state,
+    LoadingState loadingState,
+    List<dynamic> quizzes,
     dynamic t,
   ) {
-    if (state.loadingState == LoadingState.loading) {
+    if (loadingState == LoadingState.loading) {
       return const SliverFillRemaining(
         child: Center(child: CircularProgressIndicator()),
       );
     }
 
-    if (state.quizzes.isEmpty) {
+    if (quizzes.isEmpty) {
       return SliverFillRemaining(
         child: FadeInUp(
           child: _EmptyQuizzes(t: t),
@@ -97,7 +105,7 @@ final class QuizListPage extends StatelessWidget {
       sliver: SliverList(
         delegate: SliverChildBuilderDelegate(
           (context, index) {
-            final quiz = state.quizzes[index];
+            final quiz = quizzes[index];
             return FadeInUp(
               duration: const Duration(milliseconds: 500),
               delay: Duration(milliseconds: 100 * index),
@@ -110,7 +118,7 @@ final class QuizListPage extends StatelessWidget {
               ),
             );
           },
-          childCount: state.quizzes.length,
+          childCount: quizzes.length,
         ),
       ),
     );

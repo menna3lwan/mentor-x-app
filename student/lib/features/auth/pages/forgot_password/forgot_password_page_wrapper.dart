@@ -62,14 +62,22 @@ final class _ForgotPasswordPageWrapperState
                 ResetPasswordPageRoute(phoneNumber: event.phone).push(context);
               }
             },
-            child: BlocBuilder<ForgotPasswordBloc, ForgotPasswordState>(
-              builder: (context, state) {
+            child: Builder(
+              builder: (context) {
+                final isLoading = context.select<ForgotPasswordBloc, bool>(
+                  (bloc) => bloc.state.loadingState.isLoading,
+                );
+                final errorMessage = context.select<
+                  ForgotPasswordBloc,
+                  String?
+                >((bloc) => bloc.state.errorMessage);
                 final bloc = context.read<ForgotPasswordBloc>();
+
                 return ForgotPasswordPage(
                   formKey: _formKey,
                   phoneController: _phoneController,
-                  isLoading: state.loadingState.isLoading,
-                  errorMessage: state.errorMessage,
+                  isLoading: isLoading,
+                  errorMessage: errorMessage,
                   inputFormatters: [
                     FilteringTextInputFormatter.digitsOnly,
                     LengthLimitingTextInputFormatter(11),

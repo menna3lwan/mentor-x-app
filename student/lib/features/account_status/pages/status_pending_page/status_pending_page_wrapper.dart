@@ -46,9 +46,12 @@ final class _StatusPendingPageWrapperState
       },
       child: BlocBuilder<StatusPendingPageBloc, StatusPendingPageState>(
         builder: (context, state) {
+          final studentCode = state.studentCode;
+          final isRefreshing = state.isRefreshing;
+
           return StatusPendingPagePage(
-            studentCode: state.studentCode,
-            isRefreshing: state.isRefreshing,
+            studentCode: studentCode ?? '',
+            isRefreshing: isRefreshing,
             onRefresh: () {
               context.read<StatusPendingPageBloc>().add(
                 const StatusPendingPageRefreshRequested(isManual: true),

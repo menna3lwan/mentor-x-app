@@ -22,8 +22,8 @@ Future<void> main() async {
       // ignore: experimental_member_use
       options.profilesSampleRate = 1.0;
       // Configure Session Replay
-      options.replay.sessionSampleRate = 0.1;
-      options.replay.onErrorSampleRate = 1.0;
+      // options.replay.sessionSampleRate = 0.1;
+      // options.replay.onErrorSampleRate = 1.0;
     },
     appRunner: () => runApp(SentryWidget(child: StudentApp(requirements: requirements))),
   );

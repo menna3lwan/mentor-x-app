@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_student/core/core.dart';
+import 'dart:math';
 
 final class MarketplaceCartItem extends Equatable {
   final MarketplaceItemEntity item;
@@ -20,15 +21,35 @@ final class MarketplaceCartItem extends Equatable {
 
 final class MarketplaceCartState extends Equatable {
   final List<MarketplaceCartItem> items;
+  final CouponEntity? appliedCoupon;
 
-  const MarketplaceCartState({this.items = const []});
+  const MarketplaceCartState({this.items = const [], this.appliedCoupon});
 
   double get subtotal =>
       items.fold(0, (sum, item) => sum + item.item.price * item.quantity);
+      
   int get totalCount => items.fold(0, (sum, item) => sum + item.quantity);
 
+  double get discountAmount {
+    if (appliedCoupon == null) return 0;
+    double discount = 0;
+    if (appliedCoupon!.type == 'percentage') {
+      discount = subtotal * ((appliedCoupon!.discountPercentage ?? 0) / 100);
+    } else {
+      discount = appliedCoupon!.discountAmount ?? 0;
+    }
+    
+    if (appliedCoupon!.maxDiscount != null && appliedCoupon!.maxDiscount! > 0) {
+      discount = min(discount, appliedCoupon!.maxDiscount!);
+    }
+    
+    return min(discount, subtotal);
+  }
+
+  double get total => subtotal - discountAmount;
+
   @override
-  List<Object?> get props => [items];
+  List<Object?> get props => [items, appliedCoupon];
 }
 
 final class MarketplaceCartCubit extends Cubit<MarketplaceCartState> {
@@ -44,7 +65,7 @@ final class MarketplaceCartCubit extends Cubit<MarketplaceCartState> {
       updatedItems[existingIndex] = updatedItems[existingIndex].copyWith(
         quantity: updatedItems[existingIndex].quantity + 1,
       );
-      emit(MarketplaceCartState(items: updatedItems));
+      emit(MarketplaceCartState(items: updatedItems, appliedCoupon: state.appliedCoupon));
     } else {
       emit(
         MarketplaceCartState(
@@ -52,6 +73,7 @@ final class MarketplaceCartCubit extends Cubit<MarketplaceCartState> {
             ...state.items,
             MarketplaceCartItem(item: item, quantity: 1),
           ],
+          appliedCoupon: state.appliedCoupon,
         ),
       );
     }
@@ -67,7 +89,7 @@ final class MarketplaceCartCubit extends Cubit<MarketplaceCartState> {
 
   void removeItem(String itemId) {
     final updatedItems = state.items.where((i) => i.item.id != itemId).toList();
-    emit(MarketplaceCartState(items: updatedItems));
+    emit(MarketplaceCartState(items: updatedItems, appliedCoupon: state.appliedCoupon));
   }
 
   void updateQuantity(String itemId, int quantity) {
@@ -81,8 +103,20 @@ final class MarketplaceCartCubit extends Cubit<MarketplaceCartState> {
       updatedItems[existingIndex] = updatedItems[existingIndex].copyWith(
         quantity: quantity,
       );
-      emit(MarketplaceCartState(items: updatedItems));
+      emit(MarketplaceCartState(items: updatedItems, appliedCoupon: state.appliedCoupon));
     }
+  }
+
+  void applyCoupon(CouponEntity coupon) {
+    emit(MarketplaceCartState(items: state.items, appliedCoupon: coupon));
+    analyticsService.logEvent(
+      name: 'marketplace_apply_coupon',
+      parameters: {'coupon_code': coupon.code},
+    );
+  }
+
+  void removeCoupon() {
+    emit(MarketplaceCartState(items: state.items, appliedCoupon: null));
   }
 
   void clear() {

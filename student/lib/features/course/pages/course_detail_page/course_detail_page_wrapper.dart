@@ -36,21 +36,58 @@ final class _CourseDetailPageWrapperState
             break;
         }
       },
-      child: BlocBuilder<CourseDetailPageBloc, CourseDetailPageState>(
-        builder: (context, state) {
+      child: Builder(
+        builder: (context) {
           final bloc = context.read<CourseDetailPageBloc>();
+          final course = context.select(
+            (CourseDetailPageBloc bloc) => bloc.state.course,
+          );
+          final sessions = context.select(
+            (CourseDetailPageBloc bloc) => bloc.state.sessions,
+          );
+          final sessionItems = context.select(
+            (CourseDetailPageBloc bloc) => bloc.state.sessionItems,
+          );
+          final sessionWeeks = context.select(
+            (CourseDetailPageBloc bloc) => bloc.state.sessionWeeks,
+          );
+          final enrollment = context.select(
+            (CourseDetailPageBloc bloc) => bloc.state.enrollment,
+          );
+          final selectedTab = context.select(
+            (CourseDetailPageBloc bloc) => bloc.state.selectedTab,
+          );
+          final isCourseLoading = context.select(
+            (CourseDetailPageBloc bloc) => bloc.state.isCourseLoading,
+          );
+          final isSessionsLoading = context.select(
+            (CourseDetailPageBloc bloc) => bloc.state.isSessionsLoading,
+          );
+          final isEnrolling = context.select(
+            (CourseDetailPageBloc bloc) => bloc.state.isEnrolling,
+          );
+          final isEnrolled = context.select(
+            (CourseDetailPageBloc bloc) => bloc.state.isEnrolled,
+          );
+          final isCourseFailure = context.select(
+            (CourseDetailPageBloc bloc) => bloc.state.isCourseFailure,
+          );
+          final errorMessage = context.select(
+            (CourseDetailPageBloc bloc) => bloc.state.errorMessage,
+          );
+
           return CourseDetailPagePage(
-            course: state.course,
-            sessions: state.sessions,
-            sessionItems: state.sessionItems,
-            sessionWeeks: state.sessionWeeks,
-            enrollment: state.enrollment,
-            selectedTab: state.selectedTab,
-            isCourseLoading: state.isCourseLoading,
-            isSessionsLoading: state.isSessionsLoading,
-            isEnrolling: state.isEnrolling,
-            isEnrolled: state.isEnrolled,
-            errorMessage: state.isCourseFailure ? state.errorMessage : null,
+            course: course,
+            sessions: sessions,
+            sessionItems: sessionItems,
+            sessionWeeks: sessionWeeks,
+            enrollment: enrollment,
+            selectedTab: selectedTab,
+            isCourseLoading: isCourseLoading,
+            isSessionsLoading: isSessionsLoading,
+            isEnrolling: isEnrolling,
+            isEnrolled: isEnrolled,
+            errorMessage: isCourseFailure ? errorMessage : null,
             onTabChanged: (tab) => bloc.add(CourseDetailPageTabChanged(tab)),
             onEnrollTap: () =>
                 bloc.add(const CourseDetailPageEnrollRequested()),
@@ -63,8 +100,7 @@ final class _CourseDetailPageWrapperState
   }
 
   void _handleItemTap(BuildContext context, SessionItemEntity item) {
-    final state = context.read<CourseDetailPageBloc>().state;
-    final enrollment = state.enrollment;
+    final enrollment = context.read<CourseDetailPageBloc>().state.enrollment;
 
     switch (item.itemType) {
       case SessionItemType.video:

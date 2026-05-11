@@ -466,65 +466,74 @@ final class _LeaderboardTile extends StatelessWidget {
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(24),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-            color: context.backgroundSecondaryColor.withValues(alpha: 0.8),
-            child: Row(
-              children: [
-                Container(
-                  width: 36,
-                  height: 36,
-                  decoration: BoxDecoration(
-                    color: context.backgroundTertiaryColor,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Center(
-                    child: Text(
-                      '#${entry.rank}',
-                      style: TextStyle(
-                        color: context.textPrimaryColor,
-                        fontWeight: FontWeight.w900,
-                        fontSize: 14,
-                        letterSpacing: -0.5,
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: ExcludeSemantics(
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                  child: const SizedBox.expand(),
+                ),
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              color: context.backgroundSecondaryColor.withValues(alpha: 0.8),
+              child: Row(
+                children: [
+                  Container(
+                    width: 36,
+                    height: 36,
+                    decoration: BoxDecoration(
+                      color: context.backgroundTertiaryColor,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Center(
+                      child: Text(
+                        '#${entry.rank}',
+                        style: TextStyle(
+                          color: context.textPrimaryColor,
+                          fontWeight: FontWeight.w900,
+                          fontSize: 14,
+                          letterSpacing: -0.5,
+                        ),
                       ),
                     ),
                   ),
-                ),
-                const Gap(16),
-                SizedBox(
-                  width: 40,
-                  height: 40,
-                  child: AppDynamicImage(
-                    'https://ui-avatars.com/api/?name=${entry.studentName}&background=random&color=fff',
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ),
-                const Gap(12),
-                Expanded(
-                  child: Text(
-                    entry.studentName,
-                    style: TextStyle(
-                      color: context.textPrimaryColor,
-                      fontWeight: FontWeight.w800,
-                      fontSize: 14,
-                      letterSpacing: -0.2,
+                  const Gap(16),
+                  SizedBox(
+                    width: 40,
+                    height: 40,
+                    child: AppDynamicImage(
+                      'https://ui-avatars.com/api/?name=${entry.studentName}&background=random&color=fff',
+                      borderRadius: BorderRadius.circular(20),
                     ),
                   ),
-                ),
-                Text(
-                  '${entry.score}%',
-                  style: TextStyle(
-                    color: context.brandPrimaryColor,
-                    fontWeight: FontWeight.w900,
-                    fontSize: 16,
-                    letterSpacing: -0.5,
+                  const Gap(12),
+                  Expanded(
+                    child: Text(
+                      entry.studentName,
+                      style: TextStyle(
+                        color: context.textPrimaryColor,
+                        fontWeight: FontWeight.w800,
+                        fontSize: 14,
+                        letterSpacing: -0.2,
+                      ),
+                    ),
                   ),
-                ),
-              ],
+                  Text(
+                    '${entry.score}%',
+                    style: TextStyle(
+                      color: context.brandPrimaryColor,
+                      fontWeight: FontWeight.w900,
+                      fontSize: 16,
+                      letterSpacing: -0.5,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
@@ -685,9 +694,13 @@ class _BlurredBlob extends StatelessWidget {
           color: color,
           shape: BoxShape.circle,
         ),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 50, sigmaY: 50),
-          child: const SizedBox.expand(),
+        child: ClipOval(
+          child: ExcludeSemantics(
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 50, sigmaY: 50),
+              child: const SizedBox.expand(),
+            ),
+          ),
         ),
       ),
     );

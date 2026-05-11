@@ -94,9 +94,13 @@ class _BlurredBlob extends StatelessWidget {
         color: color,
         shape: BoxShape.circle,
       ),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 70, sigmaY: 70),
-        child: const SizedBox.expand(),
+      child: ClipOval(
+        child: ExcludeSemantics(
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 70, sigmaY: 70),
+            child: const SizedBox.expand(),
+          ),
+        ),
       ),
     );
   }

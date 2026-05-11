@@ -37,9 +37,17 @@ final class EnrolledCourseCard extends StatelessWidget {
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(28),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-            child: IntrinsicHeight(
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: ExcludeSemantics(
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                    child: const SizedBox.expand(),
+                  ),
+                ),
+              ),
+              IntrinsicHeight(
               child: Row(
                 children: [
                   SizedBox(
@@ -49,17 +57,9 @@ final class EnrolledCourseCard extends StatelessWidget {
                         Positioned.fill(
                           child: Hero(
                             tag: 'course_image_${course.id}',
-                            child: Image.network(
+                            child: AppDynamicImage(
                               course.thumbnailUrl,
                               fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) => Container(
-                                color: context.backgroundPrimaryColor,
-                                child: Icon(
-                                  Icons.school_outlined,
-                                  color: context.textTertiaryColor.withValues(alpha: 0.3),
-                                  size: 32,
-                                ),
-                              ),
                             ),
                           ),
                         ),
@@ -145,36 +145,41 @@ final class EnrolledCourseCard extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(3),
                                 ),
                               ),
-                              LayoutBuilder(
-                                builder: (context, constraints) {
-                                  return AnimatedContainer(
-                                    duration: const Duration(milliseconds: 800),
-                                    curve: Curves.easeOutBack,
-                                    height: 6,
-                                    width: constraints.maxWidth * (progress / 100),
-                                    decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        colors: progress >= 100
-                                            ? [
-                                                context.statusSuccessColor,
-                                                context.statusSuccessColor.withValues(alpha: 0.8),
-                                              ]
-                                            : [
-                                                context.brandPrimaryColor,
-                                                context.brandPrimaryColor.withValues(alpha: 0.8),
-                                              ],
-                                      ),
-                                      borderRadius: BorderRadius.circular(3),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: (progress >= 100
-                                                  ? context.statusSuccessColor
-                                                  : context.brandPrimaryColor)
-                                              .withValues(alpha: 0.3),
-                                          blurRadius: 8,
-                                          offset: const Offset(0, 2),
+                              TweenAnimationBuilder<double>(
+                                tween: Tween<double>(begin: 0, end: progress / 100),
+                                duration: const Duration(milliseconds: 800),
+                                curve: Curves.easeOutBack,
+                                builder: (context, value, child) {
+                                  return FractionallySizedBox(
+                                    alignment: Alignment.centerLeft,
+                                    widthFactor: value.clamp(0, 1),
+                                    child: AnimatedContainer(
+                                      duration: const Duration(milliseconds: 300),
+                                      height: 6,
+                                      decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                          colors: progress >= 100
+                                              ? [
+                                                  context.statusSuccessColor,
+                                                  context.statusSuccessColor.withValues(alpha: 0.8),
+                                                ]
+                                              : [
+                                                  context.brandPrimaryColor,
+                                                  context.brandPrimaryColor.withValues(alpha: 0.8),
+                                                ],
                                         ),
-                                      ],
+                                        borderRadius: BorderRadius.circular(3),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: (progress >= 100
+                                                    ? context.statusSuccessColor
+                                                    : context.brandPrimaryColor)
+                                                .withValues(alpha: 0.3),
+                                            blurRadius: 8,
+                                            offset: const Offset(0, 2),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   );
                                 },
@@ -188,9 +193,9 @@ final class EnrolledCourseCard extends StatelessWidget {
                 ],
               ),
             ),
-          ),
+          ],
         ),
       ),
-    );
+    ));
   }
 }

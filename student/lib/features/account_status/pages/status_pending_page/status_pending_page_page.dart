@@ -31,6 +31,7 @@ final class StatusPendingPagePage extends StatelessWidget {
         children: [
           if (studentCode != null && studentCode!.trim().isNotEmpty) ...[
             FadeInUp(
+              key: const ValueKey('status_pending_code_fade'),
               duration: const Duration(milliseconds: 600),
               child: Container(
                 width: double.infinity,
@@ -78,6 +79,7 @@ final class StatusPendingPagePage extends StatelessWidget {
             const Gap(32),
           ],
           FadeInUp(
+            key: const ValueKey('status_pending_support_fade'),
             duration: const Duration(milliseconds: 600),
             delay: const Duration(milliseconds: 200),
             child: Text(
@@ -95,6 +97,7 @@ final class StatusPendingPagePage extends StatelessWidget {
       ),
       actions: [
         FadeInUp(
+          key: const ValueKey('status_pending_refresh_btn_fade'),
           duration: const Duration(milliseconds: 500),
           delay: const Duration(milliseconds: 300),
           child: MentorXButton(
@@ -105,6 +108,7 @@ final class StatusPendingPagePage extends StatelessWidget {
         ),
         const Gap(20),
         FadeInUp(
+          key: const ValueKey('status_pending_logout_btn_fade'),
           duration: const Duration(milliseconds: 500),
           delay: const Duration(milliseconds: 500),
           child: TextButton(

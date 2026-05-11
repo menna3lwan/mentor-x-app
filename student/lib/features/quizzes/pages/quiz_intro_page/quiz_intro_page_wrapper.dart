@@ -1,6 +1,5 @@
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'bloc/quiz_intro_page_bloc.dart';
 import 'quiz_intro_page_page.dart';
@@ -25,8 +24,8 @@ class _QuizIntroPageWrapperState extends State<QuizIntroPageWrapper> {
             Navigator.of(context).pop();
         }
       },
-      child: BlocBuilder<QuizIntroPageBloc, QuizIntroPageState>(
-        builder: (context, state) {
+      child: Builder(
+        builder: (context) {
           return const QuizIntroPage();
         },
       ),

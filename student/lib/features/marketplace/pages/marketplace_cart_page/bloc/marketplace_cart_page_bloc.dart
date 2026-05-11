@@ -48,11 +48,15 @@ final class MarketplaceCartPageBloc
   ) async {
     emit(state.copyWith(loadingState: LoadingState.loading));
     try {
-      final walletSummary = await walletRepository.getSummary();
+      final [walletSummary, validCoupons] = await Future.wait([
+        walletRepository.getSummary(),
+        walletRepository.getValidCoupons(),
+      ]);
       emit(
         state.copyWith(
           loadingState: LoadingState.loaded,
-          walletSummary: walletSummary,
+          walletSummary: walletSummary as WalletSummaryEntity,
+          validCoupons: validCoupons as List<CouponEntity>,
         ),
       );
     } catch (e) {

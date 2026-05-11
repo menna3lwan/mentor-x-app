@@ -16,15 +16,14 @@ final class QuizGradeDetailParentViewPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AssessmentsBloc, AssessmentsState>(
-      builder: (context, state) {
-        QuizAttemptEntity? attempt;
-        for (final item in state.assessments) {
-          if (item.id == assessmentId) {
-            attempt = item;
-            break;
-          }
-        }
+    return Builder(
+      builder: (context) {
+        final attempt = context.select<AssessmentsBloc, QuizAttemptEntity?>(
+          (bloc) => bloc.state.assessments
+              .where((item) => item.id == assessmentId)
+              .firstOrNull,
+        );
+
         if (attempt == null) {
           return const AppDashboardScaffold(
             title: 'Quiz Detail',
@@ -40,6 +39,7 @@ final class QuizGradeDetailParentViewPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 FadeInDown(
+                  key: const ValueKey('parent_quiz_score_card_fade'),
                   duration: const Duration(milliseconds: 600),
                   child: AppHeroCard(
                     title: 'QUIZ SCORE',
@@ -66,6 +66,7 @@ final class QuizGradeDetailParentViewPage extends StatelessWidget {
                 const Gap(32),
                 
                 FadeInLeft(
+                  key: const ValueKey('parent_quiz_questions_header_fade'),
                   duration: const Duration(milliseconds: 500),
                   child: const AppSectionHeader(title: 'Question Breakdown'),
                 ),
@@ -76,6 +77,7 @@ final class QuizGradeDetailParentViewPage extends StatelessWidget {
                   final color = isCorrect ? context.statusSuccessColor : context.statusDangerColor;
                   
                   return FadeInUp(
+                    key: ValueKey('parent_quiz_question_item_fade_$index'),
                     duration: const Duration(milliseconds: 500),
                     delay: Duration(milliseconds: 50 * index),
                     child: Container(

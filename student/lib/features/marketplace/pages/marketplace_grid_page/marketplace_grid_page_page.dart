@@ -227,8 +227,12 @@ final class _CartBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<MarketplaceCartCubit, MarketplaceCartState>(
-      builder: (context, state) {
+    return Builder(
+      builder: (context) {
+        final totalCount = context.select<MarketplaceCartCubit, int>(
+          (cubit) => cubit.state.totalCount,
+        );
+
         return Stack(
           alignment: Alignment.center,
           children: [
@@ -236,7 +240,7 @@ final class _CartBadge extends StatelessWidget {
               icon: const Icon(Icons.shopping_bag_outlined),
               onPressed: () => const MarketplaceCartPageRoute().push(context),
             ),
-            if (state.totalCount > 0)
+            if (totalCount > 0)
               Positioned(
                 right: 6,
                 top: 6,
@@ -263,7 +267,7 @@ final class _CartBadge extends StatelessWidget {
                     minHeight: 18,
                   ),
                   child: Text(
-                    '${state.totalCount}',
+                    '$totalCount',
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 9,

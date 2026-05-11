@@ -13,109 +13,110 @@ final class RewardsHistoryPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = context.t.student;
 
-    return BlocBuilder<RewardsHistoryPageBloc, RewardsHistoryPageState>(
-      builder: (context, state) {
-        return Scaffold(
-          backgroundColor: context.backgroundPrimaryColor,
-          appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(70),
-            child: Container(
-              decoration: BoxDecoration(
-                color: context.backgroundSecondaryColor,
-                borderRadius: const BorderRadius.vertical(
-                  bottom: Radius.circular(24),
-                ),
-                border: Border(
-                  bottom: BorderSide(
-                    color: context.borderPrimaryColor.withValues(alpha: 0.05),
-                  ),
-                ),
-              ),
-              child: AppBar(
-                backgroundColor: Colors.transparent,
-                elevation: 0,
-                foregroundColor: context.textPrimaryColor,
-                centerTitle: true,
-                title: Text(
-                  t['rewardsHistoryTitle'] ?? 'Points History',
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: -0.5,
-                  ),
-                ),
+    return Scaffold(
+      backgroundColor: context.backgroundPrimaryColor,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(70),
+        child: Container(
+          decoration: BoxDecoration(
+            color: context.backgroundSecondaryColor,
+            borderRadius: const BorderRadius.vertical(
+              bottom: Radius.circular(24),
+            ),
+            border: Border(
+              bottom: BorderSide(
+                color: context.borderPrimaryColor.withValues(alpha: 0.05),
               ),
             ),
           ),
-          body: _buildBody(context, state, t),
-        );
-      },
-    );
-  }
-
-  Widget _buildBody(
-    BuildContext context,
-    RewardsHistoryPageState state,
-    dynamic t,
-  ) {
-    if (state.historySection.isLoading) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
-    final transactions = state.historySection.data ?? [];
-
-    if (transactions.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            FadeInDown(
-              child: Container(
-                padding: const EdgeInsets.all(32),
-                decoration: BoxDecoration(
-                  color: context.backgroundSecondaryColor,
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: context.borderPrimaryColor.withValues(alpha: 0.05),
-                  ),
-                ),
-                child: Icon(
-                  Icons.history_rounded,
-                  size: 80,
-                  color: context.textTertiaryColor.withValues(alpha: 0.2),
-                ),
+          child: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            foregroundColor: context.textPrimaryColor,
+            centerTitle: true,
+            title: Text(
+              t['rewardsHistoryTitle'] ?? 'Points History',
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w900,
+                letterSpacing: -0.5,
               ),
             ),
-            const Gap(24),
-            FadeInUp(
-              child: Text(
-                t['noHistory'] ?? 'No points history yet',
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w900,
-                  color: context.textPrimaryColor,
-                  letterSpacing: -0.5,
-                ),
-              ),
-            ),
-          ],
+          ),
         ),
-      );
-    }
+      ),
+      body: Builder(
+        builder: (context) {
+          final isLoading = context.select(
+            (RewardsHistoryPageBloc bloc) => bloc.state.historySection.isLoading,
+          );
 
-    return ListView.separated(
-      physics: const BouncingScrollPhysics(),
-      padding: const EdgeInsets.fromLTRB(20, 24, 20, 100),
-      itemCount: transactions.length,
-      separatorBuilder: (_, _) => const Gap(16),
-      itemBuilder: (context, index) {
-        final tx = transactions[index];
-        return FadeInUp(
-          duration: const Duration(milliseconds: 500),
-          delay: Duration(milliseconds: 50 * index),
-          child: _PointsTransactionTile(tx: tx, t: t),
-        );
-      },
+          if (isLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          final transactions = context.select(
+            (RewardsHistoryPageBloc bloc) =>
+                bloc.state.historySection.data ?? [],
+          );
+
+          if (transactions.isEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  FadeInDown(
+                    child: Container(
+                      padding: const EdgeInsets.all(32),
+                      decoration: BoxDecoration(
+                        color: context.backgroundSecondaryColor,
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: context.borderPrimaryColor.withValues(
+                            alpha: 0.05,
+                          ),
+                        ),
+                      ),
+                      child: Icon(
+                        Icons.history_rounded,
+                        size: 80,
+                        color: context.textTertiaryColor.withValues(alpha: 0.2),
+                      ),
+                    ),
+                  ),
+                  const Gap(24),
+                  FadeInUp(
+                    child: Text(
+                      t['noHistory'] ?? 'No points history yet',
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w900,
+                        color: context.textPrimaryColor,
+                        letterSpacing: -0.5,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          return ListView.separated(
+            physics: const BouncingScrollPhysics(),
+            padding: const EdgeInsets.fromLTRB(20, 24, 20, 100),
+            itemCount: transactions.length,
+            separatorBuilder: (_, _) => const Gap(16),
+            itemBuilder: (context, index) {
+              final tx = transactions[index];
+              return FadeInUp(
+                duration: const Duration(milliseconds: 500),
+                delay: Duration(milliseconds: 50 * index),
+                child: _PointsTransactionTile(tx: tx, t: t),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }

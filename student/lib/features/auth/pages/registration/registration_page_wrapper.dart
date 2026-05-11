@@ -28,13 +28,20 @@ final class RegistrationPageWrapper extends StatelessWidget {
             context.showErrorSnackBar(message);
         }
       },
-      child: BlocBuilder<StudentRegistrationBloc, StudentRegistrationState>(
-        builder: (context, state) {
+      child: Builder(
+        builder: (context) {
+          final currentStep = context.select(
+            (StudentRegistrationBloc bloc) => bloc.state.currentStep,
+          );
+          final isLoading = context.select(
+            (StudentRegistrationBloc bloc) => bloc.state.loadingState.isLoading,
+          );
+
           return RegistrationPage(
-            currentStep: state.currentStep,
-            isLoading: state.loadingState.isLoading,
+            currentStep: currentStep,
+            isLoading: isLoading,
             onBack: () {
-              if (state.currentStep == 0) {
+              if (currentStep == 0) {
                 if (context.canPop()) {
                   context.pop();
                 } else {

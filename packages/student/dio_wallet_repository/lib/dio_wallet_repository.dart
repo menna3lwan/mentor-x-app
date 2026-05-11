@@ -1,8 +1,10 @@
 import 'package:mentorx_core/mentorx_core.dart';
 import 'models/wallet_models.dart';
 import 'models/payment_order_model.dart';
+import 'models/coupon_model.dart';
 export 'models/wallet_models.dart';
 export 'models/payment_order_model.dart';
+export 'models/coupon_model.dart';
 
 final class DioWalletRepository
     extends HttpClientRepository<WalletRepositoryExceptionCode>
@@ -17,6 +19,21 @@ final class DioWalletRepository
 
   @override
   Future<void> initialize() async {}
+
+  @override
+  Future<List<CouponEntity>> getValidCoupons() async {
+    try {
+      final response = await httpClient.get('/api/coupons/valid');
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final list = asList(data is Map ? data['content'] : data);
+      return list.map((e) => CouponModel.fromJson(asMap(e))).toList();
+    } on HttpClientResponse catch (e) {
+      return handleHttpClientErrorResponse(
+        e,
+        defaultCode: WalletRepositoryExceptionCode.unknown,
+      );
+    }
+  }
 
   @override
   Future<WalletSummaryEntity> getSummary() async {

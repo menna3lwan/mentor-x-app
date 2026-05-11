@@ -39,8 +39,12 @@ final class _StartStepState extends State<StartStep> {
     final t = context.t.student;
     final bloc = context.read<StudentRegistrationBloc>();
 
-    return BlocBuilder<StudentRegistrationBloc, StudentRegistrationState>(
-      builder: (context, state) {
+    return Builder(
+      builder: (context) {
+        final isPhoneUnique = context.select(
+          (StudentRegistrationBloc bloc) => bloc.state.isPhoneUnique,
+        );
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -90,7 +94,7 @@ final class _StartStepState extends State<StartStep> {
                 label: t['studentPhoneLabel'] ?? 'Your Phone Number',
                 icon: Icons.phone_android_outlined,
                 keyboardType: TextInputType.phone,
-                errorText: !state.isPhoneUnique
+                errorText: !isPhoneUnique
                     ? (t['phoneAlreadyRegistered'] ??
                           'This phone number is already registered.')
                     : null,

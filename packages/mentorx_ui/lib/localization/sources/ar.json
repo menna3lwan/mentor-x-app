@@ -878,6 +878,8 @@
         "orderSummary": "ملخص الطلب",
         "profileTitle": "الملف الشخصي",
         "personalData": "البيانات الشخصية",
+        "identityVerification": "التحقق من الهوية",
+        "verifyNowDesc": "قم بتأكيد هويتك الآن",
         "name": "الاسم",
         "phone": "الهاتف",
         "grade": "الصف",

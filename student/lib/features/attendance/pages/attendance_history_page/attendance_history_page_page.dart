@@ -16,10 +16,27 @@ final class AttendanceHistoryPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = context.t.student;
 
-    return BlocBuilder<AttendanceHistoryPageBloc, AttendanceHistoryPageState>(
-      builder: (context, state) {
-        final isLoading = state.loadingState == LoadingState.loading;
-        final records = state.records;
+    return Builder(
+      builder: (context) {
+        final loadingState = context.select<
+          AttendanceHistoryPageBloc,
+          LoadingState
+        >((bloc) => bloc.state.loadingState);
+        final records = context.select<
+          AttendanceHistoryPageBloc,
+          List<AttendanceRecordEntity>
+        >((bloc) => bloc.state.records);
+        final presentCount = context.select<AttendanceHistoryPageBloc, int>(
+          (bloc) => bloc.state.presentCount,
+        );
+        final totalCount = context.select<AttendanceHistoryPageBloc, int>(
+          (bloc) => bloc.state.totalCount,
+        );
+        final absentCount = context.select<AttendanceHistoryPageBloc, int>(
+          (bloc) => bloc.state.absentCount,
+        );
+
+        final isLoading = loadingState == LoadingState.loading;
 
         return Scaffold(
           backgroundColor: context.backgroundPrimaryColor,
@@ -82,7 +99,9 @@ final class AttendanceHistoryPage extends StatelessWidget {
                               child: FadeInDown(
                                 duration: const Duration(milliseconds: 600),
                                 child: _StatsHeader(
-                                  state: state,
+                                  presentCount: presentCount,
+                                  totalCount: totalCount,
+                                  absentCount: absentCount,
                                   t: t,
                                 ),
                               ),
@@ -130,11 +149,15 @@ final class AttendanceHistoryPage extends StatelessWidget {
 }
 
 final class _StatsHeader extends StatelessWidget {
-  final AttendanceHistoryPageState state;
+  final int presentCount;
+  final int totalCount;
+  final int absentCount;
   final dynamic t;
 
   const _StatsHeader({
-    required this.state,
+    required this.presentCount,
+    required this.totalCount,
+    required this.absentCount,
     required this.t,
   });
 
@@ -164,8 +187,8 @@ final class _StatsHeader extends StatelessWidget {
             child: Column(
               children: [
                 ScoreCircle(
-                  score: state.presentCount,
-                  total: state.totalCount,
+                  score: presentCount,
+                  total: totalCount,
                   radius: 80,
                   lineWidth: 16,
                   activeColor: context.brandPrimaryColor,
@@ -187,7 +210,7 @@ final class _StatsHeader extends StatelessWidget {
                     Expanded(
                       child: _StatMiniCard(
                         label: t['present'] ?? 'Present',
-                        value: state.presentCount.toString(),
+                        value: presentCount.toString(),
                         color: context.statusSuccessColor,
                         icon: Icons.check_circle_rounded,
                       ),
@@ -196,7 +219,7 @@ final class _StatsHeader extends StatelessWidget {
                     Expanded(
                       child: _StatMiniCard(
                         label: t['absent'] ?? 'Absent',
-                        value: state.absentCount.toString(),
+                        value: absentCount.toString(),
                         color: context.statusDangerColor,
                         icon: Icons.cancel_rounded,
                       ),

@@ -15,8 +15,12 @@ final class LeaderboardPageWrapper extends StatelessWidget {
         leaderboardRepository: context.read<LeaderboardRepository>(),
         courseRepository: context.read<CourseRepository>(),
       )..add(LeaderboardPageLoadRequested(courseId: courseId)),
-      child: BlocBuilder<LeaderboardPageBloc, LeaderboardPageState>(
-        builder: (context, state) {
+      child: Builder(
+        builder: (context) {
+          final state = context.select<
+            LeaderboardPageBloc,
+            LeaderboardPageState
+          >((bloc) => bloc.state);
           return LeaderboardPagePage(
             state: state,
             onCourseChanged: (id) => context.read<LeaderboardPageBloc>().add(

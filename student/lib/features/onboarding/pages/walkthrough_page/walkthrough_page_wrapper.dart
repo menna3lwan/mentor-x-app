@@ -53,14 +53,17 @@ final class _WalkthroughPageWrapperState extends State<WalkthroughPageWrapper> {
             break;
         }
       },
-      child: BlocBuilder<WalkthroughPageBloc, WalkthroughPageState>(
-        builder: (context, state) {
+      child: Builder(
+        builder: (context) {
+          final isSubmitting = context.select<WalkthroughPageBloc, bool>(
+            (bloc) => bloc.state.isSubmitting,
+          );
           final bloc = context.read<WalkthroughPageBloc>();
           return WalkthroughPagePage(
             pageController: _pageController,
             currentPage: _currentPage,
             onPageChanged: _onPageChanged,
-            isLoading: state.isSubmitting,
+            isLoading: isSubmitting,
             onNext: () => _onNext(bloc),
             onSkip: () => bloc.add(const WalkthroughPageSkipped()),
           );

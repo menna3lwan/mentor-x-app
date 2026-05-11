@@ -76,6 +76,7 @@ part 'src/entities/attendance_record_entity.dart';
 part 'src/entities/attendance_summary_entity.dart';
 
 // Financial
+part 'src/entities/coupon_entity.dart';
 part 'src/entities/wallet_transaction_entity.dart';
 part 'src/entities/payment_entity.dart';
 part 'src/entities/payment_order_entity.dart';

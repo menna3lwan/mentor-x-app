@@ -94,7 +94,6 @@ final class HomeHeaderWidget extends StatelessWidget {
     );
   }
 }
-
 final class _NotificationButton extends StatelessWidget {
   final int unreadCount;
 
@@ -115,18 +114,27 @@ final class _NotificationButton extends StatelessWidget {
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(30),
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-              child: IconButton(
-                onPressed: () {
-                  // Navigate to notifications
-                },
-                icon: Icon(
-                  Icons.notifications_none_rounded,
-                  color: context.textPrimaryColor,
-                  size: 26,
+            child: Stack(
+              children: [
+                Positioned.fill(
+                  child: ExcludeSemantics(
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                      child: const SizedBox.expand(),
+                    ),
+                  ),
                 ),
-              ),
+                IconButton(
+                  onPressed: () {
+                    // Navigate to notifications
+                  },
+                  icon: Icon(
+                    Icons.notifications_none_rounded,
+                    color: context.textPrimaryColor,
+                    size: 26,
+                  ),
+                ),
+              ],
             ),
           ),
         ),

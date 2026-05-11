@@ -13,8 +13,21 @@ final class LocationStep extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = context.t.student;
     final bloc = context.read<StudentRegistrationBloc>();
-    return BlocBuilder<StudentRegistrationBloc, StudentRegistrationState>(
-      builder: (context, state) {
+    return Builder(
+      builder: (context) {
+        final selectedGovernorate = context.select(
+          (StudentRegistrationBloc bloc) => bloc.state.selectedGovernorate,
+        );
+        final governorates = context.select(
+          (StudentRegistrationBloc bloc) => bloc.state.governorates,
+        );
+        final selectedArea = context.select(
+          (StudentRegistrationBloc bloc) => bloc.state.selectedArea,
+        );
+        final areas = context.select(
+          (StudentRegistrationBloc bloc) => bloc.state.areas,
+        );
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -47,12 +60,17 @@ final class LocationStep extends StatelessWidget {
             const Gap(40),
             FadeInUp(
               duration: const Duration(milliseconds: 400),
-              child: _buildGovernoratePicker(context, state, bloc),
+              child: _buildGovernoratePicker(
+                context,
+                selectedGovernorate,
+                governorates,
+                bloc,
+              ),
             ),
             const Gap(32),
             FadeInUp(
               duration: const Duration(milliseconds: 500),
-              child: _buildAreaPicker(context, state, bloc),
+              child: _buildAreaPicker(context, selectedArea, areas, bloc),
             ),
           ],
         );
@@ -62,7 +80,8 @@ final class LocationStep extends StatelessWidget {
 
   Widget _buildGovernoratePicker(
     BuildContext context,
-    StudentRegistrationState state,
+    GovernorateEntity? selectedGovernorate,
+    List<GovernorateEntity> governorates,
     StudentRegistrationBloc bloc,
   ) {
     final t = context.t.student;
@@ -85,7 +104,7 @@ final class LocationStep extends StatelessWidget {
         ),
         const Gap(16),
         DropdownButtonFormField<GovernorateEntity>(
-          value: state.selectedGovernorate,
+          value: selectedGovernorate,
           dropdownColor: context.backgroundSecondaryColor,
           icon: Icon(
             Icons.keyboard_arrow_down_rounded,
@@ -129,7 +148,7 @@ final class LocationStep extends StatelessWidget {
               fontWeight: FontWeight.w600,
             ),
           ),
-          items: state.governorates.map((gov) {
+          items: governorates.map((gov) {
             return DropdownMenuItem(
               value: gov,
               child: Text(
@@ -150,7 +169,8 @@ final class LocationStep extends StatelessWidget {
 
   Widget _buildAreaPicker(
     BuildContext context,
-    StudentRegistrationState state,
+    String? selectedArea,
+    List<String> areas,
     StudentRegistrationBloc bloc,
   ) {
     final t = context.t.student;
@@ -177,7 +197,7 @@ final class LocationStep extends StatelessWidget {
         ),
         const Gap(16),
         DropdownButtonFormField<String>(
-          value: state.selectedArea,
+          value: selectedArea,
           dropdownColor: context.backgroundSecondaryColor,
           icon: Icon(
             Icons.keyboard_arrow_down_rounded,
@@ -221,7 +241,7 @@ final class LocationStep extends StatelessWidget {
               fontWeight: FontWeight.w600,
             ),
           ),
-          items: state.areas.map((area) {
+          items: areas.map((area) {
             return DropdownMenuItem(
               value: area,
               child: Text(

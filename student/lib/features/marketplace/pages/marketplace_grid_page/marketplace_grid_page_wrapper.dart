@@ -1,6 +1,5 @@
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'bloc/marketplace_grid_page_bloc.dart';
 import 'marketplace_grid_page_page.dart';
@@ -27,8 +26,8 @@ class _MarketplaceGridPageWrapperState
             Navigator.of(context).pop();
         }
       },
-      child: BlocBuilder<MarketplaceGridPageBloc, MarketplaceGridPageState>(
-        builder: (context, state) {
+      child: Builder(
+        builder: (context) {
           return const MarketplaceGridPage();
         },
       ),

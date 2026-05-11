@@ -16,16 +16,33 @@ final class AssignmentDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = context.t.student;
 
-    return BlocBuilder<AssignmentDetailPageBloc, AssignmentDetailPageState>(
-      builder: (context, state) {
-        if (state.loadingState == LoadingState.loading) {
+    return Builder(
+      builder: (context) {
+        final loadingState = context.select<
+          AssignmentDetailPageBloc,
+          LoadingState
+        >((bloc) => bloc.state.loadingState);
+        final errorMessage = context.select<
+          AssignmentDetailPageBloc,
+          String?
+        >((bloc) => bloc.state.errorMessage);
+        final assignment = context.select<
+          AssignmentDetailPageBloc,
+          AssignmentEntity?
+        >((bloc) => bloc.state.assignment);
+        final submission = context.select<
+          AssignmentDetailPageBloc,
+          AssignmentSubmissionEntity?
+        >((bloc) => bloc.state.submission);
+
+        if (loadingState == LoadingState.loading) {
           return Scaffold(
             backgroundColor: context.backgroundPrimaryColor,
             body: const Center(child: CircularProgressIndicator()),
           );
         }
 
-        if (state.errorMessage != null) {
+        if (errorMessage != null) {
           return Scaffold(
             backgroundColor: context.backgroundPrimaryColor,
             body: Center(
@@ -53,7 +70,7 @@ final class AssignmentDetailPage extends StatelessWidget {
                     const Gap(32),
                     FadeInUp(
                       child: Text(
-                        state.errorMessage!,
+                        errorMessage,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 16,
@@ -77,7 +94,6 @@ final class AssignmentDetailPage extends StatelessWidget {
           );
         }
 
-        final assignment = state.assignment;
         if (assignment == null) {
           return Scaffold(
             backgroundColor: context.backgroundPrimaryColor,
@@ -90,7 +106,6 @@ final class AssignmentDetailPage extends StatelessWidget {
           );
         }
 
-        final submission = state.submission;
         final isSubmitted = submission != null;
         final deadlineStr = assignment.deadline != null
             ? DateFormat.yMMMd(

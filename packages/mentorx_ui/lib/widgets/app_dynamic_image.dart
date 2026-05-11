@@ -108,13 +108,13 @@ final class _PlaceHolderImage extends StatelessWidget {
           height: height,
           child: Center(
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(8.0),
               child: Opacity(
                 opacity: 0.5,
                 child: MentorXLogo(
                   size: (width != null && height != null)
-                      ? (width! < height! ? width! : height!) * 0.5
-                      : 40,
+                      ? (width! < height! ? width! : height!) * 0.4
+                      : 30,
                 ),
               ),
             ),

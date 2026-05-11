@@ -1,6 +1,5 @@
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'about_page_page.dart';
 import 'bloc/about_page_bloc.dart';
@@ -22,11 +21,7 @@ class _AboutPageWrapperState extends State<AboutPageWrapper> {
             Navigator.of(context).pop();
         }
       },
-      child: BlocBuilder<AboutPageBloc, AboutPageState>(
-        builder: (context, state) {
-          return const AboutPage();
-        },
-      ),
+      child: const AboutPage(),
     );
   }
 }

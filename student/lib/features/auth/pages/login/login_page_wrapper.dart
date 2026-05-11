@@ -116,18 +116,30 @@ final class _LoginPageWrapperState extends State<LoginPageWrapper> {
           context.showErrorSnackBar(event.message);
         }
       },
-      child: BlocBuilder<LoginBloc, LoginState>(
-        builder: (context, state) {
+      child: Builder(
+        builder: (context) {
+          final isLoading = context.select<LoginBloc, bool>(
+            (bloc) => bloc.state.isLoading,
+          );
+          final obscurePassword = context.select<LoginBloc, bool>(
+            (bloc) => bloc.state.obscurePassword,
+          );
+          final isError = context.select<LoginBloc, bool>(
+            (bloc) => bloc.state.loadingState.isError,
+          );
+          final errorMessage = context.select<LoginBloc, String?>(
+            (bloc) => bloc.state.errorMessage,
+          );
+
           final bloc = context.read<LoginBloc>();
+
           return LoginPage(
             formKey: _formKey,
             phoneController: _phoneController,
             passwordController: _passwordController,
-            isLoading: state.isLoading,
-            obscurePassword: state.obscurePassword,
-            errorMessage: state.loadingState.isError
-                ? state.errorMessage
-                : null,
+            isLoading: isLoading,
+            obscurePassword: obscurePassword,
+            errorMessage: isError ? errorMessage : null,
             inputFormatters: [
               FilteringTextInputFormatter.digitsOnly,
               LengthLimitingTextInputFormatter(11),

@@ -26,17 +26,30 @@ final class _MyCoursesPageWrapperState extends State<MyCoursesPageWrapper> {
             MentorXUI.showToast(message: message);
         }
       },
-      child: BlocBuilder<MyCoursesPageBloc, MyCoursesPageState>(
-        builder: (context, state) {
+      child: Builder(
+        builder: (context) {
           final bloc = context.read<MyCoursesPageBloc>();
+          final selectedTab = context.select(
+            (MyCoursesPageBloc bloc) => bloc.state.selectedTab,
+          );
+          final isLoading = context.select(
+            (MyCoursesPageBloc bloc) => bloc.state.isLoading,
+          );
+          final loadingState = context.select(
+            (MyCoursesPageBloc bloc) => bloc.state.loadingState,
+          );
+          final courses = context.select(
+            (MyCoursesPageBloc bloc) => bloc.state.courses,
+          );
+          final errorMessage = context.select(
+            (MyCoursesPageBloc bloc) => bloc.state.errorMessage,
+          );
+
           return MyCoursesPagePage(
-            selectedTab: state.selectedTab,
-            isLoading:
-                state.isLoading || state.loadingState == LoadingState.initial,
-            courses: state.courses,
-            errorMessage: state.loadingState.isError
-                ? state.errorMessage
-                : null,
+            selectedTab: selectedTab,
+            isLoading: isLoading || loadingState == LoadingState.initial,
+            courses: courses,
+            errorMessage: loadingState.isError ? errorMessage : null,
             onTabChanged: (tab) => bloc.add(MyCoursesPageTabChanged(tab)),
             onRefresh: () async => bloc.add(const MyCoursesPageRefreshed()),
             onCourseTap: (courseId) {
