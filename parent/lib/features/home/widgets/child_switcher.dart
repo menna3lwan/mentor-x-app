@@ -12,8 +12,6 @@ class ChildSwitcher extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = MentorXThemeColorPalette.light;
-
     return BlocBuilder<HomeBloc, HomeState>(
       builder: (context, state) {
         if (state.children.isEmpty || state.selectedChild == null) {
@@ -47,7 +45,6 @@ class ChildSwitcher extends StatelessWidget {
                   name: child.name.split(' ').first,
                   imageUrl: child.profileImageUrl,
                   isSelected: isSelected,
-                  palette: palette,
                   onTap: () {
                     context.read<HomeBloc>().add(HomeChildSwitched(child));
                   },
@@ -65,14 +62,12 @@ class _ChildAvatarItem extends StatelessWidget {
   final String name;
   final String? imageUrl;
   final bool isSelected;
-  final MentorXThemeColorPalette palette;
   final VoidCallback onTap;
 
   const _ChildAvatarItem({
     required this.name,
     this.imageUrl,
     required this.isSelected,
-    required this.palette,
     required this.onTap,
   });
 
@@ -96,12 +91,12 @@ class _ChildAvatarItem extends StatelessWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: isSelected ? palette.brandPrimary : palette.borderPrimary.withValues(alpha: 0.1),
+                    color: isSelected ? context.brandPrimaryColor : context.borderPrimaryColor.withValues(alpha: 0.1),
                     width: isSelected ? 3 : 1.5,
                   ),
                   boxShadow: isSelected ? [
                     BoxShadow(
-                      color: palette.brandPrimary.withValues(alpha: 0.3),
+                      color: context.brandPrimaryColor.withValues(alpha: 0.3),
                       blurRadius: 20,
                       offset: const Offset(0, 10),
                     ),
@@ -117,13 +112,13 @@ class _ChildAvatarItem extends StatelessWidget {
                   tag: 'child_avatar_${name}_$isSelected',
                   child: CircleAvatar(
                     radius: 32,
-                    backgroundColor: isSelected ? palette.brandPrimary.withValues(alpha: 0.05) : palette.backgroundSecondary,
+                    backgroundColor: isSelected ? context.brandPrimaryColor.withValues(alpha: 0.05) : context.backgroundSecondaryColor,
                     backgroundImage: imageUrl != null ? NetworkImage(imageUrl!) : null,
                     child: imageUrl == null 
                         ? Text(
                             name[0].toUpperCase(),
                             style: TextStyle(
-                              color: palette.brandPrimary,
+                              color: context.brandPrimaryColor,
                               fontSize: 24,
                               fontWeight: FontWeight.w900,
                             ),
@@ -139,7 +134,7 @@ class _ChildAvatarItem extends StatelessWidget {
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: isSelected ? FontWeight.w900 : FontWeight.w700,
-                color: isSelected ? palette.textPrimary : palette.textTertiary,
+                color: isSelected ? context.textPrimaryColor : context.textTertiaryColor,
                 letterSpacing: isSelected ? -0.2 : 0,
               ),
               child: Text(name),
@@ -152,7 +147,7 @@ class _ChildAvatarItem extends StatelessWidget {
                   width: 6,
                   height: 6,
                   decoration: BoxDecoration(
-                    color: palette.brandPrimary,
+                    color: context.brandPrimaryColor,
                     shape: BoxShape.circle,
                   ),
                 ),
@@ -169,8 +164,6 @@ class _AddChildButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = MentorXThemeColorPalette.light;
-
     return GestureDetector(
       onTap: () => const AddChildLinkRoute().go(context),
       behavior: HitTestBehavior.opaque,
@@ -182,7 +175,7 @@ class _AddChildButton extends StatelessWidget {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               border: Border.all(
-                color: palette.borderPrimary.withValues(alpha: 0.3),
+                color: context.borderPrimaryColor.withValues(alpha: 0.3),
                 width: 1.5,
                 style: BorderStyle.solid, // Using solid for simplicity but visually distinct
               ),
@@ -190,7 +183,7 @@ class _AddChildButton extends StatelessWidget {
             child: CircleAvatar(
               radius: 32,
               backgroundColor: Colors.white,
-              child: Icon(Icons.add_rounded, color: palette.textTertiary, size: 32),
+              child: Icon(Icons.add_rounded, color: context.textTertiaryColor, size: 32),
             ),
           ),
           const Gap(12),
@@ -199,7 +192,7 @@ class _AddChildButton extends StatelessWidget {
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w700,
-              color: palette.textTertiary,
+              color: context.textTertiaryColor,
               letterSpacing: -0.2,
             ),
           ),

@@ -27,7 +27,8 @@ void main() {
       build: () => PurchaseConfirmPageBloc(
         walletRepository: walletRepository,
       ),
-      act: (bloc) => bloc.add(const PurchaseConfirmPageLoadEvent(paymentId: '1')),
+      act: (bloc) =>
+          bloc.add(const PurchaseConfirmPageLoadEvent(paymentId: '1')),
       expect: () => [
         isA<PurchaseConfirmPageState>().having(
           (s) => s.loadingState,

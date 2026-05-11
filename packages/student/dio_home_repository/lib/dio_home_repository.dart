@@ -24,7 +24,7 @@ final class DioStudentHomeRepository
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return WalletSummaryModel.fromJson(data);
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: StudentHomeRepositoryExceptionCode.failedToLoadWalletSummary,
       );
@@ -36,9 +36,9 @@ final class DioStudentHomeRepository
     try {
       final response = await httpClient.get('/api/notifications/unread-count');
       final data = asMap(response.data)['data'] ?? asMap(response.data);
-      return intOrNull(data['count']) ?? 0;
+      return intOrNull(data['count'] ?? data['unreadCount']) ?? 0;
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode:
             StudentHomeRepositoryExceptionCode.failedToLoadUnreadNotificationsCount,
@@ -49,24 +49,26 @@ final class DioStudentHomeRepository
   @override
   Future<List<BannerEntity>> getHomeBanners({String? gradeId}) async {
     try {
+      final queryParams = {
+        'placement': 'home',
+        if (gradeId != null) 'grade_id': gradeId,
+      };
+
       final response = await httpClient.get(
-        '/api/banners',
-        queryParameters: {
-          'placement': 'home',
-          if (gradeId != null) 'grade_id': gradeId,
-        },
+        '/api/banners/active',
+        queryParameters: queryParams,
       );
 
-      final list = asList(asMap(response.data)['content'] ??
-          asMap(response.data)['data'] ??
-          response.data);
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final list = asList(data is Map ? data['content'] : data);
       return list
           .map(asMap)
           .map(BannerModel.fromJson)
           .where((banner) => banner.id.isNotEmpty && banner.imageUrl.isNotEmpty)
           .toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      if (e.statusCode == 403) return [];
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: StudentHomeRepositoryExceptionCode.failedToLoadBanners,
       );
@@ -76,23 +78,24 @@ final class DioStudentHomeRepository
   @override
   Future<List<CourseSummaryEntity>> getContinueLearningCourses() async {
     try {
+      final queryParams = {
+        'size': 5,
+        'sort': 'lastAccessedAt,desc',
+      };
+
       final response = await httpClient.get(
         '/api/enrollments/my-enrollments',
-        queryParameters: {
-          'size': 5,
-          'sort': 'lastAccessedAt,desc',
-        },
+        queryParameters: queryParams,
       );
 
-      final content = asList(asMap(response.data)['content'] ??
-          asMap(response.data)['data'] ??
-          response.data);
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final content = asList(data is Map ? data['content'] : data);
       return content
           .map(asMap)
           .map(CourseModel.fromJson)
           .toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode:
             StudentHomeRepositoryExceptionCode.failedToLoadContinueLearning,
@@ -104,24 +107,25 @@ final class DioStudentHomeRepository
   Future<List<CourseSummaryEntity>> getFeaturedCourses(
       {String? gradeId}) async {
     try {
+      final queryParams = {
+        'featured': true,
+        if (gradeId != null) 'grade_id': gradeId,
+        'size': 6,
+      };
+
       final response = await httpClient.get(
         '/api/courses',
-        queryParameters: {
-          'featured': true,
-          if (gradeId != null) 'grade_id': gradeId,
-          'size': 6,
-        },
+        queryParameters: queryParams,
       );
 
-      final content = asList(asMap(response.data)['content'] ??
-          asMap(response.data)['data'] ??
-          response.data);
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final content = asList(data is Map ? data['content'] : data);
       return content
           .map(asMap)
           .map(CourseModel.fromJson)
           .toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: StudentHomeRepositoryExceptionCode.failedToLoadFeaturedCourses,
       );
@@ -131,27 +135,26 @@ final class DioStudentHomeRepository
   @override
   Future<List<AnnouncementEntity>> getRecentAnnouncements() async {
     try {
+      final queryParams = {'limit': 3};
       final response = await httpClient.get(
-        '/api/announcements',
-        queryParameters: {'limit': 3},
+        '/api/announcements/active',
+        queryParameters: queryParams,
       );
 
-      final list = asList(asMap(response.data)['content'] ??
-          asMap(response.data)['data'] ??
-          response.data);
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final list = asList(data is Map ? data['content'] : data);
 
       return list
           .map(asMap)
           .map(AnnouncementModel.fromJson)
           .toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: StudentHomeRepositoryExceptionCode.failedToLoadAnnouncements,
       );
     }
   }
-
   @override
   Future<void> trackBannerClick(String bannerId) async {
     try {
@@ -161,6 +164,35 @@ final class DioStudentHomeRepository
         e,
         defaultCode: StudentHomeRepositoryExceptionCode.failedToTrackBannerClick,
       );
+    }
+  }
+
+  @override
+  Future<BannerEntity> createBanner(Map<String, dynamic> data) async {
+    try {
+      final response = await httpClient.post('/api/banners', data: data);
+      final responseData = asMap(response.data)["content"] ?? asMap(response.data);
+      return BannerModel.fromJson(responseData);
+    } on HttpClientResponse catch (e) {
+      return handleHttpClientErrorResponse(e, defaultCode: StudentHomeRepositoryExceptionCode.unknown);
+    }
+  }
+
+  @override
+  Future<void> updateBanner(String bannerId, Map<String, dynamic> data) async {
+    try {
+      await httpClient.patch('/api/banners/$bannerId', data: data);
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(e, defaultCode: StudentHomeRepositoryExceptionCode.unknown);
+    }
+  }
+
+  @override
+  Future<void> deleteBanner(String bannerId) async {
+    try {
+      await httpClient.delete('/api/banners/$bannerId');
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(e, defaultCode: StudentHomeRepositoryExceptionCode.unknown);
     }
   }
 }

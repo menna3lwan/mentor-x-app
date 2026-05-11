@@ -32,14 +32,15 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
 
   @override
   Widget build(BuildContext context) {
-    final palette = MentorXThemeColorPalette.light;
-
     return Scaffold(
       body: Container(
         width: double.infinity,
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [palette.brandPrimary, palette.brandPrimary.withOpacity(0.8)],
+            colors: [
+              context.brandPrimaryColor,
+              context.brandPrimaryColor.withValues(alpha: 0.8)
+            ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -50,9 +51,9 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
             Container(
               padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.15),
+                color: Colors.white.withValues(alpha: 0.15),
                 shape: BoxShape.circle,
-                border: Border.all(color: Colors.white.withOpacity(0.2)),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
               ),
               child: const Icon(Icons.family_restroom_rounded, size: 80, color: Colors.white),
             ),
@@ -72,7 +73,7 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w700,
-                color: Colors.white.withOpacity(0.7),
+                color: Colors.white.withValues(alpha: 0.7),
                 letterSpacing: 2,
               ),
             ),
@@ -81,7 +82,7 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
               width: 40,
               height: 40,
               child: CircularProgressIndicator(
-                color: Colors.white.withOpacity(0.5),
+                color: Colors.white.withValues(alpha: 0.5),
                 strokeWidth: 3,
               ),
             ),

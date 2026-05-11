@@ -7,7 +7,10 @@ import '../helpers/student_patrol_harness.dart';
 void main() {
   final routes = <({String name, GoRouteData route})>[
     (name: 'quiz_intro', route: const QuizIntroPageRoute()),
-    (name: 'quiz_taking', route: const QuizTakingPageRoute(quizId: 'dummy-quiz-id')),
+    (
+      name: 'quiz_taking',
+      route: const QuizTakingPageRoute(quizId: 'dummy-quiz-id'),
+    ),
     (name: 'quiz_result', route: const QuizResultPageRoute(attemptId: '1')),
     (name: 'quiz_review', route: const QuizReviewPageRoute()),
     (name: 'quiz_answers_review', route: const QuizAnswersReviewPageRoute()),
@@ -18,7 +21,6 @@ void main() {
     (name: 'device_management', route: const DeviceManagementPageRoute()),
     (name: 'whatsapp_groups', route: const WhatsappGroupsPageRoute()),
     (name: 'about', route: const AboutPageRoute()),
-    (name: 'support', route: const SupportPageRoute()),
     (name: 'edit_profile', route: const EditProfilePageRoute()),
     (name: 'change_password', route: const ChangePasswordPageRoute()),
   ];

@@ -9,21 +9,27 @@ part 'forgot_password_state.dart';
 
 sealed class ForgotPasswordPresentationEvent {}
 
-final class ForgotPasswordSuccessPresentationEvent extends ForgotPasswordPresentationEvent {
+final class ForgotPasswordSuccessPresentationEvent
+    extends ForgotPasswordPresentationEvent {
   final String phone;
 
   ForgotPasswordSuccessPresentationEvent(this.phone);
 }
 
-final class ForgotPasswordBloc extends Bloc<ForgotPasswordEvent, ForgotPasswordState>
-    with BlocPresentationMixin<ForgotPasswordState, ForgotPasswordPresentationEvent> {
+final class ForgotPasswordBloc
+    extends Bloc<ForgotPasswordEvent, ForgotPasswordState>
+    with
+        BlocPresentationMixin<
+          ForgotPasswordState,
+          ForgotPasswordPresentationEvent
+        > {
   final StudentAuthenticationRepository _authRepository;
 
   ForgotPasswordBloc({
     required StudentAuthenticationRepository authRepository,
     String? initialPhone,
-  })  : _authRepository = authRepository,
-        super(ForgotPasswordState(phone: initialPhone ?? '')) {
+  }) : _authRepository = authRepository,
+       super(ForgotPasswordState(phone: initialPhone ?? '')) {
     on<ForgotPasswordPhoneChanged>(_onPhoneChanged);
     on<ForgotPasswordSubmitted>(_onSubmitted);
   }
@@ -45,19 +51,27 @@ final class ForgotPasswordBloc extends Bloc<ForgotPasswordEvent, ForgotPasswordS
 
     try {
       await _authRepository.requestPasswordReset(state.phone.trim());
-      
+
       emit(state.copyWith(loadingState: LoadingState.loaded));
-      emitPresentation(ForgotPasswordSuccessPresentationEvent(state.phone.trim()));
+      emitPresentation(
+        ForgotPasswordSuccessPresentationEvent(state.phone.trim()),
+      );
     } on AuthenticationRepositoryException catch (e) {
-      emit(state.copyWith(
-        loadingState: LoadingState.error,
-        errorMessage: MentorXNullableValue(e.message ?? 'An error occurred'),
-      ));
+      emit(
+        state.copyWith(
+          loadingState: LoadingState.error,
+          errorMessage: MentorXNullableValue(e.message ?? 'An error occurred'),
+        ),
+      );
     } catch (e) {
-      emit(state.copyWith(
-        loadingState: LoadingState.error,
-        errorMessage: const MentorXNullableValue('An unexpected error occurred'),
-      ));
+      emit(
+        state.copyWith(
+          loadingState: LoadingState.error,
+          errorMessage: const MentorXNullableValue(
+            'An unexpected error occurred',
+          ),
+        ),
+      );
     }
   }
 }

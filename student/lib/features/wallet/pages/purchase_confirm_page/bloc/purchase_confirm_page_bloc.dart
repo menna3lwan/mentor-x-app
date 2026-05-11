@@ -32,7 +32,19 @@ final class PurchaseConfirmPageBloc
     PurchaseConfirmPageLoadEvent event,
     Emitter<PurchaseConfirmPageState> emit,
   ) async {
-    emit(state.copyWith(loadingState: LoadingState.loading));
-    emit(state.copyWith(loadingState: LoadingState.loaded));
+    emit(
+      state.copyWith(loadingState: LoadingState.loading, errorMessage: null),
+    );
+    try {
+      final payment = await walletRepository.getPaymentStatus(event.paymentId);
+      emit(state.copyWith(loadingState: LoadingState.loaded, payment: payment));
+    } catch (e) {
+      emit(
+        state.copyWith(
+          loadingState: LoadingState.error,
+          errorMessage: e.toString(),
+        ),
+      );
+    }
   }
 }

@@ -1,7 +1,6 @@
 part of '../mentorx_ui.dart';
 
-/// You can provider your own light and dark themes using [MentorXThemeProvider.fromColorPalette]
-/// and override whatever tokens you want using the optional named parameters
+/// A widget that provides the MentorX theme data to its descendants.
 final class MentorXThemeProvider extends StatelessWidget {
   final Widget child;
   final Brightness brightness;

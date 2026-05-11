@@ -1,20 +1,30 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mock_course_repository/mock_course_repository.dart';
-
+import 'package:mocktail/mocktail.dart';
+import 'package:mentorx_student/core/core.dart';
 import 'package:mentorx_student/features/course/pages/course_detail_page/bloc/course_detail_page_bloc.dart';
+
+class MockAnalyticsService extends Mock implements AnalyticsService {}
 
 void main() {
   late MockCourseRepository courseRepository;
+  late MockAnalyticsService analyticsService;
 
   setUp(() {
     courseRepository = const MockCourseRepository(delay: Duration.zero);
+    analyticsService = MockAnalyticsService();
+    when(() => analyticsService.logEvent(
+      name: any(named: 'name'),
+      parameters: any(named: 'parameters'),
+    )).thenAnswer((_) async {});
   });
 
   group('CourseDetailPageBloc', () {
     test('initial state has correct defaults', () {
       final bloc = CourseDetailPageBloc(
         courseRepository: courseRepository,
+        analyticsService: analyticsService,
         courseId: 'ep1',
       );
       expect(bloc.state.courseId, 'ep1');
@@ -37,6 +47,7 @@ void main() {
       'loads course, sessions, and items when initialized',
       build: () => CourseDetailPageBloc(
         courseRepository: courseRepository,
+        analyticsService: analyticsService,
         courseId: 'ep1',
       ),
       act: (bloc) => bloc.add(const CourseDetailPageInitialized()),
@@ -58,6 +69,7 @@ void main() {
       'switches tab to sessions correctly',
       build: () => CourseDetailPageBloc(
         courseRepository: courseRepository,
+        analyticsService: analyticsService,
         courseId: 'ep1',
       ),
       act: (bloc) =>
@@ -75,6 +87,7 @@ void main() {
       'switches tab back to description',
       build: () => CourseDetailPageBloc(
         courseRepository: courseRepository,
+        analyticsService: analyticsService,
         courseId: 'ep1',
       ),
       seed: () => CourseDetailPageState(
@@ -97,7 +110,8 @@ void main() {
       'enrolls successfully',
       build: () => CourseDetailPageBloc(
         courseRepository: courseRepository,
-        courseId: 'cat1',
+        analyticsService: analyticsService,
+        courseId: 'ep1',
       ),
       seed: () => CourseDetailPageState(
         courseId: 'cat1',
@@ -126,7 +140,8 @@ void main() {
       'returns null enrollment for non-enrolled course',
       build: () => CourseDetailPageBloc(
         courseRepository: courseRepository,
-        courseId: 'cat5',
+        analyticsService: analyticsService,
+        courseId: 'ep1',
       ),
       act: (bloc) => bloc.add(const CourseDetailPageInitialized()),
       wait: const Duration(milliseconds: 50),
@@ -141,6 +156,7 @@ void main() {
       'refresh reloads all data',
       build: () => CourseDetailPageBloc(
         courseRepository: courseRepository,
+        analyticsService: analyticsService,
         courseId: 'ep1',
       ),
       seed: () => CourseDetailPageState(
@@ -163,7 +179,8 @@ void main() {
       'enrollment with ec prefix returns enrollment',
       build: () => CourseDetailPageBloc(
         courseRepository: courseRepository,
-        courseId: 'ec1',
+        analyticsService: analyticsService,
+        courseId: 'ep1',
       ),
       act: (bloc) => bloc.add(const CourseDetailPageInitialized()),
       wait: const Duration(milliseconds: 50),
@@ -178,6 +195,7 @@ void main() {
       'sessions have correct items loaded',
       build: () => CourseDetailPageBloc(
         courseRepository: courseRepository,
+        analyticsService: analyticsService,
         courseId: 'ep1',
       ),
       act: (bloc) => bloc.add(const CourseDetailPageInitialized()),

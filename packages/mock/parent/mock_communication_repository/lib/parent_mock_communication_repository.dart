@@ -8,6 +8,9 @@ final class MockParentCommunicationRepository implements ParentCommunicationRepo
   });
 
   @override
+  Future<void> initialize() async {}
+
+  @override
   Future<List<NotificationEntity>> getNotifications(String childId) async {
     await Future.delayed(delay);
     return [

@@ -46,3 +46,5 @@ app.*.map.json
 
 # Patrol generated bundle
 integration_test/test_bundle.dart
+
+sentry.properties

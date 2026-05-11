@@ -8,6 +8,9 @@ final class MockChildrenRepository implements ParentChildrenRepository {
   });
 
   @override
+  Future<void> initialize() async {}
+
+  @override
   Future<List<ParentChildEntity>> getChildren() async {
     await Future.delayed(delay);
     return const [

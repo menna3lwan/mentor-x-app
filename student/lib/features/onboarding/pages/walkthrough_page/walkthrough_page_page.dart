@@ -23,190 +23,189 @@ final class WalkthroughPagePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = MentorXThemeColorPalette.light;
-    final textTheme = Theme.of(context).textTheme;
     final steps = _steps(context);
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Column(
-          children: [
-            // Skip button
-            FadeInDown(
-              duration: const Duration(milliseconds: 600),
-              child: Align(
-                alignment: AlignmentDirectional.topEnd,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                  child: TextButton(
-                    onPressed: isLoading ? null : onSkip,
-                    style: TextButton.styleFrom(
-                      foregroundColor: palette.textTertiary,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                    ),
-                    child: Text(
-                      context.t.ui.common.skip,
-                      style: textTheme.labelLarge?.copyWith(
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: 1.1,
+      backgroundColor: context.backgroundPrimaryColor,
+      body: Stack(
+        children: [
+          // Background Decorations
+          Positioned(
+            top: -100,
+            right: -100,
+            child: FadeInDown(
+              duration: const Duration(seconds: 2),
+              child: _BackgroundBlob(
+                size: 300,
+                color: context.brandPrimaryColor.withValues(alpha: 0.05),
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: -50,
+            left: -50,
+            child: FadeInUp(
+              duration: const Duration(seconds: 2),
+              child: _BackgroundBlob(
+                size: 200,
+                color: context.brandSecondaryColor.withValues(alpha: 0.05),
+              ),
+            ),
+          ),
+
+          SafeArea(
+            child: Column(
+              children: [
+                // Skip button
+                FadeInDown(
+                  duration: const Duration(milliseconds: 600),
+                  child: Align(
+                    alignment: AlignmentDirectional.topEnd,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 12,
+                      ),
+                      child: TextButton(
+                        onPressed: isLoading ? null : onSkip,
+                        style: TextButton.styleFrom(
+                          foregroundColor: context.textTertiaryColor,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                            side: BorderSide(
+                              color: context.borderPrimaryColor.withValues(
+                                alpha: 0.1,
+                              ),
+                            ),
+                          ),
+                        ),
+                        child: Text(
+                          context.t.ui.common.skip,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: 1.2,
+                            fontSize: 12,
+                          ),
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ),
 
-            // PageView
-            Expanded(
-              child: PageView.builder(
-                controller: pageController,
-                itemCount: steps.length,
-                onPageChanged: onPageChanged,
-                itemBuilder: (context, index) {
-                  final step = steps[index];
-                  final isCurrent = currentPage == index;
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 40),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        if (isCurrent)
-                          FadeInDown(
-                            duration: const Duration(milliseconds: 800),
-                            child: Container(
-                              width: 260,
-                              height: 260,
-                              decoration: BoxDecoration(
-                                gradient: RadialGradient(
-                                  colors: [
-                                    palette.brandPrimary.withValues(alpha: 0.15),
-                                    palette.brandPrimary.withValues(alpha: 0.0),
-                                  ],
-                                ),
-                                shape: BoxShape.circle,
-                              ),
-                              child: Center(
-                                child: ZoomIn(
-                                  duration: const Duration(milliseconds: 600),
-                                  delay: const Duration(milliseconds: 200),
-                                  child: Container(
-                                    width: 140,
-                                    height: 140,
-                                    decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        colors: [palette.brandPrimary, palette.brandPrimary.withValues(alpha: 0.8)],
-                                        begin: Alignment.topLeft,
-                                        end: Alignment.bottomRight,
+                // PageView
+                Expanded(
+                  child: PageView.builder(
+                    controller: pageController,
+                    itemCount: steps.length,
+                    onPageChanged: onPageChanged,
+                    itemBuilder: (context, index) {
+                      final step = steps[index];
+                      final isCurrent = currentPage == index;
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 40),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            if (isCurrent)
+                              ZoomIn(
+                                duration: const Duration(milliseconds: 800),
+                                child: Container(
+                                  width: 320,
+                                  height: 320,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: context.brandPrimaryColor
+                                            .withValues(alpha: 0.1),
+                                        blurRadius: 50,
+                                        spreadRadius: 20,
                                       ),
-                                      borderRadius: BorderRadius.circular(40),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: palette.brandPrimary.withValues(alpha: 0.3),
-                                          blurRadius: 30,
-                                          offset: const Offset(0, 15),
-                                        ),
-                                      ],
-                                    ),
-                                    child: Icon(
-                                      step.icon,
-                                      size: 64,
-                                      color: palette.textForeground,
-                                    ),
+                                    ],
+                                  ),
+                                  child: Image.asset(
+                                    step.imagePath,
+                                    fit: BoxFit.contain,
                                   ),
                                 ),
                               ),
-                            ),
-                          ),
-                        const Gap(60),
-                        if (isCurrent)
-                          FadeInUp(
-                            duration: const Duration(milliseconds: 600),
-                            child: Text(
-                              step.title,
-                              style: textTheme.headlineMedium?.copyWith(
-                                fontWeight: FontWeight.w900,
-                                color: palette.textPrimary,
-                                letterSpacing: -1,
+                            const Gap(48),
+                            if (isCurrent) ...[
+                              FadeInUp(
+                                duration: const Duration(milliseconds: 600),
+                                child: Text(
+                                  step.title,
+                                  style: TextStyle(
+                                    fontSize: 32,
+                                    fontWeight: FontWeight.w900,
+                                    color: context.textPrimaryColor,
+                                    letterSpacing: -1.5,
+                                    height: 1.1,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
                               ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        const Gap(20),
-                        if (isCurrent)
-                          FadeInUp(
-                            duration: const Duration(milliseconds: 600),
-                            delay: const Duration(milliseconds: 200),
-                            child: Text(
-                              step.description,
-                              style: textTheme.bodyLarge?.copyWith(
-                                color: palette.textSecondary,
-                                height: 1.6,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
+                              const Gap(20),
+                              FadeInUp(
+                                duration: const Duration(milliseconds: 600),
+                                delay: const Duration(milliseconds: 200),
+                                child: Text(
+                                  step.description,
+                                  style: TextStyle(
+                                    color: context.textSecondaryColor,
+                                    height: 1.6,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
                               ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                      ],
-                    ),
-                  );
-                },
-              ),
-            ),
+                            ],
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
 
-            // Dots indicator
-            FadeInUp(
-              duration: const Duration(milliseconds: 600),
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 32),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(
-                    steps.length,
-                    (index) => AnimatedContainer(
-                      duration: const Duration(milliseconds: 400),
-                      curve: Curves.elasticOut,
-                      margin: const EdgeInsets.symmetric(horizontal: 5),
-                      width: currentPage == index ? 32 : 10,
-                      height: 10,
-                      decoration: BoxDecoration(
-                        color: currentPage == index
-                            ? palette.brandPrimary
-                            : palette.brandPrimary.withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: currentPage == index
-                            ? [
-                                BoxShadow(
-                                  color: palette.brandPrimary.withValues(alpha: 0.3),
-                                  blurRadius: 8,
-                                  offset: const Offset(0, 3),
-                                )
-                              ]
-                            : null,
+                // Dots indicator
+                FadeInUp(
+                  duration: const Duration(milliseconds: 600),
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 32),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(
+                        steps.length,
+                        (index) =>
+                            _AnimatedIndicator(isActive: currentPage == index),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ),
 
-            // Next / Get Started button
-            FadeInUp(
-              duration: const Duration(milliseconds: 800),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(32, 0, 32, 40),
-                child: MentorXButton(
-                  loading: isLoading,
-                  onPressed: onNext,
-                  text: currentPage < steps.length - 1
-                      ? context.t.ui.common.next
-                      : context.t.ui.common.getStarted,
+                // Next / Get Started button
+                FadeInUp(
+                  duration: const Duration(milliseconds: 800),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(32, 0, 32, 48),
+                    child: MentorXButton(
+                      loading: isLoading,
+                      onPressed: onNext,
+                      label: currentPage < steps.length - 1
+                          ? context.t.ui.common.next
+                          : context.t.ui.common.getStarted,
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -214,17 +213,17 @@ final class WalkthroughPagePage extends StatelessWidget {
   List<_OnboardingStep> _steps(BuildContext context) {
     return [
       _OnboardingStep(
-        icon: Icons.school_rounded,
+        imagePath: 'assets/images/onboarding/learn.png',
         title: context.t.onboarding.steps.learn.title,
         description: context.t.onboarding.steps.learn.description,
       ),
       _OnboardingStep(
-        icon: Icons.auto_graph_rounded,
+        imagePath: 'assets/images/onboarding/track_progress.png',
         title: context.t.onboarding.steps.trackProgress.title,
         description: context.t.onboarding.steps.trackProgress.description,
       ),
       _OnboardingStep(
-        icon: Icons.quiz_rounded,
+        imagePath: 'assets/images/onboarding/quizzes.png',
         title: context.t.onboarding.steps.quizzes.title,
         description: context.t.onboarding.steps.quizzes.description,
       ),
@@ -233,13 +232,71 @@ final class WalkthroughPagePage extends StatelessWidget {
 }
 
 final class _OnboardingStep {
-  final IconData icon;
+  final String imagePath;
   final String title;
   final String description;
 
   const _OnboardingStep({
-    required this.icon,
+    required this.imagePath,
     required this.title,
     required this.description,
   });
+}
+
+class _BackgroundBlob extends StatelessWidget {
+  final double size;
+  final Color color;
+
+  const _BackgroundBlob({required this.size, required this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        color: color,
+        shape: BoxShape.circle,
+        boxShadow: [
+          BoxShadow(
+            color: color.withValues(alpha: 0.1),
+            blurRadius: 100,
+            spreadRadius: 50,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _AnimatedIndicator extends StatelessWidget {
+  final bool isActive;
+
+  const _AnimatedIndicator({required this.isActive});
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 400),
+      curve: Curves.elasticOut,
+      margin: const EdgeInsets.symmetric(horizontal: 6),
+      width: isActive ? 40 : 12,
+      height: 12,
+      decoration: BoxDecoration(
+        color: isActive
+            ? Theme.of(context).primaryColor
+            : Theme.of(context).dividerColor.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: isActive
+            ? [
+                BoxShadow(
+                  color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ]
+            : null,
+      ),
+    );
+  }
 }

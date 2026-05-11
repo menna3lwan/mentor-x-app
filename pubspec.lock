@@ -9,6 +9,21 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "91.0.0"
+  _flutterfire_internals:
+    dependency: transitive
+    description:
+      name: _flutterfire_internals
+      sha256: afe15ce18a287d2f89da95566e62892df339b1936bbe9b83587df45b944ee72a
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.3.67"
+  analytics_service:
+    dependency: transitive
+    description:
+      path: "packages/services/analytics_service"
+      relative: true
+    source: path
+    version: "1.0.0"
   analyzer:
     dependency: transitive
     description:
@@ -341,10 +356,10 @@ packages:
     dependency: transitive
     description:
       name: device_info_plus
-      sha256: b4fed1b2835da9d670d7bed7db79ae2a94b0f5ad6312268158a9b5479abbacdd
+      sha256: a7fd703482b391a87d60b6061d04dfdeab07826b96f9abd8f5ed98068acc0074
       url: "https://pub.dev"
     source: hosted
-    version: "12.4.0"
+    version: "10.1.2"
   device_info_plus_platform_interface:
     dependency: transitive
     description:
@@ -376,6 +391,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.9.2"
+  dio_student_analytics_repository:
+    dependency: transitive
+    description:
+      path: "packages/student/dio_student_analytics_repository"
+      relative: true
+    source: path
+    version: "1.0.0"
   dio_web_adapter:
     dependency: transitive
     description:
@@ -400,6 +422,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.8"
+  error_tracking_service:
+    dependency: transitive
+    description:
+      path: "packages/services/error_tracking_service"
+      relative: true
+    source: path
+    version: "0.0.1"
   event_bus:
     dependency: transitive
     description:
@@ -480,6 +509,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.9.3+4"
+  firebase_analytics:
+    dependency: transitive
+    description:
+      name: firebase_analytics
+      sha256: "8170273394694efdf567e7e30c26457ff346377a52eb679c278f97b36b786d70"
+      url: "https://pub.dev"
+    source: hosted
+    version: "12.1.3"
+  firebase_analytics_platform_interface:
+    dependency: transitive
+    description:
+      name: firebase_analytics_platform_interface
+      sha256: "2c25cd85f640a47fcc15e970a04a50470f0a4d0e76f23c5bc5ec93a3d48d8775"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.0.7"
+  firebase_analytics_web:
+    dependency: transitive
+    description:
+      name: firebase_analytics_web
+      sha256: e0eb2b21eccb18109af2c1d3154f9e69b45abf4816e3290a6251008e0503aca9
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.6.1+3"
   firebase_core:
     dependency: transitive
     description:
@@ -512,6 +565,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.1"
+  fl_chart:
+    dependency: transitive
+    description:
+      name: fl_chart
+      sha256: "5276944c6ffc975ae796569a826c38a62d2abcf264e26b88fa6f482e107f4237"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.70.2"
   flutter:
     dependency: transitive
     description: flutter
@@ -798,6 +859,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.3"
+  globbing:
+    dependency: transitive
+    description:
+      name: globbing
+      sha256: "4f89cfaf6fa74c9c1740a96259da06bd45411ede56744e28017cc534a12b6e2d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   go_router:
     dependency: transitive
     description:
@@ -1006,6 +1075,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.4.1"
+  injector:
+    dependency: transitive
+    description:
+      name: injector
+      sha256: ed389bed5b48a699d5b9561c985023d0d5cc88dd5ff2237aadcce5a5ab433e4e
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.0"
   integration_test:
     dependency: transitive
     description: flutter
@@ -1027,6 +1104,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.5"
+  jni:
+    dependency: transitive
+    description:
+      name: jni
+      sha256: d2c361082d554d4593c3012e26f6b188f902acd291330f13d6427641a92b3da1
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.14.2"
   jovial_misc:
     dependency: transitive
     description:
@@ -1163,14 +1248,21 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.7.0"
+  mock_student_analytics_repository:
+    dependency: transitive
+    description:
+      path: "packages/mock/student/mock_student_analytics_repository"
+      relative: true
+    source: path
+    version: "1.0.0"
   mocktail:
     dependency: transitive
     description:
       name: mocktail
-      sha256: "890df3f9688106f25755f26b1c60589a92b3ab91a22b8b224947ad041bf172d8"
+      sha256: "5e1bf53cc7baa8062a33b84424deb61513858ea05c601b8509e683815b5914aa"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.4"
+    version: "1.0.5"
   mustache_template:
     dependency: transitive
     description:
@@ -1215,10 +1307,10 @@ packages:
     dependency: transitive
     description:
       name: package_info_plus
-      sha256: "468c26b4254ab01979fa5e4a98cb343ea3631b9acee6f21028997419a80e1a20"
+      sha256: f69da0d3189a4b4ceaeb1a3defb0f329b3b352517f52bed4290f83d4f06bc08d
       url: "https://pub.dev"
     source: hosted
-    version: "9.0.1"
+    version: "9.0.0"
   package_info_plus_platform_interface:
     dependency: transitive
     description:
@@ -1435,6 +1527,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
+  properties:
+    dependency: transitive
+    description:
+      name: properties
+      sha256: "333f427dd4ed07bdbe8c75b9ff864a1e70b5d7a8426a2e8bdd457b65ae5ac598"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.1"
   provider:
     dependency: transitive
     description:
@@ -1499,6 +1599,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.0"
+  sentry:
+    dependency: transitive
+    description:
+      name: sentry
+      sha256: f04095a25ff02b202a914174c73ec309570aa93d61098cb4a0a9e715b4aaa465
+      url: "https://pub.dev"
+    source: hosted
+    version: "9.20.0"
+  sentry_dart_plugin:
+    dependency: transitive
+    description:
+      name: sentry_dart_plugin
+      sha256: "2c5f263f8d5aea3cf387a7e03f77e355d35c71bd9a429474d633fbc085b86ceb"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.3.0"
+  sentry_flutter:
+    dependency: transitive
+    description:
+      name: sentry_flutter
+      sha256: "4f0a914d8c37e5015d7b86dd42b92dd265948fd31875b43e62ddfc2e7bea0e41"
+      url: "https://pub.dev"
+    source: hosted
+    version: "9.20.0"
   serial_csv:
     dependency: transitive
     description:
@@ -1736,6 +1860,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.4.0"
+  system_info2:
+    dependency: transitive
+    description:
+      name: system_info2
+      sha256: b937736ecfa63c45b10dde1ceb6bb30e5c0c340e14c441df024150679d65ac43
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.1.0"
   term_glyph:
     dependency: transitive
     description:
@@ -1964,10 +2096,10 @@ packages:
     dependency: transitive
     description:
       name: win32_registry
-      sha256: "6f1b564492d0147b330dd794fee8f512cec4977957f310f9951b5f9d83618dae"
+      sha256: "21ec76dfc731550fd3e2ce7a33a9ea90b828fdf19a5c3bcf556fa992cfa99852"
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.0"
+    version: "1.1.5"
   xdg_directories:
     dependency: transitive
     description:

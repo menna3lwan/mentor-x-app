@@ -16,7 +16,12 @@ final class WalletMainPageState extends Equatable {
   static const initial = WalletMainPageState();
 
   @override
-  List<Object?> get props => [loadingState, summary, transactions, errorMessage];
+  List<Object?> get props => [
+    loadingState,
+    summary,
+    transactions,
+    errorMessage,
+  ];
 
   WalletMainPageState copyWith({
     LoadingState? loadingState,
@@ -28,7 +33,9 @@ final class WalletMainPageState extends Equatable {
       loadingState: loadingState ?? this.loadingState,
       summary: summary != null ? summary.value : this.summary,
       transactions: transactions ?? this.transactions,
-      errorMessage: errorMessage != null ? errorMessage.value : this.errorMessage,
+      errorMessage: errorMessage != null
+          ? errorMessage.value
+          : this.errorMessage,
     );
   }
 }

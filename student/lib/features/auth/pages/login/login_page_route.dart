@@ -9,6 +9,7 @@ final class LoginPageRoute extends GoRouteData with $LoginPageRoute {
     return BlocProvider<LoginBloc>(
       create: (context) => LoginBloc(
         authRepository: context.read<StudentAuthenticationRepository>(),
+        analyticsService: context.read<AnalyticsService>(),
       ),
       child: const LoginPageWrapper(),
     );

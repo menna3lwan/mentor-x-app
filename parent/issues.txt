@@ -1,6 +1,0 @@
-Analyzing parent...
-
-  error - lib/features/home/widgets/parent_announcements_scroll.dart:25:22 - Invalid constant value. - invalid_constant
-  error - lib/features/home/widgets/parent_quick_actions_grid.dart:19:22 - Invalid constant value. - invalid_constant
-
-2 issues found.

@@ -51,10 +51,15 @@ extension MentorXThemeExtension on BuildContext {
       colors[$mentorxToken.color.backgroundPrimaryTransparent]!;
   Color get backgroundElevatedSurfaceColor =>
       colors[$mentorxToken.color.backgroundElevatedSurface]!;
+  Color get backgroundElevatedSurfaceShadowColor =>
+      colors[$mentorxToken.color.backgroundElevatedSurfaceShadow]!;
 
   Color get statusDangerColor => colors[$mentorxToken.color.statusDanger]!;
   Color get statusSuccessColor => colors[$mentorxToken.color.statusSuccess]!;
   Color get statusWarningColor => colors[$mentorxToken.color.statusWarning]!;
+
+  Color get borderPrimaryColor => colors[$mentorxToken.color.borderPrimary]!;
+  Color get borderSecondaryColor => colors[$mentorxToken.color.borderSecondary]!;
 
   // ── TextStyle Getters ─────────────────────────────────────────────────
 

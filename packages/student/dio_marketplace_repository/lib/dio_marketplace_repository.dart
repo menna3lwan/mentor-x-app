@@ -6,9 +6,10 @@ final class DioMarketplaceRepository
     extends HttpClientRepository<MarketplaceRepositoryExceptionCode>
     implements MarketplaceRepository {
   @override
-  Never throwException(MarketplaceRepositoryExceptionCode code,
-          {String? message}) =>
-      throw MarketplaceRepositoryException(code: code, message: message);
+  Never throwException(
+    MarketplaceRepositoryExceptionCode code, {
+    String? message,
+  }) => throw MarketplaceRepositoryException(code: code, message: message);
 
   final HttpClient httpClient;
 
@@ -21,10 +22,13 @@ final class DioMarketplaceRepository
   Future<List<MarketplaceCategoryEntity>> getCategories() async {
     try {
       final response = await httpClient.get('/api/marketplace/categories');
-      final data = asList(response.data);
-      return data.map((e) => MarketplaceCategoryModel.fromJson(asMap(e))).toList();
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final list = asList(data is Map ? data['content'] : data);
+      return list
+          .map((e) => MarketplaceCategoryModel.fromJson(asMap(e)))
+          .toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: MarketplaceRepositoryExceptionCode.failedToLoadCategories,
       );
@@ -38,19 +42,22 @@ final class DioMarketplaceRepository
     MentorXPaginationInfo? paginationInfo,
   }) async {
     try {
+      final queryParams = {
+        if (categoryId != null) 'category_id': categoryId,
+        if (search != null) 'search': search,
+        if (paginationInfo != null) ...paginationInfo.toJson(),
+      };
+
       final response = await httpClient.get(
         '/api/marketplace/items',
-        queryParameters: {
-          if (categoryId != null) 'category_id': categoryId,
-          if (search != null) 'search': search,
-          if (paginationInfo != null) ...paginationInfo.toJson(),
-        },
+        queryParameters: queryParams,
       );
 
-      final data = asList(response.data);
-      return data.map((e) => MarketplaceItemModel.fromJson(asMap(e))).toList();
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final list = asList(data is Map ? data['content'] : data);
+      return list.map((e) => MarketplaceItemModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: MarketplaceRepositoryExceptionCode.failedToLoadItems,
       );
@@ -64,7 +71,7 @@ final class DioMarketplaceRepository
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return MarketplaceItemModel.fromJson(data);
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: MarketplaceRepositoryExceptionCode.failedToLoadItems,
       );
@@ -79,20 +86,24 @@ final class DioMarketplaceRepository
     String? deliveryNotes,
   }) async {
     try {
+      final payload = {
+        'items': items
+            .map((e) => {'item_id': e.itemId, 'quantity': e.quantity})
+            .toList(),
+        'delivery_address': deliveryAddress,
+        'delivery_phone': deliveryPhone,
+        if (deliveryNotes != null) 'delivery_notes': deliveryNotes,
+      };
+
       final response = await httpClient.post(
         '/api/marketplace/orders',
-        data: {
-          'items': items.map((e) => {'item_id': e.itemId, 'quantity': e.quantity}).toList(),
-          'delivery_address': deliveryAddress,
-          'delivery_phone': deliveryPhone,
-          if (deliveryNotes != null) 'delivery_notes': deliveryNotes,
-        },
+        data: payload,
       );
 
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return MarketplaceOrderModel.fromJson(data);
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: MarketplaceRepositoryExceptionCode.failedToPlaceOrder,
       );
@@ -104,21 +115,23 @@ final class DioMarketplaceRepository
     MentorXPaginationInfo? paginationInfo,
   }) async {
     try {
+      final queryParams = {
+        if (paginationInfo != null) ...paginationInfo.toJson(),
+      };
+
       final response = await httpClient.get(
         '/api/marketplace/orders',
-        queryParameters: {
-          if (paginationInfo != null) ...paginationInfo.toJson(),
-        },
+        queryParameters: queryParams,
       );
 
-      final data = asList(response.data);
-      return data.map((e) => MarketplaceOrderModel.fromJson(asMap(e))).toList();
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final list = asList(data is Map ? data['content'] : data);
+      return list.map((e) => MarketplaceOrderModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: MarketplaceRepositoryExceptionCode.failedToLoadOrders,
       );
     }
   }
-
 }

@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
+import 'package:animate_do/animate_do.dart';
+import 'package:gap/gap.dart';
 import '../bloc/student_registration_bloc.dart';
 
-class StartStep extends StatefulWidget {
+final class StartStep extends StatefulWidget {
   const StartStep({super.key});
 
   @override
   State<StartStep> createState() => _StartStepState();
 }
 
-class _StartStepState extends State<StartStep> {
+final class _StartStepState extends State<StartStep> {
   late final TextEditingController _firstNameController;
   late final TextEditingController _phoneController;
   late final TextEditingController _parentPhoneController;
@@ -34,49 +36,80 @@ class _StartStepState extends State<StartStep> {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t.student;
+    final bloc = context.read<StudentRegistrationBloc>();
+
     return BlocBuilder<StudentRegistrationBloc, StudentRegistrationState>(
       builder: (context, state) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Let\'s get started',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            FadeInDown(
+              duration: const Duration(milliseconds: 400),
+              child: Text(
+                t['welcomeTitle'] ?? "Let's get started",
+                style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.w900,
+                  color: context.textPrimaryColor,
+                  letterSpacing: -1.0,
+                ),
+              ),
             ),
-            const SizedBox(height: 8),
-            const Text(
-              'Enter your basic details to verify your phone number.',
-              style: TextStyle(color: Colors.grey),
+            const Gap(12),
+            FadeInDown(
+              duration: const Duration(milliseconds: 500),
+              child: Text(
+                t['welcomeSubtitle'] ??
+                    'Enter your basic details to verify your phone number and begin your journey.',
+                style: TextStyle(
+                  color: context.textSecondaryColor,
+                  fontSize: 15,
+                  height: 1.6,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ),
-            const SizedBox(height: 32),
-            MentorXTextFormField(
-              label: 'First Name',
-              icon: Icons.person_outline,
-              controller: _firstNameController,
-              onChanged: (v) => context.read<StudentRegistrationBloc>().add(
-                    StudentRegistrationFirstNameChanged(v),
-                  ),
+            const Gap(40),
+            FadeInUp(
+              duration: const Duration(milliseconds: 400),
+              child: MentorXTextFormField(
+                key: const Key('registration_first_name'),
+                label: t['firstNameLabel'] ?? 'First Name',
+                icon: Icons.person_outline_rounded,
+                controller: _firstNameController,
+                onChanged: (v) =>
+                    bloc.add(StudentRegistrationFirstNameChanged(v)),
+              ),
             ),
-            const SizedBox(height: 16),
-            MentorXTextFormField(
-              label: 'Your Phone Number',
-              icon: Icons.phone_android_outlined,
-              keyboardType: TextInputType.phone,
-              errorText: !state.isPhoneUnique ? 'This phone number is already registered.' : null,
-              controller: _phoneController,
-              onChanged: (v) => context.read<StudentRegistrationBloc>().add(
-                    StudentRegistrationPhoneChanged(v),
-                  ),
+            const Gap(20),
+            FadeInUp(
+              duration: const Duration(milliseconds: 500),
+              child: MentorXTextFormField(
+                key: const Key('registration_phone'),
+                label: t['studentPhoneLabel'] ?? 'Your Phone Number',
+                icon: Icons.phone_android_outlined,
+                keyboardType: TextInputType.phone,
+                errorText: !state.isPhoneUnique
+                    ? (t['phoneAlreadyRegistered'] ??
+                          'This phone number is already registered.')
+                    : null,
+                controller: _phoneController,
+                onChanged: (v) => bloc.add(StudentRegistrationPhoneChanged(v)),
+              ),
             ),
-            const SizedBox(height: 16),
-            MentorXTextFormField(
-              label: 'Parent Phone Number',
-              icon: Icons.family_restroom_outlined,
-              keyboardType: TextInputType.phone,
-              controller: _parentPhoneController,
-              onChanged: (v) => context.read<StudentRegistrationBloc>().add(
-                    StudentRegistrationParentPhoneChanged(v),
-                  ),
+            const Gap(20),
+            FadeInUp(
+              duration: const Duration(milliseconds: 600),
+              child: MentorXTextFormField(
+                key: const Key('registration_parent_phone'),
+                label: t['parentPhoneLabel'] ?? 'Parent Phone Number',
+                icon: Icons.family_restroom_outlined,
+                keyboardType: TextInputType.phone,
+                controller: _parentPhoneController,
+                onChanged: (v) =>
+                    bloc.add(StudentRegistrationParentPhoneChanged(v)),
+              ),
             ),
           ],
         );

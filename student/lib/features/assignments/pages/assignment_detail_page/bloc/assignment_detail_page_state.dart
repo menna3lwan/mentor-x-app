@@ -16,7 +16,12 @@ final class AssignmentDetailPageState extends Equatable {
   static const initial = AssignmentDetailPageState();
 
   @override
-  List<Object?> get props => [loadingState, assignment, submission, errorMessage];
+  List<Object?> get props => [
+    loadingState,
+    assignment,
+    submission,
+    errorMessage,
+  ];
 
   AssignmentDetailPageState copyWith({
     LoadingState? loadingState,

@@ -33,15 +33,19 @@ final class QuizListPageBloc extends Bloc<QuizListPageEvent, QuizListPageState>
     emit(state.copyWith(loadingState: LoadingState.loading));
     try {
       final quizzes = await quizRepository.getQuizzes();
-      emit(state.copyWith(
-        loadingState: LoadingState.loaded,
-        quizzes: quizzes,
-      ));
+      emit(
+        state.copyWith(
+          loadingState: LoadingState.loaded,
+          quizzes: quizzes,
+        ),
+      );
     } catch (e) {
-      emit(state.copyWith(
-        loadingState: LoadingState.error,
-        errorMessage: e.toString(),
-      ));
+      emit(
+        state.copyWith(
+          loadingState: LoadingState.error,
+          errorMessage: e.toString(),
+        ),
+      );
     }
   }
 }

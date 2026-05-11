@@ -5,6 +5,9 @@ final class MockParentHomeRepository implements ParentHomeRepository {
   const MockParentHomeRepository();
 
   @override
+  Future<void> initialize() async {}
+
+  @override
   Future<ParentHomeSummaryEntity> getSummary(String studentId) async {
     await Future.delayed(const Duration(milliseconds: 500));
     return MockParentDashboardGenerator.homeSummary();

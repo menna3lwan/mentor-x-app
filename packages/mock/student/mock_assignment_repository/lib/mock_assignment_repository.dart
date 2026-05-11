@@ -18,6 +18,22 @@ final class MockAssignmentRepository implements AssignmentRepository {
   }
 
   @override
+  Future<List<AssignmentEntity>> getAssignments() async {
+    await Future<void>.delayed(delay);
+    return [
+      MockAssignmentGenerator.assignment('assignment_1'),
+      MockAssignmentGenerator.assignment('assignment_2'),
+      MockAssignmentGenerator.assignment('assignment_3'),
+    ];
+  }
+
+  @override
+  Future<List<QuizQuestionEntity>> getAssignmentQuestions(String assignmentId) async {
+    await Future<void>.delayed(delay);
+    return MockAssignmentGenerator.assignment(assignmentId).questions;
+  }
+
+  @override
   Future<AssignmentSubmissionEntity?> getSubmission(
     String assignmentId,
   ) async {
@@ -42,5 +58,28 @@ final class MockAssignmentRepository implements AssignmentRepository {
       status: SubmissionStatus.submitted,
       submittedAt: DateTime.now(),
     );
+  }
+
+  @override
+  Future<void> deleteAttempt(String attemptId) async {
+    await Future<void>.delayed(delay);
+  }
+
+  @override
+  Future<List<AssignmentSubmissionEntity>> getStudentAttempts(String studentId) async {
+    await Future<void>.delayed(delay);
+    return [MockAssignmentGenerator.submission('assignment_1')!];
+  }
+
+  @override
+  Future<List<AssignmentSubmissionEntity>> getAttemptsForAssignment(String assignmentId) async {
+    await Future<void>.delayed(delay);
+    return [MockAssignmentGenerator.submission(assignmentId)!];
+  }
+
+  @override
+  Future<Map<String, dynamic>> getAssignmentStatistics(String assignmentId) async {
+    await Future<void>.delayed(delay);
+    return {'average_score': 90.0};
   }
 }

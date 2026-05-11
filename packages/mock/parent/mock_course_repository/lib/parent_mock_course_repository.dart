@@ -8,6 +8,9 @@ final class MockParentCourseRepository implements ParentCourseRepository {
   });
 
   @override
+  Future<void> initialize() async {}
+
+  @override
   Future<List<CourseEntity>> getCourses(String childId, {String? status}) async {
     await Future.delayed(delay);
     return [

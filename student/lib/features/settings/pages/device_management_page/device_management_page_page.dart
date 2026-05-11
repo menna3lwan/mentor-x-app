@@ -3,7 +3,6 @@ import 'package:intl/intl.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:gap/gap.dart';
-
 import 'bloc/device_management_page_bloc.dart';
 
 final class DeviceManagementPagePage extends StatelessWidget {
@@ -20,38 +19,57 @@ final class DeviceManagementPagePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = MentorXThemeColorPalette.light;
+    final t = context.t.student;
 
     return Scaffold(
-      backgroundColor: palette.backgroundSecondary,
+      backgroundColor: context.backgroundPrimaryColor,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(70),
         child: FadeInDown(
           duration: const Duration(milliseconds: 500),
-          child: AppBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            foregroundColor: palette.textPrimary,
-            centerTitle: true,
-            title: const Text(
-              'Device Management',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, letterSpacing: -0.5),
+          child: Container(
+            decoration: BoxDecoration(
+              color: context.backgroundSecondaryColor,
+              borderRadius: const BorderRadius.vertical(
+                bottom: Radius.circular(28),
+              ),
+              border: Border(
+                bottom: BorderSide(
+                  color: context.borderPrimaryColor.withValues(alpha: 0.05),
+                ),
+              ),
+            ),
+            child: AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              foregroundColor: context.textPrimaryColor,
+              centerTitle: true,
+              title: Text(
+                t['deviceManagement'] ?? 'Device Management',
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: -0.5,
+                ),
+              ),
             ),
           ),
         ),
       ),
       body: RefreshIndicator(
         onRefresh: () async => onRefresh(),
+        color: context.brandPrimaryColor,
+        backgroundColor: context.backgroundSecondaryColor,
         child: state.isLoading
             ? const Center(child: CircularProgressIndicator())
             : state.loadingState.isError
-                ? _buildError(palette)
-                : _buildLoaded(context, palette),
+            ? _buildError(context)
+            : _buildLoaded(context),
       ),
     );
   }
 
-  Widget _buildError(MentorXThemeColorPalette palette) {
+  Widget _buildError(BuildContext context) {
     return ListView(
       physics: const AlwaysScrollableScrollPhysics(),
       children: [
@@ -61,7 +79,7 @@ final class DeviceManagementPagePage extends StatelessWidget {
           child: Icon(
             Icons.error_outline_rounded,
             size: 64,
-            color: palette.statusDanger,
+            color: context.statusDangerColor,
           ),
         ),
         const Gap(16),
@@ -70,7 +88,11 @@ final class DeviceManagementPagePage extends StatelessWidget {
           child: Text(
             state.errorMessage ?? 'Unable to load devices.',
             textAlign: TextAlign.center,
-            style: TextStyle(color: palette.statusDanger, fontWeight: FontWeight.w700, fontSize: 16),
+            style: TextStyle(
+              color: context.statusDangerColor,
+              fontWeight: FontWeight.w800,
+              fontSize: 16,
+            ),
           ),
         ),
         const Gap(8),
@@ -80,14 +102,17 @@ final class DeviceManagementPagePage extends StatelessWidget {
           child: Text(
             'Pull down to try again.',
             textAlign: TextAlign.center,
-            style: TextStyle(color: palette.textSecondary, fontWeight: FontWeight.w500),
+            style: TextStyle(
+              color: context.textTertiaryColor,
+              fontWeight: FontWeight.w700,
+            ),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildLoaded(BuildContext context, MentorXThemeColorPalette palette) {
+  Widget _buildLoaded(BuildContext context) {
     if (state.devices.isEmpty) {
       return ListView(
         physics: const AlwaysScrollableScrollPhysics(),
@@ -98,13 +123,16 @@ final class DeviceManagementPagePage extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
-                color: palette.backgroundPrimary,
+                color: context.backgroundSecondaryColor,
                 shape: BoxShape.circle,
+                border: Border.all(
+                  color: context.borderPrimaryColor.withValues(alpha: 0.05),
+                ),
               ),
               child: Icon(
                 Icons.devices_other_rounded,
                 size: 80,
-                color: palette.textTertiary.withValues(alpha: 0.3),
+                color: context.textTertiaryColor.withValues(alpha: 0.1),
               ),
             ),
           ),
@@ -114,10 +142,12 @@ final class DeviceManagementPagePage extends StatelessWidget {
             child: Text(
               'No registered devices',
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.w900,
-                    color: palette.textPrimary,
-                  ),
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.w900,
+                color: context.textPrimaryColor,
+                letterSpacing: -0.5,
+              ),
             ),
           ),
           const Gap(10),
@@ -127,7 +157,11 @@ final class DeviceManagementPagePage extends StatelessWidget {
             child: Text(
               'Your active login sessions will appear here.',
               textAlign: TextAlign.center,
-              style: TextStyle(color: palette.textSecondary, fontWeight: FontWeight.w500, fontSize: 15),
+              style: TextStyle(
+                color: context.textTertiaryColor,
+                fontWeight: FontWeight.w700,
+                fontSize: 15,
+              ),
             ),
           ),
         ],
@@ -136,7 +170,7 @@ final class DeviceManagementPagePage extends StatelessWidget {
 
     return ListView.separated(
       physics: const BouncingScrollPhysics(),
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
       itemCount: state.devices.length,
       separatorBuilder: (_, _) => const Gap(16),
       itemBuilder: (context, index) {
@@ -149,13 +183,16 @@ final class DeviceManagementPagePage extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: palette.backgroundPrimary,
-              borderRadius: BorderRadius.circular(24),
+              color: context.backgroundSecondaryColor,
+              borderRadius: BorderRadius.circular(28),
+              border: Border.all(
+                color: context.borderPrimaryColor.withValues(alpha: 0.05),
+              ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.02),
-                  blurRadius: 12,
-                  offset: const Offset(0, 4),
+                  color: Colors.black.withValues(alpha: 0.05),
+                  blurRadius: 15,
+                  offset: const Offset(0, 8),
                 ),
               ],
             ),
@@ -164,23 +201,25 @@ final class DeviceManagementPagePage extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    ZoomIn(
-                      duration: const Duration(milliseconds: 400),
-                      child: Container(
-                        width: 48,
-                        height: 48,
-                        decoration: BoxDecoration(
-                          color: palette.brandPrimary.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Icon(
-                          _getDeviceIcon(device.deviceType),
-                          color: palette.brandPrimary,
-                          size: 24,
+                    Container(
+                      width: 52,
+                      height: 52,
+                      decoration: BoxDecoration(
+                        color: context.brandPrimaryColor.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: context.brandPrimaryColor.withValues(
+                            alpha: 0.2,
+                          ),
                         ),
                       ),
+                      child: Icon(
+                        _getDeviceIcon(device.deviceType),
+                        color: context.brandPrimaryColor,
+                        size: 26,
+                      ),
                     ),
-                    const Gap(14),
+                    const Gap(16),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -190,7 +229,7 @@ final class DeviceManagementPagePage extends StatelessWidget {
                             style: TextStyle(
                               fontWeight: FontWeight.w900,
                               fontSize: 16,
-                              color: palette.textPrimary,
+                              color: context.textPrimaryColor,
                               letterSpacing: -0.5,
                             ),
                           ),
@@ -198,9 +237,9 @@ final class DeviceManagementPagePage extends StatelessWidget {
                           Text(
                             device.deviceModel,
                             style: TextStyle(
-                              color: palette.textSecondary,
+                              color: context.textTertiaryColor,
                               fontSize: 12,
-                              fontWeight: FontWeight.w600,
+                              fontWeight: FontWeight.w800,
                             ),
                           ),
                         ],
@@ -209,7 +248,7 @@ final class DeviceManagementPagePage extends StatelessWidget {
                     _StatusChip(isActive: device.isActive),
                   ],
                 ),
-                const Gap(16),
+                const Gap(20),
                 Wrap(
                   spacing: 8,
                   runSpacing: 8,
@@ -218,28 +257,32 @@ final class DeviceManagementPagePage extends StatelessWidget {
                       icon: Icons.access_time_rounded,
                       label: 'Last used ${_formatDate(device.lastUsedAt)}',
                     ),
-                    if (device.osVersion != null && device.osVersion!.isNotEmpty)
+                    if (device.osVersion != null &&
+                        device.osVersion!.isNotEmpty)
                       _MetaPill(
                         icon: Icons.settings_cell_rounded,
                         label: 'OS ${device.osVersion}',
                       ),
-                    if (device.appVersion != null && device.appVersion!.isNotEmpty)
+                    if (device.appVersion != null &&
+                        device.appVersion!.isNotEmpty)
                       _MetaPill(
                         icon: Icons.verified_rounded,
                         label: 'App v${device.appVersion}',
                       ),
                   ],
                 ),
-                const Gap(20),
+                const Gap(24),
                 SizedBox(
                   width: double.infinity,
                   child: MentorXButton(
-                    onPressed: !device.isActive || isDeactivating ? null : () => onDeactivateTapped(device.id),
-                    label: device.isActive ? 'Deactivate Device' : 'Deactivated',
+                    onPressed: !device.isActive || isDeactivating
+                        ? null
+                        : () => onDeactivateTapped(device.id),
+                    label: device.isActive
+                        ? 'Deactivate Device'
+                        : 'Deactivated',
                     loading: isDeactivating,
-                    color: palette.statusDanger,
-                    variant: MentorXButtonVariant.outline,
-                    icon: Icons.power_settings_new_rounded,
+                    color: context.backgroundPrimaryColor,
                   ),
                 ),
               ],
@@ -253,7 +296,9 @@ final class DeviceManagementPagePage extends StatelessWidget {
   IconData _getDeviceIcon(String? type) {
     type = type?.toLowerCase();
     if (type == 'tablet') return Icons.tablet_android_rounded;
-    if (type == 'desktop' || type == 'web') return Icons.desktop_windows_rounded;
+    if (type == 'desktop' || type == 'web') {
+      return Icons.desktop_windows_rounded;
+    }
     return Icons.smartphone_rounded;
   }
 
@@ -269,8 +314,9 @@ final class _StatusChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = MentorXThemeColorPalette.light;
-    final color = isActive ? palette.statusSuccess : palette.textTertiary;
+    final color = isActive
+        ? context.statusSuccessColor
+        : context.textTertiaryColor;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -283,8 +329,8 @@ final class _StatusChip extends StatelessWidget {
         isActive ? 'Active' : 'Inactive',
         style: TextStyle(
           color: color,
-          fontWeight: FontWeight.w800,
-          fontSize: 11,
+          fontWeight: FontWeight.w900,
+          fontSize: 10,
           letterSpacing: 0.5,
         ),
       ),
@@ -300,25 +346,26 @@ final class _MetaPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = MentorXThemeColorPalette.light;
-
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: palette.backgroundSecondary,
+        color: context.backgroundPrimaryColor,
         borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: context.borderPrimaryColor.withValues(alpha: 0.05),
+        ),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 14, color: palette.textTertiary),
+          Icon(icon, size: 14, color: context.textTertiaryColor),
           const Gap(8),
           Text(
             label,
             style: TextStyle(
-              color: palette.textSecondary,
-              fontSize: 12,
-              fontWeight: FontWeight.w700,
+              color: context.textSecondaryColor,
+              fontSize: 11,
+              fontWeight: FontWeight.w800,
             ),
           ),
         ],

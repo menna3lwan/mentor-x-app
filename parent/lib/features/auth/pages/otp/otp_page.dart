@@ -23,10 +23,8 @@ final class OtpPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = MentorXThemeColorPalette.light;
-
     return Scaffold(
-      backgroundColor: palette.backgroundPrimary,
+      backgroundColor: context.backgroundPrimaryColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -49,7 +47,7 @@ final class OtpPage extends StatelessWidget {
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: palette.brandPrimary.withValues(alpha: 0.1),
+                        color: context.brandPrimaryColor.withValues(alpha: 0.1),
                         blurRadius: 30,
                         offset: const Offset(0, 10),
                       ),
@@ -57,7 +55,7 @@ final class OtpPage extends StatelessWidget {
                   ),
                   child: Icon(
                     Icons.security_rounded,
-                    color: palette.brandPrimary,
+                    color: context.brandPrimaryColor,
                     size: 48,
                   ),
                 ),

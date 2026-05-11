@@ -1,6 +1,8 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
+import 'package:gap/gap.dart';
 
 final class CatalogCourseCard extends StatelessWidget {
   final CourseSummaryEntity course;
@@ -14,30 +16,35 @@ final class CatalogCourseCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = MentorXThemeColorPalette.light;
-
     return GestureDetector(
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: palette.backgroundPrimary,
-          borderRadius: BorderRadius.circular(20),
+          color: context.backgroundSecondaryColor.withValues(alpha: 0.45),
+          borderRadius: BorderRadius.circular(28),
+          border: Border.all(
+            color: context.borderPrimaryColor.withValues(alpha: 0.1),
+          ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.04),
-              blurRadius: 16,
-              offset: const Offset(0, 4),
+              color: Colors.black.withValues(alpha: 0.08),
+              blurRadius: 20,
+              offset: const Offset(0, 10),
             ),
           ],
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(28),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
             Stack(
               children: [
                 ClipRRect(
                   borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(20),
+                    top: Radius.circular(28),
                   ),
                   child: AspectRatio(
                     aspectRatio: 1.1,
@@ -47,10 +54,12 @@ final class CatalogCourseCard extends StatelessWidget {
                         course.thumbnailUrl,
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) => Container(
-                          color: palette.backgroundSecondary,
+                          color: context.backgroundPrimaryColor,
                           child: Icon(
-                            Icons.image_outlined,
-                            color: palette.textTertiary,
+                            Icons.school_outlined,
+                            color: context.textTertiaryColor.withValues(
+                              alpha: 0.2,
+                            ),
                             size: 32,
                           ),
                         ),
@@ -59,30 +68,40 @@ final class CatalogCourseCard extends StatelessWidget {
                   ),
                 ),
                 Positioned(
-                  top: 8,
-                  right: 8,
+                  top: 10,
+                  right: 10,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: palette.backgroundPrimary.withOpacity(0.9),
-                      borderRadius: BorderRadius.circular(8),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          blurRadius: 4,
-                        ),
-                      ],
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 6,
                     ),
-                    child: Text(
-                      course.isFree
-                          ? context.t.course.detail.free
-                          : '${course.price?.toInt() ?? 0} ${context.t.core.currency}',
-                      style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w800,
-                        color: course.isFree
-                            ? palette.statusSuccess
-                            : palette.brandPrimary,
+                    decoration: BoxDecoration(
+                      color: context.backgroundPrimaryColor.withValues(
+                        alpha: 0.6,
+                      ),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: context.borderPrimaryColor.withValues(
+                          alpha: 0.1,
+                        ),
+                      ),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                        child: Text(
+                          course.isFree
+                              ? context.t.course.detail.free
+                              : '${course.price?.toInt() ?? 0} ${context.t.core.currency}',
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w900,
+                            color: course.isFree
+                                ? context.statusSuccessColor
+                                : context.brandPrimaryColor,
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -90,7 +109,7 @@ final class CatalogCourseCard extends StatelessWidget {
               ],
             ),
             Padding(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(14),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -99,27 +118,28 @@ final class CatalogCourseCard extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 13,
-                      color: palette.textPrimary,
-                      height: 1.3,
+                      fontWeight: FontWeight.w800,
+                      fontSize: 14,
+                      color: context.textPrimaryColor,
+                      height: 1.2,
+                      letterSpacing: -0.3,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const Gap(8),
                   Row(
                     children: [
                       Icon(
                         Icons.people_alt_rounded,
                         size: 14,
-                        color: palette.textTertiary,
+                        color: context.textTertiaryColor,
                       ),
-                      const SizedBox(width: 4),
+                      const Gap(6),
                       Text(
                         '${course.enrolledCount} ${context.t.course.detail.students}',
                         style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w600,
-                          color: palette.textSecondary,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w700,
+                          color: context.textSecondaryColor,
                         ),
                       ),
                     ],
@@ -130,6 +150,8 @@ final class CatalogCourseCard extends StatelessWidget {
           ],
         ),
       ),
-    );
+    ),
+  ),
+);
   }
 }

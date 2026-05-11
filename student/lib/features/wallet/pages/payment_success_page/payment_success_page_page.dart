@@ -1,16 +1,19 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../core/core.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
+import '../../../../core/core.dart';
 
-class PaymentSuccessPage extends StatefulWidget {
-  const PaymentSuccessPage({super.key});
+final class PaymentSuccessPage extends StatefulWidget {
+  final String? amount;
+  const PaymentSuccessPage({super.key, this.amount});
   @override
   State<PaymentSuccessPage> createState() => _PaymentSuccessPageState();
 }
 
-class _PaymentSuccessPageState extends State<PaymentSuccessPage> {
+final class _PaymentSuccessPageState extends State<PaymentSuccessPage> {
   double _addedAmount = 200.0;
   bool _balanceUpdated = false;
 
@@ -19,12 +22,12 @@ class _PaymentSuccessPageState extends State<PaymentSuccessPage> {
     super.didChangeDependencies();
     if (_balanceUpdated) return;
     _balanceUpdated = true;
-    final args =
-        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
-    if (args != null) {
-      final raw = args['amount'] as String?;
-      _addedAmount = double.tryParse(raw ?? '') ?? 200.0;
-    }
+
+    // Use passed amount if available, otherwise fallback to query parameters
+    final state = GoRouterState.of(context);
+    final rawAmount = widget.amount ?? state.uri.queryParameters['amount'];
+    _addedAmount = double.tryParse(rawAmount ?? '') ?? 200.0;
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         context.read<AppSessionCubit>().updateBalance(_addedAmount);
@@ -38,86 +41,151 @@ class _PaymentSuccessPageState extends State<PaymentSuccessPage> {
     final session = context.watch<AppSessionCubit>().state;
 
     return Scaffold(
-      backgroundColor: AppColors.backgroundLight,
+      backgroundColor: context.backgroundPrimaryColor,
       body: SafeArea(
         child: Center(
           child: Padding(
-            padding: const EdgeInsets.all(32),
+            padding: const EdgeInsets.symmetric(horizontal: 32),
             child: Column(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
-                  padding: const EdgeInsets.all(24),
-                  decoration: const BoxDecoration(
-                    color: AppColors.greenLight,
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.check_circle,
-                    size: 64,
-                    color: AppColors.green,
-                  ),
-                ),
-                const SizedBox(height: 24),
-                Text(
-                  t['paymentSuccess']!,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.green,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  t['balanceAdded']!.replaceAll(
-                    '%s',
-                    '${_addedAmount.toInt()}',
-                  ),
-                  style: TextStyle(fontSize: 14, color: AppColors.greyDark),
-                ),
-                const SizedBox(height: 24),
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                  child: Column(
-                    children: [
-                      Text(
-                        t['newBalance']!,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: AppColors.greyDark,
+                ZoomIn(
+                  duration: const Duration(milliseconds: 600),
+                  child: Container(
+                    padding: const EdgeInsets.all(40),
+                    decoration: BoxDecoration(
+                      color: context.statusSuccessColor.withValues(alpha: 0.1),
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: context.statusSuccessColor.withValues(
+                          alpha: 0.2,
                         ),
+                        width: 4,
                       ),
-                      const SizedBox(height: 8),
-                      Text(
-                        '${session.walletBalance.toStringAsFixed(2)} ${t['egp']!}',
-                        style: const TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.w800,
-                          color: AppColors.primary,
+                      boxShadow: [
+                        BoxShadow(
+                          color: context.statusSuccessColor.withValues(
+                            alpha: 0.1,
+                          ),
+                          blurRadius: 30,
+                          offset: const Offset(0, 10),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 32),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () => context.go('/'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primary,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
+                      ],
                     ),
-                    child: Text(t['backToWallet']!),
+                    child: Icon(
+                      Icons.check_circle_rounded,
+                      size: 100,
+                      color: context.statusSuccessColor,
+                    ),
+                  ),
+                ),
+                const Gap(40),
+                FadeInUp(
+                  duration: const Duration(milliseconds: 500),
+                  child: Text(
+                    t['paymentSuccess']!,
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w900,
+                      color: context.textPrimaryColor,
+                      letterSpacing: -1,
+                    ),
+                  ),
+                ),
+                const Gap(12),
+                FadeInUp(
+                  duration: const Duration(milliseconds: 500),
+                  delay: const Duration(milliseconds: 200),
+                  child: Text(
+                    t['balanceAdded']!.replaceAll(
+                      '%s',
+                      _addedAmount.toStringAsFixed(0),
+                    ),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: context.textSecondaryColor,
+                      height: 1.6,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+                const Gap(48),
+                FadeInUp(
+                  duration: const Duration(milliseconds: 500),
+                  delay: const Duration(milliseconds: 400),
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(32),
+                    decoration: BoxDecoration(
+                      color: context.backgroundSecondaryColor,
+                      borderRadius: BorderRadius.circular(32),
+                      border: Border.all(
+                        color: context.borderPrimaryColor.withValues(
+                          alpha: 0.05,
+                        ),
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.1),
+                          blurRadius: 20,
+                          offset: const Offset(0, 10),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      children: [
+                        Text(
+                          t['newBalance']!,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w800,
+                            color: context.textTertiaryColor,
+                            letterSpacing: 0.5,
+                          ),
+                        ),
+                        const Gap(12),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.baseline,
+                          textBaseline: TextBaseline.alphabetic,
+                          children: [
+                            Text(
+                              session.walletBalance.toStringAsFixed(2),
+                              style: TextStyle(
+                                fontSize: 40,
+                                fontWeight: FontWeight.w900,
+                                color: context.brandPrimaryColor,
+                                letterSpacing: -1,
+                              ),
+                            ),
+                            const Gap(8),
+                            Text(
+                              t['egp']!,
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w900,
+                                color: context.brandPrimaryColor.withValues(
+                                  alpha: 0.7,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const Gap(64),
+                FadeInUp(
+                  duration: const Duration(milliseconds: 500),
+                  delay: const Duration(milliseconds: 600),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: MentorXButton(
+                      onPressed: () => context.go('/'),
+                      label: t['backToWallet']!,
+                    ),
                   ),
                 ),
               ],

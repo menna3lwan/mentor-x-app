@@ -123,4 +123,79 @@ final class MockCourseRepository implements CourseRepository {
   }) async {
     await Future<void>.delayed(delay ~/ 2);
   }
+
+  @override
+  Future<void> updateCourse(String courseId, Map<String, dynamic> data) async {
+    await Future<void>.delayed(delay);
+  }
+
+  @override
+  Future<void> deleteCourse(String courseId) async {
+    await Future<void>.delayed(delay);
+  }
+
+  @override
+  Future<CourseEntity> createCourse(Map<String, dynamic> data) async {
+    await Future<void>.delayed(delay);
+    return MockCourseGenerator.courseDetail('new_course');
+  }
+
+  @override
+  Future<void> toggleCourseStatus(String courseId) async {
+    await Future<void>.delayed(delay);
+  }
+
+  @override
+  Future<void> completeEnrollment(String enrollmentId) async {
+    await Future<void>.delayed(delay);
+  }
+
+  @override
+  Future<void> grantEnrollmentAccess(String enrollmentId) async {
+    await Future<void>.delayed(delay);
+  }
+
+  @override
+  Future<void> expireOldEnrollments() async {
+    await Future<void>.delayed(delay);
+  }
+
+  @override
+  Future<void> extendEnrollment(String enrollmentId, int days) async {
+    await Future<void>.delayed(delay);
+  }
+
+  @override
+  Future<Map<String, dynamic>> getMyEnrollmentStats() async {
+    await Future<void>.delayed(delay);
+    return {'total_courses': 5, 'completed': 2};
+  }
+
+  @override
+  Future<List<EnrollmentEntity>> getStudentEnrollments(String studentId) async {
+    await Future<void>.delayed(delay);
+    return [MockCourseGenerator.courseProgress('ec1')];
+  }
+
+  @override
+  Future<List<EnrollmentEntity>> getCourseEnrollments(String courseId) async {
+    await Future<void>.delayed(delay);
+    return [MockCourseGenerator.courseProgress('ec1')];
+  }
+
+  @override
+  Future<void> deleteEnrollment(String enrollmentId) async {
+    await Future<void>.delayed(delay);
+  }
+
+  @override
+  Future<void> cancelAllStudentEnrollments(String studentId) async {
+    await Future<void>.delayed(delay);
+  }
+
+  @override
+  Future<List<WeekEntity>> getSessionWeeks(String sessionId) async {
+    await Future<void>.delayed(delay ~/ 2);
+    return MockCourseGenerator.sessionWeeks(sessionId);
+  }
 }

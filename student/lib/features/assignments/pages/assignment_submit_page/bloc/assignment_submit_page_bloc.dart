@@ -23,6 +23,7 @@ final class AssignmentSubmitPageBloc
         > {
   AssignmentSubmitPageBloc({
     required this.assignmentRepository,
+    required this.analyticsService,
     required String assignmentId,
   }) : super(AssignmentSubmitPageState(assignmentId: assignmentId)) {
     on<AssignmentSubmitPageLoadEvent>(_onLoad);
@@ -36,6 +37,7 @@ final class AssignmentSubmitPageBloc
   }
 
   final AssignmentRepository assignmentRepository;
+  final AnalyticsService analyticsService;
 
   void _onFileAdded(
     AssignmentSubmitPageFileAdded event,
@@ -66,8 +68,9 @@ final class AssignmentSubmitPageBloc
   ) async {
     emit(state.copyWith(loadingState: LoadingState.loading));
     try {
-      final assignment =
-          await assignmentRepository.getAssignment(state.assignmentId);
+      final assignment = await assignmentRepository.getAssignment(
+        state.assignmentId,
+      );
       emit(
         state.copyWith(
           loadingState: LoadingState.loaded,
@@ -99,7 +102,9 @@ final class AssignmentSubmitPageBloc
     Emitter<AssignmentSubmitPageState> emit,
   ) {
     if (state.currentQuestionIndex < state.questions.length - 1) {
-      emit(state.copyWith(currentQuestionIndex: state.currentQuestionIndex + 1));
+      emit(
+        state.copyWith(currentQuestionIndex: state.currentQuestionIndex + 1),
+      );
     }
   }
 
@@ -108,7 +113,9 @@ final class AssignmentSubmitPageBloc
     Emitter<AssignmentSubmitPageState> emit,
   ) {
     if (state.currentQuestionIndex > 0) {
-      emit(state.copyWith(currentQuestionIndex: state.currentQuestionIndex - 1));
+      emit(
+        state.copyWith(currentQuestionIndex: state.currentQuestionIndex - 1),
+      );
     }
   }
 
@@ -129,6 +136,12 @@ final class AssignmentSubmitPageBloc
           loadingState: LoadingState.success,
           result: result,
         ),
+      );
+      analyticsService.logEvent(
+        name: 'assignment_submit_success',
+        parameters: {
+          'assignment_id': state.assignmentId,
+        },
       );
     } catch (e) {
       emit(

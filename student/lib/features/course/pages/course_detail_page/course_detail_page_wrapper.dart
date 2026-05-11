@@ -25,22 +25,12 @@ final class _CourseDetailPageWrapperState
       listener: (context, event) {
         switch (event) {
           case CourseDetailPageEnrollSuccessPresentationEvent():
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(context.t.course.detail.enrollSuccess),
-                backgroundColor: MentorXThemeColorPalette.light.statusSuccess,
-              ),
-            );
+            context.showSuccessSnackBar(context.t.course.detail.enrollSuccess);
           case CourseDetailPageEnrollFailurePresentationEvent(:final message):
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  message.isNotEmpty
-                      ? message
-                      : context.t.course.detail.enrollFailed,
-                ),
-                backgroundColor: MentorXThemeColorPalette.light.statusDanger,
-              ),
+            context.showErrorSnackBar(
+              message.isNotEmpty
+                  ? message
+                  : context.t.course.detail.enrollFailed,
             );
           case CourseDetailPageFailurePresentationEvent():
             break;
@@ -53,6 +43,7 @@ final class _CourseDetailPageWrapperState
             course: state.course,
             sessions: state.sessions,
             sessionItems: state.sessionItems,
+            sessionWeeks: state.sessionWeeks,
             enrollment: state.enrollment,
             selectedTab: state.selectedTab,
             isCourseLoading: state.isCourseLoading,
@@ -94,16 +85,16 @@ final class _CourseDetailPageWrapperState
         ).push(context);
       case SessionItemType.link:
         if (item.contentUrl != null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Opening: ${item.contentUrl}')),
+          context.showInfoSnackBar(
+            context.t.ui.common.opening(url: item.contentUrl!),
           );
         }
       case SessionItemType.quiz:
         QuizTakingPageRoute(quizId: item.id).push(context);
-        break;
       case SessionItemType.assignment:
-        AssignmentSubmitPageRoute(assignmentId: item.id).push(context);
-        break;
+        AssignmentDetailPageRoute(assignmentId: item.id).push(context);
+      case SessionItemType.audio:
+        context.showInfoSnackBar(context.t.ui.common.comingSoon);
     }
   }
 }

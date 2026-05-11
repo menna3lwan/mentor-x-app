@@ -21,17 +21,21 @@ final class DioRewardsRepository
     MentorXPaginationInfo? paginationInfo,
   }) async {
     try {
+      final queryParams = {
+        if (paginationInfo != null) ...paginationInfo.toJson(),
+      };
+
       final response = await httpClient.get(
         '/api/student/points/history',
-        queryParameters: {
-          if (paginationInfo != null) ...paginationInfo.toJson(),
-        },
+        queryParameters: queryParams,
       );
 
-      final data = asList(response.data);
+      final data = asList(asMap(response.data)['data'] ??
+          asMap(response.data)['content'] ??
+          response.data);
       return data.map((e) => PointsTransactionModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: RewardsRepositoryExceptionCode.failedToLoadPointsHistory,
       );
@@ -43,17 +47,21 @@ final class DioRewardsRepository
     MentorXPaginationInfo? paginationInfo,
   }) async {
     try {
+      final queryParams = {
+        if (paginationInfo != null) ...paginationInfo.toJson(),
+      };
+
       final response = await httpClient.get(
         '/api/rewards/items',
-        queryParameters: {
-          if (paginationInfo != null) ...paginationInfo.toJson(),
-        },
+        queryParameters: queryParams,
       );
 
-      final data = asList(response.data);
+      final data = asList(asMap(response.data)['data'] ??
+          asMap(response.data)['content'] ??
+          response.data);
       return data.map((e) => RewardItemModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: RewardsRepositoryExceptionCode.failedToLoadRewardItems,
       );
@@ -65,17 +73,21 @@ final class DioRewardsRepository
     MentorXPaginationInfo? paginationInfo,
   }) async {
     try {
+      final queryParams = {
+        if (paginationInfo != null) ...paginationInfo.toJson(),
+      };
+
       final response = await httpClient.get(
         '/api/rewards/claims',
-        queryParameters: {
-          if (paginationInfo != null) ...paginationInfo.toJson(),
-        },
+        queryParameters: queryParams,
       );
 
-      final data = asList(response.data);
+      final data = asList(asMap(response.data)['data'] ??
+          asMap(response.data)['content'] ??
+          response.data);
       return data.map((e) => RewardClaimModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: RewardsRepositoryExceptionCode.failedToLoadClaims,
       );
@@ -85,15 +97,16 @@ final class DioRewardsRepository
   @override
   Future<RewardClaimEntity> claimReward(String rewardItemId) async {
     try {
+      final payload = {'reward_item_id': rewardItemId};
       final response = await httpClient.post(
         '/api/rewards/claims',
-        data: {'reward_item_id': rewardItemId},
+        data: payload,
       );
 
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return RewardClaimModel.fromJson(data);
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: RewardsRepositoryExceptionCode.failedToClaimReward,
       );

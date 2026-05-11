@@ -3,50 +3,51 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:gap/gap.dart';
-import 'package:mentorx_core/mentorx_core.dart';
-import 'package:mentorx_student/core/core.dart';
-import '../rewards_catalog_page/bloc/rewards_page_bloc.dart';
+import 'bloc/rewards_history_page_bloc.dart';
 import 'package:intl/intl.dart';
 
-class RewardsHistoryPage extends StatelessWidget {
+final class RewardsHistoryPage extends StatelessWidget {
   const RewardsHistoryPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final palette = MentorXThemeColorPalette.light;
     final t = context.t.student;
 
-    return BlocBuilder<RewardsPageBloc, RewardsPageState>(
+    return BlocBuilder<RewardsHistoryPageBloc, RewardsHistoryPageState>(
       builder: (context, state) {
         return Scaffold(
-          backgroundColor: palette.backgroundSecondary,
+          backgroundColor: context.backgroundPrimaryColor,
           appBar: PreferredSize(
             preferredSize: const Size.fromHeight(70),
             child: Container(
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [palette.brandPrimary, palette.brandPrimary.withValues(alpha: 0.8)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
+                color: context.backgroundSecondaryColor,
+                borderRadius: const BorderRadius.vertical(
+                  bottom: Radius.circular(24),
                 ),
-                borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
-                boxShadow: [
-                  BoxShadow(color: palette.brandPrimary.withValues(alpha: 0.3), blurRadius: 15, offset: const Offset(0, 4)),
-                ],
+                border: Border(
+                  bottom: BorderSide(
+                    color: context.borderPrimaryColor.withValues(alpha: 0.05),
+                  ),
+                ),
               ),
               child: AppBar(
                 backgroundColor: Colors.transparent,
                 elevation: 0,
-                foregroundColor: Colors.white,
+                foregroundColor: context.textPrimaryColor,
                 centerTitle: true,
                 title: Text(
                   t['rewardsHistoryTitle'] ?? 'Points History',
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900, letterSpacing: -0.5),
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: -0.5,
+                  ),
                 ),
               ),
             ),
           ),
-          body: _buildBody(context, state, palette, t),
+          body: _buildBody(context, state, t),
         );
       },
     );
@@ -54,8 +55,7 @@ class RewardsHistoryPage extends StatelessWidget {
 
   Widget _buildBody(
     BuildContext context,
-    RewardsPageState state,
-    MentorXThemeColorPalette palette,
+    RewardsHistoryPageState state,
     dynamic t,
   ) {
     if (state.historySection.isLoading) {
@@ -73,16 +73,16 @@ class RewardsHistoryPage extends StatelessWidget {
               child: Container(
                 padding: const EdgeInsets.all(32),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: context.backgroundSecondaryColor,
                   shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 20),
-                  ],
+                  border: Border.all(
+                    color: context.borderPrimaryColor.withValues(alpha: 0.05),
+                  ),
                 ),
                 child: Icon(
                   Icons.history_rounded,
                   size: 80,
-                  color: palette.textTertiary.withValues(alpha: 0.2),
+                  color: context.textTertiaryColor.withValues(alpha: 0.2),
                 ),
               ),
             ),
@@ -91,9 +91,9 @@ class RewardsHistoryPage extends StatelessWidget {
               child: Text(
                 t['noHistory'] ?? 'No points history yet',
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 22,
                   fontWeight: FontWeight.w900,
-                  color: palette.textSecondary,
+                  color: context.textPrimaryColor,
                   letterSpacing: -0.5,
                 ),
               ),
@@ -107,46 +107,52 @@ class RewardsHistoryPage extends StatelessWidget {
       physics: const BouncingScrollPhysics(),
       padding: const EdgeInsets.fromLTRB(20, 24, 20, 100),
       itemCount: transactions.length,
-      separatorBuilder: (_, _) => const Gap(12),
+      separatorBuilder: (_, _) => const Gap(16),
       itemBuilder: (context, index) {
         final tx = transactions[index];
         return FadeInUp(
           duration: const Duration(milliseconds: 500),
           delay: Duration(milliseconds: 50 * index),
-          child: _PointsTransactionTile(tx: tx, palette: palette, t: t),
+          child: _PointsTransactionTile(tx: tx, t: t),
         );
       },
     );
   }
 }
 
-class _PointsTransactionTile extends StatelessWidget {
-  final PointsTransactionEntity tx;
-  final MentorXThemeColorPalette palette;
+final class _PointsTransactionTile extends StatelessWidget {
+  final dynamic tx;
   final dynamic t;
 
   const _PointsTransactionTile({
     required this.tx,
-    required this.palette,
     required this.t,
   });
 
   @override
   Widget build(BuildContext context) {
     final isEarned = tx.isCredit;
-    final color = isEarned ? palette.statusSuccess : palette.brandPrimary;
+    final color = isEarned
+        ? context.statusSuccessColor
+        : context.statusDangerColor;
+    final iconColor = isEarned
+        ? context.statusSuccessColor
+        : context.brandPrimaryColor;
     final formattedDate = DateFormat('dd MMM, hh:mm a').format(tx.createdAt);
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
+        color: context.backgroundSecondaryColor,
+        borderRadius: BorderRadius.circular(28),
+        border: Border.all(
+          color: context.borderPrimaryColor.withValues(alpha: 0.05),
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 15,
+            offset: const Offset(0, 8),
           ),
         ],
       ),
@@ -155,13 +161,13 @@ class _PointsTransactionTile extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.1),
+              color: iconColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(16),
             ),
             child: Icon(
               isEarned ? Icons.add_rounded : Icons.remove_rounded,
-              color: color,
-              size: 20,
+              color: iconColor,
+              size: 24,
             ),
           ),
           const Gap(16),
@@ -173,15 +179,19 @@ class _PointsTransactionTile extends StatelessWidget {
                   tx.description,
                   style: TextStyle(
                     fontWeight: FontWeight.w900,
-                    fontSize: 14,
-                    color: palette.textPrimary,
+                    fontSize: 15,
+                    color: context.textPrimaryColor,
                     letterSpacing: -0.3,
                   ),
                 ),
-                const Gap(4),
+                const Gap(6),
                 Text(
                   formattedDate,
-                  style: TextStyle(color: palette.textTertiary, fontSize: 11, fontWeight: FontWeight.w600),
+                  style: TextStyle(
+                    color: context.textTertiaryColor,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ],
             ),
@@ -195,15 +205,17 @@ class _PointsTransactionTile extends StatelessWidget {
                 style: TextStyle(
                   color: color,
                   fontWeight: FontWeight.w900,
-                  fontSize: 20,
+                  fontSize: 22,
+                  letterSpacing: -0.5,
                 ),
               ),
+              const Gap(4),
               Text(
                 'Balance: ${tx.balanceAfter}',
                 style: TextStyle(
-                  color: palette.textTertiary,
-                  fontSize: 10,
-                  fontWeight: FontWeight.w700,
+                  color: context.textTertiaryColor,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w800,
                 ),
               ),
             ],

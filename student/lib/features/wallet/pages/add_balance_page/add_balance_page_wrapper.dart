@@ -15,9 +15,9 @@ class _AddBalancePageWrapperState extends State<AddBalancePageWrapper> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AddBalancePageBloc, AddBalancePageState>(
-        builder: (context, state) {
-          return const AddBalancePage();
-        },
-      );
+      builder: (context, state) {
+        return const AddBalancePage();
+      },
+    );
   }
 }

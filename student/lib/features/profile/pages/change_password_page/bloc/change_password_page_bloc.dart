@@ -46,10 +46,12 @@ final class ChangePasswordPageBloc
     ChangePasswordPageSubmitEvent event,
     Emitter<ChangePasswordPageState> emit,
   ) async {
-    emit(state.copyWith(
-      loadingState: LoadingState.loading,
-      errorMessage: const MentorXNullableValue(null),
-    ));
+    emit(
+      state.copyWith(
+        loadingState: LoadingState.loading,
+        errorMessage: const MentorXNullableValue(null),
+      ),
+    );
 
     try {
       await profileRepository.changePassword(
@@ -59,15 +61,19 @@ final class ChangePasswordPageBloc
       emit(state.copyWith(loadingState: LoadingState.loaded));
       emitPresentation(const ChangePasswordPageSuccess());
     } on MentorXException catch (e) {
-      emit(state.copyWith(
-        loadingState: LoadingState.error,
-        errorMessage: MentorXNullableValue(e.message),
-      ));
+      emit(
+        state.copyWith(
+          loadingState: LoadingState.error,
+          errorMessage: MentorXNullableValue(e.message),
+        ),
+      );
     } catch (e) {
-      emit(state.copyWith(
-        loadingState: LoadingState.error,
-        errorMessage: MentorXNullableValue(e.toString()),
-      ));
+      emit(
+        state.copyWith(
+          loadingState: LoadingState.error,
+          errorMessage: MentorXNullableValue(e.toString()),
+        ),
+      );
     }
   }
 }

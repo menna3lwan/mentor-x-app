@@ -6,10 +6,15 @@ export 'models/children_models.dart';
 final class DioParentChildrenRepository extends HttpClientRepository<AuthenticationExceptionCode>
     implements ParentChildrenRepository {
 
+  static final MentorXLogger _logger = MentorXLogger('DioParentChildrenRepository');
+
   DioParentChildrenRepository({
     required HttpClient httpClient,
     required CacheRepository cacheRepository,
   }) : _httpClient = httpClient;
+
+  @override
+  Future<void> initialize() async {}
 
   @override
   Never throwException(
@@ -22,9 +27,17 @@ final class DioParentChildrenRepository extends HttpClientRepository<Authenticat
   @override
   Future<List<ParentChildEntity>> getChildren() async {
     try {
-      final response = await _httpClient.get('/api/v1/parent/children');
-      final data = asList(response.data);
-      return data
+      HttpClientResponse response;
+      try {
+        response = await _httpClient.get('/api/parent/children');
+      } on HttpClientResponse catch (e) {
+        if (e.statusCode != 404) rethrow;
+        response = await _httpClient.get('/api/parent/children');
+      }
+      
+      final data = asMap(response.data)['data'] ?? asList(response.data);
+      final list = asList(data);
+      return list
           .map((json) => ParentChildModel.fromJson(asMap(json)))
           .toList();
     } on HttpClientResponse catch (e) {
@@ -40,9 +53,17 @@ final class DioParentChildrenRepository extends HttpClientRepository<Authenticat
     required String query,
   }) async {
     try {
-      final response = await _httpClient.post('/api/v1/parent/find-student', data: {
-        'value': query,
-      });
+      HttpClientResponse response;
+      try {
+        response = await _httpClient.post('/api/parent/find-student', data: {
+          'value': query,
+        });
+      } on HttpClientResponse catch (e) {
+        if (e.statusCode != 404) rethrow;
+        response = await _httpClient.post('/api/parent/find-student', data: {
+          'value': query,
+        });
+      }
 
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return ParentStudentLookupModel.fromJson(data);
@@ -60,10 +81,19 @@ final class DioParentChildrenRepository extends HttpClientRepository<Authenticat
     required String relationship,
   }) async {
     try {
-      final response = await _httpClient.post('/api/v1/parent/link-child', data: {
-        'student_id': studentId,
-        'relationship': relationship,
-      });
+      HttpClientResponse response;
+      try {
+        response = await _httpClient.post('/api/parent/link-child', data: {
+          'student_id': studentId,
+          'relationship': relationship,
+        });
+      } on HttpClientResponse catch (e) {
+        if (e.statusCode != 404) rethrow;
+        response = await _httpClient.post('/api/parent/link-child', data: {
+          'student_id': studentId,
+          'relationship': relationship,
+        });
+      }
 
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return ParentChildModel.fromJson(data);
@@ -78,7 +108,12 @@ final class DioParentChildrenRepository extends HttpClientRepository<Authenticat
   @override
   Future<void> unlinkChild(String childId) async {
     try {
-      await _httpClient.delete('/api/v1/parent/children/$childId');
+      try {
+        await _httpClient.delete('/api/parent/children/$childId');
+      } on HttpClientResponse catch (e) {
+        if (e.statusCode != 404) rethrow;
+        await _httpClient.delete('/api/parent/children/$childId');
+      }
     } on HttpClientResponse catch (e) {
       handleHttpClientErrorResponse(
         e,

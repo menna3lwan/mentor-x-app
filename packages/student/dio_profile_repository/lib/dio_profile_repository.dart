@@ -38,7 +38,7 @@ final class DioStudentProfileRepository
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return ProfileEditRequestModel.fromJson(data);
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: StudentProfileRepositoryExceptionCode.failedToSubmitEditRequest,
       );
@@ -53,12 +53,14 @@ final class DioStudentProfileRepository
         queryParameters: {'status': 'pending'},
       );
 
-      return asList(response.data)
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final list = asList(data is Map ? data['content'] : data);
+      return list
           .map(asMap)
           .map(ProfileEditRequestModel.fromJson)
           .toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: StudentProfileRepositoryExceptionCode.failedToLoadEditRequests,
       );
@@ -76,7 +78,7 @@ final class DioStudentProfileRepository
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return NationalIdVerificationModel.fromJson(data);
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: StudentProfileRepositoryExceptionCode.failedToVerifyIdentity,
       );
@@ -95,7 +97,7 @@ final class DioStudentProfileRepository
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return NationalIdVerificationModel.fromJson(data);
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: StudentProfileRepositoryExceptionCode.failedToGetVerificationStatus,
       );
@@ -105,11 +107,11 @@ final class DioStudentProfileRepository
   @override
   Future<StudentEntity> getProfile() async {
     try {
-      final response = await httpClient.get('/api/auth/me');
+      final response = await httpClient.get('/api/student/profile');
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return StudentProfileModel.fromJson(data);
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: StudentProfileRepositoryExceptionCode.failedToLoadProfile,
       );
@@ -117,19 +119,44 @@ final class DioStudentProfileRepository
   }
 
   @override
+  Future<Map<String, dynamic>> getSummary() async {
+    try {
+      final response = await httpClient.get('/api/profile/student/summary');
+      return asMap(response.data);
+    } on HttpClientResponse catch (e) {
+      return handleHttpClientErrorResponse(e, defaultCode: StudentProfileRepositoryExceptionCode.unknown);
+    }
+  }
+
+  @override
   Future<List<DeviceEntity>> getDevices() async {
     try {
       final response = await httpClient.get('/api/auth/session-status');
-      final data = asList(asMap(response.data)['content'] ??
-          asMap(response.data)['data'] ??
-          response.data);
+      
+      final rootData = asMap(response.data);
 
-      return data
-          .map(asMap)
-          .map(DeviceModel.fromJson)
-          .toList();
+      // Handle the case where session-status returns a single status object instead of a list
+      if (rootData.containsKey('hasSession')) {
+        final hasSession = boolOrFalse(rootData['hasSession']);
+        if (!hasSession) return const [];
+
+        return [
+          DeviceEntity(
+            id: stringOrNull(rootData['studentCode']) ?? 'current',
+            deviceName: 'Active Session',
+            deviceModel: stringOrNull(rootData['role']) ?? 'Student',
+            isActive: true,
+            lastUsedAt: DateTime.now(),
+          ),
+        ];
+      }
+
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final list = asList(data is Map ? data['content'] : rootData['content'] ?? response.data);
+
+      return list.map(asMap).map(DeviceModel.fromJson).toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: StudentProfileRepositoryExceptionCode.failedToLoadDevices,
       );
@@ -162,10 +189,7 @@ final class DioStudentProfileRepository
         },
       );
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
-        e,
-        defaultCode: StudentProfileRepositoryExceptionCode.failedToUpdateProfile,
-      );
+      handleHttpClientErrorResponse(e, defaultCode: StudentProfileRepositoryExceptionCode.failedToUpdateProfile);
     }
   }
 
@@ -173,16 +197,25 @@ final class DioStudentProfileRepository
   Future<StudentEntity> updateProfile(StudentEntity profile) async {
     try {
       final response = await httpClient.put(
-        '/api/auth/me',
+        '/api/student/profile',
         data: StudentProfileModel.fromEntity(profile).toJson(),
       );
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return StudentProfileModel.fromJson(data);
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: StudentProfileRepositoryExceptionCode.failedToUpdateProfile,
       );
+    }
+  }
+
+  @override
+  Future<void> deleteAccount(String password) async {
+    try {
+      await httpClient.post('/api/auth/delete-account', data: {'password': password});
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(e, defaultCode: StudentProfileRepositoryExceptionCode.unknown);
     }
   }
 }

@@ -22,7 +22,9 @@ final class ForgotPasswordState extends Equatable {
     return ForgotPasswordState(
       phone: phone ?? this.phone,
       loadingState: loadingState ?? this.loadingState,
-      errorMessage: errorMessage != null ? errorMessage.value : this.errorMessage,
+      errorMessage: errorMessage != null
+          ? errorMessage.value
+          : this.errorMessage,
     );
   }
 }

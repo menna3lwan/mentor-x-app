@@ -8,6 +8,9 @@ final class MockParentFinancialRepository implements ParentFinancialRepository {
   });
 
   @override
+  Future<void> initialize() async {}
+
+  @override
   Future<List<WalletTransactionEntity>> getTransactions(
     String childId, {
     MentorXPaginationInfo? paginationInfo,

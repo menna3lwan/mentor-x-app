@@ -23,52 +23,60 @@ final class MyGradesPagePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = MentorXThemeColorPalette.light;
     final t = context.t.student;
 
     return Scaffold(
-      backgroundColor: palette.backgroundSecondary,
+      backgroundColor: context.backgroundPrimaryColor,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(70),
         child: Container(
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [palette.brandPrimary, palette.brandPrimary.withValues(alpha: 0.8)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
+            color: context.backgroundSecondaryColor,
+            borderRadius: const BorderRadius.vertical(
+              bottom: Radius.circular(24),
             ),
-            borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
-            boxShadow: [
-              BoxShadow(color: palette.brandPrimary.withValues(alpha: 0.3), blurRadius: 15, offset: const Offset(0, 4)),
-            ],
+            border: Border(
+              bottom: BorderSide(
+                color: context.borderPrimaryColor.withValues(alpha: 0.05),
+              ),
+            ),
           ),
           child: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
-            foregroundColor: Colors.white,
+            foregroundColor: context.textPrimaryColor,
             centerTitle: true,
             title: Text(
               t['myGrades'] ?? 'My Grades',
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900, letterSpacing: -0.5),
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w900,
+                letterSpacing: -0.5,
+              ),
             ),
           ),
         ),
       ),
       body: RefreshIndicator(
-        color: palette.brandPrimary,
+        color: context.brandPrimaryColor,
         onRefresh: () async => onRefresh(),
         child: state.isLoading
             ? const Center(child: CircularProgressIndicator())
             : state.loadingState.isError
-                ? _ErrorView(errorMessage: state.errorMessage, palette: palette)
-                : _buildLoaded(context, palette, t),
+            ? _ErrorView(errorMessage: state.errorMessage)
+            : _buildLoaded(context, t),
       ),
     );
   }
 
-  Widget _buildLoaded(BuildContext context, MentorXThemeColorPalette palette, dynamic t) {
+  Widget _buildLoaded(
+    BuildContext context,
+    dynamic t,
+  ) {
     if (state.sections.isEmpty) {
-      return FadeInUp(child: _EmptyGrades(palette: palette, t: t));
+      return FadeInUp(
+        child: _EmptyGrades(t: t),
+      );
     }
 
     return CustomScrollView(
@@ -81,7 +89,6 @@ final class MyGradesPagePage extends StatelessWidget {
               duration: const Duration(milliseconds: 600),
               child: _SummaryHeader(
                 average: state.overallAverage,
-                palette: palette,
                 t: t,
               ),
             ),
@@ -97,7 +104,6 @@ final class MyGradesPagePage extends StatelessWidget {
                 selectedCourseId: state.selectedCourseId,
                 courses: state.courses,
                 onChanged: onCourseFilterChanged,
-                palette: palette,
                 t: t,
               ),
             ),
@@ -111,12 +117,11 @@ final class MyGradesPagePage extends StatelessWidget {
                 final section = state.sections[index];
                 return FadeInUp(
                   duration: const Duration(milliseconds: 500),
-                  delay: Duration(milliseconds: 200 + (100 * index)),
+                  delay: Duration(milliseconds: 50 * index),
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 20),
                     child: _CourseSectionCard(
                       section: section,
-                      palette: palette,
                       t: t,
                       onQuizTap: onQuizTap,
                       onAssignmentTap: onAssignmentTap,
@@ -128,18 +133,20 @@ final class MyGradesPagePage extends StatelessWidget {
             ),
           ),
         ),
-        const SliverToBoxAdapter(child: Gap(40)),
+        const SliverToBoxAdapter(child: Gap(100)),
       ],
     );
   }
 }
 
-class _SummaryHeader extends StatelessWidget {
+final class _SummaryHeader extends StatelessWidget {
   final double? average;
-  final MentorXThemeColorPalette palette;
   final dynamic t;
 
-  const _SummaryHeader({required this.average, required this.palette, required this.t});
+  const _SummaryHeader({
+    required this.average,
+    required this.t,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -148,10 +155,17 @@ class _SummaryHeader extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.backgroundSecondaryColor,
         borderRadius: BorderRadius.circular(32),
+        border: Border.all(
+          color: context.borderPrimaryColor.withValues(alpha: 0.05),
+        ),
         boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 20, offset: const Offset(0, 10)),
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          ),
         ],
       ),
       child: Row(
@@ -159,10 +173,14 @@ class _SummaryHeader extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: palette.brandPrimary.withValues(alpha: 0.1),
+              color: context.brandPrimaryColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(20),
             ),
-            child: Icon(Icons.auto_graph_rounded, color: palette.brandPrimary, size: 32),
+            child: Icon(
+              Icons.auto_graph_rounded,
+              color: context.brandPrimaryColor,
+              size: 32,
+            ),
           ),
           const Gap(20),
           Expanded(
@@ -171,7 +189,11 @@ class _SummaryHeader extends StatelessWidget {
               children: [
                 Text(
                   t['overallAverage'] ?? 'Overall Average',
-                  style: TextStyle(color: palette.textSecondary, fontSize: 14, fontWeight: FontWeight.w700),
+                  style: TextStyle(
+                    color: context.textTertiaryColor,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
                 const Gap(4),
                 Row(
@@ -179,14 +201,23 @@ class _SummaryHeader extends StatelessWidget {
                   children: [
                     Text(
                       display,
-                      style: TextStyle(fontSize: 32, fontWeight: FontWeight.w900, color: palette.textPrimary),
+                      style: TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.w900,
+                        color: context.textPrimaryColor,
+                        letterSpacing: -1,
+                      ),
                     ),
                     const Gap(4),
                     Padding(
                       padding: const EdgeInsets.only(bottom: 6),
                       child: Text(
                         '%',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: palette.brandPrimary),
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w900,
+                          color: context.brandPrimaryColor,
+                        ),
                       ),
                     ),
                   ],
@@ -200,18 +231,16 @@ class _SummaryHeader extends StatelessWidget {
   }
 }
 
-class _CourseFilter extends StatelessWidget {
+final class _CourseFilter extends StatelessWidget {
   final String? selectedCourseId;
   final List<CourseSummaryEntity> courses;
   final ValueChanged<String?> onChanged;
-  final MentorXThemeColorPalette palette;
   final dynamic t;
 
   const _CourseFilter({
     required this.selectedCourseId,
     required this.courses,
     required this.onChanged,
-    required this.palette,
     required this.t,
   });
 
@@ -220,18 +249,31 @@ class _CourseFilter extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.backgroundSecondaryColor,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: palette.brandPrimary.withValues(alpha: 0.1)),
+        border: Border.all(
+          color: context.borderPrimaryColor.withValues(alpha: 0.1),
+        ),
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
           value: selectedCourseId ?? 'all',
           isExpanded: true,
-          style: TextStyle(color: palette.textPrimary, fontWeight: FontWeight.w700, fontSize: 14),
-          icon: Icon(Icons.filter_list_rounded, color: palette.brandPrimary),
+          dropdownColor: context.backgroundSecondaryColor,
+          style: TextStyle(
+            color: context.textPrimaryColor,
+            fontWeight: FontWeight.w800,
+            fontSize: 14,
+          ),
+          icon: Icon(
+            Icons.filter_list_rounded,
+            color: context.brandPrimaryColor,
+          ),
           items: [
-            DropdownMenuItem(value: 'all', child: Text(t['allCourses'] ?? 'All Courses')),
+            DropdownMenuItem(
+              value: 'all',
+              child: Text(t['allCourses'] ?? 'All Courses'),
+            ),
             ...courses.map<DropdownMenuItem<String>>(
               (course) => DropdownMenuItem<String>(
                 value: course.id,
@@ -246,16 +288,14 @@ class _CourseFilter extends StatelessWidget {
   }
 }
 
-class _CourseSectionCard extends StatelessWidget {
+final class _CourseSectionCard extends StatelessWidget {
   final CourseGradesSection section;
-  final MentorXThemeColorPalette palette;
   final dynamic t;
   final ValueChanged<String> onQuizTap;
   final ValueChanged<String> onAssignmentTap;
 
   const _CourseSectionCard({
     required this.section,
-    required this.palette,
     required this.t,
     required this.onQuizTap,
     required this.onAssignmentTap,
@@ -265,10 +305,17 @@ class _CourseSectionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.backgroundSecondaryColor,
         borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: context.borderPrimaryColor.withValues(alpha: 0.05),
+        ),
         boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 15, offset: const Offset(0, 8)),
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 15,
+            offset: const Offset(0, 8),
+          ),
         ],
       ),
       child: Column(
@@ -281,33 +328,51 @@ class _CourseSectionCard extends StatelessWidget {
                 Expanded(
                   child: Text(
                     section.course.title,
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w900, color: palette.textPrimary),
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w900,
+                      color: context.textPrimaryColor,
+                      letterSpacing: -0.3,
+                    ),
                   ),
                 ),
+                const Gap(12),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
                   decoration: BoxDecoration(
-                    color: palette.brandPrimary.withValues(alpha: 0.08),
+                    color: context.brandPrimaryColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: context.brandPrimaryColor.withValues(alpha: 0.1),
+                    ),
                   ),
                   child: Text(
                     section.averagePercentage == null
                         ? '--'
                         : '${section.averagePercentage!.toStringAsFixed(1)}%',
-                    style: TextStyle(color: palette.brandPrimary, fontWeight: FontWeight.w900, fontSize: 13),
+                    style: TextStyle(
+                      color: context.brandPrimaryColor,
+                      fontWeight: FontWeight.w900,
+                      fontSize: 13,
+                    ),
                   ),
                 ),
               ],
             ),
           ),
-          Divider(height: 1, color: palette.backgroundSecondary),
+          Divider(
+            height: 1,
+            color: context.borderPrimaryColor.withValues(alpha: 0.05),
+          ),
           ...section.quizzes.map(
             (quiz) => _AssessmentTile(
               title: 'Quiz ${quiz.quizId}',
               subtitle: 'Score ${quiz.score}/${quiz.totalMarks}',
               percentage: quiz.percentage,
               icon: Icons.quiz_rounded,
-              palette: palette,
               onTap: () => onQuizTap(quiz.quizId),
             ),
           ),
@@ -323,7 +388,6 @@ class _CourseSectionCard extends StatelessWidget {
                 subtitle: subtitle,
                 percentage: assignment.percentage,
                 icon: Icons.assignment_turned_in_rounded,
-                palette: palette,
                 onTap: () => onAssignmentTap(assignment.assignmentId),
               );
             },
@@ -335,12 +399,11 @@ class _CourseSectionCard extends StatelessWidget {
   }
 }
 
-class _AssessmentTile extends StatelessWidget {
+final class _AssessmentTile extends StatelessWidget {
   final String title;
   final String subtitle;
   final double? percentage;
   final IconData icon;
-  final MentorXThemeColorPalette palette;
   final VoidCallback onTap;
 
   const _AssessmentTile({
@@ -348,13 +411,12 @@ class _AssessmentTile extends StatelessWidget {
     required this.subtitle,
     required this.percentage,
     required this.icon,
-    required this.palette,
     required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    final color = _scoreColor(percentage, palette);
+    final color = _scoreColor(context, percentage);
 
     return Material(
       color: Colors.transparent,
@@ -367,10 +429,10 @@ class _AssessmentTile extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: palette.backgroundSecondary,
+                  color: context.backgroundPrimaryColor,
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(icon, color: palette.textSecondary, size: 20),
+                child: Icon(icon, color: context.textTertiaryColor, size: 20),
               ),
               const Gap(16),
               Expanded(
@@ -379,20 +441,34 @@ class _AssessmentTile extends StatelessWidget {
                   children: [
                     Text(
                       title,
-                      style: TextStyle(fontWeight: FontWeight.w800, fontSize: 14, color: palette.textPrimary),
+                      style: TextStyle(
+                        fontWeight: FontWeight.w900,
+                        fontSize: 14,
+                        color: context.textPrimaryColor,
+                      ),
                     ),
-                    const Gap(2),
+                    const Gap(4),
                     Text(
                       subtitle,
-                      style: TextStyle(fontSize: 11, color: palette.textTertiary, fontWeight: FontWeight.w600),
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: context.textTertiaryColor,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ],
                 ),
               ),
               const Gap(12),
               Text(
-                percentage == null ? '--' : '${percentage!.toStringAsFixed(1)}%',
-                style: TextStyle(color: color, fontWeight: FontWeight.w900, fontSize: 14),
+                percentage == null
+                    ? '--'
+                    : '${percentage!.toStringAsFixed(1)}%',
+                style: TextStyle(
+                  color: color,
+                  fontWeight: FontWeight.w900,
+                  fontSize: 14,
+                ),
               ),
             ],
           ),
@@ -401,20 +477,19 @@ class _AssessmentTile extends StatelessWidget {
     );
   }
 
-  Color _scoreColor(double? percentage, MentorXThemeColorPalette palette) {
-    if (percentage == null) return palette.textSecondary;
-    if (percentage >= 85) return palette.statusSuccess;
-    if (percentage >= 70) return palette.brandPrimary;
+  Color _scoreColor(BuildContext context, double? percentage) {
+    if (percentage == null) return context.textSecondaryColor;
+    if (percentage >= 85) return context.statusSuccessColor;
+    if (percentage >= 70) return context.brandPrimaryColor;
     if (percentage >= 50) return Colors.orange;
-    return palette.statusDanger;
+    return context.statusDangerColor;
   }
 }
 
-class _ErrorView extends StatelessWidget {
+final class _ErrorView extends StatelessWidget {
   final String? errorMessage;
-  final MentorXThemeColorPalette palette;
 
-  const _ErrorView({this.errorMessage, required this.palette});
+  const _ErrorView({this.errorMessage});
 
   @override
   Widget build(BuildContext context) {
@@ -424,12 +499,19 @@ class _ErrorView extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.error_outline_rounded, size: 64, color: palette.statusDanger.withValues(alpha: 0.3)),
+            Icon(
+              Icons.error_outline_rounded,
+              size: 64,
+              color: context.statusDangerColor.withValues(alpha: 0.3),
+            ),
             const Gap(24),
             Text(
               errorMessage ?? 'Unable to load grades.',
               textAlign: TextAlign.center,
-              style: TextStyle(color: palette.textSecondary, fontWeight: FontWeight.w800),
+              style: TextStyle(
+                color: context.textSecondaryColor,
+                fontWeight: FontWeight.w800,
+              ),
             ),
           ],
         ),
@@ -438,11 +520,10 @@ class _ErrorView extends StatelessWidget {
   }
 }
 
-class _EmptyGrades extends StatelessWidget {
-  final MentorXThemeColorPalette palette;
+final class _EmptyGrades extends StatelessWidget {
   final dynamic t;
 
-  const _EmptyGrades({required this.palette, required this.t});
+  const _EmptyGrades({required this.t});
 
   @override
   Widget build(BuildContext context) {
@@ -453,26 +534,40 @@ class _EmptyGrades extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(32),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: context.backgroundSecondaryColor,
               shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 20),
-              ],
+              border: Border.all(
+                color: context.borderPrimaryColor.withValues(alpha: 0.05),
+              ),
             ),
-            child: Icon(Icons.school_rounded, size: 80, color: palette.textTertiary.withValues(alpha: 0.2)),
+            child: Icon(
+              Icons.school_rounded,
+              size: 80,
+              color: context.textTertiaryColor.withValues(alpha: 0.2),
+            ),
           ),
           const Gap(32),
           Text(
             t['noGrades'] ?? 'No grades available yet.',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900, color: palette.textPrimary),
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w900,
+              color: context.textPrimaryColor,
+              letterSpacing: -0.5,
+            ),
           ),
           const Gap(12),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 40),
             child: Text(
-              t['completeAssessmentsDesc'] ?? 'Complete quizzes and assignments to see your grades.',
+              t['completeAssessmentsDesc'] ??
+                  'Complete quizzes and assignments to see your grades.',
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 14, color: palette.textSecondary, fontWeight: FontWeight.w500),
+              style: TextStyle(
+                fontSize: 14,
+                color: context.textSecondaryColor,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
         ],

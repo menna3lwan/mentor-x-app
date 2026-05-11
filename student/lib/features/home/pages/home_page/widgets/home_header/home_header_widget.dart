@@ -1,5 +1,7 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
+import 'package:gap/gap.dart';
 
 final class HomeHeaderWidget extends StatelessWidget {
   final String studentName;
@@ -15,9 +17,8 @@ final class HomeHeaderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = MentorXThemeColorPalette.light;
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 12),
+      padding: const EdgeInsets.symmetric(vertical: 16),
       child: Row(
         children: [
           Container(
@@ -25,66 +26,79 @@ final class HomeHeaderWidget extends StatelessWidget {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               gradient: LinearGradient(
-                colors: [palette.brandPrimary, palette.brandPrimary.withOpacity(0.4)],
+                colors: [
+                  context.brandPrimaryColor,
+                  context.brandSecondaryColor,
+                ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: palette.brandPrimary.withOpacity(0.2),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
+                  color: context.brandPrimaryColor.withValues(alpha: 0.25),
+                  blurRadius: 15,
+                  offset: const Offset(0, 8),
                 ),
               ],
             ),
-            child: CircleAvatar(
-              radius: 24,
-              backgroundColor: Colors.white,
-              child: Icon(Icons.person_rounded, color: palette.brandPrimary, size: 28),
+            child: Container(
+              padding: const EdgeInsets.all(2),
+              decoration: BoxDecoration(
+                color: context.backgroundPrimaryColor,
+                shape: BoxShape.circle,
+              ),
+              child: CircleAvatar(
+                radius: 28,
+                backgroundColor: context.backgroundSecondaryColor,
+                child: Icon(
+                  Icons.person_rounded,
+                  color: context.brandPrimaryColor,
+                  size: 30,
+                ),
+              ),
             ),
           ),
-          const SizedBox(width: 16),
+          const Gap(20),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  greetingText,
+                  greetingText.toUpperCase(),
                   style: TextStyle(
-                    fontSize: 13,
-                    color: palette.textTertiary,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 0.2,
+                    fontSize: 10,
+                    color: context.brandPrimaryColor,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 1.5,
                   ),
                 ),
-                const SizedBox(height: 2),
+                const Gap(4),
                 Text(
                   studentName,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    fontSize: 22,
+                    fontSize: 26,
                     fontWeight: FontWeight.w900,
-                    color: palette.textPrimary,
-                    letterSpacing: -0.8,
+                    color: context.textPrimaryColor,
+                    letterSpacing: -1,
                     height: 1.1,
                   ),
                 ),
               ],
             ),
           ),
-          _NotificationButton(unreadCount: unreadCount, palette: palette),
+          _NotificationButton(unreadCount: unreadCount),
         ],
       ),
     );
   }
 }
 
-class _NotificationButton extends StatelessWidget {
+final class _NotificationButton extends StatelessWidget {
   final int unreadCount;
-  final MentorXThemeColorPalette palette;
 
-  const _NotificationButton({required this.unreadCount, required this.palette});
+  const _NotificationButton({required this.unreadCount});
 
   @override
   Widget build(BuildContext context) {
@@ -93,55 +107,59 @@ class _NotificationButton extends StatelessWidget {
       children: [
         Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: context.backgroundSecondaryColor.withValues(alpha: 0.45),
             shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.04),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
-              ),
-            ],
-            border: Border.all(color: palette.backgroundSecondary),
+            border: Border.all(
+              color: context.borderPrimaryColor.withValues(alpha: 0.1),
+            ),
           ),
-          child: IconButton(
-            onPressed: () {
-              // Navigate to notifications
-            },
-            icon: Icon(
-              Icons.notifications_outlined,
-              color: palette.textPrimary,
-              size: 24,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(30),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+              child: IconButton(
+                onPressed: () {
+                  // Navigate to notifications
+                },
+                icon: Icon(
+                  Icons.notifications_none_rounded,
+                  color: context.textPrimaryColor,
+                  size: 26,
+                ),
+              ),
             ),
           ),
         ),
         if (unreadCount > 0)
           Positioned(
-            right: -2,
-            top: -2,
+            right: 0,
+            top: 0,
             child: Container(
               padding: const EdgeInsets.all(4),
               decoration: BoxDecoration(
-                color: palette.statusDanger,
+                color: context.statusDangerColor,
                 shape: BoxShape.circle,
-                border: Border.all(color: Colors.white, width: 2),
+                border: Border.all(
+                  color: context.backgroundSecondaryColor,
+                  width: 2,
+                ),
                 boxShadow: [
                   BoxShadow(
-                    color: palette.statusDanger.withOpacity(0.3),
-                    blurRadius: 4,
+                    color: context.statusDangerColor.withValues(alpha: 0.3),
+                    blurRadius: 6,
                   ),
                 ],
               ),
               constraints: const BoxConstraints(
-                minWidth: 18,
-                minHeight: 18,
+                minWidth: 20,
+                minHeight: 20,
               ),
               child: Text(
                 unreadCount > 9 ? '9+' : '$unreadCount',
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   color: Colors.white,
-                  fontSize: 9,
+                  fontSize: 10,
                   fontWeight: FontWeight.w900,
                 ),
               ),

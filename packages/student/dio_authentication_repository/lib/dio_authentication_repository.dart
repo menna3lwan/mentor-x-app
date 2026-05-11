@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:mentorx_core/mentorx_core.dart';
+import 'package:device_info_service/device_info_service.dart';
 
 import 'models/student_model.dart';
 
@@ -24,11 +25,13 @@ final class DioAuthenticationRepository
 
   final HttpClient httpClient;
   final CacheRepository cacheRepository;
+  final DeviceInfoService deviceInfoService;
 
   DioAuthenticationRepository({
     required this.httpClient,
     required this.cacheRepository,
-  });
+    DeviceInfoService? deviceInfoService,
+  }) : deviceInfoService = deviceInfoService ?? DeviceInfoServiceImpl();
 
   String? _pendingOtpPhoneNumber;
   OtpVerificationPurpose _pendingOtpPurpose = OtpVerificationPurpose.login;
@@ -95,7 +98,7 @@ final class DioAuthenticationRepository
   @override
   Future<StudentEntity?> getCurrentUser() async {
     try {
-      final isAuthenticated = await httpClient.isAuthenticated();
+      final isAuthenticated = httpClient.isAuthenticated;
       if (!isAuthenticated) return null;
 
       final response = await _getCurrentUserResponse();
@@ -111,7 +114,7 @@ final class DioAuthenticationRepository
       return user;
     } on HttpClientResponse catch (e) {
       if (e.statusCode == 401) return null;
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: _ExceptionCode.failedToGetCurrentUser,
       );
@@ -150,7 +153,7 @@ final class DioAuthenticationRepository
       return expiresIn == null ? null : Duration(seconds: expiresIn);
     } on HttpClientResponse catch (e) {
       AuthRateLimiter.recordFailedAttempt(phoneNumber, 'resend_otp');
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: _ExceptionCode.failedToResendOtp,
       );
@@ -160,6 +163,7 @@ final class DioAuthenticationRepository
   @override
   Future<void> requestPasswordReset(String phoneNumber) async {
     try {
+      await httpClient.clearTokens();
       await httpClient.post(
         '/api/auth/forgot-password',
         data: {'phone': phoneNumber},
@@ -199,9 +203,10 @@ final class DioAuthenticationRepository
 
   Future<void> _clearLocalAuthSession() async {
     await _deleteCachedUser();
-    httpClient.removeBearerToken();
+    await httpClient.clearTokens();
     clearOtpVerificationContext();
   }
+
 
   @override
   Future<StudentEntity> loginWithPassword({
@@ -209,6 +214,10 @@ final class DioAuthenticationRepository
     required String password,
   }) async {
     try {
+      // Proactively clear existing tokens to avoid sending stale/invalid
+      // tokens in the Authorization header to the login endpoint.
+      await httpClient.clearTokens();
+
       final payload = await _buildLoginPayload(
         phoneNumber: phoneNumber,
         password: password,
@@ -235,7 +244,7 @@ final class DioAuthenticationRepository
         );
       }
 
-      _setTokensIfPresent(data);
+      await _setTokensIfPresent(data);
 
       var user = _extractStudentFromResponse(response.data);
       user ??= await getCurrentUser();
@@ -266,7 +275,28 @@ final class DioAuthenticationRepository
           message: stringOrNull(data['error']) ?? 'Session already active on another device.',
         );
       }
-      handleHttpClientErrorResponse(
+      if (_isAccountPendingError(e)) {
+        final data = asMap(e.data);
+        throw AccountPendingException(
+          message: stringOrNull(data['error'] ?? data['message']),
+          supportWhatsApp: stringOrNull(data['supportWhatsApp']),
+        );
+      }
+      if (_isAccountRejectedError(e)) {
+        final data = asMap(e.data);
+        throw AccountRejectedException(
+          message: stringOrNull(data['error'] ?? data['message']),
+          rejectionReason: stringOrNull(data['rejectionReason']),
+          supportWhatsApp: stringOrNull(data['supportWhatsApp']),
+        );
+      }
+      if (_isInvalidCredentialsError(e)) {
+        return handleHttpClientErrorResponse(
+          e,
+          defaultCode: AuthenticationRepositoryExceptionCode.invalidCredentials,
+        );
+      }
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: _ExceptionCode.failedToGetCurrentUser,
       );
@@ -278,6 +308,9 @@ final class DioAuthenticationRepository
     String phoneNumber,
   ) async {
     try {
+      // Clear existing tokens before starting a new registration/OTP flow.
+      await httpClient.clearTokens();
+
       final response = await _sendOtpResponse(phoneNumber);
 
       setOtpVerificationContext(
@@ -294,7 +327,7 @@ final class DioAuthenticationRepository
         otpLength: otpLength,
       );
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: _ExceptionCode.failedToSendOtp,
       );
@@ -308,10 +341,15 @@ final class DioAuthenticationRepository
       throw _Exception(code: _ExceptionCode.invalidPhoneNumber);
     }
 
+    final otpInt = int.tryParse(otp);
+    if (otpInt == null) {
+      throw _Exception(code: _ExceptionCode.invalidOtp);
+    }
+
     try {
-      final response = await _verifyOtpResponse(phone, otp);
+      final response = await _verifyOtpResponse(phone, otpInt);
       final data = asMap(response.data)['data'] ?? asMap(response.data);
-      _setTokensIfPresent(data);
+      await _setTokensIfPresent(data);
 
       final studentFromPayload = _extractStudentFromResponse(response.data);
       if (studentFromPayload != null) {
@@ -345,7 +383,7 @@ final class DioAuthenticationRepository
       clearOtpVerificationContext();
       return fallbackUser;
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: _ExceptionCode.failedToVerifyOtp,
       );
@@ -355,7 +393,7 @@ final class DioAuthenticationRepository
   @override
   Future<void> refreshToken() async {
     try {
-      final currentRefreshToken = httpClient.getRefreshToken();
+      final currentRefreshToken = httpClient.refreshToken;
       if (currentRefreshToken == null || currentRefreshToken.isEmpty) {
         throw AuthenticationRepositoryException(
           code: AuthenticationRepositoryExceptionCode.failedToRefreshToken,
@@ -371,7 +409,7 @@ final class DioAuthenticationRepository
       );
 
       final data = asMap(response.data)['data'] ?? asMap(response.data);
-      _setTokensIfPresent(data);
+      await _setTokensIfPresent(data);
     } on HttpClientResponse catch (e) {
       handleHttpClientErrorResponse(
         e,
@@ -404,18 +442,39 @@ final class DioAuthenticationRepository
     try {
       final response = await httpClient.get('/api/auth/session-status');
 
-      final user = _extractStudentFromResponse(response.data);
+      var user = _extractStudentFromResponse(response.data);
       if (user == null) {
-        throw _Exception(
-          code: _ExceptionCode.unknown,
-          message: 'Account status payload was missing user details.',
-        );
+        // Fallback: If session status says we have a session, create a skeleton user
+        final data = asMap(response.data);
+        if (boolOrFalse(data['hasSession'])) {
+          user = StudentEntity(
+            id: stringOrNull(data['studentCode']) ?? '',
+            firstName: 'Student',
+            lastName: stringOrNull(data['studentCode']) ?? '',
+            phoneNumber: '',
+            status: _parseStatus(stringOrNull(data['status'])) ?? StudentStatus.active,
+            studentCode: stringOrNull(data['studentCode']),
+            createdAt: DateTime.now(),
+            updatedAt: DateTime.now(),
+          );
+        } else {
+          throw _Exception(
+            code: _ExceptionCode.unknown,
+            message: 'Account status payload was missing user details.',
+          );
+        }
       }
 
       await _cacheUser(user);
       return user;
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      if (e.statusCode == 401) {
+        return handleHttpClientErrorResponse(
+          e,
+          defaultCode: AuthenticationRepositoryExceptionCode.invalidCredentials,
+        );
+      }
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: _ExceptionCode.unknown,
       );
@@ -477,24 +536,13 @@ final class DioAuthenticationRepository
 
   Future<HttpClientResponse> _verifyOtpResponse(
     String phone,
-    String otp,
+    int otp,
   ) async {
-    if (_pendingOtpPurpose == OtpVerificationPurpose.registration) {
-      try {
-        return await httpClient.post(
-          '/api/student/register/complete',
-          data: {'phone': phone, 'otp': otp},
-        );
-      } on HttpClientResponse catch (e) {
-        if (e.statusCode != 404) rethrow;
-      }
-    }
-
     return httpClient.post(
       '/api/auth/verify-otp',
       data: {
         'phone': phone,
-        'otp': otp, // Matches Postman field name "otp"
+        'otp': otp,
       },
     );
   }
@@ -506,11 +554,11 @@ final class DioAuthenticationRepository
     final payload = <String, dynamic>{
       'phone': phoneNumber,
       'password': password,
-      'device_hash': _buildDeviceHash(),
-      'device_name': _buildDeviceName(),
+      'device_hash': await deviceInfoService.getDeviceHash(),
+      'device_name': await deviceInfoService.getDeviceName(),
       'device_model': _buildDeviceModel(),
       'os_version': Platform.operatingSystemVersion,
-      'app_version': '1.0.0',
+      'app_version': await deviceInfoService.getAppVersion(),
     };
 
     final tenantId = await cacheRepository.get(CacheKeys.tenantId);
@@ -522,16 +570,24 @@ final class DioAuthenticationRepository
     return payload;
   }
 
-  void _setTokensIfPresent(Map<String, dynamic> data) {
+  Future<void> _setTokensIfPresent(Map<String, dynamic> data) async {
     final accessToken = stringOrNull(
       data['token'] ?? data['access_token'] ?? data['accessToken'],
     );
-    if (accessToken == null) return;
+    
+    if (accessToken == null) {
+      _logger.warning('No access token found in response data keys: ${data.keys.toList()}');
+      return;
+    }
 
+    _logger.info('Token found in response, updating HttpClient and Cache');
     final refreshToken = stringOrNull(
       data['refresh_token'] ?? data['refreshToken'],
     );
-    httpClient.setBearerToken(accessToken, refreshToken: refreshToken);
+    await httpClient.setAccessToken(accessToken);
+    if (refreshToken != null) {
+      await httpClient.setRefreshToken(refreshToken);
+    }
   }
 
   StudentEntity? _extractStudentFromResponse(dynamic rawResponse) {
@@ -564,6 +620,27 @@ final class DioAuthenticationRepository
     final error = stringOrNull(data['error']) ?? '';
     return response.statusCode == 400 &&
         (error.contains('تسجيل الخروج أولاً') || error.contains('logout first'));
+  }
+
+  bool _isInvalidCredentialsError(HttpClientResponse response) {
+    final data = asMap(response.data);
+    final error = stringOrNull(data['error'] ?? data['message']) ?? '';
+    return response.statusCode == 401 ||
+        error.contains('كلمة المرور غير صحيحة') ||
+        error.contains('رقم الهاتف غير موجود') ||
+        error.contains('رقم الهاتف أو كلمة المرور غير صحيحة');
+  }
+
+  bool _isAccountPendingError(HttpClientResponse response) {
+    final data = asMap(response.data);
+    final status = stringOrNull(data['status'])?.toUpperCase();
+    return status == 'PENDING';
+  }
+
+  bool _isAccountRejectedError(HttpClientResponse response) {
+    final data = asMap(response.data);
+    final status = stringOrNull(data['status'])?.toUpperCase();
+    return status == 'REJECTED';
   }
 
   List<DeviceEntity> _parseActiveDevices(dynamic rawDevices) {
@@ -609,29 +686,75 @@ final class DioAuthenticationRepository
     return asMap(error);
   }
 
-
-
-  static String _buildDeviceHash() {
-    final raw = [
-      Platform.operatingSystem,
-      Platform.operatingSystemVersion,
-      Platform.localHostname,
-      Platform.localeName,
-    ].join('|');
-
-    return base64UrlEncode(utf8.encode(raw)).replaceAll('=', '');
-  }
-
-  static String _buildDeviceName() {
-    if (Platform.isAndroid) return 'Android Device';
-    if (Platform.isIOS) return 'iPhone';
-    return 'Mobile Device';
-  }
-
   static String _buildDeviceModel() {
     if (Platform.isAndroid) return 'Android';
     if (Platform.isIOS) return 'iOS';
     return Platform.operatingSystem;
+  }
+
+  @override
+  Future<void> forceLogoutAll() async {
+    try {
+      await httpClient.post('/api/auth/force-logout-all');
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: _ExceptionCode.failedToLogout,
+      );
+    }
+  }
+
+  @override
+  Future<Map<String, dynamic>> getPendingStatus() async {
+    try {
+      final response = await httpClient.get('/api/auth/pending-status');
+      return asMap(response.data);
+    } on HttpClientResponse catch (e) {
+      return handleHttpClientErrorResponse(
+        e,
+        defaultCode: _ExceptionCode.unknown,
+      );
+    }
+  }
+
+  @override
+  Future<String> getEntryPoint() async {
+    try {
+      final response = await httpClient.get('/api/auth/entry-point');
+      final data = asMap(response.data);
+      return stringOrEmpty(data['entry_point'] ?? data['entryPoint']);
+    } on HttpClientResponse catch (e) {
+      return handleHttpClientErrorResponse(
+        e,
+        defaultCode: _ExceptionCode.unknown,
+      );
+    }
+  }
+
+  @override
+  Future<bool> checkPhone(String phone) async {
+    try {
+      final response = await httpClient.get('/api/auth/check-phone/$phone');
+      final data = asMap(response.data);
+      return boolOrNull(data['available'] ?? data['exists']) ?? true;
+    } on HttpClientResponse catch (e) {
+      return handleHttpClientErrorResponse(
+        e,
+        defaultCode: _ExceptionCode.unknown,
+      );
+    }
+  }
+
+  @override
+  Future<void> testMultiDevice() async {
+    try {
+      await httpClient.post('/api/auth/student/test-multi-device');
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: _ExceptionCode.unknown,
+      );
+    }
   }
 }
 

@@ -10,6 +10,7 @@ final class WalkthroughPageRoute extends GoRouteData
     return BlocProvider<WalkthroughPageBloc>(
       create: (context) => WalkthroughPageBloc(
         cacheRepository: context.read<CacheRepository>(),
+        analyticsService: context.read<AnalyticsService>(),
       ),
       child: const WalkthroughPageWrapper(),
     );

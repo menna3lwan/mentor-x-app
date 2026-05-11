@@ -1,10 +1,12 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
+import 'package:gap/gap.dart';
 import '../../../../core/core.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'bloc/redeem_code_page_bloc.dart';
 
-class RedeemCodePagePage extends StatefulWidget {
+final class RedeemCodePagePage extends StatefulWidget {
   final RedeemCodePageState state;
   final Function(String) onSubmit;
 
@@ -15,10 +17,10 @@ class RedeemCodePagePage extends StatefulWidget {
   });
 
   @override
-  State<RedeemCodePagePage> createState() => _RedeemCodePagePageState();
+  State<RedeemCodePagePage> createState() => _RedeemCodeCodePageState();
 }
 
-class _RedeemCodePagePageState extends State<RedeemCodePagePage> {
+final class _RedeemCodeCodePageState extends State<RedeemCodePagePage> {
   final _codeController = TextEditingController();
 
   @override
@@ -30,111 +32,204 @@ class _RedeemCodePagePageState extends State<RedeemCodePagePage> {
   @override
   Widget build(BuildContext context) {
     final t = context.t.student;
-    final palette = MentorXThemeColorPalette.light;
 
-    return BlocPresentationListener<RedeemCodePageBloc, RedeemCodePagePresentationEvent>(
+    return BlocPresentationListener<
+      RedeemCodePageBloc,
+      RedeemCodePagePresentationEvent
+    >(
       listener: (context, event) {
         if (event is RedeemCodePageNavigateBack) {
-          MentorXUI.showToast(message: t['codeActivated'] ?? 'Code activated successfully!');
+          MentorXUI.showToast(
+            message: t['codeActivated'] ?? 'Code activated successfully!',
+          );
           Navigator.pop(context);
         }
       },
       child: Scaffold(
-        backgroundColor: palette.backgroundSecondary,
+        backgroundColor: context.backgroundPrimaryColor,
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(70),
-          child: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [palette.brandPrimary, palette.brandPrimary.withOpacity(0.8)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
+          child: FadeInDown(
+            duration: const Duration(milliseconds: 500),
+            child: Container(
+              decoration: BoxDecoration(
+                color: context.backgroundSecondaryColor,
+                borderRadius: const BorderRadius.vertical(
+                  bottom: Radius.circular(28),
+                ),
+                border: Border(
+                  bottom: BorderSide(
+                    color: context.borderPrimaryColor.withValues(alpha: 0.05),
+                  ),
+                ),
               ),
-              borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
-              boxShadow: [
-                BoxShadow(color: palette.brandPrimary.withOpacity(0.3), blurRadius: 15, offset: const Offset(0, 4)),
-              ],
-            ),
-            child: AppBar(
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              foregroundColor: Colors.white,
-              title: Text(t['redeemCode']!, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800)),
+              child: AppBar(
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                foregroundColor: context.textPrimaryColor,
+                centerTitle: true,
+                title: Text(
+                  t['redeemCode']!,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: -0.5,
+                  ),
+                ),
+              ),
             ),
           ),
         ),
         body: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
           padding: const EdgeInsets.all(24),
           child: Column(
             children: [
-              const SizedBox(height: 32),
+              const Gap(32),
               // Icon with glow
-              Container(
-                padding: const EdgeInsets.all(24),
-                decoration: BoxDecoration(
-                  color: palette.brandPrimary.withOpacity(0.05),
-                  shape: BoxShape.circle,
-                  border: Border.all(color: palette.brandPrimary.withOpacity(0.1)),
-                ),
-                child: Icon(Icons.qr_code_scanner_rounded, size: 56, color: palette.brandPrimary),
-              ),
-              const SizedBox(height: 32),
-              Text(
-                t['redeemCodeTitle'] ?? 'Redeem Your Code',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: palette.textPrimary),
-              ),
-              const SizedBox(height: 12),
-              Text(
-                t['enterCodeDesc'] ?? 'Enter the activation code to top up your wallet balance instantly.',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 14, color: palette.textSecondary, height: 1.5),
-              ),
-              const SizedBox(height: 40),
-              // Glassmorphic Input
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(24),
-                  boxShadow: [
-                    BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 15, offset: const Offset(0, 8)),
-                  ],
-                ),
-                child: TextField(
-                  controller: _codeController,
-                  textAlign: TextAlign.center,
-                  textDirection: TextDirection.ltr,
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: 4,
-                    color: palette.brandPrimary,
+              ZoomIn(
+                duration: const Duration(milliseconds: 600),
+                child: Container(
+                  padding: const EdgeInsets.all(28),
+                  decoration: BoxDecoration(
+                    color: context.brandPrimaryColor.withValues(alpha: 0.1),
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: context.brandPrimaryColor.withValues(alpha: 0.2),
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: context.brandPrimaryColor.withValues(alpha: 0.1),
+                        blurRadius: 20,
+                        offset: const Offset(0, 10),
+                      ),
+                    ],
                   ),
-                  onChanged: (_) => setState(() {}),
-                  decoration: InputDecoration(
-                    hintText: 'XXXX-XXXX-XXXX',
-                    hintStyle: TextStyle(fontSize: 18, color: palette.textTertiary.withOpacity(0.3), letterSpacing: 4),
-                    contentPadding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(24), borderSide: BorderSide.none),
+                  child: Icon(
+                    Icons.qr_code_scanner_rounded,
+                    size: 64,
+                    color: context.brandPrimaryColor,
+                  ),
+                ),
+              ),
+              const Gap(32),
+              FadeInUp(
+                duration: const Duration(milliseconds: 500),
+                delay: const Duration(milliseconds: 200),
+                child: Text(
+                  t['redeemCodeTitle'] ?? 'Redeem Your Code',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w900,
+                    color: context.textPrimaryColor,
+                    letterSpacing: -0.5,
+                  ),
+                ),
+              ),
+              const Gap(12),
+              FadeInUp(
+                duration: const Duration(milliseconds: 500),
+                delay: const Duration(milliseconds: 300),
+                child: Text(
+                  t['enterCodeDesc'] ??
+                      'Enter the activation code to top up your wallet balance instantly.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: context.textSecondaryColor,
+                    height: 1.6,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+              const Gap(40),
+              // Glassmorphic Input
+              FadeInUp(
+                duration: const Duration(milliseconds: 500),
+                delay: const Duration(milliseconds: 400),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: context.backgroundSecondaryColor,
+                    borderRadius: BorderRadius.circular(28),
+                    border: Border.all(
+                      color: context.borderPrimaryColor.withValues(alpha: 0.05),
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.05),
+                        blurRadius: 20,
+                        offset: const Offset(0, 10),
+                      ),
+                    ],
+                  ),
+                  child: TextField(
+                    controller: _codeController,
+                    textAlign: TextAlign.center,
+                    textDirection: TextDirection.ltr,
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: 4,
+                      color: context.brandPrimaryColor,
+                    ),
+                    onChanged: (_) => setState(() {}),
+                    decoration: InputDecoration(
+                      hintText: 'XXXX-XXXX-XXXX',
+                      hintStyle: TextStyle(
+                        fontSize: 20,
+                        color: context.textTertiaryColor.withValues(alpha: 0.2),
+                        letterSpacing: 4,
+                        fontWeight: FontWeight.w800,
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                        vertical: 24,
+                        horizontal: 24,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(28),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
                   ),
                 ),
               ),
               if (widget.state.errorMessage != null) ...[
-                const SizedBox(height: 16),
-                StatusBadge(message: widget.state.errorMessage!, status: StatusBadgeType.danger),
+                const Gap(16),
+                FadeInDown(
+                  child: StatusBadge(
+                    message: widget.state.errorMessage!,
+                    status: StatusBadgeType.danger,
+                  ),
+                ),
               ],
-              const SizedBox(height: 48),
-              MentorXButton(
-                onPressed: _codeController.text.isNotEmpty && widget.state.loadingState != LoadingState.loading
-                    ? () => widget.onSubmit(_codeController.text)
-                    : null,
-                text: t['activateCode']!,
-                loading: widget.state.loadingState == LoadingState.loading,
+              const Gap(48),
+              FadeInUp(
+                duration: const Duration(milliseconds: 500),
+                delay: const Duration(milliseconds: 500),
+                child: MentorXButton(
+                  onPressed:
+                      _codeController.text.isNotEmpty &&
+                          widget.state.loadingState != LoadingState.loading
+                      ? () => widget.onSubmit(_codeController.text)
+                      : null,
+                  label: t['activateCode']!,
+                  loading: widget.state.loadingState == LoadingState.loading,
+                ),
               ),
-              const SizedBox(height: 24),
-              Text(
-                t['redeemPolicy'] ?? 'By activating this code, you agree to our terms and conditions.',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 11, color: palette.textTertiary),
+              const Gap(24),
+              FadeIn(
+                duration: const Duration(milliseconds: 500),
+                delay: const Duration(milliseconds: 700),
+                child: Text(
+                  t['redeemPolicy'] ??
+                      'By activating this code, you agree to our terms and conditions.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: context.textTertiaryColor,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
               ),
             ],
           ),

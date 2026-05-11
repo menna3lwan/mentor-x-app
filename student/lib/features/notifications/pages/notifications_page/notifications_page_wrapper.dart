@@ -21,18 +21,19 @@ class _NotificationsPageWrapperState extends State<NotificationsPageWrapper> {
       create: (context) => NotificationsPageBloc(
         notificationRepository: context.read<NotificationRepository>(),
       )..add(const NotificationsPageLoadEvent()),
-      child: BlocPresentationListener<
-        NotificationsPageBloc,
-        NotificationsPagePresentationEvent
-      >(
-        listener: (context, event) {
-          switch (event) {
-            case NotificationsPageNavigateBack():
-              Navigator.of(context).pop();
-          }
-        },
-        child: const NotificationsPage(),
-      ),
+      child:
+          BlocPresentationListener<
+            NotificationsPageBloc,
+            NotificationsPagePresentationEvent
+          >(
+            listener: (context, event) {
+              switch (event) {
+                case NotificationsPageNavigateBack():
+                  Navigator.of(context).pop();
+              }
+            },
+            child: const NotificationsPage(),
+          ),
     );
   }
 }

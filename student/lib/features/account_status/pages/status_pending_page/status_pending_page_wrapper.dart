@@ -36,6 +36,7 @@ final class _StatusPendingPageWrapperState
               case StudentStatus.pending:
                 break;
               case StudentStatus.suspended:
+              case StudentStatus.rejected:
               case StudentStatus.inactive:
                 const StatusRejectedPageRoute().go(context);
             }
@@ -48,22 +49,11 @@ final class _StatusPendingPageWrapperState
           return StatusPendingPagePage(
             studentCode: state.studentCode,
             isRefreshing: state.isRefreshing,
-            showContactTeacher: state.hasTeacherContact,
             onRefresh: () {
               context.read<StatusPendingPageBloc>().add(
                 const StatusPendingPageRefreshRequested(isManual: true),
               );
             },
-            onContactTeacher: state.hasTeacherContact
-                ? () {
-                    final phone = state.tenantWhatsAppNumber!.trim();
-                    WhatsAppHelper.openByPhone(
-                      phoneNumber: phone,
-                      message:
-                          'Hello, I need help with my pending student account approval.',
-                    );
-                  }
-                : null,
             onLogout: () {
               context.read<StatusPendingPageBloc>().add(
                 const StatusPendingPageLogoutRequested(),

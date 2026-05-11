@@ -5,7 +5,7 @@ import 'package:patrol/patrol.dart';
 
 Future<void> launchStudentApp(PatrolIntegrationTester $) async {
   final requirements = await StudentRequirements.initialize();
-  await $.pumpWidgetAndSettle(StudentApp(requirements: requirements));
+  await $.pumpWidget(StudentApp(requirements: requirements));
 }
 
 Future<void> goToStudentRoute(
@@ -15,7 +15,7 @@ Future<void> goToStudentRoute(
   final context = rootNavigatorKey.currentContext;
   expect(context, isNotNull);
   route.go(context!);
-  await $.pumpAndSettle();
+  await $.pump(const Duration(seconds: 2));
 }
 
 String currentStudentLocation() {

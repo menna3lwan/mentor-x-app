@@ -8,6 +8,9 @@ final class DioParentGradeRepository
   final HttpClient httpClient;
 
   DioParentGradeRepository({required this.httpClient});
+  
+  @override
+  Future<void> initialize() async {}
 
   @override
   Never throwException(
@@ -20,9 +23,17 @@ final class DioParentGradeRepository
   @override
   Future<ParentGradeSummaryEntity> getGradeSummary(String childId) async {
     try {
-      final response = await httpClient.get(
-        '/api/v1/parent/children/$childId/grades/summary',
-      );
+      HttpClientResponse response;
+      try {
+        response = await httpClient.get(
+          '/api/parent/children/$childId/grades/summary',
+        );
+      } on HttpClientResponse catch (e) {
+        if (e.statusCode != 404) rethrow;
+        response = await httpClient.get(
+          '/api/parent/dashboard/child/$childId/overview',
+        );
+      }
 
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return ParentGradeSummaryModel.fromJson(data);
@@ -40,10 +51,19 @@ final class DioParentGradeRepository
     int months = 6,
   }) async {
     try {
-      final response = await httpClient.get(
-        '/api/v1/parent/children/$childId/grades/trend',
-        queryParameters: {'months': months},
-      );
+      HttpClientResponse response;
+      try {
+        response = await httpClient.get(
+          '/api/parent/children/$childId/grades/trend',
+          queryParameters: {'months': months},
+        );
+      } on HttpClientResponse catch (e) {
+        if (e.statusCode != 404) rethrow;
+        response = await httpClient.get(
+          '/api/parent/dashboard/child/$childId/overview',
+          queryParameters: {'months': months},
+        );
+      }
 
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return ParentGradeTrendModel.fromJson(data);
@@ -62,13 +82,25 @@ final class DioParentGradeRepository
     String? courseId,
   }) async {
     try {
-      final response = await httpClient.get(
-        '/api/v1/parent/children/$childId/assessments',
-        queryParameters: {
-          if (type != null) 'type': type,
-          if (courseId != null) 'course_id': courseId,
-        },
-      );
+      HttpClientResponse response;
+      try {
+        response = await httpClient.get(
+          '/api/parent/children/$childId/assessments',
+          queryParameters: {
+            if (type != null) 'type': type,
+            if (courseId != null) 'course_id': courseId,
+          },
+        );
+      } on HttpClientResponse catch (e) {
+        if (e.statusCode != 404) rethrow;
+        response = await httpClient.get(
+          '/api/parent/dashboard/child/$childId/progress/all',
+          queryParameters: {
+            if (type != null) 'type': type,
+            if (courseId != null) 'course_id': courseId,
+          },
+        );
+      }
 
       final data = asList(response.data);
       return data.map((e) => QuizAttemptModel.fromJson(asMap(e))).toList();

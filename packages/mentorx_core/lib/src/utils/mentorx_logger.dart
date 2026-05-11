@@ -4,6 +4,8 @@ part of 'package:mentorx_core/mentorx_core.dart';
 /// and uses dart:developer log function for console output.
 class MentorXLogger {
   static bool enabled = false;
+  static void Function(String message, Object? error, StackTrace? stackTrace)?
+  onError;
 
   /// The name of the logger instance
   final String name;
@@ -60,6 +62,9 @@ class MentorXLogger {
       error: error,
       stackTrace: stackTrace,
     );
+    if (error != null) {
+      onError?.call(messageWithName(message), error, stackTrace);
+    }
   }
 
   /// Log a message at level [Level.error].
@@ -77,6 +82,7 @@ class MentorXLogger {
       error: error,
       stackTrace: stackTrace,
     );
+    onError?.call(messageWithName(message), error, stackTrace);
   }
 
   /// Log a message at level [Level.fatal].
@@ -95,5 +101,6 @@ class MentorXLogger {
       error: error,
       stackTrace: stackTrace,
     );
+    onError?.call(messageWithName(message), error, stackTrace);
   }
 }

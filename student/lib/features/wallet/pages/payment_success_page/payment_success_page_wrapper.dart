@@ -6,7 +6,8 @@ import 'bloc/payment_success_page_bloc.dart';
 import 'payment_success_page_page.dart';
 
 final class PaymentSuccessPageWrapper extends StatefulWidget {
-  const PaymentSuccessPageWrapper({super.key});
+  final String? amount;
+  const PaymentSuccessPageWrapper({super.key, this.amount});
 
   @override
   State<PaymentSuccessPageWrapper> createState() =>
@@ -28,7 +29,7 @@ class _PaymentSuccessPageWrapperState extends State<PaymentSuccessPageWrapper> {
       },
       child: BlocBuilder<PaymentSuccessPageBloc, PaymentSuccessPageState>(
         builder: (context, state) {
-          return const PaymentSuccessPage();
+          return PaymentSuccessPage(amount: widget.amount);
         },
       ),
     );

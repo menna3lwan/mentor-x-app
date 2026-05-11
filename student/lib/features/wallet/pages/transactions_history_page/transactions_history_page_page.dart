@@ -1,241 +1,233 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
-import 'package:mentorx_student/core/core.dart';
+import '../../../../core/core.dart';
 import 'package:animate_do/animate_do.dart';
-import 'dart:ui';
-import 'bloc/transactions_history_page_bloc.dart';
+import 'package:gap/gap.dart';
 
-class TransactionsHistoryPage extends StatefulWidget {
-  const TransactionsHistoryPage({super.key});
+final class TransactionsHistoryPage extends StatelessWidget {
+  final List<WalletTransactionEntity> transactions;
+  final bool hasMore;
+  final bool isLoading;
+  final bool isInitialLoading;
+  final ScrollController scrollController;
+  final Future<void> Function() onRefresh;
 
-  @override
-  State<TransactionsHistoryPage> createState() => _TransactionsHistoryPageState();
-}
-
-class _TransactionsHistoryPageState extends State<TransactionsHistoryPage> {
-  final _scrollController = ScrollController();
-
-  @override
-  void initState() {
-    super.initState();
-    _scrollController.addListener(_onScroll);
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  void _onScroll() {
-    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
-      context.read<TransactionsHistoryPageBloc>().add(const TransactionsHistoryPageLoadMoreEvent());
-    }
-  }
+  const TransactionsHistoryPage({
+    super.key,
+    required this.transactions,
+    required this.hasMore,
+    required this.isLoading,
+    required this.isInitialLoading,
+    required this.scrollController,
+    required this.onRefresh,
+  });
 
   @override
   Widget build(BuildContext context) {
     final t = context.t.student;
-    final palette = MentorXThemeColorPalette.light;
 
-    return BlocBuilder<TransactionsHistoryPageBloc, TransactionsHistoryPageState>(
-      builder: (context, state) {
-        final transactions = state.transactions;
-        final isLoading = state.loadingState == LoadingState.loading;
-        final isInitialLoading = isLoading && transactions.isEmpty;
-
-        return Scaffold(
-          backgroundColor: palette.backgroundSecondary,
-          appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(70),
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [palette.brandPrimary, palette.brandPrimary.withOpacity(0.8)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
-                boxShadow: [
-                  BoxShadow(color: palette.brandPrimary.withOpacity(0.3), blurRadius: 15, offset: const Offset(0, 4)),
-                ],
-              ),
-              child: AppBar(
-                backgroundColor: Colors.transparent,
-                elevation: 0,
-                foregroundColor: Colors.white,
-                centerTitle: true,
-                title: Text(
-                  t['transactionsTitle']!,
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
-                ),
+    return Scaffold(
+      backgroundColor: context.backgroundPrimaryColor,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(70),
+        child: Container(
+          decoration: BoxDecoration(
+            color: context.backgroundSecondaryColor,
+            borderRadius: const BorderRadius.vertical(
+              bottom: Radius.circular(24),
+            ),
+            border: Border(
+              bottom: BorderSide(
+                color: context.borderPrimaryColor.withValues(alpha: 0.05),
               ),
             ),
           ),
-          body: isInitialLoading
-              ? const Center(child: CircularProgressIndicator())
-              : transactions.isEmpty
-                  ? _EmptyHistory(t: t, palette: palette)
-                  : RefreshIndicator(
-                      color: palette.brandPrimary,
-                      onRefresh: () async {
-                        context.read<TransactionsHistoryPageBloc>().add(const TransactionsHistoryPageLoadEvent());
-                      },
-                      child: ListView.separated(
-                        controller: _scrollController,
-                        padding: const EdgeInsets.all(20),
-                        itemCount: transactions.length + (state.hasMore ? 1 : 0),
-                        separatorBuilder: (context, index) => const SizedBox(height: 12),
-                        itemBuilder: (context, i) {
-                          if (i == transactions.length) {
-                            return const Center(
-                              child: Padding(
-                                padding: EdgeInsets.all(16.0),
-                                child: CircularProgressIndicator(strokeWidth: 2),
-                              ),
-                            );
-                          }
-                          final tx = transactions[i];
-                          final isCredit = tx.isCredit;
-                          final formattedDate = DateFormat('dd MMM yyyy, hh:mm a').format(tx.createdAt);
-
-                          return FadeInLeft(
-                            duration: Duration(milliseconds: 300 + (i % 5) * 100),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(24),
-                              child: BackdropFilter(
-                                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                                child: Container(
-                                  padding: const EdgeInsets.all(16),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.8),
-                                    borderRadius: BorderRadius.circular(24),
-                                    border: Border.all(color: Colors.white.withOpacity(0.5)),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.02),
-                                        blurRadius: 10,
-                                        offset: const Offset(0, 4),
-                                      ),
-                                    ],
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        padding: const EdgeInsets.all(12),
-                                        decoration: BoxDecoration(
-                                          color: isCredit
-                                              ? Colors.green.withOpacity(0.1)
-                                              : Colors.red.withOpacity(0.1),
-                                          borderRadius: BorderRadius.circular(16),
-                                        ),
-                                        child: Icon(
-                                          isCredit
-                                              ? Icons.add_rounded
-                                              : Icons.remove_rounded,
-                                          size: 20,
-                                          color: isCredit ? Colors.green : Colors.red,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 16),
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Row(
-                                              children: [
-                                                Expanded(
-                                                  child: Text(
-                                                    tx.typeBadge ?? tx.transactionType.name.toUpperCase(),
-                                                    style: TextStyle(
-                                                      fontSize: 14,
-                                                      fontWeight: FontWeight.w800,
-                                                      color: palette.textPrimary,
-                                                    ),
-                                                  ),
-                                                ),
-                                                StatusBadge(
-                                                  message: tx.status?.name ?? 'Success',
-                                                  status: tx.status == TransactionStatus.failed 
-                                                    ? StatusBadgeType.danger 
-                                                    : tx.status == TransactionStatus.pending 
-                                                      ? StatusBadgeType.warning 
-                                                      : StatusBadgeType.success,
-                                                  isSmall: true,
-                                                ),
-                                              ],
-                                            ),
-                                            const SizedBox(height: 4),
-                                            Text(
-                                              formattedDate,
-                                              style: TextStyle(
-                                                fontSize: 11,
-                                                color: palette.textTertiary,
-                                              ),
-                                            ),
-                                            if (tx.description.isNotEmpty) ...[
-                                              const SizedBox(height: 6),
-                                              Text(
-                                                tx.description,
-                                                style: TextStyle(
-                                                  fontSize: 12,
-                                                  color: palette.textSecondary,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            ],
-                                          ],
-                                        ),
-                                      ),
-                                      const SizedBox(width: 16),
-                                      Column(
-                                        crossAxisAlignment: CrossAxisAlignment.end,
-                                        children: [
-                                          Text(
-                                            '${isCredit ? '+' : '-'}${tx.amount.toStringAsFixed(0)}',
-                                            style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w900,
-                                              color: isCredit ? Colors.green : Colors.red,
-                                              letterSpacing: -0.5,
-                                            ),
-                                          ),
-                                          Text(
-                                            t['egp']!,
-                                            style: TextStyle(
-                                              fontSize: 10,
-                                              fontWeight: FontWeight.w800,
-                                              color: (isCredit ? Colors.green : Colors.red).withOpacity(0.7),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          );
-                        },
+          child: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            foregroundColor: context.textPrimaryColor,
+            centerTitle: true,
+            title: Text(
+              t['transactionsTitle'] ?? 'Transactions',
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900),
+            ),
+          ),
+        ),
+      ),
+      body: isInitialLoading
+          ? const Center(child: CircularProgressIndicator())
+          : transactions.isEmpty
+          ? const _EmptyHistory()
+          : RefreshIndicator(
+              color: context.brandPrimaryColor,
+              onRefresh: onRefresh,
+              child: ListView.separated(
+                controller: scrollController,
+                padding: const EdgeInsets.all(20),
+                itemCount: transactions.length + (hasMore ? 1 : 0),
+                separatorBuilder: (context, index) => const Gap(12),
+                itemBuilder: (context, i) {
+                  if (i == transactions.length) {
+                    return const Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(16.0),
+                        child: CircularProgressIndicator(strokeWidth: 2),
                       ),
+                    );
+                  }
+                  final tx = transactions[i];
+                  return FadeInUp(
+                    duration: Duration(milliseconds: 300 + (i % 5) * 100),
+                    child: _TransactionItem(
+                      tx: tx,
+                      t: t,
                     ),
-        );
-      },
+                  );
+                },
+              ),
+            ),
     );
   }
 }
 
-class _EmptyHistory extends StatelessWidget {
-  const _EmptyHistory({required this.t, required this.palette});
-  final Map<String, String> t;
-  final MentorXThemeColorPalette palette;
+final class _TransactionItem extends StatelessWidget {
+  const _TransactionItem({
+    required this.tx,
+    required this.t,
+  });
+
+  final WalletTransactionEntity tx;
+  final dynamic t;
 
   @override
   Widget build(BuildContext context) {
+    final isCredit = tx.isCredit;
+    final formattedDate = DateFormat(
+      'dd MMM yyyy, hh:mm a',
+    ).format(tx.createdAt);
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: context.backgroundSecondaryColor,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: context.borderPrimaryColor.withValues(alpha: 0.05),
+        ),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: isCredit
+                  ? context.statusSuccessColor.withValues(alpha: 0.1)
+                  : context.statusDangerColor.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Icon(
+              isCredit ? Icons.add_rounded : Icons.remove_rounded,
+              size: 20,
+              color: isCredit
+                  ? context.statusSuccessColor
+                  : context.statusDangerColor,
+            ),
+          ),
+          const Gap(16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        tx.typeBadge ?? tx.transactionType.name.toUpperCase(),
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w900,
+                          color: context.textPrimaryColor,
+                        ),
+                      ),
+                    ),
+                    StatusBadge(
+                      message: tx.status?.name ?? 'Success',
+                      status: tx.status == TransactionStatus.failed
+                          ? StatusBadgeType.danger
+                          : tx.status == TransactionStatus.pending
+                          ? StatusBadgeType.warning
+                          : StatusBadgeType.success,
+                      isSmall: true,
+                    ),
+                  ],
+                ),
+                const Gap(4),
+                Text(
+                  formattedDate,
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: context.textTertiaryColor,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                if (tx.description.isNotEmpty) ...[
+                  const Gap(6),
+                  Text(
+                    tx.description,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: context.textSecondaryColor,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ],
+            ),
+          ),
+          const Gap(16),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                '${isCredit ? '+' : '-'}${tx.amount.toStringAsFixed(0)}',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w900,
+                  color: isCredit
+                      ? context.statusSuccessColor
+                      : context.statusDangerColor,
+                  letterSpacing: -0.5,
+                ),
+              ),
+              Text(
+                t['egp']!,
+                style: TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w800,
+                  color:
+                      (isCredit
+                              ? context.statusSuccessColor
+                              : context.statusDangerColor)
+                          .withValues(alpha: 0.6),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+final class _EmptyHistory extends StatelessWidget {
+  const _EmptyHistory();
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.t.student;
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -243,22 +235,22 @@ class _EmptyHistory extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(32),
             decoration: BoxDecoration(
-              color: palette.backgroundPrimary,
+              color: context.backgroundSecondaryColor,
               shape: BoxShape.circle,
             ),
             child: Icon(
               Icons.history_rounded,
               size: 64,
-              color: palette.textTertiary.withOpacity(0.2),
+              color: context.textTertiaryColor.withValues(alpha: 0.2),
             ),
           ),
-          const SizedBox(height: 24),
+          const Gap(24),
           Text(
             t['noTransactions'] ?? 'No transactions found',
             style: TextStyle(
               fontSize: 16,
-              fontWeight: FontWeight.w800,
-              color: palette.textSecondary,
+              fontWeight: FontWeight.w900,
+              color: context.textSecondaryColor,
             ),
           ),
         ],

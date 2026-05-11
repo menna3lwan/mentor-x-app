@@ -1,11 +1,9 @@
 import 'dart:async';
-
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
-
 import '../../../../app/student_app.dart';
 import '../../../../core/core.dart';
 import 'bloc/login_bloc.dart';
@@ -77,15 +75,12 @@ final class _LoginPageWrapperState extends State<LoginPageWrapper> {
     final tenantLogoUrl = await cacheRepository.get(CacheKeys.tenantLogoUrl);
     final biometricEnabled = await cacheRepository.get('biometric_enabled');
 
-    if (!mounted) {
-      return;
-    }
+    if (!mounted) return;
 
     if (rememberedPhone != null && rememberedPhone.trim().isNotEmpty) {
       final trimmedPhone = rememberedPhone.trim();
       _phoneController.text = trimmedPhone;
       bloc.add(LoginPhoneChanged(trimmedPhone));
-      bloc.add(const LoginRememberMeToggled());
     }
 
     setState(() {
@@ -113,22 +108,12 @@ final class _LoginPageWrapperState extends State<LoginPageWrapper> {
             phoneNumber: event.phoneNumber,
             otpLength: event.otpLength,
             otpDurationSeconds: event.otpDuration?.inSeconds,
-          ).go(context);
+          ).push(context);
         } else if (event is LoginDeviceLimitReachedPresentationEvent) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(event.message),
-              backgroundColor: MentorXThemeColorPalette.light.statusWarning,
-            ),
-          );
+          context.showErrorSnackBar(event.message);
           const DeviceManagementPageRoute().go(context);
         } else if (event is LoginFailurePresentationEvent) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(event.message),
-              backgroundColor: MentorXThemeColorPalette.light.statusDanger,
-            ),
-          );
+          context.showErrorSnackBar(event.message);
         }
       },
       child: BlocBuilder<LoginBloc, LoginState>(
@@ -140,7 +125,6 @@ final class _LoginPageWrapperState extends State<LoginPageWrapper> {
             passwordController: _passwordController,
             isLoading: state.isLoading,
             obscurePassword: state.obscurePassword,
-            rememberMe: state.rememberMe,
             errorMessage: state.loadingState.isError
                 ? state.errorMessage
                 : null,
@@ -154,42 +138,21 @@ final class _LoginPageWrapperState extends State<LoginPageWrapper> {
             onPasswordChanged: (value) => bloc.add(LoginPasswordChanged(value)),
             onObscurePasswordToggled: () =>
                 bloc.add(const LoginObscurePasswordToggled()),
-            onRememberMeToggled: () => bloc.add(const LoginRememberMeToggled()),
             onForgotPassword: () {
               ForgotPasswordPageRoute(
                 phoneNumber: _phoneController.text.trim(),
-              ).go(context);
+              ).push(context);
             },
             onRegister: () {
-              const RegistrationPageRoute().go(context);
-            },
-            onChangeTeacher: () async {
-              final cacheRepository = context.read<CacheRepository>();
-              await cacheRepository.removeAll([
-                CacheKeys.tenantId,
-                CacheKeys.tenantName,
-                CacheKeys.tenantLogoUrl,
-                CacheKeys.tenantPrimaryColor,
-                CacheKeys.tenantAccentColor,
-              ]);
-
-              if (!context.mounted) {
-                return;
-              }
-
-              const WalkthroughPageRoute().go(context);
+              const RegistrationPageRoute().push(context);
             },
             onSubmit: () => _submit(bloc),
             tenantName: _tenantName,
             tenantLogoUrl: _tenantLogoUrl,
             showBiometricLogin: _showBiometricLogin,
             onBiometricLogin: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text(
-                    'Biometric login will be available after your first successful login on this device.',
-                  ),
-                ),
+              context.showInfoSnackBar(
+                'Biometric login will be available after your first successful login on this device.',
               );
             },
           );
@@ -200,17 +163,10 @@ final class _LoginPageWrapperState extends State<LoginPageWrapper> {
 
   Future<void> _handleRememberedPhone(BuildContext context) async {
     final cacheRepository = context.read<CacheRepository>();
-    final bloc = context.read<LoginBloc>();
-
-    if (bloc.state.rememberMe) {
-      await cacheRepository.put(
-        CacheKeys.rememberedPhone,
-        _phoneController.text.trim(),
-      );
-      return;
-    }
-
-    await cacheRepository.remove(CacheKeys.rememberedPhone);
+    await cacheRepository.put(
+      CacheKeys.rememberedPhone,
+      _phoneController.text.trim(),
+    );
   }
 
   void _handleAuthenticatedUser(BuildContext context, StudentEntity user) {
@@ -223,9 +179,9 @@ final class _LoginPageWrapperState extends State<LoginPageWrapper> {
         const StatusPendingPageRoute().go(context);
       case StudentStatus.suspended:
         const StatusBlockedPageRoute().go(context);
+      case StudentStatus.rejected:
       case StudentStatus.inactive:
         const StatusRejectedPageRoute().go(context);
     }
   }
-
 }

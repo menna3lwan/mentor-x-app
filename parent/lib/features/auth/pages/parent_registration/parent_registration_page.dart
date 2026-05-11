@@ -23,15 +23,12 @@ final class ParentRegistrationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = MentorXThemeColorPalette.light;
-
     return Scaffold(
-      backgroundColor: palette.backgroundPrimary,
+      backgroundColor: context.backgroundPrimaryColor,
       body: Column(
         children: [
           // Premium Header
           _BuildHeader(
-            palette: palette,
             title: title,
             currentStep: currentStep,
             leading: appBarLeading,
@@ -40,7 +37,7 @@ final class ParentRegistrationPage extends StatelessWidget {
           Expanded(
             child: Container(
               decoration: BoxDecoration(
-                color: palette.backgroundSecondary.withValues(alpha: 0.5),
+                color: context.backgroundSecondaryColor.withValues(alpha: 0.5),
                 borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
               ),
               child: ClipRRect(
@@ -67,7 +64,7 @@ final class ParentRegistrationPage extends StatelessWidget {
               bottom: MediaQuery.of(context).padding.bottom + 20,
             ),
             decoration: BoxDecoration(
-              color: palette.backgroundPrimary,
+              color: context.backgroundPrimaryColor,
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.05),
@@ -102,13 +99,11 @@ final class ParentRegistrationPage extends StatelessWidget {
 }
 
 class _BuildHeader extends StatelessWidget {
-  final MentorXThemeColorPalette palette;
   final String title;
   final int currentStep;
   final Widget? leading;
 
   const _BuildHeader({
-    required this.palette,
     required this.title,
     required this.currentStep,
     this.leading,
@@ -124,7 +119,7 @@ class _BuildHeader extends StatelessWidget {
         right: 20,
       ),
       decoration: BoxDecoration(
-        color: palette.backgroundPrimary,
+        color: context.backgroundPrimaryColor,
       ),
       child: Column(
         children: [
@@ -143,7 +138,7 @@ class _BuildHeader extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w900,
-                      color: palette.textPrimary,
+                      color: context.textPrimaryColor,
                       letterSpacing: -0.5,
                     ),
                   ),
@@ -167,12 +162,12 @@ class _BuildHeader extends StatelessWidget {
                     margin: const EdgeInsets.symmetric(horizontal: 4),
                     decoration: BoxDecoration(
                       color: isActive 
-                          ? palette.brandPrimary 
-                          : palette.brandPrimary.withValues(alpha: 0.15),
+                          ? context.brandPrimaryColor 
+                          : context.brandPrimaryColor.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(10),
                       boxShadow: isCurrent ? [
                         BoxShadow(
-                          color: palette.brandPrimary.withValues(alpha: 0.3),
+                          color: context.brandPrimaryColor.withValues(alpha: 0.3),
                           blurRadius: 8,
                           offset: const Offset(0, 2),
                         ),

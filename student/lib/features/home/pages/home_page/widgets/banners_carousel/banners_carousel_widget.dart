@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:gap/gap.dart';
 
 import 'package:mentorx_core/mentorx_core.dart';
 
@@ -48,8 +49,8 @@ final class _BannersCarouselWidgetState extends State<BannersCarouselWidget> {
       _currentIndex = (_currentIndex + 1) % widget.banners.length;
       _pageController.animateToPage(
         _currentIndex,
-        duration: const Duration(milliseconds: 350),
-        curve: Curves.easeInOut,
+        duration: const Duration(milliseconds: 600),
+        curve: Curves.easeOutCubic,
       );
     });
   }
@@ -63,7 +64,6 @@ final class _BannersCarouselWidgetState extends State<BannersCarouselWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final palette = MentorXThemeColorPalette.light;
     final hasItems = widget.banners.isNotEmpty;
 
     return Skeletonizer(
@@ -71,34 +71,41 @@ final class _BannersCarouselWidgetState extends State<BannersCarouselWidget> {
       child: Column(
         children: [
           SizedBox(
-            height: 180,
+            height: 190,
             child: PageView.builder(
               controller: _pageController,
+              physics: const BouncingScrollPhysics(),
               itemCount: hasItems ? widget.banners.length : 1,
               onPageChanged: (index) => setState(() => _currentIndex = index),
               itemBuilder: (context, index) {
                 final banner = hasItems ? widget.banners[index] : null;
                 final bannerId = banner?.id ?? '';
-                final bannerImageUrl = banner?.imageUrl ??
+                final bannerImageUrl =
+                    banner?.imageUrl ??
                     'https://picsum.photos/800/450?placeholder';
                 final bannerTitle = banner?.title;
 
                 return GestureDetector(
                   onTap: hasItems ? () => widget.onTapBanner(bannerId) : null,
                   child: Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 4),
+                    margin: const EdgeInsets.symmetric(horizontal: 6),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(24),
+                      border: Border.all(
+                        color: context.borderPrimaryColor.withValues(
+                          alpha: 0.05,
+                        ),
+                      ),
                       boxShadow: [
                         BoxShadow(
-                          color: palette.textPrimary.withOpacity(0.08),
+                          color: Colors.black.withValues(alpha: 0.2),
                           blurRadius: 15,
                           offset: const Offset(0, 8),
                         ),
                       ],
                     ),
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(24),
                       child: Stack(
                         fit: StackFit.expand,
                         children: [
@@ -107,40 +114,46 @@ final class _BannersCarouselWidgetState extends State<BannersCarouselWidget> {
                             fit: BoxFit.cover,
                             errorBuilder: (context, error, stackTrace) =>
                                 ColoredBox(
-                              color: palette.backgroundTertiary,
-                              child: Icon(
-                                Icons.image_not_supported_outlined,
-                                color: palette.textSecondary,
-                              ),
-                            ),
+                                  color: context.backgroundSecondaryColor,
+                                  child: Icon(
+                                    Icons.image_not_supported_outlined,
+                                    color: context.textTertiaryColor.withValues(
+                                      alpha: 0.3,
+                                    ),
+                                    size: 40,
+                                  ),
+                                ),
                           ),
-                          // Gradient Overlay
-                          const DecoratedBox(
+                          // Premium Gradient Overlay
+                          DecoratedBox(
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
                                 begin: Alignment.topCenter,
                                 end: Alignment.bottomCenter,
                                 colors: [
                                   Colors.transparent,
-                                  Colors.black45,
+                                  context.backgroundPrimaryColor.withValues(
+                                    alpha: 0.8,
+                                  ),
                                 ],
                               ),
                             ),
                           ),
                           if (bannerTitle?.isNotEmpty ?? false)
                             Positioned(
-                              left: 16,
-                              right: 16,
-                              bottom: 16,
+                              left: 20,
+                              right: 20,
+                              bottom: 20,
                               child: Text(
                                 bannerTitle!,
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                  color: Colors.white,
+                                style: TextStyle(
+                                  color: context.textForegroundColor,
                                   fontSize: 18,
-                                  fontWeight: FontWeight.w800,
-                                  letterSpacing: -0.2,
+                                  fontWeight: FontWeight.w900,
+                                  letterSpacing: -0.5,
+                                  height: 1.2,
                                 ),
                               ),
                             ),
@@ -152,7 +165,7 @@ final class _BannersCarouselWidgetState extends State<BannersCarouselWidget> {
               },
             ),
           ),
-          const SizedBox(height: 12),
+          const Gap(16),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: List.generate(
@@ -161,14 +174,14 @@ final class _BannersCarouselWidgetState extends State<BannersCarouselWidget> {
                 final isActive = _currentIndex == index;
                 return AnimatedContainer(
                   duration: const Duration(milliseconds: 300),
-                  width: isActive ? 20 : 8,
+                  width: isActive ? 24 : 8,
                   height: 8,
                   margin: const EdgeInsets.symmetric(horizontal: 4),
                   decoration: BoxDecoration(
                     color: isActive
-                        ? palette.brandPrimary
-                        : palette.brandPrimary.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(10),
+                        ? context.brandPrimaryColor
+                        : context.brandPrimaryColor.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(4),
                   ),
                 );
               },

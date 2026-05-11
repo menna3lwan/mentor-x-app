@@ -23,13 +23,18 @@ final class CourseCatalogPageBloc
           CourseCatalogPagePresentationEvent
         > {
   final CourseRepository _courseRepository;
+  final StudentRegistrationRepository _registrationRepository;
 
-  CourseCatalogPageBloc({required CourseRepository courseRepository})
-    : _courseRepository = courseRepository,
-      super(const CourseCatalogPageState()) {
+  CourseCatalogPageBloc({
+    required CourseRepository courseRepository,
+    required StudentRegistrationRepository registrationRepository,
+  }) : _courseRepository = courseRepository,
+       _registrationRepository = registrationRepository,
+       super(const CourseCatalogPageState()) {
     on<CourseCatalogPageInitialized>(_onInitialized);
     on<CourseCatalogPageSearchChanged>(_onSearchChanged);
     on<CourseCatalogPageCategoryChanged>(_onCategoryChanged);
+    on<CourseCatalogPageGradeChanged>(_onGradeChanged);
     on<CourseCatalogPageSortChanged>(_onSortChanged);
     on<CourseCatalogPageRefreshed>(_onRefreshed);
   }
@@ -38,9 +43,51 @@ final class CourseCatalogPageBloc
     CourseCatalogPageInitialized event,
     Emitter<CourseCatalogPageState> emit,
   ) async {
+    emit(
+      state.copyWith(
+        gradesStatus: CatalogSectionStatus.loading,
+        categoriesStatus: CatalogSectionStatus.loading,
+      ),
+    );
+    try {
+      final appInfo = await _registrationRepository.getApplicationInfo();
+      emit(
+        state.copyWith(
+          gradesStatus: CatalogSectionStatus.loaded,
+          grades: appInfo.grades,
+        ),
+      );
+    } catch (_) {
+      emit(state.copyWith(gradesStatus: CatalogSectionStatus.failure));
+    }
+
+    await _loadCategories(emit: emit);
+    await _loadCourses(emit: emit);
+  }
+
+  Future<void> _onGradeChanged(
+    CourseCatalogPageGradeChanged event,
+    Emitter<CourseCatalogPageState> emit,
+  ) async {
+    emit(
+      state.copyWith(
+        selectedGradeId: event.gradeId,
+        clearGrade: event.gradeId == null,
+        clearCategory: true,
+      ),
+    );
+    await _loadCategories(emit: emit);
+    await _loadCourses(emit: emit);
+  }
+
+  Future<void> _loadCategories({
+    required Emitter<CourseCatalogPageState> emit,
+  }) async {
     emit(state.copyWith(categoriesStatus: CatalogSectionStatus.loading));
     try {
-      final categories = await _courseRepository.getCategories();
+      final categories = await _courseRepository.getCategories(
+        gradeId: state.selectedGradeId,
+      );
       emit(
         state.copyWith(
           categoriesStatus: CatalogSectionStatus.loaded,
@@ -50,7 +97,6 @@ final class CourseCatalogPageBloc
     } catch (_) {
       emit(state.copyWith(categoriesStatus: CatalogSectionStatus.failure));
     }
-    await _loadCourses(emit: emit);
   }
 
   Future<void> _onSearchChanged(
@@ -101,6 +147,7 @@ final class CourseCatalogPageBloc
         CatalogSortOption.popular => ('enrolled', null),
       };
       final courses = await _courseRepository.getCourseCatalog(
+        gradeId: state.selectedGradeId,
         categoryId: state.selectedCategoryId,
         search: state.searchQuery.isNotEmpty ? state.searchQuery : null,
         sort: sort,

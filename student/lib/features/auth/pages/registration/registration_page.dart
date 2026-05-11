@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
@@ -9,7 +10,7 @@ import 'steps/academic_info_step.dart';
 import 'steps/location_step.dart';
 import 'steps/security_step.dart';
 
-class RegistrationPage extends StatelessWidget {
+final class RegistrationPage extends StatelessWidget {
   final int currentStep;
   final bool isLoading;
   final VoidCallback onBack;
@@ -29,69 +30,64 @@ class RegistrationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final steps = [
-      'Welcome',
-      'Verify',
-      'Profile',
-      'Academic',
-      'Location',
-      'Security',
+    final t = context.t.student;
+    final List<String> steps = [
+      t['welcome']?.toString() ?? 'Welcome',
+      t['otpVerifyTitle']?.toString() ?? 'Verify',
+      t['profile']?.toString() ?? 'Profile',
+      t['academicInfo']?.toString() ?? 'Academic',
+      t['locationDetails']?.toString() ?? 'Location',
+      t['securityAndIdentity']?.toString() ?? 'Security',
     ];
 
-    final palette = MentorXThemeColorPalette.light;
-
-    return Scaffold(
-      backgroundColor: palette.backgroundPrimary,
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(70),
-        child: FadeInDown(
-          duration: const Duration(milliseconds: 500),
-          child: AppBar(
-            backgroundColor: palette.backgroundPrimary,
-            elevation: 0,
-            title: Text(
-              steps[currentStep],
-              style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 20, letterSpacing: -0.5),
-            ),
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back_ios_new_rounded, color: palette.textPrimary, size: 20),
-              onPressed: onBack,
-            ),
-            centerTitle: true,
-          ),
+    return AuthScaffold(
+      backgroundColor: context.backgroundPrimaryColor,
+      appBarLeading: IconButton(
+        onPressed: onBack,
+        icon: Icon(
+          Icons.arrow_back_ios_new_rounded,
+          color: context.textPrimaryColor,
+          size: 20,
         ),
       ),
-      body: Column(
+      title: Text(steps[currentStep]),
+      progressIndicator: FadeInDown(
+        duration: const Duration(milliseconds: 500),
+        delay: const Duration(milliseconds: 100),
+        child: _buildStepper(context, steps),
+      ),
+      body: Stack(
         children: [
-          FadeInDown(
-            duration: const Duration(milliseconds: 500),
-            delay: const Duration(milliseconds: 100),
-            child: _buildStepper(context, steps),
-          ),
-          Expanded(
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-              child: FadeInRight(
-                key: ValueKey(currentStep),
-                duration: const Duration(milliseconds: 500),
-                child: _buildCurrentStep(context),
+          const _BackgroundDecorations(),
+          Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 16,
+                  ),
+                  child: ZoomIn(
+                    key: ValueKey(currentStep),
+                    child: _buildCurrentStep(context),
+                  ),
+                ),
               ),
-            ),
-          ),
-          FadeInUp(
-            duration: const Duration(milliseconds: 500),
-            child: _buildBottomActions(context),
+            ],
           ),
         ],
+      ),
+      footer: FadeInUp(
+        duration: const Duration(milliseconds: 500),
+        child: _buildBottomActions(context),
       ),
     );
   }
 
+
   Widget _buildStepper(BuildContext context, List<String> steps) {
-    final palette = MentorXThemeColorPalette.light;
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+      padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 24),
       child: Row(
         children: List.generate(steps.length, (index) {
           final isCompleted = index < currentStep;
@@ -104,16 +100,23 @@ class RegistrationPage extends StatelessWidget {
                   Expanded(
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 500),
-                      height: 4,
-                      margin: const EdgeInsets.symmetric(horizontal: 6),
+                      height: 6,
+                      margin: const EdgeInsets.symmetric(horizontal: 8),
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(2),
+                        borderRadius: BorderRadius.circular(3),
                         color: isCompleted
-                            ? palette.brandPrimary
-                            : palette.brandPrimary.withValues(alpha: 0.1),
-                        boxShadow: isCompleted 
-                          ? [BoxShadow(color: palette.brandPrimary.withValues(alpha: 0.2), blurRadius: 4)]
-                          : null,
+                            ? context.brandPrimaryColor
+                            : context.borderPrimaryColor.withValues(alpha: 0.1),
+                        boxShadow: isCompleted
+                            ? [
+                                BoxShadow(
+                                  color: context.brandPrimaryColor.withValues(
+                                    alpha: 0.3,
+                                  ),
+                                  blurRadius: 8,
+                                ),
+                              ]
+                            : null,
                       ),
                     ),
                   ),
@@ -131,41 +134,45 @@ class RegistrationPage extends StatelessWidget {
     bool isActive,
     bool isCompleted,
   ) {
-    final palette = MentorXThemeColorPalette.light;
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
-      width: isActive ? 36 : 32,
-      height: isActive ? 36 : 32,
+      width: isActive ? 40 : 32,
+      height: isActive ? 40 : 32,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: isCompleted
-            ? palette.brandPrimary
+            ? context.brandPrimaryColor
             : isActive
-                ? palette.brandPrimary.withValues(alpha: 0.15)
-                : palette.backgroundSecondary,
+            ? context.brandPrimaryColor.withValues(alpha: 0.2)
+            : context.backgroundSecondaryColor,
         border: isActive
-            ? Border.all(color: palette.brandPrimary, width: 3)
+            ? Border.all(color: context.brandPrimaryColor, width: 3)
             : isCompleted
-                ? null
-                : Border.all(color: palette.textTertiary.withValues(alpha: 0.3), width: 1.5),
+            ? null
+            : Border.all(
+                color: context.borderPrimaryColor.withValues(alpha: 0.1),
+                width: 2,
+              ),
         boxShadow: isActive
             ? [
                 BoxShadow(
-                  color: palette.brandPrimary.withValues(alpha: 0.3),
-                  blurRadius: 12,
-                  offset: const Offset(0, 4),
-                )
+                  color: context.brandPrimaryColor.withValues(alpha: 0.4),
+                  blurRadius: 15,
+                  offset: const Offset(0, 8),
+                ),
               ]
             : null,
       ),
       child: Center(
         child: isCompleted
-            ? Icon(Icons.check_rounded, size: 20, color: palette.textForeground)
+            ? const Icon(Icons.check_rounded, size: 20, color: Colors.white)
             : Text(
                 step.toString(),
                 style: TextStyle(
                   fontSize: isActive ? 16 : 14,
-                  color: isActive ? palette.brandPrimary : palette.textSecondary,
+                  color: isActive
+                      ? context.brandPrimaryColor
+                      : context.textSecondaryColor,
                   fontWeight: FontWeight.w900,
                 ),
               ),
@@ -193,22 +200,27 @@ class RegistrationPage extends StatelessWidget {
   }
 
   Widget _buildBottomActions(BuildContext context) {
-    final palette = MentorXThemeColorPalette.light;
+    final t = context.t.student;
     return Container(
-      padding: EdgeInsets.only(
-        left: 24,
-        right: 24,
-        top: 24,
-        bottom: MediaQuery.of(context).padding.bottom + 24,
+      padding: EdgeInsets.fromLTRB(
+        24,
+        24,
+        24,
+        MediaQuery.paddingOf(context).bottom + 24,
       ),
       decoration: BoxDecoration(
-        color: palette.backgroundPrimary,
+        color: context.backgroundSecondaryColor,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+        border: Border(
+          top: BorderSide(
+            color: context.borderPrimaryColor.withValues(alpha: 0.05),
+          ),
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.06),
-            blurRadius: 24,
-            offset: const Offset(0, -12),
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 30,
+            offset: const Offset(0, -10),
           ),
         ],
       ),
@@ -216,29 +228,39 @@ class RegistrationPage extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           MentorXButton(
-            onPressed: isLoading ? null : (currentStep == 5 ? onSubmit : onNext),
+            onPressed: isLoading
+                ? null
+                : (currentStep == 5 ? onSubmit : onNext),
             label: currentStep == 5
-                ? 'Complete Registration'
-                : (currentStep == 0 ? 'Verify & Continue' : 'Continue'),
+                ? (t['completeRegistration'] ?? 'Complete Registration')
+                : (currentStep == 0
+                      ? (t['commonNext'] ?? 'Verify & Continue')
+                      : (t['commonNext'] ?? 'Continue')),
             loading: isLoading,
           ),
           if (currentStep == 0) ...[
-            const Gap(16),
+            const Gap(20),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Already have an account?',
-                  style: TextStyle(color: palette.textSecondary, fontWeight: FontWeight.w600),
+                  t['alreadyHaveAccount'] ?? 'Already have an account?',
+                  style: TextStyle(
+                    color: context.textSecondaryColor,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
                 TextButton(
                   onPressed: isLoading ? null : onLogin,
-                  style: TextButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 8)),
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                  ),
                   child: Text(
-                    'Sign In',
+                    t['signIn'] ?? 'Sign In',
                     style: TextStyle(
-                      color: palette.brandPrimary,
+                      color: context.brandPrimaryColor,
                       fontWeight: FontWeight.w900,
+                      letterSpacing: 0.5,
                     ),
                   ),
                 ),
@@ -246,6 +268,106 @@ class RegistrationPage extends StatelessWidget {
             ),
           ],
         ],
+      ),
+    );
+  }
+}
+
+class _BackgroundDecorations extends StatelessWidget {
+  const _BackgroundDecorations();
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Positioned(
+          top: -100,
+          right: -100,
+          child: _BlurredBlob(
+            color: context.brandPrimaryColor.withValues(alpha: 0.1),
+            size: 300,
+          ),
+        ),
+        Positioned(
+          bottom: 200,
+          left: -150,
+          child: _BlurredBlob(
+            color: context.brandSecondaryColor.withValues(alpha: 0.08),
+            size: 400,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _BlurredBlob extends StatelessWidget {
+  final Color color;
+  final double size;
+
+  const _BlurredBlob({required this.color, required this.size});
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeIn(
+      duration: const Duration(seconds: 2),
+      child: Container(
+        width: size,
+        height: size,
+        decoration: BoxDecoration(
+          color: color,
+          shape: BoxShape.circle,
+        ),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 50, sigmaY: 50),
+          child: const SizedBox.expand(),
+        ),
+      ),
+    );
+  }
+}
+
+class _FadeInScale extends StatefulWidget {
+  final Widget child;
+  const _FadeInScale({required this.child});
+
+  @override
+  State<_FadeInScale> createState() => _FadeInScaleState();
+}
+
+class _FadeInScaleState extends State<_FadeInScale>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _fadeAnimation;
+  late Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    );
+    _fadeAnimation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
+    _scaleAnimation = Tween<double>(begin: 0.95, end: 1.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeOutBack),
+    );
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeTransition(
+      opacity: _fadeAnimation,
+      child: ScaleTransition(
+        scale: _scaleAnimation,
+        child: widget.child,
       ),
     );
   }

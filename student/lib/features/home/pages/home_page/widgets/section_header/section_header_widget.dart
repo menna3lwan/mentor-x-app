@@ -13,7 +13,6 @@ final class SectionHeaderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = MentorXThemeColorPalette.light;
     return Row(
       children: [
         Expanded(
@@ -21,17 +20,27 @@ final class SectionHeaderWidget extends StatelessWidget {
             title,
             style: TextStyle(
               fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: palette.textPrimary,
+              fontWeight: FontWeight.w900,
+              color: context.textPrimaryColor,
+              letterSpacing: -0.5,
             ),
           ),
         ),
         if (onSeeAll != null)
           TextButton(
             onPressed: onSeeAll,
+            style: TextButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              minimumSize: Size.zero,
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            ),
             child: Text(
               context.t.ui.common.viewAll,
-              style: TextStyle(color: palette.brandPrimary),
+              style: TextStyle(
+                color: context.brandPrimaryColor,
+                fontWeight: FontWeight.w900,
+                fontSize: 13,
+              ),
             ),
           ),
       ],

@@ -6,14 +6,15 @@ part of '../../../../core/routing/app_routes.dart';
 )
 final class PaymentSuccessPageRoute extends GoRouteData
     with $PaymentSuccessPageRoute {
-  const PaymentSuccessPageRoute();
+  final String? amount;
+  const PaymentSuccessPageRoute({this.amount});
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return BlocProvider<PaymentSuccessPageBloc>(
       create: (context) =>
           PaymentSuccessPageBloc()..add(const PaymentSuccessPageLoadEvent()),
-      child: const PaymentSuccessPageWrapper(),
+      child: PaymentSuccessPageWrapper(amount: amount),
     );
   }
 }

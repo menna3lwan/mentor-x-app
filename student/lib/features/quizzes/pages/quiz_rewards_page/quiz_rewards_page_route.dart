@@ -10,6 +10,7 @@ final class QuizRewardsPageRoute extends GoRouteData
     return BlocProvider<QuizRewardsPageBloc>(
       create: (context) => QuizRewardsPageBloc(
         quizRepository: context.read<QuizRepository>(),
+        leaderboardRepository: context.read<LeaderboardRepository>(),
       )..add(const QuizRewardsPageLoadEvent()),
       child: const QuizRewardsPageWrapper(),
     );

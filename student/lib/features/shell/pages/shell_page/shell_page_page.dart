@@ -6,7 +6,7 @@ import 'package:gap/gap.dart';
 import '../../widgets/ai_fab_button.dart';
 import '../../widgets/app_drawer.dart';
 
-class ShellPage extends StatelessWidget {
+final class ShellPage extends StatelessWidget {
   const ShellPage({super.key, required this.navigationShell});
 
   final StatefulNavigationShell navigationShell;
@@ -14,14 +14,15 @@ class ShellPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = context.t.student;
+
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.backgroundPrimaryColor,
       drawer: AppDrawer(onTabSelected: (i) => navigationShell.goBranch(i)),
       body: Stack(
         children: [
           navigationShell,
           PositionedDirectional(
-            bottom: 90,
+            bottom: 100,
             start: 20,
             child: ZoomIn(
               duration: const Duration(milliseconds: 600),
@@ -34,47 +35,57 @@ class ShellPage extends StatelessWidget {
         duration: const Duration(milliseconds: 500),
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+            color: context.backgroundSecondaryColor,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+            border: Border(
+              top: BorderSide(
+                color: context.borderPrimaryColor.withValues(alpha: 0.05),
+              ),
+            ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.05),
-                blurRadius: 20,
-                offset: const Offset(0, -4),
+                color: Colors.black.withValues(alpha: 0.2),
+                blurRadius: 30,
+                offset: const Offset(0, -10),
               ),
             ],
           ),
           child: SafeArea(
             child: SizedBox(
-              height: 74,
+              height: 80,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   _buildNavItem(
+                    context,
                     Icons.home_outlined,
                     Icons.home_rounded,
                     t['navHome'] ?? 'Home',
                     0,
                   ),
                   _buildNavItem(
+                    context,
                     Icons.menu_book_outlined,
                     Icons.menu_book_rounded,
                     t['navCourses'] ?? 'Courses',
                     1,
                   ),
                   _buildNavItem(
+                    context,
                     Icons.quiz_outlined,
                     Icons.quiz_rounded,
                     t['navQuizzes'] ?? 'Quizzes',
                     2,
                   ),
                   _buildNavItem(
+                    context,
                     Icons.account_balance_wallet_outlined,
                     Icons.account_balance_wallet_rounded,
                     t['navWallet'] ?? 'Wallet',
                     3,
                   ),
                   _buildNavItem(
+                    context,
                     Icons.person_outline_rounded,
                     Icons.person_rounded,
                     t['navAccount'] ?? 'Account',
@@ -90,6 +101,7 @@ class ShellPage extends StatelessWidget {
   }
 
   Widget _buildNavItem(
+    BuildContext context,
     IconData icon,
     IconData activeIcon,
     String label,
@@ -99,18 +111,27 @@ class ShellPage extends StatelessWidget {
     return GestureDetector(
       onTap: () => navigationShell.goBranch(index),
       behavior: HitTestBehavior.opaque,
-      child: SizedBox(
+      child: Container(
         width: 64,
+        padding: const EdgeInsets.symmetric(vertical: 8),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            AnimatedScale(
-              scale: isActive ? 1.1 : 1.0,
-              duration: const Duration(milliseconds: 200),
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: isActive
+                    ? context.brandPrimaryColor.withValues(alpha: 0.1)
+                    : Colors.transparent,
+                borderRadius: BorderRadius.circular(16),
+              ),
               child: Icon(
                 isActive ? activeIcon : icon,
                 size: 24,
-                color: isActive ? AppColors.accent : AppColors.grey,
+                color: isActive
+                    ? context.brandPrimaryColor
+                    : context.textTertiaryColor,
               ),
             ),
             const Gap(4),
@@ -118,8 +139,10 @@ class ShellPage extends StatelessWidget {
               label,
               style: TextStyle(
                 fontSize: 10,
-                fontWeight: isActive ? FontWeight.w900 : FontWeight.w600,
-                color: isActive ? AppColors.accent : AppColors.grey,
+                fontWeight: isActive ? FontWeight.w900 : FontWeight.w700,
+                color: isActive
+                    ? context.brandPrimaryColor
+                    : context.textTertiaryColor,
                 letterSpacing: 0.2,
               ),
             ),

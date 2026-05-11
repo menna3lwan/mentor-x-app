@@ -33,7 +33,9 @@ final class AddBalancePageBloc
     AddBalancePageLoadEvent event,
     Emitter<AddBalancePageState> emit,
   ) async {
-    emit(state.copyWith(loadingState: LoadingState.loading, errorMessage: null));
+    emit(
+      state.copyWith(loadingState: LoadingState.loading, errorMessage: null),
+    );
     emit(state.copyWith(loadingState: LoadingState.loaded));
   }
 
@@ -41,25 +43,30 @@ final class AddBalancePageBloc
     AddBalancePageSubmitEvent event,
     Emitter<AddBalancePageState> emit,
   ) async {
-    emit(state.copyWith(loadingState: LoadingState.loading, errorMessage: null));
+    emit(
+      state.copyWith(loadingState: LoadingState.loading, errorMessage: null),
+    );
     try {
-      final payment = await walletRepository.initiatePayment(
+      final payment = await walletRepository.depositFunds(
         amount: event.amount,
         method: event.method,
-        paymentType: PaymentType.walletTopup,
       );
-      
-      emit(state.copyWith(
-        loadingState: LoadingState.loaded,
-        payment: payment,
-      ));
-      
+
+      emit(
+        state.copyWith(
+          loadingState: LoadingState.loaded,
+          payment: payment,
+        ),
+      );
+
       emitPresentation(AddBalancePageSuccess(payment));
     } catch (e) {
-      emit(state.copyWith(
-        loadingState: LoadingState.error,
-        errorMessage: e.toString(),
-      ));
+      emit(
+        state.copyWith(
+          loadingState: LoadingState.error,
+          errorMessage: e.toString(),
+        ),
+      );
     }
   }
 }

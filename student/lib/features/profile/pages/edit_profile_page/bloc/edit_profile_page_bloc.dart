@@ -14,8 +14,7 @@ final class EditProfilePageNavigateBack
   const EditProfilePageNavigateBack();
 }
 
-final class EditProfilePageSuccess
-    extends EditProfilePagePresentationEvent {
+final class EditProfilePageSuccess extends EditProfilePagePresentationEvent {
   const EditProfilePageSuccess();
 }
 
@@ -26,13 +25,16 @@ final class EditProfilePageBloc
           EditProfilePageState,
           EditProfilePagePresentationEvent
         > {
-  EditProfilePageBloc({required this.profileRepository})
-    : super(EditProfilePageState.initial) {
+  EditProfilePageBloc({
+    required this.profileRepository,
+    required this.analyticsService,
+  }) : super(EditProfilePageState.initial) {
     on<EditProfilePageLoadEvent>(_onLoad);
     on<EditProfilePageSubmitRequestEvent>(_onSubmitRequest);
   }
 
   final ProfileRepository profileRepository;
+  final AnalyticsService analyticsService;
 
   Future<void> _onLoad(
     EditProfilePageLoadEvent event,
@@ -47,19 +49,23 @@ final class EditProfilePageBloc
     Emitter<EditProfilePageState> emit,
   ) async {
     if (profileRepository is! StudentProfileRepository) {
-      emit(state.copyWith(
-        loadingState: LoadingState.error,
-        errorMessage: const MentorXNullableValue('Invalid repository type'),
-      ));
+      emit(
+        state.copyWith(
+          loadingState: LoadingState.error,
+          errorMessage: const MentorXNullableValue('Invalid repository type'),
+        ),
+      );
       return;
     }
 
     final studentRepo = profileRepository as StudentProfileRepository;
 
-    emit(state.copyWith(
-      loadingState: LoadingState.loading,
-      errorMessage: const MentorXNullableValue(null),
-    ));
+    emit(
+      state.copyWith(
+        loadingState: LoadingState.loading,
+        errorMessage: const MentorXNullableValue(null),
+      ),
+    );
 
     try {
       await studentRepo.submitEditRequest(
@@ -68,17 +74,27 @@ final class EditProfilePageBloc
         reason: event.reason,
       );
       emit(state.copyWith(loadingState: LoadingState.loaded));
+      analyticsService.logEvent(
+        name: 'profile_edit_request',
+        parameters: {
+          'field_name': event.fieldName,
+        },
+      );
       emitPresentation(const EditProfilePageSuccess());
     } on MentorXException catch (e) {
-      emit(state.copyWith(
-        loadingState: LoadingState.error,
-        errorMessage: MentorXNullableValue(e.message),
-      ));
+      emit(
+        state.copyWith(
+          loadingState: LoadingState.error,
+          errorMessage: MentorXNullableValue(e.message),
+        ),
+      );
     } catch (e) {
-      emit(state.copyWith(
-        loadingState: LoadingState.error,
-        errorMessage: MentorXNullableValue(e.toString()),
-      ));
+      emit(
+        state.copyWith(
+          loadingState: LoadingState.error,
+          errorMessage: MentorXNullableValue(e.toString()),
+        ),
+      );
     }
   }
 }

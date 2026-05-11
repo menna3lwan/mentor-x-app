@@ -15,6 +15,7 @@ final class ParentGradeRepositoryException
 // ——— Repository ———
 
 abstract interface class ParentGradeRepository {
+  Future<void> initialize();
   Future<ParentGradeSummaryEntity> getGradeSummary(String childId);
   Future<ParentGradeTrendEntity> getGradeTrend(String childId, {int months = 6});
   Future<List<QuizAttemptEntity>> getAssessments(

@@ -3,33 +3,45 @@ import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:gap/gap.dart';
 
-class AboutPage extends StatelessWidget {
+final class AboutPage extends StatelessWidget {
   const AboutPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     final t = context.t.student;
-    final palette = MentorXThemeColorPalette.light;
+
     return Scaffold(
-      backgroundColor: palette.backgroundSecondary,
+      backgroundColor: context.backgroundPrimaryColor,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(70),
         child: FadeInDown(
           duration: const Duration(milliseconds: 500),
-          child: AppBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            foregroundColor: palette.brandPrimary,
-            title: Text(
-              t['aboutTitle'] ?? 'About',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w900,
-                color: palette.textPrimary,
-                letterSpacing: -0.5,
+          child: Container(
+            decoration: BoxDecoration(
+              color: context.backgroundSecondaryColor,
+              borderRadius: const BorderRadius.vertical(
+                bottom: Radius.circular(28),
+              ),
+              border: Border(
+                bottom: BorderSide(
+                  color: context.borderPrimaryColor.withValues(alpha: 0.05),
+                ),
               ),
             ),
-            centerTitle: true,
+            child: AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              foregroundColor: context.textPrimaryColor,
+              centerTitle: true,
+              title: Text(
+                t['aboutTitle'] ?? 'About',
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: -0.5,
+                ),
+              ),
+            ),
           ),
         ),
       ),
@@ -48,13 +60,16 @@ class AboutPage extends StatelessWidget {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     gradient: LinearGradient(
-                      colors: [palette.brandSecondary, palette.brandPrimary],
+                      colors: [
+                        context.brandSecondaryColor,
+                        context.brandPrimaryColor,
+                      ],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: palette.brandPrimary.withValues(alpha: 0.2),
+                        color: context.brandPrimaryColor.withValues(alpha: 0.2),
                         blurRadius: 20,
                         offset: const Offset(0, 10),
                       ),
@@ -63,18 +78,18 @@ class AboutPage extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.all(28),
                     decoration: BoxDecoration(
-                      color: palette.backgroundPrimary,
+                      color: context.backgroundSecondaryColor,
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
                       Icons.school_rounded,
                       size: 56,
-                      color: palette.brandPrimary,
+                      color: context.brandPrimaryColor,
                     ),
                   ),
                 ),
               ),
-              const Gap(24),
+              const Gap(32),
               FadeInUp(
                 duration: const Duration(milliseconds: 500),
                 delay: const Duration(milliseconds: 200),
@@ -83,48 +98,57 @@ class AboutPage extends StatelessWidget {
                     Text(
                       'MentorX',
                       style: TextStyle(
-                        fontSize: 28,
+                        fontSize: 32,
                         fontWeight: FontWeight.w900,
-                        color: palette.textPrimary,
-                        letterSpacing: -0.8,
+                        color: context.textPrimaryColor,
+                        letterSpacing: -1,
                       ),
                     ),
                     const Gap(8),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 6,
+                      ),
                       decoration: BoxDecoration(
-                        color: palette.brandPrimary.withValues(alpha: 0.1),
+                        color: context.brandPrimaryColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: palette.brandPrimary.withValues(alpha: 0.2)),
+                        border: Border.all(
+                          color: context.brandPrimaryColor.withValues(
+                            alpha: 0.2,
+                          ),
+                        ),
                       ),
                       child: Text(
-                        'Student Edition',
+                        'Student Edition Pro',
                         style: TextStyle(
                           fontSize: 13,
-                          fontWeight: FontWeight.w800,
-                          color: palette.brandPrimary,
+                          fontWeight: FontWeight.w900,
+                          color: context.brandPrimaryColor,
+                          letterSpacing: 0.5,
                         ),
                       ),
                     ),
                   ],
                 ),
               ),
-              const Gap(20),
+              const Gap(24),
               FadeInUp(
                 duration: const Duration(milliseconds: 500),
                 delay: const Duration(milliseconds: 300),
                 child: Text(
-                  t['aboutDesc'] ?? 'Your learning companion',
+                  t['aboutDesc'] ??
+                      'Your ultimate learning companion for a premium education experience.',
                   style: TextStyle(
                     fontSize: 15,
-                    color: palette.textSecondary,
+                    color: context.textSecondaryColor,
                     height: 1.6,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.w700,
                   ),
                   textAlign: TextAlign.center,
                 ),
               ),
-              const Gap(32),
+              const Gap(40),
 
               // Info card
               FadeInUp(
@@ -134,13 +158,16 @@ class AboutPage extends StatelessWidget {
                   width: double.infinity,
                   padding: const EdgeInsets.all(24),
                   decoration: BoxDecoration(
-                    color: palette.backgroundPrimary,
-                    borderRadius: BorderRadius.circular(28),
+                    color: context.backgroundSecondaryColor,
+                    borderRadius: BorderRadius.circular(32),
+                    border: Border.all(
+                      color: context.borderPrimaryColor.withValues(alpha: 0.05),
+                    ),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.03),
-                        blurRadius: 16,
-                        offset: const Offset(0, 8),
+                        color: Colors.black.withValues(alpha: 0.05),
+                        blurRadius: 20,
+                        offset: const Offset(0, 10),
                       ),
                     ],
                   ),
@@ -149,45 +176,46 @@ class AboutPage extends StatelessWidget {
                       _InfoRow(
                         icon: Icons.tag_rounded,
                         label: t['version'] ?? 'Version',
-                        value: '1.0.0',
-                        palette: palette,
+                        value: '2.0.0',
                       ),
                       Divider(
-                        height: 32,
-                        color: palette.backgroundSecondary,
-                        thickness: 1.5,
+                        height: 40,
+                        color: context.borderPrimaryColor.withValues(
+                          alpha: 0.05,
+                        ),
+                        thickness: 1,
                       ),
                       _InfoRow(
                         icon: Icons.update_rounded,
                         label: t['lastUpdate'] ?? 'Last Update',
-                        value: 'April 2025',
-                        palette: palette,
+                        value: 'May 2026',
                       ),
                       Divider(
-                        height: 32,
-                        color: palette.backgroundSecondary,
-                        thickness: 1.5,
+                        height: 40,
+                        color: context.borderPrimaryColor.withValues(
+                          alpha: 0.05,
+                        ),
+                        thickness: 1,
                       ),
                       _InfoRow(
                         icon: Icons.verified_user_rounded,
                         label: 'Build',
-                        value: '2025.04.27',
-                        palette: palette,
+                        value: '2026.05.08',
                       ),
                     ],
                   ),
                 ),
               ),
-              const Gap(40),
+              const Gap(48),
               FadeInUp(
                 duration: const Duration(milliseconds: 500),
                 delay: const Duration(milliseconds: 500),
                 child: Text(
-                  '© 2025 MentorX. All rights reserved.',
+                  '© 2026 MentorX. All rights reserved.',
                   style: TextStyle(
                     fontSize: 12,
-                    color: palette.textTertiary.withValues(alpha: 0.8),
-                    fontWeight: FontWeight.w600,
+                    color: context.textTertiaryColor,
+                    fontWeight: FontWeight.w800,
                   ),
                   textDirection: TextDirection.ltr,
                 ),
@@ -200,38 +228,36 @@ class AboutPage extends StatelessWidget {
   }
 }
 
-class _InfoRow extends StatelessWidget {
+final class _InfoRow extends StatelessWidget {
   const _InfoRow({
     required this.icon,
     required this.label,
     required this.value,
-    required this.palette,
   });
   final IconData icon;
   final String label;
   final String value;
-  final MentorXThemeColorPalette palette;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         Container(
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: palette.brandPrimary.withValues(alpha: 0.1),
+            color: context.brandPrimaryColor.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(12),
           ),
-          child: Icon(icon, size: 18, color: palette.brandPrimary),
+          child: Icon(icon, size: 20, color: context.brandPrimaryColor),
         ),
-        const Gap(14),
+        const Gap(16),
         Expanded(
           child: Text(
             label,
             style: TextStyle(
               fontSize: 14,
-              color: palette.textSecondary,
-              fontWeight: FontWeight.w700,
+              color: context.textSecondaryColor,
+              fontWeight: FontWeight.w800,
             ),
           ),
         ),
@@ -240,7 +266,7 @@ class _InfoRow extends StatelessWidget {
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w900,
-            color: palette.textPrimary,
+            color: context.textPrimaryColor,
           ),
           textDirection: TextDirection.ltr,
         ),

@@ -20,13 +20,16 @@ final class RedeemCodePageBloc
           RedeemCodePageState,
           RedeemCodePagePresentationEvent
         > {
-  RedeemCodePageBloc({required this.walletRepository})
-    : super(RedeemCodePageState.initial) {
+  RedeemCodePageBloc({
+    required this.walletRepository,
+    required this.analyticsService,
+  }) : super(RedeemCodePageState.initial) {
     on<RedeemCodePageLoadEvent>(_onLoad);
     on<RedeemCodePageSubmitEvent>(_onSubmit);
   }
 
   final WalletRepository walletRepository;
+  final AnalyticsService analyticsService;
 
   Future<void> _onLoad(
     RedeemCodePageLoadEvent event,
@@ -43,12 +46,18 @@ final class RedeemCodePageBloc
     try {
       await walletRepository.redeemCode(event.code);
       emit(state.copyWith(loadingState: LoadingState.loaded));
+      analyticsService.logEvent(
+        name: 'wallet_redeem_success',
+        parameters: {'code': event.code},
+      );
       emitPresentation(const RedeemCodePageNavigateBack());
     } catch (e) {
-      emit(state.copyWith(
-        loadingState: LoadingState.error,
-        errorMessage: e.toString(),
-      ));
+      emit(
+        state.copyWith(
+          loadingState: LoadingState.error,
+          errorMessage: e.toString(),
+        ),
+      );
     }
   }
 }

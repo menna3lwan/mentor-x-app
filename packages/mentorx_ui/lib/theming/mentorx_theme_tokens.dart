@@ -42,6 +42,10 @@ final class MentorXColorToken {
   ColorToken get statusDanger => const ColorToken('statusDanger');
   ColorToken get statusSuccess => const ColorToken('statusSuccess');
   ColorToken get statusWarning => const ColorToken('statusWarning');
+
+  // Border colors
+  ColorToken get borderPrimary => const ColorToken('borderPrimary');
+  ColorToken get borderSecondary => const ColorToken('borderSecondary');
 }
 
 class MentorXTextStyleToken {

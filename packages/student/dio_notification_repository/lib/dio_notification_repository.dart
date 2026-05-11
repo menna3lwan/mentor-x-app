@@ -22,19 +22,20 @@ final class DioNotificationRepository
     MentorXPaginationInfo? paginationInfo,
   }) async {
     try {
+      final queryParams = {
+        if (paginationInfo != null) ...paginationInfo.toJson(),
+      };
+
       final response = await httpClient.get(
-        '/api/notifications',
-        queryParameters: {
-          if (paginationInfo != null) ...paginationInfo.toJson(),
-        },
+        '/api/notifications/my',
+        queryParameters: queryParams,
       );
 
-      final list = asList(asMap(response.data)['content'] ??
-          asMap(response.data)['data'] ??
-          response.data);
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final list = asList(data is Map ? data['content'] : data);
       return list.map((e) => NotificationModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: NotificationRepositoryExceptionCode.failedToLoadNotifications,
       );
@@ -81,14 +82,27 @@ final class DioNotificationRepository
   Future<int> getUnreadCount() async {
     try {
       final response = await httpClient.get('/api/notifications/unread-count');
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
-      return (data['count'] as num?)?.toInt() ?? (data is num ? data.toInt() : 0);
+      final rawData = asMap(response.data)['data'] ?? response.data;
+      if (rawData is num) return rawData.toInt();
+      if (rawData is Map) return (rawData['count'] as num?)?.toInt() ?? 0;
+      return 0;
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: NotificationRepositoryExceptionCode.failedToGetUnreadCount,
       );
     }
   }
 
+  @override
+  Future<void> updateFCMToken(String token) async {
+    try {
+      await httpClient.post(
+        '/api/notifications/fcm-token',
+        data: {'token': token},
+      );
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(e, defaultCode: NotificationRepositoryExceptionCode.unknown);
+    }
+  }
 }

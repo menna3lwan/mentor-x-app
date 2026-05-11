@@ -30,10 +30,13 @@ final class WalkthroughPageBloc
           WalkthroughPagePresentationEvent
         > {
   final CacheRepository _cacheRepository;
+  final AnalyticsService _analyticsService;
 
   WalkthroughPageBloc({
     required CacheRepository cacheRepository,
+    required AnalyticsService analyticsService,
   }) : _cacheRepository = cacheRepository,
+       _analyticsService = analyticsService,
        super(WalkthroughPageState.initial) {
     on<WalkthroughPageSkipped>(_persistAndComplete);
     on<WalkthroughPageCompleted>(_persistAndComplete);
@@ -48,6 +51,11 @@ final class WalkthroughPageBloc
     try {
       await _cacheRepository.put(CacheKeys.hasSeenOnboarding, 'true');
       emit(state.copyWith(loadingState: LoadingState.loaded));
+      _analyticsService.logEvent(
+        name: event is WalkthroughPageSkipped
+            ? 'onboarding_skip'
+            : 'onboarding_complete',
+      );
       emitPresentation(const WalkthroughPageCompletedPresentationEvent());
     } catch (_) {
       emit(state.copyWith(loadingState: LoadingState.error));

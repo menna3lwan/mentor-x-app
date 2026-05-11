@@ -1,7 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
-import 'package:parent/app/parent_app.dart';
-import 'package:parent/app/parent_requirements.dart';
+import 'package:parent/app/app.dart';
 import 'package:parent/core/core.dart';
 import 'package:patrol/patrol.dart';
 

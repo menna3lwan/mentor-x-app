@@ -10,7 +10,6 @@ final class LoginPage extends StatelessWidget {
   final TextEditingController passwordController;
   final bool isLoading;
   final bool obscurePassword;
-  final bool rememberMe;
   final String? errorMessage;
   final List<TextInputFormatter> inputFormatters;
   final String? Function(String?) phoneValidator;
@@ -18,10 +17,8 @@ final class LoginPage extends StatelessWidget {
   final ValueChanged<String> onPhoneChanged;
   final ValueChanged<String> onPasswordChanged;
   final VoidCallback onObscurePasswordToggled;
-  final VoidCallback onRememberMeToggled;
   final VoidCallback onForgotPassword;
   final VoidCallback onRegister;
-  final VoidCallback onChangeTeacher;
   final VoidCallback onSubmit;
   final String? tenantName;
   final String? tenantLogoUrl;
@@ -35,7 +32,6 @@ final class LoginPage extends StatelessWidget {
     required this.passwordController,
     required this.isLoading,
     required this.obscurePassword,
-    required this.rememberMe,
     required this.errorMessage,
     required this.inputFormatters,
     required this.phoneValidator,
@@ -43,10 +39,8 @@ final class LoginPage extends StatelessWidget {
     required this.onPhoneChanged,
     required this.onPasswordChanged,
     required this.onObscurePasswordToggled,
-    required this.onRememberMeToggled,
     required this.onForgotPassword,
     required this.onRegister,
-    required this.onChangeTeacher,
     required this.onSubmit,
     this.tenantName,
     this.tenantLogoUrl,
@@ -56,219 +50,204 @@ final class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = MentorXThemeColorPalette.light;
-
-    return Scaffold(
-      body: Container(
-        height: double.infinity,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              palette.backgroundPrimary,
-              palette.backgroundSecondary,
-            ],
-          ),
-        ),
-        child: SafeArea(
-          child: Center(
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 420),
-                child: Column(
-                  children: [
-                    const Gap(24),
-                    FadeInDown(
-                      duration: const Duration(milliseconds: 600),
-                      child: _TenantHeader(
-                        logoUrl: tenantLogoUrl,
-                        tenantName: tenantName,
-                        palette: palette,
-                      ),
-                    ),
-                    const Gap(32),
-                    FadeInUp(
-                      duration: const Duration(milliseconds: 600),
-                      delay: const Duration(milliseconds: 200),
-                      child: GradientCard(
-                        colors: [
-                          palette.backgroundPrimary,
-                          palette.backgroundPrimary.withValues(alpha: 0.9),
-                        ],
-                        padding: const EdgeInsets.all(32),
-                        child: Form(
-                          key: formKey,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Welcome Back',
-                                style: Theme.of(context).textTheme.headlineSmall
-                                    ?.copyWith(fontWeight: FontWeight.w900, letterSpacing: -0.5),
-                              ),
-                              const Gap(8),
-                              Text(
-                                'Sign in to continue your learning journey',
-                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                  color: palette.textSecondary,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              const Gap(32),
-                              MentorXTextFormField(
-                                label: 'Phone Number',
-                                hint: '01xxxxxxxxx',
-                                prefixIcon: Icons.phone_android_outlined,
-                                controller: phoneController,
-                                keyboardType: TextInputType.phone,
-                                inputFormatters: inputFormatters,
-                                onChanged: onPhoneChanged,
-                                validator: phoneValidator,
-                              ),
-                              const Gap(20),
-                              MentorXTextFormField(
-                                label: 'Password',
-                                hint: 'Enter your password',
-                                prefixIcon: Icons.lock_outline_rounded,
-                                controller: passwordController,
-                                isPassword: true,
-                                obscurePassword: obscurePassword,
-                                onObscureTextToggled: onObscurePasswordToggled,
-                                onChanged: onPasswordChanged,
-                                validator: passwordValidator,
-                              ),
-                              const Gap(16),
-                              Row(
-                                children: [
-                                  SizedBox(
-                                    height: 24,
-                                    width: 24,
-                                    child: Checkbox(
-                                      value: rememberMe,
-                                      onChanged: (_) => onRememberMeToggled(),
-                                      activeColor: palette.brandPrimary,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(6),
-                                      ),
-                                    ),
-                                  ),
-                                  const Gap(10),
-                                  Text(
-                                    'Remember me',
-                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                      fontWeight: FontWeight.w700,
-                                      color: palette.textPrimary,
-                                    ),
-                                  ),
-                                  const Spacer(),
-                                  TextButton(
-                                    onPressed: onForgotPassword,
-                                    style: TextButton.styleFrom(
-                                      padding: EdgeInsets.zero,
-                                      minimumSize: Size.zero,
-                                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                    ),
-                                    child: Text(
-                                      'Forgot password?',
-                                      style: TextStyle(
-                                        color: palette.brandPrimary,
-                                        fontWeight: FontWeight.w800,
-                                        fontSize: 13,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              if (errorMessage != null) ...[
-                                const Gap(20),
-                                StatusBadge(
-                                  message: errorMessage!,
-                                  status: StatusBadgeType.danger,
-                                ),
-                              ],
-                              const Gap(32),
-                              MentorXButton(
-                                onPressed: isLoading ? null : onSubmit,
-                                label: 'Sign In',
-                                loading: isLoading,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    const Gap(32),
-                    if (showBiometricLogin) ...[
-                      FadeInUp(
-                        duration: const Duration(milliseconds: 500),
-                        delay: const Duration(milliseconds: 400),
-                        child: SizedBox(
-                          width: double.infinity,
-                          height: 56,
-                          child: OutlinedButton.icon(
-                            onPressed: isLoading ? null : onBiometricLogin,
-                            style: OutlinedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              side: BorderSide(color: palette.brandPrimary.withValues(alpha: 0.3), width: 2),
-                            ),
-                            icon: Icon(Icons.fingerprint_rounded, color: palette.brandPrimary, size: 24),
-                            label: Text(
-                              'Login with biometrics',
-                              style: TextStyle(color: palette.brandPrimary, fontWeight: FontWeight.w800, fontSize: 15),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const Gap(24),
-                    ],
-                    FadeInUp(
-                      duration: const Duration(milliseconds: 500),
-                      delay: const Duration(milliseconds: 500),
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "Don't have an account?",
-                                style: TextStyle(color: palette.textSecondary, fontWeight: FontWeight.w600),
-                              ),
-                              TextButton(
-                                onPressed: onRegister,
-                                child: Text(
-                                  'Register Now',
-                                  style: TextStyle(
-                                    color: palette.brandPrimary,
-                                    fontWeight: FontWeight.w900,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const Gap(8),
-                          TextButton.icon(
-                            onPressed: onChangeTeacher,
-                            icon: const Icon(Icons.swap_horiz_rounded, size: 22),
-                            label: const Text('Change Teacher / School'),
-                            style: TextButton.styleFrom(
-                              foregroundColor: palette.textTertiary,
-                              textStyle: const TextStyle(fontWeight: FontWeight.w700),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const Gap(40),
-                  ],
+    return AuthScaffold(
+      backgroundColor: context.backgroundPrimaryColor,
+      body: Center(
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          padding: const EdgeInsets.symmetric(vertical: 32),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 420),
+            child: Column(
+              children: [
+                FadeInDown(
+                  duration: const Duration(milliseconds: 600),
+                  child: _TenantHeader(
+                    logoUrl: tenantLogoUrl,
+                    tenantName: tenantName,
+                  ),
                 ),
-              ),
+                const Gap(48),
+                FadeInUp(
+                  duration: const Duration(milliseconds: 600),
+                  child: Container(
+                    padding: const EdgeInsets.all(32),
+                    decoration: BoxDecoration(
+                      color: context.backgroundSecondaryColor,
+                      borderRadius: BorderRadius.circular(32),
+                      border: Border.all(
+                        color:
+                            context.borderPrimaryColor.withValues(alpha: 0.05),
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.2),
+                          blurRadius: 30,
+                          offset: const Offset(0, 15),
+                        ),
+                      ],
+                    ),
+                    child: Form(
+                      key: formKey,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Welcome Back',
+                            style: TextStyle(
+                              fontSize: 28,
+                              fontWeight: FontWeight.w900,
+                              color: context.textPrimaryColor,
+                              letterSpacing: -1.0,
+                            ),
+                          ),
+                          const Gap(12),
+                          Text(
+                            'Sign in to continue your learning journey',
+                            style: TextStyle(
+                              color: context.textSecondaryColor,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              height: 1.5,
+                            ),
+                          ),
+                          const Gap(40),
+                          MentorXTextFormField(
+                            label: 'Phone Number',
+                            hint: '01xxxxxxxxx',
+                            icon: Icons.phone_android_rounded,
+                            controller: phoneController,
+                            keyboardType: TextInputType.phone,
+                            inputFormatters: inputFormatters,
+                            onChanged: onPhoneChanged,
+                            validator: phoneValidator,
+                          ),
+                          const Gap(24),
+                          MentorXTextFormField(
+                            label: 'Password',
+                            hint: 'Enter your password',
+                            icon: Icons.lock_outline_rounded,
+                            controller: passwordController,
+                            isPassword: true,
+                            obscurePassword: obscurePassword,
+                            onObscureTextToggled: onObscurePasswordToggled,
+                            onChanged: onPasswordChanged,
+                          ),
+                          const Gap(16),
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: TextButton(
+                              onPressed: onForgotPassword,
+                              style: TextButton.styleFrom(
+                                padding: EdgeInsets.zero,
+                                minimumSize: Size.zero,
+                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              ),
+                              child: Text(
+                                'Forgot password?',
+                                style: TextStyle(
+                                  color: context.brandPrimaryColor,
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 13,
+                                ),
+                              ),
+                            ),
+                          ),
+                          if (errorMessage != null) ...[
+                            const Gap(24),
+                            StatusBadge(
+                              message: errorMessage!,
+                              status: StatusBadgeType.danger,
+                            ),
+                          ],
+                          const Gap(40),
+                          MentorXButton(
+                            onPressed: isLoading ? null : onSubmit,
+                            label: 'Sign In',
+                            loading: isLoading,
+                            analyticsName: 'login_submit',
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                const Gap(40),
+                if (showBiometricLogin) ...[
+                  FadeInUp(
+                    duration: const Duration(milliseconds: 500),
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: isLoading ? null : onBiometricLogin,
+                        borderRadius: BorderRadius.circular(20),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 16,
+                            horizontal: 24,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                              color: context.brandPrimaryColor.withValues(
+                                alpha: 0.2,
+                              ),
+                              width: 2,
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.fingerprint_rounded,
+                                color: context.brandPrimaryColor,
+                                size: 24,
+                              ),
+                              const Gap(12),
+                              Text(
+                                'Login with biometrics',
+                                style: TextStyle(
+                                  color: context.brandPrimaryColor,
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 15,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const Gap(32),
+                ],
+                FadeInUp(
+                  duration: const Duration(milliseconds: 500),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Don't have an account? ",
+                        style: TextStyle(
+                          color: context.textSecondaryColor,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: onRegister,
+                        child: Text(
+                          'Register Now',
+                          style: TextStyle(
+                            color: context.brandPrimaryColor,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
         ),
@@ -280,69 +259,50 @@ final class LoginPage extends StatelessWidget {
 final class _TenantHeader extends StatelessWidget {
   final String? logoUrl;
   final String? tenantName;
-  final MentorXThemeColorPalette palette;
 
   const _TenantHeader({
     required this.logoUrl,
     required this.tenantName,
-    required this.palette,
   });
 
   @override
   Widget build(BuildContext context) {
-    final hasLogo = logoUrl != null && logoUrl!.trim().isNotEmpty;
     return Column(
       children: [
         Container(
-          width: 100,
-          height: 100,
+          width: 110,
+          height: 110,
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                palette.brandPrimary,
-                palette.brandSecondary,
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
+            color: context.backgroundSecondaryColor,
+            borderRadius: BorderRadius.circular(36),
+            border: Border.all(
+              color: context.brandPrimaryColor.withValues(alpha: 0.1),
             ),
-            borderRadius: BorderRadius.circular(32),
             boxShadow: [
               BoxShadow(
-                color: palette.brandPrimary.withValues(alpha: 0.3),
-                blurRadius: 24,
-                spreadRadius: 2,
+                color: context.brandPrimaryColor.withValues(alpha: 0.1),
+                blurRadius: 25,
                 offset: const Offset(0, 12),
               ),
             ],
           ),
           clipBehavior: Clip.antiAlias,
-          child: hasLogo
-              ? Image.network(
-                  logoUrl!,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Icon(
-                      Icons.school_rounded,
-                      color: palette.textForeground,
-                      size: 48,
-                    );
-                  },
-                )
-              : Icon(
-                  Icons.school_rounded,
-                  color: palette.textForeground,
-                  size: 48,
-                ),
+          child: AppDynamicImage(
+            logoUrl ?? '',
+            fit: BoxFit.cover,
+            borderRadius: BorderRadius.circular(36),
+          ),
         ),
         if (tenantName != null && tenantName!.trim().isNotEmpty) ...[
           const Gap(20),
           Text(
             tenantName!,
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.w900,
-                  letterSpacing: -0.8,
-                  color: palette.textPrimary,
-                ),
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.w900,
+              color: context.textPrimaryColor,
+              letterSpacing: -0.5,
+            ),
             textAlign: TextAlign.center,
           ),
         ],

@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:mentorx_core/mentorx_core.dart';
+import 'package:analytics_service/analytics_service.dart';
 
 part 'course_detail_page_event.dart';
 part 'course_detail_page_state.dart';
@@ -34,11 +35,14 @@ final class CourseDetailPageBloc
           CourseDetailPagePresentationEvent
         > {
   final CourseRepository _courseRepository;
+  final AnalyticsService _analyticsService;
 
   CourseDetailPageBloc({
     required CourseRepository courseRepository,
+    required AnalyticsService analyticsService,
     required String courseId,
   }) : _courseRepository = courseRepository,
+       _analyticsService = analyticsService,
        super(CourseDetailPageState(courseId: courseId)) {
     on<CourseDetailPageInitialized>(_onInitialized);
     on<CourseDetailPageTabChanged>(_onTabChanged);
@@ -73,6 +77,13 @@ final class CourseDetailPageBloc
           enrollStatus: EnrollActionStatus.success,
           enrollment: enrollment,
         ),
+      );
+      _analyticsService.logEvent(
+        name: 'course_enroll_success',
+        parameters: {
+          'course_id': state.courseId,
+          'course_title': state.course?.title,
+        },
       );
       emitPresentation(const CourseDetailPageEnrollSuccessPresentationEvent());
     } on CourseRepositoryException catch (e) {
@@ -130,6 +141,13 @@ final class CourseDetailPageBloc
           course: course,
         ),
       );
+      _analyticsService.logEvent(
+        name: 'course_detail_view',
+        parameters: {
+          'course_id': state.courseId,
+          'course_title': course.title,
+        },
+      );
     } catch (e) {
       emit(
         state.copyWith(
@@ -151,19 +169,38 @@ final class CourseDetailPageBloc
           sessions: sessions,
         ),
       );
+
+      final weekFutures = <String, Future<List<WeekEntity>>>{};
       final itemFutures = <String, Future<List<SessionItemEntity>>>{};
+
       for (final session in sessions) {
+        weekFutures[session.id] = _courseRepository.getSessionWeeks(session.id);
         itemFutures[session.id] = _courseRepository.getSessionItems(session.id);
       }
+
+      final weeksMap = <String, List<WeekEntity>>{};
       final itemsMap = <String, List<SessionItemEntity>>{};
-      for (final entry in itemFutures.entries) {
+
+      for (final session in sessions) {
         try {
-          itemsMap[entry.key] = await entry.value;
+          weeksMap[session.id] = await weekFutures[session.id]!;
         } catch (_) {
-          itemsMap[entry.key] = [];
+          weeksMap[session.id] = [];
+        }
+
+        try {
+          itemsMap[session.id] = await itemFutures[session.id]!;
+        } catch (_) {
+          itemsMap[session.id] = [];
         }
       }
-      emit(state.copyWith(sessionItems: itemsMap));
+
+      emit(
+        state.copyWith(
+          sessionWeeks: weeksMap,
+          sessionItems: itemsMap,
+        ),
+      );
     } catch (e) {
       emit(state.copyWith(sessionsStatus: DetailSectionStatus.failure));
     }

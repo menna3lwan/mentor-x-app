@@ -8,10 +8,12 @@ environment:
   sdk: ^3.11.4
 
 dependencies:
+  sentry_flutter: ^9.20.0
   flutter:
     sdk: flutter
 
-  firebase_core: ^4.5.0
+  firebase_core: any
+  firebase_analytics: any
 
   # State Management
   bloc: ^9.2.0
@@ -58,6 +60,7 @@ dependencies:
   qr_flutter: ^4.1.0
   url_launcher: ^6.3.2
   file_picker: ^8.3.4
+  fl_chart: ^0.70.2
 
   # MentorX Packages:
   mentorx_core:
@@ -102,10 +105,22 @@ dependencies:
     path: ../packages/mock/student/mock_grade_repository
   mock_student_registration_repository:
     path: ../packages/mock/student/mock_student_registration_repository
+  mock_leaderboard_repository:
+    path: ../packages/mock/student/mock_leaderboard_repository
+  mock_student_analytics_repository:
+    path: ../packages/mock/student/mock_student_analytics_repository
 
   # Clients
   dio_http_client:
     path: ../packages/clients/dio_http_client
+
+  # Services
+  device_info_service:
+    path: ../packages/services/device_info_service
+  analytics_service:
+    path: ../packages/services/analytics_service
+  error_tracking_service:
+    path: ../packages/services/error_tracking_service
 
   # Dio Repositories
   dio_authentication_repository:
@@ -140,11 +155,16 @@ dependencies:
     path: ../packages/student/dio_settings_repository
   dio_student_registration_repository:
     path: ../packages/student/dio_student_registration_repository
+  dio_leaderboard_repository:
+    path: ../packages/student/dio_leaderboard_repository
+  dio_student_analytics_repository:
+    path: ../packages/student/dio_student_analytics_repository
   dio: ^5.9.2
   flutter_markdown: ^0.7.7+1
   animate_do: ^5.1.0
 
 dev_dependencies:
+  sentry_dart_plugin: ^3.3.0
   # Testing
   flutter_test:
     sdk: flutter
@@ -168,10 +188,8 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-  # assets:
-  #   - path: ../packages/mentorx_ui/lib/assets/svgs/
-  #     transformers:
-  #       - package: vector_graphics_compiler
+  assets:
+    - assets/images/onboarding/
 
   #   - family: HT-Mosafer-Rounded-English
   #     fonts:
@@ -202,3 +220,9 @@ patrol:
     package_name: com.mentorx.student
   ios:
     bundle_id: com.mentorx.student
+
+sentry:
+  upload_debug_symbols: true
+  upload_source_maps: true
+  project: flutter
+  org: mentorx-e9

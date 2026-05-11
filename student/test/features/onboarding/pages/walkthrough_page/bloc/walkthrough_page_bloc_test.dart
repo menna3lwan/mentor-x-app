@@ -74,17 +74,37 @@ class _FailingCacheRepository implements CacheRepository {
   Future<void> removeAll(List<String> keys) async {}
 }
 
+class _MockAnalyticsService implements AnalyticsService {
+  @override
+  Future<void> initialize() async {}
+  @override
+  Future<void> logEvent({required String name, Map<String, Object?>? parameters}) async {}
+  @override
+  Future<void> setCurrentScreen({required String screenName, String? screenClassOverride}) async {}
+  @override
+  Future<void> setUserId(String? id) async {}
+  @override
+  Future<void> setUserProperty({required String name, required String? value}) async {}
+  @override
+  Future<void> resetAnalyticsData() async {}
+}
+
 void main() {
   late _MockCacheRepository cacheRepository;
+  late _MockAnalyticsService analyticsService;
 
   setUp(() {
     cacheRepository = _MockCacheRepository();
+    analyticsService = _MockAnalyticsService();
   });
 
   group('WalkthroughPageBloc', () {
     // ── 1. Initial state ──────────────────────────────────────────────
     test('initial state has LoadingState.initial', () {
-      final bloc = WalkthroughPageBloc(cacheRepository: cacheRepository);
+      final bloc = WalkthroughPageBloc(
+        cacheRepository: cacheRepository,
+        analyticsService: analyticsService,
+      );
       expect(bloc.state.loadingState, LoadingState.initial);
       expect(bloc.state, WalkthroughPageState.initial);
       bloc.close();
@@ -92,7 +112,10 @@ void main() {
 
     // ── 2. isSubmitting getter ────────────────────────────────────────
     test('isSubmitting returns true when loading', () {
-      final bloc = WalkthroughPageBloc(cacheRepository: cacheRepository);
+      final bloc = WalkthroughPageBloc(
+        cacheRepository: cacheRepository,
+        analyticsService: analyticsService,
+      );
       // Initial state should not be submitting
       expect(bloc.state.isSubmitting, isFalse);
 
@@ -117,7 +140,10 @@ void main() {
     // ── 3. Skip event - state emissions ──────────────────────────────
     blocTest<WalkthroughPageBloc, WalkthroughPageState>(
       'emits [loading, loaded] when skipped',
-      build: () => WalkthroughPageBloc(cacheRepository: cacheRepository),
+      build: () => WalkthroughPageBloc(
+        cacheRepository: cacheRepository,
+        analyticsService: analyticsService,
+      ),
       act: (bloc) => bloc.add(const WalkthroughPageSkipped()),
       expect: () => [
         isA<WalkthroughPageState>().having(
@@ -136,7 +162,10 @@ void main() {
     // ── 4. Completed event - state emissions ─────────────────────────
     blocTest<WalkthroughPageBloc, WalkthroughPageState>(
       'emits [loading, loaded] when completed',
-      build: () => WalkthroughPageBloc(cacheRepository: cacheRepository),
+      build: () => WalkthroughPageBloc(
+        cacheRepository: cacheRepository,
+        analyticsService: analyticsService,
+      ),
       act: (bloc) => bloc.add(const WalkthroughPageCompleted()),
       expect: () => [
         isA<WalkthroughPageState>().having(
@@ -157,6 +186,7 @@ void main() {
       'emits [loading, error] when cache repository throws on skip',
       build: () => WalkthroughPageBloc(
         cacheRepository: _FailingCacheRepository(),
+        analyticsService: analyticsService,
       ),
       act: (bloc) => bloc.add(const WalkthroughPageSkipped()),
       expect: () => [
@@ -178,6 +208,7 @@ void main() {
       'emits [loading, error] when cache repository throws on completed',
       build: () => WalkthroughPageBloc(
         cacheRepository: _FailingCacheRepository(),
+        analyticsService: analyticsService,
       ),
       act: (bloc) => bloc.add(const WalkthroughPageCompleted()),
       expect: () => [
@@ -199,6 +230,7 @@ void main() {
       'can recover after error',
       build: () => WalkthroughPageBloc(
         cacheRepository: _FailingCacheRepository(),
+        analyticsService: analyticsService,
       ),
       act: (bloc) => bloc.add(const WalkthroughPageCompleted()),
       expect: () => [
@@ -217,7 +249,10 @@ void main() {
 
     blocTest<WalkthroughPageBloc, WalkthroughPageState>(
       'can recover after error by re-creating with a working repository',
-      build: () => WalkthroughPageBloc(cacheRepository: cacheRepository),
+      build: () => WalkthroughPageBloc(
+        cacheRepository: cacheRepository,
+        analyticsService: analyticsService,
+      ),
       seed: () => const WalkthroughPageState(
         loadingState: LoadingState.error,
       ),
@@ -243,7 +278,10 @@ void main() {
       WalkthroughPagePresentationEvent
     >(
       'emits WalkthroughPageCompletedPresentationEvent on successful skip',
-      build: () => WalkthroughPageBloc(cacheRepository: cacheRepository),
+      build: () => WalkthroughPageBloc(
+        cacheRepository: cacheRepository,
+        analyticsService: analyticsService,
+      ),
       act: (bloc) => bloc.add(const WalkthroughPageSkipped()),
       expectPresentation: () => [
         isA<WalkthroughPageCompletedPresentationEvent>(),
@@ -256,7 +294,10 @@ void main() {
       WalkthroughPagePresentationEvent
     >(
       'emits WalkthroughPageCompletedPresentationEvent on successful complete',
-      build: () => WalkthroughPageBloc(cacheRepository: cacheRepository),
+      build: () => WalkthroughPageBloc(
+        cacheRepository: cacheRepository,
+        analyticsService: analyticsService,
+      ),
       act: (bloc) => bloc.add(const WalkthroughPageCompleted()),
       expectPresentation: () => [
         isA<WalkthroughPageCompletedPresentationEvent>(),
@@ -271,6 +312,7 @@ void main() {
       'emits no presentation event when cache repository throws',
       build: () => WalkthroughPageBloc(
         cacheRepository: _FailingCacheRepository(),
+        analyticsService: analyticsService,
       ),
       act: (bloc) => bloc.add(const WalkthroughPageCompleted()),
       expectPresentation: () => <WalkthroughPagePresentationEvent>[],

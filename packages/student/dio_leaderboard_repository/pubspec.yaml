@@ -1,0 +1,23 @@
+name: dio_leaderboard_repository
+description: "Dio implementation of LeaderboardRepository for student app."
+version: 1.0.0
+publish_to: none
+
+resolution: workspace
+
+environment:
+  sdk: ^3.11.4
+
+dependencies:
+  mentorx_core:
+    path: ../../mentorx_core
+
+  dio_http_client:
+    path: ../../clients/dio_http_client
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  lints: ^6.0.0
+  mocktail: ^1.0.4
+  test: ^1.25.6

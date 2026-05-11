@@ -12,14 +12,14 @@ final class UserSettingsModel extends UserSettingsEntity {
 
   factory UserSettingsModel.fromJson(Map<String, dynamic> json) {
     return UserSettingsModel(
-      language: json['language'] as String? ?? 'en',
-      theme: json['theme'] as String? ?? 'light',
-      pushNotifications: json['pushNotifications'] ?? json['push_notifications'] ?? true,
-      notificationPreferences: Map<String, bool>.from(
-        json['notificationPreferences'] ?? json['notification_preferences'] ?? {},
+      language: ModelParser.asString(json['language'], fallback: 'en'),
+      theme: ModelParser.asString(json['theme'], fallback: 'light'),
+      pushNotifications: ModelParser.asBool(json['pushNotifications'] ?? json['push_notifications'], fallback: true),
+      notificationPreferences: ModelParser.asMap(json['notificationPreferences'] ?? json['notification_preferences']).map(
+        (k, v) => MapEntry(k, ModelParser.asBool(v)),
       ),
-      videoQualityDefault: json['videoQualityDefault']?.toString() ?? json['video_quality_default']?.toString(),
-      playbackSpeedDefault: (json['playbackSpeedDefault'] ?? json['playback_speed_default'])?.toDouble(),
+      videoQualityDefault: ModelParser.asString(json['videoQualityDefault'] ?? json['video_quality_default']),
+      playbackSpeedDefault: ModelParser.asDouble(json['playbackSpeedDefault'] ?? json['playback_speed_default']),
     );
   }
 }

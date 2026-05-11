@@ -3,21 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-
 import '../../../../core/core.dart';
 import 'bloc/forgot_password_bloc.dart';
 import 'forgot_password_page.dart';
 
-class ForgotPasswordPageWrapper extends StatefulWidget {
+final class ForgotPasswordPageWrapper extends StatefulWidget {
   final String? initialPhone;
 
   const ForgotPasswordPageWrapper({super.key, this.initialPhone});
 
   @override
-  State<ForgotPasswordPageWrapper> createState() => _ForgotPasswordPageWrapperState();
+  State<ForgotPasswordPageWrapper> createState() =>
+      _ForgotPasswordPageWrapperState();
 }
 
-class _ForgotPasswordPageWrapperState extends State<ForgotPasswordPageWrapper> {
+final class _ForgotPasswordPageWrapperState
+    extends State<ForgotPasswordPageWrapper> {
   final _formKey = GlobalKey<FormState>();
   late final TextEditingController _phoneController;
 
@@ -51,36 +52,47 @@ class _ForgotPasswordPageWrapperState extends State<ForgotPasswordPageWrapper> {
         authRepository: context.read<StudentAuthenticationRepository>(),
         initialPhone: widget.initialPhone,
       ),
-      child: BlocPresentationListener<ForgotPasswordBloc, ForgotPasswordPresentationEvent>(
-        listener: (context, event) {
-          if (event is ForgotPasswordSuccessPresentationEvent) {
-            ResetPasswordPageRoute(phoneNumber: event.phone).go(context);
-          }
-        },
-        child: BlocBuilder<ForgotPasswordBloc, ForgotPasswordState>(
-          builder: (context, state) {
-            final bloc = context.read<ForgotPasswordBloc>();
-            return ForgotPasswordPage(
-              formKey: _formKey,
-              phoneController: _phoneController,
-              isLoading: state.loadingState.isLoading,
-              errorMessage: state.errorMessage,
-              inputFormatters: [
-                FilteringTextInputFormatter.digitsOnly,
-                LengthLimitingTextInputFormatter(11),
-              ],
-              phoneValidator: _phoneValidator,
-              onPhoneChanged: (value) => bloc.add(ForgotPasswordPhoneChanged(value)),
-              onSubmit: () {
-                if (_formKey.currentState?.validate() ?? false) {
-                  bloc.add(const ForgotPasswordSubmitted());
-                }
+      child:
+          BlocPresentationListener<
+            ForgotPasswordBloc,
+            ForgotPasswordPresentationEvent
+          >(
+            listener: (context, event) {
+              if (event is ForgotPasswordSuccessPresentationEvent) {
+                ResetPasswordPageRoute(phoneNumber: event.phone).push(context);
+              }
+            },
+            child: BlocBuilder<ForgotPasswordBloc, ForgotPasswordState>(
+              builder: (context, state) {
+                final bloc = context.read<ForgotPasswordBloc>();
+                return ForgotPasswordPage(
+                  formKey: _formKey,
+                  phoneController: _phoneController,
+                  isLoading: state.loadingState.isLoading,
+                  errorMessage: state.errorMessage,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(11),
+                  ],
+                  phoneValidator: _phoneValidator,
+                  onPhoneChanged: (value) =>
+                      bloc.add(ForgotPasswordPhoneChanged(value)),
+                  onSubmit: () {
+                    if (_formKey.currentState?.validate() ?? false) {
+                      bloc.add(const ForgotPasswordSubmitted());
+                    }
+                  },
+                  onBack: () {
+                    if (context.canPop()) {
+                      context.pop();
+                    } else {
+                      const LoginPageRoute().go(context);
+                    }
+                  },
+                );
               },
-              onBack: () => context.pop(),
-            );
-          },
-        ),
-      ),
+            ),
+          ),
     );
   }
 }

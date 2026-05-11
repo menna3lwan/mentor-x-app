@@ -16,21 +16,34 @@ final class WalletMainPageWrapper extends StatefulWidget {
 class _WalletMainPageWrapperState extends State<WalletMainPageWrapper> {
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => WalletMainPageBloc(
-        walletRepository: context.read<WalletRepository>(),
-      )..add(const WalletMainPageLoadEvent()),
-      child: BlocPresentationListener<
-        WalletMainPageBloc,
-        WalletMainPagePresentationEvent
-      >(
-        listener: (context, event) {
-          switch (event) {
-            case WalletMainPageNavigateBack():
-              Navigator.of(context).pop();
-          }
+    return BlocPresentationListener<
+      WalletMainPageBloc,
+      WalletMainPagePresentationEvent
+    >(
+      listener: (context, event) {
+        switch (event) {
+          case WalletMainPageNavigateBack():
+            Navigator.of(context).pop();
+        }
+      },
+      child: BlocBuilder<WalletMainPageBloc, WalletMainPageState>(
+        builder: (context, state) {
+          final bloc = context.read<WalletMainPageBloc>();
+          final balance = state.summary?.walletBalance ?? 0.0;
+          final points = state.summary?.points ?? 0;
+          final transactions = state.transactions;
+          final isLoading = state.loadingState == LoadingState.loading;
+
+          return WalletMainPage(
+            balance: balance,
+            points: points,
+            transactions: transactions,
+            isLoading: isLoading,
+            onRefresh: () {
+              bloc.add(const WalletMainPageLoadEvent());
+            },
+          );
         },
-        child: const WalletMainPage(),
       ),
     );
   }

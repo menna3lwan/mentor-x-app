@@ -61,13 +61,11 @@ class StatusBadge extends StatelessWidget {
   }
 
   Widget _buildAlert(BuildContext context) {
-    final palette = MentorXThemeColorPalette.light;
-    
     final Color effectiveColor = switch (status!) {
-      StatusBadgeType.success => palette.statusSuccess,
-      StatusBadgeType.warning => palette.statusWarning,
-      StatusBadgeType.danger => palette.statusDanger,
-      StatusBadgeType.info => palette.brandPrimary,
+      StatusBadgeType.success => context.statusSuccessColor,
+      StatusBadgeType.warning => context.statusWarningColor,
+      StatusBadgeType.danger => context.statusDangerColor,
+      StatusBadgeType.info => context.brandPrimaryColor,
     };
 
     return Container(
@@ -91,8 +89,8 @@ class StatusBadge extends StatelessWidget {
           ),
           SizedBox(width: isSmall ? 8 : 12),
           if (isSmall)
-            Text(
-              message!,
+            _LinkifiedText(
+              text: message!,
               style: TextStyle(
                 color: useSolidColor ? Colors.white : effectiveColor,
                 fontSize: 11,
@@ -101,8 +99,8 @@ class StatusBadge extends StatelessWidget {
             )
           else
             Expanded(
-              child: Text(
-                message!,
+              child: _LinkifiedText(
+                text: message!,
                 style: TextStyle(
                   color: useSolidColor ? Colors.white : effectiveColor,
                   fontSize: 13,
@@ -122,5 +120,87 @@ class StatusBadge extends StatelessWidget {
       StatusBadgeType.danger => Icons.error_outline_rounded,
       StatusBadgeType.info => Icons.info_outline_rounded,
     };
+  }
+}
+
+class _LinkifiedText extends StatefulWidget {
+  final String text;
+  final TextStyle style;
+
+  const _LinkifiedText({required this.text, required this.style});
+
+  @override
+  State<_LinkifiedText> createState() => _LinkifiedTextState();
+}
+
+class _LinkifiedTextState extends State<_LinkifiedText> {
+  final List<TapGestureRecognizer> _recognizers = [];
+
+  void _disposeRecognizers() {
+    for (final recognizer in _recognizers) {
+      recognizer.dispose();
+    }
+    _recognizers.clear();
+  }
+
+  @override
+  void dispose() {
+    _disposeRecognizers();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    _disposeRecognizers();
+    
+    // Improved regex to better match international and local phone numbers
+    final phoneRegex = RegExp(r'\+?\d{8,15}');
+    final matches = phoneRegex.allMatches(widget.text);
+
+    if (matches.isEmpty) {
+      return Text(widget.text, style: widget.style);
+    }
+
+    final spans = <TextSpan>[];
+    int lastIndex = 0;
+
+    for (final match in matches) {
+      if (match.start > lastIndex) {
+        spans.add(TextSpan(text: widget.text.substring(lastIndex, match.start)));
+      }
+
+      final phoneNumber = match.group(0)!;
+      final recognizer = TapGestureRecognizer()
+        ..onTap = () async {
+          final uri = Uri.parse('tel:$phoneNumber');
+          if (await canLaunchUrl(uri)) {
+            await launchUrl(uri);
+          }
+        };
+      _recognizers.add(recognizer);
+
+      spans.add(
+        TextSpan(
+          text: phoneNumber,
+          style: widget.style.copyWith(
+            decoration: TextDecoration.underline,
+            decorationColor: widget.style.color?.withValues(alpha: 0.5),
+            fontWeight: FontWeight.w700,
+          ),
+          recognizer: recognizer,
+        ),
+      );
+
+      lastIndex = match.end;
+    }
+
+    if (lastIndex < widget.text.length) {
+      spans.add(TextSpan(text: widget.text.substring(lastIndex)));
+    }
+
+    return Text.rich(
+      TextSpan(children: spans),
+      style: widget.style,
+    );
   }
 }

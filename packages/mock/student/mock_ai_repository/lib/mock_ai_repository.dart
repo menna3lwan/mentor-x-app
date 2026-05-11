@@ -144,7 +144,6 @@ final class MockAIRepository implements AIRepository {
       createdAt: DateTime.now(),
     );
   }
-
   @override
   Future<void> submitFeedback(
     String messageId, {
@@ -152,5 +151,16 @@ final class MockAIRepository implements AIRepository {
     String? feedback,
   }) async {
     await Future<void>.delayed(delay ~/ 2);
+  }
+
+  @override
+  Future<Map<String, dynamic>> getStats() async {
+    await Future<void>.delayed(delay);
+    return {'total_messages': 25, 'top_subjects': ['Algebra', 'Physics']};
+  }
+
+  @override
+  Future<void> clearHistory() async {
+    await Future<void>.delayed(delay);
   }
 }

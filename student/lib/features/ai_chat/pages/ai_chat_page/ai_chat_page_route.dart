@@ -9,6 +9,7 @@ final class AiChatPageRoute extends GoRouteData with $AiChatPageRoute {
     return BlocProvider<AiChatPageBloc>(
       create: (context) => AiChatPageBloc(
         aiRepository: context.read<AIRepository>(),
+        analyticsService: context.read<AnalyticsService>(),
       )..add(const AiChatPageLoadEvent()),
       child: const AiChatPageWrapper(),
     );

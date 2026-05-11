@@ -22,21 +22,22 @@ final class DioGradeRepository
     MentorXPaginationInfo? paginationInfo,
   }) async {
     try {
+      final queryParams = {
+        if (courseId != null) 'course_id': courseId,
+        if (paginationInfo != null) ...paginationInfo.toJson(),
+      };
+
       final response = await httpClient.get(
         '/api/quiz-attempts/student/me',
-        queryParameters: {
-          if (courseId != null) 'course_id': courseId,
-          if (paginationInfo != null) ...paginationInfo.toJson(),
-        },
+        queryParameters: queryParams,
       );
 
-      final list = asList(asMap(response.data)['content'] ??
-          asMap(response.data)['data'] ??
-          response.data);
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final list = asList(data is Map ? data['content'] : data);
 
       return list.map((e) => QuizAttemptModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: GradeRepositoryExceptionCode.failedToLoadQuizResults,
       );
@@ -49,21 +50,22 @@ final class DioGradeRepository
     MentorXPaginationInfo? paginationInfo,
   }) async {
     try {
+      final queryParams = {
+        if (courseId != null) 'course_id': courseId,
+        if (paginationInfo != null) ...paginationInfo.toJson(),
+      };
+
       final response = await httpClient.get(
         '/api/assignment-attempts/student/me',
-        queryParameters: {
-          if (courseId != null) 'course_id': courseId,
-          if (paginationInfo != null) ...paginationInfo.toJson(),
-        },
+        queryParameters: queryParams,
       );
 
-      final list = asList(asMap(response.data)['content'] ??
-          asMap(response.data)['data'] ??
-          response.data);
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final list = asList(data is Map ? data['content'] : data);
 
       return list.map((e) => AssignmentSubmissionModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: GradeRepositoryExceptionCode.failedToLoadAssignmentResults,
       );

@@ -1,4 +1,5 @@
 export 'account_status/account_status.dart';
+export 'analytics/analytics.dart';
 export 'ai_chat/ai_chat.dart';
 export 'assignments/assignments.dart';
 export 'attendance/attendance.dart';
@@ -7,7 +8,7 @@ export 'course/course.dart';
 export 'home/home.dart';
 export 'notifications/notifications.dart';
 export 'onboarding/onboarding.dart';
-export 'products/products.dart';
+export 'marketplace/marketplace.dart';
 export 'profile/profile.dart';
 export 'quizzes/quizzes.dart';
 export 'rewards/rewards.dart';

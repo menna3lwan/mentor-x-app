@@ -80,7 +80,11 @@ final class SplashPageBloc extends Bloc<SplashPageEvent, SplashPageState>
         user = await _authenticationRepository.getAccountStatus().timeout(
           const Duration(seconds: 3),
         );
-      } catch (_) {
+      } catch (e) {
+        if (e is AuthenticationRepositoryException &&
+            e.code == AuthenticationRepositoryExceptionCode.invalidCredentials) {
+          return '/login';
+        }
         // Fallback to cached user in unstable network conditions.
       }
 
@@ -93,6 +97,7 @@ final class SplashPageBloc extends Bloc<SplashPageEvent, SplashPageState>
         StudentStatus.active => '/',
         StudentStatus.pending => '/status-pending',
         StudentStatus.suspended => '/status-blocked',
+        StudentStatus.rejected => '/status-rejected',
         StudentStatus.inactive => '/status-rejected',
       };
     }

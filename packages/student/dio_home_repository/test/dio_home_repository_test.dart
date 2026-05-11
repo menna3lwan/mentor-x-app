@@ -63,7 +63,7 @@ void main() {
         ];
 
         when(() => httpClient.get(
-              '/api/banners',
+              '/api/banners/active',
               queryParameters: any(named: 'queryParameters'),
             )).thenAnswer(
           (_) async => HttpClientResponse(

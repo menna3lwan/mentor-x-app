@@ -53,4 +53,20 @@ final class MockHomeRepository implements StudentHomeRepository {
   Future<void> trackBannerClick(String bannerId) async {
     await Future<void>.delayed(delay ~/ 2);
   }
+
+  @override
+  Future<BannerEntity> createBanner(Map<String, dynamic> data) async {
+    await Future<void>.delayed(delay);
+    return MockHomeDashboardGenerator.banners().first;
+  }
+
+  @override
+  Future<void> updateBanner(String bannerId, Map<String, dynamic> data) async {
+    await Future<void>.delayed(delay);
+  }
+
+  @override
+  Future<void> deleteBanner(String bannerId) async {
+    await Future<void>.delayed(delay);
+  }
 }

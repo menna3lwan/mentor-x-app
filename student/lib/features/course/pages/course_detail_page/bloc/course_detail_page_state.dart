@@ -13,6 +13,7 @@ final class CourseDetailPageState extends Equatable {
   final CourseEntity? course;
   final List<SessionEntity> sessions;
   final Map<String, List<SessionItemEntity>> sessionItems;
+  final Map<String, List<WeekEntity>> sessionWeeks;
   final EnrollmentEntity? enrollment;
   final CourseDetailTab selectedTab;
   final EnrollActionStatus enrollStatus;
@@ -26,6 +27,7 @@ final class CourseDetailPageState extends Equatable {
     this.course,
     this.sessions = const [],
     this.sessionItems = const {},
+    this.sessionWeeks = const {},
     this.enrollment,
     this.selectedTab = CourseDetailTab.description,
     this.enrollStatus = EnrollActionStatus.initial,
@@ -54,6 +56,7 @@ final class CourseDetailPageState extends Equatable {
     CourseEntity? course,
     List<SessionEntity>? sessions,
     Map<String, List<SessionItemEntity>>? sessionItems,
+    Map<String, List<WeekEntity>>? sessionWeeks,
     EnrollmentEntity? enrollment,
     bool clearEnrollment = false,
     CourseDetailTab? selectedTab,
@@ -68,6 +71,7 @@ final class CourseDetailPageState extends Equatable {
       course: course ?? this.course,
       sessions: sessions ?? this.sessions,
       sessionItems: sessionItems ?? this.sessionItems,
+      sessionWeeks: sessionWeeks ?? this.sessionWeeks,
       enrollment: clearEnrollment ? null : (enrollment ?? this.enrollment),
       selectedTab: selectedTab ?? this.selectedTab,
       enrollStatus: enrollStatus ?? this.enrollStatus,
@@ -84,6 +88,7 @@ final class CourseDetailPageState extends Equatable {
     course,
     sessions,
     sessionItems,
+    sessionWeeks,
     enrollment,
     selectedTab,
     enrollStatus,

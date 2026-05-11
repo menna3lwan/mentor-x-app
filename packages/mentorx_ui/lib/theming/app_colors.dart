@@ -3,7 +3,7 @@ part of '../mentorx_ui.dart';
 /// Static design-token color palette for the MentorX student app.
 ///
 /// Used throughout the app via direct static access (e.g., [AppColors.primary]).
-/// Mirrors the semantic colors from [MentorXThemeColorPalette] for Material widgets
+/// Mirrors the semantic colors for Material widgets
 /// that don't support Mix tokens.
 final class AppColors {
   AppColors._();

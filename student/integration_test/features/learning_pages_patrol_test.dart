@@ -19,8 +19,15 @@ void main() {
     ),
     (name: 'attendance_qr', route: const AttendanceQrPageRoute()),
     (name: 'attendance_history', route: const AttendanceHistoryPageRoute()),
-    (name: 'assignment_detail', route: const AssignmentDetailPageRoute(assignmentId: '1')),
-    (name: 'assignment_submit', route: const AssignmentSubmitPageRoute(assignmentId: 'dummy-id')),
+    (name: 'assignments_list', route: const AssignmentsListPageRoute()),
+    (
+      name: 'assignment_detail',
+      route: const AssignmentDetailPageRoute(assignmentId: '1'),
+    ),
+    (
+      name: 'assignment_submit',
+      route: const AssignmentSubmitPageRoute(assignmentId: 'dummy-id'),
+    ),
     (name: 'assignment_result', route: const AssignmentResultPageRoute()),
   ];
 

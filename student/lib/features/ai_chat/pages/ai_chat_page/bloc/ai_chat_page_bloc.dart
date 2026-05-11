@@ -15,35 +15,44 @@ final class AiChatPageNavigateBack extends AiChatPagePresentationEvent {
 
 final class AiChatPageBloc extends Bloc<AiChatPageEvent, AiChatPageState>
     with BlocPresentationMixin<AiChatPageState, AiChatPagePresentationEvent> {
-  AiChatPageBloc({required this.aiRepository})
-    : super(AiChatPageState.initial) {
+  AiChatPageBloc({
+    required this.aiRepository,
+    required this.analyticsService,
+  }) : super(AiChatPageState.initial) {
     on<AiChatPageLoadEvent>(_onLoad);
     on<AiChatPageSendMessage>(_onSendMessage);
   }
 
   final AIRepository aiRepository;
+  final AnalyticsService analyticsService;
 
   Future<void> _onLoad(
     AiChatPageLoadEvent event,
     Emitter<AiChatPageState> emit,
   ) async {
-    emit(state.copyWith(loadingState: LoadingState.loading, errorMessage: null));
+    emit(
+      state.copyWith(loadingState: LoadingState.loading, errorMessage: null),
+    );
     try {
       // Create or get last conversation. For now, let's create a new one for each session
       // if we want to keep it simple, or we could fetch the last one.
       final conversation = await aiRepository.createConversation();
       final messages = await aiRepository.getMessages(conversation.id);
-      
-      emit(state.copyWith(
-        loadingState: LoadingState.loaded,
-        conversationId: conversation.id,
-        messages: messages,
-      ));
+
+      emit(
+        state.copyWith(
+          loadingState: LoadingState.loaded,
+          conversationId: conversation.id,
+          messages: messages,
+        ),
+      );
     } catch (e) {
-      emit(state.copyWith(
-        loadingState: LoadingState.error,
-        errorMessage: e.toString(),
-      ));
+      emit(
+        state.copyWith(
+          loadingState: LoadingState.error,
+          errorMessage: e.toString(),
+        ),
+      );
     }
   }
 
@@ -52,7 +61,7 @@ final class AiChatPageBloc extends Bloc<AiChatPageEvent, AiChatPageState>
     Emitter<AiChatPageState> emit,
   ) async {
     if (state.conversationId == null) return;
-    
+
     final userMessage = AIMessageEntity(
       id: DateTime.now().toIso8601String(),
       conversationId: state.conversationId!,
@@ -61,26 +70,38 @@ final class AiChatPageBloc extends Bloc<AiChatPageEvent, AiChatPageState>
       createdAt: DateTime.now(),
     );
 
-    emit(state.copyWith(
-      messages: [...state.messages, userMessage],
-      isTyping: true,
-    ));
+    emit(
+      state.copyWith(
+        messages: [...state.messages, userMessage],
+        isTyping: true,
+      ),
+    );
 
     try {
       final responseMessage = await aiRepository.sendMessage(
         state.conversationId!,
         event.content,
       );
-      
-      emit(state.copyWith(
-        messages: [...state.messages, responseMessage],
-        isTyping: false,
-      ));
+
+      emit(
+        state.copyWith(
+          messages: [...state.messages, responseMessage],
+          isTyping: false,
+        ),
+      );
+      analyticsService.logEvent(
+        name: 'ai_message_sent',
+        parameters: {
+          'conversation_id': state.conversationId,
+        },
+      );
     } catch (e) {
-      emit(state.copyWith(
-        isTyping: false,
-        errorMessage: e.toString(),
-      ));
+      emit(
+        state.copyWith(
+          isTyping: false,
+          errorMessage: e.toString(),
+        ),
+      );
     }
   }
 }

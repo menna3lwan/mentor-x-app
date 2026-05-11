@@ -19,6 +19,9 @@ abstract interface class ProfileRepository {
   /// Get the current user's full profile.
   Future<StudentEntity> getProfile();
 
+  /// Get profile summary.
+  Future<Map<String, dynamic>> getSummary();
+
   /// Get registered devices.
   Future<List<DeviceEntity>> getDevices();
 

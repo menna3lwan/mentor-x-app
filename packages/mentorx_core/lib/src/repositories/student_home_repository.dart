@@ -32,4 +32,9 @@ abstract interface class StudentHomeRepository {
   Future<List<AnnouncementEntity>> getRecentAnnouncements();
 
   Future<void> trackBannerClick(String bannerId);
+
+  // Pro Features
+  Future<BannerEntity> createBanner(Map<String, dynamic> data);
+  Future<void> updateBanner(String bannerId, Map<String, dynamic> data);
+  Future<void> deleteBanner(String bannerId);
 }

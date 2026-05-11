@@ -8,6 +8,9 @@ final class DioParentCourseRepository
   final HttpClient httpClient;
 
   DioParentCourseRepository({required this.httpClient});
+  
+  @override
+  Future<void> initialize() async {}
 
   @override
   Never throwException(
@@ -20,12 +23,23 @@ final class DioParentCourseRepository
   @override
   Future<List<CourseEntity>> getCourses(String childId, {String? status}) async {
     try {
-      final response = await httpClient.get(
-        '/api/v1/parent/children/$childId/courses',
-        queryParameters: {
-          if (status != null) 'status': status,
-        },
-      );
+      HttpClientResponse response;
+      try {
+        response = await httpClient.get(
+          '/api/parent/children/$childId/courses',
+          queryParameters: {
+            if (status != null) 'status': status,
+          },
+        );
+      } on HttpClientResponse catch (e) {
+        if (e.statusCode != 404) rethrow;
+        response = await httpClient.get(
+          '/api/parent/dashboard/child/$childId/enrollments',
+          queryParameters: {
+            if (status != null) 'status': status,
+          },
+        );
+      }
 
       final data = asList(response.data);
       return data.map((e) => CourseModel.fromJson(asMap(e))).toList();
@@ -43,9 +57,17 @@ final class DioParentCourseRepository
     String courseId,
   ) async {
     try {
-      final response = await httpClient.get(
-        '/api/v1/parent/children/$childId/courses/$courseId/progress',
-      );
+      HttpClientResponse response;
+      try {
+        response = await httpClient.get(
+          '/api/parent/children/$childId/courses/$courseId/progress',
+        );
+      } on HttpClientResponse catch (e) {
+        if (e.statusCode != 404) rethrow;
+        response = await httpClient.get(
+          '/api/parent/dashboard/child/$childId/progress/$courseId',
+        );
+      }
 
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return CourseSummaryModel.fromJson(data);

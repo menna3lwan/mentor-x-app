@@ -15,7 +15,13 @@ final class ProfileShellBranchData extends StatefulShellBranchData {}
   branches: [
     TypedStatefulShellBranch<HomeShellBranchData>(
       routes: [
-        TypedGoRoute<HomePageRoute>(path: '/', name: 'home'),
+        TypedGoRoute<HomePageRoute>(
+          path: '/',
+          name: 'home',
+          routes: [
+            TypedGoRoute<AnalyticsDashboardPageRoute>(path: 'analytics'),
+          ],
+        ),
       ],
     ),
     TypedStatefulShellBranch<CoursesShellBranchData>(

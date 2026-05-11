@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 
-class AiFabButton extends StatelessWidget {
+final class AiFabButton extends StatelessWidget {
   const AiFabButton({super.key});
 
   @override
@@ -10,22 +10,40 @@ class AiFabButton extends StatelessWidget {
     return GestureDetector(
       onTap: () => context.push('/ai-chat'),
       child: Container(
-        width: 52,
-        height: 52,
+        width: 60,
+        height: 60,
         decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [AppColors.teal, AppColors.tealLight],
+          gradient: LinearGradient(
+            colors: [
+              context.brandSecondaryColor,
+              context.brandSecondaryColor.withValues(alpha: 0.8),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
           shape: BoxShape.circle,
+          border: Border.all(
+            color: Colors.white.withValues(alpha: 0.2),
+            width: 1.5,
+          ),
           boxShadow: [
             BoxShadow(
-              color: AppColors.teal.withValues(alpha: 0.4),
+              color: context.brandSecondaryColor.withValues(alpha: 0.4),
               blurRadius: 20,
-              offset: const Offset(0, 4),
+              offset: const Offset(0, 6),
+            ),
+            BoxShadow(
+              color: context.brandSecondaryColor.withValues(alpha: 0.2),
+              blurRadius: 40,
+              spreadRadius: -5,
             ),
           ],
         ),
-        child: const Icon(Icons.smart_toy, color: Colors.white, size: 24),
+        child: const Icon(
+          Icons.psychology_rounded,
+          color: Colors.white,
+          size: 32,
+        ),
       ),
     );
   }

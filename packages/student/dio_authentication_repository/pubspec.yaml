@@ -13,6 +13,8 @@ dependencies:
     path: ../../mentorx_core
   dio_http_client:
     path: ../../clients/dio_http_client
+  device_info_service:
+    path: ../../services/device_info_service
 
 dev_dependencies:
   lints: ^6.0.0

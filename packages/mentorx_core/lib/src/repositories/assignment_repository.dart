@@ -19,6 +19,12 @@ abstract interface class AssignmentRepository {
   /// Fetch assignment details.
   Future<AssignmentEntity> getAssignment(String assignmentId);
 
+  /// Fetch all assignments for the student.
+  Future<List<AssignmentEntity>> getAssignments();
+
+  /// Fetch assignment questions.
+  Future<List<QuizQuestionEntity>> getAssignmentQuestions(String assignmentId);
+
   /// Fetch the student's submission for an assignment.
   Future<AssignmentSubmissionEntity?> getSubmission(String assignmentId);
 
@@ -29,4 +35,10 @@ abstract interface class AssignmentRepository {
     List<String> filePaths = const [],
     String? contentText,
   });
+
+  // Pro Features
+  Future<void> deleteAttempt(String attemptId);
+  Future<List<AssignmentSubmissionEntity>> getStudentAttempts(String studentId);
+  Future<List<AssignmentSubmissionEntity>> getAttemptsForAssignment(String assignmentId);
+  Future<Map<String, dynamic>> getAssignmentStatistics(String assignmentId);
 }

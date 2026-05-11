@@ -10,6 +10,7 @@ final class EditProfilePageRoute extends GoRouteData
     return BlocProvider<EditProfilePageBloc>(
       create: (context) => EditProfilePageBloc(
         profileRepository: context.read<ProfileRepository>(),
+        analyticsService: context.read<AnalyticsService>(),
       )..add(const EditProfilePageLoadEvent()),
       child: const EditProfilePageWrapper(),
     );

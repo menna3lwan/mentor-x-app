@@ -36,4 +36,12 @@ abstract interface class StudentProfileRepository implements ProfileRepository {
 
   /// Get current national ID verification status.
   Future<NationalIdVerificationEntity> getVerificationStatus();
+
+  // Pro Features
+  @override
+  Future<void> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  });
+  Future<void> deleteAccount(String password);
 }

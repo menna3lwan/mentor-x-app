@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
+import 'package:animate_do/animate_do.dart';
+import 'package:gap/gap.dart';
 
 final class PdfViewerPagePage extends StatelessWidget {
   final String title;
@@ -23,33 +25,36 @@ final class PdfViewerPagePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = MentorXThemeColorPalette.light;
     final t = context.t.student;
 
     return Scaffold(
-      backgroundColor: palette.backgroundSecondary,
+      backgroundColor: context.backgroundPrimaryColor,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(70),
         child: Container(
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [palette.brandPrimary, palette.brandPrimary.withOpacity(0.8)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
+            color: context.backgroundSecondaryColor,
+            borderRadius: const BorderRadius.vertical(
+              bottom: Radius.circular(24),
             ),
-            borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
-            boxShadow: [
-              BoxShadow(color: palette.brandPrimary.withOpacity(0.3), blurRadius: 15, offset: const Offset(0, 4)),
-            ],
+            border: Border(
+              bottom: BorderSide(
+                color: context.borderPrimaryColor.withValues(alpha: 0.05),
+              ),
+            ),
           ),
           child: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
-            foregroundColor: Colors.white,
+            foregroundColor: context.textPrimaryColor,
             centerTitle: true,
             title: Text(
               title,
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w900,
+                letterSpacing: -0.5,
+              ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
@@ -57,23 +62,33 @@ final class PdfViewerPagePage extends StatelessWidget {
               if (isReady && !isCompleted)
                 IconButton(
                   onPressed: onMarkComplete,
-                  icon: const Icon(Icons.check_circle_outline_rounded),
+                  icon: const Icon(
+                    Icons.check_circle_outline_rounded,
+                    size: 22,
+                  ),
                   tooltip: context.t.course.pdf.markComplete,
                 ),
               if (isCompleted)
-                const Padding(
-                  padding: EdgeInsets.only(right: 12),
-                  child: Icon(Icons.check_circle_rounded, color: Colors.white),
+                Padding(
+                  padding: const EdgeInsets.only(right: 16),
+                  child: Icon(
+                    Icons.check_circle_rounded,
+                    color: context.statusSuccessColor,
+                    size: 22,
+                  ),
                 ),
             ],
           ),
         ),
       ),
-      body: _buildBody(context, palette, t),
+      body: _buildBody(context, t),
     );
   }
 
-  Widget _buildBody(BuildContext context, MentorXThemeColorPalette palette, dynamic t) {
+  Widget _buildBody(
+    BuildContext context,
+    dynamic t,
+  ) {
     if (errorMessage != null) {
       return Center(
         child: Padding(
@@ -81,12 +96,31 @@ final class PdfViewerPagePage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.error_outline_rounded, size: 64, color: Colors.red.withOpacity(0.3)),
-              const SizedBox(height: 24),
-              Text(
-                errorMessage!,
-                style: TextStyle(color: palette.textSecondary, fontWeight: FontWeight.w600),
-                textAlign: TextAlign.center,
+              FadeInDown(
+                child: Container(
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    color: context.statusDangerColor.withValues(alpha: 0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.error_outline_rounded,
+                    size: 64,
+                    color: context.statusDangerColor,
+                  ),
+                ),
+              ),
+              const Gap(32),
+              FadeInUp(
+                child: Text(
+                  errorMessage!,
+                  style: TextStyle(
+                    color: context.textPrimaryColor,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 16,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
               ),
             ],
           ),
@@ -100,77 +134,136 @@ final class PdfViewerPagePage extends StatelessWidget {
 
     return Center(
       child: SingleChildScrollView(
-        padding: const EdgeInsets.all(32),
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 48),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
-              padding: const EdgeInsets.all(40),
-              decoration: BoxDecoration(
-                color: Colors.red.withOpacity(0.05),
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.red.withOpacity(0.1)),
-              ),
-              child: Icon(
-                Icons.picture_as_pdf_rounded,
-                size: 100,
-                color: Colors.red.shade400,
+            FadeInDown(
+              duration: const Duration(milliseconds: 600),
+              child: Container(
+                padding: const EdgeInsets.all(48),
+                decoration: BoxDecoration(
+                  color: context.statusDangerColor.withValues(alpha: 0.05),
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: context.statusDangerColor.withValues(alpha: 0.1),
+                  ),
+                ),
+                child: Icon(
+                  Icons.picture_as_pdf_rounded,
+                  size: 110,
+                  color: context.statusDangerColor,
+                ),
               ),
             ),
-            const SizedBox(height: 32),
-            Text(
-              context.t.course.pdf.title,
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900, color: palette.textPrimary),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              title,
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 15, color: palette.textSecondary, fontWeight: FontWeight.w500),
+            const Gap(40),
+            FadeInUp(
+              duration: const Duration(milliseconds: 600),
+              child: Column(
+                children: [
+                  Text(
+                    context.t.course.pdf.title,
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w900,
+                      color: context.textPrimaryColor,
+                      letterSpacing: -0.5,
+                    ),
+                  ),
+                  const Gap(12),
+                  Text(
+                    title,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: context.textSecondaryColor,
+                      fontWeight: FontWeight.w700,
+                      height: 1.5,
+                    ),
+                  ),
+                ],
+              ),
             ),
             if (contentUrl != null) ...[
-              const SizedBox(height: 24),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                decoration: BoxDecoration(
-                  color: palette.backgroundPrimary,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: palette.brandPrimary.withOpacity(0.1)),
-                ),
-                child: Text(
-                  contentUrl!,
-                  style: TextStyle(fontSize: 11, color: palette.textTertiary),
-                  textAlign: TextAlign.center,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
+              const Gap(32),
+              FadeInUp(
+                duration: const Duration(milliseconds: 600),
+                delay: const Duration(milliseconds: 200),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 12,
+                  ),
+                  decoration: BoxDecoration(
+                    color: context.backgroundSecondaryColor,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: context.borderPrimaryColor.withValues(alpha: 0.05),
+                    ),
+                  ),
+                  child: Text(
+                    contentUrl!,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: context.textTertiaryColor,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
               ),
             ],
             if (isCompleted) ...[
-              const SizedBox(height: 32),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                decoration: BoxDecoration(
-                  color: Colors.green.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(Icons.verified_rounded, color: Colors.green, size: 20),
-                    const SizedBox(width: 8),
-                    Text(
-                      context.t.course.pdf.completed,
-                      style: const TextStyle(color: Colors.green, fontWeight: FontWeight.w800, fontSize: 13),
+              const Gap(40),
+              FadeInUp(
+                duration: const Duration(milliseconds: 600),
+                delay: const Duration(milliseconds: 400),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 12,
+                  ),
+                  decoration: BoxDecoration(
+                    color: context.statusSuccessColor.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(24),
+                    border: Border.all(
+                      color: context.statusSuccessColor.withValues(alpha: 0.1),
                     ),
-                  ],
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.verified_rounded,
+                        color: context.statusSuccessColor,
+                        size: 20,
+                      ),
+                      const Gap(10),
+                      Text(
+                        context.t.course.pdf.completed.toUpperCase(),
+                        style: TextStyle(
+                          color: context.statusSuccessColor,
+                          fontWeight: FontWeight.w900,
+                          fontSize: 12,
+                          letterSpacing: 1.0,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ] else if (isReady) ...[
-              const SizedBox(height: 40),
-              MentorXButton(
-                onPressed: onMarkComplete,
-                text: context.t.course.pdf.markComplete,
+              const Gap(48),
+              FadeInUp(
+                duration: const Duration(milliseconds: 600),
+                delay: const Duration(milliseconds: 400),
+                child: MentorXButton(
+                  onPressed: onMarkComplete,
+                  label: context.t.course.pdf.markComplete,
+                ),
               ),
             ],
           ],

@@ -15,6 +15,7 @@ final class ParentAttendanceRepositoryException
 // ——— Repository ———
 
 abstract interface class ParentAttendanceRepository {
+  Future<void> initialize();
   Future<List<AttendanceRecordEntity>> getAttendance(
     String childId, {
     DateTime? from,

@@ -21,17 +21,21 @@ final class DioAiRepository
     MentorXPaginationInfo? paginationInfo,
   }) async {
     try {
+      final queryParams = {
+        if (paginationInfo != null) ...paginationInfo.toJson(),
+      };
+
       final response = await httpClient.get(
         '/api/ai/conversations',
-        queryParameters: {
-          if (paginationInfo != null) ...paginationInfo.toJson(),
-        },
+        queryParameters: queryParams,
       );
 
-      final data = asList(response.data);
-      return data.map((e) => AIConversationModel.fromJson(asMap(e))).toList();
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final list = asList(data is Map ? data['content'] : data);
+
+      return list.map((e) => AIConversationModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: AIRepositoryExceptionCode.failedToLoadConversations,
       );
@@ -41,15 +45,17 @@ final class DioAiRepository
   @override
   Future<AIConversationEntity> createConversation({String? subject}) async {
     try {
+      final payload = {if (subject != null) 'subject': subject};
+
       final response = await httpClient.post(
         '/api/ai/conversations',
-        data: {if (subject != null) 'subject': subject},
+        data: payload,
       );
 
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return AIConversationModel.fromJson(data);
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: AIRepositoryExceptionCode.failedToCreateConversation,
       );
@@ -71,9 +77,10 @@ final class DioAiRepository
   @override
   Future<void> renameConversation(String conversationId, String title) async {
     try {
+      final payload = {'title': title};
       await httpClient.patch(
         '/api/ai/conversations/$conversationId',
-        data: {'title': title},
+        data: payload,
       );
     } on HttpClientResponse catch (e) {
       handleHttpClientErrorResponse(
@@ -89,17 +96,21 @@ final class DioAiRepository
     MentorXPaginationInfo? paginationInfo,
   }) async {
     try {
+      final queryParams = {
+        if (paginationInfo != null) ...paginationInfo.toJson(),
+      };
+
       final response = await httpClient.get(
         '/api/ai/conversations/$conversationId/messages',
-        queryParameters: {
-          if (paginationInfo != null) ...paginationInfo.toJson(),
-        },
+        queryParameters: queryParams,
       );
 
-      final data = asList(response.data);
-      return data.map((e) => AIMessageModel.fromJson(asMap(e))).toList();
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final list = asList(data is Map ? data['content'] : data);
+
+      return list.map((e) => AIMessageModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: AIRepositoryExceptionCode.failedToLoadMessages,
       );
@@ -112,15 +123,17 @@ final class DioAiRepository
     String content,
   ) async {
     try {
+      final payload = {'content': content};
+
       final response = await httpClient.post(
         '/api/ai/conversations/$conversationId/messages',
-        data: {'content': content},
+        data: payload,
       );
 
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return AIMessageModel.fromJson(data);
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: AIRepositoryExceptionCode.failedToSendMessage,
       );
@@ -149,4 +162,22 @@ final class DioAiRepository
     }
   }
 
+  @override
+  Future<Map<String, dynamic>> getStats() async {
+    try {
+      final response = await httpClient.get('/api/ai/stats');
+      return asMap(response.data);
+    } on HttpClientResponse catch (e) {
+      return handleHttpClientErrorResponse(e, defaultCode: AIRepositoryExceptionCode.unknown);
+    }
+  }
+
+  @override
+  Future<void> clearHistory() async {
+    try {
+      await httpClient.post('/api/ai/clear-history');
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(e, defaultCode: AIRepositoryExceptionCode.unknown);
+    }
+  }
 }

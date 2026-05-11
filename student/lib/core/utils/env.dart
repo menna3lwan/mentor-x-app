@@ -20,6 +20,11 @@ final class Env {
   );
 
   static bool get hasMentorXBaseUrl => mentorXBaseUrl.trim().isNotEmpty;
+  static const String sentryDsn = String.fromEnvironment(
+    'SENTRY_DSN',
+    defaultValue:
+        'https://d670c06af420324e69b2345020158b5b@o4511367439187968.ingest.us.sentry.io/4511367449149440',
+  );
 
   static final authenticationRepositoryMode = RepositoryMode.fromString(
     const String.fromEnvironment(
@@ -130,6 +135,13 @@ final class Env {
     ),
   );
 
+  static final analyticsRepositoryMode = RepositoryMode.fromString(
+    const String.fromEnvironment(
+      'ANALYTICS_REPOSITORY_MODE',
+      defaultValue: 'mock',
+    ),
+  );
+
   static bool get usesAnyProdRepository =>
       authenticationRepositoryMode == RepositoryMode.prod ||
       homeRepositoryMode == RepositoryMode.prod ||
@@ -146,7 +158,8 @@ final class Env {
       announcementRepositoryMode == RepositoryMode.prod ||
       rewardsRepositoryMode == RepositoryMode.prod ||
       gradeRepositoryMode == RepositoryMode.prod ||
-      registrationRepositoryMode == RepositoryMode.prod;
+      registrationRepositoryMode == RepositoryMode.prod ||
+      analyticsRepositoryMode == RepositoryMode.prod;
 
   // Mock values:
   static const int _mockDelayDurationInSeconds = int.fromEnvironment(

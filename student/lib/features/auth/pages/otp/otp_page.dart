@@ -40,20 +40,75 @@ final class OtpPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = MentorXThemeColorPalette.light;
+    final defaultPinTheme = PinTheme(
+      width: 56,
+      height: 64,
+      textStyle: TextStyle(
+        fontSize: 24,
+        color: context.textPrimaryColor,
+        fontWeight: FontWeight.w900,
+      ),
+      decoration: BoxDecoration(
+        color: context.backgroundSecondaryColor,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: context.borderPrimaryColor.withValues(alpha: 0.1),
+          width: 2,
+        ),
+      ),
+    );
+
+    final focusedPinTheme = defaultPinTheme.copyWith(
+      decoration: defaultPinTheme.decoration!.copyWith(
+        border: Border.all(color: context.brandPrimaryColor, width: 2),
+        boxShadow: [
+          BoxShadow(
+            color: context.brandPrimaryColor.withValues(alpha: 0.1),
+            blurRadius: 15,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+    );
 
     return Scaffold(
-      backgroundColor: palette.backgroundPrimary,
+      backgroundColor: context.backgroundPrimaryColor,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(70),
         child: FadeInDown(
           duration: const Duration(milliseconds: 500),
-          child: AppBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back_ios_new_rounded, color: palette.textPrimary, size: 20),
-              onPressed: onEditPhone,
+          child: Container(
+            decoration: BoxDecoration(
+              color: context.backgroundSecondaryColor,
+              borderRadius: const BorderRadius.vertical(
+                bottom: Radius.circular(24),
+              ),
+              border: Border(
+                bottom: BorderSide(
+                  color: context.borderPrimaryColor.withValues(alpha: 0.05),
+                ),
+              ),
+            ),
+            child: AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              leading: IconButton(
+                icon: Icon(
+                  Icons.arrow_back_ios_new_rounded,
+                  color: context.textPrimaryColor,
+                  size: 20,
+                ),
+                onPressed: onEditPhone,
+              ),
+              centerTitle: true,
+              title: const Text(
+                'OTP Verification',
+                style: TextStyle(
+                  fontWeight: FontWeight.w900,
+                  fontSize: 18,
+                  letterSpacing: -0.5,
+                ),
+              ),
             ),
           ),
         ),
@@ -62,210 +117,218 @@ final class OtpPage extends StatelessWidget {
         child: Center(
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
-            padding: const EdgeInsets.symmetric(horizontal: 24),
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 420),
               child: FadeInUp(
                 duration: const Duration(milliseconds: 600),
-                child: GradientCard(
-                  colors: [
-                    palette.backgroundPrimary,
-                    palette.backgroundPrimary.withValues(alpha: 0.95),
-                  ],
-                  padding: const EdgeInsets.all(32),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ZoomIn(
-                        duration: const Duration(milliseconds: 600),
-                        child: Container(
-                          width: 90,
-                          height: 90,
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                palette.statusSuccess,
-                                palette.statusSuccess.withValues(alpha: 0.7),
-                              ],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                            ),
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: palette.statusSuccess.withValues(alpha: 0.2),
-                                blurRadius: 16,
-                                offset: const Offset(0, 8),
-                              ),
-                            ],
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ZoomIn(
+                      duration: const Duration(milliseconds: 600),
+                      child: Container(
+                        width: 100,
+                        height: 100,
+                        decoration: BoxDecoration(
+                          color: context.brandPrimaryColor.withValues(
+                            alpha: 0.1,
                           ),
-                          alignment: Alignment.center,
-                          child: Icon(
-                            Icons.mark_email_read_rounded,
-                            color: palette.textForeground,
-                            size: 44,
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: context.brandPrimaryColor.withValues(
+                              alpha: 0.1,
+                            ),
                           ),
                         ),
+                        alignment: Alignment.center,
+                        child: Icon(
+                          Icons.mark_chat_read_rounded,
+                          color: context.brandPrimaryColor,
+                          size: 48,
+                        ),
                       ),
-                      const Gap(24),
-                      Text(
-                        'Verify OTP',
-                        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    ),
+                    const Gap(32),
+                    Text(
+                      'Verify Your Number',
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.w900,
+                        color: context.textPrimaryColor,
+                        letterSpacing: -1.0,
+                      ),
+                    ),
+                    const Gap(16),
+                    RichText(
+                      textAlign: TextAlign.center,
+                      text: TextSpan(
+                        style: TextStyle(
+                          color: context.textSecondaryColor,
+                          fontSize: 15,
+                          height: 1.6,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        children: [
+                          const TextSpan(text: "We've sent a code to "),
+                          TextSpan(
+                            text: phoneNumber,
+                            style: TextStyle(
+                              color: context.textPrimaryColor,
                               fontWeight: FontWeight.w900,
-                              letterSpacing: -0.5,
                             ),
+                          ),
+                        ],
                       ),
-                      const Gap(10),
-                      Text(
-                        'Enter the code sent to your phone',
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: palette.textSecondary,
-                              fontWeight: FontWeight.w500,
-                            ),
+                    ),
+                    const Gap(48),
+                    Directionality(
+                      textDirection: TextDirection.ltr,
+                      child: Pinput(
+                        length: otpLength,
+                        autofocus: true,
+                        defaultPinTheme: defaultPinTheme,
+                        focusedPinTheme: focusedPinTheme,
+                        separatorBuilder: (index) => const Gap(12),
+                        onChanged: onOtpChanged,
+                        onCompleted: (_) => onSubmit(),
                       ),
-                      const Gap(4),
-                      Directionality(
-                        textDirection: TextDirection.ltr,
-                        child: Text(
-                          phoneNumber,
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                fontWeight: FontWeight.w900,
-                                color: palette.brandPrimary,
-                              ),
+                    ),
+                    const Gap(32),
+                    if (errorMessage != null) ...[
+                      FadeIn(
+                        child: StatusBadge(
+                          message: errorMessage!,
+                          status: StatusBadgeType.danger,
                         ),
                       ),
                       const Gap(32),
-                      Directionality(
-                        textDirection: TextDirection.ltr,
-                        child: Pinput(
-                          length: otpLength,
-                          autofocus: true,
-                          onChanged: onOtpChanged,
-                          onCompleted: (_) => onSubmit(),
-                          defaultPinTheme: PinTheme(
-                            width: 56,
-                            height: 60,
-                            textStyle: TextStyle(
-                              fontSize: 22,
-                              color: palette.textPrimary,
-                              fontWeight: FontWeight.w900,
-                            ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(16),
-                              border: Border.all(color: palette.textTertiary.withValues(alpha: 0.2), width: 2),
-                              color: palette.backgroundSecondary.withValues(alpha: 0.3),
-                            ),
-                          ),
-                          focusedPinTheme: PinTheme(
-                            width: 60,
-                            height: 64,
-                            textStyle: TextStyle(
-                              fontSize: 24,
-                              color: palette.brandPrimary,
-                              fontWeight: FontWeight.w900,
-                            ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(16),
-                              border: Border.all(color: palette.brandPrimary, width: 2.5),
-                              color: palette.backgroundPrimary,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: palette.brandPrimary.withValues(alpha: 0.1),
-                                  blurRadius: 12,
-                                  offset: const Offset(0, 6),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      const Gap(24),
-                      if (errorMessage != null) ...[
-                        FadeIn(
-                          child: StatusBadge(
-                            message: errorMessage!,
-                            status: StatusBadgeType.danger,
-                          ),
-                        ),
-                        const Gap(20),
-                      ],
-                      AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 300),
-                        child: canResend
-                            ? Column(
-                                key: const ValueKey('resend'),
-                                children: [
-                                  TextButton.icon(
-                                    onPressed: isResending ? null : onResend,
-                                    icon: isResending
-                                        ? const SizedBox(
-                                            width: 16,
-                                            height: 16,
-                                            child: CircularProgressIndicator(strokeWidth: 2, color: Colors.blue),
-                                          )
-                                        : Icon(Icons.refresh_rounded, size: 20, color: palette.brandPrimary),
-                                    label: Text(
-                                      'Resend Code',
-                                      style: TextStyle(fontWeight: FontWeight.w800, color: palette.brandPrimary),
-                                    ),
-                                  ),
-                                  TextButton.icon(
-                                    onPressed: isResendingWhatsapp ? null : onResendViaWhatsapp,
-                                    icon: isResendingWhatsapp
-                                        ? const SizedBox(
-                                            width: 16,
-                                            height: 16,
-                                            child: CircularProgressIndicator(strokeWidth: 2, color: Colors.green),
-                                          )
-                                        : const Icon(Icons.chat_rounded, size: 20, color: Colors.green),
-                                    label: const Text(
-                                      'Resend via WhatsApp',
-                                      style: TextStyle(fontWeight: FontWeight.w800, color: Colors.green),
-                                    ),
-                                  ),
-                                ],
-                              )
-                            : Padding(
-                                key: const ValueKey('countdown'),
-                                padding: const EdgeInsets.symmetric(vertical: 12),
-                                child: Row(
+                    ],
+                    AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 400),
+                      child: canResend
+                          ? Column(
+                              key: const ValueKey('resend'),
+                              children: [
+                                Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Icon(Icons.timer_outlined, size: 18, color: palette.textTertiary),
-                                    const Gap(8),
                                     Text(
-                                      'Resend in $formattedCountdown',
-                                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                            color: palette.textSecondary,
-                                            fontWeight: FontWeight.w600,
-                                          ),
+                                      "Didn't receive code? ",
+                                      style: TextStyle(
+                                        color: context.textSecondaryColor,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                    TextButton(
+                                      onPressed: isResending ? null : onResend,
+                                      child: isResending
+                                          ? SizedBox(
+                                              width: 16,
+                                              height: 16,
+                                              child: CircularProgressIndicator(
+                                                strokeWidth: 2,
+                                                color:
+                                                    context.brandPrimaryColor,
+                                              ),
+                                            )
+                                          : Text(
+                                              'Resend',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w900,
+                                                color:
+                                                    context.brandPrimaryColor,
+                                              ),
+                                            ),
                                     ),
                                   ],
                                 ),
+                                const Gap(8),
+                                TextButton.icon(
+                                  onPressed: isResendingWhatsapp
+                                      ? null
+                                      : onResendViaWhatsapp,
+                                  icon: isResendingWhatsapp
+                                      ? SizedBox(
+                                          width: 16,
+                                          height: 16,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                            color: Colors.green,
+                                          ),
+                                        )
+                                      : const Icon(
+                                          Icons.chat_rounded,
+                                          size: 18,
+                                          color: Colors.green,
+                                        ),
+                                  label: const Text(
+                                    'Resend via WhatsApp',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w900,
+                                      color: Colors.green,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )
+                          : Container(
+                              key: const ValueKey('countdown'),
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 16,
+                                horizontal: 24,
                               ),
-                      ),
-                      if (showEditPhone) ...[
-                        const Gap(12),
-                        TextButton.icon(
-                          onPressed: onEditPhone,
-                          icon: const Icon(Icons.edit_outlined, size: 18),
-                          label: const Text('Edit Phone Number'),
-                          style: TextButton.styleFrom(
-                            foregroundColor: palette.textTertiary,
-                            textStyle: const TextStyle(fontWeight: FontWeight.w700),
+                              decoration: BoxDecoration(
+                                color: context.backgroundSecondaryColor,
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(
+                                  color: context.borderPrimaryColor.withValues(
+                                    alpha: 0.05,
+                                  ),
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.timer_outlined,
+                                    size: 18,
+                                    color: context.textTertiaryColor,
+                                  ),
+                                  const Gap(12),
+                                  Text(
+                                    'Resend code in $formattedCountdown',
+                                    style: TextStyle(
+                                      color: context.textSecondaryColor,
+                                      fontWeight: FontWeight.w800,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                    ),
+                    const Gap(56),
+                    MentorXButton(
+                      onPressed: isLoading ? null : onSubmit,
+                      label: 'Verify & Confirm',
+                      loading: isLoading,
+                    ),
+                    if (showEditPhone) ...[
+                      const Gap(24),
+                      TextButton.icon(
+                        onPressed: onEditPhone,
+                        icon: const Icon(Icons.edit_rounded, size: 18),
+                        label: const Text('Edit Phone Number'),
+                        style: TextButton.styleFrom(
+                          foregroundColor: context.textTertiaryColor,
+                          textStyle: const TextStyle(
+                            fontWeight: FontWeight.w800,
                           ),
                         ),
-                      ],
-                      const Gap(32),
-                      MentorXButton(
-                        onPressed: isLoading ? null : onSubmit,
-                        label: 'Verify & Confirm',
-                        loading: isLoading,
                       ),
                     ],
-                  ),
+                  ],
                 ),
               ),
             ),

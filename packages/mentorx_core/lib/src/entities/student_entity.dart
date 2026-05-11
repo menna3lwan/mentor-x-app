@@ -1,27 +1,33 @@
 part of 'package:mentorx_core/mentorx_core.dart';
 
-enum StudentStatus { active, inactive, pending, suspended }
+enum StudentStatus { active, inactive, pending, suspended, rejected }
 
 enum Gender { male, female }
 
 enum StudyType { center, online, hybrid }
 
-class StudentEntity extends Equatable {
+base class StudentEntity extends Equatable {
   final String id;
   final String firstName;
+  final String? secondName;
+  final String? thirdName;
+  final String? fourthName;
   final String lastName;
   final String? email;
   final String phoneNumber;
   final String? profileImageUrl;
+  final String? identityDocumentUrl;
   final Gender gender;
   final StudentStatus status;
   final String? gradeId;
   final String? gradeName;
   final String? studentCode;
   final String? studyType;
+  final String? studyLocation;
   final double walletBalance;
   final int totalPoints;
   final String? schoolName;
+  final String? educationDepartment;
   final String? centerId;
   final String? centerName;
   final String? parentName;
@@ -30,7 +36,14 @@ class StudentEntity extends Equatable {
   final DateTime? dateOfBirth;
   final String? address;
   final String? city;
+  final String? area;
   final String? governorate;
+  final bool? isOnline;
+  final bool? enabled;
+  final bool? hasActiveSession;
+  final int? devicesCount;
+  final int? loginCount;
+  final DateTime? lastLoginAt;
   final List<String>? enrolledCourseIds;
   final Map<String, dynamic>? metadata;
   final DateTime createdAt;
@@ -44,16 +57,22 @@ class StudentEntity extends Equatable {
     required this.status,
     required this.createdAt,
     required this.updatedAt,
+    this.secondName,
+    this.thirdName,
+    this.fourthName,
     this.email,
     this.profileImageUrl,
+    this.identityDocumentUrl,
     this.gender = Gender.male,
     this.gradeId,
     this.gradeName,
     this.studentCode,
     this.studyType,
+    this.studyLocation,
     this.walletBalance = 0.0,
     this.totalPoints = 0,
     this.schoolName,
+    this.educationDepartment,
     this.centerId,
     this.centerName,
     this.parentName,
@@ -62,12 +81,31 @@ class StudentEntity extends Equatable {
     this.dateOfBirth,
     this.address,
     this.city,
+    this.area,
     this.governorate,
+    this.isOnline,
+    this.enabled,
+    this.hasActiveSession,
+    this.devicesCount,
+    this.loginCount,
+    this.lastLoginAt,
     this.enrolledCourseIds,
     this.metadata,
   });
 
-  String get fullName => '$firstName $lastName'.trim();
+  String get fullName {
+    final parts = [firstName, secondName, thirdName, fourthName, lastName]
+        .where((p) => p != null && p.isNotEmpty)
+        .toList();
+    return parts.join(' ').trim();
+  }
+
+  String get shortName {
+    if (fourthName != null && fourthName!.isNotEmpty) {
+      return '$firstName $fourthName';
+    }
+    return '$firstName $lastName'.trim();
+  }
 
   static final placeholder = StudentEntity(
     id: '',
@@ -83,19 +121,25 @@ class StudentEntity extends Equatable {
   List<Object?> get props => [
         id,
         firstName,
+        secondName,
+        thirdName,
+        fourthName,
         lastName,
         email,
         phoneNumber,
         profileImageUrl,
+        identityDocumentUrl,
         gender,
         status,
         gradeId,
         gradeName,
         studentCode,
         studyType,
+        studyLocation,
         walletBalance,
         totalPoints,
         schoolName,
+        educationDepartment,
         centerId,
         centerName,
         parentName,
@@ -104,7 +148,14 @@ class StudentEntity extends Equatable {
         dateOfBirth,
         address,
         city,
+        area,
         governorate,
+        isOnline,
+        enabled,
+        hasActiveSession,
+        devicesCount,
+        loginCount,
+        lastLoginAt,
         enrolledCourseIds,
         metadata,
         createdAt,
@@ -114,60 +165,86 @@ class StudentEntity extends Equatable {
   StudentEntity copyWith({
     String? id,
     String? firstName,
+    MentorXNullableValue<String?>? secondName,
+    MentorXNullableValue<String?>? thirdName,
+    MentorXNullableValue<String?>? fourthName,
     String? lastName,
-    String? email,
+    MentorXNullableValue<String?>? email,
     String? phoneNumber,
-    String? profileImageUrl,
+    MentorXNullableValue<String?>? profileImageUrl,
+    MentorXNullableValue<String?>? identityDocumentUrl,
     Gender? gender,
     StudentStatus? status,
-    String? gradeId,
-    String? gradeName,
-    String? studentCode,
-    String? studyType,
+    MentorXNullableValue<String?>? gradeId,
+    MentorXNullableValue<String?>? gradeName,
+    MentorXNullableValue<String?>? studentCode,
+    MentorXNullableValue<String?>? studyType,
+    MentorXNullableValue<String?>? studyLocation,
     double? walletBalance,
     int? totalPoints,
-    String? schoolName,
-    String? centerId,
-    String? centerName,
-    String? parentName,
-    String? parentPhone,
-    String? academicLevel,
-    DateTime? dateOfBirth,
-    String? address,
-    String? city,
-    String? governorate,
-    List<String>? enrolledCourseIds,
-    Map<String, dynamic>? metadata,
+    MentorXNullableValue<String?>? schoolName,
+    MentorXNullableValue<String?>? educationDepartment,
+    MentorXNullableValue<String?>? centerId,
+    MentorXNullableValue<String?>? centerName,
+    MentorXNullableValue<String?>? parentName,
+    MentorXNullableValue<String?>? parentPhone,
+    MentorXNullableValue<String?>? academicLevel,
+    MentorXNullableValue<DateTime?>? dateOfBirth,
+    MentorXNullableValue<String?>? address,
+    MentorXNullableValue<String?>? city,
+    MentorXNullableValue<String?>? area,
+    MentorXNullableValue<String?>? governorate,
+    MentorXNullableValue<bool?>? isOnline,
+    MentorXNullableValue<bool?>? enabled,
+    MentorXNullableValue<bool?>? hasActiveSession,
+    MentorXNullableValue<int?>? devicesCount,
+    MentorXNullableValue<int?>? loginCount,
+    MentorXNullableValue<DateTime?>? lastLoginAt,
+    MentorXNullableValue<List<String>?>? enrolledCourseIds,
+    MentorXNullableValue<Map<String, dynamic>?>? metadata,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
     return StudentEntity(
       id: id ?? this.id,
       firstName: firstName ?? this.firstName,
+      secondName: secondName != null ? secondName.value : this.secondName,
+      thirdName: thirdName != null ? thirdName.value : this.thirdName,
+      fourthName: fourthName != null ? fourthName.value : this.fourthName,
       lastName: lastName ?? this.lastName,
-      email: email ?? this.email,
+      email: email != null ? email.value : this.email,
       phoneNumber: phoneNumber ?? this.phoneNumber,
-      profileImageUrl: profileImageUrl ?? this.profileImageUrl,
+      profileImageUrl: profileImageUrl != null ? profileImageUrl.value : this.profileImageUrl,
+      identityDocumentUrl: identityDocumentUrl != null ? identityDocumentUrl.value : this.identityDocumentUrl,
       gender: gender ?? this.gender,
       status: status ?? this.status,
-      gradeId: gradeId ?? this.gradeId,
-      gradeName: gradeName ?? this.gradeName,
-      studentCode: studentCode ?? this.studentCode,
-      studyType: studyType ?? this.studyType,
+      gradeId: gradeId != null ? gradeId.value : this.gradeId,
+      gradeName: gradeName != null ? gradeName.value : this.gradeName,
+      studentCode: studentCode != null ? studentCode.value : this.studentCode,
+      studyType: studyType != null ? studyType.value : this.studyType,
+      studyLocation: studyLocation != null ? studyLocation.value : this.studyLocation,
       walletBalance: walletBalance ?? this.walletBalance,
       totalPoints: totalPoints ?? this.totalPoints,
-      schoolName: schoolName ?? this.schoolName,
-      centerId: centerId ?? this.centerId,
-      centerName: centerName ?? this.centerName,
-      parentName: parentName ?? this.parentName,
-      parentPhone: parentPhone ?? this.parentPhone,
-      academicLevel: academicLevel ?? this.academicLevel,
-      dateOfBirth: dateOfBirth ?? this.dateOfBirth,
-      address: address ?? this.address,
-      city: city ?? this.city,
-      governorate: governorate ?? this.governorate,
-      enrolledCourseIds: enrolledCourseIds ?? this.enrolledCourseIds,
-      metadata: metadata ?? this.metadata,
+      schoolName: schoolName != null ? schoolName.value : this.schoolName,
+      educationDepartment: educationDepartment != null ? educationDepartment.value : this.educationDepartment,
+      centerId: centerId != null ? centerId.value : this.centerId,
+      centerName: centerName != null ? centerName.value : this.centerName,
+      parentName: parentName != null ? parentName.value : this.parentName,
+      parentPhone: parentPhone != null ? parentPhone.value : this.parentPhone,
+      academicLevel: academicLevel != null ? academicLevel.value : this.academicLevel,
+      dateOfBirth: dateOfBirth != null ? dateOfBirth.value : this.dateOfBirth,
+      address: address != null ? address.value : this.address,
+      city: city != null ? city.value : this.city,
+      area: area != null ? area.value : this.area,
+      governorate: governorate != null ? governorate.value : this.governorate,
+      isOnline: isOnline != null ? isOnline.value : this.isOnline,
+      enabled: enabled != null ? enabled.value : this.enabled,
+      hasActiveSession: hasActiveSession != null ? hasActiveSession.value : this.hasActiveSession,
+      devicesCount: devicesCount != null ? devicesCount.value : this.devicesCount,
+      loginCount: loginCount != null ? loginCount.value : this.loginCount,
+      lastLoginAt: lastLoginAt != null ? lastLoginAt.value : this.lastLoginAt,
+      enrolledCourseIds: enrolledCourseIds != null ? enrolledCourseIds.value : this.enrolledCourseIds,
+      metadata: metadata != null ? metadata.value : this.metadata,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );

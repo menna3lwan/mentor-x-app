@@ -18,24 +18,23 @@ final class NotificationModel extends NotificationEntity {
 
   factory NotificationModel.fromJson(Map<String, dynamic> json) {
     return NotificationModel(
-      id: json['id']?.toString() ?? '',
-      title: json['title'] ?? '',
-      message: json['message'] ?? json['body'] ?? '',
+      id: ModelParser.asString(json['id']),
+      title: ModelParser.asString(json['title']),
+      message: ModelParser.asString(json['message'] ?? json['body']),
       type: _parseType(json['type']),
-      createdAt: DateTime.tryParse(json['created_at'] ?? json['createdAt'] ?? '') ?? DateTime.now(),
-      isRead: json['is_read'] ?? json['read'] ?? false,
-      readAt: json['read_at'] != null ? DateTime.tryParse(json['read_at']) : null,
-      deepLink: json['deepLink'] ?? json['action_url'] ?? json['url'],
-      imageUrl: json['image_url'] ?? json['imageUrl'],
-      data: json['action_data'] as Map<String, dynamic>? ?? (json['data'] as Map<String, dynamic>?),
-      studentId: json['student_id']?.toString(),
-      studentName: json['student_name'],
+      createdAt: ModelParser.asDateTime(json['created_at'] ?? json['createdAt']) ?? DateTime.now(),
+      isRead: ModelParser.asBool(json['is_read'] ?? json['read'] ?? json['isRead']),
+      readAt: ModelParser.asDateTime(json['read_at'] ?? json['readAt']),
+      deepLink: ModelParser.asString(json['deepLink'] ?? json['action_url'] ?? json['url'] ?? json['link']),
+      imageUrl: ModelParser.asString(json['image_url'] ?? json['imageUrl']),
+      data: ModelParser.asMap(json['action_data'] ?? json['data']),
+      studentId: ModelParser.asString(json['student_id'] ?? json['studentId']),
+      studentName: ModelParser.asString(json['student_name'] ?? json['studentName']),
     );
   }
 
   static NotificationType _parseType(dynamic value) {
-    if (value == null) return NotificationType.info;
-    final str = value.toString().toLowerCase();
+    final str = ModelParser.asString(value).toLowerCase();
     return NotificationType.values.firstWhere(
       (e) => e.name == str,
       orElse: () => NotificationType.info,

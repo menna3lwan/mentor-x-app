@@ -7,9 +7,12 @@ enum CatalogSortOption { newest, priceAsc, priceDesc, popular }
 final class CourseCatalogPageState extends Equatable {
   final CatalogSectionStatus coursesStatus;
   final CatalogSectionStatus categoriesStatus;
+  final CatalogSectionStatus gradesStatus;
   final List<CourseSummaryEntity> courses;
   final List<CategoryEntity> categories;
+  final List<GradeEntity> grades;
   final String searchQuery;
+  final String? selectedGradeId;
   final String? selectedCategoryId;
   final CatalogSortOption sortOption;
   final String? errorMessage;
@@ -17,9 +20,12 @@ final class CourseCatalogPageState extends Equatable {
   const CourseCatalogPageState({
     this.coursesStatus = CatalogSectionStatus.initial,
     this.categoriesStatus = CatalogSectionStatus.initial,
+    this.gradesStatus = CatalogSectionStatus.initial,
     this.courses = const [],
     this.categories = const [],
+    this.grades = const [],
     this.searchQuery = '',
+    this.selectedGradeId,
     this.selectedCategoryId,
     this.sortOption = CatalogSortOption.newest,
     this.errorMessage,
@@ -32,10 +38,14 @@ final class CourseCatalogPageState extends Equatable {
   CourseCatalogPageState copyWith({
     CatalogSectionStatus? coursesStatus,
     CatalogSectionStatus? categoriesStatus,
+    CatalogSectionStatus? gradesStatus,
     List<CourseSummaryEntity>? courses,
     List<CategoryEntity>? categories,
+    List<GradeEntity>? grades,
     String? searchQuery,
+    String? selectedGradeId,
     String? selectedCategoryId,
+    bool clearGrade = false,
     bool clearCategory = false,
     CatalogSortOption? sortOption,
     String? errorMessage,
@@ -43,9 +53,14 @@ final class CourseCatalogPageState extends Equatable {
     return CourseCatalogPageState(
       coursesStatus: coursesStatus ?? this.coursesStatus,
       categoriesStatus: categoriesStatus ?? this.categoriesStatus,
+      gradesStatus: gradesStatus ?? this.gradesStatus,
       courses: courses ?? this.courses,
       categories: categories ?? this.categories,
+      grades: grades ?? this.grades,
       searchQuery: searchQuery ?? this.searchQuery,
+      selectedGradeId: clearGrade
+          ? null
+          : (selectedGradeId ?? this.selectedGradeId),
       selectedCategoryId: clearCategory
           ? null
           : (selectedCategoryId ?? this.selectedCategoryId),
@@ -58,9 +73,12 @@ final class CourseCatalogPageState extends Equatable {
   List<Object?> get props => [
     coursesStatus,
     categoriesStatus,
+    gradesStatus,
     courses,
     categories,
+    grades,
     searchQuery,
+    selectedGradeId,
     selectedCategoryId,
     sortOption,
     errorMessage,

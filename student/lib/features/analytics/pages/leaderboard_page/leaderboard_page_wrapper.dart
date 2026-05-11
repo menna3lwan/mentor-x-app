@@ -1,0 +1,33 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mentorx_core/mentorx_core.dart';
+import 'bloc/leaderboard_page_bloc.dart';
+import 'leaderboard_page_page.dart';
+
+final class LeaderboardPageWrapper extends StatelessWidget {
+  final String? courseId;
+  const LeaderboardPageWrapper({super.key, this.courseId});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider<LeaderboardPageBloc>(
+      create: (context) => LeaderboardPageBloc(
+        leaderboardRepository: context.read<LeaderboardRepository>(),
+        courseRepository: context.read<CourseRepository>(),
+      )..add(LeaderboardPageLoadRequested(courseId: courseId)),
+      child: BlocBuilder<LeaderboardPageBloc, LeaderboardPageState>(
+        builder: (context, state) {
+          return LeaderboardPagePage(
+            state: state,
+            onCourseChanged: (id) => context.read<LeaderboardPageBloc>().add(
+              LeaderboardPageFilterChanged(id),
+            ),
+            onRefresh: () => context.read<LeaderboardPageBloc>().add(
+              LeaderboardPageLoadRequested(courseId: state.selectedCourseId),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}

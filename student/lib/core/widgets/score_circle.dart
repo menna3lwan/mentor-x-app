@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
+import 'package:gap/gap.dart';
 
-class ScoreCircle extends StatelessWidget {
+final class ScoreCircle extends StatelessWidget {
   const ScoreCircle({
     super.key,
     required this.score,
@@ -25,13 +26,13 @@ class ScoreCircle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = context.t.student;
-    final palette = MentorXThemeColorPalette.light;
     final isAr = context.isArabic;
     final percent = total > 0 ? score / total : 0.0;
     final percentage = (percent * 100).toInt();
 
-    Color progressColor = activeColor ?? palette.brandPrimary;
-    Color centerBgColor = backgroundColor ?? palette.brandPrimary.withOpacity(0.05);
+    Color progressColor = activeColor ?? context.brandPrimaryColor;
+    Color centerBgColor =
+        backgroundColor ?? context.brandPrimaryColor.withValues(alpha: 0.05);
     String statusText = '';
 
     if (percentage >= 85) {
@@ -49,16 +50,18 @@ class ScoreCircle extends StatelessWidget {
       lineWidth: lineWidth,
       percent: percent.clamp(0.0, 1.0),
       progressColor: progressColor,
-      backgroundColor: palette.textTertiary.withOpacity(0.1),
+      backgroundColor: context.borderPrimaryColor.withValues(alpha: 0.1),
       circularStrokeCap: CircularStrokeCap.round,
-      animationDuration: 800,
+      animationDuration: 1000,
       animation: true,
+      curve: Curves.fastOutSlowIn,
       center: Container(
-        width: radius * 2 - lineWidth * 2 - 8,
-        height: radius * 2 - lineWidth * 2 - 8,
+        width: radius * 2 - lineWidth * 2 - 12,
+        height: radius * 2 - lineWidth * 2 - 12,
         decoration: BoxDecoration(
           color: centerBgColor,
           shape: BoxShape.circle,
+          border: Border.all(color: progressColor.withValues(alpha: 0.1)),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -69,23 +72,26 @@ class ScoreCircle extends StatelessWidget {
                 fontSize: radius * 0.45,
                 fontWeight: FontWeight.w900,
                 color: progressColor,
+                letterSpacing: -1.0,
               ),
             ),
             if (!showPercentage)
               Text(
                 ofLabel,
                 style: TextStyle(
-                  fontSize: 12,
+                  fontSize: 11,
                   fontWeight: FontWeight.w700,
-                  color: palette.textTertiary,
+                  color: context.textTertiaryColor,
                 ),
               ),
+            const Gap(2),
             Text(
-              statusText,
+              statusText.toUpperCase(),
               style: TextStyle(
-                fontSize: 10,
-                fontWeight: FontWeight.w800,
+                fontSize: 9,
+                fontWeight: FontWeight.w900,
                 color: progressColor,
+                letterSpacing: 0.5,
               ),
             ),
           ],
@@ -94,4 +100,3 @@ class ScoreCircle extends StatelessWidget {
     );
   }
 }
-

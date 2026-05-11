@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:mentorx_student/core/core.dart';
 
 import 'bloc/splash_page_bloc.dart';
-import 'splash_page_page.dart';
+import 'splash_view.dart';
 
 final class SplashPageWrapper extends StatefulWidget {
   const SplashPageWrapper({super.key});
@@ -29,7 +29,7 @@ final class _SplashPageWrapperState extends State<SplashPageWrapper> {
       },
       child: BlocBuilder<SplashPageBloc, SplashPageState>(
         builder: (context, state) {
-          return SplashPagePage(
+          return SplashView(
             isLoading:
                 state.loadingState.isLoading ||
                 state.loadingState == LoadingState.initial,

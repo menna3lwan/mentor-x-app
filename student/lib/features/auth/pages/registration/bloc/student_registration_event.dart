@@ -51,7 +51,8 @@ final class StudentRegistrationStartRequested extends StudentRegistrationEvent {
   const StudentRegistrationStartRequested();
 }
 
-final class StudentRegistrationCheckPhoneRequested extends StudentRegistrationEvent {
+final class StudentRegistrationCheckPhoneRequested
+    extends StudentRegistrationEvent {
   final String phone;
   const StudentRegistrationCheckPhoneRequested(this.phone);
 }
@@ -65,6 +66,11 @@ final class StudentRegistrationOtpChanged extends StudentRegistrationEvent {
 final class StudentRegistrationResendOtpRequested
     extends StudentRegistrationEvent {
   const StudentRegistrationResendOtpRequested();
+}
+
+final class StudentRegistrationVerifyOtpRequested
+    extends StudentRegistrationEvent {
+  const StudentRegistrationVerifyOtpRequested();
 }
 
 // Step 2: Full Personal
@@ -158,19 +164,22 @@ final class StudentRegistrationSubmitted extends StudentRegistrationEvent {
 }
 
 @Deprecated('Use individual name parts')
-final class StudentRegistrationLastNameChanged extends StudentRegistrationEvent {
+final class StudentRegistrationLastNameChanged
+    extends StudentRegistrationEvent {
   final String value;
   const StudentRegistrationLastNameChanged(this.value);
 }
 
 @Deprecated('Use areas strings')
-final class StudentRegistrationDistrictChanged extends StudentRegistrationEvent {
+final class StudentRegistrationDistrictChanged
+    extends StudentRegistrationEvent {
   final DistrictEntity? value;
   const StudentRegistrationDistrictChanged(this.value);
 }
 
 @Deprecated('Use individual center/online fields')
-final class StudentRegistrationStudyTypeChanged extends StudentRegistrationEvent {
+final class StudentRegistrationStudyTypeChanged
+    extends StudentRegistrationEvent {
   final StudyType value;
   const StudentRegistrationStudyTypeChanged(this.value);
 }

@@ -27,14 +27,16 @@ class RewardsPageState extends Equatable {
     );
   }
 
-  bool get isFirstLoading => 
-    pointsSection.isInitial && itemsSection.isInitial && historySection.isInitial;
+  bool get isFirstLoading =>
+      pointsSection.isInitial &&
+      itemsSection.isInitial &&
+      historySection.isInitial;
 
   @override
   List<Object?> get props => [
-    pointsSection, 
-    itemsSection, 
-    historySection, 
+    pointsSection,
+    itemsSection,
+    historySection,
     isClaiming,
   ];
 }

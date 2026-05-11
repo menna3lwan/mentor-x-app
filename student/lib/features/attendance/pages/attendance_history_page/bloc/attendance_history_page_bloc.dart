@@ -32,34 +32,46 @@ final class AttendanceHistoryPageBloc
     AttendanceHistoryPageLoadEvent event,
     Emitter<AttendanceHistoryPageState> emit,
   ) async {
-    emit(state.copyWith(
-      loadingState: LoadingState.loading,
-      errorMessage: const MentorXNullableValue(null),
-    ));
+    emit(
+      state.copyWith(
+        loadingState: LoadingState.loading,
+        errorMessage: const MentorXNullableValue(null),
+      ),
+    );
 
     try {
       final records = await attendanceRepository.getRecords();
-      
-      final present = records.where((r) => r.status == AttendanceStatus.present).length;
-      final absent = records.where((r) => r.status != AttendanceStatus.present).length;
 
-      emit(state.copyWith(
-        loadingState: LoadingState.loaded,
-        records: records,
-        totalCount: records.length,
-        presentCount: present,
-        absentCount: absent,
-      ));
+      final present = records
+          .where((r) => r.status == AttendanceStatus.present)
+          .length;
+      final absent = records
+          .where((r) => r.status != AttendanceStatus.present)
+          .length;
+
+      emit(
+        state.copyWith(
+          loadingState: LoadingState.loaded,
+          records: records,
+          totalCount: records.length,
+          presentCount: present,
+          absentCount: absent,
+        ),
+      );
     } on MentorXException catch (e) {
-      emit(state.copyWith(
-        loadingState: LoadingState.error,
-        errorMessage: MentorXNullableValue(e.message),
-      ));
+      emit(
+        state.copyWith(
+          loadingState: LoadingState.error,
+          errorMessage: MentorXNullableValue(e.message),
+        ),
+      );
     } catch (e) {
-      emit(state.copyWith(
-        loadingState: LoadingState.error,
-        errorMessage: MentorXNullableValue(e.toString()),
-      ));
+      emit(
+        state.copyWith(
+          loadingState: LoadingState.error,
+          errorMessage: MentorXNullableValue(e.toString()),
+        ),
+      );
     }
   }
 }

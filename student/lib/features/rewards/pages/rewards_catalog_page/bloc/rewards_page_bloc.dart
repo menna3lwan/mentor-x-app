@@ -22,12 +22,15 @@ class RewardsPageBloc extends Bloc<RewardsPageEvent, RewardsPageState>
     with BlocPresentationMixin<RewardsPageState, RewardsPagePresentationEvent> {
   final RewardsRepository _rewardsRepository;
   final WalletRepository _walletRepository;
+  final AnalyticsService _analyticsService;
 
   RewardsPageBloc({
     required RewardsRepository rewardsRepository,
     required WalletRepository walletRepository,
+    required AnalyticsService analyticsService,
   }) : _rewardsRepository = rewardsRepository,
        _walletRepository = walletRepository,
+       _analyticsService = analyticsService,
        super(const RewardsPageState()) {
     on<RewardsPageStartedEvent>(_onStarted);
     on<RewardsPageRefreshedEvent>(_onRefreshed);
@@ -106,6 +109,13 @@ class RewardsPageBloc extends Bloc<RewardsPageEvent, RewardsPageState>
       final claim = await _rewardsRepository.claimReward(event.rewardItemId);
       emitPresentation(
         RewardsPageClaimSuccessPresentationEvent(claim.rewardTitle ?? 'Reward'),
+      );
+      _analyticsService.logEvent(
+        name: 'reward_claim_success',
+        parameters: {
+          'reward_id': event.rewardItemId,
+          'reward_title': claim.rewardTitle,
+        },
       );
       // Reload points after claim
       final wallet = await _walletRepository.getSummary();

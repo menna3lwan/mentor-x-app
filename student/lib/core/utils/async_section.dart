@@ -16,17 +16,17 @@ final class AsyncSection<T> extends Equatable {
   const AsyncSection.initial() : this._(status: AsyncSectionStatus.initial);
 
   const AsyncSection.loading({T? data})
-      : this._(status: AsyncSectionStatus.loading, data: data);
+    : this._(status: AsyncSectionStatus.loading, data: data);
 
   const AsyncSection.success(T data)
-      : this._(status: AsyncSectionStatus.success, data: data);
+    : this._(status: AsyncSectionStatus.success, data: data);
 
   const AsyncSection.failure({String? message, T? data})
-      : this._(
-          status: AsyncSectionStatus.failure,
-          data: data,
-          errorMessage: message,
-        );
+    : this._(
+        status: AsyncSectionStatus.failure,
+        data: data,
+        errorMessage: message,
+      );
 
   bool get isInitial => status == AsyncSectionStatus.initial;
   bool get isLoading => status == AsyncSectionStatus.loading;

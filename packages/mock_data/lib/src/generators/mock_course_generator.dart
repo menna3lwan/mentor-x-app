@@ -199,7 +199,7 @@ final class MockCourseGenerator {
         id: 's1',
         courseId: 'ep1',
         title: 'Introduction to Algebraic Expressions',
-        orderIndex: 0,
+        orderNumber: 0,
         isFree: true,
         itemCount: 4,
       ),
@@ -207,28 +207,28 @@ final class MockCourseGenerator {
         id: 's2',
         courseId: 'ep1',
         title: 'Linear Equations',
-        orderIndex: 1,
+        orderNumber: 1,
         itemCount: 3,
       ),
       SessionEntity(
         id: 's3',
         courseId: 'ep1',
         title: 'Quadratic Equations',
-        orderIndex: 2,
+        orderNumber: 2,
         itemCount: 5,
       ),
       SessionEntity(
         id: 's4',
         courseId: 'ep1',
         title: 'Polynomials & Factoring',
-        orderIndex: 3,
+        orderNumber: 3,
         itemCount: 3,
       ),
       SessionEntity(
         id: 's5',
         courseId: 'ep1',
         title: 'Final Review & Practice',
-        orderIndex: 4,
+        orderNumber: 4,
         itemCount: 4,
       ),
     ];
@@ -264,7 +264,7 @@ final class MockCourseGenerator {
             orderIndex: 2,
             downloadable: true,
             pageCount: 8,
-            fileSizeKb: 2400,
+            fileSize: 2400,
           ),
           SessionItemEntity(
             id: 'i4',
@@ -324,7 +324,7 @@ final class MockCourseGenerator {
             itemType: SessionItemType.document,
             orderIndex: 2,
             pageCount: 5,
-            fileSizeKb: 1800,
+            fileSize: 1800,
           ),
           SessionItemEntity(
             id: 'i11',
@@ -359,7 +359,7 @@ final class MockCourseGenerator {
             itemType: SessionItemType.document,
             orderIndex: 1,
             pageCount: 6,
-            fileSizeKb: 1500,
+            fileSize: 1500,
           ),
           SessionItemEntity(
             id: 'i_default_3',
@@ -394,5 +394,20 @@ final class MockCourseGenerator {
       enrolledAt: DateTime.now(),
       expiresAt: DateTime.now().add(const Duration(days: 90)),
     );
+  }
+
+  static List<WeekEntity> sessionWeeks(String sessionId) {
+    return [
+      WeekEntity(
+        id: 'w1',
+        sessionId: sessionId,
+        title: 'Week 1',
+      ),
+      WeekEntity(
+        id: 'w2',
+        sessionId: sessionId,
+        title: 'Week 2',
+      ),
+    ];
   }
 }

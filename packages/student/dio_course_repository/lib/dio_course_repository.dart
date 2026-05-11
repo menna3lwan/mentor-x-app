@@ -34,16 +34,15 @@ final class DioCourseRepository
         },
       );
 
-      final list = asList(asMap(response.data)['content'] ??
-          asMap(response.data)['data'] ??
-          response.data);
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final list = asList(data is Map ? data['content'] : data);
 
       return list
           .map(asMap)
           .map(CourseSummaryModel.fromJson)
           .toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: CourseRepositoryExceptionCode.failedToLoadCourses,
       );
@@ -72,16 +71,15 @@ final class DioCourseRepository
         },
       );
 
-      final list = asList(asMap(response.data)['content'] ??
-          asMap(response.data)['data'] ??
-          response.data);
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final list = asList(data is Map ? data['content'] : data);
 
       return list
           .map(asMap)
           .map(CourseSummaryModel.fromJson)
           .toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: CourseRepositoryExceptionCode.failedToLoadCatalog,
       );
@@ -96,8 +94,8 @@ final class DioCourseRepository
         queryParameters: {if (gradeId != null) 'grade_id': gradeId},
       );
 
-      final list = asList(asMap(response.data)['content'] ??
-          asMap(response.data)['data'] ??
+      final list = asList(asMap(response.data)['data'] ??
+          asMap(response.data)['content'] ??
           response.data);
 
       return list
@@ -105,7 +103,7 @@ final class DioCourseRepository
           .map(CategoryModel.fromJson)
           .toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: CourseRepositoryExceptionCode.failedToLoadCategories,
       );
@@ -120,7 +118,7 @@ final class DioCourseRepository
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return CourseModel.fromJson(data);
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: CourseRepositoryExceptionCode.failedToLoadCourseDetail,
       );
@@ -132,8 +130,8 @@ final class DioCourseRepository
     try {
       final response = await httpClient.get('/api/sessions/course/$courseId');
 
-      final list = asList(asMap(response.data)['content'] ??
-          asMap(response.data)['data'] ??
+      final list = asList(asMap(response.data)['data'] ??
+          asMap(response.data)['content'] ??
           response.data);
 
       return list
@@ -141,7 +139,28 @@ final class DioCourseRepository
           .map(SessionModel.fromJson)
           .toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
+        e,
+        defaultCode: CourseRepositoryExceptionCode.failedToLoadSessions,
+      );
+    }
+  }
+
+  @override
+  Future<List<WeekEntity>> getSessionWeeks(String sessionId) async {
+    try {
+      final response = await httpClient.get('/api/weeks/session/$sessionId');
+
+      final list = asList(asMap(response.data)['data'] ??
+          asMap(response.data)['content'] ??
+          response.data);
+
+      return list
+          .map(asMap)
+          .map(WeekModel.fromJson)
+          .toList();
+    } on HttpClientResponse catch (e) {
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: CourseRepositoryExceptionCode.failedToLoadSessions,
       );
@@ -153,16 +172,26 @@ final class DioCourseRepository
     try {
       final response = await httpClient.get('/api/weeks/session/$sessionId');
 
-      final list = asList(asMap(response.data)['content'] ??
-          asMap(response.data)['data'] ??
+      final list = asList(asMap(response.data)['data'] ??
+          asMap(response.data)['content'] ??
           response.data);
+
+      // Try to parse as weeks first, then flatten items
+      try {
+        final weeks = list.map(asMap).map(WeekModel.fromJson).toList();
+        if (weeks.isNotEmpty && weeks.any((w) => w.items.isNotEmpty)) {
+          return weeks.expand((w) => w.items).toList();
+        }
+      } catch (_) {
+        // Fallback to direct item parsing if it's not a list of weeks
+      }
 
       return list
           .map(asMap)
           .map(SessionItemModel.fromJson)
           .toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: CourseRepositoryExceptionCode.failedToLoadSessions,
       );
@@ -172,13 +201,13 @@ final class DioCourseRepository
   @override
   Future<EnrollmentEntity?> getCourseProgress(String courseId) async {
     try {
-      final response = await httpClient.get('/api/enrollments/check/$courseId');
+      final response = await httpClient.get('/api/enrollments/course/$courseId/progress');
 
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return EnrollmentModel.fromJson(data);
     } on HttpClientResponse catch (e) {
       if (e.statusCode == 404) return null;
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: CourseRepositoryExceptionCode.failedToLoadProgress,
       );
@@ -196,7 +225,7 @@ final class DioCourseRepository
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return EnrollmentModel.fromJson(data);
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: CourseRepositoryExceptionCode.failedToEnroll,
       );
@@ -211,7 +240,7 @@ final class DioCourseRepository
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return data['stream_url']?.toString() ?? data['url']?.toString() ?? '';
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: CourseRepositoryExceptionCode.failedToLoadStreamUrl,
       );
@@ -226,7 +255,7 @@ final class DioCourseRepository
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return data['content_url']?.toString() ?? data['url']?.toString() ?? '';
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: CourseRepositoryExceptionCode.failedToLoadContentUrl,
       );
@@ -259,4 +288,127 @@ final class DioCourseRepository
     }
   }
 
+  @override
+  Future<void> updateCourse(String courseId, Map<String, dynamic> data) async {
+    try {
+      await httpClient.put('/api/courses/$courseId', data: data);
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(e, defaultCode: CourseRepositoryExceptionCode.unknown);
+    }
+  }
+
+  @override
+  Future<void> deleteCourse(String courseId) async {
+    try {
+      await httpClient.delete('/api/courses/$courseId');
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(e, defaultCode: CourseRepositoryExceptionCode.unknown);
+    }
+  }
+
+  @override
+  Future<CourseEntity> createCourse(Map<String, dynamic> data) async {
+    try {
+      final response = await httpClient.post('/api/courses', data: data);
+      final responseData = asMap(response.data)['data'] ?? asMap(response.data);
+      return CourseModel.fromJson(responseData);
+    } on HttpClientResponse catch (e) {
+      return handleHttpClientErrorResponse(e, defaultCode: CourseRepositoryExceptionCode.unknown);
+    }
+  }
+
+  @override
+  Future<void> toggleCourseStatus(String courseId) async {
+    try {
+      await httpClient.patch('/api/courses/$courseId/toggle-status');
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(e, defaultCode: CourseRepositoryExceptionCode.unknown);
+    }
+  }
+
+  @override
+  Future<void> completeEnrollment(String enrollmentId) async {
+    try {
+      await httpClient.post('/api/enrollments/$enrollmentId/complete');
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(e, defaultCode: CourseRepositoryExceptionCode.failedToMarkComplete);
+    }
+  }
+
+  @override
+  Future<void> grantEnrollmentAccess(String enrollmentId) async {
+    try {
+      await httpClient.post('/api/enrollments/$enrollmentId/access');
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(e, defaultCode: CourseRepositoryExceptionCode.failedToEnroll);
+    }
+  }
+
+  @override
+  Future<void> expireOldEnrollments() async {
+    try {
+      await httpClient.post('/api/enrollments/admin/expire-old');
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(e, defaultCode: CourseRepositoryExceptionCode.unknown);
+    }
+  }
+
+  @override
+  Future<void> extendEnrollment(String enrollmentId, int days) async {
+    try {
+      await httpClient.patch('/api/enrollments/admin/$enrollmentId/extend', data: {'days': days});
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(e, defaultCode: CourseRepositoryExceptionCode.unknown);
+    }
+  }
+
+  @override
+  Future<Map<String, dynamic>> getMyEnrollmentStats() async {
+    try {
+      final response = await httpClient.get('/api/enrollments/stats/my-stats');
+      return asMap(response.data);
+    } on HttpClientResponse catch (e) {
+      return handleHttpClientErrorResponse(e, defaultCode: CourseRepositoryExceptionCode.unknown);
+    }
+  }
+
+  @override
+  Future<List<EnrollmentEntity>> getStudentEnrollments(String studentId) async {
+    try {
+      final response = await httpClient.get('/api/enrollments/admin/student/$studentId');
+      final list = asList(asMap(response.data)['data'] ?? response.data);
+      return list.map(asMap).map(EnrollmentModel.fromJson).toList();
+    } on HttpClientResponse catch (e) {
+      return handleHttpClientErrorResponse(e, defaultCode: CourseRepositoryExceptionCode.unknown);
+    }
+  }
+
+  @override
+  Future<List<EnrollmentEntity>> getCourseEnrollments(String courseId) async {
+    try {
+      final response = await httpClient.get('/api/enrollments/admin/course/$courseId');
+      final list = asList(asMap(response.data)['data'] ?? response.data);
+      return list.map(asMap).map(EnrollmentModel.fromJson).toList();
+    } on HttpClientResponse catch (e) {
+      return handleHttpClientErrorResponse(e, defaultCode: CourseRepositoryExceptionCode.unknown);
+    }
+  }
+
+  @override
+  Future<void> deleteEnrollment(String enrollmentId) async {
+    try {
+      await httpClient.delete('/api/enrollments/admin/$enrollmentId');
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(e, defaultCode: CourseRepositoryExceptionCode.unknown);
+    }
+  }
+
+  @override
+  Future<void> cancelAllStudentEnrollments(String studentId) async {
+    try {
+      await httpClient.delete('/api/enrollments/admin/student/$studentId/cancel-all');
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(e, defaultCode: CourseRepositoryExceptionCode.unknown);
+    }
+  }
 }

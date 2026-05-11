@@ -1,218 +1,206 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:gap/gap.dart';
-import 'package:mentorx_student/core/core.dart';
-import 'bloc/change_password_page_bloc.dart';
 
-class ChangePasswordPage extends StatefulWidget {
-  const ChangePasswordPage({super.key});
-  @override
-  State<ChangePasswordPage> createState() => _ChangePasswordPageState();
-}
+final class ChangePasswordPage extends StatelessWidget {
+  final GlobalKey<FormState> formKey;
+  final TextEditingController currentController;
+  final TextEditingController newController;
+  final TextEditingController confirmController;
+  final bool obscureCurrent;
+  final bool obscureNew;
+  final bool obscureConfirm;
+  final bool isSubmitting;
+  final VoidCallback onToggleCurrent;
+  final VoidCallback onToggleNew;
+  final VoidCallback onToggleConfirm;
+  final VoidCallback onSubmit;
 
-class _ChangePasswordPageState extends State<ChangePasswordPage> {
-  final _formKey = GlobalKey<FormState>();
-  bool _obscureCurrent = true;
-  bool _obscureNew = true;
-  bool _obscureConfirm = true;
-
-  final _currentController = TextEditingController();
-  final _newController = TextEditingController();
-  final _confirmController = TextEditingController();
-
-  @override
-  void dispose() {
-    _currentController.dispose();
-    _newController.dispose();
-    _confirmController.dispose();
-    super.dispose();
-  }
-
-  void _onSubmit() {
-    if (!_formKey.currentState!.validate()) return;
-    
-    context.read<ChangePasswordPageBloc>().add(
-      ChangePasswordPageSubmitEvent(
-        currentPassword: _currentController.text,
-        newPassword: _newController.text,
-      ),
-    );
-  }
+  const ChangePasswordPage({
+    super.key,
+    required this.formKey,
+    required this.currentController,
+    required this.newController,
+    required this.confirmController,
+    required this.obscureCurrent,
+    required this.obscureNew,
+    required this.obscureConfirm,
+    required this.isSubmitting,
+    required this.onToggleCurrent,
+    required this.onToggleNew,
+    required this.onToggleConfirm,
+    required this.onSubmit,
+  });
 
   @override
   Widget build(BuildContext context) {
     final t = context.t.student;
-    final palette = MentorXThemeColorPalette.light;
 
-    return BlocConsumer<ChangePasswordPageBloc, ChangePasswordPageState>(
-      listener: (context, state) {
-        if (state.errorMessage != null) {
-          MentorXUI.showToast(message: state.errorMessage!);
-        }
-      },
-      builder: (context, state) {
-        final isSubmitting = state.loadingState == LoadingState.loading;
-
-        return Scaffold(
-          backgroundColor: palette.backgroundSecondary,
-          appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(70),
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [palette.brandPrimary, palette.brandPrimary.withValues(alpha: 0.8)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
-                boxShadow: [
-                  BoxShadow(
-                    color: palette.brandPrimary.withValues(alpha: 0.3),
-                    blurRadius: 15,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: AppBar(
-                backgroundColor: Colors.transparent,
-                elevation: 0,
-                foregroundColor: Colors.white,
-                centerTitle: true,
-                title: Text(
-                  t['changePassword'] ?? 'Change Password',
-                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w900, letterSpacing: -0.5),
-                ),
+    return Scaffold(
+      backgroundColor: context.backgroundPrimaryColor,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(70),
+        child: Container(
+          decoration: BoxDecoration(
+            color: context.backgroundSecondaryColor,
+            borderRadius: const BorderRadius.vertical(
+              bottom: Radius.circular(24),
+            ),
+            border: Border(
+              bottom: BorderSide(
+                color: context.borderPrimaryColor.withValues(alpha: 0.05),
               ),
             ),
           ),
-          body: Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Center(
-                    child: FadeInDown(
-                      duration: const Duration(milliseconds: 600),
-                      child: Container(
-                        padding: const EdgeInsets.all(24),
-                        decoration: BoxDecoration(
-                          color: palette.brandPrimary.withValues(alpha: 0.08),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          Icons.shield_outlined,
-                          size: 48,
-                          color: palette.brandPrimary,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const Gap(12),
-                  Center(
-                    child: FadeInUp(
-                      duration: const Duration(milliseconds: 600),
-                      child: Text(
-                        t['changePasswordDesc'] ?? 'Update your account password',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: palette.textSecondary,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const Gap(40),
-
-                  FadeInUp(
-                    duration: const Duration(milliseconds: 500),
-                    delay: const Duration(milliseconds: 100),
-                    child: _PremiumPasswordField(
-                      label: t['currentPassword'] ?? 'Current Password',
-                      controller: _currentController,
-                      obscure: _obscureCurrent,
-                      onToggle: () => setState(() => _obscureCurrent = !_obscureCurrent),
-                      validator: (v) => v == null || v.isEmpty ? t['requiredField'] ?? 'Required' : null,
-                      enabled: !isSubmitting,
-                      palette: palette,
-                    ),
-                  ),
-                  const Gap(20),
-                  FadeInUp(
-                    duration: const Duration(milliseconds: 500),
-                    delay: const Duration(milliseconds: 200),
-                    child: _PremiumPasswordField(
-                      label: t['newPassword'] ?? 'New Password',
-                      controller: _newController,
-                      obscure: _obscureNew,
-                      onToggle: () => setState(() => _obscureNew = !_obscureNew),
-                      validator: (v) {
-                        if (v == null || v.isEmpty) return t['requiredField'] ?? 'Required';
-                        if (v.length < 6) return t['passwordTooShort'] ?? 'Min. 6 characters';
-                        return null;
-                      },
-                      enabled: !isSubmitting,
-                      palette: palette,
-                    ),
-                  ),
-                  const Gap(20),
-                  FadeInUp(
-                    duration: const Duration(milliseconds: 500),
-                    delay: const Duration(milliseconds: 300),
-                    child: _PremiumPasswordField(
-                      label: t['confirmNewPassword'] ?? 'Confirm New Password',
-                      controller: _confirmController,
-                      obscure: _obscureConfirm,
-                      onToggle: () => setState(() => _obscureConfirm = !_obscureConfirm),
-                      validator: (v) {
-                        if (v == null || v.isEmpty) return t['requiredField'] ?? 'Required';
-                        if (v != _newController.text) return t['passwordsDoNotMatch'] ?? 'Passwords do not match';
-                        return null;
-                      },
-                      enabled: !isSubmitting,
-                      palette: palette,
-                    ),
-                  ),
-                  const Gap(40),
-
-                  FadeInUp(
-                    duration: const Duration(milliseconds: 500),
-                    delay: const Duration(milliseconds: 400),
-                    child: MentorXButton(
-                      onPressed: isSubmitting ? null : _onSubmit,
-                      label: t['saveChanges'] ?? 'Save Changes',
-                      loading: isSubmitting,
-                    ),
-                  ),
-                ],
+          child: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            foregroundColor: context.textPrimaryColor,
+            centerTitle: true,
+            title: Text(
+              t['changePassword'] ?? 'Change Password',
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w900,
+                letterSpacing: -0.5,
               ),
             ),
           ),
-        );
-      },
+        ),
+      ),
+      body: Form(
+        key: formKey,
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: FadeInDown(
+                  duration: const Duration(milliseconds: 600),
+                  child: Container(
+                    padding: const EdgeInsets.all(28),
+                    decoration: BoxDecoration(
+                      color: context.brandPrimaryColor.withValues(alpha: 0.1),
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: context.brandPrimaryColor.withValues(alpha: 0.2),
+                      ),
+                    ),
+                    child: Icon(
+                      Icons.shield_rounded,
+                      size: 56,
+                      color: context.brandPrimaryColor,
+                    ),
+                  ),
+                ),
+              ),
+              const Gap(16),
+              Center(
+                child: FadeInUp(
+                  duration: const Duration(milliseconds: 600),
+                  child: Text(
+                    t['changePasswordDesc'] ?? 'Update your account password',
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: context.textSecondaryColor,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+              ),
+              const Gap(48),
+              FadeInUp(
+                duration: const Duration(milliseconds: 500),
+                delay: const Duration(milliseconds: 100),
+                child: _PremiumPasswordField(
+                  label: t['currentPassword'] ?? 'Current Password',
+                  controller: currentController,
+                  obscure: obscureCurrent,
+                  onToggle: onToggleCurrent,
+                  validator: (v) => v == null || v.isEmpty
+                      ? t['requiredField'] ?? 'Required'
+                      : null,
+                  enabled: !isSubmitting,
+                ),
+              ),
+              const Gap(24),
+              FadeInUp(
+                duration: const Duration(milliseconds: 500),
+                delay: const Duration(milliseconds: 200),
+                child: _PremiumPasswordField(
+                  label: t['newPassword'] ?? 'New Password',
+                  controller: newController,
+                  obscure: obscureNew,
+                  onToggle: onToggleNew,
+                  validator: (v) {
+                    if (v == null || v.isEmpty) {
+                      return t['requiredField'] ?? 'Required';
+                    }
+                    if (v.length < 6) {
+                      return t['passwordTooShort'] ?? 'Min. 6 characters';
+                    }
+                    return null;
+                  },
+                  enabled: !isSubmitting,
+                ),
+              ),
+              const Gap(24),
+              FadeInUp(
+                duration: const Duration(milliseconds: 500),
+                delay: const Duration(milliseconds: 300),
+                child: _PremiumPasswordField(
+                  label: t['confirmNewPassword'] ?? 'Confirm New Password',
+                  controller: confirmController,
+                  obscure: obscureConfirm,
+                  onToggle: onToggleConfirm,
+                  validator: (v) {
+                    if (v == null || v.isEmpty) {
+                      return t['requiredField'] ?? 'Required';
+                    }
+                    if (v != newController.text) {
+                      return t['passwordsDoNotMatch'] ??
+                          'Passwords do not match';
+                    }
+                    return null;
+                  },
+                  enabled: !isSubmitting,
+                ),
+              ),
+              const Gap(56),
+              FadeInUp(
+                duration: const Duration(milliseconds: 500),
+                delay: const Duration(milliseconds: 400),
+                child: MentorXButton(
+                  onPressed: isSubmitting ? null : onSubmit,
+                  label: t['saveChanges'] ?? 'Save Changes',
+                  loading: isSubmitting,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
 
-class _PremiumPasswordField extends StatelessWidget {
+final class _PremiumPasswordField extends StatelessWidget {
   const _PremiumPasswordField({
     required this.label,
     required this.controller,
     required this.obscure,
     required this.onToggle,
-    required this.palette,
     this.validator,
     this.enabled = true,
   });
+
   final String label;
   final TextEditingController controller;
   final bool obscure;
   final VoidCallback onToggle;
-  final MentorXThemeColorPalette palette;
   final String? Function(String?)? validator;
   final bool enabled;
 
@@ -221,21 +209,16 @@ class _PremiumPasswordField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            Icon(Icons.lock_outline_rounded, size: 15, color: palette.brandPrimary),
-            const SizedBox(width: 6),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: palette.brandPrimary.withValues(alpha: 0.8),
-              ),
-            ),
-          ],
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w900,
+            color: context.textTertiaryColor,
+            letterSpacing: 0.5,
+          ),
         ),
-        const SizedBox(height: 8),
+        const Gap(10),
         TextFormField(
           controller: controller,
           obscureText: obscure,
@@ -243,42 +226,47 @@ class _PremiumPasswordField extends StatelessWidget {
           validator: validator,
           enabled: enabled,
           style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            color: palette.textPrimary,
+            fontSize: 15,
+            fontWeight: FontWeight.w700,
+            color: context.textPrimaryColor,
           ),
           decoration: InputDecoration(
             filled: true,
-            fillColor: Colors.white,
+            fillColor: context.backgroundSecondaryColor,
             contentPadding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 14,
+              horizontal: 20,
+              vertical: 18,
             ),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(14),
-              borderSide: const BorderSide(color: AppColors.greyLight),
+              borderRadius: BorderRadius.circular(20),
+              borderSide: BorderSide(
+                color: context.borderPrimaryColor.withValues(alpha: 0.05),
+              ),
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(14),
-              borderSide: const BorderSide(color: AppColors.greyLight),
-            ),
-            disabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(14),
-              borderSide: const BorderSide(color: AppColors.greyLight, width: 0.5),
+              borderRadius: BorderRadius.circular(20),
+              borderSide: BorderSide(
+                color: context.borderPrimaryColor.withValues(alpha: 0.05),
+              ),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(14),
-              borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
+              borderRadius: BorderRadius.circular(20),
+              borderSide: BorderSide(
+                color: context.brandPrimaryColor,
+                width: 1.5,
+              ),
             ),
             errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(14),
-              borderSide: const BorderSide(color: AppColors.red),
+              borderRadius: BorderRadius.circular(20),
+              borderSide: BorderSide(color: context.statusDangerColor),
             ),
             suffixIcon: IconButton(
               icon: Icon(
-                obscure ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-                size: 20,
-                color: AppColors.grey,
+                obscure
+                    ? Icons.visibility_off_rounded
+                    : Icons.visibility_rounded,
+                size: 22,
+                color: context.textTertiaryColor,
               ),
               onPressed: onToggle,
             ),

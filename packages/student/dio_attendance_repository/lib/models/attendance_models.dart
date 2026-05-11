@@ -17,18 +17,18 @@ final class AttendanceSummaryModel extends AttendanceSummaryEntity {
 
   factory AttendanceSummaryModel.fromJson(Map<String, dynamic> json) {
     return AttendanceSummaryModel(
-      totalSessions: _toInt(json['totalSessions'] ?? json['total_sessions']),
-      present: _toInt(json['present'] ?? json['total_present'] ?? json['present_count']),
-      absent: _toInt(json['absent'] ?? json['total_absent'] ?? json['absent_count']),
-      late: _toInt(json['late'] ?? json['total_late'] ?? json['late_count']),
-      excused: _toInt(json['excused'] ?? json['total_excused'] ?? json['excused_count']),
-      online: _toInt(json['online'] ?? json['total_online'] ?? json['online_count']),
-      attendanceRate: _toDouble(json['attendanceRate'] ?? json['attendance_rate']),
-      punctualityRate: _toDouble(json['punctualityRate'] ?? json['punctuality_rate']),
-      periodFrom: json['periodFrom'] != null ? DateTime.tryParse(json['periodFrom']) : (json['period_from'] != null ? DateTime.tryParse(json['period_from']) : null),
-      periodTo: json['periodTo'] != null ? DateTime.tryParse(json['periodTo']) : (json['period_to'] != null ? DateTime.tryParse(json['period_to']) : null),
-      recentRecords: (json['recentRecords'] as List? ?? json['recent_records'] as List? ?? [])
-          .map((e) => AttendanceRecordModel.fromJson(e))
+      totalSessions: ModelParser.asInt(json['totalSessions'] ?? json['total_sessions']),
+      present: ModelParser.asInt(json['present'] ?? json['total_present'] ?? json['present_count']),
+      absent: ModelParser.asInt(json['absent'] ?? json['total_absent'] ?? json['absent_count']),
+      late: ModelParser.asInt(json['late'] ?? json['total_late'] ?? json['late_count']),
+      excused: ModelParser.asInt(json['excused'] ?? json['total_excused'] ?? json['excused_count']),
+      online: ModelParser.asInt(json['online'] ?? json['total_online'] ?? json['online_count']),
+      attendanceRate: ModelParser.asDouble(json['attendanceRate'] ?? json['attendance_rate']),
+      punctualityRate: ModelParser.asDouble(json['punctualityRate'] ?? json['punctuality_rate']),
+      periodFrom: ModelParser.asDateTime(json['periodFrom'] ?? json['period_from']),
+      periodTo: ModelParser.asDateTime(json['periodTo'] ?? json['period_to']),
+      recentRecords: ModelParser.asList(json['recentRecords'] ?? json['recent_records'])
+          .map((e) => AttendanceRecordModel.fromJson(ModelParser.asMap(e)))
           .toList(),
     );
   }
@@ -56,28 +56,27 @@ final class AttendanceRecordModel extends AttendanceRecordEntity {
 
   factory AttendanceRecordModel.fromJson(Map<String, dynamic> json) {
     return AttendanceRecordModel(
-      id: json['id']?.toString() ?? '',
+      id: ModelParser.asString(json['id']),
       status: _parseStatus(json['status']),
-      date: DateTime.tryParse(json['date'] ?? json['created_at'] ?? '') ?? DateTime.now(),
-      studentId: json['student_id']?.toString() ?? json['studentId']?.toString(),
-      courseId: json['course_id']?.toString() ?? json['courseId']?.toString(),
-      courseName: json['course_name']?.toString() ?? json['courseName']?.toString(),
-      sessionId: json['session_id']?.toString() ?? json['sessionId']?.toString(),
-      sessionTitle: json['session_title']?.toString() ?? json['sessionTitle']?.toString(),
+      date: ModelParser.asDateTime(json['date'] ?? json['created_at']) ?? DateTime.now(),
+      studentId: ModelParser.asString(json['student_id'] ?? json['studentId']),
+      courseId: ModelParser.asString(json['course_id'] ?? json['courseId']),
+      courseName: ModelParser.asString(json['course_name'] ?? json['courseName']),
+      sessionId: ModelParser.asString(json['session_id'] ?? json['sessionId']),
+      sessionTitle: ModelParser.asString(json['session_title'] ?? json['sessionTitle']),
       checkInMethod: _parseMethod(json['check_in_method'] ?? json['checkInMethod']),
-      checkInTime: json['check_in_time'] != null ? DateTime.tryParse(json['check_in_time']) : (json['checkInTime'] != null ? DateTime.tryParse(json['checkInTime']) : null),
-      notes: json['notes']?.toString(),
-      teacherNotes: json['teacher_notes']?.toString() ?? json['teacherNotes']?.toString(),
-      centerName: json['center_name']?.toString() ?? json['centerName']?.toString(),
-      startTime: json['start_time']?.toString() ?? json['startTime']?.toString(),
-      endTime: json['end_time']?.toString() ?? json['endTime']?.toString(),
-      isOnline: json['is_online'] ?? json['isOnline'] ?? false,
+      checkInTime: ModelParser.asDateTime(json['check_in_time'] ?? json['checkInTime']),
+      notes: ModelParser.asString(json['notes']),
+      teacherNotes: ModelParser.asString(json['teacher_notes'] ?? json['teacherNotes']),
+      centerName: ModelParser.asString(json['center_name'] ?? json['centerName']),
+      startTime: ModelParser.asString(json['start_time'] ?? json['startTime']),
+      endTime: ModelParser.asString(json['end_time'] ?? json['endTime']),
+      isOnline: ModelParser.asBool(json['is_online'] ?? json['isOnline']),
     );
   }
 
   static AttendanceStatus _parseStatus(dynamic value) {
-    if (value == null) return AttendanceStatus.absent;
-    final str = value.toString().toLowerCase();
+    final str = ModelParser.asString(value).toLowerCase();
     return AttendanceStatus.values.firstWhere(
       (e) => e.name == str,
       orElse: () => AttendanceStatus.absent,
@@ -86,22 +85,10 @@ final class AttendanceRecordModel extends AttendanceRecordEntity {
 
   static CheckInMethod? _parseMethod(dynamic value) {
     if (value == null) return null;
-    final str = value.toString().toLowerCase();
+    final str = ModelParser.asString(value).toLowerCase();
     return CheckInMethod.values.firstWhere(
       (e) => e.name == str,
       orElse: () => CheckInMethod.manual,
     );
   }
-}
-
-int _toInt(dynamic value) {
-  if (value is int) return value;
-  if (value is num) return value.toInt();
-  return int.tryParse(value?.toString() ?? '') ?? 0;
-}
-
-double _toDouble(dynamic value) {
-  if (value is double) return value;
-  if (value is num) return value.toDouble();
-  return double.tryParse(value?.toString() ?? '') ?? 0;
 }

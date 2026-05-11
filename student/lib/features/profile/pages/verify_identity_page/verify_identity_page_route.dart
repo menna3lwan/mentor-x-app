@@ -1,10 +1,17 @@
-import 'package:go_router/go_router.dart';
-import 'verify_identity_page_wrapper.dart';
+part of '../../../../core/routing/app_routes.dart';
 
-final class VerifyIdentityPageRoute extends GoRoute {
-  VerifyIdentityPageRoute()
-      : super(
-          path: '/verify-identity',
-          builder: (context, state) => const VerifyIdentityPageWrapper(),
-        );
+@TypedGoRoute<VerifyIdentityPageRoute>(path: '/verify-identity')
+final class VerifyIdentityPageRoute extends GoRouteData
+    with $VerifyIdentityPageRoute {
+  const VerifyIdentityPageRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return BlocProvider(
+      create: (context) => VerifyIdentityPageBloc(
+        repository: context.read<StudentProfileRepository>(),
+      )..add(const VerifyIdentityPageStarted()),
+      child: const VerifyIdentityPageWrapper(),
+    );
+  }
 }

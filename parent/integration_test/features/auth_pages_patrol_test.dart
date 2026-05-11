@@ -69,24 +69,24 @@ void main() {
     await $('Find Student').tap();
     await $.pumpAndSettle();
 
-    await $('Confirm This Is My Child').tap();
+    await $('Confirm Child').tap();
     await $.pumpAndSettle();
 
-    await $('Next').tap();
+    await $('Continue').tap();
     await $.pumpAndSettle();
 
     await $(TextFormField).at(0).enterText('Ali');
     await $(TextFormField).at(1).enterText('Hassan');
     await $(TextFormField).at(2).enterText('01022222222');
     await $(TextFormField).at(3).enterText('ali.hassan@example.com');
-    await $('Relationship').tap();
+    await $('Relationship to Child').tap();
     await $('Father').tap();
-    await $('Next').tap();
+    await $('Continue').tap();
     await $.pumpAndSettle();
 
     await $(TextFormField).at(0).enterText('Parent@123');
     await $(TextFormField).at(1).enterText('Parent@123');
-    await $('Submit').tap();
+    await $('Create Account').tap();
     await $.pumpAndSettle();
 
     expect(currentParentLocation(), '/otp');

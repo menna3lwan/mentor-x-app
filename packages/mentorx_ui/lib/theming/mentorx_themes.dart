@@ -3,23 +3,76 @@ part of '../mentorx_ui.dart';
 final class MentorXThemes {
   MentorXThemes._();
 
-  static final MixThemeData light = fromColorPalette(
-    MentorXThemeColorPalette.light,
+  static final MixThemeData light = _createTheme(
+    brandPrimary: const Color(0xFF183764),
+    brandPressed: const Color(0xFF0F2647),
+    brandTransparent: const Color(0x66183764),
+    brandSecondary: const Color(0xFFF59239),
+    brandTertiary: const Color(0xFFFFF2DB),
+    textPrimary: const Color(0xFF183764),
+    textSecondary: const Color(0xFFB3B4B5),
+    textTertiary: const Color(0xFFD1D2D3),
+    textForeground: const Color(0xFFFFFFFF),
+    backgroundPrimary: const Color(0xFFFFF2DB),
+    backgroundSecondary: const Color(0xFFFFFFFF),
+    backgroundTertiary: const Color(0xFFF5E6C8),
+    backgroundPrimaryTransparent: const Color(0xCCFFF2DB),
+    backgroundElevatedSurface: const Color(0xFFFFFFFF),
+    backgroundElevatedSurfaceShadow: const Color(0x1A000000),
+    statusDanger: const Color(0xFFD64545),
+    statusSuccess: const Color(0xFF4BBBA0),
+    statusWarning: const Color(0xFFF59239),
+    borderPrimary: const Color(0xFFE5E6E7),
+    borderSecondary: const Color(0xFFF1F2F3),
   );
-  static final MixThemeData dark = fromColorPalette(
-    MentorXThemeColorPalette.dark,
+
+  static final MixThemeData dark = _createTheme(
+    brandPrimary: const Color(0xFF4A7BBF),
+    brandPressed: const Color(0xFF3A6BAF),
+    brandTransparent: const Color(0x664A7BBF),
+    brandSecondary: const Color(0xFFF59239),
+    brandTertiary: const Color(0xFF3D3426),
+    textPrimary: const Color(0xFFFFFFFF),
+    textSecondary: const Color(0xFFA1A9B4),
+    textTertiary: const Color(0xFF485056),
+    textForeground: const Color(0xFFFFFFFF),
+    backgroundPrimary: const Color(0xFF1A1D21),
+    backgroundSecondary: const Color(0xFF242830),
+    backgroundTertiary: const Color(0xFF2C3038),
+    backgroundPrimaryTransparent: const Color(0xCC1A1D21),
+    backgroundElevatedSurface: const Color(0xFF2A2E36),
+    backgroundElevatedSurfaceShadow: const Color(0x4D000000),
+    statusDanger: const Color(0xFFE06B6B),
+    statusSuccess: const Color(0xFF6DD4BE),
+    statusWarning: const Color(0xFFF7A85C),
+    borderPrimary: const Color(0xFF3A3F48),
+    borderSecondary: const Color(0xFF2C3138),
   );
 
   static MixThemeData fromBrightness(Brightness brightness) =>
       brightness == Brightness.light ? light : dark;
 
-  /// You can override the existing tokens by using the override parameters
-  /// and they will be merged with the existing ones
-  static MixThemeData fromColorPalette(
-    MentorXThemeColorPalette palette, {
-    Map<ColorToken, Color> colorOverrides = const {},
-    Map<RadiusToken, Radius> radiusOverrides = const {},
-    Map<TextStyleToken, TextStyle> textStyleOverrides = const {},
+  static MixThemeData _createTheme({
+    required Color brandPrimary,
+    required Color brandPressed,
+    required Color brandTransparent,
+    required Color brandSecondary,
+    required Color brandTertiary,
+    required Color textPrimary,
+    required Color textSecondary,
+    required Color textTertiary,
+    required Color textForeground,
+    required Color backgroundPrimary,
+    required Color backgroundSecondary,
+    required Color backgroundTertiary,
+    required Color backgroundPrimaryTransparent,
+    required Color backgroundElevatedSurface,
+    required Color backgroundElevatedSurfaceShadow,
+    required Color statusDanger,
+    required Color statusSuccess,
+    required Color statusWarning,
+    required Color borderPrimary,
+    required Color borderSecondary,
   }) {
     final colorTokens = $mentorxToken.color;
     final radiusTokens = $mentorxToken.radius;
@@ -27,67 +80,66 @@ final class MentorXThemes {
 
     return MixThemeData(
       colors: {
-        colorTokens.brandPrimary: palette.brandPrimary,
-        colorTokens.brandPressed: palette.brandPressed,
-        colorTokens.brandTransparent: palette.brandTransparent,
-        colorTokens.brandSecondary: palette.brandSecondary,
-        colorTokens.brandTertiary: palette.brandTertiary,
-        colorTokens.textPrimary: palette.textPrimary,
-        colorTokens.textSecondary: palette.textSecondary,
-        colorTokens.textTertiary: palette.textTertiary,
-        colorTokens.textForeground: palette.textForeground,
-        colorTokens.backgroundPrimary: palette.backgroundPrimary,
-        colorTokens.backgroundSecondary: palette.backgroundSecondary,
-        colorTokens.backgroundTertiary: palette.backgroundTertiary,
-        colorTokens.backgroundPrimaryTransparent:
-            palette.backgroundPrimaryTransparent,
-        colorTokens.backgroundElevatedSurface:
-            palette.backgroundElevatedSurface,
-        colorTokens.backgroundElevatedSurfaceShadow:
-            palette.backgroundElevatedSurfaceShadow,
-        colorTokens.statusDanger: palette.statusDanger,
-        colorTokens.statusSuccess: palette.statusSuccess,
-        colorTokens.statusWarning: palette.statusWarning,
-      }..addAll(colorOverrides),
+        colorTokens.brandPrimary: brandPrimary,
+        colorTokens.brandPressed: brandPressed,
+        colorTokens.brandTransparent: brandTransparent,
+        colorTokens.brandSecondary: brandSecondary,
+        colorTokens.brandTertiary: brandTertiary,
+        colorTokens.textPrimary: textPrimary,
+        colorTokens.textSecondary: textSecondary,
+        colorTokens.textTertiary: textTertiary,
+        colorTokens.textForeground: textForeground,
+        colorTokens.backgroundPrimary: backgroundPrimary,
+        colorTokens.backgroundSecondary: backgroundSecondary,
+        colorTokens.backgroundTertiary: backgroundTertiary,
+        colorTokens.backgroundPrimaryTransparent: backgroundPrimaryTransparent,
+        colorTokens.backgroundElevatedSurface: backgroundElevatedSurface,
+        colorTokens.backgroundElevatedSurfaceShadow: backgroundElevatedSurfaceShadow,
+        colorTokens.statusDanger: statusDanger,
+        colorTokens.statusSuccess: statusSuccess,
+        colorTokens.statusWarning: statusWarning,
+        colorTokens.borderPrimary: borderPrimary,
+        colorTokens.borderSecondary: borderSecondary,
+      },
       textStyles: {
         styleTokens.titleH1: GoogleFonts.cairo(
           fontSize: 24,
           fontWeight: FontWeight.w700,
-          color: palette.textPrimary,
+          color: textPrimary,
         ),
         styleTokens.titleH2: GoogleFonts.cairo(
           fontSize: 20,
           fontWeight: FontWeight.w600,
-          color: palette.textPrimary,
+          color: textPrimary,
         ),
         styleTokens.sectionTitle: GoogleFonts.cairo(
           fontSize: 18,
           fontWeight: FontWeight.w500,
-          color: palette.textPrimary,
+          color: textPrimary,
         ),
         styleTokens.bodyPrimary: GoogleFonts.cairo(
           fontSize: 16,
           fontWeight: FontWeight.w400,
-          color: palette.textPrimary,
+          color: textPrimary,
         ),
         styleTokens.bodySecondary: GoogleFonts.cairo(
           fontSize: 14,
           fontWeight: FontWeight.w400,
-          color: palette.textSecondary,
+          color: textSecondary,
         ),
         styleTokens.smallText: GoogleFonts.cairo(
           fontSize: 12,
           fontWeight: FontWeight.w400,
-          color: palette.textSecondary,
+          color: textSecondary,
         ),
-      }..addAll(textStyleOverrides),
+      },
       radii: {
         radiusTokens.thin: const Radius.circular(2),
         radiusTokens.extraSmall: const Radius.circular(4),
         radiusTokens.small: const Radius.circular(8),
         radiusTokens.medium: const Radius.circular(16),
         radiusTokens.large: const Radius.circular(32),
-      }..addAll(radiusOverrides),
+      },
     );
   }
 

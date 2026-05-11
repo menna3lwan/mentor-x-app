@@ -14,7 +14,7 @@ class RefreshTokenInterceptor extends Interceptor {
   final Dio _dio;
   final CacheRepository _cacheRepository;
   final String _baseUrl;
-  final void Function(String token, String? refreshToken) _onTokensUpdated;
+  final Future<void> Function(String token, String? refreshToken) _onTokensUpdated;
 
   static const String _accessTokenKey = CacheKeys.accessToken;
   static const String _refreshTokenKey = CacheKeys.refreshToken;
@@ -32,7 +32,7 @@ class RefreshTokenInterceptor extends Interceptor {
     required Dio dio,
     required CacheRepository cacheRepository,
     required String baseUrl,
-    required void Function(String token, String? refreshToken) onTokensUpdated,
+    required Future<void> Function(String token, String? refreshToken) onTokensUpdated,
   }) : _dio = dio,
        _cacheRepository = cacheRepository,
        _baseUrl = baseUrl,
@@ -73,7 +73,7 @@ class RefreshTokenInterceptor extends Interceptor {
           final accessToken = newTokens['accessToken'];
           final refreshToken = newTokens['refreshToken'];
           if (accessToken != null) {
-            _onTokensUpdated(accessToken, refreshToken);
+            await _onTokensUpdated(accessToken, refreshToken);
           }
 
           // Complete the refresh process

@@ -8,6 +8,9 @@ final class MockParentGradeRepository implements ParentGradeRepository {
   });
 
   @override
+  Future<void> initialize() async {}
+
+  @override
   Future<ParentGradeSummaryEntity> getGradeSummary(String childId) async {
     await Future.delayed(delay);
     return const ParentGradeSummaryEntity(

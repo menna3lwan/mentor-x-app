@@ -33,8 +33,6 @@ class _ForgetPasswordPageWrapperState extends State<ForgetPasswordPageWrapper> {
 
   @override
   Widget build(BuildContext context) {
-    final palette = MentorXThemeColorPalette.light;
-
     return BlocPresentationListener<
       ForgetPasswordBloc,
       ForgetPasswordPresentationEvent
@@ -42,7 +40,7 @@ class _ForgetPasswordPageWrapperState extends State<ForgetPasswordPageWrapper> {
       listener: (context, event) {
         switch (event) {
           case ForgetPasswordSuccessPresentationEvent(:final phone):
-            _openResetPasswordBottomSheet(phone, palette);
+            _openResetPasswordBottomSheet(phone);
           case ForgetPasswordFailurePresentationEvent(:final exception):
             MentorXUI.showToast(message: exception.message ?? 'Failed to send code', isError: true);
         }
@@ -89,7 +87,7 @@ class _ForgetPasswordPageWrapperState extends State<ForgetPasswordPageWrapper> {
                 child: Text(
                   'Back to Login',
                   style: TextStyle(
-                    color: palette.brandPrimary,
+                    color: context.brandPrimaryColor,
                     fontWeight: FontWeight.w800,
                     fontSize: 14,
                   ),
@@ -102,7 +100,7 @@ class _ForgetPasswordPageWrapperState extends State<ForgetPasswordPageWrapper> {
     );
   }
 
-  Future<void> _openResetPasswordBottomSheet(String phone, MentorXThemeColorPalette palette) async {
+  Future<void> _openResetPasswordBottomSheet(String phone) async {
     final otpController = TextEditingController();
     final newPasswordController = TextEditingController();
     final confirmPasswordController = TextEditingController();
@@ -120,7 +118,7 @@ class _ForgetPasswordPageWrapperState extends State<ForgetPasswordPageWrapper> {
                 bottom: MediaQuery.of(context).viewInsets.bottom,
               ),
               decoration: BoxDecoration(
-                color: palette.backgroundPrimary,
+                color: context.backgroundPrimaryColor,
                 borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
               ),
               child: Padding(
@@ -132,7 +130,7 @@ class _ForgetPasswordPageWrapperState extends State<ForgetPasswordPageWrapper> {
                       width: 48,
                       height: 5,
                       decoration: BoxDecoration(
-                        color: palette.textTertiary.withValues(alpha: 0.2),
+                        color: context.textTertiaryColor.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
@@ -142,7 +140,7 @@ class _ForgetPasswordPageWrapperState extends State<ForgetPasswordPageWrapper> {
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.w900,
-                        color: palette.textPrimary,
+                        color: context.textPrimaryColor,
                         letterSpacing: -0.5,
                       ),
                     ),
@@ -152,7 +150,7 @@ class _ForgetPasswordPageWrapperState extends State<ForgetPasswordPageWrapper> {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 14, 
-                        color: palette.textSecondary,
+                        color: context.textSecondaryColor,
                         fontWeight: FontWeight.w500,
                         height: 1.5,
                       ),

@@ -2,7 +2,6 @@ part of 'package:mentorx_core/mentorx_core.dart';
 
 enum ParentChildLinkStatus { pending, linked, rejected, unlinked }
 
-
 class ParentChildEntity extends Equatable {
   final String id;
   final String name;
@@ -22,21 +21,18 @@ class ParentChildEntity extends Equatable {
     this.isVerified,
   });
 
-  static const placeholder = ParentChildEntity(
-    id: '',
-    name: '',
-  );
+  static const placeholder = ParentChildEntity(id: '', name: '');
 
   @override
   List<Object?> get props => [
-        id,
-        name,
-        studentCode,
-        profileImageUrl,
-        gradeName,
-        centerName,
-        isVerified,
-      ];
+    id,
+    name,
+    studentCode,
+    profileImageUrl,
+    gradeName,
+    centerName,
+    isVerified,
+  ];
 
   ParentChildEntity copyWith({
     String? id,

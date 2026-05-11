@@ -2,13 +2,14 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../core/core.dart';
-import '../../features/products/cubit/cart_cubit.dart';
+import 'package:error_tracking_service/error_tracking_service.dart';
+import '../../features/marketplace/cubit/marketplace_cart_cubit.dart';
 
 final class AppBlocs {
   final AppAuthenticationCubit appAuthenticationCubit;
   final AppSessionCubit appSessionCubit;
   final AppLocaleCubit appLocaleCubit;
-  final CartCubit cartCubit;
+  final MarketplaceCartCubit cartCubit;
 
   const AppBlocs._({
     required this.appAuthenticationCubit,
@@ -22,7 +23,7 @@ final class AppBlocs {
       BlocProvider<AppAuthenticationCubit>.value(value: appAuthenticationCubit),
       BlocProvider<AppSessionCubit>.value(value: appSessionCubit),
       BlocProvider<AppLocaleCubit>.value(value: appLocaleCubit),
-      BlocProvider<CartCubit>.value(value: cartCubit),
+      BlocProvider<MarketplaceCartCubit>.value(value: cartCubit),
     ];
   }
 }
@@ -36,19 +37,24 @@ final class BlocsFactory {
     required Brightness brightness,
     required CacheRepository cacheRepository,
     required StudentAuthenticationRepository authenticationRepository,
+    required AnalyticsService analyticsService,
+    required ErrorTrackingService errorTrackingService,
     required List<LocalizedClient> localizedClients,
   }) async {
     final authenticationCubit = AppAuthenticationCubit(
       authRepository: authenticationRepository,
+      analyticsService: analyticsService,
+      errorTrackingService: errorTrackingService,
       initialUser: user,
     );
     final sessionCubit = AppSessionCubit(initialUser: user);
     final localeCubit = AppLocaleCubit(
       initialLanguageCode: languageCode,
       cacheRepository: cacheRepository,
+      analyticsService: analyticsService,
       localizedClients: localizedClients,
     );
-    final cartCubit = CartCubit();
+    final cartCubit = MarketplaceCartCubit(analyticsService: analyticsService);
 
     return AppBlocs._(
       appAuthenticationCubit: authenticationCubit,
