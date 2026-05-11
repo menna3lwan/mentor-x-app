@@ -19,7 +19,7 @@ final class DioCourseRepository
   Future<void> initialize() async {}
 
   @override
-  Future<List<CourseSummaryEntity>> getEnrolledCourses({
+  Future<List<EnrollmentEntity>> getEnrolledCourses({
     String? status,
     String? search,
     MentorXPaginationInfo? paginationInfo,
@@ -39,7 +39,7 @@ final class DioCourseRepository
 
       return list
           .map(asMap)
-          .map(CourseSummaryModel.fromJson)
+          .map(EnrollmentModel.fromJson)
           .toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(

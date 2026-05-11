@@ -8,6 +8,7 @@ final class AppDynamicImage extends StatelessWidget {
   final double? height;
   final bool matchTextDirection;
   final BorderRadius? borderRadius;
+  final Widget? errorWidget;
 
   const AppDynamicImage(
     this.path, {
@@ -18,11 +19,13 @@ final class AppDynamicImage extends StatelessWidget {
     this.fit = BoxFit.cover,
     this.matchTextDirection = true,
     this.borderRadius,
+    this.errorWidget,
   });
 
   @override
   Widget build(BuildContext context) {
     if (path.isEmpty) {
+      if (errorWidget != null) return errorWidget!;
       return ColoredBox(
         color: context.backgroundSecondaryColor,
         child: SizedBox(width: width, height: height),
@@ -61,7 +64,7 @@ final class AppDynamicImage extends StatelessWidget {
             placeholder: (context, url) =>
                 _PlaceHolderImage(height: imageHeight, width: imageWidth, borderRadius: borderRadius),
             errorWidget: (context, url, error) =>
-                _PlaceHolderImage(height: imageHeight, width: imageWidth, borderRadius: borderRadius),
+                errorWidget ?? _PlaceHolderImage(height: imageHeight, width: imageWidth, borderRadius: borderRadius),
             imageBuilder: borderRadius != null 
               ? (context, imageProvider) => Container(
                   width: imageWidth,
@@ -86,6 +89,8 @@ final class AppDynamicImage extends StatelessWidget {
       width: width,
       height: height,
       matchTextDirection: matchTextDirection,
+      errorBuilder: (context, error, stackTrace) =>
+          errorWidget ?? _PlaceHolderImage(height: height, width: width, borderRadius: borderRadius),
     );
   }
 }

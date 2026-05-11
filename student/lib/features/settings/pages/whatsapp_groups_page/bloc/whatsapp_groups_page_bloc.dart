@@ -24,7 +24,12 @@ final class WhatsappGroupsPageBloc
           WhatsappGroupsPageState,
           WhatsappGroupsPagePresentationEvent
         > {
-  WhatsappGroupsPageBloc() : super(WhatsappGroupsPageState.initial) {
+  final StudentCommunicationRepository _repository;
+
+  WhatsappGroupsPageBloc({
+    required StudentCommunicationRepository repository,
+  }) : _repository = repository,
+       super(WhatsappGroupsPageState.initial) {
     on<WhatsappGroupsPageInitialized>(_onInitialized);
     on<WhatsappGroupsPageRefreshed>(_onRefreshed);
     on<WhatsappGroupsPageJoinRequested>(_onJoinRequested);
@@ -60,35 +65,26 @@ final class WhatsappGroupsPageBloc
   Future<void> _load(Emitter<WhatsappGroupsPageState> emit) async {
     emit(state.copyWith(loadingState: LoadingState.loading));
 
-    final groups = <WhatsappGroupUiModel>[
-      const WhatsappGroupUiModel(
-        id: 'math-grade-10',
-        title: 'Grade 10 Math Group',
-        description: 'Homework reminders, live class updates, and quick Q&A.',
-        inviteLink: 'https://chat.whatsapp.com/mock-grade10-math',
-        participantsCount: 128,
-      ),
-      const WhatsappGroupUiModel(
-        id: 'science-grade-10',
-        title: 'Grade 10 Science Group',
-        description: 'Chapter notes, practical tips, and exam review sessions.',
-        inviteLink: 'https://chat.whatsapp.com/mock-grade10-science',
-        participantsCount: 94,
-      ),
-      const WhatsappGroupUiModel(
-        id: 'announcements-main',
-        title: 'Student Announcements',
-        description: 'Important center announcements and schedule changes.',
-        inviteLink: 'https://chat.whatsapp.com/mock-announcements',
-        participantsCount: 460,
-      ),
-    ];
+    try {
+      final entities = await _repository.getWhatsAppGroups();
+      
+      final groups = entities.map((entity) => WhatsappGroupUiModel(
+        id: entity.id,
+        title: entity.name,
+        description: entity.description ?? '',
+        inviteLink: entity.url,
+        participantsCount: 0, // Not provided by the current entity
+        iconUrl: entity.imageUrl,
+      )).toList();
 
-    emit(
-      state.copyWith(
-        loadingState: LoadingState.loaded,
-        groups: groups,
-      ),
-    );
+      emit(
+        state.copyWith(
+          loadingState: LoadingState.loaded,
+          groups: groups,
+        ),
+      );
+    } catch (e) {
+      emit(state.copyWith(loadingState: LoadingState.error));
+    }
   }
 }

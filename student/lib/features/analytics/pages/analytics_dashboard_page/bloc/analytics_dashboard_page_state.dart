@@ -4,7 +4,7 @@ enum AnalyticsDashboardStatus { initial, loading, success, failure }
 
 final class AnalyticsDashboardPageState extends Equatable {
   final AnalyticsDashboardStatus status;
-  final List<CourseSummaryEntity> courses;
+  final List<EnrollmentEntity> courses;
   final String? selectedCourseId;
   final StudentAnalyticsSummaryEntity? summary;
   final String? errorMessage;
@@ -19,7 +19,7 @@ final class AnalyticsDashboardPageState extends Equatable {
 
   AnalyticsDashboardPageState copyWith({
     AnalyticsDashboardStatus? status,
-    List<CourseSummaryEntity>? courses,
+    List<EnrollmentEntity>? courses,
     String? selectedCourseId,
     StudentAnalyticsSummaryEntity? summary,
     String? errorMessage,

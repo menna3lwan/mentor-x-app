@@ -45,7 +45,7 @@ part '../../features/account_status/pages/status_blocked_page/status_blocked_pag
 part '../../features/profile/pages/profile_view_page/profile_view_page_route.dart';
 part '../../features/profile/pages/edit_profile_page/edit_profile_page_route.dart';
 part '../../features/profile/pages/change_password_page/change_password_page_route.dart';
-part '../../features/profile/pages/verify_identity_page/verify_identity_page_route.dart';
+
 part '../../features/wallet/pages/redeem_code_page/redeem_code_page_route.dart';
 part '../../features/wallet/pages/add_balance_page/add_balance_page_route.dart';
 part '../../features/wallet/pages/wallet_main_page/wallet_main_page_route.dart';

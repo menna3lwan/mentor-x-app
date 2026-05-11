@@ -12,7 +12,7 @@ final class MockCourseRepository implements CourseRepository {
   Future<void> initialize() async {}
 
   @override
-  Future<List<CourseSummaryEntity>> getEnrolledCourses({
+  Future<List<EnrollmentEntity>> getEnrolledCourses({
     String? status,
     String? search,
     MentorXPaginationInfo? paginationInfo,
@@ -25,7 +25,7 @@ final class MockCourseRepository implements CourseRepository {
     if (search != null && search.isNotEmpty) {
       final query = search.toLowerCase();
       return courses
-          .where((c) => c.title.toLowerCase().contains(query))
+          .where((c) => (c.courseTitle ?? '').toLowerCase().contains(query))
           .toList();
     }
     return courses;

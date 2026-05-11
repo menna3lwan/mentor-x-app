@@ -4,7 +4,7 @@ final class LeaderboardPageState extends Equatable {
   final LoadingState loadingState;
   final List<LeaderboardEntryEntity> leaderboard;
   final LeaderboardEntryEntity? myRank;
-  final List<CourseSummaryEntity> courses;
+  final List<EnrollmentEntity> courses;
   final String? selectedCourseId;
   final String? errorMessage;
 
@@ -21,7 +21,7 @@ final class LeaderboardPageState extends Equatable {
     LoadingState? loadingState,
     List<LeaderboardEntryEntity>? leaderboard,
     LeaderboardEntryEntity? myRank,
-    List<CourseSummaryEntity>? courses,
+    List<EnrollmentEntity>? courses,
     String? selectedCourseId,
     String? errorMessage,
   }) {

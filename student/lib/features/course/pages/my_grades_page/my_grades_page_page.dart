@@ -233,7 +233,7 @@ final class _SummaryHeader extends StatelessWidget {
 
 final class _CourseFilter extends StatelessWidget {
   final String? selectedCourseId;
-  final List<CourseSummaryEntity> courses;
+  final List<EnrollmentEntity> courses;
   final ValueChanged<String?> onChanged;
   final dynamic t;
 
@@ -277,7 +277,7 @@ final class _CourseFilter extends StatelessWidget {
             ...courses.map<DropdownMenuItem<String>>(
               (course) => DropdownMenuItem<String>(
                 value: course.id,
-                child: Text(course.title),
+                child: Text(course.courseTitle ?? ''),
               ),
             ),
           ],
@@ -327,7 +327,7 @@ final class _CourseSectionCard extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    section.course.title,
+                    section.course.courseTitle ?? '',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w900,

@@ -9,7 +9,7 @@ import 'widgets/widgets.dart';
 
 final class AnalyticsDashboardPagePage extends StatelessWidget {
   final AnalyticsDashboardStatus status;
-  final List<CourseSummaryEntity> courses;
+  final List<EnrollmentEntity> courses;
   final String? selectedCourseId;
   final int? rank;
   final int? totalStudents;
@@ -273,7 +273,7 @@ final class AnalyticsDashboardPagePage extends StatelessWidget {
           return Padding(
             padding: const EdgeInsets.only(right: 10),
             child: _ModernFilterChip(
-              label: isAll ? t.allCourses : course!.title,
+              label: isAll ? t.allCourses : course!.courseTitle ?? '',
               isSelected: isSelected,
               onTap: () => onCourseChanged(course?.id),
             ),

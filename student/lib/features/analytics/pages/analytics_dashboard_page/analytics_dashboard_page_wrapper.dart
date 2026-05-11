@@ -22,7 +22,7 @@ final class AnalyticsDashboardPageWrapper extends StatelessWidget {
           >((bloc) => bloc.state.status);
           final courses = context.select<
             AnalyticsDashboardPageBloc,
-            List<CourseSummaryEntity>
+            List<EnrollmentEntity>
           >((bloc) => bloc.state.courses);
           final selectedCourseId = context.select<
             AnalyticsDashboardPageBloc,

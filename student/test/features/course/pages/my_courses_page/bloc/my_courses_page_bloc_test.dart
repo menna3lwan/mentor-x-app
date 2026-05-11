@@ -96,7 +96,7 @@ void main() {
             .having((s) => s.loadingState, 'loadingState', LoadingState.loaded)
             .having(
               (s) => s.courses.every(
-                (c) => c.title.toLowerCase().contains('algebra'),
+                (c) => (c.courseTitle ?? '').toLowerCase().contains('algebra'),
               ),
               'all contain algebra',
               true,

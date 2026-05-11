@@ -1,6 +1,7 @@
 part of '../../../../core/routing/app_routes.dart';
 
-final class AnalyticsDashboardPageRoute extends GoRouteData {
+final class AnalyticsDashboardPageRoute extends GoRouteData
+    with $AnalyticsDashboardPageRoute {
   const AnalyticsDashboardPageRoute();
 
   @override

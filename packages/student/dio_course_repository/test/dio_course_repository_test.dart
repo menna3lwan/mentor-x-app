@@ -40,7 +40,7 @@ void main() {
 
         expect(result.length, 1);
         expect(result[0].id, 'c1');
-        expect(result[0].title, 'Enrolled Course 1');
+        expect(result[0].courseTitle, 'Enrolled Course 1');
       });
     });
 

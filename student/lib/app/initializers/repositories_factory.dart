@@ -25,6 +25,7 @@ import 'package:dio_settings_repository/dio_settings_repository.dart';
 import 'package:dio_student_registration_repository/dio_student_registration_repository.dart';
 import 'package:dio_leaderboard_repository/dio_leaderboard_repository.dart';
 import 'package:dio_student_analytics_repository/dio_student_analytics_repository.dart';
+import 'package:dio_student_communication_repository/dio_student_communication_repository.dart';
 import 'package:device_info_service/device_info_service.dart';
 import 'package:analytics_service/analytics_service.dart';
 import 'package:error_tracking_service/error_tracking_service.dart';
@@ -44,6 +45,7 @@ import 'package:mock_announcement_repository/mock_announcement_repository.dart';
 import 'package:mock_rewards_repository/mock_rewards_repository.dart';
 import 'package:mock_grade_repository/mock_grade_repository.dart';
 import 'package:mock_student_registration_repository/mock_student_registration_repository.dart';
+import 'package:mock_student_communication_repository/mock_student_communication_repository.dart';
 import 'package:mock_profile_repository/mock_profile_repository.dart';
 import 'package:mock_leaderboard_repository/mock_leaderboard_repository.dart';
 import 'package:mock_student_analytics_repository/mock_student_analytics_repository.dart';
@@ -69,6 +71,7 @@ final class AppRepositories {
   final AnnouncementRepository announcementRepository;
   final StudentRegistrationRepository registrationRepository;
   final LeaderboardRepository leaderboardRepository;
+  final StudentCommunicationRepository communicationRepository;
   final StudentAnalyticsRepository studentAnalyticsRepository;
   final AnalyticsService analyticsService;
   final ErrorTrackingService errorTrackingService;
@@ -92,6 +95,7 @@ final class AppRepositories {
     required this.announcementRepository,
     required this.registrationRepository,
     required this.leaderboardRepository,
+    required this.communicationRepository,
     required this.studentAnalyticsRepository,
     required this.analyticsService,
     required this.errorTrackingService,
@@ -117,6 +121,7 @@ final class AppRepositories {
       announcementRepository,
       registrationRepository,
       leaderboardRepository,
+      communicationRepository,
       studentAnalyticsRepository,
       analyticsService,
       errorTrackingService,
@@ -160,6 +165,9 @@ final class AppRepositories {
       ),
       RepositoryProvider<LeaderboardRepository>(
         create: (_) => leaderboardRepository,
+      ),
+      RepositoryProvider<StudentCommunicationRepository>(
+        create: (_) => communicationRepository,
       ),
       RepositoryProvider<StudentAnalyticsRepository>(
         create: (_) => studentAnalyticsRepository,
@@ -440,6 +448,16 @@ final class RepositoriesFactory {
     }
   }
 
+  static Future<StudentCommunicationRepository> _initCommunicationRepository() async {
+    switch (Env.homeRepositoryMode) { // Reusing home mode for now
+      case RepositoryMode.mock:
+        return MockStudentCommunicationRepository(delay: Env.mockDelayDuration);
+      case RepositoryMode.prod:
+        final httpClient = await _initHttpClient();
+        return DioStudentCommunicationRepository(httpClient: httpClient);
+    }
+  }
+
   static Future<StudentAnalyticsRepository>
   _initStudentAnalyticsRepository() async {
     switch (Env.analyticsRepositoryMode) {
@@ -500,6 +518,7 @@ final class RepositoriesFactory {
       announcementRepository as AnnouncementRepository,
       registrationRepository as StudentRegistrationRepository,
       leaderboardRepository as LeaderboardRepository,
+      communicationRepository as StudentCommunicationRepository,
       studentAnalyticsRepository as StudentAnalyticsRepository,
       analyticsService as AnalyticsService,
       errorTrackingService as ErrorTrackingService,
@@ -522,6 +541,7 @@ final class RepositoriesFactory {
         _initAnnouncementRepository(),
         _initRegistrationRepository(),
         _initLeaderboardRepository(),
+        _initCommunicationRepository(),
         _initStudentAnalyticsRepository(),
         _initAnalyticsService(),
         _initErrorTrackingService(),
@@ -546,6 +566,7 @@ final class RepositoriesFactory {
       announcementRepository: announcementRepository,
       registrationRepository: registrationRepository,
       leaderboardRepository: leaderboardRepository,
+      communicationRepository: communicationRepository,
       studentAnalyticsRepository: studentAnalyticsRepository,
       analyticsService: analyticsService,
       errorTrackingService: errorTrackingService,

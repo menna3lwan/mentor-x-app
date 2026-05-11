@@ -6,6 +6,7 @@ final class WhatsappGroupUiModel extends Equatable {
   final String description;
   final String inviteLink;
   final int participantsCount;
+  final String? iconUrl;
 
   const WhatsappGroupUiModel({
     required this.id,
@@ -13,6 +14,7 @@ final class WhatsappGroupUiModel extends Equatable {
     required this.description,
     required this.inviteLink,
     required this.participantsCount,
+    this.iconUrl,
   });
 
   @override
@@ -22,6 +24,7 @@ final class WhatsappGroupUiModel extends Equatable {
     description,
     inviteLink,
     participantsCount,
+    iconUrl,
   ];
 }
 

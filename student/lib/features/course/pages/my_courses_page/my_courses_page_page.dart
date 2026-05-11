@@ -11,7 +11,7 @@ import 'widgets/widgets.dart';
 final class MyCoursesPagePage extends StatelessWidget {
   final MyCoursesTab selectedTab;
   final bool isLoading;
-  final List<CourseSummaryEntity> courses;
+  final List<EnrollmentEntity> courses;
   final String? errorMessage;
   final ValueChanged<MyCoursesTab> onTabChanged;
   final Future<void> Function() onRefresh;
@@ -189,7 +189,7 @@ final class MyCoursesPagePage extends StatelessWidget {
             delay: Duration(milliseconds: 100 * index),
             child: EnrolledCourseCard(
               course: course,
-              onTap: () => onCourseTap(course.id),
+              onTap: () => onCourseTap(course.courseId),
             ),
           );
         },

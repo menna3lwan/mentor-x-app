@@ -76,22 +76,6 @@ final class MockProfileRepository implements StudentProfileRepository {
     return [];
   }
 
-  @override
-  Future<NationalIdVerificationEntity> verifyIdentity(String imagePath) async {
-    await Future<void>.delayed(delay);
-    return const NationalIdVerificationEntity(
-      status: VerificationStatus.pending,
-    );
-  }
-
-  @override
-  Future<NationalIdVerificationEntity> getVerificationStatus() async {
-    await Future<void>.delayed(delay);
-    return NationalIdVerificationEntity(
-      status: VerificationStatus.verified,
-      verifiedAt: DateTime.now(),
-    );
-  }
 
   @override
   Future<void> deleteAccount(String password) async {

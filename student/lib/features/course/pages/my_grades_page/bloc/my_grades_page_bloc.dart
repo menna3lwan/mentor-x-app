@@ -76,10 +76,10 @@ final class MyGradesPageBloc extends Bloc<MyGradesPageEvent, MyGradesPageState>
       final sections = await Future.wait(
         visibleCourses.map((course) async {
           final quizzes = await _gradeRepository.getQuizGrades(
-            courseId: course.id,
+            courseId: course.courseId,
           );
           final assignments = await _gradeRepository.getAssignmentGrades(
-            courseId: course.id,
+            courseId: course.courseId,
           );
 
           final percentageValues = <double>[];

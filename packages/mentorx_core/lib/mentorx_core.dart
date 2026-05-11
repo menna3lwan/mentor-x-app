@@ -103,7 +103,6 @@ part 'src/entities/reward_claim_entity.dart';
 
 // Verification & Profile (Student only)
 part 'src/entities/profile_edit_request_entity.dart';
-part 'src/entities/national_id_verification_entity.dart';
 part 'src/entities/code_redemption_entity.dart';
 part 'src/entities/leaderboard_entry_entity.dart';
 part 'src/entities/student_analytics_entity.dart';
@@ -136,6 +135,7 @@ part 'src/repositories/parent_course_repository.dart';
 part 'src/repositories/parent_attendance_repository.dart';
 part 'src/repositories/parent_grade_repository.dart';
 part 'src/repositories/parent_communication_repository.dart';
+part 'src/repositories/student_communication_repository.dart';
 part 'src/repositories/onboarding_repository.dart';
 
 // Role-specific interfaces

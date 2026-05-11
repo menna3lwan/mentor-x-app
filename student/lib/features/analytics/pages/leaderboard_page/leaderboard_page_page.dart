@@ -145,7 +145,7 @@ final class LeaderboardPagePage extends StatelessWidget {
 
 final class _CourseFilter extends StatelessWidget {
   final String? selectedId;
-  final List<CourseSummaryEntity> courses;
+  final List<EnrollmentEntity> courses;
   final ValueChanged<String?> onChanged;
   final dynamic t;
 
@@ -173,7 +173,7 @@ final class _CourseFilter extends StatelessWidget {
             (c) => Padding(
               padding: const EdgeInsets.only(right: 8),
               child: _FilterChip(
-                label: c.title,
+                label: c.courseTitle ?? '',
                 isSelected: selectedId == c.id,
                 onTap: () => onChanged(c.id),
               ),

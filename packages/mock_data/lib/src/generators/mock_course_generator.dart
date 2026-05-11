@@ -3,13 +3,14 @@ part of '../../mock_data.dart';
 final class MockCourseGenerator {
   MockCourseGenerator._();
 
-  static List<CourseSummaryEntity> enrolledCourses({
+  static List<EnrollmentEntity> enrolledCourses({
     required String languageCode,
     String? status,
   }) {
+    final List<CourseSummaryEntity> summaries;
     switch (status) {
       case 'completed':
-        return [
+        summaries = [
           LocalizedCourseData.algebraFundamentals.resolve(languageCode),
           const CourseSummaryEntity(
             id: 'ec2',
@@ -26,8 +27,9 @@ final class MockCourseGenerator {
             enrolledCount: 1120,
           ),
         ];
+        break;
       case 'expired':
-        return const [
+        summaries = const [
           CourseSummaryEntity(
             id: 'ee1',
             title: 'Physics Mechanics — Term 1',
@@ -43,8 +45,9 @@ final class MockCourseGenerator {
             enrolledCount: 650,
           ),
         ];
+        break;
       default: // in_progress
-        return const [
+        summaries = const [
           CourseSummaryEntity(
             id: 'ep1',
             title: 'Advanced Algebra for Grade 10',
@@ -81,7 +84,20 @@ final class MockCourseGenerator {
             enrolledCount: 620,
           ),
         ];
+        break;
     }
+
+    return summaries.map((s) {
+      return EnrollmentEntity(
+        id: 'enr_${s.id}',
+        courseId: s.id,
+        courseTitle: s.title,
+        courseThumbnailUrl: s.thumbnailUrl,
+        progressPercent: s.progressPercent ?? 0,
+        enrolledAt: DateTime.now().subtract(const Duration(days: 30)),
+        completedAt: s.progressPercent == 100 ? DateTime.now() : null,
+      );
+    }).toList();
   }
 
   static List<CourseSummaryEntity> catalogCourses() {

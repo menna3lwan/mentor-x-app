@@ -11,8 +11,9 @@ final class WhatsappGroupsPageRoute extends GoRouteData
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return BlocProvider<WhatsappGroupsPageBloc>(
-      create: (context) =>
-          WhatsappGroupsPageBloc()..add(const WhatsappGroupsPageInitialized()),
+      create: (context) => WhatsappGroupsPageBloc(
+        repository: context.read<StudentCommunicationRepository>(),
+      )..add(const WhatsappGroupsPageInitialized()),
       child: const WhatsappGroupsPageWrapper(),
     );
   }

@@ -398,6 +398,13 @@ packages:
       relative: true
     source: path
     version: "1.0.0"
+  dio_student_communication_repository:
+    dependency: transitive
+    description:
+      path: "packages/student/dio_student_communication_repository"
+      relative: true
+    source: path
+    version: "0.0.1"
   dio_web_adapter:
     dependency: transitive
     description:
@@ -1255,6 +1262,13 @@ packages:
       relative: true
     source: path
     version: "1.0.0"
+  mock_student_communication_repository:
+    dependency: transitive
+    description:
+      path: "packages/mock/student/mock_student_communication_repository"
+      relative: true
+    source: path
+    version: "0.0.1"
   mocktail:
     dependency: transitive
     description:

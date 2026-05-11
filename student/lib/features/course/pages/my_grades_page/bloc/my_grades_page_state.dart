@@ -1,7 +1,7 @@
 part of 'my_grades_page_bloc.dart';
 
 final class CourseGradesSection extends Equatable {
-  final CourseSummaryEntity course;
+  final EnrollmentEntity course;
   final List<QuizAttemptEntity> quizzes;
   final List<AssignmentSubmissionEntity> assignments;
   final double? averagePercentage;
@@ -19,7 +19,7 @@ final class CourseGradesSection extends Equatable {
 
 final class MyGradesPageState extends Equatable {
   final LoadingState loadingState;
-  final List<CourseSummaryEntity> courses;
+  final List<EnrollmentEntity> courses;
   final List<CourseGradesSection> sections;
   final String? selectedCourseId;
   final double? overallAverage;
@@ -36,13 +36,13 @@ final class MyGradesPageState extends Equatable {
 
   static const initial = MyGradesPageState(
     loadingState: LoadingState.initial,
-    courses: <CourseSummaryEntity>[],
+    courses: <EnrollmentEntity>[],
     sections: <CourseGradesSection>[],
   );
 
   MyGradesPageState copyWith({
     LoadingState? loadingState,
-    List<CourseSummaryEntity>? courses,
+    List<EnrollmentEntity>? courses,
     List<CourseGradesSection>? sections,
     String? selectedCourseId,
     double? overallAverage,

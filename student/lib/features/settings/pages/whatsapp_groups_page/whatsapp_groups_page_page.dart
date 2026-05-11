@@ -180,15 +180,22 @@ final class _GroupCard extends StatelessWidget {
               Container(
                 width: 52,
                 height: 52,
+                clipBehavior: Clip.antiAlias,
                 decoration: BoxDecoration(
                   color: waColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(color: waColor.withValues(alpha: 0.2)),
                 ),
-                child: const Icon(
-                  Icons.chat_rounded,
-                  color: waColor,
-                  size: 28,
+                child: AppDynamicImage(
+                  group.iconUrl ?? '',
+                  width: 52,
+                  height: 52,
+                  fit: BoxFit.cover,
+                  errorWidget: const Icon(
+                    Icons.chat_rounded,
+                    color: waColor,
+                    size: 28,
+                  ),
                 ),
               ),
               const Gap(16),

@@ -4,8 +4,6 @@ enum StudentProfileRepositoryExceptionCode {
   unknown,
   failedToSubmitEditRequest,
   failedToLoadEditRequests,
-  failedToVerifyIdentity,
-  failedToGetVerificationStatus,
   failedToLoadProfile,
   failedToUpdateProfile,
   failedToLoadDevices,
@@ -31,11 +29,6 @@ abstract interface class StudentProfileRepository implements ProfileRepository {
   /// Get pending edit requests.
   Future<List<ProfileEditRequestEntity>> getPendingEditRequests();
 
-  /// Submit national ID verification (OCR upload).
-  Future<NationalIdVerificationEntity> verifyIdentity(String imagePath);
-
-  /// Get current national ID verification status.
-  Future<NationalIdVerificationEntity> getVerificationStatus();
 
   // Pro Features
   @override

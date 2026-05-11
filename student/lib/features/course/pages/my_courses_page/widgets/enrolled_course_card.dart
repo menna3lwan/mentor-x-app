@@ -5,7 +5,7 @@ import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:gap/gap.dart';
 
 final class EnrolledCourseCard extends StatelessWidget {
-  final CourseSummaryEntity course;
+  final EnrollmentEntity course;
   final VoidCallback onTap;
 
   const EnrolledCourseCard({
@@ -16,7 +16,7 @@ final class EnrolledCourseCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final progress = course.progressPercent ?? 0;
+    final progress = course.progressPercent;
 
     return GestureDetector(
       onTap: onTap,
@@ -56,9 +56,9 @@ final class EnrolledCourseCard extends StatelessWidget {
                       children: [
                         Positioned.fill(
                           child: Hero(
-                            tag: 'course_image_${course.id}',
+                            tag: 'course_image_${course.courseId}',
                             child: AppDynamicImage(
-                              course.thumbnailUrl,
+                              course.courseThumbnailUrl ?? '',
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -88,7 +88,7 @@ final class EnrolledCourseCard extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            course.title,
+                            course.courseTitle ?? '',
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
@@ -99,6 +99,33 @@ final class EnrolledCourseCard extends StatelessWidget {
                               height: 1.2,
                             ),
                           ),
+                          if (course.timeSpentFormatted != null || course.totalLessons > 0) ...[
+                            const Gap(8),
+                            Row(
+                              children: [
+                                if (course.timeSpentFormatted != null)
+                                  _StatChip(
+                                    icon: Icons.timer_outlined,
+                                    label: course.timeSpentFormatted!,
+                                  ),
+                                if (course.totalLessons > 0) ...[
+                                  const Gap(8),
+                                  _StatChip(
+                                    icon: Icons.play_lesson_outlined,
+                                    label: '${course.completedLessons}/${course.totalLessons}',
+                                  ),
+                                ],
+                              ],
+                            ),
+                          ],
+                          if (course.quizzesTaken > 0) ...[
+                            const Gap(8),
+                            _StatChip(
+                              icon: Icons.quiz_outlined,
+                              label: 'Score: ${course.averageQuizScore.toInt()}%',
+                              color: context.brandSecondaryColor,
+                            ),
+                          ],
                           const Gap(16),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -197,5 +224,48 @@ final class EnrolledCourseCard extends StatelessWidget {
         ),
       ),
     ));
+  }
+}
+
+class _StatChip extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final Color? color;
+
+  const _StatChip({
+    required this.icon,
+    required this.label,
+    this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final effectiveColor = color ?? context.textSecondaryColor.withValues(alpha: 0.7);
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      decoration: BoxDecoration(
+        color: effectiveColor.withValues(alpha: 0.05),
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            icon,
+            size: 10,
+            color: effectiveColor,
+          ),
+          const Gap(4),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.w700,
+              color: effectiveColor,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
