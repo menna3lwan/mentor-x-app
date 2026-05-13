@@ -13,20 +13,19 @@ final class LeaderboardEntryModel extends LeaderboardEntryEntity {
   });
 
   factory LeaderboardEntryModel.fromJson(Map<String, dynamic> json) {
+    // Matches LeaderboardEntryResponse schema
     return LeaderboardEntryModel(
       rank: ModelParser.asInt(json['rank']),
-      studentId: ModelParser.asString(json['studentId'] ?? json['id'] ?? json['userId']),
+      studentId: ModelParser.asString(json['studentId'] ?? json['id']),
       studentName: ModelParser.asString(json['studentName'] ?? json['name'] ?? json['fullName']),
       avatarUrl: ModelParser.asString(
-        json['avatarUrl'] ?? json['avatar'] ?? json['profileImageUrl'] ?? json['image'],
+        json['avatarUrl'] ?? json['profileImageUrl'] ?? json['image'],
       ).isEmpty
           ? null
-          : ModelParser.asString(json['avatarUrl'] ?? json['avatar'] ?? json['profileImageUrl'] ?? json['image']),
-      points: ModelParser.asInt(json['points'] ?? json['score']),
-      score: ModelParser.asDouble(json['percentage'] ?? json['score']),
-      quizCount: ModelParser.asInt(json['quizCount'] ?? json['quizzesTaken']) == 0
-          ? null
-          : ModelParser.asInt(json['quizCount'] ?? json['quizzesTaken']),
+          : ModelParser.asString(json['avatarUrl'] ?? json['profileImageUrl'] ?? json['image']),
+      points: ModelParser.asInt(json['score'] ?? json['points']), // API uses 'score' for points/marks
+      score: ModelParser.asDouble(json['percentage'] ?? json['score']), // percentage is the double score
+      quizCount: ModelParser.asInt(json['totalMarks']), // Use as proxy if quizCount missing
       isCurrentUser: ModelParser.asBool(json['isCurrentUser'] ?? json['isMe']),
     );
   }
@@ -38,7 +37,6 @@ final class LeaderboardEntryModel extends LeaderboardEntryEntity {
         'avatarUrl': avatarUrl,
         'points': points,
         'score': score,
-        'quizCount': quizCount,
         'isCurrentUser': isCurrentUser,
       };
 }

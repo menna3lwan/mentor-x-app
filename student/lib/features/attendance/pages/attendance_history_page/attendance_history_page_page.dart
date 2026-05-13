@@ -6,7 +6,7 @@ import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:gap/gap.dart';
 import '../../../../core/core.dart';
-import '../../../../core/widgets/score_circle.dart';
+
 import 'bloc/attendance_history_page_bloc.dart';
 
 final class AttendanceHistoryPage extends StatelessWidget {
@@ -49,7 +49,7 @@ final class AttendanceHistoryPage extends StatelessWidget {
                       itemCount: 8,
                       itemBuilder: (_, _) => const Padding(
                         padding: EdgeInsets.only(bottom: 12),
-                        child: MentorXSkeleton(height: 100, borderRadius: 28),
+                        child: MentorXSkeleton(height: 100, borderRadius: 24),
                       ),
                     )
                   : RefreshIndicator(
@@ -62,56 +62,24 @@ final class AttendanceHistoryPage extends StatelessWidget {
                       child: CustomScrollView(
                         physics: const BouncingScrollPhysics(),
                         slivers: [
-                          SliverAppBar(
-                            expandedHeight: 120,
-                            collapsedHeight: 80,
-                            pinned: true,
-                            floating: true,
-                            backgroundColor: Colors.transparent,
-                            elevation: 0,
-                            surfaceTintColor: Colors.transparent,
-                            flexibleSpace: ClipRRect(
-                              child: BackdropFilter(
-                                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                                child: FlexibleSpaceBar(
-                                  centerTitle: true,
-                                  title: Text(
-                                    t['attendanceHistory']!,
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w900,
-                                      color: context.textPrimaryColor,
-                                      letterSpacing: -0.5,
-                                    ),
-                                  ),
-                                  background: Container(
-                                    decoration: BoxDecoration(
-                                      color: context.backgroundSecondaryColor
-                                          .withValues(alpha: 0.45),
-                                      border: Border(
-                                        bottom: BorderSide(
-                                          color: context.borderPrimaryColor
-                                              .withValues(alpha: 0.1),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
                           SliverToBoxAdapter(
-                            child: Padding(
-                              padding: const EdgeInsets.fromLTRB(20, 24, 20, 16),
-                              child: FadeInDown(
-                                duration: const Duration(milliseconds: 600),
-                                child: _StatsHeader(
-                                  presentCount: presentCount,
-                                  totalCount: totalCount,
-                                  absentCount: absentCount,
-                                  t: t,
+                            child: Column(
+                              children: [
+                                Gap(MediaQuery.paddingOf(context).top + 20),
+                                _buildHeader(context, t),
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
+                                  child: FadeInDown(
+                                    duration: const Duration(milliseconds: 600),
+                                    child: _StatsHeader(
+                                      presentCount: presentCount,
+                                      totalCount: totalCount,
+                                      absentCount: absentCount,
+                                      t: t,
+                                    ),
+                                  ),
                                 ),
-                              ),
+                              ],
                             ),
                           ),
                           if (records.isEmpty)
@@ -120,7 +88,7 @@ final class AttendanceHistoryPage extends StatelessWidget {
                               child: AppEmptyView(
                                 title: t['noAttendance'] ?? 'No attendance records yet',
                                 message: 'Your attendance history will appear here',
-                                icon: Icons.event_busy_rounded,
+                                icon: Icons.event_available_rounded,
                               ),
                             )
                           else
@@ -155,6 +123,65 @@ final class AttendanceHistoryPage extends StatelessWidget {
       },
     );
   }
+
+  Widget _buildHeader(BuildContext context, dynamic t) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+      child: Row(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: context.backgroundSecondaryColor.withValues(alpha: 0.6),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: context.borderPrimaryColor.withValues(alpha: 0.1),
+              ),
+            ),
+            child: MentorXIconButton(
+              onPressed: () => Navigator.of(context).pop(),
+              icon: Icons.arrow_back_ios_new_rounded,
+              color: context.textPrimaryColor,
+              size: MentorXIconButtonSize.small,
+            ),
+          ),
+          const Gap(20),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                FadeInLeft(
+                  duration: const Duration(milliseconds: 600),
+                  child: Text(
+                    'ENGAGEMENT',
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w900,
+                      color: context.brandPrimaryColor,
+                      letterSpacing: 2.0,
+                    ),
+                  ),
+                ),
+                const Gap(4),
+                FadeInLeft(
+                  duration: const Duration(milliseconds: 800),
+                  delay: const Duration(milliseconds: 100),
+                  child: Text(
+                    t['attendanceHistory'] ?? 'Attendance',
+                    style: TextStyle(
+                      fontSize: 26,
+                      fontWeight: FontWeight.w900,
+                      color: context.textPrimaryColor,
+                      letterSpacing: -0.8,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 final class _StatsHeader extends StatelessWidget {
@@ -172,73 +199,112 @@ final class _StatsHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final rate = totalCount == 0 ? 0 : (presentCount / totalCount * 100).toInt();
+
     return Container(
+      padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: context.backgroundSecondaryColor.withValues(alpha: 0.45),
-        borderRadius: BorderRadius.circular(32),
+        color: context.backgroundSecondaryColor.withValues(alpha: 0.6),
+        borderRadius: BorderRadius.circular(24),
         border: Border.all(
           color: context.borderPrimaryColor.withValues(alpha: 0.1),
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 30,
-            offset: const Offset(0, 15),
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
           ),
         ],
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(32),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-          child: Padding(
-            padding: const EdgeInsets.all(32),
-            child: Column(
-              children: [
-                ScoreCircle(
-                  score: presentCount,
-                  total: totalCount,
-                  radius: 80,
-                  lineWidth: 16,
-                  activeColor: context.brandPrimaryColor,
-                  backgroundColor: context.backgroundPrimaryColor.withValues(alpha: 0.5),
-                ),
-                const Gap(32),
-                Text(
-                  t['attendanceRate'] ?? 'Attendance Rate',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w900,
-                    color: context.textPrimaryColor,
-                    letterSpacing: -0.5,
-                  ),
-                ),
-                const Gap(32),
-                Row(
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      child: _StatMiniCard(
-                        label: t['present'] ?? 'Present',
-                        value: presentCount.toString(),
-                        color: context.statusSuccessColor,
-                        icon: Icons.check_circle_rounded,
+                    Text(
+                      t['attendanceRate'] ?? 'Attendance Rate',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w800,
+                        color: context.textSecondaryColor,
+                        letterSpacing: -0.2,
                       ),
                     ),
-                    const Gap(16),
-                    Expanded(
-                      child: _StatMiniCard(
-                        label: t['absent'] ?? 'Absent',
-                        value: absentCount.toString(),
-                        color: context.statusDangerColor,
-                        icon: Icons.cancel_rounded,
-                      ),
+                    const Gap(4),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          '$rate',
+                          style: TextStyle(
+                            fontSize: 36,
+                            fontWeight: FontWeight.w900,
+                            color: context.textPrimaryColor,
+                            letterSpacing: -1.0,
+                          ),
+                        ),
+                        const Gap(4),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 6),
+                          child: Text(
+                            '%',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w900,
+                              color: context.brandPrimaryColor,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
-            ),
+              ),
+              Container(
+                width: 60,
+                height: 60,
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  color: context.brandPrimaryColor.withValues(alpha: 0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: CircularProgressIndicator(
+                  value: totalCount == 0 ? 0 : presentCount / totalCount,
+                  strokeWidth: 6,
+                  color: context.brandPrimaryColor,
+                  backgroundColor: context.brandPrimaryColor.withValues(alpha: 0.1),
+                  strokeCap: StrokeCap.round,
+                ),
+              ),
+            ],
           ),
-        ),
+          const Gap(24),
+          Row(
+            children: [
+              Expanded(
+                child: _StatMiniCard(
+                  label: t['present'] ?? 'Present',
+                  value: presentCount.toString(),
+                  color: context.statusSuccessColor,
+                  icon: Icons.check_circle_rounded,
+                ),
+              ),
+              const Gap(12),
+              Expanded(
+                child: _StatMiniCard(
+                  label: t['absent'] ?? 'Absent',
+                  value: absentCount.toString(),
+                  color: context.statusDangerColor,
+                  icon: Icons.cancel_rounded,
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -260,50 +326,34 @@ final class _StatMiniCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 12),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: context.backgroundPrimaryColor.withValues(alpha: 0.4),
-        borderRadius: BorderRadius.circular(24),
+        color: context.backgroundPrimaryColor.withValues(alpha: 0.5),
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: color.withValues(alpha: 0.15),
+          color: color.withValues(alpha: 0.1),
         ),
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  color.withValues(alpha: 0.2),
-                  color.withValues(alpha: 0.05),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              shape: BoxShape.circle,
-              border: Border.all(color: color.withValues(alpha: 0.1)),
-            ),
-            child: Icon(icon, color: color, size: 20),
-          ),
-          const Gap(16),
+          Icon(icon, color: color, size: 18),
+          const Gap(12),
           Text(
             value,
             style: TextStyle(
-              fontSize: 28,
+              fontSize: 22,
               fontWeight: FontWeight.w900,
-              color: color,
+              color: context.textPrimaryColor,
               letterSpacing: -0.5,
             ),
           ),
-          const Gap(4),
           Text(
-            label.toUpperCase(),
+            label,
             style: TextStyle(
-              fontSize: 10,
-              fontWeight: FontWeight.w900,
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
               color: context.textTertiaryColor,
-              letterSpacing: 1.0,
             ),
           ),
         ],
@@ -326,131 +376,79 @@ final class _AttendanceItem extends StatelessWidget {
     final formattedDate = DateFormat('dd MMM yyyy').format(record.date);
     final statusColor = present ? context.statusSuccessColor : context.statusDangerColor;
 
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Container(
-        decoration: BoxDecoration(
-          color: context.backgroundSecondaryColor.withValues(alpha: 0.45),
-          borderRadius: BorderRadius.circular(28),
-          border: Border.all(
-            color: context.borderPrimaryColor.withValues(alpha: 0.1),
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      decoration: BoxDecoration(
+        color: context.backgroundSecondaryColor.withValues(alpha: 0.6),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: context.borderPrimaryColor.withValues(alpha: 0.1),
+        ),
+      ),
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        leading: Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: statusColor.withValues(alpha: 0.1),
+            shape: BoxShape.circle,
           ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
-              blurRadius: 15,
-              offset: const Offset(0, 8),
+          child: Icon(
+            present ? Icons.check_rounded : Icons.close_rounded,
+            size: 20,
+            color: statusColor,
+          ),
+        ),
+        title: Text(
+          record.courseName ?? t['session'] ?? 'Session',
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.w800,
+            color: context.textPrimaryColor,
+            letterSpacing: -0.3,
+          ),
+        ),
+        subtitle: Row(
+          children: [
+            Icon(
+              Icons.calendar_today_rounded,
+              size: 12,
+              color: context.textTertiaryColor,
+            ),
+            const Gap(6),
+            Text(
+              formattedDate,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: context.textTertiaryColor,
+              ),
             ),
           ],
         ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(28),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-            child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                onTap: () {},
-                child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              statusColor.withValues(alpha: 0.2),
-                              statusColor.withValues(alpha: 0.05),
-                            ],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: statusColor.withValues(alpha: 0.1),
-                          ),
-                        ),
-                        child: Icon(
-                          present ? Icons.check_rounded : Icons.close_rounded,
-                          size: 22,
-                          color: statusColor,
-                        ),
-                      ),
-                      const Gap(20),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              record.courseName ?? t['session'] ?? 'Session',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w900,
-                                color: context.textPrimaryColor,
-                                letterSpacing: -0.3,
-                              ),
-                            ),
-                            const Gap(6),
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.calendar_today_rounded,
-                                  size: 14,
-                                  color: context.textTertiaryColor,
-                                ),
-                                const Gap(8),
-                                Text(
-                                  formattedDate,
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w800,
-                                    color: context.textTertiaryColor,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      if (record.sessionTitle != null) ...[
-                        const Gap(12),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 8,
-                          ),
-                          decoration: BoxDecoration(
-                            color: context.backgroundPrimaryColor.withValues(alpha: 0.4),
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: context.borderPrimaryColor.withValues(
-                                alpha: 0.1,
-                              ),
-                            ),
-                          ),
-                          child: Text(
-                            record.sessionTitle!,
-                            style: TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.w900,
-                              color: context.textSecondaryColor,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ],
+        trailing: record.sessionTitle != null
+            ? Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: context.backgroundPrimaryColor.withValues(alpha: 0.5),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  record.sessionTitle!,
+                  style: TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w800,
+                    color: context.textSecondaryColor,
                   ),
                 ),
-              ),
-            ),
-          ),
-        ),
+              )
+            : null,
       ),
     );
   }
 }
-
 
 class _BackgroundDecorations extends StatelessWidget {
   const _BackgroundDecorations();
@@ -463,23 +461,15 @@ class _BackgroundDecorations extends StatelessWidget {
           top: -100,
           right: -50,
           child: _BlurredBlob(
-            color: context.brandPrimaryColor.withValues(alpha: 0.12),
+            color: context.brandPrimaryColor.withValues(alpha: 0.1),
             size: 350,
           ),
         ),
         Positioned(
-          top: 300,
-          left: -150,
+          bottom: -50,
+          left: -100,
           child: _BlurredBlob(
             color: context.brandSecondaryColor.withValues(alpha: 0.08),
-            size: 400,
-          ),
-        ),
-        Positioned(
-          bottom: -50,
-          right: -100,
-          child: _BlurredBlob(
-            color: context.brandPrimaryColor.withValues(alpha: 0.1),
             size: 300,
           ),
         ),

@@ -37,6 +37,7 @@ final class MarketplaceItemModel extends MarketplaceItemEntity {
     super.isActive = true,
     super.isFeatured = false,
     super.stockQuantity = 0,
+    super.trackInventory = true,
     super.categoryId,
   });
 
@@ -44,7 +45,7 @@ final class MarketplaceItemModel extends MarketplaceItemEntity {
     return MarketplaceItemModel(
       id: ModelParser.asString(json['id']),
       title: ModelParser.asString(json['title']),
-      price: ModelParser.asDouble(json['price']),
+      price: ModelParser.asDouble(json['price'] ?? json['unitPrice'] ?? json['unit_price']),
       description: ModelParser.asString(json['description']),
       oldPrice: ModelParser.asDouble(json['oldPrice'] ?? json['old_price']),
       imageUrls: ModelParser.asList(json['imageUrls'] ?? json['image_urls'])
@@ -53,6 +54,10 @@ final class MarketplaceItemModel extends MarketplaceItemEntity {
       isActive: ModelParser.asBool(json['isActive'] ?? json['is_active'], fallback: true),
       isFeatured: ModelParser.asBool(json['isFeatured'] ?? json['is_featured']),
       stockQuantity: ModelParser.asInt(json['stockQuantity'] ?? json['stock_quantity']),
+      trackInventory: ModelParser.asBool(
+        json['trackInventory'] ?? json['track_inventory'] ?? json['inventoryTracking'],
+        fallback: true,
+      ),
       categoryId: ModelParser.asString(json['categoryId'] ?? json['category_id']),
     );
   }
@@ -67,6 +72,7 @@ final class MarketplaceItemModel extends MarketplaceItemEntity {
         'is_active': isActive,
         'is_featured': isFeatured,
         'stock_quantity': stockQuantity,
+        'track_inventory': trackInventory,
         'category_id': categoryId,
       };
 

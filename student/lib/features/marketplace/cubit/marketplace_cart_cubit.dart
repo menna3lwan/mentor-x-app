@@ -1,7 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_student/core/core.dart';
 import 'dart:math';
-import 'package:analytics_service/analytics_service.dart';
 
 final class MarketplaceCartItem extends Equatable {
   final MarketplaceItemEntity item;

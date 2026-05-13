@@ -2,6 +2,7 @@ part of 'quiz_taking_page_bloc.dart';
 
 final class QuizTakingPageState extends Equatable {
   final String quizId;
+  final String? attemptId;
   final LoadingState loadingState;
   final QuizEntity? quiz;
   final List<QuizQuestionEntity> questions;
@@ -12,6 +13,7 @@ final class QuizTakingPageState extends Equatable {
 
   const QuizTakingPageState({
     required this.quizId,
+    this.attemptId,
     this.loadingState = LoadingState.initial,
     this.quiz,
     this.questions = const [],
@@ -32,6 +34,7 @@ final class QuizTakingPageState extends Equatable {
   @override
   List<Object?> get props => [
     quizId,
+    attemptId,
     loadingState,
     quiz,
     questions,
@@ -43,6 +46,7 @@ final class QuizTakingPageState extends Equatable {
 
   QuizTakingPageState copyWith({
     String? quizId,
+    String? attemptId,
     LoadingState? loadingState,
     QuizEntity? quiz,
     List<QuizQuestionEntity>? questions,
@@ -53,6 +57,7 @@ final class QuizTakingPageState extends Equatable {
   }) {
     return QuizTakingPageState(
       quizId: quizId ?? this.quizId,
+      attemptId: attemptId ?? this.attemptId,
       loadingState: loadingState ?? this.loadingState,
       quiz: quiz ?? this.quiz,
       questions: questions ?? this.questions,

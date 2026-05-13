@@ -5,7 +5,7 @@ import 'core/utils/env.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  SentryWidgetsFlutterBinding.ensureInitialized();
   final requirements = await StudentRequirements.initialize();
   await SentryFlutter.init(
     (options) {

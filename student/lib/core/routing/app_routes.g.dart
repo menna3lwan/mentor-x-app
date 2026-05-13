@@ -1522,17 +1522,20 @@ mixin $QuizReviewPageRoute on GoRouteData {
 }
 
 RouteBase get $quizIntroPageRoute => GoRouteData.$route(
-  path: '/quiz-intro',
+  path: '/quiz-intro/:quizId',
   name: 'quizIntro',
   factory: $QuizIntroPageRoute._fromState,
 );
 
 mixin $QuizIntroPageRoute on GoRouteData {
   static QuizIntroPageRoute _fromState(GoRouterState state) =>
-      const QuizIntroPageRoute();
+      QuizIntroPageRoute(quizId: state.pathParameters['quizId']!);
+
+  QuizIntroPageRoute get _self => this as QuizIntroPageRoute;
 
   @override
-  String get location => GoRouteData.$location('/quiz-intro');
+  String get location =>
+      GoRouteData.$location('/quiz-intro/${Uri.encodeComponent(_self.quizId)}');
 
   @override
   void go(BuildContext context) => context.go(location);

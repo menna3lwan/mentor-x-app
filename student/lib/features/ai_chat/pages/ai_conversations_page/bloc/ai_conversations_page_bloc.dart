@@ -1,4 +1,3 @@
-import 'package:analytics_service/analytics_service.dart';
 import 'package:bloc/bloc.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
 

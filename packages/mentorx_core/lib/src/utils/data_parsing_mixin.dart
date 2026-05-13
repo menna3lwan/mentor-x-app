@@ -10,13 +10,33 @@ mixin DataParsingMixin {
     return <String, dynamic>{};
   }
 
-  /// Converts dynamic value to `List<dynamic>` safely
-  /// Prioritizes 'data' or 'items' keys if value is a Map
+  /// Extracts the main data payload from a potentially wrapped response.
+  /// If the map contains a 'data' key which is also a Map, it returns that nested map.
+  Map<String, dynamic> extractData(dynamic value) {
+    final map = asMap(value);
+    final data = map['data'];
+    if (data is Map) {
+      return asMap(data);
+    }
+    return map;
+  }
+
+  /// Converts dynamic value to `List<dynamic>` safely.
+  /// Robustly handles 'data', 'items', 'content' keys and nested 'data.content'.
   List<dynamic> asList(dynamic value) {
     if (value is List<dynamic>) return value;
     if (value is Map) {
-      final d = value['data'] ?? value['items'];
+      // 1. Direct check for common list keys
+      final d = value['data'] ?? value['items'] ?? value['content'];
       if (d is List<dynamic>) return d;
+
+      // 2. Deep check for nested data.content or data.items
+      if (d is Map) {
+        final nested = d['content'] ?? d['items'] ?? d['data'];
+        if (nested is List<dynamic>) return nested;
+      }
+
+      // 3. Fallback: if value itself is the list we want (handled by first if)
     }
     return <dynamic>[];
   }

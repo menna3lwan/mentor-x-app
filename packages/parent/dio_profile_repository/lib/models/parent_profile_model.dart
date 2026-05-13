@@ -1,6 +1,6 @@
 import 'package:mentorx_core/mentorx_core.dart';
 
-class ParentProfileModel extends ParentEntity {
+final class ParentProfileModel extends ParentEntity {
   const ParentProfileModel({
     required super.id,
     required super.firstName,
@@ -18,27 +18,43 @@ class ParentProfileModel extends ParentEntity {
   });
 
   factory ParentProfileModel.fromJson(Map<String, dynamic> json) {
+    final data = ModelParser.asMap(json['data'] ?? json);
+
+    final String name = ModelParser.asString(data['name'] ?? data['fullName']);
+    final nameParts = name.trim().split(' ');
+    final String first = nameParts.isNotEmpty ? nameParts.first : '';
+    final String last = nameParts.length > 1 ? nameParts.sublist(1).join(' ') : '';
+
     return ParentProfileModel(
-      id: json['id'] as String? ?? '',
-      firstName: json['firstName'] ?? json['first_name'] ?? '',
-      lastName: json['lastName'] ?? json['last_name'] ?? '',
-      email: json['email'] as String? ?? '',
-      phoneNumber: json['phoneNumber'] ?? json['phone_number'] ?? '',
-      profileImageUrl: json['profileImageUrl'] ?? json['profile_image_url'],
-      status: ParentStatus.values.firstWhere(
-        (e) => e.name == json['status'],
-        orElse: () => ParentStatus.active,
-      ),
-      childrenCount: json['childrenCount'] ?? json['children_count'] ?? 0,
-      walletBalance: (json['walletBalance'] ?? json['wallet_balance'] ?? 0).toDouble(),
-      totalPoints: json['totalPoints'] ?? json['total_points'] ?? 0,
-      metadata: json['metadata'] as Map<String, dynamic>?,
-      createdAt: json['createdAt'] != null || json['created_at'] != null
-          ? DateTime.parse(json['createdAt'] ?? json['created_at'])
-          : DateTime.now(),
-      updatedAt: json['updatedAt'] != null || json['updated_at'] != null
-          ? DateTime.parse(json['updatedAt'] ?? json['updated_at'])
-          : DateTime.now(),
+      id: ModelParser.asString(data['id'] ?? data['userId']),
+      firstName: ModelParser.asString(data['firstName'], fallback: first),
+      lastName: ModelParser.asString(data['lastName'], fallback: last),
+      email: ModelParser.asString(data['email']),
+      phoneNumber: ModelParser.asString(data['phone'] ?? data['phoneNumber']),
+      profileImageUrl: ModelParser.asString(data['profileImageUrl'] ?? data['image_url']),
+      status: _parseStatus(data['status']),
+      childrenCount: ModelParser.asInt(data['childrenCount'] ?? data['students'] is List ? (data['students'] as List).length : 0),
+      walletBalance: ModelParser.asDouble(data['walletBalance'] ?? data['balance']),
+      totalPoints: ModelParser.asInt(data['totalPoints'] ?? data['points']),
+      metadata: ModelParser.asMap(data['metadata']),
+      createdAt: ModelParser.asDateTime(data['createdAt'] ?? data['created_at']) ?? DateTime.now(),
+      updatedAt: ModelParser.asDateTime(data['updatedAt'] ?? data['updated_at']) ?? DateTime.now(),
     );
   }
+
+  static ParentStatus _parseStatus(dynamic value) {
+    final str = ModelParser.asString(value).toLowerCase();
+    if (str == 'active' || str == 'approved') return ParentStatus.active;
+    return ParentStatus.values.firstWhere(
+      (e) => e.name == str,
+      orElse: () => ParentStatus.active,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': '$firstName $lastName'.trim(),
+    };
+  }
 }
+

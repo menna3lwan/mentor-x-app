@@ -10,6 +10,7 @@ class MarketplaceItemEntity extends Equatable {
   final bool isActive;
   final bool isFeatured;
   final int stockQuantity;
+  final bool trackInventory;
   final String? categoryId;
 
   const MarketplaceItemEntity({
@@ -22,12 +23,13 @@ class MarketplaceItemEntity extends Equatable {
     this.isActive = true,
     this.isFeatured = false,
     this.stockQuantity = 0,
+    this.trackInventory = true,
     this.categoryId,
   });
 
   bool get hasDiscount => oldPrice != null && oldPrice! > price;
 
-  bool get inStock => stockQuantity > 0;
+  bool get inStock => !trackInventory || stockQuantity > 0;
 
   static const placeholder = MarketplaceItemEntity(
     id: '',
@@ -46,6 +48,7 @@ class MarketplaceItemEntity extends Equatable {
         isActive,
         isFeatured,
         stockQuantity,
+        trackInventory,
         categoryId,
       ];
 
@@ -59,6 +62,7 @@ class MarketplaceItemEntity extends Equatable {
     bool? isActive,
     bool? isFeatured,
     int? stockQuantity,
+    bool? trackInventory,
     String? categoryId,
   }) {
     return MarketplaceItemEntity(
@@ -71,6 +75,7 @@ class MarketplaceItemEntity extends Equatable {
       isActive: isActive ?? this.isActive,
       isFeatured: isFeatured ?? this.isFeatured,
       stockQuantity: stockQuantity ?? this.stockQuantity,
+      trackInventory: trackInventory ?? this.trackInventory,
       categoryId: categoryId ?? this.categoryId,
     );
   }

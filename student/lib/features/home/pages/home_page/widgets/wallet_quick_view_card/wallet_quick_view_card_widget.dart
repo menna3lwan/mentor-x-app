@@ -27,10 +27,10 @@ final class WalletQuickViewCardWidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(32),
           boxShadow: [
             BoxShadow(
-              color: context.brandPrimaryColor.withValues(alpha: 0.2),
-              blurRadius: 40,
-              offset: const Offset(0, 20),
-              spreadRadius: -10,
+              color: context.brandPrimaryColor.withValues(alpha: 0.15),
+              blurRadius: 30,
+              offset: const Offset(0, 15),
+              spreadRadius: -5,
             ),
           ],
         ),
@@ -43,115 +43,99 @@ final class WalletQuickViewCardWidget extends StatelessWidget {
                 const WalletMainPageRoute().push(context);
               },
               child: Container(
-                padding: const EdgeInsets.all(28),
+                padding: const EdgeInsets.all(24),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                     colors: [
                       context.brandPrimaryColor,
-                      context.brandSecondaryColor.withValues(alpha: 0.8),
+                      context.brandPrimaryColor.withValues(alpha: 0.85),
+                      context.brandSecondaryColor.withValues(alpha: 0.9),
                     ],
-                    stops: const [0.3, 1.0],
+                    stops: const [0.0, 0.6, 1.0],
                   ),
                 ),
                 child: Stack(
                   children: [
                     Positioned(
-                      right: -20,
-                      top: -20,
+                      right: -30,
+                      bottom: -30,
                       child: Icon(
                         Icons.account_balance_wallet_rounded,
-                        size: 140,
-                        color: Colors.white.withValues(alpha: 0.1),
+                        size: 160,
+                        color: Colors.white.withValues(alpha: 0.08),
                       ),
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.15),
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: Colors.white.withValues(alpha: 0.1),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  context.t.home.dashboard.walletBalance.toUpperCase(),
+                                  style: TextStyle(
+                                    color: Colors.white.withValues(alpha: 0.7),
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w800,
+                                    letterSpacing: 1.2,
+                                  ),
+                                ),
+                                const Gap(6),
+                                Text(
+                                  context.t.core.price(amount: balance),
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 34,
+                                    fontWeight: FontWeight.w900,
+                                    letterSpacing: -1.2,
+                                    height: 1.0,
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Icon(
-                                Icons.account_balance_wallet_outlined,
+                            Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withValues(alpha: 0.15),
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: Colors.white.withValues(alpha: 0.1),
+                                ),
+                              ),
+                              child: const Icon(
+                                Icons.add_rounded,
                                 color: Colors.white,
-                                size: 14,
+                                size: 24,
                               ),
-                              const Gap(8),
-                              Text(
-                                context.t.home.dashboard.walletBalance.toUpperCase(),
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w900,
-                                  letterSpacing: 1.2,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const Gap(20),
-                        Text(
-                          context.t.core.price(amount: balance),
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 40,
-                            fontWeight: FontWeight.w900,
-                            letterSpacing: -1.5,
-                            height: 1.0,
-                          ),
-                        ),
-                        const Gap(24),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 10,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.2),
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(
-                              color: Colors.white.withValues(alpha: 0.1),
                             ),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(4),
-                                decoration: const BoxDecoration(
-                                  color: Colors.white,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Icon(
-                                  Icons.stars_rounded,
-                                  color: context.brandPrimaryColor,
-                                  size: 14,
-                                ),
+                          ],
+                        ),
+                        const Gap(32),
+                        Row(
+                          children: [
+                            _StatItem(
+                              icon: Icons.stars_rounded,
+                              label: context.t.home.dashboard.points(
+                                count: points,
                               ),
-                              const Gap(10),
-                              Text(
-                                context.t.home.dashboard.points(
-                                  count: points,
-                                ),
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w900,
-                                  letterSpacing: -0.2,
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                            const Gap(16),
+                            Container(
+                              width: 1,
+                              height: 24,
+                              color: Colors.white.withValues(alpha: 0.15),
+                            ),
+                            const Gap(16),
+                            _StatItem(
+                              icon: Icons.auto_graph_rounded,
+                              label: 'Level 5', // Placeholder for "pro" look
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -162,6 +146,36 @@ final class WalletQuickViewCardWidget extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _StatItem extends StatelessWidget {
+  final IconData icon;
+  final String label;
+
+  const _StatItem({required this.icon, required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Icon(
+          icon,
+          color: Colors.white.withValues(alpha: 0.9),
+          size: 18,
+        ),
+        const Gap(8),
+        Text(
+          label,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 14,
+            fontWeight: FontWeight.w700,
+            letterSpacing: -0.2,
+          ),
+        ),
+      ],
     );
   }
 }

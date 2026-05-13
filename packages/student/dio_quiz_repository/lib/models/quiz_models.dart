@@ -21,6 +21,7 @@ final class QuizModel extends QuizEntity {
   });
 
   factory QuizModel.fromJson(Map<String, dynamic> json) {
+    // API sends totalMarks and passingPercentage (or passMarks)
     final totalMarks = ModelParser.asInt(json['totalMarks'] ?? json['total_marks']);
     final passingPercentage = ModelParser.asDouble(json['passingPercentage'] ?? json['passing_percentage']);
     final passMarks = ModelParser.asInt(
@@ -82,10 +83,11 @@ final class QuizQuestionModel extends QuizQuestionEntity {
 
   static QuizQuestionType _parseType(dynamic value) {
     final str = ModelParser.asString(value).toLowerCase();
-    return QuizQuestionType.values.firstWhere(
-      (e) => e.name == str,
-      orElse: () => QuizQuestionType.multipleChoice,
-    );
+    // Support matching enum name or value
+    for (final type in QuizQuestionType.values) {
+      if (type.name.toLowerCase() == str) return type;
+    }
+    return QuizQuestionType.multipleChoice;
   }
 }
 
@@ -108,36 +110,61 @@ final class QuizAttemptModel extends QuizAttemptEntity {
   });
 
   factory QuizAttemptModel.fromJson(Map<String, dynamic> json) {
+    final bool isSubmitted = ModelParser.asBool(json['submitted']);
+    final startedAt = ModelParser.asDateTime(json['startedAt'] ?? json['started_at']);
+    final submittedAt = ModelParser.asDateTime(json['submittedAt'] ?? json['submitted_at']);
+    
+    int timeSpent = ModelParser.asInt(json['timeSpentSeconds'] ?? json['time_spent_seconds']);
+    if (timeSpent == 0 && startedAt != null && submittedAt != null) {
+      timeSpent = submittedAt.difference(startedAt).inSeconds;
+    }
+
     return QuizAttemptModel(
       id: ModelParser.asString(
-        json['id'] ?? json['attemptId'] ?? json['attempt_id'],
+        json['attemptId'] ?? json['id'] ?? json['attempt_id'],
       ),
       quizId: ModelParser.asString(json['quizId'] ?? json['quiz_id']),
       courseId: ModelParser.asString(json['courseId'] ?? json['course_id']),
-      courseName: ModelParser.asString(json['courseName'] ?? json['course_name']),
-      attemptNumber:
-          ModelParser.asInt(json['attemptNumber'] ?? json['attempt_number']),
-      status: _parseStatus(json['status']),
-      answers: ModelParser.asMap(json['answers']).map(
-        (k, v) => MapEntry(k, v.toString()),
-      ),
+      courseName: ModelParser.asString(json['courseName'] ?? json['quizTitle'] ?? json['quiz_title']),
+      attemptNumber: ModelParser.asInt(json['attemptNumber'] ?? json['attempt_number']),
+      status: _parseStatus(json['status'] ?? (isSubmitted ? 'submitted' : 'in_progress')),
+      answers: _parseAnswers(json['answers']),
       score: ModelParser.asInt(json['score']),
       totalMarks: ModelParser.asInt(json['totalMarks'] ?? json['total_marks']),
       percentage: ModelParser.asDouble(json['percentage']),
       passed: ModelParser.asBool(json['passed']),
-      startedAt: ModelParser.asDateTime(json['startedAt'] ?? json['started_at']) ??
-          DateTime.now(),
-      submittedAt:
-          ModelParser.asDateTime(json['submittedAt'] ?? json['submitted_at']),
-      timeSpentSeconds:
-          ModelParser.asInt(json['timeSpentSeconds'] ?? json['time_spent_seconds']),
+      startedAt: startedAt ?? DateTime.now(),
+      submittedAt: submittedAt,
+      timeSpentSeconds: timeSpent,
     );
+  }
+
+  static Map<String, String> _parseAnswers(dynamic json) {
+    if (json is Map) {
+      return json.map((k, v) => MapEntry(k.toString(), v.toString()));
+    }
+    if (json is List) {
+      final map = <String, String>{};
+      for (final item in json) {
+        final entry = ModelParser.asMap(item);
+        final qId = ModelParser.asString(entry['questionId'] ?? entry['question_id']);
+        final ans = ModelParser.asString(entry['selectedAnswer'] ?? entry['selected_answer'] ?? entry['answer']);
+        if (qId.isNotEmpty) {
+          map[qId] = ans;
+        }
+      }
+      return map;
+    }
+    return const {};
   }
 
   static QuizAttemptStatus _parseStatus(dynamic value) {
     final str = ModelParser.asString(value).toLowerCase();
+    if (str == 'completed' || str == 'submitted') return QuizAttemptStatus.submitted;
+    if (str == 'started' || str == 'in_progress' || str == 'active') return QuizAttemptStatus.inProgress;
+    
     return QuizAttemptStatus.values.firstWhere(
-      (e) => e.name == str,
+      (e) => e.name.toLowerCase() == str,
       orElse: () => QuizAttemptStatus.inProgress,
     );
   }

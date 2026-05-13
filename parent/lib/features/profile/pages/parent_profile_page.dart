@@ -1,7 +1,9 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:gap/gap.dart';
+import 'package:animate_do/animate_do.dart';
 import 'package:mix/mix.dart';
 import 'package:analytics_service/analytics_service.dart';
 import '../bloc/profile_bloc.dart';
@@ -11,19 +13,18 @@ class ParentProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final t = Translations.of(context).parent;
-
     return BlocProvider(
       create: (context) => ProfileBloc(
         analyticsService: context.read<AnalyticsService>(),
       )..add(ProfileStarted()),
-      child: BlocBuilder<ProfileBloc, ProfileState>(
-        builder: (context, state) {
-          return AppDashboardScaffold(
-            title: t.myProfile,
-            body: const ParentProfileView(),
-          );
-        },
+      child: Scaffold(
+        backgroundColor: context.backgroundPrimaryColor,
+        body: Stack(
+          children: [
+            const _BackgroundDecorations(),
+            const ParentProfileView(),
+          ],
+        ),
       ),
     );
   }
@@ -51,118 +52,184 @@ class ParentProfileView extends StatelessWidget {
 
         final profile = state.profileData;
         
-        return ListView(
+        return CustomScrollView(
           physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-          children: [
-            // Avatar and Name
-            Center(
-              child: Column(
-                children: [
-                  Stack(
-                    alignment: Alignment.bottomRight,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(color: context.brandPrimaryColor.withValues(alpha: 0.1), width: 4),
-                        ),
-                        child: CircleAvatar(
-                          radius: 50,
-                          backgroundColor: context.backgroundSecondaryColor,
-                          child: Icon(Icons.person_rounded, size: 60, color: context.brandPrimaryColor),
-                        ),
+          slivers: [
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  children: [
+                    Gap(MediaQuery.paddingOf(context).top + 20),
+                    _buildHeader(context, t),
+                    const Gap(40),
+                    
+                    // Avatar and Name
+                    FadeInDown(
+                      duration: const Duration(milliseconds: 800),
+                      child: Column(
+                        children: [
+                          Stack(
+                            alignment: Alignment.bottomRight,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(4),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: context.brandPrimaryColor.withValues(alpha: 0.1), 
+                                    width: 4,
+                                  ),
+                                ),
+                                child: CircleAvatar(
+                                  radius: 60,
+                                  backgroundColor: context.backgroundSecondaryColor.withValues(alpha: 0.6),
+                                  child: Icon(Icons.person_rounded, size: 70, color: context.brandPrimaryColor),
+                                ),
+                              ),
+                              Container(
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: context.brandPrimaryColor,
+                                  shape: BoxShape.circle,
+                                  border: Border.all(color: context.backgroundPrimaryColor, width: 3),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: context.brandPrimaryColor.withValues(alpha: 0.3),
+                                      blurRadius: 10,
+                                      offset: const Offset(0, 4),
+                                    ),
+                                  ],
+                                ),
+                                child: const Icon(Icons.camera_alt_rounded, size: 18, color: Colors.white),
+                              ),
+                            ],
+                          ),
+                          const Gap(24),
+                          Text(
+                            profile?.fullName ?? 'Parent User',
+                            style: TextStyle(
+                              fontSize: 26,
+                              fontWeight: FontWeight.w900,
+                              color: context.textPrimaryColor,
+                              letterSpacing: -0.5,
+                            ),
+                          ),
+                          const Gap(6),
+                          StatusBadge(
+                            label: 'Verified Account',
+                            color: context.statusSuccessColor,
+                            isSmall: true,
+                          ),
+                        ],
                       ),
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: context.brandPrimaryColor,
-                          shape: BoxShape.circle,
-                          border: Border.all(color: context.backgroundPrimaryColor, width: 3),
-                        ),
-                        child: const Icon(Icons.camera_alt_rounded, size: 16, color: Colors.white),
-                      ),
-                    ],
-                  ),
-                  const Gap(16),
-                  Text(
-                    profile?.fullName ?? 'Parent User',
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w900,
-                      color: context.textPrimaryColor,
                     ),
-                  ),
-                  const Gap(4),
-                  StatusBadge(
-                    label: 'Verified Account',
-                    color: context.statusSuccessColor,
-                    isSmall: true,
-                  ),
-                ],
-              ),
-            ),
-            const Gap(40),
+                    const Gap(48),
 
-            _ProfileSection(
-              title: t.accountInfo,
-              children: [
-                _ProfileTile(
-                  icon: Icons.person_rounded,
-                  label: 'Full Name',
-                  value: profile?.fullName ?? '-',
+                    FadeInUp(
+                      duration: const Duration(milliseconds: 600),
+                      delay: const Duration(milliseconds: 200),
+                      child: _ProfileSection(
+                        title: t.accountInfo,
+                        children: [
+                          _ProfileTile(
+                            icon: Icons.person_rounded,
+                            label: 'Full Name',
+                            value: profile?.fullName ?? '-',
+                          ),
+                          _ProfileTile(
+                            icon: Icons.phone_android_rounded,
+                            label: 'Phone Number',
+                            value: profile?.phoneNumber ?? '-',
+                          ),
+                          _ProfileTile(
+                            icon: Icons.email_rounded,
+                            label: 'Email Address',
+                            value: profile?.email ?? '-',
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Gap(32),
+                    
+                    FadeInUp(
+                      duration: const Duration(milliseconds: 600),
+                      delay: const Duration(milliseconds: 400),
+                      child: _ProfileSection(
+                        title: t.appSettings,
+                        children: [
+                          _ProfileTile(
+                            icon: Icons.notifications_rounded,
+                            label: t.notifications,
+                            value: 'Enabled',
+                            onTap: () {},
+                          ),
+                          _ProfileTile(
+                            icon: Icons.security_rounded,
+                            label: t.security,
+                            value: 'Password & Biometrics',
+                            onTap: () {},
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Gap(48),
+                    
+                    FadeInUp(
+                      duration: const Duration(milliseconds: 600),
+                      delay: const Duration(milliseconds: 600),
+                      child: MentorXButton(
+                        onPressed: () {
+                          // Logout logic
+                        },
+                        label: t.signOut,
+                        style: Style(
+                          $box.color(context.statusDangerColor.withValues(alpha: 0.1)),
+                          $text.color(context.statusDangerColor),
+                          $box.borderRadius(16),
+                          $box.padding.vertical(16),
+                        ),
+                      ),
+                    ),
+                    const Gap(100),
+                  ],
                 ),
-                _ProfileTile(
-                  icon: Icons.phone_android_rounded,
-                  label: 'Phone Number',
-                  value: profile?.phoneNumber ?? '-',
-                ),
-                _ProfileTile(
-                  icon: Icons.email_rounded,
-                  label: 'Email Address',
-                  value: profile?.email ?? '-',
-                ),
-              ],
-            ),
-            const Gap(32),
-            _ProfileSection(
-              title: t.appSettings,
-              children: [
-                _ProfileTile(
-                  icon: Icons.notifications_rounded,
-                  label: t.notifications,
-                  value: 'Enabled',
-                  onTap: () {},
-                ),
-                _ProfileTile(
-                  icon: Icons.security_rounded,
-                  label: t.security,
-                  value: 'Password & Biometrics',
-                  onTap: () {},
-                ),
-              ],
-            ),
-            const Gap(48),
-            MentorXButton(
-              onPressed: () {
-                // Logout logic
-              },
-              label: t.signOut,
-              style: Style(
-                $box.color(context.statusDangerColor.withValues(alpha: 0.1)),
-                $text.color(context.statusDangerColor),
               ),
             ),
-            const Gap(40),
           ],
         );
       },
     );
   }
-}
 
-// Removed _BuildHeader in favor of AppDashboardScaffold
+  Widget _buildHeader(BuildContext context, dynamic t) {
+    return FadeInDown(
+      duration: const Duration(milliseconds: 600),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            t.myProfile,
+            style: TextStyle(
+              color: context.textPrimaryColor,
+              fontSize: 28,
+              fontWeight: FontWeight.w900,
+              letterSpacing: -1.0,
+            ),
+          ),
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.settings_suggest_rounded),
+            style: IconButton.styleFrom(
+              backgroundColor: context.backgroundSecondaryColor.withValues(alpha: 0.6),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
 
 class _ProfileSection extends StatelessWidget {
   final String title;
@@ -189,9 +256,9 @@ class _ProfileSection extends StatelessWidget {
         ),
         Container(
           decoration: BoxDecoration(
-            color: context.backgroundSecondaryColor,
-            borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: context.textTertiaryColor.withValues(alpha: 0.1)),
+            color: context.backgroundSecondaryColor.withValues(alpha: 0.4),
+            borderRadius: BorderRadius.circular(28),
+            border: Border.all(color: context.borderPrimaryColor.withValues(alpha: 0.1)),
           ),
           child: Column(
             children: children,
@@ -219,7 +286,7 @@ class _ProfileTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(24),
+      borderRadius: BorderRadius.circular(28),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         child: Row(
@@ -228,7 +295,7 @@ class _ProfileTile extends StatelessWidget {
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
                 color: context.brandPrimaryColor.withValues(alpha: 0.08),
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(18),
               ),
               child: Icon(icon, color: context.brandPrimaryColor, size: 22),
             ),
@@ -250,8 +317,9 @@ class _ProfileTile extends StatelessWidget {
                     value,
                     style: TextStyle(
                       fontSize: 15,
-                      fontWeight: FontWeight.w800,
+                      fontWeight: FontWeight.w900,
                       color: context.textPrimaryColor,
+                      letterSpacing: -0.2,
                     ),
                   ),
                 ],
@@ -260,6 +328,59 @@ class _ProfileTile extends StatelessWidget {
             if (onTap != null)
               Icon(Icons.arrow_forward_ios_rounded, color: context.textTertiaryColor, size: 14),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _BackgroundDecorations extends StatelessWidget {
+  const _BackgroundDecorations();
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Positioned(
+          top: -100,
+          left: -100,
+          child: _BlurredBlob(
+            color: context.brandPrimaryColor.withValues(alpha: 0.1),
+            size: 400,
+          ),
+        ),
+        Positioned(
+          bottom: 100,
+          right: -150,
+          child: _BlurredBlob(
+            color: context.brandSecondaryColor.withValues(alpha: 0.08),
+            size: 450,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _BlurredBlob extends StatelessWidget {
+  final Color color;
+  final double size;
+
+  const _BlurredBlob({required this.color, required this.size});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        color: color,
+        shape: BoxShape.circle,
+      ),
+      child: ClipOval(
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 80, sigmaY: 80),
+          child: const SizedBox.expand(),
         ),
       ),
     );

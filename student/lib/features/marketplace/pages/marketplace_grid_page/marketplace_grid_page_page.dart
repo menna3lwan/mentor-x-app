@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
@@ -43,14 +44,25 @@ final class _MarketplaceGridPageState extends State<MarketplaceGridPage> {
                 duration: const Duration(milliseconds: 400),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: MentorXTextFormField(
-                    label: t['search'] ?? 'Search',
-                    hintText: t['searchProducts'] ?? 'Search products...',
-                    prefixIcon: Icons.search_rounded,
-                    controller: _searchController,
-                    onChanged: (value) {
-                      bloc.add(MarketplaceGridPageSearchQueryChangedEvent(value));
-                    },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.05),
+                          blurRadius: 20,
+                          offset: const Offset(0, 10),
+                        ),
+                      ],
+                    ),
+                    child: MentorXTextFormField(
+                      label: t['search'] ?? 'Search',
+                      hintText: t['searchProducts'] ?? 'Search products...',
+                      prefixIcon: Icons.search_rounded,
+                      controller: _searchController,
+                      onChanged: (value) {
+                        bloc.add(MarketplaceGridPageSearchQueryChangedEvent(value));
+                      },
+                    ),
                   ),
                 ),
               ),
@@ -73,42 +85,45 @@ final class _MarketplaceGridPageState extends State<MarketplaceGridPage> {
                             ? state.selectedCategoryId == null
                             : state.selectedCategoryId == category?.id;
 
-                        return ChoiceChip(
-                          label: Text(isAll ? t['all'] ?? 'All' : category!.name),
-                          selected: isSelected,
-                          onSelected: (selected) {
-                            if (selected) {
-                              bloc.add(
-                                MarketplaceGridPageCategorySelectedEvent(
-                                  category?.id,
-                                ),
-                              );
-                            }
-                          },
-                          selectedColor: context.brandPrimaryColor,
-                          labelStyle: TextStyle(
-                            color: isSelected
-                                ? Colors.white
-                                : context.textSecondaryColor,
-                            fontWeight: FontWeight.w900,
-                            fontSize: 13,
-                          ),
-                          backgroundColor: context.backgroundSecondaryColor.withValues(alpha: 0.45),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
-                            side: BorderSide(
+                        return AnimatedContainer(
+                          duration: const Duration(milliseconds: 300),
+                          child: ChoiceChip(
+                            label: Text(isAll ? t['all'] ?? 'All' : category!.name),
+                            selected: isSelected,
+                            onSelected: (selected) {
+                              if (selected) {
+                                bloc.add(
+                                  MarketplaceGridPageCategorySelectedEvent(
+                                    category?.id,
+                                  ),
+                                );
+                              }
+                            },
+                            selectedColor: context.brandPrimaryColor,
+                            labelStyle: TextStyle(
                               color: isSelected
-                                  ? context.brandPrimaryColor
-                                  : context.borderPrimaryColor.withValues(
-                                      alpha: 0.1,
-                                    ),
+                                  ? Colors.white
+                                  : context.textSecondaryColor,
+                              fontWeight: FontWeight.w900,
+                              fontSize: 13,
                             ),
+                            backgroundColor: context.backgroundSecondaryColor.withValues(alpha: 0.6),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                              side: BorderSide(
+                                color: isSelected
+                                    ? context.brandPrimaryColor
+                                    : context.borderPrimaryColor.withValues(
+                                        alpha: 0.1,
+                                      ),
+                              ),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 8,
+                            ),
+                            showCheckmark: false,
                           ),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 8,
-                          ),
-                          showCheckmark: false,
                         );
                       },
                     ),
@@ -183,13 +198,13 @@ final class _BuildHeader extends StatelessWidget {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.fromLTRB(
-        20,
-        MediaQuery.paddingOf(context).top + 16,
         12,
-        24,
+        MediaQuery.paddingOf(context).top + 8,
+        12,
+        16,
       ),
       decoration: BoxDecoration(
-        color: context.backgroundSecondaryColor.withValues(alpha: 0.45),
+        color: context.backgroundPrimaryColor.withValues(alpha: 0.8),
         borderRadius: const BorderRadius.vertical(bottom: Radius.circular(32)),
         border: Border(
           bottom: BorderSide(
@@ -200,32 +215,58 @@ final class _BuildHeader extends StatelessWidget {
       child: ClipRRect(
         borderRadius: const BorderRadius.vertical(bottom: Radius.circular(32)),
         child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
           child: Row(
             children: [
-              MentorXIconButton(
-                onPressed: () => Navigator.pop(context),
-                icon: Icons.arrow_back_ios_new_rounded,
-                color: context.textPrimaryColor,
-                size: MentorXIconButtonSize.small,
-              ),
-              const Gap(12),
-              Expanded(
-                child: Text(
-                  t['store'] ?? 'Store',
-                  style: TextStyle(
-                    color: context.textPrimaryColor,
-                    fontSize: 22,
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: -0.5,
+              Container(
+                decoration: BoxDecoration(
+                  color: context.backgroundSecondaryColor.withValues(alpha: 0.6),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: context.borderPrimaryColor.withValues(alpha: 0.1),
                   ),
+                ),
+                child: MentorXIconButton(
+                  onPressed: () => Navigator.pop(context),
+                  icon: Icons.arrow_back_ios_new_rounded,
+                  color: context.textPrimaryColor,
+                  size: MentorXIconButtonSize.small,
+                ),
+              ),
+              const Gap(16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'EXPLORE',
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w900,
+                        color: context.brandPrimaryColor,
+                        letterSpacing: 2.0,
+                      ),
+                    ),
+                    const Gap(2),
+                    Text(
+                      t['store'] ?? 'Marketplace',
+                      style: TextStyle(
+                        color: context.textPrimaryColor,
+                        fontSize: 24,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: -1.0,
+                        height: 1.1,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               MentorXIconButton(
-                icon: Icons.history_rounded,
+                icon: Icons.receipt_long_rounded,
                 onPressed: () =>
                     const MarketplaceOrdersPageRoute().push(context),
                 color: context.textPrimaryColor,
+                size: MentorXIconButtonSize.small,
               ),
               const _CartBadge(),
             ],
@@ -251,44 +292,53 @@ final class _CartBadge extends StatelessWidget {
           alignment: Alignment.center,
           children: [
             MentorXIconButton(
-              icon: Icons.shopping_bag_outlined,
+              icon: Icons.shopping_cart_outlined,
               onPressed: () => const MarketplaceCartPageRoute().push(context),
               color: context.textPrimaryColor,
+              size: MentorXIconButtonSize.small,
             ),
             if (totalCount > 0)
               Positioned(
-                right: 6,
-                top: 6,
-                child: Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    color: context.brandSecondaryColor,
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: context.backgroundSecondaryColor,
-                      width: 2,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: context.brandSecondaryColor.withValues(
-                          alpha: 0.3,
-                        ),
-                        blurRadius: 4,
+                right: 2,
+                top: 2,
+                child: FadeIn(
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          context.brandSecondaryColor,
+                          context.brandSecondaryColor.withValues(alpha: 0.8),
+                        ],
                       ),
-                    ],
-                  ),
-                  constraints: const BoxConstraints(
-                    minWidth: 18,
-                    minHeight: 18,
-                  ),
-                  child: Text(
-                    '$totalCount',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 9,
-                      fontWeight: FontWeight.w900,
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: context.backgroundPrimaryColor,
+                        width: 2,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: context.brandSecondaryColor.withValues(
+                            alpha: 0.4,
+                          ),
+                          blurRadius: 6,
+                        ),
+                      ],
                     ),
-                    textAlign: TextAlign.center,
+                    constraints: const BoxConstraints(
+                      minWidth: 18,
+                      minHeight: 18,
+                    ),
+                    child: Center(
+                      child: Text(
+                        '$totalCount',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 9,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -298,7 +348,6 @@ final class _CartBadge extends StatelessWidget {
     );
   }
 }
-
 
 final class _ProductCard extends StatelessWidget {
   final MarketplaceItemEntity item;
@@ -315,7 +364,7 @@ final class _ProductCard extends StatelessWidget {
       onTap: () => MarketplaceDetailPageRoute(itemId: item.id).push(context),
       child: Container(
         decoration: BoxDecoration(
-          color: context.backgroundSecondaryColor.withValues(alpha: 0.45),
+          color: context.backgroundSecondaryColor.withValues(alpha: 0.6),
           borderRadius: BorderRadius.circular(28),
           border: Border.all(
             color: context.borderPrimaryColor.withValues(alpha: 0.1),
@@ -323,136 +372,138 @@ final class _ProductCard extends StatelessWidget {
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.05),
-              blurRadius: 15,
-              offset: const Offset(0, 8),
+              blurRadius: 20,
+              offset: const Offset(0, 10),
             ),
           ],
         ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(28),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  flex: 5,
-                  child: Stack(
-                    children: [
-                      Positioned.fill(
-                        child: ClipRRect(
-                          borderRadius: const BorderRadius.vertical(
-                            top: Radius.circular(28),
-                          ),
-                          child: AppDynamicImage(
-                            item.imageUrls.firstOrNull ?? '',
-                            fit: BoxFit.cover,
-                            borderRadius: const BorderRadius.vertical(
-                              top: Radius.circular(28),
-                            ),
-                          ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              flex: 11,
+              child: Stack(
+                children: [
+                  Positioned.fill(
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.vertical(
+                        top: Radius.circular(28),
+                      ),
+                      child: Hero(
+                        tag: 'product_image_${item.id}',
+                        child: AppDynamicImage(
+                          item.imageUrls.firstOrNull ?? '',
+                          fit: BoxFit.cover,
                         ),
                       ),
-                      if (item.isFeatured)
-                        Positioned(
-                          top: 12,
-                          left: 12,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 6,
-                            ),
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [
-                                  Colors.amber,
-                                  Colors.orange.shade700,
-                                ],
-                              ),
-                              borderRadius: BorderRadius.circular(10),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.orange.withValues(alpha: 0.3),
-                                  blurRadius: 8,
-                                ),
-                              ],
-                            ),
-                            child: const Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  Icons.star_rounded,
-                                  color: Colors.white,
-                                  size: 14,
-                                ),
-                                Gap(4),
-                                Text(
-                                  'HOT',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w900,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                    ],
+                    ),
                   ),
-                ),
-                Expanded(
-                  flex: 4,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                  if (item.isFeatured)
+                    Positioned(
+                      top: 12,
+                      left: 12,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              context.brandSecondaryColor,
+                              context.brandSecondaryColor.withValues(alpha: 0.8),
+                            ],
+                          ),
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(
+                              color: context.brandSecondaryColor.withValues(alpha: 0.3),
+                              blurRadius: 8,
+                            ),
+                          ],
+                        ),
+                        child: const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.bolt_rounded,
+                              color: Colors.white,
+                              size: 14,
+                            ),
+                            Gap(4),
+                            Text(
+                              'HOT',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 10,
+                                fontWeight: FontWeight.w900,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  Positioned(
+                    bottom: 10,
+                    right: 10,
+                    child: _AddToCartButton(item: item),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              flex: 7,
+              child: Padding(
+                padding: const EdgeInsets.all(14),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      item.title,
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w800,
+                        color: context.textPrimaryColor,
+                        height: 1.2,
+                        letterSpacing: -0.2,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const Spacer(),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
-                          item.title,
+                          item.price.toStringAsFixed(0),
                           style: TextStyle(
-                            fontSize: 14,
+                            fontSize: 18,
                             fontWeight: FontWeight.w900,
-                            color: context.textPrimaryColor,
-                            height: 1.2,
-                            letterSpacing: -0.2,
+                            color: context.brandPrimaryColor,
+                            letterSpacing: -0.8,
+                            height: 1.0,
                           ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
                         ),
-                        const Spacer(),
-                        if (item.hasDiscount)
-                          Text(
-                            '${item.oldPrice} ${t['egp']}',
+                        const Gap(4),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 1),
+                          child: Text(
+                            t['egp'] ?? 'EGP',
                             style: TextStyle(
-                              fontSize: 11,
-                              color: context.textTertiaryColor,
-                              decoration: TextDecoration.lineThrough,
-                              fontWeight: FontWeight.w700,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w900,
+                              color: context.brandPrimaryColor.withValues(alpha: 0.5),
                             ),
                           ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              item.price.toStringAsFixed(0),
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w900,
-                                color: context.brandPrimaryColor,
-                                letterSpacing: -0.5,
-                              ),
-                            ),
-                            _AddToCartButton(item: item),
-                          ],
                         ),
                       ],
                     ),
-                  ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
@@ -469,32 +520,53 @@ final class _AddToCartButton extends StatelessWidget {
     final t = context.t.student;
     final inStock = item.inStock;
 
-    return Material(
-      color: inStock
-          ? context.brandPrimaryColor
-          : context.backgroundPrimaryColor,
-      borderRadius: BorderRadius.circular(12),
-      child: InkWell(
-        onTap: inStock
-            ? () {
-                context.read<MarketplaceCartCubit>().addItem(item);
-                MentorXUI.showToast(
-                  message:
-                      '${item.title} ${t['addedToCart'] ?? 'added to cart'}',
-                );
-              }
+    return Container(
+      decoration: BoxDecoration(
+        gradient: inStock
+            ? LinearGradient(
+                colors: [
+                  context.brandPrimaryColor,
+                  context.brandPrimaryColor.withValues(alpha: 0.8),
+                ],
+              )
             : null,
-        borderRadius: BorderRadius.circular(12),
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: Icon(
-            inStock
-                ? Icons.add_shopping_cart_rounded
-                : Icons.not_interested_rounded,
-            color: inStock
-                ? Colors.white
-                : context.textTertiaryColor.withValues(alpha: 0.5),
-            size: 18,
+        color: inStock
+            ? null
+            : context.backgroundPrimaryColor.withValues(alpha: 0.5),
+        borderRadius: BorderRadius.circular(14),
+        boxShadow: inStock ? [
+          BoxShadow(
+            color: context.brandPrimaryColor.withValues(alpha: 0.35),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ] : null,
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: inStock
+              ? () {
+                  HapticFeedback.lightImpact();
+                  context.read<MarketplaceCartCubit>().addItem(item);
+                  MentorXUI.showToast(
+                    message:
+                        '${item.title} ${t['addedToCart'] ?? 'added to cart'}',
+                  );
+                }
+              : null,
+          borderRadius: BorderRadius.circular(14),
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Icon(
+              inStock
+                  ? Icons.add_rounded
+                  : Icons.not_interested_rounded,
+              color: inStock
+                  ? Colors.white
+                  : context.textTertiaryColor,
+              size: 22,
+            ),
           ),
         ),
       ),
@@ -513,15 +585,23 @@ class _BackgroundDecorations extends StatelessWidget {
           top: -100,
           right: -50,
           child: _BlurredBlob(
-            color: context.brandPrimaryColor.withValues(alpha: 0.1),
+            color: context.brandPrimaryColor.withValues(alpha: 0.12),
             size: 350,
+          ),
+        ),
+        Positioned(
+          top: 200,
+          left: -150,
+          child: _BlurredBlob(
+            color: context.brandSecondaryColor.withValues(alpha: 0.08),
+            size: 400,
           ),
         ),
         Positioned(
           bottom: -50,
           left: -100,
           child: _BlurredBlob(
-            color: context.brandSecondaryColor.withValues(alpha: 0.08),
+            color: context.brandPrimaryColor.withValues(alpha: 0.08),
             size: 300,
           ),
         ),
@@ -546,7 +626,7 @@ class _BlurredBlob extends StatelessWidget {
         shape: BoxShape.circle,
       ),
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 70, sigmaY: 70),
+        filter: ImageFilter.blur(sigmaX: 80, sigmaY: 80),
         child: const SizedBox.expand(),
       ),
     );

@@ -27,38 +27,34 @@ final class ProfileViewPage extends StatelessWidget {
               _ProfileHeader(session: session, isAr: isAr),
               SliverToBoxAdapter(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
                   child: Column(
                     children: [
                       FadeInUp(
-                        duration: const Duration(milliseconds: 500),
+                        duration: const Duration(milliseconds: 600),
                         child: _QuickStats(
                           session: session,
                           t: t,
                         ),
                       ),
-                      const Gap(24),
-    
-                      // Verification Section removed
-                      const Gap(0),
-    
+                      const Gap(28),
                       FadeInUp(
-                        duration: const Duration(milliseconds: 500),
-                        delay: const Duration(milliseconds: 200),
+                        duration: const Duration(milliseconds: 600),
+                        delay: const Duration(milliseconds: 100),
                         child: _PersonalDetails(
                           session: session,
                           isAr: isAr,
                           t: t,
                         ),
                       ),
-                      const Gap(24),
-    
+                      const Gap(28),
                       FadeInUp(
-                        duration: const Duration(milliseconds: 500),
-                        delay: const Duration(milliseconds: 300),
+                        duration: const Duration(milliseconds: 600),
+                        delay: const Duration(milliseconds: 200),
                         child: _ActionButtons(t: t),
                       ),
-                      const Gap(40),
+                      const Gap(100),
                     ],
                   ),
                 ),
@@ -82,29 +78,29 @@ final class _ProfileHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
-      expandedHeight: 280,
+      expandedHeight: 340,
       pinned: true,
+      stretch: true,
       backgroundColor: context.backgroundPrimaryColor,
       elevation: 0,
       flexibleSpace: FlexibleSpaceBar(
+        stretchModes: const [
+          StretchMode.zoomBackground,
+          StretchMode.blurBackground,
+        ],
         background: Stack(
           alignment: Alignment.center,
           children: [
             Container(
               decoration: BoxDecoration(
-                color: context.backgroundSecondaryColor.withValues(alpha: 0.45),
-                borderRadius: const BorderRadius.vertical(
-                  bottom: Radius.circular(40),
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    context.brandPrimaryColor.withValues(alpha: 0.2),
+                    context.backgroundPrimaryColor,
+                  ],
                 ),
-                border: Border(
-                  bottom: BorderSide(
-                    color: context.borderPrimaryColor.withValues(alpha: 0.1),
-                  ),
-                ),
-              ),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                child: const SizedBox.expand(),
               ),
             ),
             Column(
@@ -112,72 +108,119 @@ final class _ProfileHeader extends StatelessWidget {
               children: [
                 const Gap(60),
                 FadeInDown(
-                  duration: const Duration(milliseconds: 600),
-                  child: Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: context.brandPrimaryColor.withValues(alpha: 0.2),
-                        width: 2,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.2),
-                          blurRadius: 20,
-                          offset: const Offset(0, 10),
+                  duration: const Duration(milliseconds: 800),
+                  child: Stack(
+                    alignment: Alignment.bottomRight,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(6),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          gradient: LinearGradient(
+                            colors: [
+                              context.brandPrimaryColor,
+                              context.brandSecondaryColor,
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: context.brandPrimaryColor
+                                  .withValues(alpha: 0.4),
+                              blurRadius: 30,
+                              offset: const Offset(0, 15),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    child: CircleAvatar(
-                      radius: 54,
-                      backgroundColor: context.backgroundPrimaryColor,
-                      child: Icon(
-                        Icons.person_rounded,
-                        size: 60,
-                        color: context.brandPrimaryColor,
+                        child: Hero(
+                          tag: 'profile_avatar',
+                          child: CircleAvatar(
+                            radius: 64,
+                            backgroundColor: context.backgroundPrimaryColor,
+                            child: Icon(
+                              Icons.person_rounded,
+                              size: 68,
+                              color: context.brandPrimaryColor,
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              context.brandSecondaryColor,
+                              context.brandSecondaryColor.withValues(alpha: 0.8),
+                            ],
+                          ),
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: context.backgroundPrimaryColor,
+                            width: 3,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.1),
+                              blurRadius: 10,
+                            ),
+                          ],
+                        ),
+                        child: const Icon(
+                          Icons.camera_alt_rounded,
+                          size: 16,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                const Gap(16),
+                const Gap(24),
                 FadeInUp(
-                  duration: const Duration(milliseconds: 600),
+                  duration: const Duration(milliseconds: 700),
                   child: Text(
-                    isAr
-                        ? session.studentNameAr
-                        : session.studentName,
+                    isAr ? session.studentNameAr : session.studentName,
                     style: TextStyle(
-                      fontSize: 26,
+                      fontSize: 30,
                       fontWeight: FontWeight.w900,
                       color: context.textPrimaryColor,
-                      letterSpacing: -0.5,
+                      letterSpacing: -1.0,
+                      height: 1.1,
                     ),
                   ),
                 ),
-                const Gap(8),
+                const Gap(12),
                 FadeInUp(
-                  duration: const Duration(milliseconds: 600),
+                  duration: const Duration(milliseconds: 700),
                   delay: const Duration(milliseconds: 100),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 6,
-                    ),
-                    decoration: BoxDecoration(
-                      color: context.brandPrimaryColor.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(30),
-                      border: Border.all(
-                        color: context.brandPrimaryColor.withValues(alpha: 0.2),
-                      ),
-                    ),
-                    child: Text(
-                      session.studentCode,
-                      style: TextStyle(
-                        color: context.brandPrimaryColor,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w900,
-                        letterSpacing: 1.5,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(14),
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
+                        decoration: BoxDecoration(
+                          color: context.backgroundSecondaryColor
+                              .withValues(alpha: 0.6),
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(
+                            color: context.borderPrimaryColor
+                                .withValues(alpha: 0.1),
+                          ),
+                        ),
+                        child: Text(
+                          session.studentCode,
+                          style: TextStyle(
+                            color: context.textSecondaryColor,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: 1.5,
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -201,21 +244,42 @@ final class _QuickStats extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
+    return Container(
+      padding: const EdgeInsets.all(28),
+      decoration: BoxDecoration(
+        color: context.backgroundSecondaryColor.withValues(alpha: 0.6),
+        borderRadius: BorderRadius.circular(32),
+        border: Border.all(
+          color: context.borderPrimaryColor.withValues(alpha: 0.1),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 25,
+            offset: const Offset(0, 10),
+          ),
+        ],
+      ),
+      child: IntrinsicHeight(
+        child: Row(
           children: [
             Expanded(
-              child: _StatCard(
+              child: _StatItem(
                 label: t['wallet'],
                 value: session.walletBalance.toStringAsFixed(0),
                 unit: 'EGP',
                 icon: Icons.account_balance_wallet_rounded,
+                color: context.brandPrimaryColor,
               ),
             ),
-            const Gap(16),
+            VerticalDivider(
+              color: context.borderPrimaryColor.withValues(alpha: 0.08),
+              thickness: 1.5,
+              indent: 10,
+              endIndent: 10,
+            ),
             Expanded(
-              child: _StatCard(
+              child: _StatItem(
                 label: t['attendance'],
                 value: session.attendancePercent.toStringAsFixed(0),
                 unit: '%',
@@ -225,120 +289,83 @@ final class _QuickStats extends StatelessWidget {
             ),
           ],
         ),
-        const Gap(16),
+      ),
+    );
+  }
+}
+
+final class _StatItem extends StatelessWidget {
+  final String label;
+  final String value;
+  final String unit;
+  final IconData icon;
+  final Color color;
+
+  const _StatItem({
+    required this.label,
+    required this.value,
+    required this.unit,
+    required this.icon,
+    required this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                color.withValues(alpha: 0.2),
+                color.withValues(alpha: 0.05),
+              ],
+            ),
+            shape: BoxShape.circle,
+          ),
+          child: Icon(icon, color: color, size: 22),
+        ),
+        const Gap(14),
         Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.baseline,
+          textBaseline: TextBaseline.alphabetic,
           children: [
-            Expanded(
-              child: _StatCard(
-                label: 'Streak',
-                value: '12',
-                unit: 'Days',
-                icon: Icons.local_fire_department_rounded,
-                color: Colors.orangeAccent,
+            Text(
+              value,
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.w900,
+                color: context.textPrimaryColor,
+                letterSpacing: -0.8,
               ),
             ),
-            const Gap(16),
-            Expanded(
-              child: _StatCard(
-                label: 'Badges',
-                value: '5',
-                unit: 'Unlocked',
-                icon: Icons.emoji_events_rounded,
-                color: Colors.amberAccent,
+            const Gap(4),
+            Text(
+              unit,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w800,
+                color: context.textTertiaryColor,
               ),
             ),
           ],
+        ),
+        const Gap(6),
+        Text(
+          label.toUpperCase(),
+          style: TextStyle(
+            fontSize: 10,
+            fontWeight: FontWeight.w900,
+            color: context.textSecondaryColor,
+            letterSpacing: 1.0,
+          ),
         ),
       ],
     );
   }
 }
-
-final class _StatCard extends StatelessWidget {
-  final String label;
-  final String value;
-  final String unit;
-  final IconData icon;
-  final Color? color;
-
-  const _StatCard({
-    required this.label,
-    required this.value,
-    required this.unit,
-    required this.icon,
-    this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final mainColor = color ?? context.brandPrimaryColor;
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: context.backgroundSecondaryColor.withValues(alpha: 0.45),
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(
-          color: context.borderPrimaryColor.withValues(alpha: 0.1),
-        ),
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(24),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: mainColor.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(icon, color: mainColor, size: 20),
-              ),
-              const Gap(16),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.baseline,
-                textBaseline: TextBaseline.alphabetic,
-                children: [
-                  Text(
-                    value,
-                    style: TextStyle(
-                      fontSize: 26,
-                      fontWeight: FontWeight.w900,
-                      color: context.textPrimaryColor,
-                      letterSpacing: -1,
-                    ),
-                  ),
-                  const Gap(4),
-                  Text(
-                    unit,
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w800,
-                      color: context.textTertiaryColor,
-                    ),
-                  ),
-                ],
-              ),
-              const Gap(4),
-              Text(
-                label.toUpperCase(),
-                style: TextStyle(
-                  fontSize: 10,
-                  fontWeight: FontWeight.w900,
-                  color: context.textSecondaryColor,
-                  letterSpacing: 0.5,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 
 final class _PersonalDetails extends StatelessWidget {
   const _PersonalDetails({
@@ -355,86 +382,62 @@ final class _PersonalDetails extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _SectionTitle(
-          title: t['personalData'],
+        Padding(
+          padding: const EdgeInsets.only(left: 6, bottom: 14),
+          child: Text(
+            t['personalData'].toUpperCase(),
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w900,
+              color: context.brandPrimaryColor,
+              letterSpacing: 2.0,
+            ),
+          ),
         ),
-        const Gap(12),
         Container(
           decoration: BoxDecoration(
-            color: context.backgroundSecondaryColor.withValues(alpha: 0.45),
-            borderRadius: BorderRadius.circular(24),
+            color: context.backgroundSecondaryColor.withValues(alpha: 0.6),
+            borderRadius: BorderRadius.circular(32),
             border: Border.all(
               color: context.borderPrimaryColor.withValues(alpha: 0.1),
             ),
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(24),
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-              child: Column(
-                children: [
-                  _DetailRow(
-                    icon: Icons.person_outline_rounded,
-                    label: t['name'],
-                    value: isAr
-                        ? session.studentNameAr
-                        : session.studentName,
-                  ),
-                  _DetailRow(
-                    icon: Icons.phone_android_rounded,
-                    label: t['phone'],
-                    value: session.phone,
-                  ),
-                  _DetailRow(
-                    icon: Icons.school_outlined,
-                    label: t['grade'],
-                    value: isAr ? session.gradeAr : session.grade,
-                  ),
-                  _DetailRow(
-                    icon: Icons.business_rounded,
-                    label: t['center'],
-                    value: isAr ? session.centerAr : session.center,
-                  ),
-                  _DetailRow(
-                    icon: Icons.account_balance_rounded,
-                    label: t['school'],
-                    value: isAr ? session.schoolAr : session.school,
-                    isLast: true,
-                  ),
-                ],
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.05),
+                blurRadius: 25,
+                offset: const Offset(0, 10),
               ),
-            ),
+            ],
           ),
-        ),
-      ],
-    );
-  }
-}
-
-final class _SectionTitle extends StatelessWidget {
-  final String title;
-  const _SectionTitle({required this.title});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Container(
-          width: 4,
-          height: 18,
-          decoration: BoxDecoration(
-            color: context.brandSecondaryColor,
-            borderRadius: BorderRadius.circular(2),
-          ),
-        ),
-        const Gap(10),
-        Text(
-          title.toUpperCase(),
-          style: TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w900,
-            color: context.textPrimaryColor,
-            letterSpacing: 0.5,
+          child: Column(
+            children: [
+              _DetailRow(
+                icon: Icons.person_outline_rounded,
+                label: t['name'],
+                value: isAr ? session.studentNameAr : session.studentName,
+              ),
+              _DetailRow(
+                icon: Icons.phone_android_rounded,
+                label: t['phone'],
+                value: session.phone,
+              ),
+              _DetailRow(
+                icon: Icons.school_outlined,
+                label: t['grade'],
+                value: isAr ? session.gradeAr : session.grade,
+              ),
+              _DetailRow(
+                icon: Icons.business_rounded,
+                label: t['center'],
+                value: isAr ? session.centerAr : session.center,
+              ),
+              _DetailRow(
+                icon: Icons.account_balance_rounded,
+                label: t['school'],
+                value: isAr ? session.schoolAr : session.school,
+                isLast: true,
+              ),
+            ],
           ),
         ),
       ],
@@ -458,46 +461,48 @@ final class _DetailRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(18),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         border: isLast
             ? null
             : Border(
                 bottom: BorderSide(
-                  color: context.borderPrimaryColor.withValues(alpha: 0.05),
+                  color: context.borderPrimaryColor.withValues(alpha: 0.08),
                 ),
               ),
       ),
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: context.backgroundPrimaryColor,
-              borderRadius: BorderRadius.circular(10),
+              color: context.backgroundPrimaryColor.withValues(alpha: 0.5),
+              borderRadius: BorderRadius.circular(16),
             ),
-            child: Icon(icon, size: 18, color: context.textTertiaryColor),
+            child: Icon(icon, size: 22, color: context.brandPrimaryColor),
           ),
-          const Gap(16),
+          const Gap(18),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  label,
+                  label.toUpperCase(),
                   style: TextStyle(
-                    fontSize: 11,
+                    fontSize: 10,
                     color: context.textTertiaryColor,
-                    fontWeight: FontWeight.w800,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 1.0,
                   ),
                 ),
-                const Gap(2),
+                const Gap(4),
                 Text(
                   value,
                   style: TextStyle(
-                    fontSize: 14,
+                    fontSize: 16,
                     color: context.textPrimaryColor,
                     fontWeight: FontWeight.w900,
+                    letterSpacing: -0.3,
                   ),
                 ),
               ],
@@ -517,39 +522,32 @@ final class _ActionButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Row(
-          children: [
-            Expanded(
-              child: _ActionButton(
-                label: t['studentDigitalId'] ?? 'Digital ID',
-                icon: Icons.badge_rounded,
-                onTap: () => context.push('/student-card'),
-              ),
-            ),
-            const Gap(12),
-            Expanded(
-              child: _ActionButton(
-                label: t['editProfile'],
-                icon: Icons.edit_rounded,
-                onTap: () => context.push('/edit-profile'),
-              ),
-            ),
-            const Gap(12),
-            Expanded(
-              child: _ActionButton(
-                label: t['settingsTitle'],
-                icon: Icons.settings_rounded,
-                onTap: () => context.push('/settings'),
-              ),
-            ),
-          ],
+        _ActionTile(
+          label: t['studentDigitalId'] ?? 'Digital ID',
+          icon: Icons.badge_rounded,
+          onTap: () => context.push('/student-card'),
+          color: context.brandPrimaryColor,
         ),
-        const Gap(12),
-        _ActionButton(
+        const Gap(14),
+        _ActionTile(
+          label: t['editProfile'],
+          icon: Icons.edit_rounded,
+          onTap: () => context.push('/edit-profile'),
+          color: context.brandSecondaryColor,
+        ),
+        const Gap(14),
+        _ActionTile(
+          label: t['settingsTitle'],
+          icon: Icons.settings_rounded,
+          onTap: () => context.push('/settings'),
+          color: context.textSecondaryColor,
+        ),
+        const Gap(32),
+        MentorXButton(
+          onPressed: () => _showLogoutDialog(context),
           label: t['logoutSetting'],
-          icon: Icons.logout_rounded,
-          onTap: () => _showLogoutDialog(context),
-          isDanger: true,
+          color: context.statusDangerColor,
+          size: MentorXButtonSize.large,
         ),
       ],
     );
@@ -560,15 +558,19 @@ final class _ActionButtons extends StatelessWidget {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: context.backgroundSecondaryColor,
+        backgroundColor: context.backgroundPrimaryColor,
         surfaceTintColor: Colors.transparent,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
+        titlePadding: const EdgeInsets.fromLTRB(28, 28, 28, 12),
+        contentPadding: const EdgeInsets.fromLTRB(28, 0, 28, 28),
+        actionsPadding: const EdgeInsets.fromLTRB(28, 0, 28, 28),
         title: Text(
           t['logoutConfirmTitle'],
           style: TextStyle(
             fontWeight: FontWeight.w900,
             color: context.textPrimaryColor,
-            letterSpacing: -0.5,
+            fontSize: 22,
+            letterSpacing: -0.8,
           ),
         ),
         content: Text(
@@ -576,30 +578,45 @@ final class _ActionButtons extends StatelessWidget {
           style: TextStyle(
             color: context.textSecondaryColor,
             fontWeight: FontWeight.w700,
+            fontSize: 15,
+            height: 1.5,
           ),
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: Text(
-              t['cancel'],
-              style: TextStyle(
-                color: context.textTertiaryColor,
-                fontWeight: FontWeight.w800,
+          Row(
+            children: [
+              Expanded(
+                child: TextButton(
+                  onPressed: () => Navigator.pop(ctx),
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                  ),
+                  child: Text(
+                    t['cancel'],
+                    style: TextStyle(
+                      color: context.textTertiaryColor,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                ),
               ),
-            ),
-          ),
-          const Gap(8),
-          SizedBox(
-            width: 120,
-            child: MentorXButton(
-              onPressed: () {
-                Navigator.pop(ctx);
-                context.read<AppAuthenticationCubit>().logout();
-                context.go('/login');
-              },
-              label: t['logoutSetting'],
-            ),
+              const Gap(16),
+              Expanded(
+                child: MentorXButton(
+                  onPressed: () {
+                    Navigator.pop(ctx);
+                    context.read<AppAuthenticationCubit>().logout();
+                    context.go('/login');
+                  },
+                  label: t['logoutSetting'],
+                  color: context.statusDangerColor,
+                  size: MentorXButtonSize.medium,
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -607,17 +624,17 @@ final class _ActionButtons extends StatelessWidget {
   }
 }
 
-final class _ActionButton extends StatelessWidget {
+final class _ActionTile extends StatelessWidget {
   final String label;
   final IconData icon;
   final VoidCallback onTap;
-  final bool isDanger;
+  final Color color;
 
-  const _ActionButton({
+  const _ActionTile({
     required this.label,
     required this.icon,
     required this.onTap,
-    this.isDanger = false,
+    required this.color,
   });
 
   @override
@@ -625,47 +642,61 @@ final class _ActionButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
+        padding: const EdgeInsets.all(18),
         decoration: BoxDecoration(
-          color: isDanger
-              ? context.statusDangerColor.withValues(alpha: 0.1)
-              : context.backgroundSecondaryColor.withValues(alpha: 0.45),
-          borderRadius: BorderRadius.circular(20),
+          color: context.backgroundSecondaryColor.withValues(alpha: 0.6),
+          borderRadius: BorderRadius.circular(24),
           border: Border.all(
-            color: isDanger
-                ? context.statusDangerColor.withValues(alpha: 0.3)
-                : context.borderPrimaryColor.withValues(alpha: 0.1),
+            color: context.borderPrimaryColor.withValues(alpha: 0.1),
           ),
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(20),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  icon,
-                  size: 20,
-                  color: isDanger
-                      ? context.statusDangerColor
-                      : context.brandPrimaryColor,
-                ),
-                const Gap(8),
-                Text(
-                  label,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w900,
-                    color: isDanger
-                        ? context.statusDangerColor
-                        : context.textPrimaryColor,
-                    letterSpacing: -0.2,
-                  ),
-                ),
-              ],
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.05),
+              blurRadius: 20,
+              offset: const Offset(0, 10),
             ),
-          ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    color.withValues(alpha: 0.2),
+                    color.withValues(alpha: 0.05),
+                  ],
+                ),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Icon(icon, size: 22, color: color),
+            ),
+            const Gap(18),
+            Expanded(
+              child: Text(
+                label,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w900,
+                  color: context.textPrimaryColor,
+                  letterSpacing: -0.3,
+                ),
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                color: context.backgroundPrimaryColor.withValues(alpha: 0.4),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.chevron_right_rounded,
+                color: context.textTertiaryColor,
+                size: 20,
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -683,23 +714,15 @@ class _BackgroundDecorations extends StatelessWidget {
           top: -100,
           right: -50,
           child: _BlurredBlob(
-            color: context.brandPrimaryColor.withValues(alpha: 0.12),
+            color: context.brandPrimaryColor.withValues(alpha: 0.1),
             size: 350,
           ),
         ),
         Positioned(
-          top: 300,
-          left: -150,
+          bottom: -50,
+          left: -100,
           child: _BlurredBlob(
             color: context.brandSecondaryColor.withValues(alpha: 0.08),
-            size: 400,
-          ),
-        ),
-        Positioned(
-          bottom: -50,
-          right: -100,
-          child: _BlurredBlob(
-            color: context.brandPrimaryColor.withValues(alpha: 0.1),
             size: 300,
           ),
         ),
@@ -724,7 +747,7 @@ class _BlurredBlob extends StatelessWidget {
         shape: BoxShape.circle,
       ),
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 70, sigmaY: 70),
+        filter: ImageFilter.blur(sigmaX: 80, sigmaY: 80),
         child: const SizedBox.expand(),
       ),
     );

@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
 import '../../../../../core/core.dart';
-import 'package:analytics_service/analytics_service.dart';
 
 part 'pdf_viewer_page_event.dart';
 part 'pdf_viewer_page_state.dart';

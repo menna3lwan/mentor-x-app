@@ -92,10 +92,19 @@ final class DioQuizRepository
   }
 
   @override
-  Future<Map<String, dynamic>> startQuiz(String quizId) async {
+  Future<(QuizAttemptEntity, List<QuizQuestionEntity>)> startQuiz(
+    String quizId,
+  ) async {
     try {
       final response = await httpClient.post('/api/quizzes/$quizId/start');
-      return asMap(response.data)['data'] ?? asMap(response.data);
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+
+      final attempt = QuizAttemptModel.fromJson(asMap(data['attempt']));
+      final questions = asList(data['questions'])
+          .map((e) => QuizQuestionModel.fromJson(asMap(e)))
+          .toList();
+
+      return (attempt, questions);
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
@@ -116,7 +125,11 @@ final class DioQuizRepository
         '/api/quiz-attempts/$attemptId/answers',
         data: {
           'questionId': questionId,
-          'selectedAnswer': selectedOptions?.firstOrNull ?? textAnswer ?? '',
+          'question_id': questionId,
+          'selectedOptions': selectedOptions ?? (textAnswer != null ? [textAnswer] : []),
+          'selected_options': selectedOptions ?? (textAnswer != null ? [textAnswer] : []),
+          'textAnswer': textAnswer,
+          'text_answer': textAnswer,
         },
       );
     } on HttpClientResponse catch (e) {

@@ -826,7 +826,7 @@ final class _BuildNavigation extends StatelessWidget {
                           );
                     }
                   },
-                  label: isLast ? t['review']! : t['commonNext']!,
+                  label: isLast ? t['commonSubmit']! : t['commonNext']!,
                 ),
               ),
             ],

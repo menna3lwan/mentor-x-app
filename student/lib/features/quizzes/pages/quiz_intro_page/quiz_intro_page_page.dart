@@ -1,10 +1,13 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:mentorx_student/core/core.dart';
+import 'bloc/quiz_intro_page_bloc.dart';
 
 final class QuizIntroPage extends StatelessWidget {
   const QuizIntroPage({super.key});
@@ -13,69 +16,123 @@ final class QuizIntroPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = context.t.student;
 
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle.light.copyWith(
-        statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.light,
-      ),
-      child: Scaffold(
-        backgroundColor: context.backgroundPrimaryColor,
-        body: Stack(
-          children: [
-            const _BackgroundDecorations(),
-            Column(
+    return BlocBuilder<QuizIntroPageBloc, QuizIntroPageState>(
+      builder: (context, state) {
+        if (state.loadingState == LoadingState.loading) {
+          return Scaffold(
+            backgroundColor: context.backgroundPrimaryColor,
+            body: Column(
               children: [
-                const _BuildHeader(),
+                const MentorXSkeleton(height: 250, borderRadius: 32),
+                const Gap(32),
                 Expanded(
-                  child: SingleChildScrollView(
-                    physics: const BouncingScrollPhysics(),
-                    padding: const EdgeInsets.all(24),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
                     child: Column(
                       children: [
-                        FadeInUp(
-                          duration: const Duration(milliseconds: 600),
-                          delay: const Duration(milliseconds: 200),
-                          child: const _BuildContentCard(),
-                        ),
+                        const MentorXSkeleton(height: 300, borderRadius: 32),
                         const Gap(32),
-                        FadeInUp(
-                          duration: const Duration(milliseconds: 600),
-                          delay: const Duration(milliseconds: 400),
-                          child: MentorXButton(
-                            label: t['startQuiz']!,
-                            onPressed: () => context.push('/quiz-taking'),
-                          ),
-                        ),
-                        const Gap(16),
-                        FadeInUp(
-                          duration: const Duration(milliseconds: 600),
-                          delay: const Duration(milliseconds: 500),
-                          child: TextButton(
-                            onPressed: () => context.pop(),
-                            child: Text(
-                              t['commonBack']!,
-                              style: TextStyle(
-                                color: context.textTertiaryColor,
-                                fontWeight: FontWeight.w800,
-                              ),
-                            ),
-                          ),
-                        ),
+                        const MentorXSkeleton(height: 56, borderRadius: 16),
                       ],
                     ),
                   ),
                 ),
               ],
             ),
-          ],
-        ),
-      ),
+          );
+        }
+
+        if (state.errorMessage != null) {
+          return Scaffold(
+            backgroundColor: context.backgroundPrimaryColor,
+            body: AppErrorView(
+              message: state.errorMessage!,
+              onRetry: () => context.read<QuizIntroPageBloc>().add(
+                    const QuizIntroPageLoadEvent(),
+                  ),
+            ),
+          );
+        }
+
+        final quiz = state.quiz;
+        if (quiz == null) {
+          return Scaffold(
+            backgroundColor: context.backgroundPrimaryColor,
+            body: AppEmptyView(
+              title: t['quizNotFound'] ?? 'Quiz not found',
+              message: 'Try again later',
+            ),
+          );
+        }
+
+        return AnnotatedRegion<SystemUiOverlayStyle>(
+          value: SystemUiOverlayStyle.light.copyWith(
+            statusBarColor: Colors.transparent,
+            statusBarIconBrightness: Brightness.light,
+          ),
+          child: Scaffold(
+            backgroundColor: context.backgroundPrimaryColor,
+            body: Stack(
+              children: [
+                const _BackgroundDecorations(),
+                Column(
+                  children: [
+                    _BuildHeader(quiz: quiz),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        physics: const BouncingScrollPhysics(),
+                        padding: const EdgeInsets.all(24),
+                        child: Column(
+                          children: [
+                            FadeInUp(
+                              duration: const Duration(milliseconds: 600),
+                              delay: const Duration(milliseconds: 200),
+                              child: _BuildContentCard(quiz: quiz),
+                            ),
+                            const Gap(32),
+                            FadeInUp(
+                              duration: const Duration(milliseconds: 600),
+                              delay: const Duration(milliseconds: 400),
+                              child: MentorXButton(
+                                label: t['startQuiz']!,
+                                onPressed: () => QuizTakingPageRoute(
+                                  quizId: quiz.id,
+                                ).push(context),
+                              ),
+                            ),
+                            const Gap(16),
+                            FadeInUp(
+                              duration: const Duration(milliseconds: 600),
+                              delay: const Duration(milliseconds: 500),
+                              child: TextButton(
+                                onPressed: () => context.pop(),
+                                child: Text(
+                                  t['commonBack']!,
+                                  style: TextStyle(
+                                    color: context.textTertiaryColor,
+                                    fontWeight: FontWeight.w800,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
 
 final class _BuildHeader extends StatelessWidget {
-  const _BuildHeader();
+  final QuizEntity quiz;
+  const _BuildHeader({required this.quiz});
 
   @override
   Widget build(BuildContext context) {
@@ -156,7 +213,8 @@ final class _BuildHeader extends StatelessWidget {
                 duration: const Duration(milliseconds: 500),
                 delay: const Duration(milliseconds: 100),
                 child: Text(
-                  context.t.student['quizTitle'] ?? 'Final Assessment',
+                  quiz.title,
+                  textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.w900,
@@ -170,8 +228,10 @@ final class _BuildHeader extends StatelessWidget {
                 duration: const Duration(milliseconds: 500),
                 delay: const Duration(milliseconds: 200),
                 child: Text(
-                  context.t.student['quizSubtitle'] ??
+                  quiz.description ??
+                      context.t.student['quizSubtitle'] ??
                       'Test your knowledge of this unit',
+                  textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 14,
                     color: context.textTertiaryColor,
@@ -188,7 +248,8 @@ final class _BuildHeader extends StatelessWidget {
 }
 
 final class _BuildContentCard extends StatelessWidget {
-  const _BuildContentCard();
+  final QuizEntity quiz;
+  const _BuildContentCard({required this.quiz});
 
   @override
   Widget build(BuildContext context) {
@@ -226,22 +287,22 @@ final class _BuildContentCard extends StatelessWidget {
                   childAspectRatio: 2.0,
                   children: [
                     _InfoItem(
-                      value: '20',
+                      value: '${quiz.questionsCount ?? quiz.questions.length}',
                       label: t['questionCount']!,
                       icon: Icons.help_outline_rounded,
                     ),
                     _InfoItem(
-                      value: '30 ${t['minutesShort']!}',
+                      value: '${quiz.durationMinutes} ${t['minutesShort']!}',
                       label: t['duration']!,
                       icon: Icons.access_time_rounded,
                     ),
                     _InfoItem(
-                      value: '60%',
+                      value: '${quiz.passMarks} / ${quiz.totalMarks}',
                       label: t['passGrade']!,
                       icon: Icons.grade_rounded,
                     ),
                     _InfoItem(
-                      value: '3',
+                      value: '1', // Hardcoded attempts for now as QuizEntity doesn't seem to have it
                       label: t['attempts']!,
                       icon: Icons.refresh_rounded,
                     ),

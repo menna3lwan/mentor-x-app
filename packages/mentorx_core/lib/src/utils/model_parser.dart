@@ -13,12 +13,30 @@ final class ModelParser {
     return <String, dynamic>{};
   }
 
-  /// Converts dynamic value to `List<dynamic>` safely
+  /// Extracts the main data payload from a potentially wrapped response.
+  static Map<String, dynamic> extractData(dynamic value) {
+    final map = asMap(value);
+    final data = map['data'];
+    if (data is Map) {
+      return asMap(data);
+    }
+    return map;
+  }
+
+  /// Converts dynamic value to `List<dynamic>` safely.
+  /// Robustly handles 'data', 'items', 'content' keys and nested 'data.content'.
   static List<dynamic> asList(dynamic value) {
     if (value is List<dynamic>) return value;
     if (value is Map) {
+      // 1. Direct check for common list keys
       final d = value['data'] ?? value['items'] ?? value['content'];
       if (d is List<dynamic>) return d;
+
+      // 2. Deep check for nested data.content or data.items
+      if (d is Map) {
+        final nested = d['content'] ?? d['items'] ?? d['data'];
+        if (nested is List<dynamic>) return nested;
+      }
     }
     return <dynamic>[];
   }

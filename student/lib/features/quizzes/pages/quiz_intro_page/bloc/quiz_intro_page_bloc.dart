@@ -23,7 +23,8 @@ final class QuizIntroPageBloc
   QuizIntroPageBloc({
     required this.quizRepository,
     required this.analyticsService,
-  }) : super(QuizIntroPageState.initial) {
+    required String quizId,
+  }) : super(QuizIntroPageState(quizId: quizId)) {
     on<QuizIntroPageLoadEvent>(_onLoad);
   }
 
@@ -35,7 +36,28 @@ final class QuizIntroPageBloc
     Emitter<QuizIntroPageState> emit,
   ) async {
     emit(state.copyWith(loadingState: LoadingState.loading));
-    analyticsService.logEvent(name: AnalyticsEvents.quizIntroViewed);
-    emit(state.copyWith(loadingState: LoadingState.loaded));
+    try {
+      final quiz = await quizRepository.getQuiz(state.quizId);
+      analyticsService.logEvent(
+        name: AnalyticsEvents.quizIntroViewed,
+        parameters: {
+          AnalyticsParams.quizId: state.quizId,
+          AnalyticsParams.name: quiz.title,
+        },
+      );
+      emit(
+        state.copyWith(
+          loadingState: LoadingState.loaded,
+          quiz: quiz,
+        ),
+      );
+    } catch (e) {
+      emit(
+        state.copyWith(
+          loadingState: LoadingState.error,
+          errorMessage: e.toString(),
+        ),
+      );
+    }
   }
 }

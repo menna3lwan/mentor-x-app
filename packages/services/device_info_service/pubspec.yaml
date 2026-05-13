@@ -3,6 +3,8 @@ description: A service to provide device and package information.
 version: 1.0.0
 publish_to: none
 
+resolution: workspace
+
 environment:
   sdk: ^3.11.4
 
