@@ -12,6 +12,11 @@ final class MockProfileRepository implements StudentProfileRepository {
   Future<void> initialize() async {}
 
   @override
+  Future<void> updateLocation({required String area, required String city, required String governorate}) async {
+    await Future<void>.delayed(delay);
+  }
+
+  @override
   Future<StudentEntity> getProfile() async {
     await Future<void>.delayed(delay);
     return MockProfileGenerator.profile();

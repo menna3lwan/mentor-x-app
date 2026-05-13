@@ -24,14 +24,21 @@ final class StatusBlockedPageBloc
           StatusBlockedPageState,
           StatusBlockedPagePresentationEvent
         > {
-  StatusBlockedPageBloc() : super(StatusBlockedPageState.initial) {
+  StatusBlockedPageBloc({required this.analyticsService})
+    : super(StatusBlockedPageState.initial) {
     on<StatusBlockedPageInitialized>(_onInitialized);
   }
+
+  final AnalyticsService analyticsService;
 
   void _onInitialized(
     StatusBlockedPageInitialized event,
     Emitter<StatusBlockedPageState> emit,
   ) {
+    analyticsService.logEvent(
+      name: AnalyticsEvents.accountStatusViewed,
+      parameters: {AnalyticsParams.status: 'blocked'},
+    );
     emit(state.copyWith(loadingState: LoadingState.loaded));
   }
 }

@@ -4,22 +4,27 @@ import 'package:mentorx_student/core/core.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:mentorx_student/features/auth/pages/reset_password/bloc/reset_password_bloc.dart';
 
+class MockAnalyticsService extends Mock implements AnalyticsService {}
+
+
 class MockStudentAuthenticationRepository extends Mock
     implements StudentAuthenticationRepository {}
 
 void main() {
+  late AnalyticsService analyticsService;
   late StudentAuthenticationRepository authRepository;
   const testPhone = '01234567890';
 
   setUp(() {
+    analyticsService = MockAnalyticsService();
     authRepository = MockStudentAuthenticationRepository();
   });
 
   group('ResetPasswordBloc', () {
     test('initial state is correct', () {
-      final bloc = ResetPasswordBloc(
-        authRepository: authRepository,
+      final bloc = ResetPasswordBloc(authRepository: authRepository,
         phoneNumber: testPhone,
+        analyticsService: analyticsService,
       );
       expect(bloc.state, const ResetPasswordState(phoneNumber: testPhone));
       bloc.close();
@@ -27,9 +32,9 @@ void main() {
 
     blocTest<ResetPasswordBloc, ResetPasswordState>(
       'emits updated values when events are added',
-      build: () => ResetPasswordBloc(
-        authRepository: authRepository,
+      build: () => ResetPasswordBloc(authRepository: authRepository,
         phoneNumber: testPhone,
+        analyticsService: analyticsService,
       ),
       act: (bloc) => bloc
         ..add(const ResetPasswordOtpChanged('123456'))
@@ -63,10 +68,10 @@ void main() {
             newPassword: any(named: 'newPassword'),
           ),
         ).thenAnswer((_) async {});
-        return ResetPasswordBloc(
-          authRepository: authRepository,
+        return ResetPasswordBloc(authRepository: authRepository,
           phoneNumber: testPhone,
-        );
+        analyticsService: analyticsService,
+      );
       },
       act: (bloc) => bloc
         ..add(const ResetPasswordOtpChanged('123456'))
@@ -94,9 +99,9 @@ void main() {
 
     blocTest<ResetPasswordBloc, ResetPasswordState>(
       'emits failure when passwords do not match',
-      build: () => ResetPasswordBloc(
-        authRepository: authRepository,
+      build: () => ResetPasswordBloc(authRepository: authRepository,
         phoneNumber: testPhone,
+        analyticsService: analyticsService,
       ),
       act: (bloc) => bloc
         ..add(const ResetPasswordOtpChanged('123456'))
@@ -124,10 +129,10 @@ void main() {
             message: 'Reset failed',
           ),
         );
-        return ResetPasswordBloc(
-          authRepository: authRepository,
+        return ResetPasswordBloc(authRepository: authRepository,
           phoneNumber: testPhone,
-        );
+        analyticsService: analyticsService,
+      );
       },
       act: (bloc) => bloc
         ..add(const ResetPasswordOtpChanged('123456'))

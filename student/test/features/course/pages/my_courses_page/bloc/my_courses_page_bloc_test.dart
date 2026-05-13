@@ -1,3 +1,4 @@
+import 'package:mocktail/mocktail.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mock_course_repository/mock_course_repository.dart';
@@ -5,17 +6,22 @@ import 'package:mentorx_student/core/core.dart';
 
 import 'package:mentorx_student/features/course/pages/my_courses_page/bloc/my_courses_page_bloc.dart';
 
+class MockAnalyticsService extends Mock implements AnalyticsService {}
+
+
 void main() {
+  late AnalyticsService analyticsService;
   late MockCourseRepository courseRepository;
 
   setUp(() {
+    analyticsService = MockAnalyticsService();
     courseRepository = const MockCourseRepository(delay: Duration.zero);
   });
 
   group('MyCoursesPageBloc', () {
     blocTest<MyCoursesPageBloc, MyCoursesPageState>(
       'emits [loading, loaded] when initialized',
-      build: () => MyCoursesPageBloc(courseRepository: courseRepository),
+      build: () => MyCoursesPageBloc(courseRepository: courseRepository, analyticsService: analyticsService),
       act: (bloc) => bloc.add(const MyCoursesPageInitialized()),
       expect: () => [
         isA<MyCoursesPageState>().having(
@@ -31,7 +37,7 @@ void main() {
 
     blocTest<MyCoursesPageBloc, MyCoursesPageState>(
       'emits state with new tab when tab changed',
-      build: () => MyCoursesPageBloc(courseRepository: courseRepository),
+      build: () => MyCoursesPageBloc(courseRepository: courseRepository, analyticsService: analyticsService),
       seed: () => const MyCoursesPageState(
         loadingState: LoadingState.loaded,
       ),
@@ -53,7 +59,7 @@ void main() {
 
     blocTest<MyCoursesPageBloc, MyCoursesPageState>(
       'loads expired courses when expired tab selected',
-      build: () => MyCoursesPageBloc(courseRepository: courseRepository),
+      build: () => MyCoursesPageBloc(courseRepository: courseRepository, analyticsService: analyticsService),
       seed: () => const MyCoursesPageState(
         loadingState: LoadingState.loaded,
       ),
@@ -73,7 +79,7 @@ void main() {
 
     blocTest<MyCoursesPageBloc, MyCoursesPageState>(
       'search filters courses',
-      build: () => MyCoursesPageBloc(courseRepository: courseRepository),
+      build: () => MyCoursesPageBloc(courseRepository: courseRepository, analyticsService: analyticsService),
       seed: () => const MyCoursesPageState(
         loadingState: LoadingState.loaded,
       ),
@@ -106,7 +112,7 @@ void main() {
 
     blocTest<MyCoursesPageBloc, MyCoursesPageState>(
       'refresh reloads courses',
-      build: () => MyCoursesPageBloc(courseRepository: courseRepository),
+      build: () => MyCoursesPageBloc(courseRepository: courseRepository, analyticsService: analyticsService),
       seed: () => const MyCoursesPageState(
         loadingState: LoadingState.loaded,
         selectedTab: MyCoursesTab.inProgress,
@@ -127,7 +133,7 @@ void main() {
     );
 
     test('initial state has default values', () {
-      final bloc = MyCoursesPageBloc(courseRepository: courseRepository);
+      final bloc = MyCoursesPageBloc(courseRepository: courseRepository, analyticsService: analyticsService);
       expect(bloc.state.loadingState, LoadingState.initial);
       expect(bloc.state.selectedTab, MyCoursesTab.inProgress);
       expect(bloc.state.courses, isEmpty);
@@ -137,7 +143,7 @@ void main() {
     });
 
     test('inProgress tab is default', () {
-      final bloc = MyCoursesPageBloc(courseRepository: courseRepository);
+      final bloc = MyCoursesPageBloc(courseRepository: courseRepository, analyticsService: analyticsService);
       expect(bloc.state.selectedTab, MyCoursesTab.inProgress);
       expect(bloc.state, equals(MyCoursesPageState.initial));
       bloc.close();
@@ -145,7 +151,7 @@ void main() {
 
     blocTest<MyCoursesPageBloc, MyCoursesPageState>(
       'clearing search loads all courses',
-      build: () => MyCoursesPageBloc(courseRepository: courseRepository),
+      build: () => MyCoursesPageBloc(courseRepository: courseRepository, analyticsService: analyticsService),
       seed: () => const MyCoursesPageState(
         loadingState: LoadingState.loaded,
         searchQuery: 'Algebra',

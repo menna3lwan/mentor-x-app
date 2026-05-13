@@ -20,6 +20,7 @@ class AcademicMonitorPage extends StatelessWidget {
       create: (context) => CoursesBloc(
         courseRepository: context.read<ParentCourseRepository>(),
         gradeRepository: context.read<ParentGradeRepository>(),
+        analyticsService: context.read<AnalyticsService>(),
       )..add(CoursesStarted(childId)),
       child: Builder(
         builder: (context) {

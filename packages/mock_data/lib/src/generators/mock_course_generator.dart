@@ -187,14 +187,17 @@ final class MockCourseGenerator {
   }
 
   static CourseEntity courseDetail(String courseId) {
+    final isFree = courseId == 'f2' || courseId == 'f4' || courseId == 'cat2' || courseId == 'cat4' || courseId == 'cat8' || courseId == 'cat10';
+    final price = isFree ? 0.0 : 300.0;
+    
     return CourseEntity(
       id: courseId,
       title: 'Advanced Algebra for Grade 10',
       subtitle: 'Complete algebra course covering all midterm topics',
       imageUrl: 'https://picsum.photos/800/450?80',
-      price: 300,
-      oldPrice: 450,
-      isFree: false,
+      price: price,
+      oldPrice: isFree ? null : 450,
+      isFree: isFree,
       type: CourseType.both,
       orderingMode: OrderingMode.free,
       durationDays: 90,
@@ -210,10 +213,10 @@ final class MockCourseGenerator {
   }
 
   static List<SessionEntity> courseSessions(String courseId) {
-    return const [
+    return [
       SessionEntity(
         id: 's1',
-        courseId: 'ep1',
+        courseId: courseId,
         title: 'Introduction to Algebraic Expressions',
         orderNumber: 0,
         isFree: true,
@@ -221,28 +224,28 @@ final class MockCourseGenerator {
       ),
       SessionEntity(
         id: 's2',
-        courseId: 'ep1',
+        courseId: courseId,
         title: 'Linear Equations',
         orderNumber: 1,
         itemCount: 3,
       ),
       SessionEntity(
         id: 's3',
-        courseId: 'ep1',
+        courseId: courseId,
         title: 'Quadratic Equations',
         orderNumber: 2,
         itemCount: 5,
       ),
       SessionEntity(
         id: 's4',
-        courseId: 'ep1',
+        courseId: courseId,
         title: 'Polynomials & Factoring',
         orderNumber: 3,
         itemCount: 3,
       ),
       SessionEntity(
         id: 's5',
-        courseId: 'ep1',
+        courseId: courseId,
         title: 'Final Review & Practice',
         orderNumber: 4,
         itemCount: 4,

@@ -37,10 +37,12 @@ final class _ResetPasswordPageWrapperState
     return BlocProvider(
       create: (context) => ResetPasswordBloc(
         authRepository: context.read<StudentAuthenticationRepository>(),
+        analyticsService: context.read<AnalyticsService>(),
         phoneNumber: widget.phoneNumber,
       ),
       child:
           BlocPresentationListener<
+
             ResetPasswordBloc,
             ResetPasswordPresentationEvent
           >(

@@ -21,13 +21,16 @@ final class TransactionsHistoryPageBloc
           TransactionsHistoryPageState,
           TransactionsHistoryPagePresentationEvent
         > {
-  TransactionsHistoryPageBloc({required this.walletRepository})
-    : super(TransactionsHistoryPageState.initial) {
+  TransactionsHistoryPageBloc({
+    required this.walletRepository,
+    required this.analyticsService,
+  }) : super(TransactionsHistoryPageState.initial) {
     on<TransactionsHistoryPageLoadEvent>(_onLoad);
     on<TransactionsHistoryPageLoadMoreEvent>(_onLoadMore);
   }
 
   final WalletRepository walletRepository;
+  final AnalyticsService analyticsService;
 
   Future<void> _onLoad(
     TransactionsHistoryPageLoadEvent event,
@@ -47,6 +50,8 @@ final class TransactionsHistoryPageBloc
       final transactions = await walletRepository.getTransactions(
         paginationInfo: const MentorXPaginationInfo(page: 0, limit: 20),
       );
+
+      analyticsService.logEvent(name: AnalyticsEvents.transactionHistoryViewed);
 
       emit(
         state.copyWith(

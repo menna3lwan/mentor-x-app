@@ -13,6 +13,7 @@ final class MarketplaceOrdersPageRoute extends GoRouteData
     return BlocProvider<MarketplaceOrdersPageBloc>(
       create: (context) => MarketplaceOrdersPageBloc(
         marketplaceRepository: context.read<MarketplaceRepository>(),
+        analyticsService: context.read<AnalyticsService>(),
       )..add(const MarketplaceOrdersPageInitialized()),
       child: const MarketplaceOrdersPageWrapper(),
     );

@@ -14,6 +14,7 @@ final class AssignmentDetailPageRoute extends GoRouteData
     return BlocProvider<AssignmentDetailPageBloc>(
       create: (context) => AssignmentDetailPageBloc(
         assignmentRepository: context.read<AssignmentRepository>(),
+        analyticsService: context.read<AnalyticsService>(),
       )..add(AssignmentDetailPageLoadEvent(assignmentId: assignmentId)),
       child: const AssignmentDetailPageWrapper(),
     );

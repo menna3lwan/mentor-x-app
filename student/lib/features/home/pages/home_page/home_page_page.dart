@@ -20,6 +20,7 @@ final class HomePagePage extends StatelessWidget {
     return AppDashboardScaffold(
       title: 'MentorX',
       onRefresh: onRefresh,
+      backgroundColor: context.backgroundPrimaryColor,
       body: Stack(
         children: [
           const _BackgroundDecorations(),
@@ -27,14 +28,16 @@ final class HomePagePage extends StatelessWidget {
             physics: const BouncingScrollPhysics(
               parent: AlwaysScrollableScrollPhysics(),
             ),
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                appBar,
-                const Gap(24),
-                content,
-              ],
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 100),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  appBar,
+                  const Gap(24),
+                  content,
+                ],
+              ),
             ),
           ),
         ],
@@ -51,27 +54,27 @@ class _BackgroundDecorations extends StatelessWidget {
     return Stack(
       children: [
         Positioned(
-          top: -100,
-          right: -50,
+          top: -120,
+          right: -80,
           child: _BlurredBlob(
-            color: context.brandPrimaryColor.withValues(alpha: 0.12),
-            size: 350,
-          ),
-        ),
-        Positioned(
-          top: 300,
-          left: -150,
-          child: _BlurredBlob(
-            color: context.brandSecondaryColor.withValues(alpha: 0.08),
+            color: context.brandPrimaryColor.withValues(alpha: 0.15),
             size: 400,
           ),
         ),
         Positioned(
-          bottom: -50,
-          right: -100,
+          top: 250,
+          left: -180,
           child: _BlurredBlob(
-            color: context.brandPrimaryColor.withValues(alpha: 0.1),
-            size: 300,
+            color: context.brandSecondaryColor.withValues(alpha: 0.1),
+            size: 450,
+          ),
+        ),
+        Positioned(
+          bottom: 100,
+          right: -150,
+          child: _BlurredBlob(
+            color: context.brandPrimaryColor.withValues(alpha: 0.12),
+            size: 380,
           ),
         ),
       ],
@@ -95,11 +98,9 @@ class _BlurredBlob extends StatelessWidget {
         shape: BoxShape.circle,
       ),
       child: ClipOval(
-        child: ExcludeSemantics(
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 70, sigmaY: 70),
-            child: const SizedBox.expand(),
-          ),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 80, sigmaY: 80),
+          child: const SizedBox.expand(),
         ),
       ),
     );

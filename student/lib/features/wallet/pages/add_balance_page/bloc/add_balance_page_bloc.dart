@@ -21,18 +21,22 @@ final class AddBalancePageBloc
           AddBalancePageState,
           AddBalancePagePresentationEvent
         > {
-  AddBalancePageBloc({required this.walletRepository})
-    : super(AddBalancePageState.initial) {
+  AddBalancePageBloc({
+    required this.walletRepository,
+    required this.analyticsService,
+  }) : super(AddBalancePageState.initial) {
     on<AddBalancePageLoadEvent>(_onLoad);
     on<AddBalancePageSubmitEvent>(_onSubmit);
   }
 
   final WalletRepository walletRepository;
+  final AnalyticsService analyticsService;
 
   Future<void> _onLoad(
     AddBalancePageLoadEvent event,
     Emitter<AddBalancePageState> emit,
   ) async {
+    analyticsService.logEvent(name: AnalyticsEvents.addBalanceStarted);
     emit(
       state.copyWith(loadingState: LoadingState.loading, errorMessage: null),
     );
@@ -52,6 +56,14 @@ final class AddBalancePageBloc
         method: event.method,
       );
 
+      analyticsService.logEvent(
+        name: AnalyticsEvents.addBalanceCompleted,
+        parameters: {
+          AnalyticsParams.amount: event.amount,
+          AnalyticsParams.paymentMethod: event.method,
+        },
+      );
+
       emit(
         state.copyWith(
           loadingState: LoadingState.loaded,
@@ -61,6 +73,14 @@ final class AddBalancePageBloc
 
       emitPresentation(AddBalancePageSuccess(payment));
     } catch (e) {
+      analyticsService.logEvent(
+        name: AnalyticsEvents.addBalanceFailed,
+        parameters: {
+          AnalyticsParams.amount: event.amount,
+          AnalyticsParams.paymentMethod: event.method,
+          AnalyticsParams.errorMessage: e.toString(),
+        },
+      );
       emit(
         state.copyWith(
           loadingState: LoadingState.error,

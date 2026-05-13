@@ -1,3 +1,4 @@
+import 'package:analytics_service/analytics_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_core/mentorx_core.dart';
@@ -15,6 +16,7 @@ class NotificationsParentPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => CommunicationBloc(
+        analyticsService: context.read<AnalyticsService>(),
         repository: context.read<ParentCommunicationRepository>(),
       )..add(CommunicationStarted(childId)),
       child: Scaffold(
@@ -25,7 +27,9 @@ class NotificationsParentPage extends StatelessWidget {
               builder: (context) => IconButton(
                 icon: const Icon(Icons.refresh),
                 onPressed: () {
-                  context.read<CommunicationBloc>().add(CommunicationRefreshRequested(childId));
+                  context.read<CommunicationBloc>().add(
+                    CommunicationRefreshRequested(childId),
+                  );
                 },
               ),
             ),
@@ -33,9 +37,10 @@ class NotificationsParentPage extends StatelessWidget {
         ),
         body: Builder(
           builder: (context) {
-            final status = context.select<CommunicationBloc, CommunicationStatus>(
-              (bloc) => bloc.state.status,
-            );
+            final status = context
+                .select<CommunicationBloc, CommunicationStatus>(
+                  (bloc) => bloc.state.status,
+                );
 
             if (status == CommunicationStatus.loading) {
               return const Center(child: CircularProgressIndicator());
@@ -53,7 +58,9 @@ class NotificationsParentPage extends StatelessWidget {
                     Text('Failed to load notifications: $errorMessage'),
                     ElevatedButton(
                       onPressed: () {
-                        context.read<CommunicationBloc>().add(CommunicationStarted(childId));
+                        context.read<CommunicationBloc>().add(
+                          CommunicationStarted(childId),
+                        );
                       },
                       child: const Text('Retry'),
                     ),
@@ -62,9 +69,10 @@ class NotificationsParentPage extends StatelessWidget {
               );
             }
 
-            final notifications = context.select<CommunicationBloc, List<NotificationEntity>>(
-              (bloc) => bloc.state.notifications,
-            );
+            final notifications = context
+                .select<CommunicationBloc, List<NotificationEntity>>(
+                  (bloc) => bloc.state.notifications,
+                );
 
             if (notifications.isEmpty) {
               return const Center(child: Text('No new notifications.'));
@@ -72,7 +80,9 @@ class NotificationsParentPage extends StatelessWidget {
 
             return RefreshIndicator(
               onRefresh: () async {
-                context.read<CommunicationBloc>().add(CommunicationRefreshRequested(childId));
+                context.read<CommunicationBloc>().add(
+                  CommunicationRefreshRequested(childId),
+                );
               },
               child: ListView.separated(
                 itemCount: notifications.length,
@@ -80,10 +90,14 @@ class NotificationsParentPage extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final notification = notifications[index];
                   return ListTile(
-                    leading: const CircleAvatar(child: Icon(Icons.notifications_active)),
+                    leading: const CircleAvatar(
+                      child: Icon(Icons.notifications_active),
+                    ),
                     title: Text(notification.title),
                     subtitle: Text(notification.message),
-                    trailing: Text(notification.createdAt.toString().split(' ').first),
+                    trailing: Text(
+                      notification.createdAt.toString().split(' ').first,
+                    ),
                   );
                 },
               ),

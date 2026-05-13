@@ -52,7 +52,15 @@ final class RewardsHistoryPage extends StatelessWidget {
           );
 
           if (isLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return ListView.separated(
+              padding: const EdgeInsets.fromLTRB(20, 24, 20, 100),
+              itemCount: 6,
+              separatorBuilder: (_, _) => const Gap(16),
+              itemBuilder: (_, _) => const MentorXSkeleton(
+                height: 100,
+                borderRadius: 28,
+              ),
+            );
           }
 
           final transactions = context.select(
@@ -61,43 +69,10 @@ final class RewardsHistoryPage extends StatelessWidget {
           );
 
           if (transactions.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  FadeInDown(
-                    child: Container(
-                      padding: const EdgeInsets.all(32),
-                      decoration: BoxDecoration(
-                        color: context.backgroundSecondaryColor,
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: context.borderPrimaryColor.withValues(
-                            alpha: 0.05,
-                          ),
-                        ),
-                      ),
-                      child: Icon(
-                        Icons.history_rounded,
-                        size: 80,
-                        color: context.textTertiaryColor.withValues(alpha: 0.2),
-                      ),
-                    ),
-                  ),
-                  const Gap(24),
-                  FadeInUp(
-                    child: Text(
-                      t['noHistory'] ?? 'No points history yet',
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.w900,
-                        color: context.textPrimaryColor,
-                        letterSpacing: -0.5,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+            return AppEmptyView(
+              title: t['noHistory'] ?? 'No points history yet',
+              message: 'Earn points by completing tasks and participating in activities.',
+              icon: Icons.history_rounded,
             );
           }
 

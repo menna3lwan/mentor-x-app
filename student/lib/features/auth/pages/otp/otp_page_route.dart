@@ -17,6 +17,7 @@ final class OtpPageRoute extends GoRouteData with $OtpPageRoute {
     return BlocProvider<OtpBloc>(
       create: (context) => OtpBloc(
         authRepository: context.read<StudentAuthenticationRepository>(),
+        analyticsService: context.read<AnalyticsService>(),
         phoneNumber: phoneNumber,
         otpLength: otpLength,
         otpDuration: otpDurationSeconds != null

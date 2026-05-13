@@ -13,6 +13,7 @@ final class AttendanceQrPageRoute extends GoRouteData
     return BlocProvider<AttendanceQrPageBloc>(
       create: (context) => AttendanceQrPageBloc(
         attendanceRepository: context.read<AttendanceRepository>(),
+        analyticsService: context.read<AnalyticsService>(),
       )..add(const AttendanceQrPageLoadEvent()),
       child: const AttendanceQrPageWrapper(),
     );

@@ -88,24 +88,19 @@ final class _BannersCarouselWidgetState extends State<BannersCarouselWidget> {
                 return GestureDetector(
                   onTap: hasItems ? () => widget.onTapBanner(bannerId) : null,
                   child: Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 6),
+                    margin: const EdgeInsets.symmetric(horizontal: 4),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(24),
-                      border: Border.all(
-                        color: context.borderPrimaryColor.withValues(
-                          alpha: 0.05,
-                        ),
-                      ),
+                      borderRadius: BorderRadius.circular(32),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.2),
-                          blurRadius: 15,
-                          offset: const Offset(0, 8),
+                          color: Colors.black.withValues(alpha: 0.1),
+                          blurRadius: 20,
+                          offset: const Offset(0, 10),
                         ),
                       ],
                     ),
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(24),
+                      borderRadius: BorderRadius.circular(32),
                       child: Stack(
                         fit: StackFit.expand,
                         children: [
@@ -121,10 +116,9 @@ final class _BannersCarouselWidgetState extends State<BannersCarouselWidget> {
                                 end: Alignment.bottomCenter,
                                 colors: [
                                   Colors.transparent,
-                                  context.backgroundPrimaryColor.withValues(
-                                    alpha: 0.8,
-                                  ),
+                                  Colors.black.withValues(alpha: 0.7),
                                 ],
+                                stops: const [0.5, 1.0],
                               ),
                             ),
                           ),
@@ -137,12 +131,12 @@ final class _BannersCarouselWidgetState extends State<BannersCarouselWidget> {
                                 bannerTitle!,
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: context.textForegroundColor,
-                                  fontSize: 18,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
                                   fontWeight: FontWeight.w900,
-                                  letterSpacing: -0.5,
-                                  height: 1.2,
+                                  letterSpacing: -0.8,
+                                  height: 1.1,
                                 ),
                               ),
                             ),
@@ -162,15 +156,23 @@ final class _BannersCarouselWidgetState extends State<BannersCarouselWidget> {
               (index) {
                 final isActive = _currentIndex == index;
                 return AnimatedContainer(
-                  duration: const Duration(milliseconds: 300),
-                  width: isActive ? 24 : 8,
-                  height: 8,
+                  duration: const Duration(milliseconds: 400),
+                  width: isActive ? 32 : 8,
+                  height: 6,
                   margin: const EdgeInsets.symmetric(horizontal: 4),
+                  curve: Curves.easeOutCubic,
                   decoration: BoxDecoration(
                     color: isActive
                         ? context.brandPrimaryColor
-                        : context.brandPrimaryColor.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(4),
+                        : context.brandPrimaryColor.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(3),
+                    boxShadow: isActive ? [
+                      BoxShadow(
+                        color: context.brandPrimaryColor.withValues(alpha: 0.3),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ] : null,
                   ),
                 );
               },

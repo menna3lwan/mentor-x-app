@@ -33,10 +33,15 @@ class _ForgetPasswordPageWrapperState extends State<ForgetPasswordPageWrapper> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocPresentationListener<
-      ForgetPasswordBloc,
-      ForgetPasswordPresentationEvent
-    >(
+    return BlocProvider(
+      create: (context) => ForgetPasswordBloc(
+        authenticationRepository: context.read<AuthenticationRepository<ParentEntity>>(),
+        analyticsService: context.read<AnalyticsService>(),
+      ),
+      child: BlocPresentationListener<
+        ForgetPasswordBloc,
+        ForgetPasswordPresentationEvent
+      >(
       listener: (context, event) {
         switch (event) {
           case ForgetPasswordSuccessPresentationEvent(:final phone):
@@ -97,8 +102,9 @@ class _ForgetPasswordPageWrapperState extends State<ForgetPasswordPageWrapper> {
           );
         },
       ),
-    );
-  }
+    ),
+  );
+}
 
   Future<void> _openResetPasswordBottomSheet(String phone) async {
     final otpController = TextEditingController();

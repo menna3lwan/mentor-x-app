@@ -21,15 +21,19 @@ final class PaymentSuccessPageBloc
           PaymentSuccessPageState,
           PaymentSuccessPagePresentationEvent
         > {
-  PaymentSuccessPageBloc() : super(PaymentSuccessPageState.initial) {
+  PaymentSuccessPageBloc({required this.analyticsService})
+    : super(PaymentSuccessPageState.initial) {
     on<PaymentSuccessPageLoadEvent>(_onLoad);
   }
+
+  final AnalyticsService analyticsService;
 
   Future<void> _onLoad(
     PaymentSuccessPageLoadEvent event,
     Emitter<PaymentSuccessPageState> emit,
   ) async {
     emit(state.copyWith(loadingState: LoadingState.loading));
+    analyticsService.logEvent(name: AnalyticsEvents.paymentSuccessViewed);
     emit(state.copyWith(loadingState: LoadingState.loaded));
   }
 }

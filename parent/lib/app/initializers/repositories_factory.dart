@@ -12,7 +12,10 @@ import 'package:parent_dio_course_repository/parent_dio_course_repository.dart';
 import 'package:parent_dio_financial_repository/parent_dio_financial_repository.dart';
 import 'package:parent_dio_grade_repository/parent_dio_grade_repository.dart';
 import 'package:parent_dio_communication_repository/parent_dio_communication_repository.dart';
+import 'package:dio_parent_analytics_repository/dio_parent_analytics_repository.dart';
+import 'package:parent_dio_profile_repository/parent_dio_profile_repository.dart' as dio_profile;
 import 'package:device_info_service/device_info_service.dart';
+import 'package:analytics_service/analytics_service.dart';
 
 import 'package:parent_mock_authentication_repository/parent_mock_authentication_repository.dart';
 import 'package:parent_mock_home_repository/parent_mock_home_repository.dart';
@@ -22,6 +25,8 @@ import 'package:parent_mock_course_repository/parent_mock_course_repository.dart
 import 'package:parent_mock_attendance_repository/parent_mock_attendance_repository.dart';
 import 'package:parent_mock_grade_repository/parent_mock_grade_repository.dart';
 import 'package:parent_mock_communication_repository/parent_mock_communication_repository.dart';
+import 'package:mock_analytics_repository/mock_analytics_repository.dart';
+import 'package:parent_mock_profile_repository/parent_mock_profile_repository.dart' as mock_profile;
 
 import '../../core/utils/env.dart';
 
@@ -35,6 +40,9 @@ final class AppRepositories {
   final ParentAttendanceRepository attendanceRepository;
   final ParentGradeRepository gradeRepository;
   final ParentCommunicationRepository communicationRepository;
+  final ParentAnalyticsRepository analyticsRepository;
+  final ParentProfileRepository profileRepository;
+  final AnalyticsService analyticsService;
 
   const AppRepositories._({
     required this.cacheRepository,
@@ -46,6 +54,9 @@ final class AppRepositories {
     required this.attendanceRepository,
     required this.gradeRepository,
     required this.communicationRepository,
+    required this.analyticsRepository,
+    required this.profileRepository,
+    required this.analyticsService,
   });
 
   List<Object> toList() {
@@ -59,6 +70,9 @@ final class AppRepositories {
       attendanceRepository,
       gradeRepository,
       communicationRepository,
+      analyticsRepository,
+      profileRepository,
+      analyticsService,
     ];
   }
 
@@ -83,6 +97,13 @@ final class AppRepositories {
       RepositoryProvider<ParentCommunicationRepository>(
         create: (_) => communicationRepository,
       ),
+      RepositoryProvider<ParentAnalyticsRepository>(
+        create: (_) => analyticsRepository,
+      ),
+      RepositoryProvider<ParentProfileRepository>(
+        create: (_) => profileRepository,
+      ),
+      RepositoryProvider<AnalyticsService>(create: (_) => analyticsService),
     ];
   }
 }
@@ -241,6 +262,40 @@ final class RepositoriesFactory {
     }
   }
 
+  static Future<ParentAnalyticsRepository> _initAnalyticsRepository() async {
+    switch (Env.analyticsRepositoryMode) {
+      case RepositoryMode.mock:
+        return MockAnalyticsRepository(delay: Env.mockDelayDuration);
+      case RepositoryMode.prod:
+        final httpClient = await _initHttpClient();
+        return DioParentAnalyticsRepository(httpClient: httpClient);
+    }
+  }
+
+  static AnalyticsService? _analyticsService;
+
+  static Future<AnalyticsService> _initAnalyticsService() async {
+    if (_analyticsService != null) return _analyticsService!;
+    final AnalyticsService analyticsService = FirebaseAnalyticsService();
+    await analyticsService.initialize();
+    _analyticsService = analyticsService;
+    return analyticsService;
+  }
+
+  static Future<ParentProfileRepository> _initProfileRepository() async {
+    switch (Env.profileRepositoryMode) {
+      case RepositoryMode.mock:
+        return mock_profile.MockProfileRepository(delay: Env.mockDelayDuration);
+      case RepositoryMode.prod:
+        final httpClient = await _initHttpClient();
+        final cacheRepository = await _initCacheRepository();
+        return dio_profile.DioProfileRepository(
+          httpClient: httpClient,
+          cacheRepository: cacheRepository,
+        );
+    }
+  }
+
   static String _defaultLanguageCode() {
     // In a real app, you'd use a locale setting package like student app does
     // For now, simpler implementation or fallback
@@ -273,6 +328,9 @@ final class RepositoriesFactory {
       attendanceRepository as ParentAttendanceRepository,
       gradeRepository as ParentGradeRepository,
       communicationRepository as ParentCommunicationRepository,
+      analyticsRepository as ParentAnalyticsRepository,
+      profileRepository as ParentProfileRepository,
+      analyticsService as AnalyticsService,
     ] = await Future.wait(
       [
         _initAuthenticationRepository(),
@@ -283,6 +341,9 @@ final class RepositoriesFactory {
         _initAttendanceRepository(),
         _initGradeRepository(),
         _initCommunicationRepository(),
+        _initAnalyticsRepository(),
+        _initProfileRepository(),
+        _initAnalyticsService(),
       ],
     );
 
@@ -296,6 +357,9 @@ final class RepositoriesFactory {
       attendanceRepository: attendanceRepository,
       gradeRepository: gradeRepository,
       communicationRepository: communicationRepository,
+      analyticsRepository: analyticsRepository,
+      profileRepository: profileRepository,
+      analyticsService: analyticsService,
     );
 
     final localizedClients = <LocalizedClient>[];

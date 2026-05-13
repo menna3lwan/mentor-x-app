@@ -28,7 +28,18 @@ final class HeaderInterceptor extends Interceptor {
       }
     }
 
-    options.headers.addAll(coreHeaders);
+    // Safely add core headers without overwriting explicitly provided Authorization
+    coreHeaders.forEach((key, value) {
+      if (key == 'Authorization') {
+        if (!options.headers.containsKey('Authorization')) {
+          options.headers[key] = value;
+        } else {
+          _logger.debug('Skipping Authorization header injection; already present in request options.');
+        }
+      } else {
+        options.headers[key] = value;
+      }
+    });
 
     if (coreHeaders.containsKey('Authorization')) {
       final token = coreHeaders['Authorization']!;
@@ -37,10 +48,16 @@ final class HeaderInterceptor extends Interceptor {
           : '***';
       _logger.info('🔑 Injected Authorization header for: ${options.path} (Token ends with: $displayToken)');
     } else {
-      _logger.warning('🚫 No access token found in HttpClient for request: ${options.path}');
+      // Check if the client is authenticated at all
+      if (!_httpClient.isAuthenticated) {
+        _logger.warning('🚫 HttpClient.isAuthenticated is false. No token injected for: ${options.path}');
+      } else {
+        _logger.error('❌ CRITICAL: HttpClient is authenticated but _getCoreHeaders() returned no Authorization header for: ${options.path}');
+      }
+      
       // Also log if we have a device ID but no token, to confirm it's not a complete header failure
       if (coreHeaders.containsKey(NetworkConstants.deviceIdHeader)) {
-        _logger.debug('📡 Device ID was found and injected: ${coreHeaders[NetworkConstants.deviceIdHeader]}');
+        _logger.debug('📡 Device ID was successfully injected: ${coreHeaders[NetworkConstants.deviceIdHeader]}');
       }
     }
 

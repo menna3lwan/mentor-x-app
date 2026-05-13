@@ -20,7 +20,7 @@ final class QuizListPage extends StatelessWidget {
         final loadingState = context.select<QuizListPageBloc, LoadingState>(
           (bloc) => bloc.state.loadingState,
         );
-        final quizzes = context.select<QuizListPageBloc, List<dynamic>>(
+        final quizzes = context.select<QuizListPageBloc, List<QuizEntity>>(
           (bloc) => bloc.state.quizzes,
         );
 
@@ -83,19 +83,30 @@ final class QuizListPage extends StatelessWidget {
   Widget _buildBody(
     BuildContext context,
     LoadingState loadingState,
-    List<dynamic> quizzes,
-    dynamic t,
+    List<QuizEntity> quizzes,
+    Map<String, dynamic> t,
   ) {
     if (loadingState == LoadingState.loading) {
-      return const SliverFillRemaining(
-        child: Center(child: CircularProgressIndicator()),
+      return SliverPadding(
+        padding: const EdgeInsets.all(20),
+        sliver: SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (context, index) => const Padding(
+              padding: EdgeInsets.only(bottom: 16),
+              child: MentorXSkeleton(height: 100, borderRadius: 28),
+            ),
+            childCount: 5,
+          ),
+        ),
       );
     }
 
     if (quizzes.isEmpty) {
       return SliverFillRemaining(
-        child: FadeInUp(
-          child: _EmptyQuizzes(t: t),
+        child: AppEmptyView(
+          title: t['noQuizzes'] ?? 'No quizzes available',
+          message: t['noQuizzesDesc'] ?? 'Check back later for new quizzes.',
+          icon: Icons.assignment_turned_in_rounded,
         ),
       );
     }
@@ -126,8 +137,8 @@ final class QuizListPage extends StatelessWidget {
 }
 
 final class _QuizItemCard extends StatelessWidget {
-  final dynamic quiz;
-  final dynamic t;
+  final QuizEntity quiz;
+  final Map<String, dynamic> t;
   final VoidCallback onTap;
 
   const _QuizItemCard({
@@ -271,82 +282,6 @@ final class _QuizInfoLabel extends StatelessWidget {
   }
 }
 
-final class _EmptyQuizzes extends StatelessWidget {
-  const _EmptyQuizzes({required this.t});
-  final dynamic t;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(40),
-              decoration: BoxDecoration(
-                color: context.backgroundSecondaryColor.withValues(alpha: 0.45),
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: context.borderPrimaryColor.withValues(alpha: 0.1),
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.05),
-                    blurRadius: 30,
-                  ),
-                ],
-              ),
-              child: ClipOval(
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                  child: ShaderMask(
-                    shaderCallback: (bounds) => LinearGradient(
-                      colors: [
-                        context.textTertiaryColor.withValues(alpha: 0.3),
-                        context.textTertiaryColor.withValues(alpha: 0.1),
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ).createShader(bounds),
-                    child: const Icon(
-                      Icons.assignment_turned_in_rounded,
-                      size: 100,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            const Gap(40),
-            Text(
-              t['noQuizzes'] ?? 'No quizzes available',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.w900,
-                color: context.textPrimaryColor,
-                letterSpacing: -0.5,
-              ),
-            ),
-            const Gap(16),
-            Text(
-              t['noQuizzesDesc'] ?? 'Check back later for new quizzes.',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 16,
-                color: context.textSecondaryColor,
-                fontWeight: FontWeight.w600,
-                height: 1.5,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
 
 class _BackgroundDecorations extends StatelessWidget {
   const _BackgroundDecorations();

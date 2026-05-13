@@ -25,10 +25,13 @@ final class WhatsappGroupsPageBloc
           WhatsappGroupsPagePresentationEvent
         > {
   final StudentCommunicationRepository _repository;
+  final AnalyticsService _analyticsService;
 
   WhatsappGroupsPageBloc({
     required StudentCommunicationRepository repository,
+    required AnalyticsService analyticsService,
   }) : _repository = repository,
+       _analyticsService = analyticsService,
        super(WhatsappGroupsPageState.initial) {
     on<WhatsappGroupsPageInitialized>(_onInitialized);
     on<WhatsappGroupsPageRefreshed>(_onRefreshed);
@@ -39,6 +42,7 @@ final class WhatsappGroupsPageBloc
     WhatsappGroupsPageInitialized event,
     Emitter<WhatsappGroupsPageState> emit,
   ) async {
+    await _analyticsService.logEvent(name: AnalyticsEvents.whatsappGroupsViewed);
     await _load(emit);
   }
 
@@ -53,6 +57,24 @@ final class WhatsappGroupsPageBloc
     WhatsappGroupsPageJoinRequested event,
     Emitter<WhatsappGroupsPageState> emit,
   ) async {
+    final groupName = state.groups
+        .firstWhere((group) => group.id == event.groupId,
+            orElse: () => const WhatsappGroupUiModel(
+                id: '',
+                title: 'Unknown',
+                description: '',
+                inviteLink: '',
+                participantsCount: 0,
+                iconUrl: ''))
+        .title;
+
+    await _analyticsService.logEvent(
+      name: AnalyticsEvents.whatsappGroupJoined,
+      parameters: {
+        AnalyticsParams.name: groupName,
+      },
+    );
+
     emit(state.copyWith(joinedGroupId: event.groupId));
     emitPresentation(
       const WhatsappGroupsPageJoinSuccessPresentationEvent(

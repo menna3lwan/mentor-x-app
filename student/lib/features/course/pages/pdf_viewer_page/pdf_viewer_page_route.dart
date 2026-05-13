@@ -24,6 +24,7 @@ final class PdfViewerPageRoute extends GoRouteData with $PdfViewerPageRoute {
     return BlocProvider<PdfViewerPageBloc>(
       create: (context) => PdfViewerPageBloc(
         courseRepository: context.read<CourseRepository>(),
+        analyticsService: context.read<AnalyticsService>(),
         itemId: itemId,
         title: title,
         enrollmentId: enrollmentId,

@@ -133,7 +133,21 @@ final class _AiChatPageState extends State<AiChatPage> {
                 ),
               Expanded(
                 child: state.isLoading && state.messages.isEmpty
-                    ? const Center(child: CircularProgressIndicator())
+                    ? ListView.builder(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                        itemCount: 4,
+                        itemBuilder: (context, i) => Align(
+                          alignment: i.isEven ? Alignment.centerLeft : Alignment.centerRight,
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: 16),
+                            child: MentorXSkeleton(
+                              width: MediaQuery.of(context).size.width * 0.7,
+                              height: 60,
+                              borderRadius: 24,
+                            ),
+                          ),
+                        ),
+                      )
                     : ListView.builder(
                         physics: const BouncingScrollPhysics(),
                         controller: _scrollController,

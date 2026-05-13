@@ -92,9 +92,60 @@ final class DioQuizRepository
   }
 
   @override
-  Future<QuizAttemptModel> getResults(String attemptId) async {
+  Future<Map<String, dynamic>> startQuiz(String quizId) async {
     try {
-      final response = await httpClient.get('/api/quiz-attempts/$attemptId');
+      final response = await httpClient.post('/api/quizzes/$quizId/start');
+      return asMap(response.data)['data'] ?? asMap(response.data);
+    } on HttpClientResponse catch (e) {
+      return handleHttpClientErrorResponse(
+        e,
+        defaultCode: QuizRepositoryExceptionCode.failedToStartQuiz,
+      );
+    }
+  }
+
+  @override
+  Future<void> saveAnswer({
+    required String attemptId,
+    required String questionId,
+    List<String>? selectedOptions,
+    String? textAnswer,
+  }) async {
+    try {
+      await httpClient.post(
+        '/api/quiz-attempts/$attemptId/answers',
+        data: {
+          'question_id': questionId,
+          if (selectedOptions != null) 'selected_options': selectedOptions,
+          if (textAnswer != null) 'text_answer': textAnswer,
+        },
+      );
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: QuizRepositoryExceptionCode.failedToSaveAnswer,
+      );
+    }
+  }
+
+  @override
+  Future<QuizAttemptEntity> submitQuizAttempt(String attemptId) async {
+    try {
+      final response = await httpClient.post('/api/quiz-attempts/$attemptId/submit');
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      return QuizAttemptModel.fromJson(data);
+    } on HttpClientResponse catch (e) {
+      return handleHttpClientErrorResponse(
+        e,
+        defaultCode: QuizRepositoryExceptionCode.failedToSubmitQuiz,
+      );
+    }
+  }
+
+  @override
+  Future<QuizAttemptEntity> getResults(String attemptId) async {
+    try {
+      final response = await httpClient.get('/api/quiz-attempts/$attemptId/results');
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return QuizAttemptModel.fromJson(data);
     } on HttpClientResponse catch (e) {
@@ -115,18 +166,6 @@ final class DioQuizRepository
       return handleHttpClientErrorResponse(
         e,
         defaultCode: QuizRepositoryExceptionCode.unknown,
-      );
-    }
-  }
-
-  @override
-  Future<void> startQuiz(String quizId) async {
-    try {
-      await httpClient.post('/api/quizzes/$quizId/start');
-    } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
-        e,
-        defaultCode: QuizRepositoryExceptionCode.failedToStartQuiz,
       );
     }
   }

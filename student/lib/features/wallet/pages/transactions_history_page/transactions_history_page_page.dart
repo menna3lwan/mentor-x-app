@@ -62,9 +62,18 @@ final class TransactionsHistoryPage extends StatelessWidget {
         ),
       ),
       body: isInitialLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? ListView.separated(
+              padding: const EdgeInsets.all(20),
+              itemCount: 8,
+              separatorBuilder: (_, _) => const Gap(12),
+              itemBuilder: (_, _) => const MentorXSkeleton(height: 90, borderRadius: 24),
+            )
           : transactions.isEmpty
-          ? const _EmptyHistory()
+          ? AppEmptyView(
+              title: t['noTransactions'] ?? 'No transactions found',
+              message: 'Your financial activities will appear here.',
+              icon: Icons.history_rounded,
+            )
           : RefreshIndicator(
               color: context.brandPrimaryColor,
               onRefresh: onRefresh,
@@ -75,11 +84,9 @@ final class TransactionsHistoryPage extends StatelessWidget {
                 separatorBuilder: (context, index) => const Gap(12),
                 itemBuilder: (context, i) {
                   if (i == transactions.length) {
-                    return const Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(16.0),
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      ),
+                    return const Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: MentorXSkeleton(height: 60, borderRadius: 20),
                     );
                   }
                   final tx = transactions[i];
@@ -228,39 +235,3 @@ final class _TransactionItem extends StatelessWidget {
   }
 }
 
-final class _EmptyHistory extends StatelessWidget {
-  const _EmptyHistory();
-
-  @override
-  Widget build(BuildContext context) {
-    final t = context.t.student;
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(32),
-            decoration: BoxDecoration(
-              color: context.backgroundSecondaryColor,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              Icons.history_rounded,
-              size: 64,
-              color: context.textTertiaryColor.withValues(alpha: 0.2),
-            ),
-          ),
-          const Gap(24),
-          Text(
-            t['noTransactions'] ?? 'No transactions found',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w900,
-              color: context.textSecondaryColor,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}

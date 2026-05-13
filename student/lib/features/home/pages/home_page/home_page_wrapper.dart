@@ -78,76 +78,10 @@ final class _HomePageWrapperState extends State<HomePageWrapper> {
               duration: const Duration(milliseconds: 600),
               child: const WalletQuickViewCardWrapper(),
             ),
-            const Gap(24),
+            const Gap(32),
             FadeInUp(
               duration: const Duration(milliseconds: 600),
               delay: const Duration(milliseconds: 100),
-              child: const BannersCarouselWrapper(),
-            ),
-            const Gap(32),
-            FadeInUp(
-              duration: const Duration(milliseconds: 600),
-              delay: const Duration(milliseconds: 200),
-              child: Column(
-                children: [
-                  SectionHeader(
-                    title: context.t.home.dashboard.continueLearning,
-                    onSeeAll: () =>
-                        const MyCoursesPageRoute().push(context),
-                  ),
-                  const Gap(16),
-                  const ContinueLearningSectionWrapper(),
-                ],
-              ),
-            ),
-            const Gap(32),
-            FadeInUp(
-              duration: const Duration(milliseconds: 600),
-              delay: const Duration(milliseconds: 300),
-              child: Column(
-                children: [
-                  SectionHeader(
-                    title: context.t.home.dashboard.featuredCourses,
-                    onSeeAll: () =>
-                        const CourseCatalogPageRoute().push(context),
-                  ),
-                  const Gap(16),
-                  const FeaturedCoursesSectionWrapper(),
-                ],
-              ),
-            ),
-            const Gap(32),
-            Builder(
-              builder: (context) {
-                final announcementsSection = context.select<HomePageBloc, dynamic>(
-                  (bloc) => bloc.state.announcementsSection,
-                );
-
-                if ((announcementsSection.data?.isNotEmpty ?? false) ||
-                    announcementsSection.isLoading ||
-                    announcementsSection.isFailure) {
-                  return FadeInUp(
-                    duration: const Duration(milliseconds: 600),
-                    delay: const Duration(milliseconds: 400),
-                    child: Column(
-                      children: [
-                        SectionHeader(
-                          title: context.t.home.dashboard.announcements,
-                          onSeeAll: () {},
-                        ),
-                        const Gap(16),
-                        const AnnouncementsSectionWrapper(),
-                        const Gap(32),
-                      ],
-                    ),
-                  );
-                }
-                return const SizedBox.shrink();
-              },
-            ),
-            FadeInUp(
-              duration: const Duration(milliseconds: 600),
-              delay: const Duration(milliseconds: 500),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -180,7 +114,7 @@ final class _HomePageWrapperState extends State<HomePageWrapper> {
                           const MarketplaceGridPageRoute().push(context);
                           return;
                         case 7:
-                          const AnalyticsDashboardPageRoute().push(context);
+                          const StudentCardPageRoute().push(context);
                           return;
                         default:
                           return;
@@ -190,7 +124,74 @@ final class _HomePageWrapperState extends State<HomePageWrapper> {
                 ],
               ),
             ),
-            const Gap(100),
+            const Gap(32),
+            FadeInUp(
+              duration: const Duration(milliseconds: 600),
+              delay: const Duration(milliseconds: 200),
+              child: const BannersCarouselWrapper(),
+            ),
+            const Gap(32),
+            FadeInUp(
+              duration: const Duration(milliseconds: 600),
+              delay: const Duration(milliseconds: 300),
+              child: Column(
+                children: [
+                  SectionHeader(
+                    title: context.t.home.dashboard.continueLearning,
+                    onSeeAll: () =>
+                        const MyCoursesPageRoute().push(context),
+                  ),
+                  const Gap(16),
+                  const ContinueLearningSectionWrapper(),
+                ],
+              ),
+            ),
+            const Gap(32),
+            FadeInUp(
+              duration: const Duration(milliseconds: 600),
+              delay: const Duration(milliseconds: 400),
+              child: Column(
+                children: [
+                  SectionHeader(
+                    title: context.t.home.dashboard.featuredCourses,
+                    onSeeAll: () =>
+                        const CourseCatalogPageRoute().push(context),
+                  ),
+                  const Gap(16),
+                  const FeaturedCoursesSectionWrapper(),
+                ],
+              ),
+            ),
+            const Gap(32),
+            Builder(
+              builder: (context) {
+                final announcementsSection = context.select<HomePageBloc, dynamic>(
+                  (bloc) => bloc.state.announcementsSection,
+                );
+
+                if ((announcementsSection.data?.isNotEmpty ?? false) ||
+                    announcementsSection.isLoading ||
+                    announcementsSection.isFailure) {
+                  return FadeInUp(
+                    duration: const Duration(milliseconds: 600),
+                    delay: const Duration(milliseconds: 500),
+                    child: Column(
+                      children: [
+                        SectionHeader(
+                          title: context.t.home.dashboard.announcements,
+                          onSeeAll: () {},
+                        ),
+                        const Gap(16),
+                        const AnnouncementsSectionWrapper(),
+                        const Gap(32),
+                      ],
+                    ),
+                  );
+                }
+                return const SizedBox.shrink();
+              },
+            ),
+            const Gap(60),
           ],
         ),
       ),

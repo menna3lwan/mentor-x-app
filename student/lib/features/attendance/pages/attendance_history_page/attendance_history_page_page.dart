@@ -44,7 +44,14 @@ final class AttendanceHistoryPage extends StatelessWidget {
             children: [
               const _BackgroundDecorations(),
               isLoading && records.isEmpty
-                  ? const Center(child: CircularProgressIndicator())
+                  ? ListView.builder(
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+                      itemCount: 8,
+                      itemBuilder: (_, _) => const Padding(
+                        padding: EdgeInsets.only(bottom: 12),
+                        child: MentorXSkeleton(height: 100, borderRadius: 28),
+                      ),
+                    )
                   : RefreshIndicator(
                       color: context.brandPrimaryColor,
                       onRefresh: () async {
@@ -110,8 +117,10 @@ final class AttendanceHistoryPage extends StatelessWidget {
                           if (records.isEmpty)
                             SliverFillRemaining(
                               hasScrollBody: false,
-                              child: FadeInUp(
-                                child: _EmptyAttendance(t: t),
+                              child: AppEmptyView(
+                                title: t['noAttendance'] ?? 'No attendance records yet',
+                                message: 'Your attendance history will appear here',
+                                icon: Icons.event_busy_rounded,
                               ),
                             )
                           else
@@ -442,82 +451,6 @@ final class _AttendanceItem extends StatelessWidget {
   }
 }
 
-final class _EmptyAttendance extends StatelessWidget {
-  const _EmptyAttendance({required this.t});
-  final dynamic t;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(40),
-              decoration: BoxDecoration(
-                color: context.backgroundSecondaryColor.withValues(alpha: 0.45),
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: context.borderPrimaryColor.withValues(alpha: 0.1),
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.05),
-                    blurRadius: 30,
-                  ),
-                ],
-              ),
-              child: ClipOval(
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                  child: ShaderMask(
-                    shaderCallback: (bounds) => LinearGradient(
-                      colors: [
-                        context.textTertiaryColor.withValues(alpha: 0.3),
-                        context.textTertiaryColor.withValues(alpha: 0.1),
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ).createShader(bounds),
-                    child: const Icon(
-                      Icons.event_busy_rounded,
-                      size: 100,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            const Gap(40),
-            Text(
-              t['noAttendance'] ?? 'No attendance records yet',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.w900,
-                color: context.textPrimaryColor,
-                letterSpacing: -0.5,
-              ),
-            ),
-            const Gap(16),
-            Text(
-              'Your attendance history will appear here',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 16,
-                color: context.textSecondaryColor,
-                fontWeight: FontWeight.w600,
-                height: 1.5,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
 
 class _BackgroundDecorations extends StatelessWidget {
   const _BackgroundDecorations();

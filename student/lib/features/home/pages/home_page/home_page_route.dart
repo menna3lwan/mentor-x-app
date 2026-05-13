@@ -9,6 +9,7 @@ final class HomePageRoute extends GoRouteData with $HomePageRoute {
     return BlocProvider<HomePageBloc>(
       create: (context) => HomePageBloc(
         homeRepository: context.read<StudentHomeRepository>(),
+        analyticsService: context.read<AnalyticsService>(),
         studentName: (user?.fullName ?? 'Student').trim(),
       )..add(const HomePageInitializedEvent()),
       child: const HomePageWrapper(),

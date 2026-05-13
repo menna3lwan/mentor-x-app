@@ -140,6 +140,29 @@ final class DioStudentProfileRepository
   }
 
   @override
+  Future<void> updateLocation({
+    required String governorate,
+    required String city,
+    required String area,
+  }) async {
+    try {
+      await httpClient.patch(
+        '/api/student/profile/location',
+        data: {
+          'governorate': governorate,
+          'city': city,
+          'area': area,
+        },
+      );
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: StudentProfileRepositoryExceptionCode.failedToUpdateProfile,
+      );
+    }
+  }
+
+  @override
   Future<void> changePassword({
     required String currentPassword,
     required String newPassword,

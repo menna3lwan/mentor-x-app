@@ -14,6 +14,7 @@ final class QuizResultPageRoute extends GoRouteData with $QuizResultPageRoute {
       create: (context) => QuizResultPageBloc(
         quizRepository: context.read<QuizRepository>(),
         leaderboardRepository: context.read<LeaderboardRepository>(),
+        analyticsService: context.read<AnalyticsService>(),
       )..add(QuizResultPageLoadEvent(attemptId: attemptId)),
       child: const QuizResultPageWrapper(),
     );

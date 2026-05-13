@@ -12,8 +12,9 @@ final class PaymentSuccessPageRoute extends GoRouteData
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return BlocProvider<PaymentSuccessPageBloc>(
-      create: (context) =>
-          PaymentSuccessPageBloc()..add(const PaymentSuccessPageLoadEvent()),
+      create: (context) => PaymentSuccessPageBloc(
+        analyticsService: context.read<AnalyticsService>(),
+      )..add(const PaymentSuccessPageLoadEvent()),
       child: PaymentSuccessPageWrapper(amount: amount),
     );
   }

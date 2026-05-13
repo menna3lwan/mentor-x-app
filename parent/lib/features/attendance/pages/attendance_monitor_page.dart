@@ -19,6 +19,7 @@ class AttendanceMonitorPage extends StatelessWidget {
     return BlocProvider(
       create: (context) => AttendanceBloc(
         repository: context.read<ParentAttendanceRepository>(),
+        analyticsService: context.read<AnalyticsService>(),
       )..add(AttendanceStarted(childId)),
       child: Builder(
         builder: (context) {

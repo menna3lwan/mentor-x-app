@@ -79,20 +79,11 @@ final class MyCoursesPagePage extends StatelessWidget {
                 color: context.borderPrimaryColor.withValues(alpha: 0.1),
               ),
             ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(16),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                child: IconButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  icon: Icon(
-                    Icons.arrow_back_ios_new_rounded,
-                    color: context.textPrimaryColor,
-                    size: 18,
-                  ),
-                  padding: const EdgeInsets.all(12),
-                ),
-              ),
+            child: MentorXIconButton(
+              onPressed: () => Navigator.of(context).pop(),
+              icon: Icons.arrow_back_ios_new_rounded,
+              color: context.textPrimaryColor,
+              size: MentorXIconButtonSize.small,
             ),
           ),
           const Gap(20),
@@ -136,36 +127,23 @@ final class MyCoursesPagePage extends StatelessWidget {
 
   Widget _buildBody(BuildContext context) {
     if (errorMessage != null) {
-      return Center(
-        child: FadeIn(
-          child: Padding(
-            padding: const EdgeInsets.all(32),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.error_outline_rounded,
-                  size: 64,
-                  color: context.statusDangerColor.withValues(alpha: 0.3),
-                ),
-                const Gap(24),
-                Text(
-                  errorMessage!,
-                  style: TextStyle(
-                    color: context.textSecondaryColor,
-                    fontWeight: FontWeight.w700,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
-          ),
-        ),
+      return AppErrorView(
+        message: errorMessage!,
+        onRetry: onRefresh,
       );
     }
 
     if (isLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return ListView.separated(
+        padding: const EdgeInsets.fromLTRB(20, 0, 20, 100),
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: 5,
+        separatorBuilder: (context, index) => const Gap(16),
+        itemBuilder: (context, index) => const MentorXSkeleton(
+          height: 120,
+          borderRadius: 20,
+        ),
+      );
     }
 
     if (courses.isEmpty) {

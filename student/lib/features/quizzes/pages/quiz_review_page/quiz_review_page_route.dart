@@ -9,6 +9,7 @@ final class QuizReviewPageRoute extends GoRouteData with $QuizReviewPageRoute {
     return BlocProvider<QuizReviewPageBloc>(
       create: (context) => QuizReviewPageBloc(
         quizRepository: context.read<QuizRepository>(),
+        analyticsService: context.read<AnalyticsService>(),
       )..add(const QuizReviewPageLoadEvent()),
       child: const QuizReviewPageWrapper(),
     );

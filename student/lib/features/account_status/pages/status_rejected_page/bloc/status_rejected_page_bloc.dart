@@ -24,14 +24,21 @@ final class StatusRejectedPageBloc
           StatusRejectedPageState,
           StatusRejectedPagePresentationEvent
         > {
-  StatusRejectedPageBloc() : super(StatusRejectedPageState.initial) {
+  StatusRejectedPageBloc({required this.analyticsService})
+    : super(StatusRejectedPageState.initial) {
     on<StatusRejectedPageInitialized>(_onInitialized);
   }
+
+  final AnalyticsService analyticsService;
 
   void _onInitialized(
     StatusRejectedPageInitialized event,
     Emitter<StatusRejectedPageState> emit,
   ) {
+    analyticsService.logEvent(
+      name: AnalyticsEvents.accountStatusViewed,
+      parameters: {AnalyticsParams.status: 'rejected'},
+    );
     emit(state.copyWith(loadingState: LoadingState.loaded));
   }
 }

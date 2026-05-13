@@ -72,7 +72,7 @@ final class ContinueLearningSectionWidget extends StatelessWidget {
     }
 
     return SizedBox(
-      height: 240,
+      height: 230,
       child: Skeletonizer(
         enabled: isLoading,
         child: ListView.separated(
@@ -80,7 +80,7 @@ final class ContinueLearningSectionWidget extends StatelessWidget {
           physics: const BouncingScrollPhysics(),
           itemCount: courseItems.isEmpty ? 2 : courseItems.length,
           padding: const EdgeInsets.symmetric(vertical: 4),
-          separatorBuilder: (context, index) => const Gap(16),
+          separatorBuilder: (context, index) => const Gap(20),
           itemBuilder: (context, index) {
             final course = courseItems.isEmpty ? null : courseItems[index];
             final thumbnailUrl =
@@ -96,21 +96,26 @@ final class ContinueLearningSectionWidget extends StatelessWidget {
                 width: 280,
                 decoration: BoxDecoration(
                   color: context.backgroundSecondaryColor.withValues(alpha: 0.45),
-                  borderRadius: BorderRadius.circular(24),
+                  borderRadius: BorderRadius.circular(32),
                   border: Border.all(
-                    color: context.borderPrimaryColor.withValues(alpha: 0.1),
+                    color: context.borderPrimaryColor.withValues(alpha: 0.08),
                   ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.04),
+                      blurRadius: 15,
+                      offset: const Offset(0, 8),
+                    ),
+                  ],
                 ),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(24),
+                  borderRadius: BorderRadius.circular(32),
                   child: Stack(
                     children: [
                       Positioned.fill(
-                        child: ExcludeSemantics(
-                          child: BackdropFilter(
-                            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                            child: const SizedBox.expand(),
-                          ),
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+                          child: const SizedBox.expand(),
                         ),
                       ),
                       Column(
@@ -124,19 +129,32 @@ final class ContinueLearningSectionWidget extends StatelessWidget {
                                   thumbnailUrl,
                                   fit: BoxFit.cover,
                                 ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                      colors: [
+                                        Colors.black.withValues(alpha: 0.2),
+                                        Colors.transparent,
+                                      ],
+                                    ),
+                                  ),
+                                ),
                                 Positioned(
                                   top: 12,
                                   right: 12,
                                   child: Container(
                                     padding: const EdgeInsets.all(8),
                                     decoration: BoxDecoration(
-                                      color: context.backgroundPrimaryColor
-                                          .withValues(alpha: 0.8),
+                                      color: Colors.white.withValues(alpha: 0.9),
                                       shape: BoxShape.circle,
-                                      border: Border.all(
-                                        color: context.borderPrimaryColor
-                                            .withValues(alpha: 0.1),
-                                      ),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withValues(alpha: 0.1),
+                                          blurRadius: 8,
+                                        ),
+                                      ],
                                     ),
                                     child: Icon(
                                       Icons.play_arrow_rounded,
@@ -149,7 +167,7 @@ final class ContinueLearningSectionWidget extends StatelessWidget {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.all(16),
+                            padding: const EdgeInsets.all(20),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -161,24 +179,46 @@ final class ContinueLearningSectionWidget extends StatelessWidget {
                                     color: context.textPrimaryColor,
                                     fontWeight: FontWeight.w900,
                                     fontSize: 16,
-                                    letterSpacing: -0.5,
+                                    letterSpacing: -0.6,
                                   ),
                                 ),
-                                const Gap(12),
+                                const Gap(14),
                                 Row(
                                   children: [
                                     Expanded(
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(4),
-                                        child: LinearProgressIndicator(
-                                          value: progressPercent / 100,
-                                          minHeight: 6,
-                                          backgroundColor:
-                                              context.backgroundPrimaryColor.withValues(alpha: 0.3),
-                                          valueColor: AlwaysStoppedAnimation<Color>(
-                                            context.brandPrimaryColor,
+                                      child: Stack(
+                                        children: [
+                                          Container(
+                                            height: 6,
+                                            decoration: BoxDecoration(
+                                              color: context.backgroundPrimaryColor
+                                                  .withValues(alpha: 0.5),
+                                              borderRadius: BorderRadius.circular(3),
+                                            ),
                                           ),
-                                        ),
+                                          AnimatedContainer(
+                                            duration: const Duration(milliseconds: 600),
+                                            height: 6,
+                                            width: (280 - 40 - 50) * (progressPercent / 100),
+                                            decoration: BoxDecoration(
+                                              gradient: LinearGradient(
+                                                colors: [
+                                                  context.brandPrimaryColor,
+                                                  context.brandSecondaryColor,
+                                                ],
+                                              ),
+                                              borderRadius: BorderRadius.circular(3),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: context.brandPrimaryColor
+                                                      .withValues(alpha: 0.2),
+                                                  blurRadius: 4,
+                                                  offset: const Offset(0, 2),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                     const Gap(12),
@@ -188,6 +228,7 @@ final class ContinueLearningSectionWidget extends StatelessWidget {
                                         color: context.brandPrimaryColor,
                                         fontWeight: FontWeight.w900,
                                         fontSize: 12,
+                                        letterSpacing: -0.2,
                                       ),
                                     ),
                                   ],

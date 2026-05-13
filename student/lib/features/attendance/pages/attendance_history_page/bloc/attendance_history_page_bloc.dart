@@ -21,12 +21,15 @@ final class AttendanceHistoryPageBloc
           AttendanceHistoryPageState,
           AttendanceHistoryPagePresentationEvent
         > {
-  AttendanceHistoryPageBloc({required this.attendanceRepository})
-    : super(AttendanceHistoryPageState.initial) {
+  AttendanceHistoryPageBloc({
+    required this.attendanceRepository,
+    required this.analyticsService,
+  }) : super(AttendanceHistoryPageState.initial) {
     on<AttendanceHistoryPageLoadEvent>(_onLoad);
   }
 
   final AttendanceRepository attendanceRepository;
+  final AnalyticsService analyticsService;
 
   Future<void> _onLoad(
     AttendanceHistoryPageLoadEvent event,
@@ -48,6 +51,10 @@ final class AttendanceHistoryPageBloc
       final absent = records
           .where((r) => r.status != AttendanceStatus.present)
           .length;
+
+      await analyticsService.logEvent(
+        name: AnalyticsEvents.attendanceHistoryViewed,
+      );
 
       emit(
         state.copyWith(

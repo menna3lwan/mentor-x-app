@@ -1,16 +1,20 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_core/mentorx_core.dart';
+import 'package:analytics_service/analytics_service.dart';
 
 part 'financial_event.dart';
 part 'financial_state.dart';
 
 class FinancialBloc extends Bloc<FinancialEvent, FinancialState> {
   final ParentFinancialRepository _repository;
+  final AnalyticsService _analyticsService;
 
   FinancialBloc({
     required ParentFinancialRepository repository,
+    required AnalyticsService analyticsService,
   })  : _repository = repository,
+        _analyticsService = analyticsService,
         super(const FinancialState()) {
     on<FinancialStarted>(_onStarted);
     on<FinancialRefreshRequested>(_onRefreshRequested);
@@ -27,6 +31,8 @@ class FinancialBloc extends Bloc<FinancialEvent, FinancialState> {
 
     emit(state.copyWith(status: FinancialStatus.loading));
     try {
+      unawaited(_analyticsService.logEvent(name: AnalyticsEvents.walletViewed));
+      
       final results = await Future.wait([
         _repository.getTransactions(childId),
         _repository.getPayments(childId),

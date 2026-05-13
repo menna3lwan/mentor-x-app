@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_student/core/core.dart';
 import 'dart:math';
+import 'package:analytics_service/analytics_service.dart';
 
 final class MarketplaceCartItem extends Equatable {
   final MarketplaceItemEntity item;
@@ -78,10 +79,10 @@ final class MarketplaceCartCubit extends Cubit<MarketplaceCartState> {
       );
     }
     analyticsService.logEvent(
-      name: 'marketplace_add_to_cart',
+      name: AnalyticsEvents.addToCart,
       parameters: {
-        'item_id': item.id,
-        'item_name': item.title,
+        AnalyticsParams.itemId: item.id,
+        AnalyticsParams.itemName: item.title,
         'price': item.price,
       },
     );
@@ -90,6 +91,10 @@ final class MarketplaceCartCubit extends Cubit<MarketplaceCartState> {
   void removeItem(String itemId) {
     final updatedItems = state.items.where((i) => i.item.id != itemId).toList();
     emit(MarketplaceCartState(items: updatedItems, appliedCoupon: state.appliedCoupon));
+    analyticsService.logEvent(
+      name: AnalyticsEvents.removeFromCart,
+      parameters: {AnalyticsParams.itemId: itemId},
+    );
   }
 
   void updateQuantity(String itemId, int quantity) {
@@ -110,8 +115,8 @@ final class MarketplaceCartCubit extends Cubit<MarketplaceCartState> {
   void applyCoupon(CouponEntity coupon) {
     emit(MarketplaceCartState(items: state.items, appliedCoupon: coupon));
     analyticsService.logEvent(
-      name: 'marketplace_apply_coupon',
-      parameters: {'coupon_code': coupon.code},
+      name: AnalyticsEvents.couponApplied,
+      parameters: {AnalyticsParams.couponCode: coupon.code},
     );
   }
 

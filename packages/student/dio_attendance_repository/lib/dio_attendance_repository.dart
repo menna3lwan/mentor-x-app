@@ -93,4 +93,25 @@ final class DioAttendanceRepository
     }
   }
 
+  @override
+  Future<List<GroupEntity>> getMyGroups() async {
+    try {
+      final response = await httpClient.get('/api/attendance/groups/student/my-groups');
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final list = asList(data is Map ? data['content'] : data);
+      
+      return list.map((e) {
+        final map = asMap(e);
+        return GroupEntity(
+          id: asString(map['id']),
+          name: asString(map['name']),
+        );
+      }).toList();
+    } on HttpClientResponse catch (e) {
+      return handleHttpClientErrorResponse(
+        e,
+        defaultCode: AttendanceRepositoryExceptionCode.unknown,
+      );
+    }
+  }
 }

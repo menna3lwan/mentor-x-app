@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:gap/gap.dart';
+import 'package:analytics_service/analytics_service.dart';
 import '../bloc/profile_bloc.dart';
 
 class SettingsParentPage extends StatelessWidget {
@@ -10,7 +11,9 @@ class SettingsParentPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ProfileBloc()..add(ProfileStarted()),
+      create: (context) => ProfileBloc(
+        analyticsService: context.read<AnalyticsService>(),
+      )..add(ProfileStarted()),
       child: BlocBuilder<ProfileBloc, ProfileState>(
         builder: (context, state) {
           return AppDashboardScaffold(

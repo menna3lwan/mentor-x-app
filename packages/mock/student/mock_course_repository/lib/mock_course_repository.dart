@@ -89,7 +89,8 @@ final class MockCourseRepository implements CourseRepository {
   Future<EnrollmentEntity?> getCourseProgress(String courseId) async {
     await Future<void>.delayed(delay ~/ 2);
     // Return null for non-enrolled courses, progress for enrolled
-    if (courseId.startsWith('ep') || courseId.startsWith('ec')) {
+    // Enrolled courses usually start with 'e' (ep, ec, ee) or 'c' in some mock sections
+    if (courseId.startsWith('e') || courseId.startsWith('c')) {
       return MockCourseGenerator.courseProgress(courseId);
     }
     return null;

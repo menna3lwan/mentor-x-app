@@ -27,55 +27,60 @@ final class QuizResultPage extends StatelessWidget {
         if (loadingState == LoadingState.loading) {
           return Scaffold(
             backgroundColor: context.backgroundPrimaryColor,
-            body: const Center(child: CircularProgressIndicator()),
+            body: Column(
+              children: [
+                const MentorXSkeleton(height: 120, borderRadius: 32),
+                const Gap(32),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: Column(
+                      children: [
+                        const Center(
+                          child: MentorXSkeleton(
+                            height: 220,
+                            width: 220,
+                            borderRadius: 110,
+                          ),
+                        ),
+                        const Gap(40),
+                        const MentorXSkeleton(height: 40, borderRadius: 12),
+                        const Gap(12),
+                        const MentorXSkeleton(height: 20, borderRadius: 12),
+                        const Gap(40),
+                        Row(
+                          children: List.generate(
+                            3,
+                            (index) => const Expanded(
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 4),
+                                child: MentorXSkeleton(height: 100, borderRadius: 24),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           );
         }
 
         if (errorMessage != null) {
           return Scaffold(
             backgroundColor: context.backgroundPrimaryColor,
-            body: Center(
-              child: Padding(
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    FadeInDown(
-                      key: const ValueKey('quiz_result_error_icon_fade'),
-                      child: Icon(
-                        Icons.error_outline_rounded,
-                        size: 64,
-                        color: context.statusDangerColor.withValues(alpha: 0.5),
-                      ),
-                    ),
-                    const Gap(24),
-                    FadeInUp(
-                      key: const ValueKey('quiz_result_error_text_fade'),
-                      child: Text(
-                        errorMessage,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w800,
-                          color: context.textSecondaryColor,
-                        ),
-                      ),
-                    ),
-                    const Gap(32),
-                    FadeInUp(
-                      key: const ValueKey('quiz_result_error_btn_fade'),
-                      delay: const Duration(milliseconds: 200),
-                      child: SizedBox(
-                        width: 140,
-                        child: MentorXButton(
-                          label: t['commonBack']!,
-                          onPressed: () => context.go('/'),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+            body: AppErrorView(
+              message: errorMessage,
+              onRetry: () {
+                final attemptId = context.read<QuizResultPageBloc>().state.result?.id;
+                if (attemptId != null) {
+                  context.read<QuizResultPageBloc>().add(
+                    QuizResultPageLoadEvent(attemptId: attemptId),
+                  );
+                }
+              },
             ),
           );
         }
@@ -83,14 +88,9 @@ final class QuizResultPage extends StatelessWidget {
         if (result == null) {
           return Scaffold(
             backgroundColor: context.backgroundPrimaryColor,
-            body: Center(
-              child: Text(
-                t['resultNotFound'] ?? 'Result not found',
-                style: TextStyle(
-                  color: context.textPrimaryColor,
-                  fontWeight: FontWeight.w900,
-                ),
-              ),
+            body: AppEmptyView(
+              title: t['resultNotFound'] ?? 'Result not found',
+              message: 'Try again later',
             ),
           );
         }

@@ -521,6 +521,14 @@ final class _ActionButtons extends StatelessWidget {
           children: [
             Expanded(
               child: _ActionButton(
+                label: t['studentDigitalId'] ?? 'Digital ID',
+                icon: Icons.badge_rounded,
+                onTap: () => context.push('/student-card'),
+              ),
+            ),
+            const Gap(12),
+            Expanded(
+              child: _ActionButton(
                 label: t['editProfile'],
                 icon: Icons.edit_rounded,
                 onTap: () => context.push('/edit-profile'),

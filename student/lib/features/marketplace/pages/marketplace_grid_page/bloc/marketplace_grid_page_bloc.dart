@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:mentorx_student/core/core.dart';
+import 'package:analytics_service/analytics_service.dart';
 
 part 'marketplace_grid_page_event.dart';
 part 'marketplace_grid_page_state.dart';
@@ -76,8 +77,8 @@ final class MarketplaceGridPageBloc
       );
       emit(state.copyWith(loadingState: LoadingState.loaded, items: items));
       analyticsService.logEvent(
-        name: 'marketplace_category_view',
-        parameters: {'category_id': event.categoryId},
+        name: AnalyticsEvents.marketplaceCategoryViewed,
+        parameters: {AnalyticsParams.categoryId: event.categoryId},
       );
     } catch (e) {
       emit(state.copyWith(loadingState: LoadingState.error));
@@ -101,8 +102,8 @@ final class MarketplaceGridPageBloc
       );
       emit(state.copyWith(loadingState: LoadingState.loaded, items: items));
       analyticsService.logEvent(
-        name: 'marketplace_search',
-        parameters: {'query': event.searchQuery},
+        name: AnalyticsEvents.marketplaceSearched,
+        parameters: {AnalyticsParams.query: event.searchQuery},
       );
     } catch (e) {
       emit(state.copyWith(loadingState: LoadingState.error));

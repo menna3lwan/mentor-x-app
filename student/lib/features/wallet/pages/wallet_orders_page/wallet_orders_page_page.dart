@@ -44,52 +44,28 @@ final class WalletOrdersPage extends StatelessWidget {
               );
 
               if (loadingState == LoadingState.loading) {
-                return const Center(child: CircularProgressIndicator());
+                return ListView.separated(
+                  padding: const EdgeInsets.all(24),
+                  itemCount: 4,
+                  separatorBuilder: (_, _) => const Gap(16),
+                  itemBuilder: (_, _) => const MentorXSkeleton(height: 180, borderRadius: 28),
+                );
               }
 
               if (loadingState == LoadingState.error) {
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      StatusBadge(
-                        message: errorMessage ?? 'Failed to load orders',
-                        status: StatusBadgeType.danger,
-                      ),
-                      const Gap(16),
-                      ElevatedButton(
-                        onPressed: () =>
-                            context.read<WalletOrdersPageBloc>().add(
-                              const WalletOrdersPageLoadEvent(),
-                            ),
-                        child: const Text('Retry'),
-                      ),
-                    ],
+                return AppErrorView(
+                  message: errorMessage ?? 'Failed to load orders',
+                  onRetry: () => context.read<WalletOrdersPageBloc>().add(
+                    const WalletOrdersPageLoadEvent(),
                   ),
                 );
               }
 
               if (orders.isEmpty) {
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.receipt_long_rounded,
-                        size: 64,
-                        color: context.textTertiaryColor.withValues(alpha: 0.2),
-                      ),
-                      const Gap(16),
-                      Text(
-                        'No orders found',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w900,
-                          color: context.textSecondaryColor,
-                        ),
-                      ),
-                    ],
-                  ),
+                return AppEmptyView(
+                  title: 'No orders found',
+                  message: 'Your purchase history will appear here.',
+                  icon: Icons.receipt_long_rounded,
                 );
               }
 
@@ -117,20 +93,10 @@ final class WalletOrdersPage extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
       child: Row(
         children: [
-          IconButton(
+          MentorXIconButton(
             onPressed: () => Navigator.of(context).pop(),
-            icon: Icon(
-              Icons.arrow_back_ios_new_rounded,
-              color: context.textPrimaryColor,
-              size: 20,
-            ),
-            style: IconButton.styleFrom(
-              backgroundColor: context.backgroundSecondaryColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              padding: const EdgeInsets.all(12),
-            ),
+            icon: Icons.arrow_back_ios_new_rounded,
+            color: context.textPrimaryColor,
           ),
           const Gap(16),
           Expanded(

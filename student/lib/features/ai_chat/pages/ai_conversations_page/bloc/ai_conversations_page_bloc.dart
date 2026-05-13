@@ -1,3 +1,4 @@
+import 'package:analytics_service/analytics_service.dart';
 import 'package:bloc/bloc.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
 
@@ -30,10 +31,14 @@ final class AiConversationsPageBloc
           AiConversationsPagePresentationEvent
         > {
   final AIRepository _aiRepository;
+  final AnalyticsService _analyticsService;
 
-  AiConversationsPageBloc({required AIRepository aiRepository})
-    : _aiRepository = aiRepository,
-      super(AiConversationsPageState.initial) {
+  AiConversationsPageBloc({
+    required AIRepository aiRepository,
+    required AnalyticsService analyticsService,
+  }) : _aiRepository = aiRepository,
+       _analyticsService = analyticsService,
+       super(AiConversationsPageState.initial) {
     on<AiConversationsPageInitialized>(_onInitialized);
     on<AiConversationsPageRefreshed>(_onRefreshed);
     on<AiConversationsPageConversationTapped>(_onConversationTapped);
@@ -52,6 +57,7 @@ final class AiConversationsPageBloc
     AiConversationsPageInitialized event,
     Emitter<AiConversationsPageState> emit,
   ) async {
+    _analyticsService.logEvent(name: AnalyticsEvents.aiConversationsViewed);
     await _loadConversations(emit: emit);
   }
 

@@ -25,17 +25,31 @@ abstract interface class QuizRepository {
   Future<List<QuizQuestionEntity>> getQuizQuestions(String quizId);
 
   /// Submit the quiz with all answers.
+  /// Deprecated: use submitQuizAttempt instead if the backend supports it.
   Future<QuizAttemptEntity> submitQuiz(
     String quizId, {
     required Map<String, String> answers,
   });
+
+  /// Start a new quiz attempt. Returns the attempt and questions.
+  Future<Map<String, dynamic>> startQuiz(String quizId);
+
+  /// Save a quiz answer during an attempt.
+  Future<void> saveAnswer({
+    required String attemptId,
+    required String questionId,
+    List<String>? selectedOptions,
+    String? textAnswer,
+  });
+
+  /// Submit the quiz attempt.
+  Future<QuizAttemptEntity> submitQuizAttempt(String attemptId);
 
   /// Fetch detailed quiz results for an attempt.
   Future<QuizAttemptEntity> getResults(String attemptId);
 
   // Pro Features
   Future<QuizEntity> createQuiz(Map<String, dynamic> data);
-  Future<void> startQuiz(String quizId);
   Future<List<QuizEntity>> getQuizzesByWeek(String weekId);
   Future<void> deleteQuiz(String quizId);
   Future<void> deleteAttempt(String attemptId);

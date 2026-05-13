@@ -332,28 +332,23 @@ final class _AddBalancePageState extends State<AddBalancePage> {
                   ),
                 ),
               ),
-              child: ClipRRect(
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                  child: MentorXButton(
-                    onPressed:
-                        (_amountController.text.isNotEmpty &&
-                            _selectedMethodIndex >= 0)
-                        ? () {
-                            final amount =
-                                double.tryParse(_amountController.text) ?? 0.0;
-                            context.read<AddBalancePageBloc>().add(
-                              AddBalancePageSubmitEvent(
-                                amount: amount,
-                                method: _getPaymentMethod(_selectedMethodIndex),
-                              ),
-                            );
-                          }
-                        : null,
-                    label: t['continueBtn']!,
-                    loading: state.isSubmitting,
-                  ),
-                ),
+              child: MentorXButton(
+                onPressed:
+                    (_amountController.text.isNotEmpty &&
+                        _selectedMethodIndex >= 0)
+                    ? () {
+                        final amount =
+                            double.tryParse(_amountController.text) ?? 0.0;
+                        context.read<AddBalancePageBloc>().add(
+                          AddBalancePageSubmitEvent(
+                            amount: amount,
+                            method: _getPaymentMethod(_selectedMethodIndex),
+                          ),
+                        );
+                      }
+                    : null,
+                label: t['continueBtn']!,
+                loading: state.isSubmitting,
               ),
             ),
           );

@@ -227,9 +227,10 @@ final class OtpPage extends StatelessWidget {
                                               width: 16,
                                               height: 16,
                                               child: CircularProgressIndicator(
-                                                strokeWidth: 2,
-                                                color:
-                                                    context.brandPrimaryColor,
+                                                strokeWidth: 2.5,
+                                                valueColor: AlwaysStoppedAnimation<Color>(
+                                                  context.brandPrimaryColor,
+                                                ),
                                               ),
                                             )
                                           : Text(
@@ -253,8 +254,10 @@ final class OtpPage extends StatelessWidget {
                                           width: 16,
                                           height: 16,
                                           child: CircularProgressIndicator(
-                                            strokeWidth: 2,
-                                            color: Colors.green,
+                                            strokeWidth: 2.5,
+                                            valueColor: AlwaysStoppedAnimation<Color>(
+                                              Colors.green,
+                                            ),
                                           ),
                                         )
                                       : const Icon(

@@ -1,0 +1,1415 @@
+{
+  "name": "Entry Point",
+  "url": "{{BASE_URL}}/api/auth/entry-point",
+  "responses": []
+}
+{
+  "name": "Student Login",
+  "url": "{{BASE_URL}}/api/auth/student/login",
+  "responses": []
+}
+{
+  "name": "Student Logout",
+  "url": "{{BASE_URL}}/api/auth/student/logout",
+  "responses": []
+}
+{
+  "name": "Logout (General)",
+  "url": "{{BASE_URL}}/api/auth/logout",
+  "responses": []
+}
+{
+  "name": "Forgot Password — Send OTP",
+  "url": "{{BASE_URL}}/api/auth/forgot-password",
+  "responses": []
+}
+{
+  "name": "Forgot Password — Resend OTP",
+  "url": "{{BASE_URL}}/api/auth/resend-otp",
+  "responses": []
+}
+{
+  "name": "Forgot Password — Verify OTP",
+  "url": "{{BASE_URL}}/api/auth/verify-otp",
+  "responses": []
+}
+{
+  "name": "Forgot Password — Reset",
+  "url": "{{BASE_URL}}/api/auth/reset-password",
+  "responses": []
+}
+{
+  "name": "Conflict QR (حضور بدون login)",
+  "url": "{{BASE_URL}}/api/auth/student/conflict-qr",
+  "responses": []
+}
+{
+  "name": "Session Status",
+  "url": "{{BASE_URL}}/api/auth/session-status",
+  "responses": []
+}
+{
+  "name": "Pending Status",
+  "url": "{{BASE_URL}}/api/auth/pending-status",
+  "responses": []
+}
+{
+  "name": "Refresh Token",
+  "url": "{{BASE_URL}}/api/auth/refresh",
+  "responses": []
+}
+{
+  "name": "Force Logout All",
+  "url": "{{BASE_URL}}/api/auth/force-logout-all",
+  "responses": []
+}
+{
+  "name": "Me (Current User)",
+  "url": "{{BASE_URL}}/api/auth/me",
+  "responses": []
+}
+{
+  "name": "Check Phone",
+  "url": "{{BASE_URL}}/api/auth/check-phone/{phone}",
+  "responses": []
+}
+{
+  "name": "Admin Login",
+  "url": "{{BASE_URL}}/api/auth/admin/login",
+  "responses": []
+}
+{
+  "name": "Admin Logout",
+  "url": "{{BASE_URL}}/api/auth/admin/logout",
+  "responses": []
+}
+{
+  "name": "Teacher Login",
+  "url": "{{BASE_URL}}/api/auth/teacher/login",
+  "responses": []
+}
+{
+  "name": "Teacher Register",
+  "url": "{{BASE_URL}}/api/auth/teacher/register",
+  "responses": []
+}
+{
+  "name": "Teacher Forgot Password",
+  "url": "{{BASE_URL}}/api/auth/teacher/forgot-password",
+  "responses": []
+}
+{
+  "name": "Teacher Verify OTP",
+  "url": "{{BASE_URL}}/api/auth/teacher/verify-otp",
+  "responses": []
+}
+{
+  "name": "Teacher Reset Password",
+  "url": "{{BASE_URL}}/api/auth/teacher/reset-password",
+  "responses": []
+}
+{
+  "name": "Teacher Logout",
+  "url": "{{BASE_URL}}/api/auth/teacher/logout",
+  "responses": []
+}
+{
+  "name": "Parent Start Login",
+  "url": "{{BASE_URL}}/api/parent/start-login",
+  "responses": []
+}
+{
+  "name": "Parent Complete Login",
+  "url": "{{BASE_URL}}/api/parent/complete-login",
+  "responses": []
+}
+{
+  "name": "Parent Logout",
+  "url": "{{BASE_URL}}/api/parent/logout",
+  "responses": []
+}
+{
+  "name": "Staff Login",
+  "url": "{{BASE_URL}}/api/auth/staff/login",
+  "responses": []
+}
+{
+  "name": "Check Phone",
+  "url": "{{BASE_URL}}/api/student/register/check-phone/{phone}",
+  "responses": []
+}
+{
+  "name": "Start Registration (Send OTP)",
+  "url": "{{BASE_URL}}/api/student/register/start",
+  "responses": []
+}
+{
+  "name": "Complete Registration",
+  "url": "{{BASE_URL}}/api/student/register",
+  "responses": []
+}
+{
+  "name": "Resend OTP",
+  "url": "{{BASE_URL}}/api/student/register/resend-otp",
+  "responses": []
+}
+{
+  "name": "Get Governorates",
+  "url": "{{BASE_URL}}/api/student/register/governorates",
+  "responses": []
+}
+{
+  "name": "Get Areas",
+  "url": "{{BASE_URL}}/api/student/register/areas/{governorate}",
+  "responses": []
+}
+{
+  "name": "Application Info",
+  "url": "{{BASE_URL}}/api/student/register/application-info",
+  "responses": []
+}
+{
+  "name": "Update Profile",
+  "url": "{{BASE_URL}}/api/student/profile",
+  "responses": []
+}
+{
+  "name": "Update Location",
+  "url": "{{BASE_URL}}/api/student/profile/location",
+  "responses": []
+}
+{
+  "name": "Issue Card (Admin)",
+  "url": "{{BASE_URL}}/api/cards/issue/{studentId}",
+  "responses": []
+}
+{
+  "name": "My Card",
+  "url": "{{BASE_URL}}/api/cards/my",
+  "responses": []
+}
+{
+  "name": "Validate QR",
+  "url": "{{BASE_URL}}/api/cards/validate/{qrToken}",
+  "responses": []
+}
+{
+  "name": "Dashboard Stats",
+  "url": "{{BASE_URL}}/api/admin/stats",
+  "responses": []
+}
+{
+  "name": "List Students",
+  "url": "{{BASE_URL}}/api/admin/students",
+  "responses": []
+}
+{
+  "name": "Get Student",
+  "url": "{{BASE_URL}}/api/admin/students/{id}",
+  "responses": []
+}
+{
+  "name": "Approve Student",
+  "url": "{{BASE_URL}}/api/admin/students/{id}/approve",
+  "responses": []
+}
+{
+  "name": "Reject Student",
+  "url": "{{BASE_URL}}/api/admin/students/{id}/reject",
+  "responses": []
+}
+{
+  "name": "Block Student",
+  "url": "{{BASE_URL}}/api/admin/students/{id}/block",
+  "responses": []
+}
+{
+  "name": "Unblock Student",
+  "url": "{{BASE_URL}}/api/admin/students/{id}/unblock",
+  "responses": []
+}
+{
+  "name": "List Teachers",
+  "url": "{{BASE_URL}}/api/admin/teachers",
+  "responses": []
+}
+{
+  "name": "Get Teacher",
+  "url": "{{BASE_URL}}/api/admin/teachers/{id}",
+  "responses": []
+}
+{
+  "name": "Enable Teacher",
+  "url": "{{BASE_URL}}/api/admin/teachers/{id}/enable",
+  "responses": []
+}
+{
+  "name": "Disable Teacher",
+  "url": "{{BASE_URL}}/api/admin/teachers/{id}/disable",
+  "responses": []
+}
+{
+  "name": "Update Profile",
+  "url": "{{BASE_URL}}/api/teacher/profile",
+  "responses": []
+}
+{
+  "name": "Pending Students",
+  "url": "{{BASE_URL}}/api/teacher/students/pending",
+  "responses": []
+}
+{
+  "name": "Active Students",
+  "url": "{{BASE_URL}}/api/teacher/students/active",
+  "responses": []
+}
+{
+  "name": "Blocked Students",
+  "url": "{{BASE_URL}}/api/teacher/students/blocked",
+  "responses": []
+}
+{
+  "name": "Rejected Students",
+  "url": "{{BASE_URL}}/api/teacher/students/rejected",
+  "responses": []
+}
+{
+  "name": "Approve Student",
+  "url": "{{BASE_URL}}/api/teacher/students/{id}/approve",
+  "responses": []
+}
+{
+  "name": "Reject Student",
+  "url": "{{BASE_URL}}/api/teacher/students/{id}/reject",
+  "responses": []
+}
+{
+  "name": "Block Student",
+  "url": "{{BASE_URL}}/api/teacher/students/{id}/block",
+  "responses": []
+}
+{
+  "name": "Unblock Student",
+  "url": "{{BASE_URL}}/api/teacher/students/{id}/unblock",
+  "responses": []
+}
+{
+  "name": "My Permissions",
+  "url": "{{BASE_URL}}/api/teacher/staff/permissions",
+  "responses": []
+}
+{
+  "name": "Get Staff Member",
+  "url": "{{BASE_URL}}/api/teacher/staff/{id}",
+  "responses": []
+}
+{
+  "name": "Update Staff",
+  "url": "{{BASE_URL}}/api/teacher/staff/{id}",
+  "responses": []
+}
+{
+  "name": "Update Permissions",
+  "url": "{{BASE_URL}}/api/teacher/staff/{id}/permissions",
+  "responses": []
+}
+{
+  "name": "Toggle Staff Active",
+  "url": "{{BASE_URL}}/api/teacher/staff/{id}/toggle",
+  "responses": []
+}
+{
+  "name": "Delete Staff",
+  "url": "{{BASE_URL}}/api/teacher/staff/{id}",
+  "responses": []
+}
+{
+  "name": "My Children",
+  "url": "{{BASE_URL}}/api/parent/children",
+  "responses": []
+}
+{
+  "name": "Update Profile",
+  "url": "{{BASE_URL}}/api/parent/profile",
+  "responses": []
+}
+{
+  "name": "Summary",
+  "url": "{{BASE_URL}}/api/parent/dashboard/summary",
+  "responses": []
+}
+{
+  "name": "Child Overview",
+  "url": "{{BASE_URL}}/api/parent/dashboard/child/{studentId}/overview",
+  "responses": []
+}
+{
+  "name": "Child Attendance",
+  "url": "{{BASE_URL}}/api/parent/dashboard/child/{studentId}/attendance",
+  "responses": []
+}
+{
+  "name": "Child Enrollments",
+  "url": "{{BASE_URL}}/api/parent/dashboard/child/{studentId}/enrollments",
+  "responses": []
+}
+{
+  "name": "Child Progress",
+  "url": "{{BASE_URL}}/api/parent/dashboard/child/{studentId}/progress/{sessionId}",
+  "responses": []
+}
+{
+  "name": "List Levels",
+  "url": "{{BASE_URL}}/api/levels",
+  "responses": []
+}
+{
+  "name": "Get Level",
+  "url": "{{BASE_URL}}/api/levels/{id}",
+  "responses": []
+}
+{
+  "name": "Create Level",
+  "url": "{{BASE_URL}}/api/levels",
+  "responses": []
+}
+{
+  "name": "Update Level",
+  "url": "{{BASE_URL}}/api/levels/{id}",
+  "responses": []
+}
+{
+  "name": "Delete Level",
+  "url": "{{BASE_URL}}/api/levels/{id}",
+  "responses": []
+}
+{
+  "name": "List All Categories",
+  "url": "{{BASE_URL}}/api/categories",
+  "responses": []
+}
+{
+  "name": "Get Category",
+  "url": "{{BASE_URL}}/api/categories/{id}",
+  "responses": []
+}
+{
+  "name": "Categories by Level",
+  "url": "{{BASE_URL}}/api/categories/level/{levelId}",
+  "responses": []
+}
+{
+  "name": "Create Category",
+  "url": "{{BASE_URL}}/api/categories",
+  "responses": []
+}
+{
+  "name": "Update Category",
+  "url": "{{BASE_URL}}/api/categories/{id}",
+  "responses": []
+}
+{
+  "name": "Toggle Category Status",
+  "url": "{{BASE_URL}}/api/categories/{id}/toggle-status",
+  "responses": []
+}
+{
+  "name": "Delete Category",
+  "url": "{{BASE_URL}}/api/categories/{id}",
+  "responses": []
+}
+{
+  "name": "List All Courses",
+  "url": "{{BASE_URL}}/api/courses",
+  "responses": []
+}
+{
+  "name": "Get Course",
+  "url": "{{BASE_URL}}/api/courses/{id}",
+  "responses": []
+}
+{
+  "name": "Courses by Category",
+  "url": "{{BASE_URL}}/api/courses/category/{categoryId}",
+  "responses": []
+}
+{
+  "name": "Create Course",
+  "url": "{{BASE_URL}}/api/courses",
+  "responses": []
+}
+{
+  "name": "Update Course",
+  "url": "{{BASE_URL}}/api/courses/{id}",
+  "responses": []
+}
+{
+  "name": "Toggle Course Status",
+  "url": "{{BASE_URL}}/api/courses/{id}/toggle-status",
+  "responses": []
+}
+{
+  "name": "Delete Course",
+  "url": "{{BASE_URL}}/api/courses/{id}",
+  "responses": []
+}
+{
+  "name": "List All Sessions",
+  "url": "{{BASE_URL}}/api/sessions",
+  "responses": []
+}
+{
+  "name": "Get Session",
+  "url": "{{BASE_URL}}/api/sessions/{id}",
+  "responses": []
+}
+{
+  "name": "Sessions by Course",
+  "url": "{{BASE_URL}}/api/sessions/course/{courseId}",
+  "responses": []
+}
+{
+  "name": "Create Session",
+  "url": "{{BASE_URL}}/api/sessions",
+  "responses": []
+}
+{
+  "name": "Update Session",
+  "url": "{{BASE_URL}}/api/sessions/{id}",
+  "responses": []
+}
+{
+  "name": "Toggle Session Status",
+  "url": "{{BASE_URL}}/api/sessions/{id}/toggle-status",
+  "responses": []
+}
+{
+  "name": "Delete Session",
+  "url": "{{BASE_URL}}/api/sessions/{id}",
+  "responses": []
+}
+{
+  "name": "List All Weeks",
+  "url": "{{BASE_URL}}/api/weeks",
+  "responses": []
+}
+{
+  "name": "Get Week",
+  "url": "{{BASE_URL}}/api/weeks/{id}",
+  "responses": []
+}
+{
+  "name": "Weeks by Session",
+  "url": "{{BASE_URL}}/api/weeks/session/{sessionId}",
+  "responses": []
+}
+{
+  "name": "Week Status",
+  "url": "{{BASE_URL}}/api/weeks/{id}/status",
+  "responses": []
+}
+{
+  "name": "My Progress in Session",
+  "url": "{{BASE_URL}}/api/weeks/session/{sessionId}/my-progress",
+  "responses": []
+}
+{
+  "name": "Create Week",
+  "url": "{{BASE_URL}}/api/weeks",
+  "responses": []
+}
+{
+  "name": "Update Week",
+  "url": "{{BASE_URL}}/api/weeks/{id}",
+  "responses": []
+}
+{
+  "name": "Complete Week",
+  "url": "{{BASE_URL}}/api/weeks/{id}/complete",
+  "responses": []
+}
+{
+  "name": "Toggle Week Status",
+  "url": "{{BASE_URL}}/api/weeks/{id}/toggle-status",
+  "responses": []
+}
+{
+  "name": "Delete Week",
+  "url": "{{BASE_URL}}/api/weeks/{id}",
+  "responses": []
+}
+{
+  "name": "Get Material",
+  "url": "{{BASE_URL}}/api/materials/{id}",
+  "responses": []
+}
+{
+  "name": "Materials by Lesson",
+  "url": "{{BASE_URL}}/api/materials/lesson/{lessonId}",
+  "responses": []
+}
+{
+  "name": "Create Material",
+  "url": "{{BASE_URL}}/api/materials",
+  "responses": []
+}
+{
+  "name": "Update Material",
+  "url": "{{BASE_URL}}/api/materials/{id}",
+  "responses": []
+}
+{
+  "name": "Toggle Material Status",
+  "url": "{{BASE_URL}}/api/materials/{id}/toggle-status",
+  "responses": []
+}
+{
+  "name": "Delete Material",
+  "url": "{{BASE_URL}}/api/materials/{id}",
+  "responses": []
+}
+{
+  "name": "Get Quiz",
+  "url": "{{BASE_URL}}/api/quizzes/{id}",
+  "responses": []
+}
+{
+  "name": "Quizzes by Week",
+  "url": "{{BASE_URL}}/api/quizzes/week/{weekId}",
+  "responses": []
+}
+{
+  "name": "Start Quiz",
+  "url": "{{BASE_URL}}/api/quizzes/{quizId}/start",
+  "responses": []
+}
+{
+  "name": "Submit Quiz",
+  "url": "{{BASE_URL}}/api/quizzes/{quizId}/submit",
+  "responses": []
+}
+{
+  "name": "Delete Quiz",
+  "url": "{{BASE_URL}}/api/quizzes/{quizId}",
+  "responses": []
+}
+{
+  "name": "Add Question to Quiz",
+  "url": "{{BASE_URL}}/api/questions/quiz/{quizId}",
+  "responses": []
+}
+{
+  "name": "Get Questions for Quiz",
+  "url": "{{BASE_URL}}/api/questions/quiz/{quizId}",
+  "responses": []
+}
+{
+  "name": "Get Question",
+  "url": "{{BASE_URL}}/api/questions/{id}",
+  "responses": []
+}
+{
+  "name": "Update Question",
+  "url": "{{BASE_URL}}/api/questions/{id}",
+  "responses": []
+}
+{
+  "name": "Delete Question",
+  "url": "{{BASE_URL}}/api/questions/{id}",
+  "responses": []
+}
+{
+  "name": "Delete All in Quiz",
+  "url": "{{BASE_URL}}/api/questions/quiz/{quizId}/all",
+  "responses": []
+}
+{
+  "name": "Get Attempt",
+  "url": "{{BASE_URL}}/api/quiz-attempts/{attemptId}",
+  "responses": []
+}
+{
+  "name": "Student+Quiz Attempt",
+  "url": "{{BASE_URL}}/api/quiz-attempts/student/{studentId}/quiz/{quizId}",
+  "responses": []
+}
+{
+  "name": "All Attempts (Student)",
+  "url": "{{BASE_URL}}/api/quiz-attempts/student/{studentId}",
+  "responses": []
+}
+{
+  "name": "All Attempts (Quiz)",
+  "url": "{{BASE_URL}}/api/quiz-attempts/quiz/{quizId}",
+  "responses": []
+}
+{
+  "name": "Student Status",
+  "url": "{{BASE_URL}}/api/quiz-attempts/student/{studentId}/status",
+  "responses": []
+}
+{
+  "name": "Quiz Statistics",
+  "url": "{{BASE_URL}}/api/quiz-attempts/quiz/{quizId}/statistics",
+  "responses": []
+}
+{
+  "name": "Delete Attempt",
+  "url": "{{BASE_URL}}/api/quiz-attempts/{attemptId}",
+  "responses": []
+}
+{
+  "name": "Get BQ by Topic",
+  "url": "{{BASE_URL}}/api/question-bank/questions/topic/{topicId}",
+  "responses": []
+}
+{
+  "name": "Get BQ by Week",
+  "url": "{{BASE_URL}}/api/question-bank/questions/week/{weekId}",
+  "responses": []
+}
+{
+  "name": "Get Bank Question",
+  "url": "{{BASE_URL}}/api/question-bank/questions/{id}",
+  "responses": []
+}
+{
+  "name": "Update Bank Question",
+  "url": "{{BASE_URL}}/api/question-bank/questions/{id}",
+  "responses": []
+}
+{
+  "name": "Delete Bank Question",
+  "url": "{{BASE_URL}}/api/question-bank/questions/{id}",
+  "responses": []
+}
+{
+  "name": "Generate Exam",
+  "url": "{{BASE_URL}}/api/question-bank/generate",
+  "responses": []
+}
+{
+  "name": "Topics by Week",
+  "url": "{{BASE_URL}}/api/question-bank/topics/week/{weekId}",
+  "responses": []
+}
+{
+  "name": "Topics Flat",
+  "url": "{{BASE_URL}}/api/question-bank/topics/week/{weekId}/flat",
+  "responses": []
+}
+{
+  "name": "Update Topic",
+  "url": "{{BASE_URL}}/api/question-bank/topics/{id}",
+  "responses": []
+}
+{
+  "name": "Delete Topic",
+  "url": "{{BASE_URL}}/api/question-bank/topics/{id}",
+  "responses": []
+}
+{
+  "name": "Get Assignment",
+  "url": "{{BASE_URL}}/api/assignments/{id}",
+  "responses": []
+}
+{
+  "name": "Assignments by Week",
+  "url": "{{BASE_URL}}/api/assignments/week/{weekId}",
+  "responses": []
+}
+{
+  "name": "Submit Assignment",
+  "url": "{{BASE_URL}}/api/assignments/{assignmentId}/submit",
+  "responses": []
+}
+{
+  "name": "Delete Assignment",
+  "url": "{{BASE_URL}}/api/assignments/{assignmentId}",
+  "responses": []
+}
+{
+  "name": "Add Question",
+  "url": "{{BASE_URL}}/api/assignment-questions/assignment/{assignmentId}",
+  "responses": []
+}
+{
+  "name": "List Questions",
+  "url": "{{BASE_URL}}/api/assignment-questions/assignment/{assignmentId}",
+  "responses": []
+}
+{
+  "name": "Get Question",
+  "url": "{{BASE_URL}}/api/assignment-questions/{id}",
+  "responses": []
+}
+{
+  "name": "Update Question",
+  "url": "{{BASE_URL}}/api/assignment-questions/{id}",
+  "responses": []
+}
+{
+  "name": "Delete Question",
+  "url": "{{BASE_URL}}/api/assignment-questions/{id}",
+  "responses": []
+}
+{
+  "name": "Delete All",
+  "url": "{{BASE_URL}}/api/assignment-questions/assignment/{assignmentId}/all",
+  "responses": []
+}
+{
+  "name": "Get Attempt",
+  "url": "{{BASE_URL}}/api/assignment-attempts/{attemptId}",
+  "responses": []
+}
+{
+  "name": "Student+Assignment Attempt",
+  "url": "{{BASE_URL}}/api/assignment-attempts/student/{studentId}/assignment/{assignmentId}",
+  "responses": []
+}
+{
+  "name": "All (Student)",
+  "url": "{{BASE_URL}}/api/assignment-attempts/student/{studentId}",
+  "responses": []
+}
+{
+  "name": "All (Assignment)",
+  "url": "{{BASE_URL}}/api/assignment-attempts/assignment/{assignmentId}",
+  "responses": []
+}
+{
+  "name": "Statistics",
+  "url": "{{BASE_URL}}/api/assignment-attempts/assignment/{assignmentId}/statistics",
+  "responses": []
+}
+{
+  "name": "Delete Attempt",
+  "url": "{{BASE_URL}}/api/assignment-attempts/{attemptId}",
+  "responses": []
+}
+{
+  "name": "My Enrollments",
+  "url": "{{BASE_URL}}/api/enrollments/my-enrollments",
+  "responses": []
+}
+{
+  "name": "Check Enrollment",
+  "url": "{{BASE_URL}}/api/enrollments/check/{courseId}",
+  "responses": []
+}
+{
+  "name": "My Stats",
+  "url": "{{BASE_URL}}/api/enrollments/stats/my-stats",
+  "responses": []
+}
+{
+  "name": "Update Progress",
+  "url": "{{BASE_URL}}/api/enrollments/{enrollmentId}/progress",
+  "responses": []
+}
+{
+  "name": "Access Course",
+  "url": "{{BASE_URL}}/api/enrollments/{enrollmentId}/access",
+  "responses": []
+}
+{
+  "name": "Complete Enrollment",
+  "url": "{{BASE_URL}}/api/enrollments/{enrollmentId}/complete",
+  "responses": []
+}
+{
+  "name": "Student Enrollments",
+  "url": "{{BASE_URL}}/api/enrollments/admin/student/{studentId}",
+  "responses": []
+}
+{
+  "name": "Course Enrollments",
+  "url": "{{BASE_URL}}/api/enrollments/admin/course/{courseId}",
+  "responses": []
+}
+{
+  "name": "Grant Enrollment",
+  "url": "{{BASE_URL}}/api/enrollments/admin/grant",
+  "responses": []
+}
+{
+  "name": "Extend Enrollment",
+  "url": "{{BASE_URL}}/api/enrollments/admin/{enrollmentId}/extend",
+  "responses": []
+}
+{
+  "name": "Delete Enrollment",
+  "url": "{{BASE_URL}}/api/enrollments/admin/{enrollmentId}",
+  "responses": []
+}
+{
+  "name": "Cancel All",
+  "url": "{{BASE_URL}}/api/enrollments/admin/student/{studentId}/cancel-all",
+  "responses": []
+}
+{
+  "name": "Expire Old",
+  "url": "{{BASE_URL}}/api/enrollments/admin/expire-old",
+  "responses": []
+}
+{
+  "name": "Create Order",
+  "url": "{{BASE_URL}}/api/payment/orders",
+  "responses": []
+}
+{
+  "name": "Get Order",
+  "url": "{{BASE_URL}}/api/payment/orders/{orderNumber}",
+  "responses": []
+}
+{
+  "name": "My Orders",
+  "url": "{{BASE_URL}}/api/payment/orders/my-orders",
+  "responses": []
+}
+{
+  "name": "Process Payment",
+  "url": "{{BASE_URL}}/api/payment/process",
+  "responses": []
+}
+{
+  "name": "Payment Methods",
+  "url": "{{BASE_URL}}/api/payment/methods",
+  "responses": []
+}
+{
+  "name": "My Wallet",
+  "url": "{{BASE_URL}}/api/payment/wallet",
+  "responses": []
+}
+{
+  "name": "Wallet Balance",
+  "url": "{{BASE_URL}}/api/payment/wallet/balance",
+  "responses": []
+}
+{
+  "name": "Wallet Transactions",
+  "url": "{{BASE_URL}}/api/payment/wallet/transactions",
+  "responses": []
+}
+{
+  "name": "Deposit to Wallet",
+  "url": "{{BASE_URL}}/api/payment/wallet/deposit",
+  "responses": []
+}
+{
+  "name": "Admin: Student Wallet",
+  "url": "{{BASE_URL}}/api/wallet/student/{studentId}",
+  "responses": []
+}
+{
+  "name": "Admin: Top Up Wallet",
+  "url": "{{BASE_URL}}/api/wallet/top-up",
+  "responses": []
+}
+{
+  "name": "Admin: Student Transactions",
+  "url": "{{BASE_URL}}/api/wallet/student/{studentId}/transactions",
+  "responses": []
+}
+{
+  "name": "My Wallet (Wallet API)",
+  "url": "{{BASE_URL}}/api/wallet/my",
+  "responses": []
+}
+{
+  "name": "My Transactions (Wallet API)",
+  "url": "{{BASE_URL}}/api/wallet/my/transactions",
+  "responses": []
+}
+{
+  "name": "List Coupons",
+  "url": "{{BASE_URL}}/api/coupons",
+  "responses": []
+}
+{
+  "name": "Valid Coupons",
+  "url": "{{BASE_URL}}/api/coupons/valid",
+  "responses": []
+}
+{
+  "name": "Get Coupon",
+  "url": "{{BASE_URL}}/api/coupons/{id}",
+  "responses": []
+}
+{
+  "name": "Create Coupon",
+  "url": "{{BASE_URL}}/api/coupons",
+  "responses": []
+}
+{
+  "name": "Update Coupon",
+  "url": "{{BASE_URL}}/api/coupons/{id}",
+  "responses": []
+}
+{
+  "name": "Toggle Coupon",
+  "url": "{{BASE_URL}}/api/coupons/{id}/toggle",
+  "responses": []
+}
+{
+  "name": "Preview Coupon",
+  "url": "{{BASE_URL}}/api/coupons/preview",
+  "responses": []
+}
+{
+  "name": "Generate Codes",
+  "url": "{{BASE_URL}}/api/v1/access-codes/generate",
+  "responses": []
+}
+{
+  "name": "My Codes",
+  "url": "{{BASE_URL}}/api/v1/access-codes/my-codes",
+  "responses": []
+}
+{
+  "name": "Batch Codes",
+  "url": "{{BASE_URL}}/api/v1/access-codes/batch/{batchLabel}",
+  "responses": []
+}
+{
+  "name": "Code Usages",
+  "url": "{{BASE_URL}}/api/v1/access-codes/{codeId}/usages",
+  "responses": []
+}
+{
+  "name": "Redeem Code",
+  "url": "{{BASE_URL}}/api/v1/access-codes/redeem",
+  "responses": []
+}
+{
+  "name": "Delete Code",
+  "url": "{{BASE_URL}}/api/v1/access-codes/{codeId}",
+  "responses": []
+}
+{
+  "name": "Delete Batch",
+  "url": "{{BASE_URL}}/api/v1/access-codes/batch/{batchLabel}",
+  "responses": []
+}
+{
+  "name": "Payment Callback (Webhook)",
+  "url": "{{BASE_URL}}/api/payment/fawaterek/callback",
+  "responses": []
+}
+{
+  "name": "Scan QR (حضور مركز)",
+  "url": "{{BASE_URL}}/api/attendance/scan",
+  "responses": []
+}
+{
+  "name": "Online Attendance",
+  "url": "{{BASE_URL}}/api/attendance/online/{weekId}",
+  "responses": []
+}
+{
+  "name": "My Attendance",
+  "url": "{{BASE_URL}}/api/attendance/my",
+  "responses": []
+}
+{
+  "name": "Student Attendance",
+  "url": "{{BASE_URL}}/api/attendance/student/{studentId}",
+  "responses": []
+}
+{
+  "name": "Lesson Attendance",
+  "url": "{{BASE_URL}}/api/attendance/lesson/{weekId}",
+  "responses": []
+}
+{
+  "name": "Create Group",
+  "url": "{{BASE_URL}}/api/attendance/groups",
+  "responses": []
+}
+{
+  "name": "List Groups",
+  "url": "{{BASE_URL}}/api/attendance/groups",
+  "responses": []
+}
+{
+  "name": "Get Group",
+  "url": "{{BASE_URL}}/api/attendance/groups/{groupId}",
+  "responses": []
+}
+{
+  "name": "Delete Group",
+  "url": "{{BASE_URL}}/api/attendance/groups/{groupId}",
+  "responses": []
+}
+{
+  "name": "Add Members",
+  "url": "{{BASE_URL}}/api/attendance/groups/{groupId}/members",
+  "responses": []
+}
+{
+  "name": "Remove Member",
+  "url": "{{BASE_URL}}/api/attendance/groups/{groupId}/members/{studentId}",
+  "responses": []
+}
+{
+  "name": "List Members",
+  "url": "{{BASE_URL}}/api/attendance/groups/{groupId}/members",
+  "responses": []
+}
+{
+  "name": "Create Session",
+  "url": "{{BASE_URL}}/api/attendance/groups/{groupId}/sessions",
+  "responses": []
+}
+{
+  "name": "List Sessions",
+  "url": "{{BASE_URL}}/api/attendance/groups/{groupId}/sessions",
+  "responses": []
+}
+{
+  "name": "Open Session",
+  "url": "{{BASE_URL}}/api/attendance/sessions/{sessionId}/open",
+  "responses": []
+}
+{
+  "name": "Close Session",
+  "url": "{{BASE_URL}}/api/attendance/sessions/{sessionId}/close",
+  "responses": []
+}
+{
+  "name": "Mark Attendance",
+  "url": "{{BASE_URL}}/api/attendance/sessions/{sessionId}/mark",
+  "responses": []
+}
+{
+  "name": "Session Records",
+  "url": "{{BASE_URL}}/api/attendance/sessions/{sessionId}/records",
+  "responses": []
+}
+{
+  "name": "Update Record",
+  "url": "{{BASE_URL}}/api/attendance/records/{recordId}/status",
+  "responses": []
+}
+{
+  "name": "Add Comment",
+  "url": "{{BASE_URL}}/api/attendance/records/{recordId}/comment",
+  "responses": []
+}
+{
+  "name": "Export Session",
+  "url": "{{BASE_URL}}/api/attendance/sessions/{sessionId}/export",
+  "responses": []
+}
+{
+  "name": "Export Group",
+  "url": "{{BASE_URL}}/api/attendance/groups/{groupId}/export",
+  "responses": []
+}
+{
+  "name": "My Groups (Student)",
+  "url": "{{BASE_URL}}/api/attendance/student/groups",
+  "responses": []
+}
+{
+  "name": "My Group (Student)",
+  "url": "{{BASE_URL}}/api/attendance/student/groups/{groupId}",
+  "responses": []
+}
+{
+  "name": "Child Groups (Parent)",
+  "url": "{{BASE_URL}}/api/attendance/parent/students/{studentId}/groups",
+  "responses": []
+}
+{
+  "name": "Child Group (Parent)",
+  "url": "{{BASE_URL}}/api/attendance/parent/students/{studentId}/groups/{groupId}",
+  "responses": []
+}
+{
+  "name": "Admin Dashboard",
+  "url": "{{BASE_URL}}/api/analytics/admin/dashboard",
+  "responses": []
+}
+{
+  "name": "Teacher Dashboard",
+  "url": "{{BASE_URL}}/api/analytics/teacher/dashboard",
+  "responses": []
+}
+{
+  "name": "Students Map",
+  "url": "{{BASE_URL}}/api/analytics/students/map",
+  "responses": []
+}
+{
+  "name": "Purchase Heatmap",
+  "url": "{{BASE_URL}}/api/analytics/teacher/purchase-heatmap",
+  "responses": []
+}
+{
+  "name": "Sales by Type",
+  "url": "{{BASE_URL}}/api/analytics/teacher/sales-by-type",
+  "responses": []
+}
+{
+  "name": "Login Heatmap",
+  "url": "{{BASE_URL}}/api/analytics/teacher/login-heatmap",
+  "responses": []
+}
+{
+  "name": "Grades by Course",
+  "url": "{{BASE_URL}}/api/analytics/teacher/grades-by-course",
+  "responses": []
+}
+{
+  "name": "Grades by Center",
+  "url": "{{BASE_URL}}/api/analytics/teacher/grades-by-center",
+  "responses": []
+}
+{
+  "name": "Hardest Quizzes",
+  "url": "{{BASE_URL}}/api/analytics/teacher/hardest-quizzes",
+  "responses": []
+}
+{
+  "name": "Platform Time",
+  "url": "{{BASE_URL}}/api/analytics/teacher/platform-time",
+  "responses": []
+}
+{
+  "name": "Grade Comparison",
+  "url": "{{BASE_URL}}/api/analytics/student/grade-comparison",
+  "responses": []
+}
+{
+  "name": "Course Progress",
+  "url": "{{BASE_URL}}/api/analytics/student/course-progress",
+  "responses": []
+}
+{
+  "name": "Active Hours",
+  "url": "{{BASE_URL}}/api/analytics/student/active-hours",
+  "responses": []
+}
+{
+  "name": "Achievements",
+  "url": "{{BASE_URL}}/api/analytics/student/achievements",
+  "responses": []
+}
+{
+  "name": "Streak",
+  "url": "{{BASE_URL}}/api/analytics/student/streak",
+  "responses": []
+}
+{
+  "name": "Quiz Speed",
+  "url": "{{BASE_URL}}/api/analytics/student/quiz-speed",
+  "responses": []
+}
+{
+  "name": "Child Grade Comparison",
+  "url": "{{BASE_URL}}/api/analytics/parent/child/{studentId}/grade-comparison",
+  "responses": []
+}
+{
+  "name": "Child Course Progress",
+  "url": "{{BASE_URL}}/api/analytics/parent/child/{studentId}/course-progress",
+  "responses": []
+}
+{
+  "name": "Child Active Hours",
+  "url": "{{BASE_URL}}/api/analytics/parent/child/{studentId}/active-hours",
+  "responses": []
+}
+{
+  "name": "Child Achievements",
+  "url": "{{BASE_URL}}/api/analytics/parent/child/{studentId}/achievements",
+  "responses": []
+}
+{
+  "name": "Child Streak",
+  "url": "{{BASE_URL}}/api/analytics/parent/child/{studentId}/streak",
+  "responses": []
+}
+{
+  "name": "Child Quiz Speed",
+  "url": "{{BASE_URL}}/api/analytics/parent/child/{studentId}/quiz-speed",
+  "responses": []
+}
+{
+  "name": "My Notifications",
+  "url": "{{BASE_URL}}/api/notifications/my",
+  "responses": []
+}
+{
+  "name": "Unread Count",
+  "url": "{{BASE_URL}}/api/notifications/unread-count",
+  "responses": []
+}
+{
+  "name": "Mark as Read",
+  "url": "{{BASE_URL}}/api/notifications/{id}/read",
+  "responses": []
+}
+{
+  "name": "Mark All Read",
+  "url": "{{BASE_URL}}/api/notifications/read-all",
+  "responses": []
+}
+{
+  "name": "Quiz Leaderboard",
+  "url": "{{BASE_URL}}/api/leaderboard/quiz/{quizId}",
+  "responses": []
+}
+{
+  "name": "Course Leaderboard",
+  "url": "{{BASE_URL}}/api/leaderboard/course/{courseId}",
+  "responses": []
+}
+{
+  "name": "Global Leaderboard",
+  "url": "{{BASE_URL}}/api/leaderboard/global",
+  "responses": []
+}
+{
+  "name": "My Rank in Quiz",
+  "url": "{{BASE_URL}}/api/leaderboard/quiz/{quizId}/my-rank",
+  "responses": []
+}
+{
+  "name": "Active Banners (Public)",
+  "url": "{{BASE_URL}}/api/banners/active",
+  "responses": []
+}
+{
+  "name": "Admin: All Banners",
+  "url": "{{BASE_URL}}/api/banners/admin",
+  "responses": []
+}
+{
+  "name": "Admin: Get Banner",
+  "url": "{{BASE_URL}}/api/banners/admin/{id}",
+  "responses": []
+}
+{
+  "name": "Admin: Create Banner",
+  "url": "{{BASE_URL}}/api/banners",
+  "responses": []
+}
+{
+  "name": "Admin: Update Banner",
+  "url": "{{BASE_URL}}/api/banners/{id}",
+  "responses": []
+}
+{
+  "name": "Admin: Toggle Status",
+  "url": "{{BASE_URL}}/api/banners/{id}/toggle-status",
+  "responses": []
+}
+{
+  "name": "Admin: Delete Banner",
+  "url": "{{BASE_URL}}/api/banners/{id}",
+  "responses": []
+}
+{
+  "name": "Active Announcements (Public)",
+  "url": "{{BASE_URL}}/api/announcements/active",
+  "responses": []
+}
+{
+  "name": "Admin: All",
+  "url": "{{BASE_URL}}/api/announcements/admin",
+  "responses": []
+}
+{
+  "name": "Admin: Get",
+  "url": "{{BASE_URL}}/api/announcements/admin/{id}",
+  "responses": []
+}
+{
+  "name": "Admin: Create",
+  "url": "{{BASE_URL}}/api/announcements",
+  "responses": []
+}
+{
+  "name": "Admin: Update",
+  "url": "{{BASE_URL}}/api/announcements/{id}",
+  "responses": []
+}
+{
+  "name": "Admin: Toggle Status",
+  "url": "{{BASE_URL}}/api/announcements/{id}/toggle-status",
+  "responses": []
+}
+{
+  "name": "Admin: Delete",
+  "url": "{{BASE_URL}}/api/announcements/{id}",
+  "responses": []
+}
+{
+  "name": "All Governorates",
+  "url": "{{BASE_URL}}/api/public/governorates",
+  "responses": []
+}
+{
+  "name": "Governorates with Areas",
+  "url": "{{BASE_URL}}/api/public/governorates/with-areas",
+  "responses": []
+}
+{
+  "name": "Areas by Governorate ID",
+  "url": "{{BASE_URL}}/api/public/governorates/{id}/areas",
+  "responses": []
+}
+{
+  "name": "Areas by Name",
+  "url": "{{BASE_URL}}/api/public/governorates/by-name/{nameAr}/areas",
+  "responses": []
+}
+{
+  "name": "Seed Geo Data (Admin)",
+  "url": "{{BASE_URL}}/api/admin/geo/seed",
+  "responses": []
+}
+{
+  "name": "All Centers",
+  "url": "{{BASE_URL}}/api/centers/all",
+  "responses": []
+}
+{
+  "name": "Centers List (Paginated)",
+  "url": "{{BASE_URL}}/api/centers",
+  "responses": []
+}
+{
+  "name": "Get Center",
+  "url": "{{BASE_URL}}/api/centers/{id}",
+  "responses": []
+}
+{
+  "name": "Centers by Governorate",
+  "url": "{{BASE_URL}}/api/centers/governorate/{governorate}",
+  "responses": []
+}
+{
+  "name": "Create Center",
+  "url": "{{BASE_URL}}/api/centers",
+  "responses": []
+}
+{
+  "name": "Update Center",
+  "url": "{{BASE_URL}}/api/centers/{id}",
+  "responses": []
+}
+{
+  "name": "Delete Center",
+  "url": "{{BASE_URL}}/api/centers/{id}",
+  "responses": []
+}
+{
+  "name": "Upload File",
+  "url": "{{BASE_URL}}/api/files/upload",
+  "responses": []
+}

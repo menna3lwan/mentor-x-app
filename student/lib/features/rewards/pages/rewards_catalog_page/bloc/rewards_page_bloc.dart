@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:mentorx_student/core/core.dart';
+import 'package:analytics_service/analytics_service.dart';
 
 part 'rewards_page_event.dart';
 part 'rewards_page_state.dart';
@@ -111,10 +112,10 @@ class RewardsPageBloc extends Bloc<RewardsPageEvent, RewardsPageState>
         RewardsPageClaimSuccessPresentationEvent(claim.rewardTitle ?? 'Reward'),
       );
       _analyticsService.logEvent(
-        name: 'reward_claim_success',
+        name: AnalyticsEvents.rewardClaimed,
         parameters: {
-          'reward_id': event.rewardItemId,
-          'reward_title': claim.rewardTitle,
+          AnalyticsParams.itemId: event.rewardItemId,
+          AnalyticsParams.itemName: claim.rewardTitle,
         },
       );
       // Reload points after claim

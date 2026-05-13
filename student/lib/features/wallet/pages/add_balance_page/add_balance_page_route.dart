@@ -9,6 +9,7 @@ final class AddBalancePageRoute extends GoRouteData with $AddBalancePageRoute {
     return BlocProvider<AddBalancePageBloc>(
       create: (context) => AddBalancePageBloc(
         walletRepository: context.read<WalletRepository>(),
+        analyticsService: context.read<AnalyticsService>(),
       )..add(const AddBalancePageLoadEvent()),
       child: const AddBalancePageWrapper(),
     );

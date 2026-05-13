@@ -22,13 +22,16 @@ final class AssignmentsListPageBloc
           AssignmentsListPageState,
           AssignmentsListPagePresentationEvent
         > {
-  AssignmentsListPageBloc({required this.assignmentRepository})
-    : super(AssignmentsListPageState.initial) {
+  AssignmentsListPageBloc({
+    required this.assignmentRepository,
+    required this.analyticsService,
+  }) : super(AssignmentsListPageState.initial) {
     on<AssignmentsListPageLoadEvent>(_onLoad);
     on<AssignmentsListPageRefreshEvent>(_onRefresh);
   }
 
   final AssignmentRepository assignmentRepository;
+  final AnalyticsService analyticsService;
 
   Future<void> _onLoad(
     AssignmentsListPageLoadEvent event,
@@ -39,6 +42,7 @@ final class AssignmentsListPageBloc
     );
     try {
       final assignments = await assignmentRepository.getAssignments();
+      analyticsService.logEvent(name: AnalyticsEvents.assignmentsListViewed);
       emit(
         state.copyWith(
           loadingState: LoadingState.loaded,

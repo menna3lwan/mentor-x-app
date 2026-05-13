@@ -1,3 +1,4 @@
+import 'package:analytics_service/analytics_service.dart';
 import 'package:device_info_service/device_info_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,6 +15,7 @@ class LoginPageWrapper extends StatelessWidget {
       create: (context) => LoginBloc(
         authenticationRepository: context.read<AuthenticationRepository<ParentEntity>>(),
         deviceInfoService: context.read<DeviceInfoService>(),
+        analyticsService: context.read<AnalyticsService>(),
       ),
       child: const LoginPage(),
     );

@@ -50,6 +50,7 @@ final class _ForgotPasswordPageWrapperState
     return BlocProvider(
       create: (context) => ForgotPasswordBloc(
         authRepository: context.read<StudentAuthenticationRepository>(),
+        analyticsService: context.read<AnalyticsService>(),
         initialPhone: widget.initialPhone,
       ),
       child:

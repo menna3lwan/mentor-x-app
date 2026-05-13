@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
+import 'package:analytics_service/analytics_service.dart';
 
 import '../../../../../core/core.dart';
 
@@ -25,12 +26,15 @@ final class MyGradesPageBloc extends Bloc<MyGradesPageEvent, MyGradesPageState>
         > {
   final GradeRepository _gradeRepository;
   final CourseRepository _courseRepository;
+  final AnalyticsService _analyticsService;
 
   MyGradesPageBloc({
     required GradeRepository gradeRepository,
     required CourseRepository courseRepository,
+    required AnalyticsService analyticsService,
   }) : _gradeRepository = gradeRepository,
        _courseRepository = courseRepository,
+       _analyticsService = analyticsService,
        super(MyGradesPageState.initial) {
     on<MyGradesPageInitialized>(_onInitialized);
     on<MyGradesPageRefreshed>(_onRefreshed);
@@ -41,6 +45,7 @@ final class MyGradesPageBloc extends Bloc<MyGradesPageEvent, MyGradesPageState>
     MyGradesPageInitialized event,
     Emitter<MyGradesPageState> emit,
   ) async {
+    _analyticsService.logEvent(name: AnalyticsEvents.myGradesViewed);
     await _load(emit: emit);
   }
 

@@ -59,7 +59,22 @@ final class PurchaseConfirmPage extends StatelessWidget {
         ),
       ),
       body: loadingState == LoadingState.loading
-          ? const Center(child: CircularProgressIndicator())
+          ? Padding(
+              padding: const EdgeInsets.all(24),
+              child: MentorXSkeleton(height: 300, borderRadius: 32),
+            )
+          : loadingState == LoadingState.error
+          ? AppErrorView(
+              message: t['failedToLoadPayment'] ?? 'Failed to load payment',
+              onRetry: () {
+                final paymentId = context.read<PurchaseConfirmPageBloc>().state.paymentId;
+                if (paymentId != null) {
+                  context.read<PurchaseConfirmPageBloc>().add(
+                    PurchaseConfirmPageLoadEvent(paymentId: paymentId),
+                  );
+                }
+              },
+            )
           : SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               padding: const EdgeInsets.all(24),
@@ -151,28 +166,7 @@ final class PurchaseConfirmPage extends StatelessWidget {
                         label: t['confirmPayment']!,
                       ),
                     ),
-                  ] else if (loadingState == LoadingState.error)
-                    Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.error_outline_rounded,
-                            color: context.statusDangerColor,
-                            size: 48,
-                          ),
-                          const Gap(16),
-                          Text(
-                            t['failedToLoadPayment'] ??
-                                'Failed to load payment',
-                            style: TextStyle(
-                              color: context.textSecondaryColor,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                  ],
                 ],
               ),
             ),

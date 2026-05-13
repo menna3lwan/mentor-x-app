@@ -38,58 +38,55 @@ final class AssignmentDetailPage extends StatelessWidget {
         if (loadingState == LoadingState.loading) {
           return Scaffold(
             backgroundColor: context.backgroundPrimaryColor,
-            body: const Center(child: CircularProgressIndicator()),
+            body: Column(
+              children: [
+                const MentorXSkeleton(height: 120, borderRadius: 32),
+                const Gap(32),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 24),
+                  child: MentorXSkeleton(height: 40, borderRadius: 12),
+                ),
+                const Gap(12),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 24),
+                  child: MentorXSkeleton(height: 60, borderRadius: 12),
+                ),
+                const Gap(40),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 24),
+                  child: Row(
+                    children: [
+                      Expanded(child: MentorXSkeleton(height: 80, borderRadius: 24)),
+                      Gap(16),
+                      Expanded(child: MentorXSkeleton(height: 80, borderRadius: 24)),
+                    ],
+                  ),
+                ),
+                const Gap(48),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: MentorXSkeleton(height: 200, borderRadius: 32),
+                  ),
+                ),
+              ],
+            ),
           );
         }
 
         if (errorMessage != null) {
           return Scaffold(
             backgroundColor: context.backgroundPrimaryColor,
-            body: Center(
-              child: Padding(
-                padding: const EdgeInsets.all(32),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    FadeInDown(
-                      child: Container(
-                        padding: const EdgeInsets.all(24),
-                        decoration: BoxDecoration(
-                          color: context.statusDangerColor.withValues(
-                            alpha: 0.1,
-                          ),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          Icons.error_outline_rounded,
-                          size: 64,
-                          color: context.statusDangerColor,
-                        ),
-                      ),
-                    ),
-                    const Gap(32),
-                    FadeInUp(
-                      child: Text(
-                        errorMessage,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                          color: context.textPrimaryColor,
-                        ),
-                      ),
-                    ),
-                    const Gap(48),
-                    FadeInUp(
-                      delay: const Duration(milliseconds: 200),
-                      child: MentorXButton(
-                        label: t['commonBack']!,
-                        onPressed: () => context.pop(),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+            body: AppErrorView(
+              message: errorMessage,
+              onRetry: () {
+                final assignmentId = context.read<AssignmentDetailPageBloc>().state.assignment?.id;
+                if (assignmentId != null) {
+                  context.read<AssignmentDetailPageBloc>().add(
+                    AssignmentDetailPageLoadEvent(assignmentId: assignmentId),
+                  );
+                }
+              },
             ),
           );
         }
@@ -97,11 +94,9 @@ final class AssignmentDetailPage extends StatelessWidget {
         if (assignment == null) {
           return Scaffold(
             backgroundColor: context.backgroundPrimaryColor,
-            body: Center(
-              child: Text(
-                t['assignmentNotFound'] ?? 'Assignment not found',
-                style: TextStyle(color: context.textPrimaryColor),
-              ),
+            body: AppEmptyView(
+              title: t['assignmentNotFound'] ?? 'Assignment not found',
+              message: 'Try again later',
             ),
           );
         }
@@ -394,13 +389,11 @@ final class _BuildHeader extends StatelessWidget {
           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
           child: Row(
             children: [
-              IconButton(
+              MentorXIconButton(
                 onPressed: () => Navigator.pop(context),
-                icon: Icon(
-                  Icons.arrow_back_ios_new_rounded,
-                  color: context.textPrimaryColor,
-                  size: 20,
-                ),
+                icon: Icons.arrow_back_ios_new_rounded,
+                color: context.textPrimaryColor,
+                size: MentorXIconButtonSize.small,
               ),
               Expanded(
                 child: Center(

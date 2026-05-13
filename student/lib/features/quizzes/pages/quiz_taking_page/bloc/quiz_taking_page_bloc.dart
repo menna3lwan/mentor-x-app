@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:mentorx_student/core/core.dart';
+import 'package:analytics_service/analytics_service.dart';
 
 part 'quiz_taking_page_event.dart';
 part 'quiz_taking_page_state.dart';
@@ -43,10 +44,10 @@ final class QuizTakingPageBloc
     try {
       final quiz = await quizRepository.getQuiz(state.quizId);
       analyticsService.logEvent(
-        name: 'quiz_start',
+        name: AnalyticsEvents.quizStarted,
         parameters: {
-          'quiz_id': state.quizId,
-          'quiz_title': quiz.title,
+          AnalyticsParams.quizId: state.quizId,
+          AnalyticsParams.name: quiz.title,
         },
       );
       emit(
@@ -64,10 +65,10 @@ final class QuizTakingPageBloc
         ),
       );
       analyticsService.logEvent(
-        name: 'quiz_submit_failure',
+        name: AnalyticsEvents.quizSubmitFailed,
         parameters: {
-          'quiz_id': state.quizId,
-          'error': e.toString(),
+          AnalyticsParams.quizId: state.quizId,
+          AnalyticsParams.errorMessage: e.toString(),
         },
       );
     }
@@ -135,10 +136,10 @@ final class QuizTakingPageBloc
         ),
       );
       analyticsService.logEvent(
-        name: 'quiz_submit_failure',
+        name: AnalyticsEvents.quizSubmitFailed,
         parameters: {
-          'quiz_id': state.quizId,
-          'error': e.toString(),
+          AnalyticsParams.quizId: state.quizId,
+          AnalyticsParams.errorMessage: e.toString(),
         },
       );
     }

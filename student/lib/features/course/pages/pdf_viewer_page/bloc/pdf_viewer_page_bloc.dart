@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
 import '../../../../../core/core.dart';
+import 'package:analytics_service/analytics_service.dart';
 
 part 'pdf_viewer_page_event.dart';
 part 'pdf_viewer_page_state.dart';
@@ -25,15 +26,18 @@ final class PdfViewerPageBloc
           PdfViewerPagePresentationEvent
         > {
   final CourseRepository _courseRepository;
+  final AnalyticsService _analyticsService;
 
   PdfViewerPageBloc({
     required CourseRepository courseRepository,
+    required AnalyticsService analyticsService,
     required String itemId,
     required String title,
     String? enrollmentId,
     int completedLessons = 0,
     int totalLessons = 0,
   }) : _courseRepository = courseRepository,
+       _analyticsService = analyticsService,
        super(
          PdfViewerPageState(
            itemId: itemId,
@@ -51,6 +55,13 @@ final class PdfViewerPageBloc
     PdfViewerPageInitialized event,
     Emitter<PdfViewerPageState> emit,
   ) async {
+    _analyticsService.logEvent(
+      name: AnalyticsEvents.pdfViewed,
+      parameters: {
+        AnalyticsParams.id: state.itemId,
+        AnalyticsParams.name: state.title,
+      },
+    );
     emit(state.copyWith(loadingState: LoadingState.loading));
     try {
       final url = await _courseRepository.getContentUrl(state.itemId);

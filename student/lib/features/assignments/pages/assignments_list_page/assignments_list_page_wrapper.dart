@@ -14,6 +14,7 @@ final class AssignmentsListPageWrapper extends StatelessWidget {
     return BlocProvider(
       create: (context) => AssignmentsListPageBloc(
         assignmentRepository: context.read<AssignmentRepository>(),
+        analyticsService: context.read<AnalyticsService>(),
       )..add(const AssignmentsListPageLoadEvent()),
       child: const _AssignmentsListPageView(),
     );

@@ -10,9 +10,12 @@ class _MockStudentAuthenticationRepository extends Mock
 
 class _MockCacheRepository extends Mock implements CacheRepository {}
 
+class _MockAnalyticsService extends Mock implements AnalyticsService {}
+
 void main() {
   late _MockStudentAuthenticationRepository authenticationRepository;
   late _MockCacheRepository cacheRepository;
+  late _MockAnalyticsService analyticsService;
 
   final pendingUser = StudentEntity(
     id: '1',
@@ -28,6 +31,7 @@ void main() {
   setUp(() {
     authenticationRepository = _MockStudentAuthenticationRepository();
     cacheRepository = _MockCacheRepository();
+    analyticsService = _MockAnalyticsService();
 
     when(
       () => authenticationRepository.getCachedUser(),
@@ -43,6 +47,7 @@ void main() {
       final bloc = StatusPendingPageBloc(
         authRepository: authenticationRepository,
         cacheRepository: cacheRepository,
+        analyticsService: analyticsService,
       );
       expect(bloc.state, StatusPendingPageState.initial);
       expect(bloc.state.loadingState, LoadingState.initial);
@@ -54,6 +59,7 @@ void main() {
       build: () => StatusPendingPageBloc(
         authRepository: authenticationRepository,
         cacheRepository: cacheRepository,
+        analyticsService: analyticsService,
       ),
       act: (bloc) => bloc.add(const StatusPendingPageInitialized()),
       expect: () => [

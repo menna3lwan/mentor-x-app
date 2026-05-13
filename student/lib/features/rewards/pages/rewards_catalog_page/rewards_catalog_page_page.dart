@@ -44,9 +44,10 @@ final class RewardsCatalogPage extends StatelessWidget {
               ),
             ),
             actions: [
-              IconButton(
-                icon: const Icon(Icons.history_rounded, size: 22),
+              MentorXIconButton(
+                icon: Icons.history_rounded,
                 onPressed: () => const RewardsHistoryPageRoute().push(context),
+                color: context.textPrimaryColor,
               ),
               const Gap(8),
             ],
@@ -60,7 +61,30 @@ final class RewardsCatalogPage extends StatelessWidget {
           );
 
           if (isFirstLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return Column(
+              children: [
+                const Padding(
+                  padding: EdgeInsets.all(20),
+                  child: MentorXSkeleton(height: 180, borderRadius: 32),
+                ),
+                Expanded(
+                  child: GridView.builder(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 0.72,
+                      mainAxisSpacing: 16,
+                      crossAxisSpacing: 16,
+                    ),
+                    itemCount: 6,
+                    itemBuilder: (_, _) => const MentorXSkeleton(
+                      height: 200,
+                      borderRadius: 28,
+                    ),
+                  ),
+                ),
+              ],
+            );
           }
 
           return RefreshIndicator(
@@ -95,7 +119,11 @@ final class RewardsCatalogPage extends StatelessWidget {
                     if (items.isEmpty) {
                       return SliverFillRemaining(
                         hasScrollBody: false,
-                        child: FadeInUp(child: _EmptyRewards(t: t)),
+                        child: AppEmptyView(
+                          title: t['noRewards'] ?? 'No rewards available',
+                          message: t['noRewardsDesc'] ?? 'Check back later for new items.',
+                          icon: Icons.card_giftcard_rounded,
+                        ),
                       );
                     }
                     return SliverPadding(
@@ -357,52 +385,3 @@ final class _RewardItemCard extends StatelessWidget {
   }
 }
 
-final class _EmptyRewards extends StatelessWidget {
-  const _EmptyRewards({required this.t});
-  final dynamic t;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(32),
-            decoration: BoxDecoration(
-              color: context.backgroundSecondaryColor,
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: context.borderPrimaryColor.withValues(alpha: 0.05),
-              ),
-            ),
-            child: Icon(
-              Icons.card_giftcard_rounded,
-              size: 80,
-              color: context.textTertiaryColor.withValues(alpha: 0.2),
-            ),
-          ),
-          const Gap(32),
-          Text(
-            t['noRewards'] ?? 'No rewards available',
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.w900,
-              color: context.textPrimaryColor,
-              letterSpacing: -0.5,
-            ),
-          ),
-          const Gap(12),
-          Text(
-            t['noRewardsDesc'] ?? 'Check back later for new items.',
-            style: TextStyle(
-              fontSize: 15,
-              color: context.textSecondaryColor,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}

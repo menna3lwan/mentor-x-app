@@ -70,9 +70,20 @@ final class _NotificationsPageState extends State<NotificationsPage> {
                   ),
                   Expanded(
                     child: isInitialLoading
-                        ? const Center(child: CircularProgressIndicator())
+                        ? ListView.builder(
+                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+                            itemCount: 8,
+                            itemBuilder: (_, _) => const Padding(
+                              padding: EdgeInsets.only(bottom: 16),
+                              child: MentorXSkeleton(height: 120, borderRadius: 28),
+                            ),
+                          )
                         : notifications.isEmpty
-                            ? _EmptyNotifications(t: t)
+                            ? AppEmptyView(
+                                title: t['noNotifications'] ?? 'No notifications yet',
+                                message: t['noNotificationsDesc'] ?? "We'll notify you when something important happens.",
+                                icon: Icons.notifications_off_rounded,
+                              )
                             : RefreshIndicator(
                                 color: context.brandPrimaryColor,
                                 onRefresh: () async {
@@ -90,11 +101,9 @@ final class _NotificationsPageState extends State<NotificationsPage> {
                                   itemCount: notifications.length + (hasMore ? 1 : 0),
                                   itemBuilder: (context, i) {
                                     if (i == notifications.length) {
-                                      return const Center(
-                                        child: Padding(
-                                          padding: EdgeInsets.all(16.0),
-                                          child: CircularProgressIndicator(strokeWidth: 2),
-                                        ),
+                                      return const Padding(
+                                        padding: EdgeInsets.all(16.0),
+                                        child: MentorXSkeleton(height: 60, borderRadius: 20),
                                       );
                                     }
 
@@ -163,13 +172,10 @@ final class _BuildHeader extends StatelessWidget {
           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
           child: Row(
             children: [
-              IconButton(
+              MentorXIconButton(
                 onPressed: () => Navigator.pop(context),
-                icon: Icon(
-                  Icons.arrow_back_ios_new_rounded,
-                  color: context.textPrimaryColor,
-                  size: 20,
-                ),
+                icon: Icons.arrow_back_ios_new_rounded,
+                color: context.textPrimaryColor,
               ),
               Expanded(
                 child: Center(
@@ -185,17 +191,14 @@ final class _BuildHeader extends StatelessWidget {
                 ),
               ),
               if (hasNotifications)
-                IconButton(
+                MentorXIconButton(
                   onPressed: () {
                     context.read<NotificationsPageBloc>().add(
                       const NotificationsPageMarkAllAsReadEvent(),
                     );
                   },
-                  icon: Icon(
-                    Icons.done_all_rounded,
-                    size: 22,
-                    color: context.brandPrimaryColor,
-                  ),
+                  icon: Icons.done_all_rounded,
+                  color: context.brandPrimaryColor,
                   tooltip: t['markAllRead'],
                 )
               else
@@ -402,85 +405,6 @@ final class _NotificationItem extends StatelessWidget {
   }
 }
 
-final class _EmptyNotifications extends StatelessWidget {
-  const _EmptyNotifications({required this.t});
-  final dynamic t;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: FadeInUp(
-        child: Padding(
-          padding: const EdgeInsets.all(32),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(40),
-                decoration: BoxDecoration(
-                  color: context.backgroundSecondaryColor.withValues(alpha: 0.45),
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: context.borderPrimaryColor.withValues(alpha: 0.1),
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.05),
-                      blurRadius: 30,
-                    ),
-                  ],
-                ),
-                child: ClipOval(
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                    child: ShaderMask(
-                      shaderCallback: (bounds) => LinearGradient(
-                        colors: [
-                          context.textTertiaryColor.withValues(alpha: 0.3),
-                          context.textTertiaryColor.withValues(alpha: 0.1),
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ).createShader(bounds),
-                      child: const Icon(
-                        Icons.notifications_off_rounded,
-                        size: 100,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              const Gap(40),
-              Text(
-                t['noNotifications'] ?? 'No notifications yet',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w900,
-                  color: context.textPrimaryColor,
-                  letterSpacing: -0.5,
-                ),
-              ),
-              const Gap(16),
-              Text(
-                t['noNotificationsDesc'] ??
-                    "We'll notify you when something important happens.",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: context.textSecondaryColor,
-                  fontWeight: FontWeight.w600,
-                  height: 1.5,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
 
 class _BackgroundDecorations extends StatelessWidget {
   const _BackgroundDecorations();

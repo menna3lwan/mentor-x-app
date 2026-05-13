@@ -65,9 +65,17 @@ final class DeviceManagementPagePage extends StatelessWidget {
             color: context.brandPrimaryColor,
             backgroundColor: context.backgroundSecondaryColor,
             child: isLoading
-                ? const Center(child: CircularProgressIndicator())
+                ? ListView.separated(
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+                    itemCount: 3,
+                    separatorBuilder: (_, _) => const Gap(16),
+                    itemBuilder: (_, _) => const MentorXSkeleton(height: 220, borderRadius: 28),
+                  )
                 : isError
-                ? _buildError(context, state)
+                ? AppErrorView(
+                    message: state.errorMessage ?? 'Unable to load devices.',
+                    onRetry: onRefresh,
+                  )
                 : _buildLoaded(context, state),
           ),
         );
@@ -75,104 +83,14 @@ final class DeviceManagementPagePage extends StatelessWidget {
     );
   }
 
-  Widget _buildError(BuildContext context, DeviceManagementPageState state) {
-    final errorMessage = state.errorMessage;
-    return ListView(
-      physics: const AlwaysScrollableScrollPhysics(),
-      children: [
-        const Gap(120),
-        ZoomIn(
-          duration: const Duration(milliseconds: 500),
-          child: Icon(
-            Icons.error_outline_rounded,
-            size: 64,
-            color: context.statusDangerColor,
-          ),
-        ),
-        const Gap(16),
-        FadeInUp(
-          duration: const Duration(milliseconds: 500),
-          child: Text(
-            errorMessage ?? 'Unable to load devices.',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: context.statusDangerColor,
-              fontWeight: FontWeight.w800,
-              fontSize: 16,
-            ),
-          ),
-        ),
-        const Gap(8),
-        FadeInUp(
-          duration: const Duration(milliseconds: 500),
-          delay: const Duration(milliseconds: 100),
-          child: Text(
-            'Pull down to try again.',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: context.textTertiaryColor,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
 
   Widget _buildLoaded(BuildContext context, DeviceManagementPageState state) {
     final devices = state.devices;
     if (devices.isEmpty) {
-      return ListView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        children: [
-          const Gap(120),
-          ZoomIn(
-            duration: const Duration(milliseconds: 600),
-            child: Container(
-              padding: const EdgeInsets.all(24),
-              decoration: BoxDecoration(
-                color: context.backgroundSecondaryColor,
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: context.borderPrimaryColor.withValues(alpha: 0.05),
-                ),
-              ),
-              child: Icon(
-                Icons.devices_other_rounded,
-                size: 80,
-                color: context.textTertiaryColor.withValues(alpha: 0.1),
-              ),
-            ),
-          ),
-          const Gap(24),
-          FadeInUp(
-            duration: const Duration(milliseconds: 500),
-            child: Text(
-              'No registered devices',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.w900,
-                color: context.textPrimaryColor,
-                letterSpacing: -0.5,
-              ),
-            ),
-          ),
-          const Gap(10),
-          FadeInUp(
-            duration: const Duration(milliseconds: 500),
-            delay: const Duration(milliseconds: 100),
-            child: Text(
-              'Your active login sessions will appear here.',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: context.textTertiaryColor,
-                fontWeight: FontWeight.w700,
-                fontSize: 15,
-              ),
-            ),
-          ),
-        ],
+      return AppEmptyView(
+        title: 'No registered devices',
+        message: 'Your active login sessions will appear here.',
+        icon: Icons.devices_other_rounded,
       );
     }
 

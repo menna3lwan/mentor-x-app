@@ -391,6 +391,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.9.2"
+  dio_parent_analytics_repository:
+    dependency: transitive
+    description:
+      path: "packages/parent/dio_parent_analytics_repository"
+      relative: true
+    source: path
+    version: "1.0.0"
   dio_student_analytics_repository:
     dependency: transitive
     description:
@@ -398,6 +405,13 @@ packages:
       relative: true
     source: path
     version: "1.0.0"
+  dio_student_card_repository:
+    dependency: transitive
+    description:
+      path: "packages/student/dio_student_card_repository"
+      relative: true
+    source: path
+    version: "0.0.1"
   dio_student_communication_repository:
     dependency: transitive
     description:
@@ -1255,6 +1269,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.7.0"
+  mock_analytics_repository:
+    dependency: transitive
+    description:
+      path: "packages/mock/parent/mock_analytics_repository"
+      relative: true
+    source: path
+    version: "1.0.0"
   mock_student_analytics_repository:
     dependency: transitive
     description:
@@ -1262,6 +1283,13 @@ packages:
       relative: true
     source: path
     version: "1.0.0"
+  mock_student_card_repository:
+    dependency: transitive
+    description:
+      path: "packages/mock/student/mock_student_card_repository"
+      relative: true
+    source: path
+    version: "0.0.1"
   mock_student_communication_repository:
     dependency: transitive
     description:
@@ -1333,6 +1361,20 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.2.1"
+  parent_dio_profile_repository:
+    dependency: transitive
+    description:
+      path: "packages/parent/dio_profile_repository"
+      relative: true
+    source: path
+    version: "1.0.0"
+  parent_mock_profile_repository:
+    dependency: transitive
+    description:
+      path: "packages/mock/parent/mock_profile_repository"
+      relative: true
+    source: path
+    version: "1.0.0"
   path:
     dependency: transitive
     description:

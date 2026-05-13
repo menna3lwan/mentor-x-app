@@ -51,7 +51,7 @@ final class CourseCatalogPagePage extends StatelessWidget {
       body: Stack(
         children: [
           const _BackgroundDecorations(),
-          _buildContent(context),
+          Positioned.fill(child: _buildContent(context)),
         ],
       ),
     );
@@ -64,38 +64,50 @@ final class CourseCatalogPagePage extends StatelessWidget {
         _buildHeader(context),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: _SearchBar(
-            controller: searchController,
-            onChanged: onSearchChanged,
-            t: context.t.student,
+          child: FadeInDown(
+            duration: const Duration(milliseconds: 600),
+            child: _SearchBar(
+              controller: searchController,
+              onChanged: onSearchChanged,
+              t: context.t.student,
+            ),
           ),
         ),
         if (grades.isNotEmpty) ...[
-          const Gap(20),
-          LevelFilterChips(
-            grades: grades,
-            selectedGradeId: selectedGradeId,
-            onGradeChanged: onGradeChanged,
+          const Gap(24),
+          FadeInUp(
+            duration: const Duration(milliseconds: 600),
+            delay: const Duration(milliseconds: 200),
+            child: LevelFilterChips(
+              grades: grades,
+              selectedGradeId: selectedGradeId,
+              onGradeChanged: onGradeChanged,
+            ),
           ),
         ],
         if (categories.isNotEmpty) ...[
           const Gap(20),
-          CategoryFilterChips(
-            categories: categories,
-            selectedCategoryId: selectedCategoryId,
-            onCategoryChanged: onCategoryChanged,
+          FadeInUp(
+            duration: const Duration(milliseconds: 600),
+            delay: const Duration(milliseconds: 300),
+            child: CategoryFilterChips(
+              categories: categories,
+              selectedCategoryId: selectedCategoryId,
+              onCategoryChanged: onCategoryChanged,
+            ),
           ),
         ],
         Padding(
-          padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
+          padding: const EdgeInsets.fromLTRB(20, 24, 20, 12),
           child: Row(
             children: [
               Text(
                 context.t.course.catalog.coursesFound(count: courses.length),
                 style: TextStyle(
-                  fontSize: 13,
+                  fontSize: 14,
                   fontWeight: FontWeight.w900,
-                  color: context.textPrimaryColor.withValues(alpha: 0.6),
+                  color: context.textPrimaryColor.withValues(alpha: 0.5),
+                  letterSpacing: -0.2,
                 ),
               ),
               const Spacer(),
@@ -118,16 +130,22 @@ final class CourseCatalogPagePage extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
       child: Row(
         children: [
-          IconButton(
-            onPressed: () => Navigator.of(context).pop(),
-            icon: Icon(Icons.arrow_back_ios_new_rounded, color: context.textPrimaryColor, size: 20),
-            style: IconButton.styleFrom(
-              backgroundColor: context.backgroundSecondaryColor,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-              padding: const EdgeInsets.all(12),
+          Container(
+            decoration: BoxDecoration(
+              color: context.backgroundSecondaryColor.withValues(alpha: 0.45),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: context.borderPrimaryColor.withValues(alpha: 0.1),
+              ),
+            ),
+            child: MentorXIconButton(
+              onPressed: () => Navigator.of(context).pop(),
+              icon: Icons.arrow_back_ios_new_rounded,
+              color: context.textPrimaryColor,
+              size: MentorXIconButtonSize.small,
             ),
           ),
-          const Gap(16),
+          const Gap(20),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -135,26 +153,26 @@ final class CourseCatalogPagePage extends StatelessWidget {
                 FadeInLeft(
                   duration: const Duration(milliseconds: 600),
                   child: Text(
-                    'Academy',
+                    'ACADEMY',
                     style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w800,
+                      fontSize: 10,
+                      fontWeight: FontWeight.w900,
                       color: context.brandPrimaryColor,
-                      letterSpacing: 1.2,
+                      letterSpacing: 2.0,
                     ),
                   ),
                 ),
-                const Gap(2),
+                const Gap(4),
                 FadeInLeft(
                   duration: const Duration(milliseconds: 800),
                   delay: const Duration(milliseconds: 100),
                   child: Text(
                     context.t.course.courseCatalog,
                     style: TextStyle(
-                      fontSize: 24,
+                      fontSize: 26,
                       fontWeight: FontWeight.w900,
                       color: context.textPrimaryColor,
-                      letterSpacing: -0.5,
+                      letterSpacing: -0.8,
                     ),
                   ),
                 ),
@@ -168,38 +186,35 @@ final class CourseCatalogPagePage extends StatelessWidget {
 
   Widget _buildBody(BuildContext context) {
     if (errorMessage != null) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(32),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.error_outline_rounded,
-                size: 64,
-                color: context.statusDangerColor.withValues(alpha: 0.3),
-              ),
-              const Gap(24),
-              Text(
-                errorMessage!,
-                style: TextStyle(
-                  color: context.textSecondaryColor,
-                  fontWeight: FontWeight.w700,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        ),
+      return AppErrorView(
+        message: errorMessage!,
+        onRetry: onRefresh,
       );
     }
 
     if (isLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return GridView.builder(
+        padding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
+        physics: const NeverScrollableScrollPhysics(),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          childAspectRatio: 0.72,
+          crossAxisSpacing: 16,
+          mainAxisSpacing: 16,
+        ),
+        itemCount: 6,
+        itemBuilder: (context, index) => const MentorXSkeleton(
+          borderRadius: 20,
+        ),
+      );
     }
 
     if (courses.isEmpty) {
-      return _EmptyCatalog(t: context.t.student);
+      return AppEmptyView(
+        title: context.t.course.catalog.noCourses,
+        message: context.t.course.catalog.noCoursesDescription,
+        icon: Icons.search_off_rounded,
+      );
     }
 
     return RefreshIndicator(
@@ -239,19 +254,27 @@ class _BackgroundDecorations extends StatelessWidget {
     return Stack(
       children: [
         Positioned(
-          top: -50,
-          left: -50,
+          top: -100,
+          right: -50,
           child: _BlurredBlob(
-            color: context.brandPrimaryColor.withValues(alpha: 0.1),
-            size: 300,
+            color: context.brandPrimaryColor.withValues(alpha: 0.12),
+            size: 350,
           ),
         ),
         Positioned(
-          bottom: 100,
-          right: -100,
+          top: 300,
+          left: -150,
           child: _BlurredBlob(
             color: context.brandSecondaryColor.withValues(alpha: 0.08),
             size: 400,
+          ),
+        ),
+        Positioned(
+          bottom: -50,
+          right: -100,
+          child: _BlurredBlob(
+            color: context.brandPrimaryColor.withValues(alpha: 0.1),
+            size: 300,
           ),
         ),
       ],
@@ -275,7 +298,7 @@ class _BlurredBlob extends StatelessWidget {
         shape: BoxShape.circle,
       ),
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 60, sigmaY: 60),
+        filter: ImageFilter.blur(sigmaX: 70, sigmaY: 70),
         child: const SizedBox.expand(),
       ),
     );
@@ -434,54 +457,3 @@ final class _SortDropdown extends StatelessWidget {
   }
 }
 
-final class _EmptyCatalog extends StatelessWidget {
-  final dynamic t;
-
-  const _EmptyCatalog({required this.t});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(32),
-            decoration: BoxDecoration(
-              color: context.backgroundSecondaryColor,
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: context.borderPrimaryColor.withValues(alpha: 0.05),
-              ),
-            ),
-            child: Icon(
-              Icons.search_off_rounded,
-              size: 80,
-              color: context.textTertiaryColor.withValues(alpha: 0.2),
-            ),
-          ),
-          const Gap(32),
-          Text(
-            context.t.course.catalog.noCourses,
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w900,
-              color: context.textPrimaryColor,
-              letterSpacing: -0.5,
-            ),
-          ),
-          const Gap(12),
-          Text(
-            context.t.course.catalog.noCoursesDescription,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 14,
-              color: context.textSecondaryColor,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}

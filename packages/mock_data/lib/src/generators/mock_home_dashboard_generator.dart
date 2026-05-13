@@ -36,21 +36,21 @@ final class MockHomeDashboardGenerator {
   static List<CourseSummaryEntity> continueLearningCourses() {
     return const [
       CourseSummaryEntity(
-        id: 'c1',
+        id: 'ep1',
         title: 'Advanced Algebra for Grade 10',
         thumbnailUrl: 'https://picsum.photos/500/300?11',
         progressPercent: 64,
         enrolledCount: 1270,
       ),
       CourseSummaryEntity(
-        id: 'c2',
+        id: 'ep2',
         title: 'Physics Mechanics — Midterm Revision',
         thumbnailUrl: 'https://picsum.photos/500/300?12',
         progressPercent: 38,
         enrolledCount: 950,
       ),
       CourseSummaryEntity(
-        id: 'c3',
+        id: 'ep3',
         title: 'English Grammar Essentials',
         thumbnailUrl: 'https://picsum.photos/500/300?13',
         progressPercent: 81,

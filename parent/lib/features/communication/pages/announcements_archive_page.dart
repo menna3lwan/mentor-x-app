@@ -20,6 +20,7 @@ class AnnouncementsArchivePage extends StatelessWidget {
     return BlocProvider(
       create: (context) => CommunicationBloc(
         repository: context.read<ParentCommunicationRepository>(),
+        analyticsService: context.read<AnalyticsService>(),
       )..add(CommunicationStarted(childId)),
       child: Builder(
         builder: (context) {

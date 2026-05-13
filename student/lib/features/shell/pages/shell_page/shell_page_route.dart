@@ -62,7 +62,9 @@ final class ShellPageRoute extends StatefulShellRouteData {
     StatefulNavigationShell navigationShell,
   ) {
     return BlocProvider<ShellPageBloc>(
-      create: (_) => ShellPageBloc()..add(const ShellPageLoadEvent()),
+      create: (context) => ShellPageBloc(
+        analyticsService: context.read<AnalyticsService>(),
+      )..add(const ShellPageLoadEvent()),
       child: ShellPageWrapper(navigationShell: navigationShell),
     );
   }

@@ -56,6 +56,7 @@ List<RouteBase> get $appRoutes => [
   $notificationsPageRoute,
   $walkthroughPageRoute,
   $splashPageRoute,
+  $studentCardPageRoute,
 ];
 
 RouteBase get $attendanceQrPageRoute => GoRouteData.$route(
@@ -1667,6 +1668,33 @@ mixin $SplashPageRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/splash');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $studentCardPageRoute => GoRouteData.$route(
+  path: '/student-card',
+  name: 'studentCard',
+  factory: $StudentCardPageRoute._fromState,
+);
+
+mixin $StudentCardPageRoute on GoRouteData {
+  static StudentCardPageRoute _fromState(GoRouterState state) =>
+      const StudentCardPageRoute();
+
+  @override
+  String get location => GoRouteData.$location('/student-card');
 
   @override
   void go(BuildContext context) => context.go(location);

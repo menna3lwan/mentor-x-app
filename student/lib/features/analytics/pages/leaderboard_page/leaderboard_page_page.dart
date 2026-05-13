@@ -39,7 +39,14 @@ final class LeaderboardPagePage extends StatelessWidget {
               ),
               Expanded(
                 child: state.loadingState == LoadingState.loading
-                    ? const Center(child: CircularProgressIndicator())
+                    ? ListView.builder(
+                        padding: const EdgeInsets.all(24),
+                        itemCount: 8,
+                        itemBuilder: (_, _) => const Padding(
+                          padding: EdgeInsets.only(bottom: 12),
+                          child: MentorXSkeleton(height: 70, borderRadius: 24),
+                        ),
+                      )
                     : RefreshIndicator(
                         onRefresh: () async => onRefresh(),
                         color: context.brandPrimaryColor,
@@ -63,13 +70,10 @@ final class LeaderboardPagePage extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       child: Row(
         children: [
-          IconButton(
+          MentorXIconButton(
             onPressed: () => Navigator.maybePop(context),
-            icon: Icon(
-              Icons.arrow_back_ios_new_rounded,
-              color: context.textPrimaryColor,
-              size: 20,
-            ),
+            icon: Icons.arrow_back_ios_new_rounded,
+            color: context.textPrimaryColor,
           ),
           Expanded(
             child: Text(
@@ -83,9 +87,10 @@ final class LeaderboardPagePage extends StatelessWidget {
               ),
             ),
           ),
-          IconButton(
+          MentorXIconButton(
             onPressed: onRefresh,
-            icon: Icon(Icons.refresh_rounded, color: context.textPrimaryColor),
+            icon: Icons.refresh_rounded,
+            color: context.textPrimaryColor,
           ),
         ],
       ),
@@ -97,11 +102,10 @@ final class LeaderboardPagePage extends StatelessWidget {
     dynamic t,
   ) {
     if (state.leaderboard.isEmpty) {
-      return Center(
-        child: Text(
-          'No rankings available.',
-          style: TextStyle(color: context.textSecondaryColor),
-        ),
+      return AppEmptyView(
+        title: 'No rankings available',
+        message: 'Be the first to join the leaderboard by completing your coursework.',
+        icon: Icons.workspace_premium_rounded,
       );
     }
 

@@ -13,6 +13,7 @@ final class ChangePasswordPageRoute extends GoRouteData
     return BlocProvider<ChangePasswordPageBloc>(
       create: (context) => ChangePasswordPageBloc(
         profileRepository: context.read<ProfileRepository>(),
+        analyticsService: context.read<AnalyticsService>(),
       )..add(const ChangePasswordPageLoadEvent()),
       child: const ChangePasswordPageWrapper(),
     );

@@ -1,15 +1,19 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_core/mentorx_core.dart';
+import 'package:analytics_service/analytics_service.dart';
 
 part 'assessments_event.dart';
 part 'assessments_state.dart';
 
 class AssessmentsBloc extends Bloc<AssessmentsEvent, AssessmentsState> {
   final ParentGradeRepository _repository;
+  final AnalyticsService _analyticsService;
 
   AssessmentsBloc({
     required ParentGradeRepository repository,
+    required AnalyticsService analyticsService,
   })  : _repository = repository,
+        _analyticsService = analyticsService,
         super(const AssessmentsState()) {
     on<AssessmentsStarted>(_onStarted);
     on<AssessmentsRefreshRequested>(_onRefreshRequested);
@@ -21,6 +25,10 @@ class AssessmentsBloc extends Bloc<AssessmentsEvent, AssessmentsState> {
   ) async {
     emit(state.copyWith(status: AssessmentsStatus.loading));
     try {
+      _analyticsService.logEvent(
+        name: AnalyticsEvents.assessmentsViewed,
+        parameters: {AnalyticsParams.id: event.childId},
+      );
       final results = await Future.wait([
         _repository.getAssessments(event.childId),
         _repository.getGradeSummary(event.childId),

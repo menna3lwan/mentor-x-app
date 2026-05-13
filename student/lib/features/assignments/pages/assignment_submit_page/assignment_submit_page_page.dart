@@ -34,57 +34,36 @@ final class _AssignmentSubmitPageState extends State<AssignmentSubmitPage> {
         if (state.isLoading) {
           return Scaffold(
             backgroundColor: context.backgroundPrimaryColor,
-            body: const Center(child: CircularProgressIndicator()),
+            body: Column(
+              children: [
+                const MentorXSkeleton(height: 150, borderRadius: 32),
+                const Gap(32),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: Column(
+                      children: List.generate(
+                        4,
+                        (index) => const Padding(
+                          padding: EdgeInsets.only(bottom: 16),
+                          child: MentorXSkeleton(height: 80, borderRadius: 24),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           );
         }
 
         if (state.errorMessage != null) {
           return Scaffold(
             backgroundColor: context.backgroundPrimaryColor,
-            body: Center(
-              child: Padding(
-                padding: const EdgeInsets.all(32),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    FadeInDown(
-                      child: Container(
-                        padding: const EdgeInsets.all(24),
-                        decoration: BoxDecoration(
-                          color: context.statusDangerColor.withValues(
-                            alpha: 0.1,
-                          ),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          Icons.error_outline_rounded,
-                          size: 64,
-                          color: context.statusDangerColor,
-                        ),
-                      ),
-                    ),
-                    const Gap(32),
-                    FadeInUp(
-                      child: Text(
-                        state.errorMessage!,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                          color: context.textPrimaryColor,
-                        ),
-                      ),
-                    ),
-                    const Gap(48),
-                    FadeInUp(
-                      delay: const Duration(milliseconds: 200),
-                      child: MentorXButton(
-                        label: t['commonBack']!,
-                        onPressed: () => context.pop(),
-                      ),
-                    ),
-                  ],
-                ),
+            body: AppErrorView(
+              message: state.errorMessage!,
+              onRetry: () => context.read<AssignmentSubmitPageBloc>().add(
+                const AssignmentSubmitPageLoadEvent(),
               ),
             ),
           );
@@ -93,11 +72,9 @@ final class _AssignmentSubmitPageState extends State<AssignmentSubmitPage> {
         if (state.assignment == null) {
           return Scaffold(
             backgroundColor: context.backgroundPrimaryColor,
-            body: Center(
-              child: Text(
-                t['assignmentNotFound'] ?? 'Assignment not found',
-                style: TextStyle(color: context.textPrimaryColor),
-              ),
+            body: AppEmptyView(
+              title: t['assignmentNotFound'] ?? 'Assignment not found',
+              message: 'Try again later',
             ),
           );
         }
@@ -262,13 +239,11 @@ final class _BuildHeader extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  IconButton(
+                  MentorXIconButton(
                     onPressed: () => _showExitDialog(context, t),
-                    icon: Icon(
-                      Icons.close_rounded,
-                      color: context.textPrimaryColor,
-                      size: 24,
-                    ),
+                    icon: Icons.close_rounded,
+                    color: context.textPrimaryColor,
+                    size: MentorXIconButtonSize.small,
                   ),
                   const Gap(8),
                   Expanded(
@@ -616,13 +591,10 @@ final class _FileUploadCard extends StatelessWidget {
                         letterSpacing: -0.5,
                       ),
                     ),
-                    IconButton(
+                    MentorXIconButton(
                       onPressed: onAdd,
-                      icon: Icon(
-                        Icons.add_circle_outline_rounded,
-                        color: context.brandPrimaryColor,
-                        size: 32,
-                      ),
+                      icon: Icons.add_circle_outline_rounded,
+                      color: context.brandPrimaryColor,
                     ),
                   ],
                 ),
@@ -702,15 +674,11 @@ final class _FileUploadCard extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              IconButton(
+                              MentorXIconButton(
                                 onPressed: () => onRemove(path),
-                                icon: Icon(
-                                  Icons.close_rounded,
-                                  size: 22,
-                                  color: context.statusDangerColor,
-                                ),
-                                padding: EdgeInsets.zero,
-                                constraints: const BoxConstraints(),
+                                icon: Icons.close_rounded,
+                                color: context.statusDangerColor,
+                                size: MentorXIconButtonSize.small,
                               ),
                             ],
                           ),

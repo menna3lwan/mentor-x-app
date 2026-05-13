@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
@@ -35,39 +36,81 @@ final class VideoPlayerPagePage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: context.backgroundPrimaryColor,
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(70),
-        child: Container(
-          decoration: BoxDecoration(
-            color: context.backgroundSecondaryColor,
-            borderRadius: const BorderRadius.vertical(
-              bottom: Radius.circular(24),
-            ),
-            border: Border(
-              bottom: BorderSide(
-                color: context.borderPrimaryColor.withValues(alpha: 0.05),
-              ),
+      body: Stack(
+        children: [
+          const _BackgroundDecorations(),
+          Positioned.fill(
+            child: Column(
+              children: [
+                Gap(MediaQuery.paddingOf(context).top + 20),
+                _buildHeader(context),
+                Expanded(child: _buildBody(context, t)),
+              ],
             ),
           ),
-          child: AppBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            foregroundColor: context.textPrimaryColor,
-            centerTitle: true,
-            title: Text(
-              title,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w900,
-                letterSpacing: -0.5,
-              ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ),
+        ],
       ),
-      body: _buildBody(context, t),
+    );
+  }
+
+  Widget _buildHeader(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
+      child: Row(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: context.backgroundSecondaryColor.withValues(alpha: 0.45),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: context.borderPrimaryColor.withValues(alpha: 0.1),
+              ),
+            ),
+            child: MentorXIconButton(
+              onPressed: () => Navigator.of(context).pop(),
+              icon: Icons.arrow_back_ios_new_rounded,
+              color: context.textPrimaryColor,
+              size: MentorXIconButtonSize.small,
+            ),
+          ),
+          const Gap(20),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                FadeInLeft(
+                  duration: const Duration(milliseconds: 600),
+                  child: Text(
+                    'NOW PLAYING',
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w900,
+                      color: context.brandPrimaryColor,
+                      letterSpacing: 2.0,
+                    ),
+                  ),
+                ),
+                const Gap(4),
+                FadeInLeft(
+                  duration: const Duration(milliseconds: 800),
+                  delay: const Duration(milliseconds: 100),
+                  child: Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w900,
+                      color: context.textPrimaryColor,
+                      letterSpacing: -0.5,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -76,51 +119,44 @@ final class VideoPlayerPagePage extends StatelessWidget {
     dynamic t,
   ) {
     if (errorMessage != null) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(32),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              FadeInDown(
-                child: Container(
-                  padding: const EdgeInsets.all(24),
-                  decoration: BoxDecoration(
-                    color: context.statusDangerColor.withValues(alpha: 0.1),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    Icons.error_outline_rounded,
-                    size: 64,
-                    color: context.statusDangerColor,
-                  ),
-                ),
-              ),
-              const Gap(32),
-              FadeInUp(
-                child: Text(
-                  errorMessage!,
-                  style: TextStyle(
-                    color: context.textPrimaryColor,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 16,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ],
-          ),
-        ),
+      return AppErrorView(
+        message: errorMessage!,
       );
     }
 
     if (isLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          children: [
+            const MentorXSkeleton(height: 200, borderRadius: 32),
+            const Gap(40),
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.all(32),
+                decoration: BoxDecoration(
+                  color: context.backgroundSecondaryColor,
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(40)),
+                ),
+                child: Column(
+                  children: List.generate(
+                    3,
+                    (index) => const Padding(
+                      padding: EdgeInsets.only(bottom: 16),
+                      child: MentorXSkeleton(height: 60, borderRadius: 20),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
     }
 
+    // Video Player Placeholder
     return Column(
       children: [
-        // Video Player Placeholder
         Padding(
           padding: const EdgeInsets.all(24),
           child: FadeInDown(
@@ -136,7 +172,7 @@ final class VideoPlayerPagePage extends StatelessWidget {
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.3),
+                      color: Colors.black.withValues(alpha: 0.4),
                       blurRadius: 30,
                       offset: const Offset(0, 15),
                     ),
@@ -151,7 +187,7 @@ final class VideoPlayerPagePage extends StatelessWidget {
                       decoration: BoxDecoration(
                         gradient: RadialGradient(
                           colors: [
-                            context.brandPrimaryColor.withValues(alpha: 0.2),
+                            context.brandPrimaryColor.withValues(alpha: 0.25),
                             Colors.transparent,
                           ],
                           radius: 1.2,
@@ -166,27 +202,35 @@ final class VideoPlayerPagePage extends StatelessWidget {
                           child: Container(
                             padding: const EdgeInsets.all(16),
                             decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.2),
+                              color: Colors.white.withValues(alpha: 0.15),
                               shape: BoxShape.circle,
                               border: Border.all(
-                                color: Colors.white.withValues(alpha: 0.3),
+                                color: Colors.white.withValues(alpha: 0.25),
                               ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: context.brandPrimaryColor.withValues(
+                                    alpha: 0.3,
+                                  ),
+                                  blurRadius: 20,
+                                ),
+                              ],
                             ),
                             child: const Icon(
                               Icons.play_arrow_rounded,
-                              size: 56,
+                              size: 64,
                               color: Colors.white,
                             ),
                           ),
                         ),
-                        const Gap(20),
+                        const Gap(24),
                         Text(
                           context.t.course.player.title,
                           style: TextStyle(
-                            color: Colors.white.withValues(alpha: 0.7),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700,
-                            letterSpacing: 1.2,
+                            color: Colors.white.withValues(alpha: 0.6),
+                            fontSize: 12,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: 1.5,
                           ),
                         ),
                       ],
@@ -197,12 +241,12 @@ final class VideoPlayerPagePage extends StatelessWidget {
                       left: 0,
                       right: 0,
                       child: Container(
-                        padding: const EdgeInsets.fromLTRB(20, 32, 20, 20),
+                        padding: const EdgeInsets.fromLTRB(20, 40, 20, 20),
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             colors: [
                               Colors.transparent,
-                              Colors.black.withValues(alpha: 0.8),
+                              Colors.black.withValues(alpha: 0.9),
                             ],
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
@@ -212,15 +256,15 @@ final class VideoPlayerPagePage extends StatelessWidget {
                           children: [
                             Expanded(
                               child: ClipRRect(
-                                borderRadius: BorderRadius.circular(5),
+                                borderRadius: BorderRadius.circular(6),
                                 child: LinearProgressIndicator(
                                   value: totalDurationSeconds > 0
                                       ? currentPositionSeconds /
-                                            totalDurationSeconds
+                                          totalDurationSeconds
                                       : 0,
                                   minHeight: 6,
                                   backgroundColor: Colors.white.withValues(
-                                    alpha: 0.2,
+                                    alpha: 0.15,
                                   ),
                                   valueColor: AlwaysStoppedAnimation(
                                     context.brandPrimaryColor,
@@ -228,14 +272,14 @@ final class VideoPlayerPagePage extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            const Gap(20),
+                            const Gap(24),
                             Text(
                               '${_formatTime(currentPositionSeconds)} / ${_formatTime(totalDurationSeconds)}',
                               style: const TextStyle(
                                 color: Colors.white,
-                                fontSize: 12,
+                                fontSize: 11,
                                 fontWeight: FontWeight.w900,
-                                letterSpacing: 0.5,
+                                letterSpacing: 1.0,
                               ),
                             ),
                           ],
@@ -258,91 +302,102 @@ final class VideoPlayerPagePage extends StatelessWidget {
               margin: const EdgeInsets.symmetric(horizontal: 24),
               padding: const EdgeInsets.all(32),
               decoration: BoxDecoration(
-                color: context.backgroundSecondaryColor,
+                color: context.backgroundSecondaryColor.withValues(alpha: 0.45),
                 borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(40),
+                  top: Radius.circular(44),
                 ),
                 border: Border.all(
-                  color: context.borderPrimaryColor.withValues(alpha: 0.05),
+                  color: context.borderPrimaryColor.withValues(alpha: 0.1),
                 ),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withValues(alpha: 0.1),
-                    blurRadius: 20,
+                    blurRadius: 30,
                     offset: const Offset(0, -10),
                   ),
                 ],
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          title,
-                          style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.w900,
-                            color: context.textPrimaryColor,
-                            letterSpacing: -0.5,
-                          ),
-                        ),
-                      ),
-                      if (isCompleted)
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 14,
-                            vertical: 8,
-                          ),
-                          decoration: BoxDecoration(
-                            color: context.statusSuccessColor.withValues(
-                              alpha: 0.1,
-                            ),
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: context.statusSuccessColor.withValues(
-                                alpha: 0.1,
-                              ),
-                            ),
-                          ),
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.check_circle_rounded,
-                                color: context.statusSuccessColor,
-                                size: 16,
-                              ),
-                              const Gap(8),
-                              Text(
-                                context.t.course.player.completed.toUpperCase(),
+              child: ClipRRect(
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(44),
+                ),
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(32),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                title,
                                 style: TextStyle(
-                                  color: context.statusSuccessColor,
-                                  fontSize: 10,
+                                  fontSize: 24,
                                   fontWeight: FontWeight.w900,
-                                  letterSpacing: 1.0,
+                                  color: context.textPrimaryColor,
+                                  letterSpacing: -0.8,
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                            if (isCompleted)
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 14,
+                                  vertical: 8,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: context.statusSuccessColor.withValues(
+                                    alpha: 0.1,
+                                  ),
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color: context.statusSuccessColor.withValues(
+                                      alpha: 0.1,
+                                    ),
+                                  ),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.check_circle_rounded,
+                                      color: context.statusSuccessColor,
+                                      size: 16,
+                                    ),
+                                    const Gap(8),
+                                    Text(
+                                      context.t.course.player.completed.toUpperCase(),
+                                      style: TextStyle(
+                                        color: context.statusSuccessColor,
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w900,
+                                        letterSpacing: 1.0,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                          ],
                         ),
-                    ],
+                        const Gap(40),
+                        _InfoTile(
+                          label: t['videoDuration'] ?? 'Duration',
+                          value: _formatTime(totalDurationSeconds),
+                          icon: Icons.timer_rounded,
+                        ),
+                        const Gap(16),
+                        _InfoTile(
+                          label: t['videoStatus'] ?? 'Status',
+                          value: isCompleted
+                              ? (t['videoCompleted'] ?? 'Completed')
+                              : (t['videoWatching'] ?? 'Watching'),
+                          icon: Icons.info_outline_rounded,
+                        ),
+                      ],
+                    ),
                   ),
-                  const Gap(40),
-                  _InfoTile(
-                    label: t['videoDuration'] ?? 'Duration',
-                    value: _formatTime(totalDurationSeconds),
-                    icon: Icons.timer_rounded,
-                  ),
-                  const Gap(16),
-                  _InfoTile(
-                    label: t['videoStatus'] ?? 'Status',
-                    value: isCompleted
-                        ? (t['videoCompleted'] ?? 'Completed')
-                        : (t['videoWatching'] ?? 'Watching'),
-                    icon: Icons.info_outline_rounded,
-                  ),
-                ],
+                ),
               ),
             ),
           ),
@@ -374,29 +429,40 @@ final class _InfoTile extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: context.backgroundPrimaryColor,
-        borderRadius: BorderRadius.circular(20),
+        color: context.backgroundPrimaryColor.withValues(alpha: 0.45),
+        borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: context.borderPrimaryColor.withValues(alpha: 0.05),
+          color: context.borderPrimaryColor.withValues(alpha: 0.1),
         ),
       ),
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: context.brandPrimaryColor.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(12),
+              gradient: LinearGradient(
+                colors: [
+                  context.brandPrimaryColor.withValues(alpha: 0.15),
+                  context.brandPrimaryColor.withValues(alpha: 0.05),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: context.brandPrimaryColor.withValues(alpha: 0.1),
+              ),
             ),
-            child: Icon(icon, color: context.brandPrimaryColor, size: 22),
+            child: Icon(icon, color: context.brandPrimaryColor, size: 24),
           ),
-          const Gap(16),
+          const Gap(20),
           Text(
             label,
             style: TextStyle(
               color: context.textSecondaryColor,
               fontSize: 14,
               fontWeight: FontWeight.w700,
+              letterSpacing: 0.2,
             ),
           ),
           const Spacer(),
@@ -404,11 +470,71 @@ final class _InfoTile extends StatelessWidget {
             value,
             style: TextStyle(
               color: context.textPrimaryColor,
-              fontSize: 15,
+              fontSize: 16,
               fontWeight: FontWeight.w900,
+              letterSpacing: -0.2,
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _BackgroundDecorations extends StatelessWidget {
+  const _BackgroundDecorations();
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Positioned(
+          top: -100,
+          right: -50,
+          child: _BlurredBlob(
+            color: context.brandPrimaryColor.withValues(alpha: 0.12),
+            size: 350,
+          ),
+        ),
+        Positioned(
+          top: 300,
+          left: -150,
+          child: _BlurredBlob(
+            color: context.brandSecondaryColor.withValues(alpha: 0.08),
+            size: 400,
+          ),
+        ),
+        Positioned(
+          bottom: -50,
+          right: -100,
+          child: _BlurredBlob(
+            color: context.brandPrimaryColor.withValues(alpha: 0.1),
+            size: 300,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _BlurredBlob extends StatelessWidget {
+  final Color color;
+  final double size;
+
+  const _BlurredBlob({required this.color, required this.size});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        color: color,
+        shape: BoxShape.circle,
+      ),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 70, sigmaY: 70),
+        child: const SizedBox.expand(),
       ),
     );
   }

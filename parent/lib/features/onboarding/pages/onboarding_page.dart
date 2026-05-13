@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
-import '../../../core/routing/app_routes.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:parent/core/core.dart';
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});
@@ -12,6 +13,16 @@ class OnboardingPage extends StatefulWidget {
 class _OnboardingPageState extends State<OnboardingPage> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        context.read<AnalyticsService>().logEvent(name: AnalyticsEvents.walkthroughStarted);
+      }
+    });
+  }
 
   final List<_OnboardingData> _slides = [
     _OnboardingData(
@@ -134,7 +145,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                     if (_currentPage == _slides.length - 1)
                       MentorXButton(
                         onPressed: () => const LoginPageRoute().go(context),
-                        text: 'Get Started',
+                        label: 'Get Started',
                       )
                     else
                       Row(

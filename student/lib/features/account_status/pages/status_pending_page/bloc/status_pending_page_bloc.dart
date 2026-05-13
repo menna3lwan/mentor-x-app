@@ -39,13 +39,16 @@ final class StatusPendingPageBloc
         > {
   final StudentAuthenticationRepository _authRepository;
   final CacheRepository _cacheRepository;
+  final AnalyticsService _analyticsService;
   Timer? _pollingTimer;
 
   StatusPendingPageBloc({
     required StudentAuthenticationRepository authRepository,
     required CacheRepository cacheRepository,
+    required AnalyticsService analyticsService,
   }) : _authRepository = authRepository,
        _cacheRepository = cacheRepository,
+       _analyticsService = analyticsService,
        super(StatusPendingPageState.initial) {
     on<StatusPendingPageInitialized>(_onInitialized);
     on<StatusPendingPageRefreshRequested>(_onRefreshRequested);
@@ -65,6 +68,11 @@ final class StatusPendingPageBloc
         studentCode: cachedUser?.studentCode,
         tenantWhatsAppNumber: MentorXNullableValue(tenantWhatsApp),
       ),
+    );
+
+    _analyticsService.logEvent(
+      name: AnalyticsEvents.accountStatusViewed,
+      parameters: {AnalyticsParams.status: 'pending'},
     );
 
     add(const StatusPendingPageRefreshRequested());

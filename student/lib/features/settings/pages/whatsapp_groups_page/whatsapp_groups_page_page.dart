@@ -65,7 +65,14 @@ final class WhatsappGroupsPagePage extends StatelessWidget {
             color: context.brandPrimaryColor,
             backgroundColor: context.backgroundSecondaryColor,
             child: isLoading
-                ? const Center(child: CircularProgressIndicator())
+                ? ListView.builder(
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+                    itemCount: 4,
+                    itemBuilder: (_, _) => const Padding(
+                      padding: EdgeInsets.only(bottom: 16),
+                      child: MentorXSkeleton(height: 200, borderRadius: 28),
+                    ),
+                  )
                 : _buildList(context, state),
           ),
         );

@@ -25,10 +25,13 @@ final class MarketplaceOrdersPageBloc
           MarketplaceOrdersPagePresentationEvent
         > {
   final MarketplaceRepository _marketplaceRepository;
+  final AnalyticsService _analyticsService;
 
   MarketplaceOrdersPageBloc({
     required MarketplaceRepository marketplaceRepository,
+    required AnalyticsService analyticsService,
   }) : _marketplaceRepository = marketplaceRepository,
+       _analyticsService = analyticsService,
        super(MarketplaceOrdersPageState.initial) {
     on<MarketplaceOrdersPageInitialized>(_onInitialized);
     on<MarketplaceOrdersPageRefreshed>(_onRefreshed);
@@ -38,6 +41,7 @@ final class MarketplaceOrdersPageBloc
     MarketplaceOrdersPageInitialized event,
     Emitter<MarketplaceOrdersPageState> emit,
   ) async {
+    _analyticsService.logEvent(name: AnalyticsEvents.ordersViewed);
     await _load(emit);
   }
 

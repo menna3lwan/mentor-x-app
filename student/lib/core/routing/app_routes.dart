@@ -67,3 +67,4 @@ part '../../features/analytics/pages/leaderboard_page/leaderboard_page_route.dar
 part '../../features/analytics/pages/analytics_dashboard_page/analytics_dashboard_page_route.dart';
 part '../../features/onboarding/pages/walkthrough_page/walkthrough_page_route.dart';
 part '../../features/onboarding/pages/splash_page/splash_page_route.dart';
+part '../../features/student_card/pages/student_card_page/student_card_page_route.dart';

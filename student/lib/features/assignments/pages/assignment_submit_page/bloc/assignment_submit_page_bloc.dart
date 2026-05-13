@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:mentorx_student/core/core.dart';
+import 'package:analytics_service/analytics_service.dart';
 
 part 'assignment_submit_page_event.dart';
 part 'assignment_submit_page_state.dart';
@@ -138,9 +139,9 @@ final class AssignmentSubmitPageBloc
         ),
       );
       analyticsService.logEvent(
-        name: 'assignment_submit_success',
+        name: AnalyticsEvents.assignmentSubmitted,
         parameters: {
-          'assignment_id': state.assignmentId,
+          AnalyticsParams.assignmentId: state.assignmentId,
         },
       );
     } catch (e) {

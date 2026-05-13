@@ -1,17 +1,23 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_core/mentorx_core.dart';
+import 'package:analytics_service/analytics_service.dart';
 
 part 'profile_event.dart';
 part 'profile_state.dart';
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
-  ProfileBloc() : super(const ProfileState()) {
+  final AnalyticsService _analyticsService;
+
+  ProfileBloc({required AnalyticsService analyticsService})
+    : _analyticsService = analyticsService,
+      super(const ProfileState()) {
     on<ProfileStarted>(_onStarted);
     on<ProfileSettingsUpdated>(_onSettingsUpdated);
   }
 
   Future<void> _onStarted(ProfileStarted event, Emitter<ProfileState> emit) async {
     emit(state.copyWith(status: ProfileStatus.loading));
+    _analyticsService.logEvent(name: AnalyticsEvents.profileViewed);
     try {
       // Mocking parent profile data for now
       // In a real app, this would come from an AuthenticationRepository or ProfileRepository

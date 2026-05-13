@@ -30,17 +30,22 @@ final class QuizRewardsPage extends StatelessWidget {
                     );
 
                     if (loadingState == LoadingState.loading) {
-                      return const Center(child: CircularProgressIndicator());
+                      return ListView.separated(
+                        padding: const EdgeInsets.all(20),
+                        itemCount: 4,
+                        separatorBuilder: (_, _) => const Gap(16),
+                        itemBuilder: (_, _) => const MentorXSkeleton(
+                          height: 120,
+                          borderRadius: 28,
+                        ),
+                      );
                     }
                     if (loadingState == LoadingState.error) {
-                      return Center(
-                        child: Text(
-                          'Failed to load rewards',
-                          style: TextStyle(
-                            color: context.textSecondaryColor,
-                            fontWeight: FontWeight.w800,
-                          ),
-                        ),
+                      return AppErrorView(
+                        message: 'Failed to load rewards',
+                        onRetry: () => context.read<QuizRewardsPageBloc>().add(
+                              const QuizRewardsPageLoadEvent(),
+                            ),
                       );
                     }
 

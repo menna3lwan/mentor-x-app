@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:mentorx_student/core/core.dart';
+import 'package:analytics_service/analytics_service.dart';
 
 part 'edit_profile_page_event.dart';
 part 'edit_profile_page_state.dart';
@@ -75,9 +76,9 @@ final class EditProfilePageBloc
       );
       emit(state.copyWith(loadingState: LoadingState.loaded));
       analyticsService.logEvent(
-        name: 'profile_edit_request',
+        name: AnalyticsEvents.profileEditRequested,
         parameters: {
-          'field_name': event.fieldName,
+          AnalyticsParams.fieldName: event.fieldName,
         },
       );
       emitPresentation(const EditProfilePageSuccess());

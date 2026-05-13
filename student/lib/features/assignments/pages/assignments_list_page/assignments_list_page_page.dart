@@ -82,45 +82,34 @@ final class AssignmentsListPagePage extends StatelessWidget {
   Widget _buildBody(BuildContext context, dynamic t) {
     if (errorMessage != null) {
       return SliverFillRemaining(
-        child: Center(
-          child: FadeIn(
-            child: Padding(
-              padding: const EdgeInsets.all(32),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.error_outline_rounded,
-                    size: 64,
-                    color: context.statusDangerColor.withValues(alpha: 0.3),
-                  ),
-                  const Gap(24),
-                  Text(
-                    errorMessage!,
-                    style: TextStyle(
-                      color: context.textSecondaryColor,
-                      fontWeight: FontWeight.w700,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
-            ),
-          ),
+        child: AppErrorView(
+          message: errorMessage!,
+          onRetry: onRefresh,
         ),
       );
     }
 
     if (isLoading) {
-      return const SliverFillRemaining(
-        child: Center(child: CircularProgressIndicator()),
+      return SliverPadding(
+        padding: const EdgeInsets.all(20),
+        sliver: SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (context, index) => const Padding(
+              padding: EdgeInsets.only(bottom: 16),
+              child: MentorXSkeleton(height: 100, borderRadius: 28),
+            ),
+            childCount: 5,
+          ),
+        ),
       );
     }
 
     if (assignments.isEmpty) {
       return SliverFillRemaining(
-        child: FadeInUp(
-          child: _EmptyAssignments(t: t),
+        child: AppEmptyView(
+          title: t['noAssignments'] ?? 'No assignments available',
+          message: t['noAssignmentsDesc'] ?? 'Check back later for new assignments.',
+          icon: Icons.assignment_turned_in_rounded,
         ),
       );
     }
@@ -273,82 +262,6 @@ final class _AssignmentCard extends StatelessWidget {
   }
 }
 
-final class _EmptyAssignments extends StatelessWidget {
-  const _EmptyAssignments({required this.t});
-  final dynamic t;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(40),
-              decoration: BoxDecoration(
-                color: context.backgroundSecondaryColor.withValues(alpha: 0.45),
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: context.borderPrimaryColor.withValues(alpha: 0.1),
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.05),
-                    blurRadius: 30,
-                  ),
-                ],
-              ),
-              child: ClipOval(
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                  child: ShaderMask(
-                    shaderCallback: (bounds) => LinearGradient(
-                      colors: [
-                        context.textTertiaryColor.withValues(alpha: 0.3),
-                        context.textTertiaryColor.withValues(alpha: 0.1),
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ).createShader(bounds),
-                    child: const Icon(
-                      Icons.assignment_turned_in_rounded,
-                      size: 100,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            const Gap(40),
-            Text(
-              t['noAssignments'] ?? 'No assignments available',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.w900,
-                color: context.textPrimaryColor,
-                letterSpacing: -0.5,
-              ),
-            ),
-            const Gap(16),
-            Text(
-              t['noAssignmentsDesc'] ?? 'Check back later for new assignments.',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 16,
-                color: context.textSecondaryColor,
-                fontWeight: FontWeight.w600,
-                height: 1.5,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
 
 class _BackgroundDecorations extends StatelessWidget {
   const _BackgroundDecorations();

@@ -79,10 +79,10 @@ final class CourseDetailPageBloc
         ),
       );
       _analyticsService.logEvent(
-        name: 'course_enroll_success',
+        name: AnalyticsEvents.courseEnrolled,
         parameters: {
-          'course_id': state.courseId,
-          'course_title': state.course?.title,
+          AnalyticsParams.courseId: state.courseId,
+          AnalyticsParams.name: state.course?.title,
         },
       );
       emitPresentation(const CourseDetailPageEnrollSuccessPresentationEvent());
@@ -142,10 +142,10 @@ final class CourseDetailPageBloc
         ),
       );
       _analyticsService.logEvent(
-        name: 'course_detail_view',
+        name: AnalyticsEvents.courseViewed,
         parameters: {
-          'course_id': state.courseId,
-          'course_title': course.title,
+          AnalyticsParams.courseId: state.courseId,
+          AnalyticsParams.name: course.title,
         },
       );
     } catch (e) {

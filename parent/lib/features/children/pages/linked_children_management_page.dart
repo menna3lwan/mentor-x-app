@@ -12,6 +12,7 @@ class LinkedChildrenManagementPage extends StatelessWidget {
     return BlocProvider(
       create: (context) => ChildrenBloc(
         childrenRepository: context.read<ParentChildrenRepository>(),
+        analyticsService: context.read<AnalyticsService>(),
       )..add(ChildrenStarted()),
       child: Builder(
         builder: (context) {

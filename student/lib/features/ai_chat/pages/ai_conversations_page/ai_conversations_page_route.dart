@@ -13,6 +13,7 @@ final class AiConversationsPageRoute extends GoRouteData
     return BlocProvider<AiConversationsPageBloc>(
       create: (context) => AiConversationsPageBloc(
         aiRepository: context.read<AIRepository>(),
+        analyticsService: context.read<AnalyticsService>(),
       )..add(const AiConversationsPageInitialized()),
       child: const AiConversationsPageWrapper(),
     );

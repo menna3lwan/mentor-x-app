@@ -15,6 +15,7 @@ final class MarketplaceDetailPageRoute extends GoRouteData
     return BlocProvider<MarketplaceDetailPageBloc>(
       create: (context) => MarketplaceDetailPageBloc(
         marketplaceRepository: context.read<MarketplaceRepository>(),
+        analyticsService: context.read<AnalyticsService>(),
       )..add(MarketplaceDetailPageLoadEvent(itemId)),
       child: const MarketplaceDetailPageWrapper(),
     );

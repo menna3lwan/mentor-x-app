@@ -1,7 +1,9 @@
+import 'package:analytics_service/analytics_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 import 'package:device_info_service/device_info_service.dart';
+import 'dart:async';
 
 
 part 'login_event.dart';
@@ -32,13 +34,16 @@ final class LoginBloc extends Bloc<LoginEvent, LoginState>
     with BlocPresentationMixin<LoginState, LoginPresentationEvent> {
   final AuthenticationRepository<ParentEntity> _authenticationRepository;
   final DeviceInfoService _deviceInfoService;
+  final AnalyticsService _analyticsService;
   final MentorXLogger _logger = MentorXLogger('LoginBloc');
 
   LoginBloc({
     required AuthenticationRepository<ParentEntity> authenticationRepository,
     required DeviceInfoService deviceInfoService,
+    required AnalyticsService analyticsService,
   }) : _authenticationRepository = authenticationRepository,
        _deviceInfoService = deviceInfoService,
+       _analyticsService = analyticsService,
        super(LoginState.initial) {
     on<LoginSubmittedEvent>(_onLoginSubmitted);
   }
@@ -61,6 +66,7 @@ final class LoginBloc extends Bloc<LoginEvent, LoginState>
         fcmToken: event.fcmToken,
         appVersion: appVersion,
       );
+      unawaited(_analyticsService.logEvent(name: AnalyticsEvents.login));
       emit(state.copyWith(loadingState: LoginLoadingState.success));
       emitPresentation(LoginSuccessPresentationEvent(user: user));
     } on AuthenticationException catch (e) {

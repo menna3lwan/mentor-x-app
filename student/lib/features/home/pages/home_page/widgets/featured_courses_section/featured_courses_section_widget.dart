@@ -32,7 +32,7 @@ final class FeaturedCoursesSectionWidget extends StatelessWidget {
     final courseItems = courses ?? const <CourseSummaryEntity>[];
 
     return SizedBox(
-      height: 280,
+      height: 270,
       child: Skeletonizer(
         enabled: isLoading,
         child: ListView.separated(
@@ -40,7 +40,7 @@ final class FeaturedCoursesSectionWidget extends StatelessWidget {
           physics: const BouncingScrollPhysics(),
           itemCount: courseItems.isEmpty ? 3 : courseItems.length,
           padding: const EdgeInsets.symmetric(vertical: 4),
-          separatorBuilder: (context, index) => const Gap(16),
+          separatorBuilder: (context, index) => const Gap(20),
           itemBuilder: (context, index) {
             final course = courseItems.isEmpty ? null : courseItems[index];
             final thumbnailUrl =
@@ -58,21 +58,26 @@ final class FeaturedCoursesSectionWidget extends StatelessWidget {
                 width: 220,
                 decoration: BoxDecoration(
                   color: context.backgroundSecondaryColor.withValues(alpha: 0.45),
-                  borderRadius: BorderRadius.circular(24),
+                  borderRadius: BorderRadius.circular(32),
                   border: Border.all(
-                    color: context.borderPrimaryColor.withValues(alpha: 0.1),
+                    color: context.borderPrimaryColor.withValues(alpha: 0.08),
                   ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.04),
+                      blurRadius: 15,
+                      offset: const Offset(0, 8),
+                    ),
+                  ],
                 ),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(24),
+                  borderRadius: BorderRadius.circular(32),
                   child: Stack(
                     children: [
                       Positioned.fill(
-                        child: ExcludeSemantics(
-                          child: BackdropFilter(
-                            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                            child: const SizedBox.expand(),
-                          ),
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+                          child: const SizedBox.expand(),
                         ),
                       ),
                       Column(
@@ -82,23 +87,36 @@ final class FeaturedCoursesSectionWidget extends StatelessWidget {
                             child: Stack(
                               fit: StackFit.expand,
                               children: [
-                              AppDynamicImage(thumbnailUrl, fit: BoxFit.cover),
+                                AppDynamicImage(thumbnailUrl, fit: BoxFit.cover),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                      colors: [
+                                        Colors.black.withValues(alpha: 0.2),
+                                        Colors.transparent,
+                                      ],
+                                    ),
+                                  ),
+                                ),
                                 Positioned(
                                   top: 12,
                                   left: 12,
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(
-                                      horizontal: 10,
+                                      horizontal: 12,
                                       vertical: 6,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: context.backgroundPrimaryColor
-                                          .withValues(alpha: 0.8),
-                                      borderRadius: BorderRadius.circular(10),
-                                      border: Border.all(
-                                        color: context.borderPrimaryColor
-                                            .withValues(alpha: 0.1),
-                                      ),
+                                      color: Colors.white.withValues(alpha: 0.9),
+                                      borderRadius: BorderRadius.circular(12),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withValues(alpha: 0.1),
+                                          blurRadius: 8,
+                                        ),
+                                      ],
                                     ),
                                     child: Text(
                                       isFree
@@ -129,7 +147,7 @@ final class FeaturedCoursesSectionWidget extends StatelessWidget {
                                     fontWeight: FontWeight.w900,
                                     fontSize: 15,
                                     height: 1.3,
-                                    letterSpacing: -0.3,
+                                    letterSpacing: -0.4,
                                   ),
                                 ),
                                 const Gap(12),

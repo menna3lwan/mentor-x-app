@@ -13,6 +13,7 @@ final class AttendanceHistoryPageRoute extends GoRouteData
     return BlocProvider<AttendanceHistoryPageBloc>(
       create: (context) => AttendanceHistoryPageBloc(
         attendanceRepository: context.read<AttendanceRepository>(),
+        analyticsService: context.read<AnalyticsService>(),
       )..add(const AttendanceHistoryPageLoadEvent()),
       child: const AttendanceHistoryPageWrapper(),
     );

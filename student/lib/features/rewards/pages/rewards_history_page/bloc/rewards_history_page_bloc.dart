@@ -7,10 +7,13 @@ part 'rewards_history_page_state.dart';
 final class RewardsHistoryPageBloc
     extends Bloc<RewardsHistoryPageEvent, RewardsHistoryPageState> {
   final RewardsRepository _rewardsRepository;
+  final AnalyticsService _analyticsService;
 
   RewardsHistoryPageBloc({
     required RewardsRepository rewardsRepository,
+    required AnalyticsService analyticsService,
   }) : _rewardsRepository = rewardsRepository,
+       _analyticsService = analyticsService,
        super(const RewardsHistoryPageState()) {
     on<RewardsHistoryPageStartedEvent>(_onStarted);
     on<RewardsHistoryPageRefreshedEvent>(_onRefreshed);
@@ -21,6 +24,7 @@ final class RewardsHistoryPageBloc
     RewardsHistoryPageStartedEvent event,
     Emitter<RewardsHistoryPageState> emit,
   ) async {
+    _analyticsService.logEvent(name: AnalyticsEvents.rewardsHistoryViewed);
     await _loadHistory(emit);
   }
 

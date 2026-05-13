@@ -1,15 +1,19 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_core/mentorx_core.dart';
+import 'package:analytics_service/analytics_service.dart';
 
 part 'children_event.dart';
 part 'children_state.dart';
 
 class ChildrenBloc extends Bloc<ChildrenEvent, ChildrenState> {
   final ParentChildrenRepository _childrenRepository;
+  final AnalyticsService _analyticsService;
 
   ChildrenBloc({
     required ParentChildrenRepository childrenRepository,
+    required AnalyticsService analyticsService,
   })  : _childrenRepository = childrenRepository,
+        _analyticsService = analyticsService,
         super(const ChildrenState()) {
     on<ChildrenStarted>(_onStarted);
     on<ChildrenLookupRequested>(_onLookupRequested);
@@ -20,6 +24,7 @@ class ChildrenBloc extends Bloc<ChildrenEvent, ChildrenState> {
     emit(state.copyWith(status: ChildrenStatus.loading));
     try {
       final children = await _childrenRepository.getChildren();
+      _analyticsService.logEvent(name: AnalyticsEvents.childrenViewed);
       emit(state.copyWith(status: ChildrenStatus.success, children: children));
     } catch (e) {
       emit(state.copyWith(status: ChildrenStatus.failure, errorMessage: e.toString()));

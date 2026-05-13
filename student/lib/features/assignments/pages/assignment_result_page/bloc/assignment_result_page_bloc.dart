@@ -21,18 +21,22 @@ final class AssignmentResultPageBloc
           AssignmentResultPageState,
           AssignmentResultPagePresentationEvent
         > {
-  AssignmentResultPageBloc({required this.assignmentRepository})
-    : super(AssignmentResultPageState.initial) {
+  AssignmentResultPageBloc({
+    required this.assignmentRepository,
+    required this.analyticsService,
+  }) : super(AssignmentResultPageState.initial) {
     on<AssignmentResultPageLoadEvent>(_onLoad);
   }
 
   final AssignmentRepository assignmentRepository;
+  final AnalyticsService analyticsService;
 
   Future<void> _onLoad(
     AssignmentResultPageLoadEvent event,
     Emitter<AssignmentResultPageState> emit,
   ) async {
     emit(state.copyWith(loadingState: LoadingState.loading));
+    analyticsService.logEvent(name: AnalyticsEvents.assignmentResultViewed);
     emit(state.copyWith(loadingState: LoadingState.loaded));
   }
 }

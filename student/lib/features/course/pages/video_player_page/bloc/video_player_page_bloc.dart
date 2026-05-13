@@ -25,15 +25,18 @@ final class VideoPlayerPageBloc
           VideoPlayerPagePresentationEvent
         > {
   final CourseRepository _courseRepository;
+  final AnalyticsService _analyticsService;
 
   VideoPlayerPageBloc({
     required CourseRepository courseRepository,
+    required AnalyticsService analyticsService,
     required String itemId,
     required String title,
     String? enrollmentId,
     int completedLessons = 0,
     int totalLessons = 0,
   }) : _courseRepository = courseRepository,
+       _analyticsService = analyticsService,
        super(
          VideoPlayerPageState(
            itemId: itemId,
@@ -52,6 +55,14 @@ final class VideoPlayerPageBloc
     VideoPlayerPageInitialized event,
     Emitter<VideoPlayerPageState> emit,
   ) async {
+    _analyticsService.logEvent(
+      name: AnalyticsEvents.videoPlayed,
+      parameters: {
+        AnalyticsParams.itemId: state.itemId,
+        AnalyticsParams.itemName: state.title,
+        AnalyticsParams.courseId: state.enrollmentId ?? '',
+      },
+    );
     emit(state.copyWith(loadingState: LoadingState.loading));
     try {
       final url = await _courseRepository.getStreamUrl(state.itemId);

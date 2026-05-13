@@ -14,6 +14,18 @@ final class MockParentHomeRepository implements ParentHomeRepository {
   }
 
   @override
+  Future<ParentChildDashboardSummaryEntity> getChildOverview(String studentId) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    return ParentChildDashboardSummaryEntity(
+      child: ParentChildEntity.placeholder.copyWith(id: studentId),
+      attendance: ParentHomeAttendanceSummary.placeholder,
+      academics: ParentHomeAcademicSummary.placeholder,
+      financial: ParentHomeFinancialSummary.placeholder,
+      recentActivity: MockParentDashboardGenerator.recentActivity(studentId),
+    );
+  }
+
+  @override
   Future<List<ParentRecentActivityEntity>> getRecentActivity(
     String studentId, {
     int limit = 10,

@@ -13,6 +13,7 @@ final class WhatsappGroupsPageRoute extends GoRouteData
     return BlocProvider<WhatsappGroupsPageBloc>(
       create: (context) => WhatsappGroupsPageBloc(
         repository: context.read<StudentCommunicationRepository>(),
+        analyticsService: context.read<AnalyticsService>(),
       )..add(const WhatsappGroupsPageInitialized()),
       child: const WhatsappGroupsPageWrapper(),
     );

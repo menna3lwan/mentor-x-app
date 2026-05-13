@@ -174,14 +174,25 @@ final class WalletMainPage extends StatelessWidget {
             ),
           ),
           if (isLoading && transactions.isEmpty)
-            const SliverFillRemaining(
-              child: Center(child: CircularProgressIndicator()),
+            SliverPadding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              sliver: SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) => const Padding(
+                    padding: EdgeInsets.only(bottom: 16),
+                    child: MentorXSkeleton(height: 80, borderRadius: 28),
+                  ),
+                  childCount: 5,
+                ),
+              ),
             )
           else if (transactions.isEmpty)
             SliverFillRemaining(
               hasScrollBody: false,
-              child: FadeIn(
-                child: _EmptyTransactions(t: t),
+              child: AppEmptyView(
+                title: t['noTransactions'] ?? 'No transactions yet',
+                message: 'Start using your wallet to see transactions here.',
+                icon: Icons.receipt_long_rounded,
               ),
             )
           else
@@ -424,42 +435,6 @@ final class _BalanceCard extends StatelessWidget {
   }
 }
 
-final class _EmptyTransactions extends StatelessWidget {
-  const _EmptyTransactions({required this.t});
-  final dynamic t;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(32),
-            decoration: BoxDecoration(
-              color: context.backgroundSecondaryColor,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              Icons.receipt_long_rounded,
-              size: 64,
-              color: context.textTertiaryColor.withValues(alpha: 0.2),
-            ),
-          ),
-          const Gap(24),
-          Text(
-            t['noTransactions'] ?? 'No transactions yet',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w900,
-              color: context.textSecondaryColor,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
 
 final class _ActionButton extends StatelessWidget {
   final IconData icon;

@@ -21,12 +21,15 @@ final class AssignmentDetailPageBloc
           AssignmentDetailPageState,
           AssignmentDetailPagePresentationEvent
         > {
-  AssignmentDetailPageBloc({required this.assignmentRepository})
-    : super(AssignmentDetailPageState.initial) {
+  AssignmentDetailPageBloc({
+    required this.assignmentRepository,
+    required this.analyticsService,
+  }) : super(AssignmentDetailPageState.initial) {
     on<AssignmentDetailPageLoadEvent>(_onLoad);
   }
 
   final AssignmentRepository assignmentRepository;
+  final AnalyticsService analyticsService;
 
   Future<void> _onLoad(
     AssignmentDetailPageLoadEvent event,
@@ -41,6 +44,14 @@ final class AssignmentDetailPageBloc
       );
       final submission = await assignmentRepository.getSubmission(
         event.assignmentId,
+      );
+
+      analyticsService.logEvent(
+        name: AnalyticsEvents.assignmentViewed,
+        parameters: {
+          AnalyticsParams.assignmentId: event.assignmentId,
+          AnalyticsParams.itemName: assignment.title,
+        },
       );
 
       emit(

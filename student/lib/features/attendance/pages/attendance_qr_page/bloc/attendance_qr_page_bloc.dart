@@ -21,18 +21,22 @@ final class AttendanceQrPageBloc
           AttendanceQrPageState,
           AttendanceQrPagePresentationEvent
         > {
-  AttendanceQrPageBloc({required this.attendanceRepository})
-    : super(AttendanceQrPageState.initial) {
+  AttendanceQrPageBloc({
+    required this.attendanceRepository,
+    required this.analyticsService,
+  }) : super(AttendanceQrPageState.initial) {
     on<AttendanceQrPageLoadEvent>(_onLoad);
   }
 
   final AttendanceRepository attendanceRepository;
+  final AnalyticsService analyticsService;
 
   Future<void> _onLoad(
     AttendanceQrPageLoadEvent event,
     Emitter<AttendanceQrPageState> emit,
   ) async {
     emit(state.copyWith(loadingState: LoadingState.loading));
+    analyticsService.logEvent(name: AnalyticsEvents.attendanceQrScanned);
     emit(state.copyWith(loadingState: LoadingState.loaded));
   }
 }

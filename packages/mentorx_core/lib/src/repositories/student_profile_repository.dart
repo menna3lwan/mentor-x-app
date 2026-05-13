@@ -29,6 +29,12 @@ abstract interface class StudentProfileRepository implements ProfileRepository {
   /// Get pending edit requests.
   Future<List<ProfileEditRequestEntity>> getPendingEditRequests();
 
+  /// Update student location.
+  Future<void> updateLocation({
+    required String governorate,
+    required String city,
+    required String area,
+  });
 
   // Pro Features
   @override
@@ -36,5 +42,7 @@ abstract interface class StudentProfileRepository implements ProfileRepository {
     required String currentPassword,
     required String newPassword,
   });
+
+  @override
   Future<void> deleteAccount(String password);
 }

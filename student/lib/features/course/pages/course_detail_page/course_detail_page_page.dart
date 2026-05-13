@@ -51,12 +51,12 @@ final class CourseDetailPagePage extends StatelessWidget {
       body: Stack(
         children: [
           const _BackgroundDecorations(),
-          _buildContent(context),
-        ],
-      ),
-      bottomNavigationBar: course != null
-          ? FadeInUp(
-              duration: const Duration(milliseconds: 600),
+          Positioned.fill(child: _buildContent(context)),
+          if (course != null)
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
               child: _EnrollmentBar(
                 course: course!,
                 enrollment: enrollment,
@@ -64,38 +64,46 @@ final class CourseDetailPagePage extends StatelessWidget {
                 isEnrolled: isEnrolled,
                 onEnrollTap: onEnrollTap,
               ),
-            )
-          : null,
+            ),
+        ],
+      ),
     );
   }
 
   Widget _buildContent(BuildContext context) {
     if (errorMessage != null) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.error_outline_rounded,
-              size: 48,
-              color: context.statusDangerColor,
-            ),
-            const Gap(12),
-            Text(
-              errorMessage!,
-              style: TextStyle(
-                color: context.statusDangerColor,
-                fontWeight: FontWeight.w700,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
+      return AppErrorView(
+        message: errorMessage!,
+        onRetry: onRefresh,
       );
     }
 
     if (isCourseLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return Column(
+        children: [
+          Gap(MediaQuery.paddingOf(context).top + 20),
+          _buildHeader(context),
+          const Padding(
+            padding: EdgeInsets.all(20),
+            child: MentorXSkeleton(height: 250, borderRadius: 24),
+          ),
+          const Gap(20),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: MentorXSkeleton(height: 50, borderRadius: 24),
+          ),
+          const Gap(20),
+          Expanded(
+            child: ListView.separated(
+              padding: const EdgeInsets.all(20),
+              itemCount: 3,
+              separatorBuilder: (_, _) => const Gap(12),
+              itemBuilder: (_, _) =>
+                  const MentorXSkeleton(height: 80, borderRadius: 16),
+            ),
+          ),
+        ],
+      );
     }
 
     if (course == null) return const SizedBox.shrink();
@@ -156,20 +164,11 @@ final class CourseDetailPagePage extends StatelessWidget {
                 color: context.borderPrimaryColor.withValues(alpha: 0.1),
               ),
             ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(16),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                child: IconButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  icon: Icon(
-                    Icons.arrow_back_ios_new_rounded,
-                    color: context.textPrimaryColor,
-                    size: 18,
-                  ),
-                  padding: const EdgeInsets.all(12),
-                ),
-              ),
+            child: MentorXIconButton(
+              onPressed: () => Navigator.of(context).pop(),
+              icon: Icons.arrow_back_ios_new_rounded,
+              color: context.textPrimaryColor,
+              size: MentorXIconButtonSize.small,
             ),
           ),
           const Gap(20),
@@ -252,7 +251,6 @@ class _BlurredBlob extends StatelessWidget {
   }
 }
 
-
 final class _DetailTabBar extends StatelessWidget {
   final CourseDetailTab selectedTab;
   final ValueChanged<CourseDetailTab> onTabChanged;
@@ -282,7 +280,8 @@ final class _DetailTabBar extends StatelessWidget {
             children: CourseDetailTab.values.map((tab) {
               final isSelected = tab == selectedTab;
               final label = switch (tab) {
-                CourseDetailTab.description => context.t.course.tabs.description,
+                CourseDetailTab.description =>
+                  context.t.course.tabs.description,
                 CourseDetailTab.sessions => context.t.course.tabs.sessions,
               };
 
@@ -323,7 +322,9 @@ final class _DetailTabBar extends StatelessWidget {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 14,
-                        fontWeight: isSelected ? FontWeight.w900 : FontWeight.w800,
+                        fontWeight: isSelected
+                            ? FontWeight.w900
+                            : FontWeight.w800,
                         color: isSelected
                             ? Colors.white
                             : context.textPrimaryColor.withValues(alpha: 0.7),
@@ -493,34 +494,22 @@ final class _SessionsTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return const Padding(
-        padding: EdgeInsets.all(40),
-        child: Center(child: CircularProgressIndicator()),
+      return Column(
+        children: List.generate(
+          3,
+          (index) => const Padding(
+            padding: EdgeInsets.only(bottom: 12),
+            child: MentorXSkeleton(height: 70, borderRadius: 16),
+          ),
+        ),
       );
     }
 
     if (sessions.isEmpty) {
-      return Padding(
-        padding: const EdgeInsets.all(40),
-        child: Center(
-          child: Column(
-            children: [
-              Icon(
-                Icons.folder_open_rounded,
-                size: 64,
-                color: context.textTertiaryColor.withValues(alpha: 0.2),
-              ),
-              const Gap(16),
-              Text(
-                context.t.course.errors.failedToLoadSessions,
-                style: TextStyle(
-                  color: context.textSecondaryColor,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ],
-          ),
-        ),
+      return AppEmptyView(
+        title: context.t.course.errors.failedToLoadSessions,
+        message: 'Try refreshing the page', // Fallback message
+        icon: Icons.folder_open_rounded,
       );
     }
 
@@ -564,110 +553,105 @@ final class _EnrollmentBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: context.backgroundSecondaryColor.withValues(alpha: 0.45),
-        border: Border(
-          top: BorderSide(
-            color: context.borderPrimaryColor.withValues(alpha: 0.1),
-          ),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 30,
-            offset: const Offset(0, -10),
-          ),
-        ],
-      ),
-      child: ClipRRect(
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 15, sigmaY: 10),
-          child: Padding(
-            padding: EdgeInsets.only(
-              left: 24,
-              right: 24,
-              top: 20,
-              bottom: MediaQuery.paddingOf(context).bottom + 20,
+    return FadeInUp(
+      duration: const Duration(milliseconds: 600),
+      child: Container(
+        decoration: BoxDecoration(
+          color: context.backgroundSecondaryColor.withValues(alpha: 0.45),
+          border: Border(
+            top: BorderSide(
+              color: context.borderPrimaryColor.withValues(alpha: 0.1),
             ),
-            child: Row(
-              children: [
-                if (!isEnrolled)
-                  Expanded(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        if (course.isFree)
-                          Text(
-                            context.t.course.detail.free,
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.w900,
-                              color: context.statusSuccessColor,
-                              letterSpacing: -1,
-                            ),
-                          )
-                        else ...[
-                          Text(
-                            '${course.price.toInt()} ${context.t.core.currency}',
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.w900,
-                              color: context.textPrimaryColor,
-                              letterSpacing: -1,
-                            ),
-                          ),
-                          if (course.oldPrice != null)
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.1),
+              blurRadius: 30,
+              offset: const Offset(0, -10),
+            ),
+          ],
+        ),
+        child: ClipRRect(
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 15, sigmaY: 10),
+            child: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+                child: Row(
+                  children: [
+                    if (!isEnrolled)
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (course.isFree)
                             Text(
-                              '${course.oldPrice!.toInt()} ${context.t.core.currency}',
+                              context.t.course.detail.free,
                               style: TextStyle(
-                                fontSize: 13,
-                                color: context.textTertiaryColor,
-                                decoration: TextDecoration.lineThrough,
-                                fontWeight: FontWeight.w700,
+                                fontSize: 24,
+                                fontWeight: FontWeight.w900,
+                                color: context.statusSuccessColor,
+                                letterSpacing: -1,
+                              ),
+                            )
+                          else ...[
+                            Text(
+                              '${course.price.toInt()} ${context.t.core.currency}',
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.w900,
+                                color: context.textPrimaryColor,
+                                letterSpacing: -1,
                               ),
                             ),
+                            if (course.oldPrice != null)
+                              Text(
+                                '${course.oldPrice!.toInt()} ${context.t.core.currency}',
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  color: context.textTertiaryColor,
+                                  decoration: TextDecoration.lineThrough,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                          ],
                         ],
-                      ],
-                    ),
-                  )
-                else
-                  Expanded(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          context.t.course.detail.yourProgress.toUpperCase(),
-                          style: TextStyle(
-                            fontSize: 10,
-                            fontWeight: FontWeight.w900,
-                            color: context.textTertiaryColor,
-                            letterSpacing: 1.5,
-                          ),
+                      )
+                    else
+                      Expanded(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              context.t.course.detail.yourProgress.toUpperCase(),
+                              style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w900,
+                                color: context.textTertiaryColor,
+                                letterSpacing: 1.5,
+                              ),
+                            ),
+                            const Gap(4),
+                            Text(
+                              context.t.course.detail.completePercent(
+                                percent: (enrollment?.progressPercent ?? 0).toInt(),
+                              ),
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w900,
+                                color: context.brandPrimaryColor,
+                                letterSpacing: -0.5,
+                              ),
+                            ),
+                          ],
                         ),
-                        const Gap(4),
-                        Text(
-                          context.t.course.detail.completePercent(
-                            percent: (enrollment?.progressPercent ?? 0).toInt(),
-                          ),
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w900,
-                            color: context.brandPrimaryColor,
-                            letterSpacing: -0.5,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                const Gap(24),
-                Expanded(
-                  flex: isEnrolled ? 1 : 2,
-                  child: _buildActionButton(context),
+                      ),
+                    const Spacer(),
+                    _buildActionButton(context),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),
@@ -680,72 +664,28 @@ final class _EnrollmentBar extends StatelessWidget {
   ) {
     if (isEnrolled) {
       final status = enrollment!.status;
-      return SizedBox(
-        height: 58,
-        child: ElevatedButton(
-          onPressed: status == EnrollmentStatus.active ? () {} : null,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: status == EnrollmentStatus.active
-                ? context.brandSecondaryColor
-                : status == EnrollmentStatus.completed
-                ? context.statusSuccessColor
-                : context.statusDangerColor,
-            foregroundColor: Colors.white,
-            elevation: 0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-          ),
-          child: Text(
-            status == EnrollmentStatus.active
-                ? context.t.course.detail.continueStudying
-                : status == EnrollmentStatus.completed
-                ? context.t.course.detail.courseCompleted
-                : context.t.course.detail.courseExpired,
-            style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 14),
-          ),
-        ),
+      return MentorXButton(
+        width: 180,
+        onPressed: status == EnrollmentStatus.active ? () {} : null,
+        label: status == EnrollmentStatus.active
+            ? context.t.course.detail.continueStudying
+            : status == EnrollmentStatus.completed
+            ? context.t.course.detail.courseCompleted
+            : context.t.course.detail.courseExpired,
+        color: status == EnrollmentStatus.active
+            ? context.brandSecondaryColor
+            : status == EnrollmentStatus.completed
+            ? context.statusSuccessColor
+            : context.statusDangerColor,
       );
     }
 
-    return Container(
-      height: 58,
-      decoration: BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-            color: context.brandPrimaryColor.withValues(alpha: 0.3),
-            blurRadius: 15,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      child: ElevatedButton(
-        onPressed: isEnrolling ? null : onEnrollTap,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: context.brandPrimaryColor,
-          foregroundColor: Colors.white,
-          elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-        ),
-        child: isEnrolling
-            ? const SizedBox(
-                width: 24,
-                height: 24,
-                child: CircularProgressIndicator(
-                  strokeWidth: 3,
-                  color: Colors.white,
-                ),
-              )
-            : Text(
-                context.t.course.detail.enrollNow,
-                style: const TextStyle(
-                  fontWeight: FontWeight.w900,
-                  fontSize: 16,
-                ),
-              ),
-      ),
+    return MentorXButton(
+      width: 180,
+      onPressed: onEnrollTap,
+      loading: isEnrolling,
+      label: context.t.course.detail.enrollNow,
+      color: context.brandPrimaryColor,
     );
   }
 }

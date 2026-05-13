@@ -1,3 +1,4 @@
+import 'package:analytics_service/analytics_service.dart';
 import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,6 +18,8 @@ class WhatsAppGroupsParentPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => CommunicationBloc(
+        analyticsService: context.read<AnalyticsService>(),
+
         repository: context.read<ParentCommunicationRepository>(),
       )..add(CommunicationStarted(childId)),
       child: Builder(
@@ -24,11 +27,15 @@ class WhatsAppGroupsParentPage extends StatelessWidget {
           return AppDashboardScaffold(
             title: 'WhatsApp Groups',
             onRefresh: () async {
-              context.read<CommunicationBloc>().add(CommunicationRefreshRequested(childId));
+              context.read<CommunicationBloc>().add(
+                CommunicationRefreshRequested(childId),
+              );
             },
             actions: [
               IconButton(
-                onPressed: () => context.read<CommunicationBloc>().add(CommunicationRefreshRequested(childId)),
+                onPressed: () => context.read<CommunicationBloc>().add(
+                  CommunicationRefreshRequested(childId),
+                ),
                 icon: const Icon(Icons.refresh_rounded),
               ),
             ],
@@ -47,9 +54,15 @@ class _WhatsAppGroupsBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final status = context.select((CommunicationBloc bloc) => bloc.state.status);
-    final errorMessage = context.select((CommunicationBloc bloc) => bloc.state.errorMessage);
-    final whatsAppGroups = context.select((CommunicationBloc bloc) => bloc.state.whatsAppGroups);
+    final status = context.select(
+      (CommunicationBloc bloc) => bloc.state.status,
+    );
+    final errorMessage = context.select(
+      (CommunicationBloc bloc) => bloc.state.errorMessage,
+    );
+    final whatsAppGroups = context.select(
+      (CommunicationBloc bloc) => bloc.state.whatsAppGroups,
+    );
 
     if (status == CommunicationStatus.loading) {
       return const Center(child: CircularProgressIndicator());
@@ -58,7 +71,9 @@ class _WhatsAppGroupsBody extends StatelessWidget {
     if (status == CommunicationStatus.failure) {
       return AppErrorView(
         message: errorMessage ?? 'Failed to load groups',
-        onRetry: () => context.read<CommunicationBloc>().add(CommunicationStarted(childId)),
+        onRetry: () => context.read<CommunicationBloc>().add(
+          CommunicationStarted(childId),
+        ),
       );
     }
 
@@ -67,7 +82,9 @@ class _WhatsAppGroupsBody extends StatelessWidget {
         title: 'No Groups',
         message: 'No WhatsApp groups available for this child.',
         icon: Icons.forum_outlined,
-        onAction: () => context.read<CommunicationBloc>().add(CommunicationRefreshRequested(childId)),
+        onAction: () => context.read<CommunicationBloc>().add(
+          CommunicationRefreshRequested(childId),
+        ),
         actionLabel: 'Refresh',
       );
     }
@@ -83,10 +100,15 @@ class _WhatsAppGroupsBody extends StatelessWidget {
           decoration: BoxDecoration(
             color: context.backgroundSecondaryColor,
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: context.textTertiaryColor.withValues(alpha: 0.1)),
+            border: Border.all(
+              color: context.textTertiaryColor.withValues(alpha: 0.1),
+            ),
           ),
           child: ListTile(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 20,
+              vertical: 8,
+            ),
             leading: Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(

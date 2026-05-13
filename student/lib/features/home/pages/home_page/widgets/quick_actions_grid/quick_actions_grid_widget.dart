@@ -30,11 +30,12 @@ final class QuickActionsGridWidget extends StatelessWidget {
     return GridView.builder(
       itemCount: actions.length,
       shrinkWrap: true,
+      padding: EdgeInsets.zero,
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 4,
-        childAspectRatio: 0.75,
-        mainAxisSpacing: 20,
+        childAspectRatio: 0.8,
+        mainAxisSpacing: 16,
         crossAxisSpacing: 12,
       ),
       itemBuilder: (context, index) {
@@ -45,41 +46,41 @@ final class QuickActionsGridWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                width: 68,
-                height: 68,
+                width: 64,
+                height: 64,
                 decoration: BoxDecoration(
-                  color: context.backgroundSecondaryColor.withValues(alpha: 0.45),
-                  borderRadius: BorderRadius.circular(22),
+                  color: context.backgroundSecondaryColor.withValues(alpha: 0.4),
+                  borderRadius: BorderRadius.circular(24),
                   border: Border.all(
-                    color: context.borderPrimaryColor.withValues(alpha: 0.1),
+                    color: context.borderPrimaryColor.withValues(alpha: 0.08),
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.05),
+                      color: Colors.black.withValues(alpha: 0.04),
                       blurRadius: 10,
                       offset: const Offset(0, 4),
                     ),
                   ],
                 ),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(22),
+                  borderRadius: BorderRadius.circular(24),
                   child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                    filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
                     child: Center(
                       child: Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             colors: [
-                              context.brandPrimaryColor.withValues(alpha: 0.2),
-                              context.brandPrimaryColor.withValues(alpha: 0.05),
+                              context.brandPrimaryColor.withValues(alpha: 0.15),
+                              context.brandPrimaryColor.withValues(alpha: 0.02),
                             ],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                           ),
                           shape: BoxShape.circle,
                           border: Border.all(
-                            color: context.brandPrimaryColor.withValues(alpha: 0.1),
+                            color: context.brandPrimaryColor.withValues(alpha: 0.05),
                           ),
                         ),
                         child: Icon(
@@ -92,7 +93,7 @@ final class QuickActionsGridWidget extends StatelessWidget {
                   ),
                 ),
               ),
-              const Gap(12),
+              const Gap(10),
               Text(
                 action.$1,
                 textAlign: TextAlign.center,
@@ -100,9 +101,9 @@ final class QuickActionsGridWidget extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   color: context.textPrimaryColor,
-                  fontSize: 11,
+                  fontSize: 10.5,
                   fontWeight: FontWeight.w900,
-                  letterSpacing: -0.2,
+                  letterSpacing: -0.3,
                 ),
               ),
             ],

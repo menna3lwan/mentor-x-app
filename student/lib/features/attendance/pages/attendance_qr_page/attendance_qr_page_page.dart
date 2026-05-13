@@ -172,13 +172,10 @@ final class _BuildHeader extends StatelessWidget {
           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
           child: Row(
             children: [
-              IconButton(
+              MentorXIconButton(
                 onPressed: () => Navigator.pop(context),
-                icon: Icon(
-                  Icons.arrow_back_ios_new_rounded,
-                  color: context.textPrimaryColor,
-                  size: 20,
-                ),
+                icon: Icons.arrow_back_ios_new_rounded,
+                color: context.textPrimaryColor,
               ),
               Expanded(
                 child: Center(

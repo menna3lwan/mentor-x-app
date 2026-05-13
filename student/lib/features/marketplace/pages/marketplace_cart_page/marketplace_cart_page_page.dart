@@ -60,70 +60,12 @@ final class MarketplaceCartPage extends StatelessWidget {
         ),
       ),
       body: cartItems.isEmpty
-          ? Center(
-              child: FadeInUp(
-                child: Padding(
-                  padding: const EdgeInsets.all(32),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(32),
-                        decoration: BoxDecoration(
-                          color: context.backgroundSecondaryColor,
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: context.borderPrimaryColor.withValues(
-                              alpha: 0.05,
-                            ),
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.05),
-                              blurRadius: 20,
-                            ),
-                          ],
-                        ),
-                        child: Icon(
-                          Icons.shopping_bag_outlined,
-                          size: 80,
-                          color: context.textTertiaryColor.withValues(
-                            alpha: 0.2,
-                          ),
-                        ),
-                      ),
-                      const Gap(32),
-                      Text(
-                        t['cartEmpty']!,
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w900,
-                          color: context.textPrimaryColor,
-                          letterSpacing: -0.5,
-                        ),
-                      ),
-                      const Gap(12),
-                      Text(
-                        'Looks like you haven\'t added anything yet.',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: context.textSecondaryColor,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const Gap(40),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 40),
-                        child: MentorXButton(
-                          onPressed: () => Navigator.of(context).pop(),
-                          label: t['startShopping']!,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+          ? AppEmptyView(
+              title: t['cartEmpty']!,
+              message: 'Looks like you haven\'t added anything yet.',
+              icon: Icons.shopping_bag_outlined,
+              actionLabel: t['startShopping']!,
+              onAction: () => Navigator.of(context).pop(),
             )
           : Column(
               children: [
@@ -411,12 +353,11 @@ final class _IconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
+    return MentorXIconButton(
       onPressed: onPressed,
-      icon: Icon(icon, size: 18, color: context.textPrimaryColor),
-      padding: EdgeInsets.zero,
-      constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
-      splashRadius: 18,
+      icon: icon,
+      color: context.textPrimaryColor,
+      size: MentorXIconButtonSize.small,
     );
   }
 }
@@ -623,9 +564,11 @@ final class _CouponSection extends StatelessWidget {
                       ],
                     ),
                   ),
-                  IconButton(
-                    icon: Icon(Icons.close_rounded, color: context.statusDangerColor),
+                  MentorXIconButton(
+                    icon: Icons.close_rounded,
+                    color: context.statusDangerColor,
                     onPressed: () => cartCubit.removeCoupon(),
+                    size: MentorXIconButtonSize.small,
                   ),
                 ],
               ),
@@ -684,7 +627,14 @@ final class _CouponSection extends StatelessWidget {
 
                       if (loadingState == LoadingState.loading &&
                           validCoupons.isEmpty) {
-                        return const Center(child: CircularProgressIndicator());
+                        return ListView.separated(
+                          itemCount: 3,
+                          separatorBuilder: (_, _) => const Gap(12),
+                          itemBuilder: (_, _) => const MentorXSkeleton(
+                            height: 72,
+                            borderRadius: 16,
+                          ),
+                        );
                       }
                       if (validCoupons.isEmpty) {
                         return Center(

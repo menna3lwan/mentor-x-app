@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mentorx_core/mentorx_core.dart';
+import 'package:mentorx_student/core/core.dart';
 import 'bloc/analytics_dashboard_page_bloc.dart';
 import 'analytics_dashboard_page_page.dart';
 
@@ -13,6 +13,7 @@ final class AnalyticsDashboardPageWrapper extends StatelessWidget {
       create: (context) => AnalyticsDashboardPageBloc(
         analyticsRepository: context.read<StudentAnalyticsRepository>(),
         courseRepository: context.read<CourseRepository>(),
+        analyticsService: context.read<AnalyticsService>(),
       )..add(const AnalyticsDashboardPageLoadRequested()),
       child: Builder(
         builder: (context) {

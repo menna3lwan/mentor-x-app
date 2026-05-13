@@ -21,8 +21,10 @@ final class NotificationsPageBloc
           NotificationsPageState,
           NotificationsPagePresentationEvent
         > {
-  NotificationsPageBloc({required this.notificationRepository})
-    : super(NotificationsPageState.initial) {
+  NotificationsPageBloc({
+    required this.notificationRepository,
+    required this.analyticsService,
+  }) : super(NotificationsPageState.initial) {
     on<NotificationsPageLoadEvent>(_onLoad);
     on<NotificationsPageLoadMoreEvent>(_onLoadMore);
     on<NotificationsPageMarkAsReadEvent>(_onMarkAsRead);
@@ -30,6 +32,7 @@ final class NotificationsPageBloc
   }
 
   final NotificationRepository notificationRepository;
+  final AnalyticsService analyticsService;
 
   Future<void> _onLoad(
     NotificationsPageLoadEvent event,
@@ -49,6 +52,8 @@ final class NotificationsPageBloc
       final notifications = await notificationRepository.getNotifications(
         paginationInfo: const MentorXPaginationInfo(page: 0, limit: 20),
       );
+
+      analyticsService.logEvent(name: AnalyticsEvents.notificationsViewed);
 
       emit(
         state.copyWith(

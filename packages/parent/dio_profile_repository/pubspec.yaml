@@ -1,0 +1,22 @@
+name: parent_dio_profile_repository
+description: "Dio implementation of ParentProfileRepository for parent app."
+version: 1.0.0
+publish_to: none
+
+resolution: workspace
+
+environment:
+  sdk: ^3.11.4
+
+dependencies:
+  mentorx_core:
+    path: ../../mentorx_core
+  dio_http_client:
+    path: ../../clients/dio_http_client
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  lints: ^6.0.0
+  test: ^1.25.6
+  mocktail: ^1.0.4

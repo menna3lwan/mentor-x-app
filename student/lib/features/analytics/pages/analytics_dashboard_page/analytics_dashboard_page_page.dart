@@ -63,33 +63,25 @@ final class AnalyticsDashboardPagePage extends StatelessWidget {
     switch (status) {
       case AnalyticsDashboardStatus.initial:
       case AnalyticsDashboardStatus.loading:
-        return const Center(child: CircularProgressIndicator());
-      case AnalyticsDashboardStatus.failure:
-        return Center(
+        return Padding(
+          padding: const EdgeInsets.all(24),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                Icons.error_outline_rounded,
-                color: context.statusDangerColor,
-                size: 48,
-              ),
-              const Gap(16),
-              Text(
-                errorMessage ?? 'An error occurred',
-                style: TextStyle(color: context.textPrimaryColor),
-              ),
-              const Gap(16),
-              ElevatedButton(
-                onPressed: onRefresh,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: context.brandPrimaryColor,
-                  foregroundColor: context.textPrimaryColor,
-                ),
-                child: Text(context.t.ui.errors.retry),
-              ),
+              Gap(MediaQuery.paddingOf(context).top),
+              const MentorXSkeleton(height: 80, borderRadius: 24),
+              const Gap(24),
+              const MentorXSkeleton(height: 200, borderRadius: 32),
+              const Gap(24),
+              const MentorXSkeleton(height: 150, borderRadius: 32),
+              const Gap(24),
+              const MentorXSkeleton(height: 100, borderRadius: 24),
             ],
           ),
+        );
+      case AnalyticsDashboardStatus.failure:
+        return AppErrorView(
+          message: errorMessage ?? 'An error occurred',
+          onRetry: onRefresh,
         );
       case AnalyticsDashboardStatus.success:
         return RefreshIndicator(
@@ -235,19 +227,10 @@ final class AnalyticsDashboardPagePage extends StatelessWidget {
           ),
           FadeInRight(
             duration: const Duration(milliseconds: 600),
-            child: Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: context.backgroundSecondaryColor,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: context.borderPrimaryColor.withValues(alpha: 0.05),
-                ),
-              ),
-              child: Icon(
-                Icons.notifications_none_rounded,
-                color: context.textPrimaryColor,
-              ),
+            child: MentorXIconButton(
+              onPressed: () => const NotificationsPageRoute().push(context),
+              icon: Icons.notifications_none_rounded,
+              color: context.textPrimaryColor,
             ),
           ),
         ],

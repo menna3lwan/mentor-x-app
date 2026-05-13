@@ -13,6 +13,7 @@ final class DeviceManagementPageRoute extends GoRouteData
     return BlocProvider<DeviceManagementPageBloc>(
       create: (context) => DeviceManagementPageBloc(
         profileRepository: context.read<ProfileRepository>(),
+        analyticsService: context.read<AnalyticsService>(),
       )..add(const DeviceManagementPageInitialized()),
       child: const DeviceManagementPageWrapper(),
     );

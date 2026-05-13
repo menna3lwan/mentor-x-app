@@ -10,6 +10,7 @@ final class MyGradesPageRoute extends GoRouteData with $MyGradesPageRoute {
       create: (context) => MyGradesPageBloc(
         gradeRepository: context.read<GradeRepository>(),
         courseRepository: context.read<CourseRepository>(),
+        analyticsService: context.read<AnalyticsService>(),
       )..add(const MyGradesPageInitialized()),
       child: const MyGradesPageWrapper(),
     );

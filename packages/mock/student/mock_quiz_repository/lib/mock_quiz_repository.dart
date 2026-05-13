@@ -73,8 +73,43 @@ final class MockQuizRepository implements QuizRepository {
   }
 
   @override
-  Future<void> startQuiz(String quizId) async {
+  Future<Map<String, dynamic>> startQuiz(String quizId) async {
     await Future<void>.delayed(delay);
+    final quiz = await getQuiz(quizId);
+    final quizQuestions = await getQuizQuestions(quizId);
+    
+    return {
+      'attempt_id': 'mock_attempt_id',
+      'quiz': {
+        'id': quiz.id,
+        'title': quiz.title,
+        'duration_minutes': quiz.durationMinutes,
+        'total_marks': quiz.totalMarks,
+      },
+      'questions': quizQuestions.map((q) => {
+        'id': q.id,
+        'text': q.text,
+        'type': q.type.name,
+        'mark': q.mark,
+        'options': q.options,
+      }).toList(),
+    };
+  }
+
+  @override
+  Future<void> saveAnswer({
+    required String attemptId,
+    required String questionId,
+    List<String>? selectedOptions,
+    String? textAnswer,
+  }) async {
+    await Future<void>.delayed(delay);
+  }
+
+  @override
+  Future<QuizAttemptEntity> submitQuizAttempt(String attemptId) async {
+    await Future<void>.delayed(delay);
+    return MockQuizGenerator.submitResult('mock_quiz_id');
   }
 
   @override

@@ -134,8 +134,8 @@ final class LoginBloc extends Bloc<LoginEvent, LoginState>
       );
       _resetFailedAttempts();
       _analyticsService.logEvent(
-        name: 'login_success',
-        parameters: {'user_id': user.id},
+        name: AnalyticsEvents.login,
+        parameters: {AnalyticsParams.id: user.id},
       );
       _analyticsService.setUserId(user.id.toString());
       emit(state.copyWith(loadingState: LoadingState.loaded));
@@ -185,8 +185,11 @@ final class LoginBloc extends Bloc<LoginEvent, LoginState>
       );
       emitPresentation(LoginFailurePresentationEvent(message: message));
       _analyticsService.logEvent(
-        name: 'login_failure',
-        parameters: {'error': message, 'type': 'auth_repo_exception'},
+        name: AnalyticsEvents.registrationFailed,
+        parameters: {
+          AnalyticsParams.errorMessage: message,
+          AnalyticsParams.type: 'auth_repo_exception',
+        },
       );
     } catch (e) {
       final message = _registerFailedAttempt(fallbackMessage: e.toString());
@@ -198,8 +201,11 @@ final class LoginBloc extends Bloc<LoginEvent, LoginState>
       );
       emitPresentation(LoginFailurePresentationEvent(message: message));
       _analyticsService.logEvent(
-        name: 'login_failure',
-        parameters: {'error': message, 'type': 'generic_exception'},
+        name: AnalyticsEvents.registrationFailed,
+        parameters: {
+          AnalyticsParams.errorMessage: message,
+          AnalyticsParams.type: 'generic_exception',
+        },
       );
     }
   }

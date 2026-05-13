@@ -22,6 +22,7 @@ class FinancialMonitorPage extends StatelessWidget {
     return BlocProvider(
       create: (context) => FinancialBloc(
         repository: context.read<ParentFinancialRepository>(),
+        analyticsService: context.read<AnalyticsService>(),
       )..add(FinancialStarted(childId: childId)),
       child: Builder(
         builder: (context) {
