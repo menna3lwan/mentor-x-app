@@ -14,6 +14,7 @@ final class PurchaseConfirmPageRoute extends GoRouteData
     return BlocProvider<PurchaseConfirmPageBloc>(
       create: (context) => PurchaseConfirmPageBloc(
         walletRepository: context.read<WalletRepository>(),
+        analyticsService: context.read<AnalyticsService>(),
       )..add(PurchaseConfirmPageLoadEvent(paymentId: paymentId)),
       child: const PurchaseConfirmPageWrapper(),
     );

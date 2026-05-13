@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
@@ -27,44 +28,112 @@ final class MyGradesPagePage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: context.backgroundPrimaryColor,
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(70),
-        child: Container(
-          decoration: BoxDecoration(
-            color: context.backgroundSecondaryColor,
-            borderRadius: const BorderRadius.vertical(
-              bottom: Radius.circular(24),
-            ),
-            border: Border(
-              bottom: BorderSide(
-                color: context.borderPrimaryColor.withValues(alpha: 0.05),
-              ),
+      body: Stack(
+        children: [
+          const _BackgroundDecorations(),
+          Positioned.fill(
+            child: RefreshIndicator(
+              color: context.brandPrimaryColor,
+              onRefresh: () async => onRefresh(),
+              child: state.isLoading
+                  ? Column(
+                      children: [
+                        Gap(MediaQuery.paddingOf(context).top + 20),
+                        _buildHeader(context, t),
+                        const Padding(
+                          padding: EdgeInsets.all(20),
+                          child: MentorXSkeleton(height: 140, borderRadius: 32),
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 20),
+                          child: MentorXSkeleton(height: 56, borderRadius: 16),
+                        ),
+                        Expanded(
+                          child: ListView.separated(
+                            padding: const EdgeInsets.all(20),
+                            itemCount: 3,
+                            separatorBuilder: (_, _) => const Gap(20),
+                            itemBuilder: (_, _) => const MentorXSkeleton(
+                                height: 200, borderRadius: 24),
+                          ),
+                        ),
+                      ],
+                    )
+                  : state.loadingState.isError
+                      ? AppErrorView(
+                          message:
+                              state.errorMessage ?? 'Unable to load grades.',
+                          onRetry: onRefresh,
+                        )
+                      : Column(
+                          children: [
+                            Gap(MediaQuery.paddingOf(context).top + 20),
+                            _buildHeader(context, t),
+                            Expanded(child: _buildLoaded(context, t)),
+                          ],
+                        ),
             ),
           ),
-          child: AppBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            foregroundColor: context.textPrimaryColor,
-            centerTitle: true,
-            title: Text(
-              t['myGrades'] ?? 'My Grades',
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w900,
-                letterSpacing: -0.5,
-              ),
-            ),
-          ),
-        ),
+        ],
       ),
-      body: RefreshIndicator(
-        color: context.brandPrimaryColor,
-        onRefresh: () async => onRefresh(),
-        child: state.isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : state.loadingState.isError
-            ? _ErrorView(errorMessage: state.errorMessage)
-            : _buildLoaded(context, t),
+    );
+  }
+
+  Widget _buildHeader(BuildContext context, dynamic t) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
+      child: Row(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: context.backgroundSecondaryColor.withValues(alpha: 0.45),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: context.borderPrimaryColor.withValues(alpha: 0.1),
+              ),
+            ),
+            child: MentorXIconButton(
+              onPressed: () => Navigator.of(context).pop(),
+              icon: Icons.arrow_back_ios_new_rounded,
+              color: context.textPrimaryColor,
+              size: MentorXIconButtonSize.small,
+            ),
+          ),
+          const Gap(20),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                FadeInLeft(
+                  duration: const Duration(milliseconds: 600),
+                  child: Text(
+                    'PERFORMANCE',
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w900,
+                      color: context.brandPrimaryColor,
+                      letterSpacing: 2.0,
+                    ),
+                  ),
+                ),
+                const Gap(4),
+                FadeInLeft(
+                  duration: const Duration(milliseconds: 800),
+                  delay: const Duration(milliseconds: 100),
+                  child: Text(
+                    t['myGrades'] ?? 'My Grades',
+                    style: TextStyle(
+                      fontSize: 26,
+                      fontWeight: FontWeight.w900,
+                      color: context.textPrimaryColor,
+                      letterSpacing: -0.8,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -74,8 +143,10 @@ final class MyGradesPagePage extends StatelessWidget {
     dynamic t,
   ) {
     if (state.sections.isEmpty) {
-      return FadeInUp(
-        child: _EmptyGrades(t: t),
+      return AppEmptyView(
+        title: t['noGrades'] ?? 'No grades available yet.',
+        message: t['completeAssessmentsDesc'] ?? 'Complete quizzes and assignments to see your grades.',
+        icon: Icons.school_rounded,
       );
     }
 
@@ -155,10 +226,10 @@ final class _SummaryHeader extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: context.backgroundSecondaryColor,
+        color: context.backgroundSecondaryColor.withValues(alpha: 0.45),
         borderRadius: BorderRadius.circular(32),
         border: Border.all(
-          color: context.borderPrimaryColor.withValues(alpha: 0.05),
+          color: context.borderPrimaryColor.withValues(alpha: 0.1),
         ),
         boxShadow: [
           BoxShadow(
@@ -168,64 +239,81 @@ final class _SummaryHeader extends StatelessWidget {
           ),
         ],
       ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: context.brandPrimaryColor.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Icon(
-              Icons.auto_graph_rounded,
-              color: context.brandPrimaryColor,
-              size: 32,
-            ),
-          ),
-          const Gap(20),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  t['overallAverage'] ?? 'Overall Average',
-                  style: TextStyle(
-                    color: context.textTertiaryColor,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(32),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      context.brandPrimaryColor.withValues(alpha: 0.2),
+                      context.brandPrimaryColor.withValues(alpha: 0.05),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: context.brandPrimaryColor.withValues(alpha: 0.1),
                   ),
                 ),
-                const Gap(4),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
+                child: Icon(
+                  Icons.auto_graph_rounded,
+                  color: context.brandPrimaryColor,
+                  size: 32,
+                ),
+              ),
+              const Gap(20),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      display,
+                      t['overallAverage'] ?? 'Overall Average',
                       style: TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.w900,
-                        color: context.textPrimaryColor,
-                        letterSpacing: -1,
+                        color: context.textTertiaryColor,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 0.5,
                       ),
                     ),
                     const Gap(4),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 6),
-                      child: Text(
-                        '%',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w900,
-                          color: context.brandPrimaryColor,
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          display,
+                          style: TextStyle(
+                            fontSize: 34,
+                            fontWeight: FontWeight.w900,
+                            color: context.textPrimaryColor,
+                            letterSpacing: -1.5,
+                          ),
                         ),
-                      ),
+                        const Gap(4),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 6),
+                          child: Text(
+                            '%',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w900,
+                              color: context.brandPrimaryColor,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -233,7 +321,7 @@ final class _SummaryHeader extends StatelessWidget {
 
 final class _CourseFilter extends StatelessWidget {
   final String? selectedCourseId;
-  final List<CourseSummaryEntity> courses;
+  final List<EnrollmentEntity> courses;
   final ValueChanged<String?> onChanged;
   final dynamic t;
 
@@ -249,39 +337,49 @@ final class _CourseFilter extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
-        color: context.backgroundSecondaryColor,
-        borderRadius: BorderRadius.circular(16),
+        color: context.backgroundSecondaryColor.withValues(alpha: 0.45),
+        borderRadius: BorderRadius.circular(20),
         border: Border.all(
           color: context.borderPrimaryColor.withValues(alpha: 0.1),
         ),
       ),
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton<String>(
-          value: selectedCourseId ?? 'all',
-          isExpanded: true,
-          dropdownColor: context.backgroundSecondaryColor,
-          style: TextStyle(
-            color: context.textPrimaryColor,
-            fontWeight: FontWeight.w800,
-            fontSize: 14,
-          ),
-          icon: Icon(
-            Icons.filter_list_rounded,
-            color: context.brandPrimaryColor,
-          ),
-          items: [
-            DropdownMenuItem(
-              value: 'all',
-              child: Text(t['allCourses'] ?? 'All Courses'),
-            ),
-            ...courses.map<DropdownMenuItem<String>>(
-              (course) => DropdownMenuItem<String>(
-                value: course.id,
-                child: Text(course.title),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton<String>(
+              value: selectedCourseId ?? 'all',
+              isExpanded: true,
+              dropdownColor: context.backgroundSecondaryColor,
+              style: TextStyle(
+                color: context.textPrimaryColor,
+                fontWeight: FontWeight.w800,
+                fontSize: 14,
               ),
+              icon: Icon(
+                Icons.filter_list_rounded,
+                color: context.brandPrimaryColor,
+              ),
+              items: [
+                DropdownMenuItem(
+                  value: 'all',
+                  child: Text(t['allCourses'] ?? 'All Courses'),
+                ),
+                ...courses.map<DropdownMenuItem<String>>(
+                  (course) => DropdownMenuItem<String>(
+                    value: course.id,
+                    child: Text(
+                      course.courseTitle ?? '',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ),
+              ],
+              onChanged: onChanged,
             ),
-          ],
-          onChanged: onChanged,
+          ),
         ),
       ),
     );
@@ -305,10 +403,10 @@ final class _CourseSectionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: context.backgroundSecondaryColor,
-        borderRadius: BorderRadius.circular(24),
+        color: context.backgroundSecondaryColor.withValues(alpha: 0.45),
+        borderRadius: BorderRadius.circular(28),
         border: Border.all(
-          color: context.borderPrimaryColor.withValues(alpha: 0.05),
+          color: context.borderPrimaryColor.withValues(alpha: 0.1),
         ),
         boxShadow: [
           BoxShadow(
@@ -318,82 +416,89 @@ final class _CourseSectionCard extends StatelessWidget {
           ),
         ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    section.course.title,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w900,
-                      color: context.textPrimaryColor,
-                      letterSpacing: -0.3,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(28),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        section.course.courseTitle ?? '',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w900,
+                          color: context.textPrimaryColor,
+                          letterSpacing: -0.5,
+                        ),
+                      ),
                     ),
-                  ),
+                    const Gap(12),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: context.brandPrimaryColor.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color:
+                              context.brandPrimaryColor.withValues(alpha: 0.1),
+                        ),
+                      ),
+                      child: Text(
+                        section.averagePercentage == null
+                            ? '--'
+                            : '${section.averagePercentage!.toStringAsFixed(1)}%',
+                        style: TextStyle(
+                          color: context.brandPrimaryColor,
+                          fontWeight: FontWeight.w900,
+                          fontSize: 13,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                const Gap(12),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 6,
-                  ),
-                  decoration: BoxDecoration(
-                    color: context.brandPrimaryColor.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: context.brandPrimaryColor.withValues(alpha: 0.1),
-                    ),
-                  ),
-                  child: Text(
-                    section.averagePercentage == null
-                        ? '--'
-                        : '${section.averagePercentage!.toStringAsFixed(1)}%',
-                    style: TextStyle(
-                      color: context.brandPrimaryColor,
-                      fontWeight: FontWeight.w900,
-                      fontSize: 13,
-                    ),
-                  ),
+              ),
+              Divider(
+                height: 1,
+                color: context.borderPrimaryColor.withValues(alpha: 0.05),
+              ),
+              ...section.quizzes.map(
+                (quiz) => _AssessmentTile(
+                  title: 'Quiz ${quiz.quizId}',
+                  subtitle: 'Score ${quiz.score}/${quiz.totalMarks}',
+                  percentage: quiz.percentage,
+                  icon: Icons.quiz_rounded,
+                  onTap: () => onQuizTap(quiz.quizId),
                 ),
-              ],
-            ),
+              ),
+              ...section.assignments.map(
+                (assignment) {
+                  final score = assignment.score;
+                  final total = assignment.totalMarks;
+                  final subtitle = score == null || total == null
+                      ? 'Pending review'
+                      : 'Score $score/$total';
+                  return _AssessmentTile(
+                    title: 'Assignment ${assignment.assignmentId}',
+                    subtitle: subtitle,
+                    percentage: assignment.percentage,
+                    icon: Icons.assignment_turned_in_rounded,
+                    onTap: () => onAssignmentTap(assignment.assignmentId),
+                  );
+                },
+              ),
+              const Gap(12),
+            ],
           ),
-          Divider(
-            height: 1,
-            color: context.borderPrimaryColor.withValues(alpha: 0.05),
-          ),
-          ...section.quizzes.map(
-            (quiz) => _AssessmentTile(
-              title: 'Quiz ${quiz.quizId}',
-              subtitle: 'Score ${quiz.score}/${quiz.totalMarks}',
-              percentage: quiz.percentage,
-              icon: Icons.quiz_rounded,
-              onTap: () => onQuizTap(quiz.quizId),
-            ),
-          ),
-          ...section.assignments.map(
-            (assignment) {
-              final score = assignment.score;
-              final total = assignment.totalMarks;
-              final subtitle = score == null || total == null
-                  ? 'Pending review'
-                  : 'Score $score/$total';
-              return _AssessmentTile(
-                title: 'Assignment ${assignment.assignmentId}',
-                subtitle: subtitle,
-                percentage: assignment.percentage,
-                icon: Icons.assignment_turned_in_rounded,
-                onTap: () => onAssignmentTap(assignment.assignmentId),
-              );
-            },
-          ),
-          const Gap(12),
-        ],
+        ),
       ),
     );
   }
@@ -486,92 +591,62 @@ final class _AssessmentTile extends StatelessWidget {
   }
 }
 
-final class _ErrorView extends StatelessWidget {
-  final String? errorMessage;
-
-  const _ErrorView({this.errorMessage});
+class _BackgroundDecorations extends StatelessWidget {
+  const _BackgroundDecorations();
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.error_outline_rounded,
-              size: 64,
-              color: context.statusDangerColor.withValues(alpha: 0.3),
-            ),
-            const Gap(24),
-            Text(
-              errorMessage ?? 'Unable to load grades.',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: context.textSecondaryColor,
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-          ],
+    return Stack(
+      children: [
+        Positioned(
+          top: -100,
+          right: -50,
+          child: _BlurredBlob(
+            color: context.brandPrimaryColor.withValues(alpha: 0.12),
+            size: 350,
+          ),
         ),
-      ),
+        Positioned(
+          top: 300,
+          left: -150,
+          child: _BlurredBlob(
+            color: context.brandSecondaryColor.withValues(alpha: 0.08),
+            size: 400,
+          ),
+        ),
+        Positioned(
+          bottom: -50,
+          right: -100,
+          child: _BlurredBlob(
+            color: context.brandPrimaryColor.withValues(alpha: 0.1),
+            size: 300,
+          ),
+        ),
+      ],
     );
   }
 }
 
-final class _EmptyGrades extends StatelessWidget {
-  final dynamic t;
+class _BlurredBlob extends StatelessWidget {
+  final Color color;
+  final double size;
 
-  const _EmptyGrades({required this.t});
+  const _BlurredBlob({required this.color, required this.size});
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(32),
-            decoration: BoxDecoration(
-              color: context.backgroundSecondaryColor,
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: context.borderPrimaryColor.withValues(alpha: 0.05),
-              ),
-            ),
-            child: Icon(
-              Icons.school_rounded,
-              size: 80,
-              color: context.textTertiaryColor.withValues(alpha: 0.2),
-            ),
-          ),
-          const Gap(32),
-          Text(
-            t['noGrades'] ?? 'No grades available yet.',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w900,
-              color: context.textPrimaryColor,
-              letterSpacing: -0.5,
-            ),
-          ),
-          const Gap(12),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 40),
-            child: Text(
-              t['completeAssessmentsDesc'] ??
-                  'Complete quizzes and assignments to see your grades.',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 14,
-                color: context.textSecondaryColor,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-        ],
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        color: color,
+        shape: BoxShape.circle,
+      ),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 70, sigmaY: 70),
+        child: const SizedBox.expand(),
       ),
     );
   }
 }
+

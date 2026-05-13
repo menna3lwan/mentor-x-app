@@ -220,11 +220,14 @@ class _LoginPageState extends State<LoginPage> {
                               FadeInUp(
                                 duration: const Duration(milliseconds: 500),
                                 delay: const Duration(milliseconds: 500),
-                                child: BlocBuilder<LoginBloc, LoginState>(
-                                  builder: (context, state) {
+                                child: Builder(
+                                  builder: (context) {
+                                    final isLoading = context.select<LoginBloc, bool>(
+                                      (bloc) => bloc.state.loadingState == LoginLoadingState.loading,
+                                    );
                                     return MentorXButton(
                                       onPressed: _onLoginSubmitted,
-                                      loading: state.loadingState == LoginLoadingState.loading,
+                                      loading: isLoading,
                                       label: 'Sign In to Dashboard',
                                     );
                                   },

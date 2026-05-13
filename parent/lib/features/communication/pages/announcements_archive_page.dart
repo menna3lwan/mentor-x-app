@@ -20,9 +20,10 @@ class AnnouncementsArchivePage extends StatelessWidget {
     return BlocProvider(
       create: (context) => CommunicationBloc(
         repository: context.read<ParentCommunicationRepository>(),
+        analyticsService: context.read<AnalyticsService>(),
       )..add(CommunicationStarted(childId)),
-      child: BlocBuilder<CommunicationBloc, CommunicationState>(
-        builder: (context, state) {
+      child: Builder(
+        builder: (context) {
           return AppDashboardScaffold(
             title: t.announcements,
             onRefresh: () async {
@@ -34,26 +35,37 @@ class AnnouncementsArchivePage extends StatelessWidget {
                 icon: const Icon(Icons.refresh_rounded),
               ),
             ],
-            body: _buildBody(context, state, t),
+            body: _buildBody(context, t),
           );
         },
       ),
     );
   }
 
-  Widget _buildBody(BuildContext context, CommunicationState state, TranslationsParentEn t) {
-    if (state.status == CommunicationStatus.loading) {
+  Widget _buildBody(BuildContext context, TranslationsParentEn t) {
+    final status = context.select<CommunicationBloc, CommunicationStatus>(
+      (bloc) => bloc.state.status,
+    );
+    final errorMessage = context.select<CommunicationBloc, String?>(
+      (bloc) => bloc.state.errorMessage,
+    );
+
+    if (status == CommunicationStatus.loading) {
       return const Center(child: CircularProgressIndicator());
     }
 
-    if (state.status == CommunicationStatus.failure) {
+    if (status == CommunicationStatus.failure) {
       return AppErrorView(
-        message: state.errorMessage ?? t.unableToLoad,
+        message: errorMessage ?? t.unableToLoad,
         onRetry: () => context.read<CommunicationBloc>().add(CommunicationStarted(childId)),
       );
     }
 
-    if (state.announcements.isEmpty) {
+    final announcements = context.select<CommunicationBloc, List<AnnouncementEntity>>(
+      (bloc) => bloc.state.announcements,
+    );
+
+    if (announcements.isEmpty) {
       return AppEmptyView(
         title: 'No Announcements',
         message: 'Stay tuned! School announcements will appear here.',
@@ -66,9 +78,9 @@ class AnnouncementsArchivePage extends StatelessWidget {
     return ListView.builder(
       physics: const BouncingScrollPhysics(),
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-      itemCount: state.announcements.length,
+      itemCount: announcements.length,
       itemBuilder: (context, index) {
-        final announcement = state.announcements[index];
+        final announcement = announcements[index];
         return _AnnouncementCard(announcement: announcement);
       },
     );

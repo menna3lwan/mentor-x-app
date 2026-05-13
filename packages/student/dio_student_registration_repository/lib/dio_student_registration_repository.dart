@@ -162,11 +162,23 @@ final class DioStudentRegistrationRepository
   @override
   Future<List<GovernorateEntity>> getGovernorates() async {
     try {
-      final response = await httpClient.get(
-        '/api/student/register/governorates',
-      );
-      final data = asList(asMap(response.data)['data'] ?? asMap(response.data)['content'] ?? response.data);
-      return data.map((item) => GovernorateModel.fromJson(asMap(item))).toList();
+      HttpClientResponse response;
+      try {
+        response = await httpClient.get(
+          '/api/student/register/governorates',
+        );
+      } on HttpClientResponse catch (e) {
+        if (e.statusCode != 404) rethrow;
+        response = await httpClient.get(
+          '/api/public/governorates',
+        );
+      }
+      final data = asList(asMap(response.data)['data'] ??
+          asMap(response.data)['content'] ??
+          response.data);
+      return data
+          .map((item) => GovernorateModel.fromJson(asMap(item)))
+          .toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
@@ -178,10 +190,20 @@ final class DioStudentRegistrationRepository
   @override
   Future<List<String>> getAreas(String governorateId) async {
     try {
-      final response = await httpClient.get(
-        '/api/student/register/areas/$governorateId',
-      );
-      final data = asList(asMap(response.data)['data'] ?? asMap(response.data)['content'] ?? response.data);
+      HttpClientResponse response;
+      try {
+        response = await httpClient.get(
+          '/api/student/register/areas/$governorateId',
+        );
+      } on HttpClientResponse catch (e) {
+        if (e.statusCode != 404) rethrow;
+        response = await httpClient.get(
+          '/api/public/areas/governorate/$governorateId',
+        );
+      }
+      final data = asList(asMap(response.data)['data'] ??
+          asMap(response.data)['content'] ??
+          response.data);
       return data.map((item) => item.toString()).toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(

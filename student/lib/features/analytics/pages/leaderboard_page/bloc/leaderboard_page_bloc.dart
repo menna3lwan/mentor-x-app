@@ -8,12 +8,15 @@ final class LeaderboardPageBloc
     extends Bloc<LeaderboardPageEvent, LeaderboardPageState> {
   final LeaderboardRepository _leaderboardRepository;
   final CourseRepository _courseRepository;
+  final AnalyticsService _analyticsService;
 
   LeaderboardPageBloc({
     required LeaderboardRepository leaderboardRepository,
     required CourseRepository courseRepository,
+    required AnalyticsService analyticsService,
   }) : _leaderboardRepository = leaderboardRepository,
        _courseRepository = courseRepository,
+       _analyticsService = analyticsService,
        super(const LeaderboardPageState()) {
     on<LeaderboardPageLoadRequested>(_onLoadRequested);
     on<LeaderboardPageFilterChanged>(_onFilterChanged);
@@ -23,6 +26,7 @@ final class LeaderboardPageBloc
     LeaderboardPageLoadRequested event,
     Emitter<LeaderboardPageState> emit,
   ) async {
+    _analyticsService.logEvent(name: AnalyticsEvents.leaderboardViewed);
     emit(
       state.copyWith(
         loadingState: LoadingState.loading,

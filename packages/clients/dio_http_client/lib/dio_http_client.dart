@@ -16,13 +16,16 @@ final class DioHttpClient implements HttpClient {
   String? _refreshToken;
   String? _userId;
   String _languageCode = 'ar';
+  final Future<void> Function()? _onSessionExpired;
 
 
   DioHttpClient({
     required String baseUrl,
     required CacheRepository cacheRepository,
+    Future<void> Function()? onSessionExpired,
   }) : _dio = Dio(BaseOptions(baseUrl: baseUrl)),
-       _cacheRepository = cacheRepository {
+       _cacheRepository = cacheRepository,
+       _onSessionExpired = onSessionExpired {
     _registerInterceptors(baseUrl);
   }
 
@@ -49,6 +52,13 @@ final class DioHttpClient implements HttpClient {
             if (refreshToken != null) return setRefreshToken(refreshToken);
           });
         },
+        onSessionExpired: () async {
+          _logger.warning('Session expired signal received from RefreshTokenInterceptor');
+          if (_onSessionExpired != null) {
+            await _onSessionExpired.call();
+          }
+          await clearTokens();
+        },
       ),
     );
   }
@@ -73,6 +83,8 @@ final class DioHttpClient implements HttpClient {
   /// Loads cached token and sets it as bearer token
   /// Only loads the token if it's still valid (not expired)
   Future<void> _loadCachedToken() async {
+    _logger.debug('Attempting to load cached authentication state...');
+    
     final cachedToken = await _cacheRepository.get(CacheKeys.accessToken);
     final cachedRefreshToken = await _cacheRepository.get(
       CacheKeys.refreshToken,
@@ -80,21 +92,29 @@ final class DioHttpClient implements HttpClient {
     final cachedDeviceId = await _cacheRepository.get(CacheKeys.deviceId);
 
     if (cachedDeviceId != null && cachedDeviceId.isNotEmpty) {
+      _logger.debug('Restored Device ID from cache: $cachedDeviceId');
       setDefaultHeader(NetworkConstants.deviceIdHeader, cachedDeviceId);
     }
 
     if (cachedToken != null && cachedToken.isNotEmpty) {
-      if (_isJwtTokenExpired(cachedToken)) {
+      final isExpired = _isJwtTokenExpired(cachedToken);
+      _logger.debug('Found cached access token (Expired: $isExpired)');
+      
+      if (isExpired) {
+        _logger.warning('Cached token is expired, clearing session');
         await clearTokens();
       } else {
         await setAccessToken(cachedToken);
         if (cachedRefreshToken != null) {
+          _logger.debug('Restored refresh token from cache');
           await setRefreshToken(cachedRefreshToken);
         }
+        _logger.info('Authentication state successfully restored from cache');
       }
       return;
     }
-
+    
+    _logger.info('No valid cached token found, starting unauthenticated session');
   }
 
   /// Processes response and caches token if present
@@ -163,6 +183,7 @@ final class DioHttpClient implements HttpClient {
         _logger.debug('Token in response from $path is identical to current token, skipping update');
       }
     } else if (refreshToken != null && (isAuthPath || refreshToken != _refreshToken)) {
+      // NOTE: We relaxed the check here to allow non-JWT refresh tokens.
       _logger.info('Updating refresh token from response: $path');
       await setRefreshToken(refreshToken);
     }
@@ -243,7 +264,8 @@ final class DioHttpClient implements HttpClient {
         expirySeconds * 1000,
       );
 
-      return DateTime.now().isAfter(expiresAt);
+      // Buffer of 30 seconds to be safe and match RefreshTokenInterceptor
+      return DateTime.now().isAfter(expiresAt.subtract(const Duration(seconds: 30)));
     } catch (_) {
       return true;
     }
@@ -398,7 +420,7 @@ final class DioHttpClient implements HttpClient {
 
   @override
   Future<void> clearTokens() async {
-    _logger.info('Clearing all authentication tokens');
+    _logger.info('Clearing all authentication tokens and session data');
     _accessToken = null;
     _refreshToken = null;
     _userId = null;
@@ -407,9 +429,16 @@ final class DioHttpClient implements HttpClient {
     _defaultHeaders.remove('Authorization');
     _dio.options.headers.remove('Authorization');
     
-    await _cacheRepository.remove(CacheKeys.accessToken);
-    await _cacheRepository.remove(CacheKeys.refreshToken);
-    _logger.debug('Tokens cleared from memory and cache');
+    // Perform cache removals in parallel for efficiency
+    await Future.wait([
+      _cacheRepository.remove(CacheKeys.accessToken),
+      _cacheRepository.remove(CacheKeys.refreshToken),
+      // Crucial: Clear the user object to prevent SplashPage from attempting 
+      // authenticated calls with a cleared session.
+      _cacheRepository.remove(CacheKeys.user),
+    ]);
+    
+    _logger.debug('Tokens and user session cleared from memory and cache');
   }
 
 

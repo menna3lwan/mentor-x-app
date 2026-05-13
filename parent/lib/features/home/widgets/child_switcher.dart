@@ -12,48 +12,47 @@ class ChildSwitcher extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<HomeBloc, HomeState>(
-      builder: (context, state) {
-        if (state.children.isEmpty || state.selectedChild == null) {
-          return const SizedBox.shrink();
-        }
+    final children = context.select((HomeBloc bloc) => bloc.state.children);
+    final selectedChild = context.select((HomeBloc bloc) => bloc.state.selectedChild);
 
-        return Container(
-          height: 140,
-          margin: const EdgeInsets.symmetric(vertical: 12),
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            physics: const BouncingScrollPhysics(),
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            itemCount: state.children.length + 1,
-            itemBuilder: (context, index) {
-              if (index == state.children.length) {
-                return FadeInRight(
-                  duration: const Duration(milliseconds: 600),
-                  delay: Duration(milliseconds: 80 * index),
-                  child: const _AddChildButton(),
-                );
-              }
+    if (children.isEmpty || selectedChild == null) {
+      return const SizedBox.shrink();
+    }
 
-              final child = state.children[index];
-              final isSelected = child.id == state.selectedChild!.id;
-              
-              return FadeInRight(
-                duration: const Duration(milliseconds: 600),
-                delay: Duration(milliseconds: 80 * index),
-                child: _ChildAvatarItem(
-                  name: child.name.split(' ').first,
-                  imageUrl: child.profileImageUrl,
-                  isSelected: isSelected,
-                  onTap: () {
-                    context.read<HomeBloc>().add(HomeChildSwitched(child));
-                  },
-                ),
-              );
-            },
-          ),
-        );
-      },
+    return Container(
+      height: 140,
+      margin: const EdgeInsets.symmetric(vertical: 12),
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.symmetric(horizontal: 24),
+        itemCount: children.length + 1,
+        itemBuilder: (context, index) {
+          if (index == children.length) {
+            return FadeInRight(
+              duration: const Duration(milliseconds: 600),
+              delay: Duration(milliseconds: 80 * index),
+              child: const _AddChildButton(),
+            );
+          }
+
+          final child = children[index];
+          final isSelected = child.id == selectedChild.id;
+
+          return FadeInRight(
+            duration: const Duration(milliseconds: 600),
+            delay: Duration(milliseconds: 80 * index),
+            child: _ChildAvatarItem(
+              name: child.name.split(' ').first,
+              imageUrl: child.profileImageUrl,
+              isSelected: isSelected,
+              onTap: () {
+                context.read<HomeBloc>().add(HomeChildSwitched(child));
+              },
+            ),
+          );
+        },
+      ),
     );
   }
 }

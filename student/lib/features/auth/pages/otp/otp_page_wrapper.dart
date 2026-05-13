@@ -28,22 +28,49 @@ final class _OtpPageWrapperState extends State<OtpPageWrapper> {
             context.showErrorSnackBar(message);
         }
       },
-      child: BlocBuilder<OtpBloc, OtpState>(
-        builder: (context, state) {
+      child: Builder(
+        builder: (context) {
+          final phoneNumber = context.select<OtpBloc, String>(
+            (bloc) => bloc.state.phoneNumber,
+          );
+          final otpLength = context.select<OtpBloc, int>(
+            (bloc) => bloc.state.otpLength,
+          );
+          final isLoading = context.select<OtpBloc, bool>(
+            (bloc) => bloc.state.isLoading,
+          );
+          final isResending = context.select<OtpBloc, bool>(
+            (bloc) => bloc.state.isResending,
+          );
+          final isResendingWhatsapp = context.select<OtpBloc, bool>(
+            (bloc) => bloc.state.isResendingWhatsapp,
+          );
+          final canResend = context.select<OtpBloc, bool>(
+            (bloc) => bloc.state.canResend,
+          );
+          final formattedCountdown = context.select<OtpBloc, String>(
+            (bloc) => bloc.state.formattedCountdown,
+          );
+          final errorMessage = context.select<OtpBloc, String?>(
+            (bloc) => bloc.state.errorMessage,
+          );
+          final isError = context.select<OtpBloc, bool>(
+            (bloc) => bloc.state.loadingState.isError,
+          );
+
           final bloc = context.read<OtpBloc>();
           final authRepository = context
               .read<StudentAuthenticationRepository>();
+
           return OtpPage(
-            phoneNumber: state.phoneNumber,
-            otpLength: state.otpLength,
-            isLoading: state.isLoading,
-            isResending: state.isResending,
-            isResendingWhatsapp: state.isResendingWhatsapp,
-            canResend: state.canResend,
-            formattedCountdown: state.formattedCountdown,
-            errorMessage: state.loadingState.isError
-                ? state.errorMessage
-                : null,
+            phoneNumber: phoneNumber,
+            otpLength: otpLength,
+            isLoading: isLoading,
+            isResending: isResending,
+            isResendingWhatsapp: isResendingWhatsapp,
+            canResend: canResend,
+            formattedCountdown: formattedCountdown,
+            errorMessage: isError ? errorMessage : null,
             onOtpChanged: (value) => bloc.add(OtpOtpChanged(value)),
             onSubmit: () => bloc.add(const OtpSubmitted()),
             onResend: () => bloc.add(const OtpResendRequested()),

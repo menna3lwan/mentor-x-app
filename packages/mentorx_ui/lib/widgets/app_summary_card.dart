@@ -37,7 +37,7 @@ class AppSummaryCard extends StatelessWidget {
                   const SizedBox(width: 8),
                   Text(
                     title,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    style: context.smallTextStyle.copyWith(
                           fontWeight: FontWeight.w600,
                           color: context.textSecondaryColor,
                         ),
@@ -47,7 +47,7 @@ class AppSummaryCard extends StatelessWidget {
               const SizedBox(height: 12),
               Text(
                 value,
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                style: context.titleH2Style.copyWith(
                       fontWeight: FontWeight.bold,
                       color: color,
                     ),

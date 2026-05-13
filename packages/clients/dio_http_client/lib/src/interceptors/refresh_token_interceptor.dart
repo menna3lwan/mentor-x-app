@@ -15,6 +15,7 @@ class RefreshTokenInterceptor extends Interceptor {
   final CacheRepository _cacheRepository;
   final String _baseUrl;
   final Future<void> Function(String token, String? refreshToken) _onTokensUpdated;
+  final Future<void> Function()? _onSessionExpired;
 
   static const String _accessTokenKey = CacheKeys.accessToken;
   static const String _refreshTokenKey = CacheKeys.refreshToken;
@@ -33,10 +34,12 @@ class RefreshTokenInterceptor extends Interceptor {
     required CacheRepository cacheRepository,
     required String baseUrl,
     required Future<void> Function(String token, String? refreshToken) onTokensUpdated,
+    Future<void> Function()? onSessionExpired,
   }) : _dio = dio,
        _cacheRepository = cacheRepository,
        _baseUrl = baseUrl,
-       _onTokensUpdated = onTokensUpdated;
+       _onTokensUpdated = onTokensUpdated,
+       _onSessionExpired = onSessionExpired;
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {
@@ -57,7 +60,7 @@ class RefreshTokenInterceptor extends Interceptor {
             // Retry the original request with the new token
             return handler.resolve(await _retry(err.requestOptions));
           } catch (e) {
-            // Refresh failed, forward the error
+            // Refresh failed for the other request too
             return handler.next(err);
           }
         }
@@ -83,13 +86,17 @@ class RefreshTokenInterceptor extends Interceptor {
           // Retry the original request with the new token
           return handler.resolve(await _retry(err.requestOptions));
         } else {
-          // Refresh failed, forward the error
+          // Refresh failed (e.g. refresh token expired)
           _isRefreshing = false;
           _refreshCompleter?.completeError(err);
+          
+          // If the refresh failed with a 401/403 (handled in _refreshAccessToken),
+          // the session is dead. We should return an error that indicates this
+          // rather than the raw backend error from the original request.
           return handler.next(err);
         }
       } catch (e, s) {
-        _logger.error('Token refresh failed', e, s);
+        _logger.error('Token refresh logic encountered an unexpected error', e, s);
         _isRefreshing = false;
         _refreshCompleter?.completeError(e);
         return handler.next(err);
@@ -116,10 +123,10 @@ class RefreshTokenInterceptor extends Interceptor {
 
       // Validate refresh token expiry before attempting refresh
       if (!_isTokenValid(refreshToken)) {
-        _logger.warning('Refresh token is expired or invalid');
-        // Clean up tokens
-        await _cacheRepository.remove(_refreshTokenKey);
-        await _cacheRepository.remove(_accessTokenKey);
+        _logger.warning('Refresh token is expired or invalid, notifying session expiry');
+        if (_onSessionExpired != null) {
+          await _onSessionExpired.call();
+        }
         return null;
       }
 
@@ -166,6 +173,17 @@ class RefreshTokenInterceptor extends Interceptor {
       _logger.warning('Token refresh response missing required fields');
       return null;
     } catch (e, s) {
+      if (e is DioException) {
+        final statusCode = e.response?.statusCode;
+        // Both 401 (Unauthorized) and 403 (Forbidden) usually indicate
+        // that the refresh token is expired or has been revoked.
+        if (statusCode == 401 || statusCode == 403) {
+          _logger.warning('Refresh attempt returned $statusCode, session is definitely dead');
+          if (_onSessionExpired != null) {
+            await _onSessionExpired.call();
+          }
+        }
+      }
       _logger.error('Failed to refresh access token', e, s);
       return null;
     }
@@ -185,11 +203,17 @@ class RefreshTokenInterceptor extends Interceptor {
     return _dio.fetch(requestOptions);
   }
 
-  /// Validates a JWT token by checking its expiry
+  /// Validates a JWT token by checking its expiry.
+  /// 
+  /// If the token is not a valid JWT (not 3 parts), it returns true
+  /// to allow the backend to be the source of truth for its validity.
   bool _isTokenValid(String token) {
     try {
       final parts = token.split('.');
-      if (parts.length != 3) return false;
+      if (parts.length != 3) {
+        // Not a JWT, we assume it's an opaque token that might be valid.
+        return true;
+      }
 
       final payload = utf8.decode(
         base64Url.decode(base64Url.normalize(parts[1])),
@@ -202,7 +226,8 @@ class RefreshTokenInterceptor extends Interceptor {
       // Buffer of 30 seconds to be safe
       return expiryDate.isAfter(DateTime.now().add(const Duration(seconds: 30)));
     } catch (_) {
-      return false;
+      // On parsing error, let the backend decide
+      return true;
     }
   }
 

@@ -34,28 +34,3 @@ final class ProfileEditRequestModel extends ProfileEditRequestEntity {
   }
 }
 
-final class NationalIdVerificationModel extends NationalIdVerificationEntity {
-  const NationalIdVerificationModel({
-    required super.status,
-    super.idCardPhotoUrl,
-    super.verifiedAt,
-    super.rejectionReason,
-  });
-
-  factory NationalIdVerificationModel.fromJson(Map<String, dynamic> json) {
-    return NationalIdVerificationModel(
-      status: _parseStatus(json['status']),
-      idCardPhotoUrl: ModelParser.asString(json['idCardPhotoUrl'] ?? json['id_card_photo_url']),
-      verifiedAt: ModelParser.asDateTime(json['verifiedAt'] ?? json['verified_at']),
-      rejectionReason: ModelParser.asString(json['rejectionReason'] ?? json['rejection_reason']),
-    );
-  }
-
-  static VerificationStatus _parseStatus(dynamic value) {
-    final str = ModelParser.asString(value).toLowerCase();
-    return VerificationStatus.values.firstWhere(
-      (e) => e.name == str,
-      orElse: () => VerificationStatus.pending,
-    );
-  }
-}

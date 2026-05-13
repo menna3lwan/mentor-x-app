@@ -57,15 +57,26 @@ final class MarketplaceOrdersPagePage extends StatelessWidget {
         backgroundColor: context.backgroundSecondaryColor,
         child:
             state.loadingState == LoadingState.loading && state.orders.isEmpty
-            ? const Center(child: CircularProgressIndicator())
+            ? ListView.separated(
+                padding: const EdgeInsets.fromLTRB(20, 24, 20, 40),
+                itemCount: 6,
+                separatorBuilder: (_, _) => const Gap(16),
+                itemBuilder: (_, _) => const MentorXSkeleton(
+                  height: 160,
+                  borderRadius: 28,
+                ),
+              )
             : state.loadingState == LoadingState.error && state.orders.isEmpty
-            ? _ErrorView(
-                errorMessage: state.errorMessage,
-                onRefresh: onRefresh,
-                t: t,
+            ? AppErrorView(
+                message: state.errorMessage ?? 'Unable to load orders.',
+                onRetry: onRefresh,
               )
             : state.orders.isEmpty
-            ? _EmptyView(t: t)
+            ? AppEmptyView(
+                title: t['noOrdersYet'] ?? "You haven't placed any orders yet.",
+                message: t['startShoppingDesc'] ?? "Explore our marketplace and place your first order!",
+                icon: Icons.shopping_bag_outlined,
+              )
             : ListView.separated(
                 physics: const BouncingScrollPhysics(),
                 padding: const EdgeInsets.fromLTRB(20, 24, 20, 40),
@@ -85,116 +96,6 @@ final class MarketplaceOrdersPagePage extends StatelessWidget {
   }
 }
 
-final class _ErrorView extends StatelessWidget {
-  final String? errorMessage;
-  final VoidCallback onRefresh;
-  final dynamic t;
-
-  const _ErrorView({
-    this.errorMessage,
-    required this.onRefresh,
-    required this.t,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          FadeInDown(
-            child: Icon(
-              Icons.error_outline_rounded,
-              size: 64,
-              color: context.statusDangerColor.withValues(alpha: 0.3),
-            ),
-          ),
-          const Gap(24),
-          FadeInUp(
-            child: Text(
-              errorMessage ?? 'Unable to load orders.',
-              style: TextStyle(
-                color: context.textSecondaryColor,
-                fontWeight: FontWeight.w800,
-                fontSize: 16,
-              ),
-            ),
-          ),
-          const Gap(24),
-          FadeInUp(
-            delay: const Duration(milliseconds: 200),
-            child: SizedBox(
-              width: 140,
-              child: MentorXButton(
-                onPressed: onRefresh,
-                label: t['retry'] ?? 'Retry',
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-final class _EmptyView extends StatelessWidget {
-  final dynamic t;
-  const _EmptyView({required this.t});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          FadeInDown(
-            child: Container(
-              padding: const EdgeInsets.all(32),
-              decoration: BoxDecoration(
-                color: context.backgroundSecondaryColor,
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: context.borderPrimaryColor.withValues(alpha: 0.05),
-                ),
-              ),
-              child: Icon(
-                Icons.shopping_bag_outlined,
-                size: 64,
-                color: context.textTertiaryColor.withValues(alpha: 0.2),
-              ),
-            ),
-          ),
-          const Gap(24),
-          FadeInUp(
-            child: Text(
-              t['noOrdersYet'] ?? "You haven't placed any orders yet.",
-              style: TextStyle(
-                color: context.textPrimaryColor,
-                fontSize: 20,
-                fontWeight: FontWeight.w900,
-                letterSpacing: -0.5,
-              ),
-            ),
-          ),
-          const Gap(12),
-          FadeInUp(
-            delay: const Duration(milliseconds: 200),
-            child: Text(
-              t['startShoppingDesc'] ??
-                  "Explore our marketplace and place your first order!",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: context.textSecondaryColor,
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
 
 final class _OrderCard extends StatelessWidget {
   final MarketplaceOrderEntity order;

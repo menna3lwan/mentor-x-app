@@ -1,3 +1,4 @@
+import 'package:analytics_service/analytics_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_core/mentorx_core.dart';
@@ -15,6 +16,7 @@ class HomePageWrapper extends StatelessWidget {
         childrenRepository: context.read<ParentChildrenRepository>(),
         homeRepository: context.read<ParentHomeRepository>(),
         cacheRepository: context.read<CacheRepository>(),
+        analyticsService: context.read<AnalyticsService>(),
       )..add(HomeStarted()),
       child: BlocListener<HomeBloc, HomeState>(
         listener: (context, state) {

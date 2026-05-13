@@ -21,12 +21,15 @@ final class MarketplaceDetailPageBloc
           MarketplaceDetailPageState,
           MarketplaceDetailPagePresentationEvent
         > {
-  MarketplaceDetailPageBloc({required this.marketplaceRepository})
-    : super(MarketplaceDetailPageState.initial) {
+  MarketplaceDetailPageBloc({
+    required this.marketplaceRepository,
+    required this.analyticsService,
+  }) : super(MarketplaceDetailPageState.initial) {
     on<MarketplaceDetailPageLoadEvent>(_onLoad);
   }
 
   final MarketplaceRepository marketplaceRepository;
+  final AnalyticsService analyticsService;
 
   Future<void> _onLoad(
     MarketplaceDetailPageLoadEvent event,
@@ -36,6 +39,13 @@ final class MarketplaceDetailPageBloc
     try {
       final items = await marketplaceRepository.getItems();
       final item = items.firstWhere((i) => i.id == event.itemId);
+      analyticsService.logEvent(
+        name: AnalyticsEvents.itemViewed,
+        parameters: {
+          AnalyticsParams.itemId: item.id,
+          AnalyticsParams.itemName: item.title,
+        },
+      );
       emit(state.copyWith(loadingState: LoadingState.loaded, item: item));
     } catch (e) {
       emit(state.copyWith(loadingState: LoadingState.error));

@@ -31,64 +31,50 @@ final class WalletOrdersPage extends StatelessWidget {
         Gap(MediaQuery.paddingOf(context).top + 20),
         _buildHeader(context, t),
         Expanded(
-          child: BlocBuilder<WalletOrdersPageBloc, WalletOrdersPageState>(
-            builder: (context, state) {
-              if (state.loadingState == LoadingState.loading) {
-                return const Center(child: CircularProgressIndicator());
+          child: Builder(
+            builder: (context) {
+              final loadingState = context.select<WalletOrdersPageBloc, LoadingState>(
+                (bloc) => bloc.state.loadingState,
+              );
+              final errorMessage = context.select<WalletOrdersPageBloc, String?>(
+                (bloc) => bloc.state.errorMessage,
+              );
+              final orders = context.select<WalletOrdersPageBloc, List<PaymentOrderEntity>>(
+                (bloc) => bloc.state.orders,
+              );
+
+              if (loadingState == LoadingState.loading) {
+                return ListView.separated(
+                  padding: const EdgeInsets.all(24),
+                  itemCount: 4,
+                  separatorBuilder: (_, _) => const Gap(16),
+                  itemBuilder: (_, _) => const MentorXSkeleton(height: 180, borderRadius: 28),
+                );
               }
 
-              if (state.loadingState == LoadingState.error) {
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      StatusBadge(
-                        message: state.errorMessage ?? 'Failed to load orders',
-                        status: StatusBadgeType.danger,
-                      ),
-                      const Gap(16),
-                      ElevatedButton(
-                        onPressed: () =>
-                            context.read<WalletOrdersPageBloc>().add(
-                              const WalletOrdersPageLoadEvent(),
-                            ),
-                        child: const Text('Retry'),
-                      ),
-                    ],
+              if (loadingState == LoadingState.error) {
+                return AppErrorView(
+                  message: errorMessage ?? 'Failed to load orders',
+                  onRetry: () => context.read<WalletOrdersPageBloc>().add(
+                    const WalletOrdersPageLoadEvent(),
                   ),
                 );
               }
 
-              if (state.orders.isEmpty) {
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.receipt_long_rounded,
-                        size: 64,
-                        color: context.textTertiaryColor.withValues(alpha: 0.2),
-                      ),
-                      const Gap(16),
-                      Text(
-                        'No orders found',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w900,
-                          color: context.textSecondaryColor,
-                        ),
-                      ),
-                    ],
-                  ),
+              if (orders.isEmpty) {
+                return AppEmptyView(
+                  title: 'No orders found',
+                  message: 'Your purchase history will appear here.',
+                  icon: Icons.receipt_long_rounded,
                 );
               }
 
               return ListView.separated(
                 padding: const EdgeInsets.all(24),
-                itemCount: state.orders.length,
+                itemCount: orders.length,
                 separatorBuilder: (context, index) => const Gap(16),
                 itemBuilder: (context, index) {
-                  final order = state.orders[index];
+                  final order = orders[index];
                   return FadeInUp(
                     duration: Duration(milliseconds: 300 + (index % 5) * 100),
                     child: _OrderCard(order: order),
@@ -107,20 +93,10 @@ final class WalletOrdersPage extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
       child: Row(
         children: [
-          IconButton(
+          MentorXIconButton(
             onPressed: () => Navigator.of(context).pop(),
-            icon: Icon(
-              Icons.arrow_back_ios_new_rounded,
-              color: context.textPrimaryColor,
-              size: 20,
-            ),
-            style: IconButton.styleFrom(
-              backgroundColor: context.backgroundSecondaryColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              padding: const EdgeInsets.all(12),
-            ),
+            icon: Icons.arrow_back_ios_new_rounded,
+            color: context.textPrimaryColor,
           ),
           const Gap(16),
           Expanded(

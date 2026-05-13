@@ -1,6 +1,5 @@
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'bloc/profile_view_page_bloc.dart';
 import 'profile_view_page_page.dart';
@@ -25,8 +24,8 @@ class _ProfileViewPageWrapperState extends State<ProfileViewPageWrapper> {
             Navigator.of(context).pop();
         }
       },
-      child: BlocBuilder<ProfileViewPageBloc, ProfileViewPageState>(
-        builder: (context, state) {
+      child: Builder(
+        builder: (context) {
           return const ProfileViewPage();
         },
       ),

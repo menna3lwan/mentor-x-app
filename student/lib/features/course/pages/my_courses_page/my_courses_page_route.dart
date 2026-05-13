@@ -8,6 +8,7 @@ final class MyCoursesPageRoute extends GoRouteData with $MyCoursesPageRoute {
     return BlocProvider<MyCoursesPageBloc>(
       create: (context) => MyCoursesPageBloc(
         courseRepository: context.read<CourseRepository>(),
+        analyticsService: context.read<AnalyticsService>(),
       )..add(const MyCoursesPageInitialized()),
       child: const MyCoursesPageWrapper(),
     );

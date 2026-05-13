@@ -39,7 +39,14 @@ final class LeaderboardPagePage extends StatelessWidget {
               ),
               Expanded(
                 child: state.loadingState == LoadingState.loading
-                    ? const Center(child: CircularProgressIndicator())
+                    ? ListView.builder(
+                        padding: const EdgeInsets.all(24),
+                        itemCount: 8,
+                        itemBuilder: (_, _) => const Padding(
+                          padding: EdgeInsets.only(bottom: 12),
+                          child: MentorXSkeleton(height: 70, borderRadius: 24),
+                        ),
+                      )
                     : RefreshIndicator(
                         onRefresh: () async => onRefresh(),
                         color: context.brandPrimaryColor,
@@ -63,13 +70,10 @@ final class LeaderboardPagePage extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       child: Row(
         children: [
-          IconButton(
+          MentorXIconButton(
             onPressed: () => Navigator.maybePop(context),
-            icon: Icon(
-              Icons.arrow_back_ios_new_rounded,
-              color: context.textPrimaryColor,
-              size: 20,
-            ),
+            icon: Icons.arrow_back_ios_new_rounded,
+            color: context.textPrimaryColor,
           ),
           Expanded(
             child: Text(
@@ -83,9 +87,10 @@ final class LeaderboardPagePage extends StatelessWidget {
               ),
             ),
           ),
-          IconButton(
+          MentorXIconButton(
             onPressed: onRefresh,
-            icon: Icon(Icons.refresh_rounded, color: context.textPrimaryColor),
+            icon: Icons.refresh_rounded,
+            color: context.textPrimaryColor,
           ),
         ],
       ),
@@ -97,11 +102,10 @@ final class LeaderboardPagePage extends StatelessWidget {
     dynamic t,
   ) {
     if (state.leaderboard.isEmpty) {
-      return Center(
-        child: Text(
-          'No rankings available.',
-          style: TextStyle(color: context.textSecondaryColor),
-        ),
+      return AppEmptyView(
+        title: 'No rankings available',
+        message: 'Be the first to join the leaderboard by completing your coursework.',
+        icon: Icons.workspace_premium_rounded,
       );
     }
 
@@ -145,7 +149,7 @@ final class LeaderboardPagePage extends StatelessWidget {
 
 final class _CourseFilter extends StatelessWidget {
   final String? selectedId;
-  final List<CourseSummaryEntity> courses;
+  final List<EnrollmentEntity> courses;
   final ValueChanged<String?> onChanged;
   final dynamic t;
 
@@ -173,7 +177,7 @@ final class _CourseFilter extends StatelessWidget {
             (c) => Padding(
               padding: const EdgeInsets.only(right: 8),
               child: _FilterChip(
-                label: c.title,
+                label: c.courseTitle ?? '',
                 isSelected: selectedId == c.id,
                 onTap: () => onChanged(c.id),
               ),
@@ -466,65 +470,74 @@ final class _LeaderboardTile extends StatelessWidget {
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(24),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-            color: context.backgroundSecondaryColor.withValues(alpha: 0.8),
-            child: Row(
-              children: [
-                Container(
-                  width: 36,
-                  height: 36,
-                  decoration: BoxDecoration(
-                    color: context.backgroundTertiaryColor,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Center(
-                    child: Text(
-                      '#${entry.rank}',
-                      style: TextStyle(
-                        color: context.textPrimaryColor,
-                        fontWeight: FontWeight.w900,
-                        fontSize: 14,
-                        letterSpacing: -0.5,
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: ExcludeSemantics(
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                  child: const SizedBox.expand(),
+                ),
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              color: context.backgroundSecondaryColor.withValues(alpha: 0.8),
+              child: Row(
+                children: [
+                  Container(
+                    width: 36,
+                    height: 36,
+                    decoration: BoxDecoration(
+                      color: context.backgroundTertiaryColor,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Center(
+                      child: Text(
+                        '#${entry.rank}',
+                        style: TextStyle(
+                          color: context.textPrimaryColor,
+                          fontWeight: FontWeight.w900,
+                          fontSize: 14,
+                          letterSpacing: -0.5,
+                        ),
                       ),
                     ),
                   ),
-                ),
-                const Gap(16),
-                SizedBox(
-                  width: 40,
-                  height: 40,
-                  child: AppDynamicImage(
-                    'https://ui-avatars.com/api/?name=${entry.studentName}&background=random&color=fff',
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ),
-                const Gap(12),
-                Expanded(
-                  child: Text(
-                    entry.studentName,
-                    style: TextStyle(
-                      color: context.textPrimaryColor,
-                      fontWeight: FontWeight.w800,
-                      fontSize: 14,
-                      letterSpacing: -0.2,
+                  const Gap(16),
+                  SizedBox(
+                    width: 40,
+                    height: 40,
+                    child: AppDynamicImage(
+                      'https://ui-avatars.com/api/?name=${entry.studentName}&background=random&color=fff',
+                      borderRadius: BorderRadius.circular(20),
                     ),
                   ),
-                ),
-                Text(
-                  '${entry.score}%',
-                  style: TextStyle(
-                    color: context.brandPrimaryColor,
-                    fontWeight: FontWeight.w900,
-                    fontSize: 16,
-                    letterSpacing: -0.5,
+                  const Gap(12),
+                  Expanded(
+                    child: Text(
+                      entry.studentName,
+                      style: TextStyle(
+                        color: context.textPrimaryColor,
+                        fontWeight: FontWeight.w800,
+                        fontSize: 14,
+                        letterSpacing: -0.2,
+                      ),
+                    ),
                   ),
-                ),
-              ],
+                  Text(
+                    '${entry.score}%',
+                    style: TextStyle(
+                      color: context.brandPrimaryColor,
+                      fontWeight: FontWeight.w900,
+                      fontSize: 16,
+                      letterSpacing: -0.5,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
@@ -685,9 +698,13 @@ class _BlurredBlob extends StatelessWidget {
           color: color,
           shape: BoxShape.circle,
         ),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 50, sigmaY: 50),
-          child: const SizedBox.expand(),
+        child: ClipOval(
+          child: ExcludeSemantics(
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 50, sigmaY: 50),
+              child: const SizedBox.expand(),
+            ),
+          ),
         ),
       ),
     );

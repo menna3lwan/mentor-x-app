@@ -35,6 +35,10 @@ dependencies:
     path: ../packages/parent/dio_grade_repository
   parent_dio_communication_repository:
     path: ../packages/parent/dio_communication_repository
+  dio_parent_analytics_repository:
+    path: ../packages/parent/dio_parent_analytics_repository
+  parent_dio_profile_repository:
+    path: ../packages/parent/dio_profile_repository
   parent_mock_authentication_repository:
     path: ../packages/mock/parent/mock_authentication_repository
   parent_mock_home_repository:
@@ -51,6 +55,10 @@ dependencies:
     path: ../packages/mock/parent/mock_grade_repository
   parent_mock_communication_repository:
     path: ../packages/mock/parent/mock_communication_repository
+  mock_analytics_repository:
+    path: ../packages/mock/parent/mock_analytics_repository
+  parent_mock_profile_repository:
+    path: ../packages/mock/parent/mock_profile_repository
   flutter_secure_storage_cache_repository:
     path: ../packages/common/flutter_secure_storage_cache_repository
   dio_http_client:
@@ -77,6 +85,8 @@ dependencies:
   # Services
   device_info_service:
     path: ../packages/services/device_info_service
+  analytics_service:
+    path: ../packages/services/analytics_service
 
 dev_dependencies:
   flutter_test:

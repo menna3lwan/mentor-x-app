@@ -1,6 +1,5 @@
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'assignment_submit_page_page.dart';
 import 'bloc/assignment_submit_page_bloc.dart';
@@ -27,8 +26,8 @@ class _AssignmentSubmitPageWrapperState
             Navigator.of(context).pop();
         }
       },
-      child: BlocBuilder<AssignmentSubmitPageBloc, AssignmentSubmitPageState>(
-        builder: (context, state) {
+      child: Builder(
+        builder: (context) {
           return const AssignmentSubmitPage();
         },
       ),

@@ -1,3 +1,4 @@
+import 'package:mocktail/mocktail.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mock_attendance_repository/mock_attendance_repository.dart';
@@ -5,18 +6,23 @@ import 'package:mock_attendance_repository/mock_attendance_repository.dart';
 import 'package:mentorx_student/core/core.dart';
 import 'package:mentorx_student/features/attendance/pages/attendance_history_page/bloc/attendance_history_page_bloc.dart';
 
+class MockAnalyticsService extends Mock implements AnalyticsService {}
+
+
 void main() {
+  late AnalyticsService analyticsService;
   late MockAttendanceRepository attendanceRepository;
 
   setUp(() {
+    analyticsService = MockAnalyticsService();
     attendanceRepository = const MockAttendanceRepository(delay: Duration.zero);
   });
 
   group('AttendanceHistoryPageBloc', () {
     blocTest<AttendanceHistoryPageBloc, AttendanceHistoryPageState>(
       'emits [loading, loaded] when load event is added',
-      build: () => AttendanceHistoryPageBloc(
-        attendanceRepository: attendanceRepository,
+      build: () => AttendanceHistoryPageBloc(attendanceRepository: attendanceRepository,
+        analyticsService: analyticsService,
       ),
       act: (bloc) => bloc.add(const AttendanceHistoryPageLoadEvent()),
       expect: () => [
@@ -35,8 +41,8 @@ void main() {
 
     blocTest<AttendanceHistoryPageBloc, AttendanceHistoryPageState>(
       'initial state has LoadingState.initial',
-      build: () => AttendanceHistoryPageBloc(
-        attendanceRepository: attendanceRepository,
+      build: () => AttendanceHistoryPageBloc(attendanceRepository: attendanceRepository,
+        analyticsService: analyticsService,
       ),
       verify: (bloc) {
         expect(bloc.state, AttendanceHistoryPageState.initial);

@@ -12,7 +12,7 @@ final class MockCourseRepository implements CourseRepository {
   Future<void> initialize() async {}
 
   @override
-  Future<List<CourseSummaryEntity>> getEnrolledCourses({
+  Future<List<EnrollmentEntity>> getEnrolledCourses({
     String? status,
     String? search,
     MentorXPaginationInfo? paginationInfo,
@@ -25,7 +25,7 @@ final class MockCourseRepository implements CourseRepository {
     if (search != null && search.isNotEmpty) {
       final query = search.toLowerCase();
       return courses
-          .where((c) => c.title.toLowerCase().contains(query))
+          .where((c) => (c.courseTitle ?? '').toLowerCase().contains(query))
           .toList();
     }
     return courses;
@@ -89,7 +89,8 @@ final class MockCourseRepository implements CourseRepository {
   Future<EnrollmentEntity?> getCourseProgress(String courseId) async {
     await Future<void>.delayed(delay ~/ 2);
     // Return null for non-enrolled courses, progress for enrolled
-    if (courseId.startsWith('ep') || courseId.startsWith('ec')) {
+    // Enrolled courses usually start with 'e' (ep, ec, ee) or 'c' in some mock sections
+    if (courseId.startsWith('e') || courseId.startsWith('c')) {
       return MockCourseGenerator.courseProgress(courseId);
     }
     return null;

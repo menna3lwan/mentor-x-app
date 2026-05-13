@@ -98,7 +98,12 @@ final class AiConversationsPagePage extends StatelessWidget {
 
   Widget _buildBody(BuildContext context) {
     if (state.isLoading && state.conversations.isEmpty) {
-      return const Center(child: CircularProgressIndicator());
+      return ListView.separated(
+        padding: const EdgeInsets.fromLTRB(16, 20, 16, 120),
+        itemCount: 8,
+        separatorBuilder: (_, _) => const Gap(16),
+        itemBuilder: (_, _) => const MentorXSkeleton(height: 96, borderRadius: 24),
+      );
     }
 
     if (state.loadingState.isError && state.conversations.isEmpty) {
@@ -115,96 +120,19 @@ final class AiConversationsPagePage extends StatelessWidget {
   Widget _buildErrorState(
     BuildContext context,
   ) {
-    return ListView(
-      physics: const AlwaysScrollableScrollPhysics(),
-      children: [
-        Gap(MediaQuery.of(context).size.height * 0.2),
-        FadeInDown(
-          child: Icon(
-            Icons.error_outline_rounded,
-            size: 64,
-            color: context.statusDangerColor.withValues(alpha: 0.5),
-          ),
-        ),
-        const Gap(24),
-        FadeInUp(
-          child: Text(
-            state.errorMessage ?? 'Unable to load conversations.',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: context.textSecondaryColor,
-              fontWeight: FontWeight.w800,
-              fontSize: 16,
-            ),
-          ),
-        ),
-      ],
+    return AppErrorView(
+      message: state.errorMessage ?? 'Unable to load conversations.',
+      onRetry: onRefresh,
     );
   }
 
   Widget _buildEmptyState(
     BuildContext context,
   ) {
-    return ListView(
-      physics: const AlwaysScrollableScrollPhysics(),
-      children: [
-        Gap(MediaQuery.of(context).size.height * 0.15),
-        FadeInDown(
-          child: Container(
-            padding: const EdgeInsets.all(32),
-            margin: const EdgeInsets.symmetric(horizontal: 100),
-            decoration: BoxDecoration(
-              color: context.backgroundSecondaryColor,
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: context.borderPrimaryColor.withValues(alpha: 0.05),
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.05),
-                  blurRadius: 20,
-                ),
-              ],
-            ),
-            child: Icon(
-              Icons.forum_rounded,
-              size: 80,
-              color: context.brandPrimaryColor.withValues(alpha: 0.2),
-            ),
-          ),
-        ),
-        const Gap(32),
-        FadeInUp(
-          child: Column(
-            children: [
-              Text(
-                'No conversations yet',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: context.textPrimaryColor,
-                  fontWeight: FontWeight.w900,
-                  fontSize: 22,
-                  letterSpacing: -0.5,
-                ),
-              ),
-              const Gap(12),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 48),
-                child: Text(
-                  'Start a conversation with your AI tutor to get help with your studies.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: context.textSecondaryColor,
-                    height: 1.5,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
+    return AppEmptyView(
+      title: 'No conversations yet',
+      message: 'Start a conversation with your AI tutor to get help with your studies.',
+      icon: Icons.forum_rounded,
     );
   }
 
@@ -315,10 +243,15 @@ final class AiConversationsPagePage extends StatelessWidget {
                       ),
                     ),
                     if (isProcessing)
-                      const SizedBox(
+                      SizedBox(
                         width: 24,
                         height: 24,
-                        child: CircularProgressIndicator(strokeWidth: 3),
+                        child: CircularProgressIndicator(
+                          strokeWidth: 3,
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            context.brandPrimaryColor,
+                          ),
+                        ),
                       )
                     else
                       PopupMenuButton<_ConversationAction>(

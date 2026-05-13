@@ -58,6 +58,8 @@ final class _AddBalancePageState extends State<AddBalancePage> {
       },
       child: BlocBuilder<AddBalancePageBloc, AddBalancePageState>(
         builder: (context, state) {
+          final errorMessage = state.errorMessage;
+
           return Scaffold(
             backgroundColor: context.backgroundPrimaryColor,
             body: Stack(
@@ -73,18 +75,20 @@ final class _AddBalancePageState extends State<AddBalancePage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            if (state.errorMessage != null)
+                            if (errorMessage != null)
                               Padding(
                                 padding: const EdgeInsets.only(bottom: 24),
                                 child: FadeInDown(
+                                  key: const ValueKey('add_balance_error_fade'),
                                   child: StatusBadge(
-                                    message: state.errorMessage!,
+                                    message: errorMessage,
                                     status: StatusBadgeType.danger,
                                   ),
                                 ),
                               ),
 
                             FadeInUp(
+                              key: const ValueKey('add_balance_amount_label_fade'),
                               duration: const Duration(milliseconds: 500),
                               child: Text(
                                 t['amount']!,
@@ -98,6 +102,7 @@ final class _AddBalancePageState extends State<AddBalancePage> {
                             ),
                             const Gap(16),
                             FadeInUp(
+                              key: const ValueKey('add_balance_amount_input_fade'),
                               duration: const Duration(milliseconds: 500),
                               delay: const Duration(milliseconds: 100),
                               child: MentorXTextFormField(
@@ -111,6 +116,7 @@ final class _AddBalancePageState extends State<AddBalancePage> {
                             ),
                             const Gap(24),
                             FadeInUp(
+                              key: const ValueKey('add_balance_presets_fade'),
                               duration: const Duration(milliseconds: 500),
                               delay: const Duration(milliseconds: 200),
                               child: Wrap(
@@ -169,6 +175,7 @@ final class _AddBalancePageState extends State<AddBalancePage> {
 
                             const Gap(48),
                             FadeInUp(
+                              key: const ValueKey('add_balance_payment_label_fade'),
                               duration: const Duration(milliseconds: 500),
                               delay: const Duration(milliseconds: 300),
                               child: Text(
@@ -186,6 +193,7 @@ final class _AddBalancePageState extends State<AddBalancePage> {
                               final (icon, title, desc) = methods[i];
                               final isSelected = _selectedMethodIndex == i;
                               return FadeInUp(
+                                key: ValueKey('add_balance_method_fade_$i'),
                                 duration: const Duration(milliseconds: 500),
                                 delay: Duration(milliseconds: 400 + (100 * i)),
                                 child: GestureDetector(
@@ -278,6 +286,7 @@ final class _AddBalancePageState extends State<AddBalancePage> {
                                               ),
                                               if (isSelected)
                                                 ZoomIn(
+                                                  key: const ValueKey('add_balance_check_icon_zoom'),
                                                   child: Container(
                                                     padding: const EdgeInsets.all(4),
                                                     decoration: BoxDecoration(
@@ -323,28 +332,23 @@ final class _AddBalancePageState extends State<AddBalancePage> {
                   ),
                 ),
               ),
-              child: ClipRRect(
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                  child: MentorXButton(
-                    onPressed:
-                        (_amountController.text.isNotEmpty &&
-                            _selectedMethodIndex >= 0)
-                        ? () {
-                            final amount =
-                                double.tryParse(_amountController.text) ?? 0.0;
-                            context.read<AddBalancePageBloc>().add(
-                              AddBalancePageSubmitEvent(
-                                amount: amount,
-                                method: _getPaymentMethod(_selectedMethodIndex),
-                              ),
-                            );
-                          }
-                        : null,
-                    label: t['continueBtn']!,
-                    loading: state.isSubmitting,
-                  ),
-                ),
+              child: MentorXButton(
+                onPressed:
+                    (_amountController.text.isNotEmpty &&
+                        _selectedMethodIndex >= 0)
+                    ? () {
+                        final amount =
+                            double.tryParse(_amountController.text) ?? 0.0;
+                        context.read<AddBalancePageBloc>().add(
+                          AddBalancePageSubmitEvent(
+                            amount: amount,
+                            method: _getPaymentMethod(_selectedMethodIndex),
+                          ),
+                        );
+                      }
+                    : null,
+                label: t['continueBtn']!,
+                loading: state.isSubmitting,
               ),
             ),
           );

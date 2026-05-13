@@ -25,16 +25,38 @@ final class _PdfViewerPageWrapperState extends State<PdfViewerPageWrapper> {
             MentorXUI.showToast(message: message);
         }
       },
-      child: BlocBuilder<PdfViewerPageBloc, PdfViewerPageState>(
-        builder: (context, state) {
+      child: Builder(
+        builder: (context) {
           final bloc = context.read<PdfViewerPageBloc>();
+          final title = context.select(
+            (PdfViewerPageBloc bloc) => bloc.state.title,
+          );
+          final contentUrl = context.select(
+            (PdfViewerPageBloc bloc) => bloc.state.contentUrl,
+          );
+          final isLoading = context.select(
+            (PdfViewerPageBloc bloc) => bloc.state.isLoading,
+          );
+          final isReady = context.select(
+            (PdfViewerPageBloc bloc) => bloc.state.isReady,
+          );
+          final isCompleted = context.select(
+            (PdfViewerPageBloc bloc) => bloc.state.isCompleted,
+          );
+          final isFailure = context.select(
+            (PdfViewerPageBloc bloc) => bloc.state.isFailure,
+          );
+          final errorMessage = context.select(
+            (PdfViewerPageBloc bloc) => bloc.state.errorMessage,
+          );
+
           return PdfViewerPagePage(
-            title: state.title,
-            contentUrl: state.contentUrl,
-            isLoading: state.isLoading,
-            isReady: state.isReady,
-            isCompleted: state.isCompleted,
-            errorMessage: state.isFailure ? state.errorMessage : null,
+            title: title,
+            contentUrl: contentUrl,
+            isLoading: isLoading,
+            isReady: isReady,
+            isCompleted: isCompleted,
+            errorMessage: isFailure ? errorMessage : null,
             onMarkComplete: () => bloc.add(const PdfViewerPageCompleted()),
           );
         },

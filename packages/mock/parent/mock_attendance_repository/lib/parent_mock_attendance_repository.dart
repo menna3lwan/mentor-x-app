@@ -51,4 +51,13 @@ final class MockParentAttendanceRepository implements ParentAttendanceRepository
       attendanceRate: 0.9,
     );
   }
+
+  @override
+  Future<List<GroupEntity>> getChildGroups(String childId) async {
+    await Future.delayed(delay);
+    return [
+      GroupEntity(id: 'g-parent-1', name: 'Physics Group $childId'),
+      GroupEntity(id: 'g-parent-2', name: 'Math Group $childId'),
+    ];
+  }
 }

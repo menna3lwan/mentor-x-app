@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:mentorx_student/core/core.dart';
 import 'package:gap/gap.dart';
@@ -65,43 +64,40 @@ final class _QuizTakingPageState extends State<QuizTakingPage> {
         if (state.isLoading) {
           return Scaffold(
             backgroundColor: context.backgroundPrimaryColor,
-            body: const Center(child: CircularProgressIndicator()),
+            body: Column(
+              children: [
+                const MentorXSkeleton(height: 150, borderRadius: 32),
+                const Gap(32),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      children: [
+                        const MentorXSkeleton(height: 200, borderRadius: 28),
+                        const Gap(32),
+                        ...List.generate(
+                          3,
+                          (index) => const Padding(
+                            padding: EdgeInsets.only(bottom: 12),
+                            child: MentorXSkeleton(height: 72, borderRadius: 24),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           );
         }
 
         if (state.errorMessage != null) {
           return Scaffold(
             backgroundColor: context.backgroundPrimaryColor,
-            body: Center(
-              child: Padding(
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.error_outline_rounded,
-                      size: 64,
-                      color: context.statusDangerColor.withValues(alpha: 0.5),
-                    ),
-                    const Gap(24),
-                    Text(
-                      state.errorMessage!,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w800,
-                        color: context.textSecondaryColor,
-                      ),
-                    ),
-                    const Gap(32),
-                    SizedBox(
-                      width: 140,
-                      child: MentorXButton(
-                        label: t['commonBack']!,
-                        onPressed: () => context.pop(),
-                      ),
-                    ),
-                  ],
-                ),
+            body: AppErrorView(
+              message: state.errorMessage!,
+              onRetry: () => context.read<QuizTakingPageBloc>().add(
+                const QuizTakingPageLoadEvent(),
               ),
             ),
           );
@@ -110,14 +106,9 @@ final class _QuizTakingPageState extends State<QuizTakingPage> {
         if (state.quiz == null) {
           return Scaffold(
             backgroundColor: context.backgroundPrimaryColor,
-            body: Center(
-              child: Text(
-                t['quizNotFound'] ?? 'Quiz not found',
-                style: TextStyle(
-                  color: context.textPrimaryColor,
-                  fontWeight: FontWeight.w900,
-                ),
-              ),
+            body: AppEmptyView(
+              title: t['quizNotFound'] ?? 'Quiz not found',
+              message: 'Try again later',
             ),
           );
         }
@@ -240,12 +231,11 @@ final class _BuildHeader extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  IconButton(
+                  MentorXIconButton(
                     onPressed: () => _showExitDialog(context, t),
-                    icon: Icon(
-                      Icons.close_rounded,
-                      color: context.textPrimaryColor,
-                    ),
+                    icon: Icons.close_rounded,
+                    color: context.textPrimaryColor,
+                    size: MentorXIconButtonSize.small,
                   ),
                   const Gap(4),
                   Expanded(
@@ -496,7 +486,7 @@ final class _QuestionCard extends StatelessWidget {
                     const Gap(24),
                     ClipRRect(
                       borderRadius: BorderRadius.circular(20),
-                      child: Image.network(
+                      child: AppDynamicImage(
                         q.imageUrl!,
                         fit: BoxFit.cover,
                       ),

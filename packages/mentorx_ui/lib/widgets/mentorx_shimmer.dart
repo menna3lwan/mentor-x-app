@@ -4,16 +4,16 @@ class MentorXShimmer extends StatefulWidget {
   final Widget child;
   final bool enabled;
   final Duration duration;
-  final Color baseColor;
-  final Color highlightColor;
+  final Color? baseColor;
+  final Color? highlightColor;
 
   const MentorXShimmer({
     super.key,
     required this.child,
     this.enabled = true,
     this.duration = const Duration(milliseconds: 1500),
-    this.baseColor = const Color(0xFFE0E0E0),
-    this.highlightColor = const Color(0xFFF5F5F5),
+    this.baseColor,
+    this.highlightColor,
   });
 
   @override
@@ -41,9 +41,8 @@ class _MentorXShimmerState extends State<MentorXShimmer>
   Widget build(BuildContext context) {
     if (!widget.enabled) return widget.child;
 
-    final theme = MentorXThemeProvider.of(context);
-    final baseColor = theme.colors[$mentorxToken.color.backgroundTertiary]!;
-    final highlightColor = theme.colors[$mentorxToken.color.backgroundSecondary]!;
+    final effectiveBaseColor = widget.baseColor ?? context.backgroundTertiaryColor;
+    final effectiveHighlightColor = widget.highlightColor ?? context.backgroundSecondaryColor;
 
     return AnimatedBuilder(
       animation: _controller,
@@ -55,9 +54,9 @@ class _MentorXShimmerState extends State<MentorXShimmer>
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                baseColor,
-                highlightColor,
-                baseColor,
+                effectiveBaseColor,
+                effectiveHighlightColor,
+                effectiveBaseColor,
               ],
               stops: const [0.1, 0.5, 0.9],
               transform: _SlidingGradientTransform(offset: _controller.value),

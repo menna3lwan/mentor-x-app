@@ -25,7 +25,7 @@ abstract interface class CourseRepository {
   Future<void> initialize();
 
   /// Fetch enrolled courses with optional status filter and pagination.
-  Future<List<CourseSummaryEntity>> getEnrolledCourses({
+  Future<List<EnrollmentEntity>> getEnrolledCourses({
     String? status,
     String? search,
     MentorXPaginationInfo? paginationInfo,

@@ -20,18 +20,22 @@ final class QuizReviewPageBloc
           QuizReviewPageState,
           QuizReviewPagePresentationEvent
         > {
-  QuizReviewPageBloc({required this.quizRepository})
-    : super(QuizReviewPageState.initial) {
+  QuizReviewPageBloc({
+    required this.quizRepository,
+    required this.analyticsService,
+  }) : super(QuizReviewPageState.initial) {
     on<QuizReviewPageLoadEvent>(_onLoad);
   }
 
   final QuizRepository quizRepository;
+  final AnalyticsService analyticsService;
 
   Future<void> _onLoad(
     QuizReviewPageLoadEvent event,
     Emitter<QuizReviewPageState> emit,
   ) async {
     emit(state.copyWith(loadingState: LoadingState.loading));
+    analyticsService.logEvent(name: AnalyticsEvents.quizReviewViewed);
     emit(state.copyWith(loadingState: LoadingState.loaded));
   }
 }

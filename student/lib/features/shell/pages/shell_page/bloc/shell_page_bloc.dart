@@ -15,7 +15,13 @@ final class ShellPageNavigateBack extends ShellPagePresentationEvent {
 
 final class ShellPageBloc extends Bloc<ShellPageEvent, ShellPageState>
     with BlocPresentationMixin<ShellPageState, ShellPagePresentationEvent> {
-  ShellPageBloc() : super(ShellPageState.initial) {
+  final AnalyticsService _analyticsService;
+
+  ShellPageBloc({
+    required AnalyticsService analyticsService,
+  }) : _analyticsService = analyticsService,
+       super(ShellPageState.initial) {
+    _analyticsService.logEvent(name: 'shell_viewed');
     on<ShellPageLoadEvent>(_onLoad);
   }
 

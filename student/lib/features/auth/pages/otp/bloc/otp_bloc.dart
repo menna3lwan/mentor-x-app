@@ -26,13 +26,16 @@ final class OtpFailurePresentationEvent extends OtpPresentationEvent {
 final class OtpBloc extends Bloc<OtpEvent, OtpState>
     with BlocPresentationMixin<OtpState, OtpPresentationEvent> {
   final StudentAuthenticationRepository _authRepository;
+  final AnalyticsService _analyticsService;
 
   OtpBloc({
     required StudentAuthenticationRepository authRepository,
+    required AnalyticsService analyticsService,
     required String phoneNumber,
     int? otpLength,
     Duration? otpDuration,
   }) : _authRepository = authRepository,
+       _analyticsService = analyticsService,
        super(
          OtpState(
            phoneNumber: phoneNumber,
@@ -46,6 +49,7 @@ final class OtpBloc extends Bloc<OtpEvent, OtpState>
     on<OtpResendViaWhatsappRequested>(_onResendViaWhatsappRequested);
     on<OtpCountdownTicked>(_onCountdownTicked);
 
+    _analyticsService.logEvent(name: AnalyticsEvents.otpViewed);
     _startCountdown();
   }
 

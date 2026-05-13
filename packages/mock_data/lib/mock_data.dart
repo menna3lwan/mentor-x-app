@@ -19,6 +19,7 @@ part 'src/generators/mock_parent_dashboard_generator.dart';
 part 'src/generators/mock_home_dashboard_generator.dart';
 part 'src/generators/mock_course_generator.dart';
 part 'src/generators/mock_wallet_generator.dart';
+part 'src/generators/mock_analytics_generator.dart';
 part 'src/generators/mock_notification_generator.dart';
 part 'src/generators/mock_attendance_generator.dart';
 part 'src/generators/mock_quiz_generator.dart';

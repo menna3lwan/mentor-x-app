@@ -41,8 +41,18 @@ final class _AcademicInfoStepState extends State<AcademicInfoStep> {
   Widget build(BuildContext context) {
     final t = context.t.student;
     final bloc = context.read<StudentRegistrationBloc>();
-    return BlocBuilder<StudentRegistrationBloc, StudentRegistrationState>(
-      builder: (context, state) {
+    return Builder(
+      builder: (context) {
+        final selectedGrade = context.select(
+          (StudentRegistrationBloc bloc) => bloc.state.selectedGrade,
+        );
+        final grades = context.select(
+          (StudentRegistrationBloc bloc) => bloc.state.grades,
+        );
+        final isOnline = context.select(
+          (StudentRegistrationBloc bloc) => bloc.state.isOnline,
+        );
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -75,7 +85,7 @@ final class _AcademicInfoStepState extends State<AcademicInfoStep> {
             const Gap(40),
             FadeInUp(
               duration: const Duration(milliseconds: 400),
-              child: _buildGradePicker(context, state, bloc),
+              child: _buildGradePicker(context, selectedGrade, grades, bloc),
             ),
             const Gap(24),
             FadeInUp(
@@ -103,9 +113,9 @@ final class _AcademicInfoStepState extends State<AcademicInfoStep> {
             const Gap(40),
             FadeInUp(
               duration: const Duration(milliseconds: 700),
-              child: _buildStudyTypeToggle(context, state, bloc),
+              child: _buildStudyTypeToggle(context, isOnline, bloc),
             ),
-            if (!state.isOnline) ...[
+            if (!isOnline) ...[
               const Gap(24),
               FadeInUp(
                 duration: const Duration(milliseconds: 400),
@@ -126,7 +136,8 @@ final class _AcademicInfoStepState extends State<AcademicInfoStep> {
 
   Widget _buildGradePicker(
     BuildContext context,
-    StudentRegistrationState state,
+    GradeEntity? selectedGrade,
+    List<GradeEntity> grades,
     StudentRegistrationBloc bloc,
   ) {
     final t = context.t.student;
@@ -153,7 +164,7 @@ final class _AcademicInfoStepState extends State<AcademicInfoStep> {
         ),
         const Gap(16),
         DropdownButtonFormField<GradeEntity>(
-          value: state.selectedGrade,
+          value: selectedGrade,
           dropdownColor: context.backgroundSecondaryColor,
           icon: Icon(
             Icons.keyboard_arrow_down_rounded,
@@ -197,7 +208,7 @@ final class _AcademicInfoStepState extends State<AcademicInfoStep> {
               fontWeight: FontWeight.w600,
             ),
           ),
-          items: state.grades.map((grade) {
+          items: grades.map((grade) {
             return DropdownMenuItem(
               value: grade,
               child: Text(
@@ -218,7 +229,7 @@ final class _AcademicInfoStepState extends State<AcademicInfoStep> {
 
   Widget _buildStudyTypeToggle(
     BuildContext context,
-    StudentRegistrationState state,
+    bool isOnline,
     StudentRegistrationBloc bloc,
   ) {
     final t = context.t.student;
@@ -260,7 +271,7 @@ final class _AcademicInfoStepState extends State<AcademicInfoStep> {
                   context,
                   t['studyTypeOnline'] ?? 'Online Study',
                   Icons.laptop_chromebook_rounded,
-                  state.isOnline,
+                  isOnline,
                   () => bloc.add(
                     const StudentRegistrationOnlineToggleChanged(true),
                   ),
@@ -272,7 +283,7 @@ final class _AcademicInfoStepState extends State<AcademicInfoStep> {
                   context,
                   t['studyTypeCenter'] ?? 'Center Study',
                   Icons.location_city_rounded,
-                  !state.isOnline,
+                  !isOnline,
                   () => bloc.add(
                     const StudentRegistrationOnlineToggleChanged(false),
                   ),

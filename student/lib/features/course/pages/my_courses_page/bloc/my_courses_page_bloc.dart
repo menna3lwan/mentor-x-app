@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
 import '../../../../../core/core.dart';
+import 'package:analytics_service/analytics_service.dart';
 
 part 'my_courses_page_event.dart';
 part 'my_courses_page_state.dart';
@@ -23,10 +24,14 @@ final class MyCoursesPageBloc
           MyCoursesPagePresentationEvent
         > {
   final CourseRepository _courseRepository;
+  final AnalyticsService _analyticsService;
 
-  MyCoursesPageBloc({required CourseRepository courseRepository})
-    : _courseRepository = courseRepository,
-      super(MyCoursesPageState.initial) {
+  MyCoursesPageBloc({
+    required CourseRepository courseRepository,
+    required AnalyticsService analyticsService,
+  }) : _courseRepository = courseRepository,
+       _analyticsService = analyticsService,
+       super(MyCoursesPageState.initial) {
     on<MyCoursesPageInitialized>(_onInitialized);
     on<MyCoursesPageTabChanged>(_onTabChanged);
     on<MyCoursesPageRefreshed>(_onRefreshed);
@@ -37,6 +42,7 @@ final class MyCoursesPageBloc
     MyCoursesPageInitialized event,
     Emitter<MyCoursesPageState> emit,
   ) async {
+    _analyticsService.logEvent(name: AnalyticsEvents.myCoursesViewed);
     await _loadCourses(emit: emit);
   }
 

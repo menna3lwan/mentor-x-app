@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mentorx_core/mentorx_core.dart';
+import 'package:mentorx_student/core/core.dart';
 import 'bloc/leaderboard_page_bloc.dart';
 import 'leaderboard_page_page.dart';
 
@@ -14,9 +14,14 @@ final class LeaderboardPageWrapper extends StatelessWidget {
       create: (context) => LeaderboardPageBloc(
         leaderboardRepository: context.read<LeaderboardRepository>(),
         courseRepository: context.read<CourseRepository>(),
+        analyticsService: context.read<AnalyticsService>(),
       )..add(LeaderboardPageLoadRequested(courseId: courseId)),
-      child: BlocBuilder<LeaderboardPageBloc, LeaderboardPageState>(
-        builder: (context, state) {
+      child: Builder(
+        builder: (context) {
+          final state = context.select<
+            LeaderboardPageBloc,
+            LeaderboardPageState
+          >((bloc) => bloc.state);
           return LeaderboardPagePage(
             state: state,
             onCourseChanged: (id) => context.read<LeaderboardPageBloc>().add(

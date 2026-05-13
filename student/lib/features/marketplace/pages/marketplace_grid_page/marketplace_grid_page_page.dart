@@ -117,15 +117,31 @@ final class _MarketplaceGridPageState extends State<MarketplaceGridPage> {
               const Gap(24),
               Expanded(
                 child: state.loadingState == LoadingState.loading
-                    ? const Center(child: CircularProgressIndicator())
+                    ? GridView.builder(
+                        padding: const EdgeInsets.fromLTRB(20, 0, 20, 100),
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 16,
+                          mainAxisSpacing: 16,
+                          childAspectRatio: 0.62,
+                        ),
+                        itemCount: 6,
+                        itemBuilder: (context, index) => const MentorXSkeleton(
+                          height: 250,
+                          borderRadius: 28,
+                        ),
+                      )
                     : state.loadingState == LoadingState.error
-                        ? _ErrorView(
-                            t: t,
-                            onRetry: () =>
-                                bloc.add(const MarketplaceGridPageLoadEvent()),
+                        ? AppErrorView(
+                            message: t['errorLoadingProducts'] ?? 'Error loading products',
+                            onRetry: () => bloc.add(const MarketplaceGridPageLoadEvent()),
                           )
                         : state.items.isEmpty
-                            ? _EmptyView(t: t)
+                            ? AppEmptyView(
+                                title: t['noProductsFound'] ?? 'No products found',
+                                message: 'Try again later',
+                                icon: Icons.inventory_2_outlined,
+                              )
                             : GridView.builder(
                                 physics: const BouncingScrollPhysics(),
                                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 100),
@@ -187,13 +203,11 @@ final class _BuildHeader extends StatelessWidget {
           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
           child: Row(
             children: [
-              IconButton(
+              MentorXIconButton(
                 onPressed: () => Navigator.pop(context),
-                icon: Icon(
-                  Icons.arrow_back_ios_new_rounded,
-                  color: context.textPrimaryColor,
-                  size: 20,
-                ),
+                icon: Icons.arrow_back_ios_new_rounded,
+                color: context.textPrimaryColor,
+                size: MentorXIconButtonSize.small,
               ),
               const Gap(12),
               Expanded(
@@ -207,11 +221,11 @@ final class _BuildHeader extends StatelessWidget {
                   ),
                 ),
               ),
-              IconButton(
-                icon: const Icon(Icons.history_rounded),
+              MentorXIconButton(
+                icon: Icons.history_rounded,
                 onPressed: () =>
                     const MarketplaceOrdersPageRoute().push(context),
-                tooltip: t['marketplaceOrders'],
+                color: context.textPrimaryColor,
               ),
               const _CartBadge(),
             ],
@@ -227,16 +241,21 @@ final class _CartBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<MarketplaceCartCubit, MarketplaceCartState>(
-      builder: (context, state) {
+    return Builder(
+      builder: (context) {
+        final totalCount = context.select<MarketplaceCartCubit, int>(
+          (cubit) => cubit.state.totalCount,
+        );
+
         return Stack(
           alignment: Alignment.center,
           children: [
-            IconButton(
-              icon: const Icon(Icons.shopping_bag_outlined),
+            MentorXIconButton(
+              icon: Icons.shopping_bag_outlined,
               onPressed: () => const MarketplaceCartPageRoute().push(context),
+              color: context.textPrimaryColor,
             ),
-            if (state.totalCount > 0)
+            if (totalCount > 0)
               Positioned(
                 right: 6,
                 top: 6,
@@ -263,7 +282,7 @@ final class _CartBadge extends StatelessWidget {
                     minHeight: 18,
                   ),
                   child: Text(
-                    '${state.totalCount}',
+                    '$totalCount',
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 9,
@@ -280,89 +299,6 @@ final class _CartBadge extends StatelessWidget {
   }
 }
 
-final class _ErrorView extends StatelessWidget {
-  final dynamic t;
-  final VoidCallback onRetry;
-  const _ErrorView({
-    required this.t,
-    required this.onRetry,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.error_outline_rounded,
-            size: 64,
-            color: context.statusDangerColor.withValues(alpha: 0.5),
-          ),
-          const Gap(24),
-          Text(
-            t['errorLoadingProducts'] ?? 'Error loading products',
-            style: TextStyle(
-              color: context.textSecondaryColor,
-              fontWeight: FontWeight.w800,
-              fontSize: 16,
-            ),
-          ),
-          const Gap(24),
-          SizedBox(
-            width: 140,
-            child: MentorXButton(
-              onPressed: onRetry,
-              label: t['retry'] ?? 'Retry',
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-final class _EmptyView extends StatelessWidget {
-  final dynamic t;
-
-  const _EmptyView({required this.t});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(32),
-            decoration: BoxDecoration(
-              color: context.backgroundSecondaryColor.withValues(alpha: 0.45),
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: context.borderPrimaryColor.withValues(alpha: 0.1),
-              ),
-            ),
-            child: Icon(
-              Icons.inventory_2_outlined,
-              size: 64,
-              color: context.textTertiaryColor.withValues(alpha: 0.2),
-            ),
-          ),
-          const Gap(24),
-          Text(
-            t['noProductsFound'] ?? 'No products found',
-            style: TextStyle(
-              color: context.textPrimaryColor,
-              fontSize: 18,
-              fontWeight: FontWeight.w900,
-              letterSpacing: -0.5,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
 
 final class _ProductCard extends StatelessWidget {
   final MarketplaceItemEntity item;

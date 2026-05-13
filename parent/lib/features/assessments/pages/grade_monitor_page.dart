@@ -1,3 +1,4 @@
+import 'package:analytics_service/analytics_service.dart';
 import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,6 +20,7 @@ class GradeMonitorPage extends StatelessWidget {
     return BlocProvider(
       create: (context) => AssessmentsBloc(
         repository: context.read<ParentGradeRepository>(),
+        analyticsService: context.read<AnalyticsService>(),
       )..add(AssessmentsStarted(childId)),
       child: BlocBuilder<AssessmentsBloc, AssessmentsState>(
         builder: (context, state) {

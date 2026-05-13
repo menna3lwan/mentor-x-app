@@ -1,3 +1,4 @@
+import 'package:analytics_service/analytics_service.dart';
 import 'package:bloc/bloc.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
 
@@ -18,11 +19,14 @@ final class HomePageFailurePresentationEvent extends HomePagePresentationEvent {
 final class HomePageBloc extends Bloc<HomePageEvent, HomePageState>
     with BlocPresentationMixin<HomePageState, HomePagePresentationEvent> {
   final StudentHomeRepository _homeRepository;
+  final AnalyticsService _analyticsService;
 
   HomePageBloc({
     required StudentHomeRepository homeRepository,
+    required AnalyticsService analyticsService,
     required String studentName,
   }) : _homeRepository = homeRepository,
+       _analyticsService = analyticsService,
        super(
          HomePageState.initial(
            studentName: studentName.trim().isEmpty ? 'Student' : studentName,
@@ -39,6 +43,7 @@ final class HomePageBloc extends Bloc<HomePageEvent, HomePageState>
     Emitter<HomePageState> emit,
   ) async {
     if (state.isFirstLoading) {
+      _analyticsService.logEvent(name: AnalyticsEvents.homeViewed);
       await _loadDashboard(emit: emit, isRefresh: false);
     }
   }

@@ -1,25 +1,19 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:gap/gap.dart';
 import '../../../../core/core.dart';
+import 'bloc/wallet_main_page_bloc.dart';
 
 final class WalletMainPage extends StatelessWidget {
-  final double balance;
-  final int points;
-  final List<WalletTransactionEntity> transactions;
-  final bool isLoading;
   final VoidCallback onRefresh;
 
   const WalletMainPage({
     super.key,
-    required this.balance,
-    required this.points,
-    required this.transactions,
-    required this.isLoading,
     required this.onRefresh,
   });
 
@@ -27,18 +21,39 @@ final class WalletMainPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = context.t.student;
 
+    final balance = context.select(
+      (WalletMainPageBloc bloc) => bloc.state.summary?.walletBalance ?? 0.0,
+    );
+    final points = context.select(
+      (WalletMainPageBloc bloc) => bloc.state.summary?.points ?? 0,
+    );
+    final transactions = context.select(
+      (WalletMainPageBloc bloc) => bloc.state.transactions,
+    );
+    final loadingState = context.select(
+      (WalletMainPageBloc bloc) => bloc.state.loadingState,
+    );
+    final isLoading = loadingState == LoadingState.loading;
+
     return Scaffold(
       backgroundColor: context.backgroundPrimaryColor,
       body: Stack(
         children: [
           const _BackgroundDecorations(),
-          _buildBody(context, t),
+          _buildBody(context, t, balance, points, transactions, isLoading),
         ],
       ),
     );
   }
 
-  Widget _buildBody(BuildContext context, dynamic t) {
+  Widget _buildBody(
+    BuildContext context,
+    dynamic t,
+    double balance,
+    int points,
+    List<WalletTransactionEntity> transactions,
+    bool isLoading,
+  ) {
     return RefreshIndicator(
       color: context.brandPrimaryColor,
       onRefresh: () async => onRefresh(),
@@ -159,14 +174,25 @@ final class WalletMainPage extends StatelessWidget {
             ),
           ),
           if (isLoading && transactions.isEmpty)
-            const SliverFillRemaining(
-              child: Center(child: CircularProgressIndicator()),
+            SliverPadding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              sliver: SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) => const Padding(
+                    padding: EdgeInsets.only(bottom: 16),
+                    child: MentorXSkeleton(height: 80, borderRadius: 28),
+                  ),
+                  childCount: 5,
+                ),
+              ),
             )
           else if (transactions.isEmpty)
             SliverFillRemaining(
               hasScrollBody: false,
-              child: FadeIn(
-                child: _EmptyTransactions(t: t),
+              child: AppEmptyView(
+                title: t['noTransactions'] ?? 'No transactions yet',
+                message: 'Start using your wallet to see transactions here.',
+                icon: Icons.receipt_long_rounded,
               ),
             )
           else
@@ -409,42 +435,6 @@ final class _BalanceCard extends StatelessWidget {
   }
 }
 
-final class _EmptyTransactions extends StatelessWidget {
-  const _EmptyTransactions({required this.t});
-  final dynamic t;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(32),
-            decoration: BoxDecoration(
-              color: context.backgroundSecondaryColor,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              Icons.receipt_long_rounded,
-              size: 64,
-              color: context.textTertiaryColor.withValues(alpha: 0.2),
-            ),
-          ),
-          const Gap(24),
-          Text(
-            t['noTransactions'] ?? 'No transactions yet',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w900,
-              color: context.textSecondaryColor,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
 
 final class _ActionButton extends StatelessWidget {
   final IconData icon;

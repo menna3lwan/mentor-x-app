@@ -1,19 +1,47 @@
+import 'dart:async';
+
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
+import 'package:go_router/go_router.dart';
 
 import 'app.dart';
 import 'student_requirements.dart';
+import '../core/core.dart';
 
 final EventBus appEventBus = EventBus();
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 
-final class StudentApp extends StatelessWidget {
+final class StudentApp extends StatefulWidget {
   final StudentRequirements requirements;
 
+  static final MentorXLogger _logger = MentorXLogger('StudentApp');
+
   const StudentApp({super.key, required this.requirements});
+
+  @override
+  State<StudentApp> createState() => _StudentAppState();
+}
+
+class _StudentAppState extends State<StudentApp> {
+  late final StreamSubscription<AppAuthenticationLogoutEvent> _logoutSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+    _logoutSubscription = appEventBus.on<AppAuthenticationLogoutEvent>().listen((event) {
+      StudentApp._logger.info('Global auth event: Session cleared, redirecting to login');
+      rootNavigatorKey.currentContext?.go('/login');
+    });
+  }
+
+  @override
+  void dispose() {
+    _logoutSubscription.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,14 +49,11 @@ final class StudentApp extends StatelessWidget {
     final lightMixTheme = MentorXThemes.light;
 
     return MultiRepositoryProvider(
-      providers: requirements.repositories.toProviders(),
+      providers: widget.requirements.repositories.toProviders(),
       child: MultiBlocProvider(
-        providers: requirements.blocs.toProviders(),
+        providers: widget.requirements.blocs.toProviders(),
         child: MentorXTranslationProvider(
           child: MentorXThemeProvider(
-            // Do not uncomment the 'brightness' line below.
-            // The dark theme is not yet supported.
-            // brightness: requirements.brightness,
             lightTheme: lightMixTheme,
             darkTheme: darkMixTheme,
             child: Builder(
@@ -41,7 +66,7 @@ final class StudentApp extends StatelessWidget {
                 return MaterialApp.router(
                   key: appKey,
                   debugShowCheckedModeBanner: false,
-                  routerConfig: requirements.routerConfig,
+                  routerConfig: widget.requirements.routerConfig,
                   locale: TranslationProvider.of(context).flutterLocale,
                   supportedLocales: LocaleSettings.instance.supportedLocales,
                   localizationsDelegates: [

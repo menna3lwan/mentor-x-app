@@ -127,7 +127,7 @@ final class WalkthroughPagePage extends StatelessWidget {
                                       ),
                                     ],
                                   ),
-                                  child: Image.asset(
+                                  child: AppDynamicImage(
                                     step.imagePath,
                                     fit: BoxFit.contain,
                                   ),

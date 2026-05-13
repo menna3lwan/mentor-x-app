@@ -1,6 +1,5 @@
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'bloc/quiz_review_page_bloc.dart';
 import 'quiz_review_page_page.dart';
@@ -25,11 +24,7 @@ class _QuizReviewPageWrapperState extends State<QuizReviewPageWrapper> {
             Navigator.of(context).pop();
         }
       },
-      child: BlocBuilder<QuizReviewPageBloc, QuizReviewPageState>(
-        builder: (context, state) {
-          return const QuizReviewPage();
-        },
-      ),
+      child: const QuizReviewPage(),
     );
   }
 }

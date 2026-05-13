@@ -5,7 +5,7 @@ import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:gap/gap.dart';
 
 final class EnrolledCourseCard extends StatelessWidget {
-  final CourseSummaryEntity course;
+  final EnrollmentEntity course;
   final VoidCallback onTap;
 
   const EnrolledCourseCard({
@@ -16,7 +16,7 @@ final class EnrolledCourseCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final progress = course.progressPercent ?? 0;
+    final progress = course.progressPercent;
 
     return GestureDetector(
       onTap: onTap,
@@ -37,9 +37,17 @@ final class EnrolledCourseCard extends StatelessWidget {
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(28),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-            child: IntrinsicHeight(
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: ExcludeSemantics(
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                    child: const SizedBox.expand(),
+                  ),
+                ),
+              ),
+              IntrinsicHeight(
               child: Row(
                 children: [
                   SizedBox(
@@ -48,18 +56,10 @@ final class EnrolledCourseCard extends StatelessWidget {
                       children: [
                         Positioned.fill(
                           child: Hero(
-                            tag: 'course_image_${course.id}',
-                            child: Image.network(
-                              course.thumbnailUrl,
+                            tag: 'course_image_${course.courseId}',
+                            child: AppDynamicImage(
+                              course.courseThumbnailUrl ?? '',
                               fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) => Container(
-                                color: context.backgroundPrimaryColor,
-                                child: Icon(
-                                  Icons.school_outlined,
-                                  color: context.textTertiaryColor.withValues(alpha: 0.3),
-                                  size: 32,
-                                ),
-                              ),
                             ),
                           ),
                         ),
@@ -88,7 +88,7 @@ final class EnrolledCourseCard extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            course.title,
+                            course.courseTitle ?? '',
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
@@ -99,6 +99,33 @@ final class EnrolledCourseCard extends StatelessWidget {
                               height: 1.2,
                             ),
                           ),
+                          if (course.timeSpentFormatted != null || course.totalLessons > 0) ...[
+                            const Gap(8),
+                            Row(
+                              children: [
+                                if (course.timeSpentFormatted != null)
+                                  _StatChip(
+                                    icon: Icons.timer_outlined,
+                                    label: course.timeSpentFormatted!,
+                                  ),
+                                if (course.totalLessons > 0) ...[
+                                  const Gap(8),
+                                  _StatChip(
+                                    icon: Icons.play_lesson_outlined,
+                                    label: '${course.completedLessons}/${course.totalLessons}',
+                                  ),
+                                ],
+                              ],
+                            ),
+                          ],
+                          if (course.quizzesTaken > 0) ...[
+                            const Gap(8),
+                            _StatChip(
+                              icon: Icons.quiz_outlined,
+                              label: 'Score: ${course.averageQuizScore.toInt()}%',
+                              color: context.brandSecondaryColor,
+                            ),
+                          ],
                           const Gap(16),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -145,36 +172,41 @@ final class EnrolledCourseCard extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(3),
                                 ),
                               ),
-                              LayoutBuilder(
-                                builder: (context, constraints) {
-                                  return AnimatedContainer(
-                                    duration: const Duration(milliseconds: 800),
-                                    curve: Curves.easeOutBack,
-                                    height: 6,
-                                    width: constraints.maxWidth * (progress / 100),
-                                    decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        colors: progress >= 100
-                                            ? [
-                                                context.statusSuccessColor,
-                                                context.statusSuccessColor.withValues(alpha: 0.8),
-                                              ]
-                                            : [
-                                                context.brandPrimaryColor,
-                                                context.brandPrimaryColor.withValues(alpha: 0.8),
-                                              ],
-                                      ),
-                                      borderRadius: BorderRadius.circular(3),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: (progress >= 100
-                                                  ? context.statusSuccessColor
-                                                  : context.brandPrimaryColor)
-                                              .withValues(alpha: 0.3),
-                                          blurRadius: 8,
-                                          offset: const Offset(0, 2),
+                              TweenAnimationBuilder<double>(
+                                tween: Tween<double>(begin: 0, end: progress / 100),
+                                duration: const Duration(milliseconds: 800),
+                                curve: Curves.easeOutBack,
+                                builder: (context, value, child) {
+                                  return FractionallySizedBox(
+                                    alignment: Alignment.centerLeft,
+                                    widthFactor: value.clamp(0, 1),
+                                    child: AnimatedContainer(
+                                      duration: const Duration(milliseconds: 300),
+                                      height: 6,
+                                      decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                          colors: progress >= 100
+                                              ? [
+                                                  context.statusSuccessColor,
+                                                  context.statusSuccessColor.withValues(alpha: 0.8),
+                                                ]
+                                              : [
+                                                  context.brandPrimaryColor,
+                                                  context.brandPrimaryColor.withValues(alpha: 0.8),
+                                                ],
                                         ),
-                                      ],
+                                        borderRadius: BorderRadius.circular(3),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: (progress >= 100
+                                                    ? context.statusSuccessColor
+                                                    : context.brandPrimaryColor)
+                                                .withValues(alpha: 0.3),
+                                            blurRadius: 8,
+                                            offset: const Offset(0, 2),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   );
                                 },
@@ -188,8 +220,51 @@ final class EnrolledCourseCard extends StatelessWidget {
                 ],
               ),
             ),
-          ),
+          ],
         ),
+      ),
+    ));
+  }
+}
+
+class _StatChip extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final Color? color;
+
+  const _StatChip({
+    required this.icon,
+    required this.label,
+    this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final effectiveColor = color ?? context.textSecondaryColor.withValues(alpha: 0.7);
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      decoration: BoxDecoration(
+        color: effectiveColor.withValues(alpha: 0.05),
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            icon,
+            size: 10,
+            color: effectiveColor,
+          ),
+          const Gap(4),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.w700,
+              color: effectiveColor,
+            ),
+          ),
+        ],
       ),
     );
   }

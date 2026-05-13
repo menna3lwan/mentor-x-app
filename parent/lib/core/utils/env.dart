@@ -67,6 +67,20 @@ final class Env {
     ),
   );
 
+  static final analyticsRepositoryMode = RepositoryMode.fromString(
+    const String.fromEnvironment(
+      'ANALYTICS_REPOSITORY_MODE',
+      defaultValue: 'mock',
+    ),
+  );
+
+  static final profileRepositoryMode = RepositoryMode.fromString(
+    const String.fromEnvironment(
+      'PROFILE_REPOSITORY_MODE',
+      defaultValue: 'mock',
+    ),
+  );
+
   static const Duration mockDelayDuration = Duration(milliseconds: 800);
 
   static const String defaultLanguageCode = 'ar';
@@ -79,5 +93,7 @@ final class Env {
       courseRepositoryMode == RepositoryMode.prod ||
       attendanceRepositoryMode == RepositoryMode.prod ||
       gradeRepositoryMode == RepositoryMode.prod ||
-      communicationRepositoryMode == RepositoryMode.prod;
+      communicationRepositoryMode == RepositoryMode.prod ||
+      analyticsRepositoryMode == RepositoryMode.prod ||
+      profileRepositoryMode == RepositoryMode.prod;
 }

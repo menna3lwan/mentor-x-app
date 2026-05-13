@@ -1,6 +1,5 @@
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 
 import 'bloc/status_rejected_page_bloc.dart';
@@ -28,8 +27,8 @@ final class _StatusRejectedPageWrapperState
             exception.showAsToast();
         }
       },
-      child: BlocBuilder<StatusRejectedPageBloc, StatusRejectedPageState>(
-        builder: (context, state) {
+      child: Builder(
+        builder: (context) {
           return const StatusRejectedPagePage();
         },
       ),

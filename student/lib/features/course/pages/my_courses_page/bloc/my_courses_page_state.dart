@@ -5,7 +5,7 @@ enum MyCoursesTab { inProgress, completed, expired }
 final class MyCoursesPageState extends Equatable {
   final LoadingState loadingState;
   final MyCoursesTab selectedTab;
-  final List<CourseSummaryEntity> courses;
+  final List<EnrollmentEntity> courses;
   final String searchQuery;
   final String? errorMessage;
 
@@ -25,7 +25,7 @@ final class MyCoursesPageState extends Equatable {
   MyCoursesPageState copyWith({
     LoadingState? loadingState,
     MyCoursesTab? selectedTab,
-    List<CourseSummaryEntity>? courses,
+    List<EnrollmentEntity>? courses,
     String? searchQuery,
     String? errorMessage,
   }) {

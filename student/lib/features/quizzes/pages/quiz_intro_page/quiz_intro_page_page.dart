@@ -104,13 +104,11 @@ final class _BuildHeader extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  IconButton(
+                  MentorXIconButton(
                     onPressed: () => Navigator.pop(context),
-                    icon: Icon(
-                      Icons.arrow_back_ios_new_rounded,
-                      color: context.textPrimaryColor,
-                      size: 20,
-                    ),
+                    icon: Icons.arrow_back_ios_new_rounded,
+                    color: context.textPrimaryColor,
+                    size: MentorXIconButtonSize.small,
                   ),
                   const Spacer(),
                   Text(

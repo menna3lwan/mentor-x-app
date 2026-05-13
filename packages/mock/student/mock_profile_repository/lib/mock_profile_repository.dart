@@ -12,6 +12,11 @@ final class MockProfileRepository implements StudentProfileRepository {
   Future<void> initialize() async {}
 
   @override
+  Future<void> updateLocation({required String area, required String city, required String governorate}) async {
+    await Future<void>.delayed(delay);
+  }
+
+  @override
   Future<StudentEntity> getProfile() async {
     await Future<void>.delayed(delay);
     return MockProfileGenerator.profile();
@@ -74,27 +79,5 @@ final class MockProfileRepository implements StudentProfileRepository {
   Future<List<ProfileEditRequestEntity>> getPendingEditRequests() async {
     await Future<void>.delayed(delay);
     return [];
-  }
-
-  @override
-  Future<NationalIdVerificationEntity> verifyIdentity(String imagePath) async {
-    await Future<void>.delayed(delay);
-    return const NationalIdVerificationEntity(
-      status: VerificationStatus.pending,
-    );
-  }
-
-  @override
-  Future<NationalIdVerificationEntity> getVerificationStatus() async {
-    await Future<void>.delayed(delay);
-    return NationalIdVerificationEntity(
-      status: VerificationStatus.verified,
-      verifiedAt: DateTime.now(),
-    );
-  }
-
-  @override
-  Future<void> deleteAccount(String password) async {
-    await Future<void>.delayed(delay);
   }
 }

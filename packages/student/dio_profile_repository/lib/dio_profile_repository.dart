@@ -67,42 +67,6 @@ final class DioStudentProfileRepository
     }
   }
 
-  @override
-  Future<NationalIdVerificationEntity> verifyIdentity(String imagePath) async {
-    try {
-      final response = await httpClient.postMultipart(
-        '/api/student/profile/verify-identity',
-        files: {'image': [imagePath]},
-      );
-
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
-      return NationalIdVerificationModel.fromJson(data);
-    } on HttpClientResponse catch (e) {
-      return handleHttpClientErrorResponse(
-        e,
-        defaultCode: StudentProfileRepositoryExceptionCode.failedToVerifyIdentity,
-      );
-    } catch (e) {
-      throw StudentProfileRepositoryException(
-        code: StudentProfileRepositoryExceptionCode.failedToVerifyIdentity,
-        message: e.toString(),
-      );
-    }
-  }
-
-  @override
-  Future<NationalIdVerificationEntity> getVerificationStatus() async {
-    try {
-      final response = await httpClient.get('/api/student/profile/verification-status');
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
-      return NationalIdVerificationModel.fromJson(data);
-    } on HttpClientResponse catch (e) {
-      return handleHttpClientErrorResponse(
-        e,
-        defaultCode: StudentProfileRepositoryExceptionCode.failedToGetVerificationStatus,
-      );
-    }
-  }
 
   @override
   Future<StudentEntity> getProfile() async {
@@ -176,6 +140,29 @@ final class DioStudentProfileRepository
   }
 
   @override
+  Future<void> updateLocation({
+    required String governorate,
+    required String city,
+    required String area,
+  }) async {
+    try {
+      await httpClient.patch(
+        '/api/student/profile/location',
+        data: {
+          'governorate': governorate,
+          'city': city,
+          'area': area,
+        },
+      );
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: StudentProfileRepositoryExceptionCode.failedToUpdateProfile,
+      );
+    }
+  }
+
+  @override
   Future<void> changePassword({
     required String currentPassword,
     required String newPassword,
@@ -207,15 +194,6 @@ final class DioStudentProfileRepository
         e,
         defaultCode: StudentProfileRepositoryExceptionCode.failedToUpdateProfile,
       );
-    }
-  }
-
-  @override
-  Future<void> deleteAccount(String password) async {
-    try {
-      await httpClient.post('/api/auth/delete-account', data: {'password': password});
-    } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(e, defaultCode: StudentProfileRepositoryExceptionCode.unknown);
     }
   }
 }

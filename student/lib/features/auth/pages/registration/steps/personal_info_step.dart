@@ -41,8 +41,12 @@ final class _PersonalInfoStepState extends State<PersonalInfoStep> {
   Widget build(BuildContext context) {
     final t = context.t.student;
     final bloc = context.read<StudentRegistrationBloc>();
-    return BlocBuilder<StudentRegistrationBloc, StudentRegistrationState>(
-      builder: (context, state) {
+    return Builder(
+      builder: (context) {
+        final profilePhotoPath = context.select(
+          (StudentRegistrationBloc bloc) => bloc.state.profilePhotoPath,
+        );
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -75,7 +79,7 @@ final class _PersonalInfoStepState extends State<PersonalInfoStep> {
             const Gap(40),
             ZoomIn(
               duration: const Duration(milliseconds: 500),
-              child: _buildPhotoPicker(context, state, bloc),
+              child: _buildPhotoPicker(context, profilePhotoPath, bloc),
             ),
             const Gap(48),
             FadeInUp(
@@ -121,7 +125,7 @@ final class _PersonalInfoStepState extends State<PersonalInfoStep> {
 
   Widget _buildPhotoPicker(
     BuildContext context,
-    StudentRegistrationState state,
+    String? profilePhotoPath,
     StudentRegistrationBloc bloc,
   ) {
     return Center(
@@ -144,14 +148,14 @@ final class _PersonalInfoStepState extends State<PersonalInfoStep> {
                   offset: const Offset(0, 12),
                 ),
               ],
-              image: state.profilePhotoPath != null
+              image: profilePhotoPath != null
                   ? DecorationImage(
-                      image: FileImage(File(state.profilePhotoPath!)),
+                      image: FileImage(File(profilePhotoPath)),
                       fit: BoxFit.cover,
                     )
                   : null,
             ),
-            child: state.profilePhotoPath == null
+            child: profilePhotoPath == null
                 ? Icon(
                     Icons.person_add_rounded,
                     size: 48,

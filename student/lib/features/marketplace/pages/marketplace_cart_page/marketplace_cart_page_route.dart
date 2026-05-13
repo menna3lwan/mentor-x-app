@@ -14,6 +14,7 @@ final class MarketplaceCartPageRoute extends GoRouteData
       create: (context) => MarketplaceCartPageBloc(
         marketplaceRepository: context.read<MarketplaceRepository>(),
         walletRepository: context.read<WalletRepository>(),
+        analyticsService: context.read<AnalyticsService>(),
       )..add(const MarketplaceCartPageLoadEvent()),
       child: const MarketplaceCartPageWrapper(),
     );

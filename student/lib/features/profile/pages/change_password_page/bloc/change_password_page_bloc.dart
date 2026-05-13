@@ -26,19 +26,23 @@ final class ChangePasswordPageBloc
           ChangePasswordPageState,
           ChangePasswordPagePresentationEvent
         > {
-  ChangePasswordPageBloc({required this.profileRepository})
-    : super(ChangePasswordPageState.initial) {
+  ChangePasswordPageBloc({
+    required this.profileRepository,
+    required this.analyticsService,
+  }) : super(ChangePasswordPageState.initial) {
     on<ChangePasswordPageLoadEvent>(_onLoad);
     on<ChangePasswordPageSubmitEvent>(_onSubmit);
   }
 
   final ProfileRepository profileRepository;
+  final AnalyticsService analyticsService;
 
   Future<void> _onLoad(
     ChangePasswordPageLoadEvent event,
     Emitter<ChangePasswordPageState> emit,
   ) async {
     emit(state.copyWith(loadingState: LoadingState.loading));
+    analyticsService.logEvent(name: AnalyticsEvents.changePasswordViewed);
     emit(state.copyWith(loadingState: LoadingState.loaded));
   }
 
@@ -58,6 +62,7 @@ final class ChangePasswordPageBloc
         currentPassword: event.currentPassword,
         newPassword: event.newPassword,
       );
+      analyticsService.logEvent(name: AnalyticsEvents.passwordChanged);
       emit(state.copyWith(loadingState: LoadingState.loaded));
       emitPresentation(const ChangePasswordPageSuccess());
     } on MentorXException catch (e) {

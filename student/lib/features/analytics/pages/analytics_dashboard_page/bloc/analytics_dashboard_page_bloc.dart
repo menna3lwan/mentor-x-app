@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:analytics_service/analytics_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 
@@ -9,12 +10,15 @@ final class AnalyticsDashboardPageBloc
     extends Bloc<AnalyticsDashboardPageEvent, AnalyticsDashboardPageState> {
   final StudentAnalyticsRepository _analyticsRepository;
   final CourseRepository _courseRepository;
+  final AnalyticsService _analyticsService;
 
   AnalyticsDashboardPageBloc({
     required StudentAnalyticsRepository analyticsRepository,
     required CourseRepository courseRepository,
+    required AnalyticsService analyticsService,
   }) : _analyticsRepository = analyticsRepository,
        _courseRepository = courseRepository,
+       _analyticsService = analyticsService,
        super(const AnalyticsDashboardPageState()) {
     on<AnalyticsDashboardPageLoadRequested>(_onLoadRequested);
     on<AnalyticsDashboardPageRefreshed>(_onRefreshed);
@@ -26,6 +30,7 @@ final class AnalyticsDashboardPageBloc
     Emitter<AnalyticsDashboardPageState> emit,
   ) async {
     emit(state.copyWith(status: AnalyticsDashboardStatus.loading));
+    _analyticsService.logEvent(name: AnalyticsEvents.analyticsDashboardViewed);
     await _fetchInitialData(emit);
   }
 
@@ -75,9 +80,6 @@ final class AnalyticsDashboardPageBloc
 
   Future<void> _fetchData(Emitter<AnalyticsDashboardPageState> emit) async {
     try {
-      // If we have a courseId, we might want to fetch specific metrics
-      // but for now the repo provides a summary.
-      // Future: fetch individual metrics if selectedCourseId is not null.
       final summary = await _analyticsRepository.getDashboardSummary();
       emit(
         state.copyWith(

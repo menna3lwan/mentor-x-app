@@ -10,6 +10,7 @@ final class SettingsListPageRoute extends GoRouteData
     return BlocProvider<SettingsListPageBloc>(
       create: (context) => SettingsListPageBloc(
         settingsRepository: context.read<SettingsRepository>(),
+        analyticsService: context.read<AnalyticsService>(),
       )..add(const SettingsListPageLoadEvent()),
       child: const SettingsListPageWrapper(),
     );

@@ -27,9 +27,10 @@ final class _MyGradesPageWrapperState extends State<MyGradesPageWrapper> {
             MentorXUI.showToast(message: message);
         }
       },
-      child: BlocBuilder<MyGradesPageBloc, MyGradesPageState>(
-        builder: (context, state) {
+      child: Builder(
+        builder: (context) {
           final bloc = context.read<MyGradesPageBloc>();
+          final state = context.select((MyGradesPageBloc bloc) => bloc.state);
           return MyGradesPagePage(
             state: state,
             onRefresh: () => bloc.add(const MyGradesPageRefreshed()),

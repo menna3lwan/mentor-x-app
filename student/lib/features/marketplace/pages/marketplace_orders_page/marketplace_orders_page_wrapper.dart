@@ -28,8 +28,11 @@ final class _MarketplaceOrdersPageWrapperState
             MentorXUI.showToast(message: message);
         }
       },
-      child: BlocBuilder<MarketplaceOrdersPageBloc, MarketplaceOrdersPageState>(
-        builder: (context, state) {
+      child: Builder(
+        builder: (context) {
+          final state = context.select<MarketplaceOrdersPageBloc, MarketplaceOrdersPageState>(
+            (bloc) => bloc.state,
+          );
           return MarketplaceOrdersPagePage(
             state: state,
             onRefresh: () {

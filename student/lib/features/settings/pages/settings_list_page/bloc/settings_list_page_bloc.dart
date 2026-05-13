@@ -21,12 +21,16 @@ final class SettingsListPageBloc
           SettingsListPageState,
           SettingsListPagePresentationEvent
         > {
-  SettingsListPageBloc({required this.settingsRepository})
-    : super(SettingsListPageState.initial) {
+  SettingsListPageBloc({
+    required this.settingsRepository,
+    required AnalyticsService analyticsService,
+  }) : _analyticsService = analyticsService,
+       super(SettingsListPageState.initial) {
     on<SettingsListPageLoadEvent>(_onLoad);
   }
 
   final SettingsRepository settingsRepository;
+  final AnalyticsService _analyticsService;
 
   Future<void> _onLoad(
     SettingsListPageLoadEvent event,
@@ -34,5 +38,6 @@ final class SettingsListPageBloc
   ) async {
     emit(state.copyWith(loadingState: LoadingState.loading));
     emit(state.copyWith(loadingState: LoadingState.loaded));
+    _analyticsService.logEvent(name: AnalyticsEvents.settingsViewed);
   }
 }

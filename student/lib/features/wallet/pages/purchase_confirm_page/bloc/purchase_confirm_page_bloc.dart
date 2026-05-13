@@ -21,22 +21,33 @@ final class PurchaseConfirmPageBloc
           PurchaseConfirmPageState,
           PurchaseConfirmPagePresentationEvent
         > {
-  PurchaseConfirmPageBloc({required this.walletRepository})
-    : super(PurchaseConfirmPageState.initial) {
+  PurchaseConfirmPageBloc({
+    required this.walletRepository,
+    required this.analyticsService,
+  }) : super(PurchaseConfirmPageState.initial) {
     on<PurchaseConfirmPageLoadEvent>(_onLoad);
   }
 
   final WalletRepository walletRepository;
+  final AnalyticsService analyticsService;
 
   Future<void> _onLoad(
     PurchaseConfirmPageLoadEvent event,
     Emitter<PurchaseConfirmPageState> emit,
   ) async {
     emit(
-      state.copyWith(loadingState: LoadingState.loading, errorMessage: null),
+      state.copyWith(
+        loadingState: LoadingState.loading,
+        errorMessage: null,
+        paymentId: event.paymentId,
+      ),
     );
     try {
       final payment = await walletRepository.getPaymentStatus(event.paymentId);
+      analyticsService.logEvent(
+        name: AnalyticsEvents.purchaseConfirmViewed,
+        parameters: {AnalyticsParams.id: event.paymentId},
+      );
       emit(state.copyWith(loadingState: LoadingState.loaded, payment: payment));
     } catch (e) {
       emit(

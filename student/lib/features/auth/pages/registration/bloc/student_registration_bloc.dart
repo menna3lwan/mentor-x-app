@@ -208,8 +208,8 @@ final class StudentRegistrationBloc
         ),
       );
       _analyticsService.logEvent(
-        name: 'registration_start',
-        parameters: {'phone': state.phone},
+        name: AnalyticsEvents.registrationStarted,
+        parameters: {AnalyticsParams.id: state.phone},
       );
       emitPresentation(StudentRegistrationOtpSentPresentationEvent());
     } catch (e) {
@@ -257,8 +257,8 @@ final class StudentRegistrationBloc
         ),
       );
       _analyticsService.logEvent(
-        name: 'registration_otp_verified',
-        parameters: {'phone': state.phone},
+        name: AnalyticsEvents.otpVerified,
+        parameters: {AnalyticsParams.id: state.phone},
       );
     } catch (e) {
       emit(
@@ -298,10 +298,10 @@ final class StudentRegistrationBloc
     if (state.currentStep < 5) {
       final nextStep = state.currentStep + 1;
       _analyticsService.logEvent(
-        name: 'registration_step_complete',
+        name: AnalyticsEvents.registrationStepCompleted,
         parameters: {
-          'step': state.currentStep,
-          'next_step': nextStep,
+          AnalyticsParams.step: state.currentStep,
+          AnalyticsParams.nextStep: nextStep,
         },
       );
       emit(state.copyWith(currentStep: nextStep));
@@ -384,10 +384,10 @@ final class StudentRegistrationBloc
 
       emit(state.copyWith(loadingState: LoadingState.loaded));
       _analyticsService.logEvent(
-        name: 'registration_submit_success',
+        name: AnalyticsEvents.registrationCompleted,
         parameters: {
-          'student_code': response.studentCode,
-          'grade': state.selectedGrade?.name,
+          AnalyticsParams.id: response.studentCode,
+          AnalyticsParams.name: state.selectedGrade?.name,
         },
       );
       emitPresentation(

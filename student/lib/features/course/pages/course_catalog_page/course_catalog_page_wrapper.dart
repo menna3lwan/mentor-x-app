@@ -36,19 +36,47 @@ final class _CourseCatalogPageWrapperState
             MentorXUI.showToast(message: message);
         }
       },
-      child: BlocBuilder<CourseCatalogPageBloc, CourseCatalogPageState>(
-        builder: (context, state) {
+      child: Builder(
+        builder: (context) {
           final bloc = context.read<CourseCatalogPageBloc>();
+          final courses = context.select(
+            (CourseCatalogPageBloc bloc) => bloc.state.courses,
+          );
+          final grades = context.select(
+            (CourseCatalogPageBloc bloc) => bloc.state.grades,
+          );
+          final categories = context.select(
+            (CourseCatalogPageBloc bloc) => bloc.state.categories,
+          );
+          final selectedGradeId = context.select(
+            (CourseCatalogPageBloc bloc) => bloc.state.selectedGradeId,
+          );
+          final selectedCategoryId = context.select(
+            (CourseCatalogPageBloc bloc) => bloc.state.selectedCategoryId,
+          );
+          final sortOption = context.select(
+            (CourseCatalogPageBloc bloc) => bloc.state.sortOption,
+          );
+          final isCoursesLoading = context.select(
+            (CourseCatalogPageBloc bloc) => bloc.state.isCoursesLoading,
+          );
+          final isCoursesFailure = context.select(
+            (CourseCatalogPageBloc bloc) => bloc.state.isCoursesFailure,
+          );
+          final errorMessage = context.select(
+            (CourseCatalogPageBloc bloc) => bloc.state.errorMessage,
+          );
+
           return CourseCatalogPagePage(
             searchController: _searchController,
-            courses: state.courses,
-            grades: state.grades,
-            categories: state.categories,
-            selectedGradeId: state.selectedGradeId,
-            selectedCategoryId: state.selectedCategoryId,
-            sortOption: state.sortOption,
-            isLoading: state.isCoursesLoading,
-            errorMessage: state.isCoursesFailure ? state.errorMessage : null,
+            courses: courses,
+            grades: grades,
+            categories: categories,
+            selectedGradeId: selectedGradeId,
+            selectedCategoryId: selectedCategoryId,
+            sortOption: sortOption,
+            isLoading: isCoursesLoading,
+            errorMessage: isCoursesFailure ? errorMessage : null,
             onSearchChanged: (query) =>
                 bloc.add(CourseCatalogPageSearchChanged(query)),
             onGradeChanged: (gradeId) =>

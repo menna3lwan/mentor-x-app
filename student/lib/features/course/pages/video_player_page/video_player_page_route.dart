@@ -25,6 +25,7 @@ final class VideoPlayerPageRoute extends GoRouteData
     return BlocProvider<VideoPlayerPageBloc>(
       create: (context) => VideoPlayerPageBloc(
         courseRepository: context.read<CourseRepository>(),
+        analyticsService: context.read<AnalyticsService>(),
         itemId: itemId,
         title: title,
         enrollmentId: enrollmentId,

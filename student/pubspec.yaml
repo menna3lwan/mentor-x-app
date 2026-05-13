@@ -109,6 +109,10 @@ dependencies:
     path: ../packages/mock/student/mock_leaderboard_repository
   mock_student_analytics_repository:
     path: ../packages/mock/student/mock_student_analytics_repository
+  mock_student_communication_repository:
+    path: ../packages/mock/student/mock_student_communication_repository
+  mock_student_card_repository:
+    path: ../packages/mock/student/mock_student_card_repository
 
   # Clients
   dio_http_client:
@@ -153,12 +157,16 @@ dependencies:
     path: ../packages/student/dio_grade_repository
   dio_settings_repository:
     path: ../packages/student/dio_settings_repository
+  dio_student_communication_repository:
+    path: ../packages/student/dio_student_communication_repository
   dio_student_registration_repository:
     path: ../packages/student/dio_student_registration_repository
   dio_leaderboard_repository:
     path: ../packages/student/dio_leaderboard_repository
   dio_student_analytics_repository:
     path: ../packages/student/dio_student_analytics_repository
+  dio_student_card_repository:
+    path: ../packages/student/dio_student_card_repository
   dio: ^5.9.2
   flutter_markdown: ^0.7.7+1
   animate_do: ^5.1.0

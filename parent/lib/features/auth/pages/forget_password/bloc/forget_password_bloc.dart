@@ -1,6 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:mentorx_core/mentorx_core.dart';
+import 'package:analytics_service/analytics_service.dart';
+import 'dart:async';
 
 part 'forget_password_event.dart';
 part 'forget_password_state.dart';
@@ -30,12 +32,15 @@ final class ForgetPasswordBloc
         > {
   ForgetPasswordBloc({
     required AuthenticationRepository authenticationRepository,
+    required AnalyticsService analyticsService,
   }) : _authenticationRepository = authenticationRepository,
+       _analyticsService = analyticsService,
        super(ForgetPasswordState.initial) {
     on<ForgetPasswordSubmittedEvent>(_onForgetPasswordSubmitted);
   }
 
   final AuthenticationRepository _authenticationRepository;
+  final AnalyticsService _analyticsService;
 
   Future<void> _onForgetPasswordSubmitted(
     ForgetPasswordSubmittedEvent event,
@@ -44,6 +49,7 @@ final class ForgetPasswordBloc
     emit(state.copyWith(loadingState: ForgetPasswordLoadingState.loading));
     try {
       await _authenticationRepository.requestPasswordReset(event.phoneNumber);
+      unawaited(_analyticsService.logEvent(name: 'forget_password_requested'));
       emit(state.copyWith(loadingState: ForgetPasswordLoadingState.success));
       emitPresentation(
         ForgetPasswordSuccessPresentationEvent(phone: event.phoneNumber),

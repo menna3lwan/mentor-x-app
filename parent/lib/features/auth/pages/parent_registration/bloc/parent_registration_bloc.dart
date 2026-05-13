@@ -33,13 +33,16 @@ final class ParentRegistrationBloc
         > {
   final AuthenticationRepository _authenticationRepository;
   final DeviceInfoService _deviceInfoService;
+  final AnalyticsService _analyticsService;
   final MentorXLogger _logger = MentorXLogger('ParentRegistrationBloc');
 
   ParentRegistrationBloc({
     required AuthenticationRepository authenticationRepository,
     required DeviceInfoService deviceInfoService,
+    required AnalyticsService analyticsService,
   }) : _authenticationRepository = authenticationRepository,
        _deviceInfoService = deviceInfoService,
+       _analyticsService = analyticsService,
        super(const ParentRegistrationState()) {
     on<ParentRegistrationStepChanged>(_onStepChanged);
     on<ParentRegistrationLookupTypeChanged>(_onLookupTypeChanged);
@@ -236,6 +239,7 @@ final class ParentRegistrationBloc
         appVersion: appVersion,
       );
 
+      _analyticsService.logEvent(name: AnalyticsEvents.registrationStarted);
       emit(state.copyWith(loadingState: ParentRegistrationLoadingState.loaded));
       emitPresentation(
         ParentRegistrationSuccessPresentationEvent(

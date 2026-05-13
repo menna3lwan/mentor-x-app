@@ -26,4 +26,5 @@ abstract interface class ParentAttendanceRepository {
     DateTime? from,
     DateTime? to,
   });
+  Future<List<GroupEntity>> getChildGroups(String childId);
 }

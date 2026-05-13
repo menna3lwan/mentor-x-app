@@ -30,6 +30,7 @@ class _OtpPageWrapperState extends State<OtpPageWrapper> {
     return BlocProvider(
       create: (context) => OtpBloc(
         authenticationRepository: context.read<AuthenticationRepository<ParentEntity>>(),
+        analyticsService: context.read<AnalyticsService>(),
       ),
       child: BlocPresentationListener<OtpBloc, OtpPresentationEvent>(
         listener: (context, event) {

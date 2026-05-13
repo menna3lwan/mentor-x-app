@@ -15,3 +15,4 @@ export 'rewards/rewards.dart';
 export 'settings/settings.dart';
 export 'shell/shell.dart';
 export 'wallet/wallet.dart';
+export 'student_card/student_card.dart';

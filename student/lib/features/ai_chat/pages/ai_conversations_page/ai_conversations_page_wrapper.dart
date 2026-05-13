@@ -31,8 +31,12 @@ final class _AiConversationsPageWrapperState
             context.push('/ai-chat');
         }
       },
-      child: BlocBuilder<AiConversationsPageBloc, AiConversationsPageState>(
-        builder: (context, state) {
+      child: Builder(
+        builder: (context) {
+          final state = context.select<
+            AiConversationsPageBloc,
+            AiConversationsPageState
+          >((bloc) => bloc.state);
           return AiConversationsPagePage(
             state: state,
             onRefresh: () {

@@ -1,6 +1,5 @@
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'attendance_history_page_page.dart';
 import 'bloc/attendance_history_page_bloc.dart';
@@ -27,8 +26,8 @@ class _AttendanceHistoryPageWrapperState
             Navigator.of(context).pop();
         }
       },
-      child: BlocBuilder<AttendanceHistoryPageBloc, AttendanceHistoryPageState>(
-        builder: (context, state) {
+      child: Builder(
+        builder: (context) {
           return const AttendanceHistoryPage();
         },
       ),

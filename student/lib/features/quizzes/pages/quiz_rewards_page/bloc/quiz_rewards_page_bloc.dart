@@ -24,18 +24,21 @@ final class QuizRewardsPageBloc
   QuizRewardsPageBloc({
     required this.quizRepository,
     required this.leaderboardRepository,
+    required this.analyticsService,
   }) : super(QuizRewardsPageState.initial) {
     on<QuizRewardsPageLoadEvent>(_onLoad);
   }
 
   final QuizRepository quizRepository;
   final LeaderboardRepository leaderboardRepository;
+  final AnalyticsService analyticsService;
 
   Future<void> _onLoad(
     QuizRewardsPageLoadEvent event,
     Emitter<QuizRewardsPageState> emit,
   ) async {
     emit(state.copyWith(loadingState: LoadingState.loading));
+    analyticsService.logEvent(name: AnalyticsEvents.quizRewardsViewed);
     try {
       final entries = await leaderboardRepository.getGlobalLeaderboard();
       emit(

@@ -1,6 +1,5 @@
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'assignment_result_page_page.dart';
 import 'bloc/assignment_result_page_bloc.dart';
@@ -27,8 +26,8 @@ class _AssignmentResultPageWrapperState
             Navigator.of(context).pop();
         }
       },
-      child: BlocBuilder<AssignmentResultPageBloc, AssignmentResultPageState>(
-        builder: (context, state) {
+      child: Builder(
+        builder: (context) {
           return const AssignmentResultPage();
         },
       ),

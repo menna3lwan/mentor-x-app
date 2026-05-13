@@ -20,17 +20,21 @@ final class WalletMainPageBloc
           WalletMainPageState,
           WalletMainPagePresentationEvent
         > {
-  WalletMainPageBloc({required this.walletRepository})
-    : super(WalletMainPageState.initial) {
+  WalletMainPageBloc({
+    required this.walletRepository,
+    required this.analyticsService,
+  }) : super(WalletMainPageState.initial) {
     on<WalletMainPageLoadEvent>(_onLoad);
   }
 
   final WalletRepository walletRepository;
+  final AnalyticsService analyticsService;
 
   Future<void> _onLoad(
     WalletMainPageLoadEvent event,
     Emitter<WalletMainPageState> emit,
   ) async {
+    analyticsService.logEvent(name: AnalyticsEvents.transactionHistoryViewed);
     emit(
       state.copyWith(
         loadingState: LoadingState.loading,

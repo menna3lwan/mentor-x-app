@@ -1,3 +1,4 @@
+import 'package:mocktail/mocktail.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mentorx_student/core/core.dart';
@@ -5,7 +6,11 @@ import 'package:mock_home_repository/mock_home_repository.dart';
 
 import 'package:mentorx_student/features/home/pages/home_page/bloc/home_page_bloc.dart';
 
+class MockAnalyticsService extends Mock implements AnalyticsService {}
+
+
 void main() {
+  late AnalyticsService analyticsService;
   late MockHomeRepository homeRepository;
 
   /// Convenience helper that returns a fully-loaded seeded state.
@@ -38,6 +43,7 @@ void main() {
   }
 
   setUp(() {
+    analyticsService = MockAnalyticsService();
     homeRepository = const MockHomeRepository(delay: Duration.zero);
   });
 
@@ -46,9 +52,9 @@ void main() {
     // 1. Initial state
     // ---------------------------------------------------------------
     test('initial state has all sections as initial', () {
-      final bloc = HomePageBloc(
-        homeRepository: homeRepository,
+      final bloc = HomePageBloc(homeRepository: homeRepository,
         studentName: 'Ali',
+        analyticsService: analyticsService,
       );
 
       expect(bloc.state.walletSection.isInitial, true);
@@ -67,18 +73,18 @@ void main() {
     // 2. Fallback student name
     // ---------------------------------------------------------------
     test('uses fallback name when studentName is empty', () {
-      final bloc = HomePageBloc(
-        homeRepository: homeRepository,
+      final bloc = HomePageBloc(homeRepository: homeRepository,
         studentName: '  ',
+        analyticsService: analyticsService,
       );
 
       expect(bloc.state.studentName, 'Student');
     });
 
     test('uses fallback name when studentName is completely empty', () {
-      final bloc = HomePageBloc(
-        homeRepository: homeRepository,
+      final bloc = HomePageBloc(homeRepository: homeRepository,
         studentName: '',
+        analyticsService: analyticsService,
       );
 
       expect(bloc.state.studentName, 'Student');
@@ -89,9 +95,9 @@ void main() {
     // ---------------------------------------------------------------
     blocTest<HomePageBloc, HomePageState>(
       'loads all sections when initialized',
-      build: () => HomePageBloc(
-        homeRepository: homeRepository,
+      build: () => HomePageBloc(homeRepository: homeRepository,
         studentName: 'Ali',
+        analyticsService: analyticsService,
       ),
       act: (bloc) => bloc.add(const HomePageInitializedEvent()),
       wait: const Duration(milliseconds: 50),
@@ -118,9 +124,9 @@ void main() {
     // ---------------------------------------------------------------
     blocTest<HomePageBloc, HomePageState>(
       'does not reload when initialized a second time',
-      build: () => HomePageBloc(
-        homeRepository: homeRepository,
+      build: () => HomePageBloc(homeRepository: homeRepository,
         studentName: 'Ali',
+        analyticsService: analyticsService,
       ),
       seed: () => loadedState(),
       act: (bloc) => bloc.add(const HomePageInitializedEvent()),
@@ -133,9 +139,9 @@ void main() {
     // ---------------------------------------------------------------
     blocTest<HomePageBloc, HomePageState>(
       'refresh reloads all sections',
-      build: () => HomePageBloc(
-        homeRepository: homeRepository,
+      build: () => HomePageBloc(homeRepository: homeRepository,
         studentName: 'Ali',
+        analyticsService: analyticsService,
       ),
       act: (bloc) => bloc.add(const HomePageRefreshedEvent()),
       wait: const Duration(milliseconds: 50),
@@ -156,9 +162,9 @@ void main() {
     // ---------------------------------------------------------------
     blocTest<HomePageBloc, HomePageState>(
       'banner click does not change state',
-      build: () => HomePageBloc(
-        homeRepository: homeRepository,
+      build: () => HomePageBloc(homeRepository: homeRepository,
         studentName: 'Ali',
+        analyticsService: analyticsService,
       ),
       act: (bloc) => bloc.add(const HomePageBannerClickedEvent('banner-1')),
       wait: const Duration(milliseconds: 50),
@@ -170,9 +176,9 @@ void main() {
     // ---------------------------------------------------------------
     blocTest<HomePageBloc, HomePageState>(
       'retry wallet section reloads only wallet',
-      build: () => HomePageBloc(
-        homeRepository: homeRepository,
+      build: () => HomePageBloc(homeRepository: homeRepository,
         studentName: 'Ali',
+        analyticsService: analyticsService,
       ),
       seed: () => loadedState(
         walletSection: const HomeAsyncSection.failure('error'),
@@ -215,9 +221,9 @@ void main() {
     // ---------------------------------------------------------------
     blocTest<HomePageBloc, HomePageState>(
       'retry unreadCount section reloads only unreadCount',
-      build: () => HomePageBloc(
-        homeRepository: homeRepository,
+      build: () => HomePageBloc(homeRepository: homeRepository,
         studentName: 'Ali',
+        analyticsService: analyticsService,
       ),
       seed: () => loadedState(
         unreadCountSection: const HomeAsyncSection.failure('error'),
@@ -262,9 +268,9 @@ void main() {
     // ---------------------------------------------------------------
     blocTest<HomePageBloc, HomePageState>(
       'retry banners section reloads only banners',
-      build: () => HomePageBloc(
-        homeRepository: homeRepository,
+      build: () => HomePageBloc(homeRepository: homeRepository,
         studentName: 'Ali',
+        analyticsService: analyticsService,
       ),
       seed: () => loadedState(
         bannersSection: const HomeAsyncSection.failure('error'),
@@ -309,9 +315,9 @@ void main() {
     // ---------------------------------------------------------------
     blocTest<HomePageBloc, HomePageState>(
       'retry continueLearning section reloads only continueLearning',
-      build: () => HomePageBloc(
-        homeRepository: homeRepository,
+      build: () => HomePageBloc(homeRepository: homeRepository,
         studentName: 'Ali',
+        analyticsService: analyticsService,
       ),
       seed: () => loadedState(
         continueLearningSection: const HomeAsyncSection.failure('error'),
@@ -356,9 +362,9 @@ void main() {
     // ---------------------------------------------------------------
     blocTest<HomePageBloc, HomePageState>(
       'retry featuredCourses section reloads only featuredCourses',
-      build: () => HomePageBloc(
-        homeRepository: homeRepository,
+      build: () => HomePageBloc(homeRepository: homeRepository,
         studentName: 'Ali',
+        analyticsService: analyticsService,
       ),
       seed: () => loadedState(
         featuredCoursesSection: const HomeAsyncSection.failure('error'),
@@ -403,9 +409,9 @@ void main() {
     // ---------------------------------------------------------------
     blocTest<HomePageBloc, HomePageState>(
       'retry announcements section reloads only announcements',
-      build: () => HomePageBloc(
-        homeRepository: homeRepository,
+      build: () => HomePageBloc(homeRepository: homeRepository,
         studentName: 'Ali',
+        analyticsService: analyticsService,
       ),
       seed: () => loadedState(
         announcementsSection: const HomeAsyncSection.failure('error'),
@@ -450,9 +456,9 @@ void main() {
     // ---------------------------------------------------------------
     blocTest<HomePageBloc, HomePageState>(
       'lastUpdatedAt is set after successful load',
-      build: () => HomePageBloc(
-        homeRepository: homeRepository,
+      build: () => HomePageBloc(homeRepository: homeRepository,
         studentName: 'Ali',
+        analyticsService: analyticsService,
       ),
       act: (bloc) => bloc.add(const HomePageInitializedEvent()),
       wait: const Duration(milliseconds: 50),
@@ -470,9 +476,9 @@ void main() {
     // ---------------------------------------------------------------
     blocTest<HomePageBloc, HomePageState>(
       'isRefreshing is false after refresh completes',
-      build: () => HomePageBloc(
-        homeRepository: homeRepository,
+      build: () => HomePageBloc(homeRepository: homeRepository,
         studentName: 'Ali',
+        analyticsService: analyticsService,
       ),
       act: (bloc) => bloc.add(const HomePageRefreshedEvent()),
       wait: const Duration(milliseconds: 50),

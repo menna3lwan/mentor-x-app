@@ -1,3 +1,4 @@
+import 'package:mocktail/mocktail.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mock_course_repository/mock_course_repository.dart';
@@ -5,19 +6,24 @@ import 'package:mentorx_student/core/core.dart';
 
 import 'package:mentorx_student/features/course/pages/video_player_page/bloc/video_player_page_bloc.dart';
 
+class MockAnalyticsService extends Mock implements AnalyticsService {}
+
+
 void main() {
+  late AnalyticsService analyticsService;
   late MockCourseRepository courseRepository;
 
   setUp(() {
+    analyticsService = MockAnalyticsService();
     courseRepository = const MockCourseRepository(delay: Duration.zero);
   });
 
   group('VideoPlayerPageBloc', () {
     test('initial state is correct', () {
-      final bloc = VideoPlayerPageBloc(
-        courseRepository: courseRepository,
+      final bloc = VideoPlayerPageBloc(courseRepository: courseRepository,
         itemId: 'i1',
         title: 'Test Video',
+        analyticsService: analyticsService,
       );
       expect(bloc.state.itemId, 'i1');
       expect(bloc.state.title, 'Test Video');
@@ -32,10 +38,10 @@ void main() {
 
     blocTest<VideoPlayerPageBloc, VideoPlayerPageState>(
       'emits [loading, loaded] with stream URL when initialized',
-      build: () => VideoPlayerPageBloc(
-        courseRepository: courseRepository,
+      build: () => VideoPlayerPageBloc(courseRepository: courseRepository,
         itemId: 'i1',
         title: 'Test Video',
+        analyticsService: analyticsService,
       ),
       act: (bloc) => bloc.add(const VideoPlayerPageInitialized()),
       expect: () => [
@@ -52,10 +58,10 @@ void main() {
 
     blocTest<VideoPlayerPageBloc, VideoPlayerPageState>(
       'updates progress when progress event is added',
-      build: () => VideoPlayerPageBloc(
-        courseRepository: courseRepository,
+      build: () => VideoPlayerPageBloc(courseRepository: courseRepository,
         itemId: 'i1',
         title: 'Test Video',
+        analyticsService: analyticsService,
       ),
       seed: () => const VideoPlayerPageState(
         itemId: 'i1',
@@ -78,10 +84,10 @@ void main() {
 
     blocTest<VideoPlayerPageBloc, VideoPlayerPageState>(
       'marks item as completed',
-      build: () => VideoPlayerPageBloc(
-        courseRepository: courseRepository,
+      build: () => VideoPlayerPageBloc(courseRepository: courseRepository,
         itemId: 'i1',
         title: 'Test Video',
+        analyticsService: analyticsService,
       ),
       seed: () => const VideoPlayerPageState(
         itemId: 'i1',
@@ -100,10 +106,10 @@ void main() {
 
     blocTest<VideoPlayerPageBloc, VideoPlayerPageState>(
       'progress with totalSeconds 0 does not crash',
-      build: () => VideoPlayerPageBloc(
-        courseRepository: courseRepository,
+      build: () => VideoPlayerPageBloc(courseRepository: courseRepository,
         itemId: 'i1',
         title: 'Test Video',
+        analyticsService: analyticsService,
       ),
       seed: () => const VideoPlayerPageState(
         itemId: 'i1',
@@ -126,10 +132,10 @@ void main() {
 
     blocTest<VideoPlayerPageBloc, VideoPlayerPageState>(
       'multiple progress updates accumulate correctly',
-      build: () => VideoPlayerPageBloc(
-        courseRepository: courseRepository,
+      build: () => VideoPlayerPageBloc(courseRepository: courseRepository,
         itemId: 'i1',
         title: 'Test Video',
+        analyticsService: analyticsService,
       ),
       seed: () => const VideoPlayerPageState(
         itemId: 'i1',

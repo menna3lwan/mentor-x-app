@@ -7,7 +7,6 @@ export 'models/home_models.dart';
 
 final class DioParentHomeRepository extends HttpClientRepository<ParentHomeRepositoryExceptionCode>
     implements ParentHomeRepository {
-  static final MentorXLogger _logger = MentorXLogger('DioParentHomeRepository');
 
   DioParentHomeRepository({
     required HttpClient httpClient,
@@ -44,6 +43,31 @@ final class DioParentHomeRepository extends HttpClientRepository<ParentHomeRepos
       
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return ParentHomeSummaryModel.fromJson(data);
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: ParentHomeRepositoryExceptionCode.fetchError,
+      );
+    }
+  }
+
+  @override
+  Future<ParentChildDashboardSummaryEntity> getChildOverview(String studentId) async {
+    try {
+      HttpClientResponse response;
+      try {
+        response = await _httpClient.get(
+          '/api/parent/dashboard/child/$studentId/overview',
+        );
+      } on HttpClientResponse catch (e) {
+        if (e.statusCode != 404) rethrow;
+        response = await _httpClient.get(
+          '/api/parent/dashboard/child/$studentId/overview',
+        );
+      }
+      
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      return ParentChildDashboardSummaryModel.fromJson(data);
     } on HttpClientResponse catch (e) {
       handleHttpClientErrorResponse(
         e,

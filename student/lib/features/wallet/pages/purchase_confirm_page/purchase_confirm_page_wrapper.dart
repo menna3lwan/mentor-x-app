@@ -1,6 +1,5 @@
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'bloc/purchase_confirm_page_bloc.dart';
 import 'purchase_confirm_page_page.dart';
@@ -27,11 +26,7 @@ class _PurchaseConfirmPageWrapperState
             Navigator.of(context).pop();
         }
       },
-      child: BlocBuilder<PurchaseConfirmPageBloc, PurchaseConfirmPageState>(
-        builder: (context, state) {
-          return const PurchaseConfirmPage();
-        },
-      ),
+      child: const PurchaseConfirmPage(),
     );
   }
 }

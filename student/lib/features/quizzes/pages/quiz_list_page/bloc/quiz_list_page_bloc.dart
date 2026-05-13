@@ -19,18 +19,22 @@ final class QuizListPageBloc extends Bloc<QuizListPageEvent, QuizListPageState>
           QuizListPageState,
           QuizListPagePresentationEvent
         > {
-  QuizListPageBloc({required this.quizRepository})
-    : super(QuizListPageState.initial) {
+  QuizListPageBloc({
+    required this.quizRepository,
+    required this.analyticsService,
+  }) : super(QuizListPageState.initial) {
     on<QuizListPageLoadEvent>(_onLoad);
   }
 
   final QuizRepository quizRepository;
+  final AnalyticsService analyticsService;
 
   Future<void> _onLoad(
     QuizListPageLoadEvent event,
     Emitter<QuizListPageState> emit,
   ) async {
     emit(state.copyWith(loadingState: LoadingState.loading));
+    analyticsService.logEvent(name: AnalyticsEvents.quizListViewed);
     try {
       final quizzes = await quizRepository.getQuizzes();
       emit(

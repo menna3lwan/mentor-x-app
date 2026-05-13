@@ -20,9 +20,10 @@ class AcademicMonitorPage extends StatelessWidget {
       create: (context) => CoursesBloc(
         courseRepository: context.read<ParentCourseRepository>(),
         gradeRepository: context.read<ParentGradeRepository>(),
+        analyticsService: context.read<AnalyticsService>(),
       )..add(CoursesStarted(childId)),
-      child: BlocBuilder<CoursesBloc, CoursesState>(
-        builder: (context, state) {
+      child: Builder(
+        builder: (context) {
           return AppDashboardScaffold(
             title: t.academicMonitor,
             onRefresh: () async {
@@ -34,26 +35,39 @@ class AcademicMonitorPage extends StatelessWidget {
                 icon: const Icon(Icons.refresh_rounded),
               ),
             ],
-            body: _buildBody(context, state, t),
+            body: _AcademicMonitorBody(childId: childId),
           );
         },
       ),
     );
   }
+}
 
-  Widget _buildBody(BuildContext context, CoursesState state, TranslationsParentEn t) {
-    if (state.status == CoursesStatus.loading) {
+class _AcademicMonitorBody extends StatelessWidget {
+  const _AcademicMonitorBody({required this.childId});
+
+  final String childId;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = Translations.of(context).parent;
+    final status = context.select((CoursesBloc bloc) => bloc.state.status);
+    final errorMessage = context.select((CoursesBloc bloc) => bloc.state.errorMessage);
+    final courses = context.select((CoursesBloc bloc) => bloc.state.courses);
+    final gradeSummary = context.select((CoursesBloc bloc) => bloc.state.gradeSummary);
+
+    if (status == CoursesStatus.loading) {
       return const Center(child: CircularProgressIndicator());
     }
 
-    if (state.status == CoursesStatus.failure) {
+    if (status == CoursesStatus.failure) {
       return AppErrorView(
-        message: state.errorMessage ?? t.unableToLoad,
+        message: errorMessage ?? t.unableToLoad,
         onRetry: () => context.read<CoursesBloc>().add(CoursesStarted(childId)),
       );
     }
 
-    if (state.courses.isEmpty && state.gradeSummary == null) {
+    if (courses.isEmpty && gradeSummary == null) {
       return AppEmptyView(
         title: t.noData,
         message: 'Academic data will appear here once available.',
@@ -67,38 +81,38 @@ class AcademicMonitorPage extends StatelessWidget {
       physics: const BouncingScrollPhysics(),
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       children: [
-        if (state.gradeSummary != null) ...[
+        if (gradeSummary != null) ...[
           AppHeroCard(
             title: t.overallAverage.toUpperCase(),
             icon: Icons.auto_graph_rounded,
             stats: [
               AppHeroStatItem(
                 label: 'Average',
-                value: '${state.gradeSummary!.overallAverage.toStringAsFixed(1)}%',
+                value: '${gradeSummary.overallAverage.toStringAsFixed(1)}%',
                 onTap: () {},
               ),
               AppHeroStatItem(
                 label: 'Graded',
-                value: state.gradeSummary!.graded.toString(),
+                value: gradeSummary.graded.toString(),
                 onTap: () {},
               ),
               AppHeroStatItem(
                 label: 'Pending',
-                value: state.gradeSummary!.pending.toString(),
+                value: gradeSummary.pending.toString(),
                 onTap: () {},
               ),
             ],
           ),
           const SizedBox(height: 32),
         ],
-        
+
         AppSectionHeader(title: t.enrolledCourses),
         const SizedBox(height: 16),
-        
-        ...state.courses.map(
+
+        ...courses.map(
           (course) => _CourseCard(course: course),
         ),
-        
+
         const SizedBox(height: 40),
       ],
     );

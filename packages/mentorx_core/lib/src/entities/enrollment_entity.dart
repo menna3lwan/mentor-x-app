@@ -12,6 +12,7 @@ class EnrollmentEntity extends Equatable {
   final String courseId;
   final String? courseTitle;
   final String? courseDescription;
+  final String? courseThumbnailUrl;
   final double progressPercent;
   final int completedSessions;
   final DateTime enrolledAt;
@@ -46,6 +47,7 @@ class EnrollmentEntity extends Equatable {
     required this.courseId,
     this.courseTitle,
     this.courseDescription,
+    this.courseThumbnailUrl,
     required this.enrolledAt,
     this.progressPercent = 0,
     this.completedSessions = 0,
@@ -94,6 +96,7 @@ class EnrollmentEntity extends Equatable {
         courseId,
         courseTitle,
         courseDescription,
+        courseThumbnailUrl,
         progressPercent,
         completedSessions,
         completedLessons,
@@ -127,6 +130,7 @@ class EnrollmentEntity extends Equatable {
     String? courseId,
     String? courseTitle,
     String? courseDescription,
+    String? courseThumbnailUrl,
     double? progressPercent,
     int? completedSessions,
     int? completedLessons,
@@ -159,6 +163,7 @@ class EnrollmentEntity extends Equatable {
       courseId: courseId ?? this.courseId,
       courseTitle: courseTitle ?? this.courseTitle,
       courseDescription: courseDescription ?? this.courseDescription,
+      courseThumbnailUrl: courseThumbnailUrl ?? this.courseThumbnailUrl,
       progressPercent: progressPercent ?? this.progressPercent,
       completedSessions: completedSessions ?? this.completedSessions,
       completedLessons: completedLessons ?? this.completedLessons,

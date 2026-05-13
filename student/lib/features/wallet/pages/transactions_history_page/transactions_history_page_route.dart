@@ -13,6 +13,7 @@ final class TransactionsHistoryPageRoute extends GoRouteData
     return BlocProvider<TransactionsHistoryPageBloc>(
       create: (context) => TransactionsHistoryPageBloc(
         walletRepository: context.read<WalletRepository>(),
+        analyticsService: context.read<AnalyticsService>(),
       )..add(const TransactionsHistoryPageLoadEvent()),
       child: const TransactionsHistoryPageWrapper(),
     );

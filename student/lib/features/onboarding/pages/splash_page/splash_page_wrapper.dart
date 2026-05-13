@@ -27,13 +27,20 @@ final class _SplashPageWrapperState extends State<SplashPageWrapper> {
             context.go(route);
         }
       },
-      child: BlocBuilder<SplashPageBloc, SplashPageState>(
-        builder: (context, state) {
+      child: Builder(
+        builder: (context) {
+          final isLoading = context.select<SplashPageBloc, bool>(
+            (bloc) =>
+                bloc.state.loadingState.isLoading ||
+                bloc.state.loadingState == LoadingState.initial,
+          );
+          final errorMessage = context.select<SplashPageBloc, String?>(
+            (bloc) => bloc.state.errorMessage,
+          );
+
           return SplashView(
-            isLoading:
-                state.loadingState.isLoading ||
-                state.loadingState == LoadingState.initial,
-            errorMessage: state.errorMessage,
+            isLoading: isLoading,
+            errorMessage: errorMessage,
             onRetry: () {
               context.read<SplashPageBloc>().add(
                 const SplashPageRetryRequested(),

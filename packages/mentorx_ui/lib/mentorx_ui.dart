@@ -13,6 +13,7 @@ import 'package:mix/mix.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:vector_graphics/vector_graphics.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import 'localization/generated/strings.g.dart';
 
@@ -67,6 +68,24 @@ part 'widgets/attendance_rate_card.dart';
 part 'widgets/status_badge.dart';
 part 'widgets/generic_list_tile.dart';
 part 'widgets/app_dynamic_image.dart';
+part 'widgets/mentorx_icon_button.dart';
+part 'widgets/mentorx_main_app_bar.dart';
+part 'widgets/mentorx_back_button.dart';
+part 'widgets/mentorx_app_bar.dart';
+part 'widgets/mentorx_close_button.dart';
+part 'widgets/mentorx_bottom_sheet.dart';
+part 'widgets/mentorx_paginated_list.dart';
+part 'widgets/mentorx_read_more_text.dart';
+part 'widgets/mentorx_section_title.dart';
+part 'widgets/mentorx_checkbox_tile.dart';
+part 'widgets/mentorx_radio_button.dart';
+part 'widgets/mentorx_selection_chip.dart';
+part 'widgets/mentorx_switch.dart';
+part 'widgets/mentorx_setting_tile.dart';
+part 'widgets/mentorx_conditional_wrapper.dart';
+part 'widgets/mentorx_skeleton_provider.dart';
+part 'widgets/mentorx_error_indicator.dart';
+part 'widgets/mentorx_tile.dart';
 
 final class MentorXUI {
   MentorXUI._();

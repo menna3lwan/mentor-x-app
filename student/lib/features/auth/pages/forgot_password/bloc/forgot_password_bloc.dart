@@ -24,14 +24,19 @@ final class ForgotPasswordBloc
           ForgotPasswordPresentationEvent
         > {
   final StudentAuthenticationRepository _authRepository;
+  final AnalyticsService _analyticsService;
 
   ForgotPasswordBloc({
     required StudentAuthenticationRepository authRepository,
+    required AnalyticsService analyticsService,
     String? initialPhone,
   }) : _authRepository = authRepository,
+       _analyticsService = analyticsService,
        super(ForgotPasswordState(phone: initialPhone ?? '')) {
     on<ForgotPasswordPhoneChanged>(_onPhoneChanged);
     on<ForgotPasswordSubmitted>(_onSubmitted);
+
+    _analyticsService.logEvent(name: AnalyticsEvents.forgotPasswordViewed);
   }
 
   void _onPhoneChanged(

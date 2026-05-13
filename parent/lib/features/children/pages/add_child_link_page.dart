@@ -27,6 +27,7 @@ class _AddChildLinkPageState extends State<AddChildLinkPage> {
     return BlocProvider(
       create: (context) => ChildrenBloc(
         childrenRepository: context.read<ParentChildrenRepository>(),
+        analyticsService: context.read<AnalyticsService>(),
       ),
       child: BlocConsumer<ChildrenBloc, ChildrenState>(
         listener: (context, state) {

@@ -36,4 +36,13 @@ final class MockAttendanceRepository implements AttendanceRepository {
     await Future<void>.delayed(delay);
     return MockAttendanceGenerator.checkInResult(qrData);
   }
+
+  @override
+  Future<List<GroupEntity>> getMyGroups() async {
+    await Future<void>.delayed(delay);
+    return const [
+      GroupEntity(id: 'g-1', name: 'Physics Group A'),
+      GroupEntity(id: 'g-2', name: 'Math Group B'),
+    ];
+  }
 }

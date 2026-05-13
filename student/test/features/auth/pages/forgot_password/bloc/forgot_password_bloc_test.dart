@@ -4,16 +4,21 @@ import 'package:mentorx_student/core/core.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:mentorx_student/features/auth/pages/forgot_password/bloc/forgot_password_bloc.dart';
 
+class MockAnalyticsService extends Mock implements AnalyticsService {}
+
+
 class MockStudentAuthenticationRepository extends Mock
     implements StudentAuthenticationRepository {}
 
 void main() {
+  late AnalyticsService analyticsService;
   late StudentAuthenticationRepository authRepository;
   late ForgotPasswordBloc forgotPasswordBloc;
 
   setUp(() {
+    analyticsService = MockAnalyticsService();
     authRepository = MockStudentAuthenticationRepository();
-    forgotPasswordBloc = ForgotPasswordBloc(authRepository: authRepository);
+    forgotPasswordBloc = ForgotPasswordBloc(authRepository: authRepository, analyticsService: analyticsService);
   });
 
   tearDown(() {
@@ -40,10 +45,10 @@ void main() {
         when(
           () => authRepository.requestPasswordReset(any()),
         ).thenAnswer((_) async {});
-        return ForgotPasswordBloc(
-          authRepository: authRepository,
+        return ForgotPasswordBloc(authRepository: authRepository,
           initialPhone: '01234567890',
-        );
+        analyticsService: analyticsService,
+      );
       },
       act: (bloc) => bloc.add(const ForgotPasswordSubmitted()),
       expect: () => [
@@ -72,10 +77,10 @@ void main() {
             message: 'Error',
           ),
         );
-        return ForgotPasswordBloc(
-          authRepository: authRepository,
+        return ForgotPasswordBloc(authRepository: authRepository,
           initialPhone: '01234567890',
-        );
+        analyticsService: analyticsService,
+      );
       },
       act: (bloc) => bloc.add(const ForgotPasswordSubmitted()),
       expect: () => [

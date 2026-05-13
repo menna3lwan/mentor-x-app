@@ -14,6 +14,7 @@ final class CourseCatalogPageRoute extends GoRouteData
       create: (context) => CourseCatalogPageBloc(
         courseRepository: context.read<CourseRepository>(),
         registrationRepository: context.read<StudentRegistrationRepository>(),
+        analyticsService: context.read<AnalyticsService>(),
       )..add(const CourseCatalogPageInitialized()),
       child: const CourseCatalogPageWrapper(),
     );

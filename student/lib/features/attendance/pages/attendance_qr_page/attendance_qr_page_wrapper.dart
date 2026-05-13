@@ -1,6 +1,5 @@
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'attendance_qr_page_page.dart';
 import 'bloc/attendance_qr_page_bloc.dart';
@@ -26,8 +25,8 @@ class _AttendanceQrPageWrapperState extends State<AttendanceQrPageWrapper> {
             Navigator.of(context).pop();
         }
       },
-      child: BlocBuilder<AttendanceQrPageBloc, AttendanceQrPageState>(
-        builder: (context, state) {
+      child: Builder(
+        builder: (context) {
           return const AttendanceQrPage();
         },
       ),

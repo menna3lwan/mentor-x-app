@@ -6,7 +6,6 @@ export 'models/children_models.dart';
 final class DioParentChildrenRepository extends HttpClientRepository<AuthenticationExceptionCode>
     implements ParentChildrenRepository {
 
-  static final MentorXLogger _logger = MentorXLogger('DioParentChildrenRepository');
 
   DioParentChildrenRepository({
     required HttpClient httpClient,

@@ -20,16 +20,21 @@ final class ResetPasswordBloc
           ResetPasswordPresentationEvent
         > {
   final StudentAuthenticationRepository _authRepository;
+  final AnalyticsService _analyticsService;
 
   ResetPasswordBloc({
     required StudentAuthenticationRepository authRepository,
+    required AnalyticsService analyticsService,
     required String phoneNumber,
   }) : _authRepository = authRepository,
+       _analyticsService = analyticsService,
        super(ResetPasswordState(phoneNumber: phoneNumber)) {
     on<ResetPasswordOtpChanged>(_onOtpChanged);
     on<ResetPasswordNewPasswordChanged>(_onNewPasswordChanged);
     on<ResetPasswordConfirmPasswordChanged>(_onConfirmPasswordChanged);
     on<ResetPasswordSubmitted>(_onSubmitted);
+
+    _analyticsService.logEvent(name: AnalyticsEvents.resetPasswordViewed);
   }
 
   void _onOtpChanged(

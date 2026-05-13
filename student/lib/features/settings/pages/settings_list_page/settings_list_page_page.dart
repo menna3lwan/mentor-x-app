@@ -104,6 +104,12 @@ final class SettingsListPage extends StatelessWidget {
                             onTap: () => context.push('/change-password'),
                           ),
                           _SettingsItem(
+                            icon: Icons.badge_rounded,
+                            label: t['studentDigitalId'] ?? 'Student Digital ID',
+                            color: Colors.blueAccent,
+                            onTap: () => context.push('/student-card'),
+                          ),
+                          _SettingsItem(
                             icon: Icons.devices_other_rounded,
                             label: t['deviceManagement'] ?? 'Device Management',
                             color: context.brandSecondaryColor,

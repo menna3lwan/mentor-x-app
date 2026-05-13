@@ -1,3 +1,4 @@
+import 'package:mocktail/mocktail.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mock_marketplace_repository/mock_marketplace_repository.dart';
@@ -6,11 +7,16 @@ import 'package:mock_wallet_repository/mock_wallet_repository.dart';
 import 'package:mentorx_student/core/core.dart';
 import 'package:mentorx_student/features/marketplace/pages/marketplace_cart_page/bloc/marketplace_cart_page_bloc.dart';
 
+class MockAnalyticsService extends Mock implements AnalyticsService {}
+
+
 void main() {
+  late AnalyticsService analyticsService;
   late MockMarketplaceRepository marketplaceRepository;
   late MockWalletRepository walletRepository;
 
   setUp(() {
+    analyticsService = MockAnalyticsService();
     marketplaceRepository = const MockMarketplaceRepository(
       delay: Duration.zero,
     );
@@ -22,9 +28,9 @@ void main() {
   group('MarketplaceCartPageBloc', () {
     blocTest<MarketplaceCartPageBloc, MarketplaceCartPageState>(
       'emits [loading, loaded] when load event is added',
-      build: () => MarketplaceCartPageBloc(
-        marketplaceRepository: marketplaceRepository,
+      build: () => MarketplaceCartPageBloc(marketplaceRepository: marketplaceRepository,
         walletRepository: walletRepository,
+        analyticsService: analyticsService,
       ),
       act: (bloc) => bloc.add(const MarketplaceCartPageLoadEvent()),
       expect: () => [
@@ -43,9 +49,9 @@ void main() {
 
     blocTest<MarketplaceCartPageBloc, MarketplaceCartPageState>(
       'starts with initial loading state',
-      build: () => MarketplaceCartPageBloc(
-        marketplaceRepository: marketplaceRepository,
+      build: () => MarketplaceCartPageBloc(marketplaceRepository: marketplaceRepository,
         walletRepository: walletRepository,
+        analyticsService: analyticsService,
       ),
       verify: (bloc) {
         expect(bloc.state.loadingState, LoadingState.initial);

@@ -5,9 +5,9 @@ export 'models/attendance_models.dart';
 final class DioParentAttendanceRepository
     extends HttpClientRepository<ParentAttendanceRepositoryExceptionCode>
     implements ParentAttendanceRepository {
-  final HttpClient httpClient;
+  final HttpClient _httpClient;
 
-  DioParentAttendanceRepository({required this.httpClient});
+  DioParentAttendanceRepository({required HttpClient httpClient}) : _httpClient = httpClient;
   
   @override
   Future<void> initialize() async {}
@@ -29,7 +29,7 @@ final class DioParentAttendanceRepository
     try {
       HttpClientResponse response;
       try {
-        response = await httpClient.get(
+        response = await _httpClient.get(
           '/api/parent/dashboard/child/$childId/attendance',
           queryParameters: {
             if (from != null) 'from': from.toIso8601String(),
@@ -38,7 +38,7 @@ final class DioParentAttendanceRepository
         );
       } on HttpClientResponse catch (e) {
         if (e.statusCode != 404) rethrow;
-        response = await httpClient.get(
+        response = await _httpClient.get(
           '/api/parent/children/$childId/attendance',
           queryParameters: {
             if (from != null) 'from': from.toIso8601String(),
@@ -67,7 +67,7 @@ final class DioParentAttendanceRepository
     try {
       HttpClientResponse response;
       try {
-        response = await httpClient.get(
+        response = await _httpClient.get(
           '/api/parent/dashboard/child/$childId/overview',
           queryParameters: {
             if (from != null) 'from': from.toIso8601String(),
@@ -76,7 +76,7 @@ final class DioParentAttendanceRepository
         );
       } on HttpClientResponse catch (e) {
         if (e.statusCode != 404) rethrow;
-        response = await httpClient.get(
+        response = await _httpClient.get(
           '/api/parent/children/$childId/attendance/summary',
           queryParameters: {
             if (from != null) 'from': from.toIso8601String(),
@@ -95,4 +95,36 @@ final class DioParentAttendanceRepository
     }
   }
 
+  @override
+  Future<List<GroupEntity>> getChildGroups(String childId) async {
+    try {
+      HttpClientResponse response;
+      try {
+        response = await _httpClient.get(
+          '/api/attendance/parent/students/$childId/groups',
+        );
+      } on HttpClientResponse catch (e) {
+        if (e.statusCode != 404) rethrow;
+        response = await _httpClient.get(
+          '/api/attendance/parent/students/$childId/groups',
+        );
+      }
+
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final list = asList(data is Map ? data['content'] : data);
+      
+      return list.map((e) {
+        final map = asMap(e);
+        return GroupEntity(
+          id: asString(map['id']),
+          name: asString(map['name']),
+        );
+      }).toList();
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: ParentAttendanceRepositoryExceptionCode.fetchError,
+      );
+    }
+  }
 }

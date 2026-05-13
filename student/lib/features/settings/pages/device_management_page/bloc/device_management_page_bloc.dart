@@ -26,8 +26,9 @@ final class DeviceManagementPageBloc
         > {
   final ProfileRepository _profileRepository;
 
-  DeviceManagementPageBloc({required ProfileRepository profileRepository})
-    : _profileRepository = profileRepository,
+  DeviceManagementPageBloc({
+    required ProfileRepository profileRepository,
+  }) : _profileRepository = profileRepository,
       super(DeviceManagementPageState.initial) {
     on<DeviceManagementPageInitialized>(_onInitialized);
     on<DeviceManagementPageRefreshed>(_onRefreshed);

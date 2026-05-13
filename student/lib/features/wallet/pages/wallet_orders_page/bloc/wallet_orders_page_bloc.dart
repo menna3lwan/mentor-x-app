@@ -16,17 +16,21 @@ final class WalletOrdersPageBloc
           WalletOrdersPageState,
           WalletOrdersPagePresentationEvent
         > {
-  WalletOrdersPageBloc({required this.walletRepository})
-    : super(WalletOrdersPageState.initial) {
+  WalletOrdersPageBloc({
+    required this.walletRepository,
+    required this.analyticsService,
+  }) : super(WalletOrdersPageState.initial) {
     on<WalletOrdersPageLoadEvent>(_onLoad);
   }
 
   final WalletRepository walletRepository;
+  final AnalyticsService analyticsService;
 
   Future<void> _onLoad(
     WalletOrdersPageLoadEvent event,
     Emitter<WalletOrdersPageState> emit,
   ) async {
+    analyticsService.logEvent(name: AnalyticsEvents.walletOrdersViewed);
     emit(
       state.copyWith(loadingState: LoadingState.loading, errorMessage: null),
     );

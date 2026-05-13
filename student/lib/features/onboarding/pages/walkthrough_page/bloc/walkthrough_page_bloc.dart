@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
 import '../../../../../core/core.dart';
+import 'package:analytics_service/analytics_service.dart';
 
 part 'walkthrough_page_event.dart';
 part 'walkthrough_page_state.dart';
@@ -53,8 +54,8 @@ final class WalkthroughPageBloc
       emit(state.copyWith(loadingState: LoadingState.loaded));
       _analyticsService.logEvent(
         name: event is WalkthroughPageSkipped
-            ? 'onboarding_skip'
-            : 'onboarding_complete',
+            ? AnalyticsEvents.walkthroughSkipped
+            : AnalyticsEvents.walkthroughCompleted,
       );
       emitPresentation(const WalkthroughPageCompletedPresentationEvent());
     } catch (_) {

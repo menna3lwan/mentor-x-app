@@ -15,17 +15,19 @@ final class LeaderboardEntryModel extends LeaderboardEntryEntity {
   factory LeaderboardEntryModel.fromJson(Map<String, dynamic> json) {
     return LeaderboardEntryModel(
       rank: ModelParser.asInt(json['rank']),
-      studentId: ModelParser.asString(json['studentId'] ?? json['id']),
-      studentName: ModelParser.asString(json['studentName'] ?? json['name']),
-      avatarUrl: ModelParser.asString(json['avatarUrl']).isEmpty
+      studentId: ModelParser.asString(json['studentId'] ?? json['id'] ?? json['userId']),
+      studentName: ModelParser.asString(json['studentName'] ?? json['name'] ?? json['fullName']),
+      avatarUrl: ModelParser.asString(
+        json['avatarUrl'] ?? json['avatar'] ?? json['profileImageUrl'] ?? json['image'],
+      ).isEmpty
           ? null
-          : ModelParser.asString(json['avatarUrl']),
-      points: ModelParser.asInt(json['points']),
-      score: ModelParser.asDouble(json['score']),
-      quizCount: ModelParser.asInt(json['quizCount']) == 0
+          : ModelParser.asString(json['avatarUrl'] ?? json['avatar'] ?? json['profileImageUrl'] ?? json['image']),
+      points: ModelParser.asInt(json['points'] ?? json['score']),
+      score: ModelParser.asDouble(json['percentage'] ?? json['score']),
+      quizCount: ModelParser.asInt(json['quizCount'] ?? json['quizzesTaken']) == 0
           ? null
-          : ModelParser.asInt(json['quizCount']),
-      isCurrentUser: ModelParser.asBool(json['isCurrentUser']),
+          : ModelParser.asInt(json['quizCount'] ?? json['quizzesTaken']),
+      isCurrentUser: ModelParser.asBool(json['isCurrentUser'] ?? json['isMe']),
     );
   }
 

@@ -21,18 +21,22 @@ final class ProfileViewPageBloc
           ProfileViewPageState,
           ProfileViewPagePresentationEvent
         > {
-  ProfileViewPageBloc({required this.profileRepository})
-    : super(ProfileViewPageState.initial) {
+  ProfileViewPageBloc({
+    required this.profileRepository,
+    required this.analyticsService,
+  }) : super(ProfileViewPageState.initial) {
     on<ProfileViewPageLoadEvent>(_onLoad);
   }
 
   final ProfileRepository profileRepository;
+  final AnalyticsService analyticsService;
 
   Future<void> _onLoad(
     ProfileViewPageLoadEvent event,
     Emitter<ProfileViewPageState> emit,
   ) async {
     emit(state.copyWith(loadingState: LoadingState.loading));
+    analyticsService.logEvent(name: AnalyticsEvents.profileViewed);
     emit(state.copyWith(loadingState: LoadingState.loaded));
   }
 }

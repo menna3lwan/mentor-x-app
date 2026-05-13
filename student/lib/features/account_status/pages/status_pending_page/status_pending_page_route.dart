@@ -15,6 +15,7 @@ final class StatusPendingPageRoute extends GoRouteData
           StatusPendingPageBloc(
             authRepository: context.read<StudentAuthenticationRepository>(),
             cacheRepository: context.read<CacheRepository>(),
+            analyticsService: context.read<AnalyticsService>(),
           )..add(
             const StatusPendingPageInitialized(),
           ),

@@ -170,4 +170,87 @@ final class QuizAttemptModel extends QuizAttemptEntity {
   }
 }
 
+class ParentChildDashboardSummaryModel extends ParentChildDashboardSummaryEntity {
+  const ParentChildDashboardSummaryModel({
+    required super.child,
+    required super.attendance,
+    required super.academics,
+    required super.financial,
+    required super.recentActivity,
+  });
+
+  factory ParentChildDashboardSummaryModel.fromJson(Map<String, dynamic> json) {
+    return ParentChildDashboardSummaryModel(
+      child: ParentChildEntity.placeholder.copyWith(
+        id: ModelParser.asString(json['child']?['id']),
+        
+      ),
+      attendance: ParentHomeAttendanceSummaryModel.fromJson(ModelParser.asMap(json['attendance'])),
+      academics: ParentHomeAcademicSummaryModel.fromJson(ModelParser.asMap(json['academics'])),
+      financial: ParentHomeFinancialSummaryModel.fromJson(ModelParser.asMap(json['financial'])),
+      recentActivity: ModelParser.asList(json['recent_activity'] ?? json['recentActivity'])
+          .map((e) => ParentRecentActivityModel.fromJson(ModelParser.asMap(e)))
+          .toList(),
+    );
+  }
+}
+
+class ParentHomeAttendanceSummaryModel extends ParentHomeAttendanceSummary {
+  const ParentHomeAttendanceSummaryModel({
+    required super.attendanceRate,
+    required super.totalDays,
+    required super.attendedDays,
+    required super.absentDays,
+    super.lastAttendanceDate,
+  });
+
+  factory ParentHomeAttendanceSummaryModel.fromJson(Map<String, dynamic> json) {
+    return ParentHomeAttendanceSummaryModel(
+      attendanceRate: ModelParser.asDouble(json['attendance_rate'] ?? json['attendanceRate']),
+      totalDays: ModelParser.asInt(json['total_days'] ?? json['totalDays']),
+      attendedDays: ModelParser.asInt(json['attended_days'] ?? json['attendedDays']),
+      absentDays: ModelParser.asInt(json['absent_days'] ?? json['absentDays']),
+      lastAttendanceDate: ModelParser.asDateTime(json['last_attendance_date'] ?? json['lastAttendanceDate']),
+    );
+  }
+}
+
+class ParentHomeAcademicSummaryModel extends ParentHomeAcademicSummary {
+  const ParentHomeAcademicSummaryModel({
+    required super.averageGrade,
+    required super.gradeTrend,
+    required super.enrolledCoursesCount,
+    required super.activeAssignmentsCount,
+    super.nextDeadline,
+  });
+
+  factory ParentHomeAcademicSummaryModel.fromJson(Map<String, dynamic> json) {
+    return ParentHomeAcademicSummaryModel(
+      averageGrade: ModelParser.asDouble(json['average_grade'] ?? json['averageGrade']),
+      gradeTrend: ModelParser.asDouble(json['grade_trend'] ?? json['gradeTrend']),
+      enrolledCoursesCount: ModelParser.asInt(json['enrolled_courses_count'] ?? json['enrolledCoursesCount']),
+      activeAssignmentsCount: ModelParser.asInt(json['active_assignments_count'] ?? json['activeAssignmentsCount']),
+      nextDeadline: ModelParser.asDateTime(json['next_deadline'] ?? json['nextDeadline']),
+    );
+  }
+}
+
+class ParentHomeFinancialSummaryModel extends ParentHomeFinancialSummary {
+  const ParentHomeFinancialSummaryModel({
+    required super.walletBalance,
+    required super.spentThisMonth,
+    required super.currency,
+    super.lastTransactionDate,
+  });
+
+  factory ParentHomeFinancialSummaryModel.fromJson(Map<String, dynamic> json) {
+    return ParentHomeFinancialSummaryModel(
+      walletBalance: ModelParser.asDouble(json['wallet_balance'] ?? json['walletBalance']),
+      spentThisMonth: ModelParser.asDouble(json['spent_this_month'] ?? json['spentThisMonth']),
+      currency: ModelParser.asString(json['currency'], fallback: 'EGP'),
+      lastTransactionDate: ModelParser.asDateTime(json['last_transaction_date'] ?? json['lastTransactionDate']),
+    );
+  }
+}
+
 

@@ -37,10 +37,12 @@ final class _ResetPasswordPageWrapperState
     return BlocProvider(
       create: (context) => ResetPasswordBloc(
         authRepository: context.read<StudentAuthenticationRepository>(),
+        analyticsService: context.read<AnalyticsService>(),
         phoneNumber: widget.phoneNumber,
       ),
       child:
           BlocPresentationListener<
+
             ResetPasswordBloc,
             ResetPasswordPresentationEvent
           >(
@@ -50,17 +52,24 @@ final class _ResetPasswordPageWrapperState
                 const LoginPageRoute().go(context);
               }
             },
-            child: BlocBuilder<ResetPasswordBloc, ResetPasswordState>(
-              builder: (context, state) {
+            child: Builder(
+              builder: (context) {
                 final bloc = context.read<ResetPasswordBloc>();
+                final isLoading = context.select(
+                  (ResetPasswordBloc bloc) => bloc.state.loadingState.isLoading,
+                );
+                final errorMessage = context.select(
+                  (ResetPasswordBloc bloc) => bloc.state.errorMessage,
+                );
+
                 return ResetPasswordPage(
                   formKey: _formKey,
                   phoneNumber: widget.phoneNumber,
                   otpController: _otpController,
                   passwordController: _passwordController,
                   confirmPasswordController: _confirmPasswordController,
-                  isLoading: state.loadingState.isLoading,
-                  errorMessage: state.errorMessage,
+                  isLoading: isLoading,
+                  errorMessage: errorMessage,
                   onOtpChanged: (value) =>
                       bloc.add(ResetPasswordOtpChanged(value)),
                   onPasswordChanged: (value) =>

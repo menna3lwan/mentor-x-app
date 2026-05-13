@@ -25,15 +25,10 @@ class _RedeemCodePageWrapperState extends State<RedeemCodePageWrapper> {
             Navigator.of(context).pop();
         }
       },
-      child: BlocBuilder<RedeemCodePageBloc, RedeemCodePageState>(
-        builder: (context, state) {
-          return RedeemCodePagePage(
-            state: state,
-            onSubmit: (code) => context.read<RedeemCodePageBloc>().add(
-              RedeemCodePageSubmitEvent(code),
-            ),
-          );
-        },
+      child: RedeemCodePagePage(
+        onSubmit: (code) => context.read<RedeemCodePageBloc>().add(
+          RedeemCodePageSubmitEvent(code),
+        ),
       ),
     );
   }

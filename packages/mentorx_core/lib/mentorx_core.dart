@@ -76,6 +76,7 @@ part 'src/entities/attendance_record_entity.dart';
 part 'src/entities/attendance_summary_entity.dart';
 
 // Financial
+part 'src/entities/coupon_entity.dart';
 part 'src/entities/wallet_transaction_entity.dart';
 part 'src/entities/payment_entity.dart';
 part 'src/entities/payment_order_entity.dart';
@@ -102,10 +103,10 @@ part 'src/entities/reward_claim_entity.dart';
 
 // Verification & Profile (Student only)
 part 'src/entities/profile_edit_request_entity.dart';
-part 'src/entities/national_id_verification_entity.dart';
 part 'src/entities/code_redemption_entity.dart';
 part 'src/entities/leaderboard_entry_entity.dart';
 part 'src/entities/student_analytics_entity.dart';
+part 'src/entities/student_card_entity.dart';
 
 // ——————————————————————————————————————————————
 // Repositories — Common interfaces
@@ -129,12 +130,14 @@ part 'src/repositories/tenant_repository.dart';
 part 'src/repositories/announcement_repository.dart';
 part 'src/repositories/student_registration_repository.dart';
 part 'src/repositories/parent_home_repository.dart';
+part 'src/repositories/parent_profile_repository.dart';
 part 'src/repositories/parent_children_repository.dart';
 part 'src/repositories/parent_financial_repository.dart';
 part 'src/repositories/parent_course_repository.dart';
 part 'src/repositories/parent_attendance_repository.dart';
 part 'src/repositories/parent_grade_repository.dart';
 part 'src/repositories/parent_communication_repository.dart';
+part 'src/repositories/student_communication_repository.dart';
 part 'src/repositories/onboarding_repository.dart';
 
 // Role-specific interfaces
@@ -146,3 +149,5 @@ part 'src/repositories/marketplace_repository.dart';
 part 'src/repositories/rewards_repository.dart';
 part 'src/repositories/leaderboard_repository.dart';
 part 'src/repositories/student_analytics_repository.dart';
+part 'src/repositories/parent_analytics_repository.dart';
+part 'src/repositories/student_card_repository.dart';

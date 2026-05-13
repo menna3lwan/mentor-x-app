@@ -1,6 +1,5 @@
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'ai_chat_page_page.dart';
 import 'bloc/ai_chat_page_bloc.dart';
@@ -25,8 +24,8 @@ class _AiChatPageWrapperState extends State<AiChatPageWrapper> {
             Navigator.of(context).pop();
         }
       },
-      child: BlocBuilder<AiChatPageBloc, AiChatPageState>(
-        builder: (context, state) {
+      child: Builder(
+        builder: (context) {
           return const AiChatPage();
         },
       ),

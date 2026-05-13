@@ -9,6 +9,7 @@ final class ProfileViewPageRoute extends GoRouteData
     return BlocProvider<ProfileViewPageBloc>(
       create: (context) => ProfileViewPageBloc(
         profileRepository: context.read<ProfileRepository>(),
+        analyticsService: context.read<AnalyticsService>(),
       )..add(const ProfileViewPageLoadEvent()),
       child: const ProfileViewPageWrapper(),
     );

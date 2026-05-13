@@ -22,9 +22,10 @@ class FinancialMonitorPage extends StatelessWidget {
     return BlocProvider(
       create: (context) => FinancialBloc(
         repository: context.read<ParentFinancialRepository>(),
+        analyticsService: context.read<AnalyticsService>(),
       )..add(FinancialStarted(childId: childId)),
-      child: BlocBuilder<FinancialBloc, FinancialState>(
-        builder: (context, state) {
+      child: Builder(
+        builder: (context) {
           return AppDashboardScaffold(
             title: t.financialMonitor,
             onRefresh: () async {
@@ -36,26 +37,39 @@ class FinancialMonitorPage extends StatelessWidget {
                 icon: const Icon(Icons.refresh_rounded),
               ),
             ],
-            body: _buildBody(context, state, t),
+            body: _FinancialMonitorBody(childId: childId),
           );
         },
       ),
     );
   }
+}
 
-  Widget _buildBody(BuildContext context, FinancialState state, TranslationsParentEn t) {
-    if (state.status == FinancialStatus.loading) {
+class _FinancialMonitorBody extends StatelessWidget {
+  const _FinancialMonitorBody({required this.childId});
+
+  final String childId;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = Translations.of(context).parent;
+    final status = context.select((FinancialBloc bloc) => bloc.state.status);
+    final errorMessage = context.select((FinancialBloc bloc) => bloc.state.errorMessage);
+    final transactions = context.select((FinancialBloc bloc) => bloc.state.transactions);
+    final walletSummary = context.select((FinancialBloc bloc) => bloc.state.walletSummary);
+
+    if (status == FinancialStatus.loading) {
       return const Center(child: CircularProgressIndicator());
     }
 
-    if (state.status == FinancialStatus.failure) {
+    if (status == FinancialStatus.failure) {
       return AppErrorView(
-        message: state.errorMessage ?? t.unableToLoad,
+        message: errorMessage ?? t.unableToLoad,
         onRetry: () => context.read<FinancialBloc>().add(FinancialStarted(childId: childId)),
       );
     }
 
-    if (state.transactions.isEmpty && state.walletSummary == null) {
+    if (transactions.isEmpty && walletSummary == null) {
       return AppEmptyView(
         title: 'No Data',
         message: 'Financial data will appear here once available.',
@@ -69,7 +83,7 @@ class FinancialMonitorPage extends StatelessWidget {
       physics: const BouncingScrollPhysics(),
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       children: [
-        if (state.walletSummary != null) ...[
+        if (walletSummary != null) ...[
           FadeInDown(
             duration: const Duration(milliseconds: 600),
             child: AppHeroCard(
@@ -78,17 +92,17 @@ class FinancialMonitorPage extends StatelessWidget {
               stats: [
                 AppHeroStatItem(
                   label: 'Balance',
-                  value: '${Translations.of(context).core.currency} ${state.walletSummary!.walletBalance.toStringAsFixed(0)}',
+                  value: '${Translations.of(context).core.currency} ${walletSummary.walletBalance.toStringAsFixed(0)}',
                   onTap: () {},
                 ),
                 AppHeroStatItem(
                   label: 'Spent',
-                  value: '${Translations.of(context).core.currency} ${state.walletSummary!.spentThisMonth.toStringAsFixed(0)}',
+                  value: '${Translations.of(context).core.currency} ${walletSummary.spentThisMonth.toStringAsFixed(0)}',
                   onTap: () {},
                 ),
                 AppHeroStatItem(
                   label: 'Points',
-                  value: state.walletSummary!.points.toString(),
+                  value: walletSummary.points.toString(),
                   onTap: () {},
                 ),
               ],
@@ -96,28 +110,28 @@ class FinancialMonitorPage extends StatelessWidget {
           ),
           const Gap(32),
         ],
-        
+
         FadeInLeft(
           duration: const Duration(milliseconds: 500),
           child: AppSectionHeader(title: t.transactionHistory),
         ),
         const Gap(16),
-        
-        if (state.transactions.isEmpty)
+
+        if (transactions.isEmpty)
           AppEmptyView(
             title: 'No Transactions',
             message: 'No transaction history found for this child.',
             icon: Icons.receipt_long_rounded,
           )
         else
-          ...state.transactions.asMap().entries.map(
+          ...transactions.asMap().entries.map(
             (entry) => FadeInUp(
               duration: const Duration(milliseconds: 500),
               delay: Duration(milliseconds: 50 * entry.key),
               child: _TransactionCard(tx: entry.value),
             ),
           ),
-        
+
         const Gap(40),
       ],
     );

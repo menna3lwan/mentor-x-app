@@ -21,6 +21,13 @@ final class QuizModel extends QuizEntity {
   });
 
   factory QuizModel.fromJson(Map<String, dynamic> json) {
+    final totalMarks = ModelParser.asInt(json['totalMarks'] ?? json['total_marks']);
+    final passingPercentage = ModelParser.asDouble(json['passingPercentage'] ?? json['passing_percentage']);
+    final passMarks = ModelParser.asInt(
+      json['passMarks'] ?? json['pass_marks'],
+      fallback: (totalMarks * passingPercentage / 100).round(),
+    );
+
     return QuizModel(
       id: ModelParser.asString(json['id']),
       title: ModelParser.asString(json['title']),
@@ -28,12 +35,14 @@ final class QuizModel extends QuizEntity {
       active: ModelParser.asBool(json['active'], fallback: true),
       deleted: ModelParser.asBool(json['deleted']),
       timeRestricted: ModelParser.asBool(json['timeRestricted'] ?? json['time_restricted']),
-      durationMinutes: ModelParser.asInt(json['durationMinutes'] ?? json['duration_minutes']),
+      durationMinutes: ModelParser.asInt(
+        json['durationMinutes'] ?? json['duration_minutes'] ?? json['timeLimitMinutes'] ?? json['time_limit'],
+      ),
       deadline: ModelParser.asDateTime(json['deadline']),
       weekId: ModelParser.asString(json['weekId'] ?? json['week_id']),
       courseId: ModelParser.asString(json['courseId'] ?? json['course_id']),
-      totalMarks: ModelParser.asInt(json['totalMarks'] ?? json['total_marks']),
-      passMarks: ModelParser.asInt(json['passMarks'] ?? json['pass_marks']),
+      totalMarks: totalMarks,
+      passMarks: passMarks,
       questionsCount: ModelParser.asInt(json['questionsCount'] ?? json['questions_count']),
       questions: ModelParser.asList(json['questions'])
           .map((e) => QuizQuestionModel.fromJson(ModelParser.asMap(e)))
@@ -100,11 +109,14 @@ final class QuizAttemptModel extends QuizAttemptEntity {
 
   factory QuizAttemptModel.fromJson(Map<String, dynamic> json) {
     return QuizAttemptModel(
-      id: ModelParser.asString(json['id']),
+      id: ModelParser.asString(
+        json['id'] ?? json['attemptId'] ?? json['attempt_id'],
+      ),
       quizId: ModelParser.asString(json['quizId'] ?? json['quiz_id']),
       courseId: ModelParser.asString(json['courseId'] ?? json['course_id']),
       courseName: ModelParser.asString(json['courseName'] ?? json['course_name']),
-      attemptNumber: ModelParser.asInt(json['attemptNumber'] ?? json['attempt_number']),
+      attemptNumber:
+          ModelParser.asInt(json['attemptNumber'] ?? json['attempt_number']),
       status: _parseStatus(json['status']),
       answers: ModelParser.asMap(json['answers']).map(
         (k, v) => MapEntry(k, v.toString()),
@@ -113,9 +125,12 @@ final class QuizAttemptModel extends QuizAttemptEntity {
       totalMarks: ModelParser.asInt(json['totalMarks'] ?? json['total_marks']),
       percentage: ModelParser.asDouble(json['percentage']),
       passed: ModelParser.asBool(json['passed']),
-      startedAt: ModelParser.asDateTime(json['startedAt'] ?? json['started_at']) ?? DateTime.now(),
-      submittedAt: ModelParser.asDateTime(json['submittedAt'] ?? json['submitted_at']),
-      timeSpentSeconds: ModelParser.asInt(json['timeSpentSeconds'] ?? json['time_spent_seconds']),
+      startedAt: ModelParser.asDateTime(json['startedAt'] ?? json['started_at']) ??
+          DateTime.now(),
+      submittedAt:
+          ModelParser.asDateTime(json['submittedAt'] ?? json['submitted_at']),
+      timeSpentSeconds:
+          ModelParser.asInt(json['timeSpentSeconds'] ?? json['time_spent_seconds']),
     );
   }
 

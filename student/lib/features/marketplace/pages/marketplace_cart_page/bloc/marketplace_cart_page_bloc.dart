@@ -34,6 +34,7 @@ final class MarketplaceCartPageBloc
   MarketplaceCartPageBloc({
     required this.marketplaceRepository,
     required this.walletRepository,
+    required this.analyticsService,
   }) : super(MarketplaceCartPageState.initial) {
     on<MarketplaceCartPageLoadEvent>(_onLoad);
     on<MarketplaceCartPagePlaceOrderEvent>(_onPlaceOrder);
@@ -41,18 +42,24 @@ final class MarketplaceCartPageBloc
 
   final MarketplaceRepository marketplaceRepository;
   final WalletRepository walletRepository;
+  final AnalyticsService analyticsService;
 
   Future<void> _onLoad(
     MarketplaceCartPageLoadEvent event,
     Emitter<MarketplaceCartPageState> emit,
   ) async {
+    analyticsService.logEvent(name: AnalyticsEvents.cartViewed);
     emit(state.copyWith(loadingState: LoadingState.loading));
     try {
-      final walletSummary = await walletRepository.getSummary();
+      final [walletSummary, validCoupons] = await Future.wait([
+        walletRepository.getSummary(),
+        walletRepository.getValidCoupons(),
+      ]);
       emit(
         state.copyWith(
           loadingState: LoadingState.loaded,
-          walletSummary: walletSummary,
+          walletSummary: walletSummary as WalletSummaryEntity,
+          validCoupons: validCoupons as List<CouponEntity>,
         ),
       );
     } catch (e) {

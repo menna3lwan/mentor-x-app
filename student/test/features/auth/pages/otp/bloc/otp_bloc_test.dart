@@ -1,3 +1,4 @@
+import 'package:mocktail/mocktail.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:bloc_presentation_test/bloc_presentation_test.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -6,7 +7,10 @@ import 'package:mock_authentication_repository/mock_authentication_repository.da
 import 'package:mentorx_student/core/core.dart';
 import 'package:mentorx_student/features/auth/pages/otp/bloc/otp_bloc.dart';
 
+class MockAnalyticsService extends Mock implements AnalyticsService {}
+
 void main() {
+  late AnalyticsService analyticsService;
   late MockAuthenticationRepository authRepository;
   late MockAuthenticationRepository uninitializedAuthRepository;
 
@@ -15,6 +19,7 @@ void main() {
   const invalidOtp = '111111';
 
   setUp(() async {
+    analyticsService = MockAnalyticsService();
     authRepository = MockAuthenticationRepository(delay: Duration.zero);
     await authRepository.initialize();
     // sendOtp sets _validOtp = '000000' and stores the phone number
@@ -26,18 +31,20 @@ void main() {
   });
 
   OtpBloc buildBloc() => OtpBloc(
-    authRepository: authRepository,
-    phoneNumber: testPhone,
-    otpLength: 6,
-    otpDuration: Duration.zero,
-  );
+        authRepository: authRepository,
+        phoneNumber: testPhone,
+        otpLength: 6,
+        otpDuration: Duration.zero,
+        analyticsService: analyticsService,
+      );
 
   OtpBloc buildUninitializedBloc() => OtpBloc(
-    authRepository: uninitializedAuthRepository,
-    phoneNumber: testPhone,
-    otpLength: 6,
-    otpDuration: Duration.zero,
-  );
+        authRepository: uninitializedAuthRepository,
+        phoneNumber: testPhone,
+        otpLength: 6,
+        otpDuration: Duration.zero,
+        analyticsService: analyticsService,
+      );
 
   group('OtpBloc', () {
     // ──── 1. Initial state ────

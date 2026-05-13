@@ -39,7 +39,6 @@ List<RouteBase> get $appRoutes => [
   $statusBlockedPageRoute,
   $editProfilePageRoute,
   $changePasswordPageRoute,
-  $verifyIdentityPageRoute,
   $redeemCodePageRoute,
   $addBalancePageRoute,
   $purchaseConfirmPageRoute,
@@ -57,6 +56,7 @@ List<RouteBase> get $appRoutes => [
   $notificationsPageRoute,
   $walkthroughPageRoute,
   $splashPageRoute,
+  $studentCardPageRoute,
 ];
 
 RouteBase get $attendanceQrPageRoute => GoRouteData.$route(
@@ -842,6 +842,12 @@ RouteBase get $shellPageRoute => StatefulShellRouteData.$route(
           path: '/',
           name: 'home',
           factory: $HomePageRoute._fromState,
+          routes: [
+            GoRouteData.$route(
+              path: 'analytics',
+              factory: $AnalyticsDashboardPageRoute._fromState,
+            ),
+          ],
         ),
       ],
     ),
@@ -894,6 +900,27 @@ mixin $HomePageRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $AnalyticsDashboardPageRoute on GoRouteData {
+  static AnalyticsDashboardPageRoute _fromState(GoRouterState state) =>
+      const AnalyticsDashboardPageRoute();
+
+  @override
+  String get location => GoRouteData.$location('/analytics');
 
   @override
   void go(BuildContext context) => context.go(location);
@@ -1165,32 +1192,6 @@ mixin $ChangePasswordPageRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/change-password');
-
-  @override
-  void go(BuildContext context) => context.go(location);
-
-  @override
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  @override
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  @override
-  void replace(BuildContext context) => context.replace(location);
-}
-
-RouteBase get $verifyIdentityPageRoute => GoRouteData.$route(
-  path: '/verify-identity',
-  factory: $VerifyIdentityPageRoute._fromState,
-);
-
-mixin $VerifyIdentityPageRoute on GoRouteData {
-  static VerifyIdentityPageRoute _fromState(GoRouterState state) =>
-      const VerifyIdentityPageRoute();
-
-  @override
-  String get location => GoRouteData.$location('/verify-identity');
 
   @override
   void go(BuildContext context) => context.go(location);
@@ -1667,6 +1668,33 @@ mixin $SplashPageRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/splash');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $studentCardPageRoute => GoRouteData.$route(
+  path: '/student-card',
+  name: 'studentCard',
+  factory: $StudentCardPageRoute._fromState,
+);
+
+mixin $StudentCardPageRoute on GoRouteData {
+  static StudentCardPageRoute _fromState(GoRouterState state) =>
+      const StudentCardPageRoute();
+
+  @override
+  String get location => GoRouteData.$location('/student-card');
 
   @override
   void go(BuildContext context) => context.go(location);

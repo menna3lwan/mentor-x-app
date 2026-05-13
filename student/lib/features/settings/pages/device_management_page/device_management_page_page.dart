@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
@@ -6,13 +7,11 @@ import 'package:gap/gap.dart';
 import 'bloc/device_management_page_bloc.dart';
 
 final class DeviceManagementPagePage extends StatelessWidget {
-  final DeviceManagementPageState state;
   final VoidCallback onRefresh;
   final ValueChanged<String> onDeactivateTapped;
 
   const DeviceManagementPagePage({
     super.key,
-    required this.state,
     required this.onRefresh,
     required this.onDeactivateTapped,
   });
@@ -21,160 +20,87 @@ final class DeviceManagementPagePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = context.t.student;
 
-    return Scaffold(
-      backgroundColor: context.backgroundPrimaryColor,
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(70),
-        child: FadeInDown(
-          duration: const Duration(milliseconds: 500),
-          child: Container(
-            decoration: BoxDecoration(
-              color: context.backgroundSecondaryColor,
-              borderRadius: const BorderRadius.vertical(
-                bottom: Radius.circular(28),
-              ),
-              border: Border(
-                bottom: BorderSide(
-                  color: context.borderPrimaryColor.withValues(alpha: 0.05),
+    return BlocBuilder<DeviceManagementPageBloc, DeviceManagementPageState>(
+      builder: (context, state) {
+        final isLoading = state.isLoading;
+        final isError = state.loadingState.isError;
+
+        return Scaffold(
+          backgroundColor: context.backgroundPrimaryColor,
+          appBar: PreferredSize(
+            preferredSize: const Size.fromHeight(70),
+            child: FadeInDown(
+              duration: const Duration(milliseconds: 500),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: context.backgroundSecondaryColor,
+                  borderRadius: const BorderRadius.vertical(
+                    bottom: Radius.circular(28),
+                  ),
+                  border: Border(
+                    bottom: BorderSide(
+                      color: context.borderPrimaryColor.withValues(alpha: 0.05),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            child: AppBar(
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              foregroundColor: context.textPrimaryColor,
-              centerTitle: true,
-              title: Text(
-                t['deviceManagement'] ?? 'Device Management',
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w900,
-                  letterSpacing: -0.5,
+                child: AppBar(
+                  backgroundColor: Colors.transparent,
+                  elevation: 0,
+                  foregroundColor: context.textPrimaryColor,
+                  centerTitle: true,
+                  title: Text(
+                    t['deviceManagement'] ?? 'Device Management',
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: -0.5,
+                    ),
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-      ),
-      body: RefreshIndicator(
-        onRefresh: () async => onRefresh(),
-        color: context.brandPrimaryColor,
-        backgroundColor: context.backgroundSecondaryColor,
-        child: state.isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : state.loadingState.isError
-            ? _buildError(context)
-            : _buildLoaded(context),
-      ),
+          body: RefreshIndicator(
+            onRefresh: () async => onRefresh(),
+            color: context.brandPrimaryColor,
+            backgroundColor: context.backgroundSecondaryColor,
+            child: isLoading
+                ? ListView.separated(
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+                    itemCount: 3,
+                    separatorBuilder: (_, _) => const Gap(16),
+                    itemBuilder: (_, _) => const MentorXSkeleton(height: 220, borderRadius: 28),
+                  )
+                : isError
+                ? AppErrorView(
+                    message: state.errorMessage ?? 'Unable to load devices.',
+                    onRetry: onRefresh,
+                  )
+                : _buildLoaded(context, state),
+          ),
+        );
+      },
     );
   }
 
-  Widget _buildError(BuildContext context) {
-    return ListView(
-      physics: const AlwaysScrollableScrollPhysics(),
-      children: [
-        const Gap(120),
-        ZoomIn(
-          duration: const Duration(milliseconds: 500),
-          child: Icon(
-            Icons.error_outline_rounded,
-            size: 64,
-            color: context.statusDangerColor,
-          ),
-        ),
-        const Gap(16),
-        FadeInUp(
-          duration: const Duration(milliseconds: 500),
-          child: Text(
-            state.errorMessage ?? 'Unable to load devices.',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: context.statusDangerColor,
-              fontWeight: FontWeight.w800,
-              fontSize: 16,
-            ),
-          ),
-        ),
-        const Gap(8),
-        FadeInUp(
-          duration: const Duration(milliseconds: 500),
-          delay: const Duration(milliseconds: 100),
-          child: Text(
-            'Pull down to try again.',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: context.textTertiaryColor,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
 
-  Widget _buildLoaded(BuildContext context) {
-    if (state.devices.isEmpty) {
-      return ListView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        children: [
-          const Gap(120),
-          ZoomIn(
-            duration: const Duration(milliseconds: 600),
-            child: Container(
-              padding: const EdgeInsets.all(24),
-              decoration: BoxDecoration(
-                color: context.backgroundSecondaryColor,
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: context.borderPrimaryColor.withValues(alpha: 0.05),
-                ),
-              ),
-              child: Icon(
-                Icons.devices_other_rounded,
-                size: 80,
-                color: context.textTertiaryColor.withValues(alpha: 0.1),
-              ),
-            ),
-          ),
-          const Gap(24),
-          FadeInUp(
-            duration: const Duration(milliseconds: 500),
-            child: Text(
-              'No registered devices',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.w900,
-                color: context.textPrimaryColor,
-                letterSpacing: -0.5,
-              ),
-            ),
-          ),
-          const Gap(10),
-          FadeInUp(
-            duration: const Duration(milliseconds: 500),
-            delay: const Duration(milliseconds: 100),
-            child: Text(
-              'Your active login sessions will appear here.',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: context.textTertiaryColor,
-                fontWeight: FontWeight.w700,
-                fontSize: 15,
-              ),
-            ),
-          ),
-        ],
+  Widget _buildLoaded(BuildContext context, DeviceManagementPageState state) {
+    final devices = state.devices;
+    if (devices.isEmpty) {
+      return AppEmptyView(
+        title: 'No registered devices',
+        message: 'Your active login sessions will appear here.',
+        icon: Icons.devices_other_rounded,
       );
     }
 
     return ListView.separated(
       physics: const BouncingScrollPhysics(),
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-      itemCount: state.devices.length,
+      itemCount: devices.length,
       separatorBuilder: (_, _) => const Gap(16),
       itemBuilder: (context, index) {
-        final device = state.devices[index];
+        final device = devices[index];
         final isDeactivating = state.deactivatingDeviceIds.contains(device.id);
 
         return FadeInUp(

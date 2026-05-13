@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:analytics_service/analytics_service.dart';
 import '../../../core/core.dart';
 
 part 'onboarding_event.dart';
@@ -8,12 +8,15 @@ part 'onboarding_state.dart';
 final class OnboardingBloc extends Bloc<OnboardingEvent, OnboardingState> {
   final OnboardingRepository _onboardingRepository;
   final AuthenticationRepository _authenticationRepository;
+  final AnalyticsService _analyticsService;
 
   OnboardingBloc({
     required OnboardingRepository onboardingRepository,
     required AuthenticationRepository authenticationRepository,
+    required AnalyticsService analyticsService,
   }) : _onboardingRepository = onboardingRepository,
        _authenticationRepository = authenticationRepository,
+       _analyticsService = analyticsService,
        super(const OnboardingState.loading()) {
     on<OnboardingStarted>(_onStarted);
     on<OnboardingCompleted>(_onCompleted);
@@ -36,6 +39,7 @@ final class OnboardingBloc extends Bloc<OnboardingEvent, OnboardingState> {
       return;
     }
 
+    _analyticsService.logEvent(name: AnalyticsEvents.walkthroughStarted);
     emit(const OnboardingState.needsOnboarding());
   }
 

@@ -25,7 +25,7 @@ class AppDashboardScaffold extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           title,
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+          style: context.titleH1Style.copyWith(
                 fontWeight: FontWeight.w800,
                 color: context.brandPrimaryColor,
               ),

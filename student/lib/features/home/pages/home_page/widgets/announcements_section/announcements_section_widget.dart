@@ -35,6 +35,7 @@ final class AnnouncementsSectionWidget extends StatelessWidget {
       child: ListView.separated(
         itemCount: announcementItems.isEmpty ? 2 : announcementItems.length,
         shrinkWrap: true,
+        padding: EdgeInsets.zero,
         physics: const NeverScrollableScrollPhysics(),
         separatorBuilder: (context, index) => const Gap(16),
         itemBuilder: (context, index) {
@@ -55,87 +56,115 @@ final class AnnouncementsSectionWidget extends StatelessWidget {
             child: Container(
               decoration: BoxDecoration(
                 color: context.backgroundSecondaryColor.withValues(alpha: 0.45),
-                borderRadius: BorderRadius.circular(24),
+                borderRadius: BorderRadius.circular(28),
                 border: Border.all(
                   color: isPinned
-                      ? context.brandPrimaryColor.withValues(alpha: 0.4)
-                      : context.borderPrimaryColor.withValues(alpha: 0.1),
+                      ? context.brandPrimaryColor.withValues(alpha: 0.3)
+                      : context.borderPrimaryColor.withValues(alpha: 0.08),
                   width: isPinned ? 1.5 : 1,
                 ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.03),
+                    blurRadius: 15,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
               ),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(24),
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                  child: Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: isPinned
-                                    ? context.brandPrimaryColor.withValues(alpha: 0.1)
-                                    : context.backgroundPrimaryColor.withValues(alpha: 0.3),
-                                shape: BoxShape.circle,
-                              ),
-                              child: Icon(
-                                isPinned
-                                    ? Icons.push_pin_rounded
-                                    : Icons.campaign_rounded,
-                                size: 20,
-                                color: isPinned
-                                    ? context.brandPrimaryColor
-                                    : context.brandPrimaryColor.withValues(alpha: 0.5),
-                              ),
-                            ),
-                            const Gap(16),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    title,
-                                    style: TextStyle(
-                                      color: context.textPrimaryColor,
-                                      fontWeight: FontWeight.w900,
-                                      fontSize: 16,
-                                      letterSpacing: -0.5,
-                                    ),
-                                  ),
-                                  const Gap(6),
-                                  Text(
-                                    DateFormat.yMMMd().add_jm().format(createdAt),
-                                    style: TextStyle(
-                                      fontSize: 11,
-                                      color: context.textTertiaryColor,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        const Gap(16),
-                        Text(
-                          preview,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            color: context.textSecondaryColor,
-                            height: 1.5,
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
+                borderRadius: BorderRadius.circular(28),
+                child: Stack(
+                  children: [
+                    Positioned.fill(
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+                        child: const SizedBox.expand(),
+                      ),
                     ),
-                  ),
+                    Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: isPinned
+                                      ? context.brandPrimaryColor.withValues(alpha: 0.1)
+                                      : context.backgroundPrimaryColor.withValues(alpha: 0.4),
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: context.brandPrimaryColor.withValues(alpha: 0.05),
+                                  ),
+                                ),
+                                child: Icon(
+                                  isPinned
+                                      ? Icons.push_pin_rounded
+                                      : Icons.campaign_rounded,
+                                  size: 20,
+                                  color: isPinned
+                                      ? context.brandPrimaryColor
+                                      : context.brandPrimaryColor.withValues(alpha: 0.6),
+                                ),
+                              ),
+                              const Gap(16),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      title,
+                                      style: TextStyle(
+                                        color: context.textPrimaryColor,
+                                        fontWeight: FontWeight.w900,
+                                        fontSize: 16,
+                                        letterSpacing: -0.6,
+                                      ),
+                                    ),
+                                    const Gap(4),
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          Icons.access_time_rounded,
+                                          size: 10,
+                                          color: context.textTertiaryColor,
+                                        ),
+                                        const Gap(6),
+                                        Text(
+                                          DateFormat.yMMMd().add_jm().format(createdAt),
+                                          style: TextStyle(
+                                            fontSize: 11,
+                                            color: context.textTertiaryColor,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          const Gap(16),
+                          Text(
+                            preview,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              color: context.textSecondaryColor,
+                              height: 1.5,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: -0.1,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),

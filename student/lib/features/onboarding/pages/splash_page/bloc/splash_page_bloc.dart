@@ -20,12 +20,15 @@ final class SplashPageBloc extends Bloc<SplashPageEvent, SplashPageState>
     with BlocPresentationMixin<SplashPageState, SplashPagePresentationEvent> {
   final StudentAuthenticationRepository _authenticationRepository;
   final CacheRepository _cacheRepository;
+  final AnalyticsService _analyticsService;
 
   SplashPageBloc({
     required StudentAuthenticationRepository authenticationRepository,
     required CacheRepository cacheRepository,
+    required AnalyticsService analyticsService,
   }) : _authenticationRepository = authenticationRepository,
        _cacheRepository = cacheRepository,
+       _analyticsService = analyticsService,
        super(SplashPageState.initial) {
     on<SplashPageStarted>(_onStarted);
     on<SplashPageRetryRequested>(_onRetryRequested);
@@ -35,6 +38,7 @@ final class SplashPageBloc extends Bloc<SplashPageEvent, SplashPageState>
     SplashPageStarted event,
     Emitter<SplashPageState> emit,
   ) async {
+    _analyticsService.logEvent(name: AnalyticsEvents.splashViewed);
     await _resolveNextRoute(emit);
   }
 
@@ -81,11 +85,19 @@ final class SplashPageBloc extends Bloc<SplashPageEvent, SplashPageState>
           const Duration(seconds: 3),
         );
       } catch (e) {
-        if (e is AuthenticationRepositoryException &&
-            e.code == AuthenticationRepositoryExceptionCode.invalidCredentials) {
-          return '/login';
+        final MentorXLogger logger = MentorXLogger('SplashPageBloc');
+        logger.warning('Failed to refresh account status: $e');
+        
+        if (e is AuthenticationRepositoryException) {
+          if (e.code == AuthenticationRepositoryExceptionCode.invalidCredentials ||
+              e.code == AuthenticationRepositoryExceptionCode.failedToRefreshToken) {
+            logger.info('Session is invalid or expired, redirecting to login');
+            return '/login';
+          }
         }
-        // Fallback to cached user in unstable network conditions.
+        
+        // Fallback to cached user in unstable network conditions (e.g. timeouts, server errors)
+        logger.debug('Non-auth error during status check, falling back to cached user data');
       }
 
       final resolvedUser = user;

@@ -14,7 +14,7 @@
             "noResults": "No results found",
             "opening": "Opening: ${url}",
             "comingSoon": "Coming soon"
-        },
+        }, 
         "errors": {
             "somethingWentWrong": "Something went wrong",
             "retry": "Retry"

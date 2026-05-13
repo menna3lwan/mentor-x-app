@@ -17,7 +17,26 @@ final class MarketplaceDetailPage extends StatelessWidget {
     if (state.loadingState == LoadingState.loading) {
       return Scaffold(
         backgroundColor: context.backgroundPrimaryColor,
-        body: const Center(child: CircularProgressIndicator()),
+        body: Column(
+          children: [
+            const MentorXSkeleton(height: 400),
+            Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const MentorXSkeleton(height: 32, width: 200, borderRadius: 8),
+                  const Gap(16),
+                  const MentorXSkeleton(height: 40, width: 120, borderRadius: 8),
+                  const Gap(32),
+                  const MentorXSkeleton(height: 24, width: 100, borderRadius: 8),
+                  const Gap(12),
+                  const MentorXSkeleton(height: 100, borderRadius: 16),
+                ],
+              ),
+            ),
+          ],
+        ),
       );
     }
 
@@ -29,14 +48,16 @@ final class MarketplaceDetailPage extends StatelessWidget {
           elevation: 0,
           foregroundColor: context.textPrimaryColor,
         ),
-        body: Center(
-          child: Text(
-            t['errorLoadingProduct'] ?? 'Error loading product',
-            style: TextStyle(
-              color: context.textSecondaryColor,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
+        body: AppErrorView(
+          message: t['errorLoadingProduct'] ?? 'Error loading product',
+          onRetry: () {
+            final itemId = context.read<MarketplaceDetailPageBloc>().state.item?.id;
+            if (itemId != null) {
+              context.read<MarketplaceDetailPageBloc>().add(
+                    MarketplaceDetailPageLoadEvent(itemId),
+                  );
+            }
+          },
         ),
       );
     }
@@ -283,12 +304,10 @@ final class MarketplaceDetailPage extends StatelessWidget {
                   color: context.borderPrimaryColor.withValues(alpha: 0.1),
                 ),
               ),
-              child: IconButton(
+              child: MentorXIconButton(
+                icon: Icons.favorite_border_rounded,
+                color: context.textPrimaryColor,
                 onPressed: () {},
-                icon: Icon(
-                  Icons.favorite_border_rounded,
-                  color: context.textPrimaryColor,
-                ),
               ),
             ),
           ],

@@ -13,6 +13,7 @@ final class AssignmentResultPageRoute extends GoRouteData
     return BlocProvider<AssignmentResultPageBloc>(
       create: (context) => AssignmentResultPageBloc(
         assignmentRepository: context.read<AssignmentRepository>(),
+        analyticsService: context.read<AnalyticsService>(),
       )..add(const AssignmentResultPageLoadEvent()),
       child: const AssignmentResultPageWrapper(),
     );

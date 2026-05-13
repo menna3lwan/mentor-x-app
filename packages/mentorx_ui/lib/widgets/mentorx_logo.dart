@@ -11,11 +11,18 @@ class MentorXLogo extends StatelessWidget {
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: const Color(0xFF183764),
+        color: context.brandPrimaryColor,
         borderRadius: BorderRadius.circular(size * 0.26),
+        boxShadow: [
+          BoxShadow(
+            color: context.brandPrimaryColor.withValues(alpha: 0.2),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Icon(
-        Icons.school,
+        Icons.school_rounded,
         color: Colors.white,
         size: size * 0.47,
       ),

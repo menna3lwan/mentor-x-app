@@ -17,6 +17,8 @@ abstract interface class ParentHomeRepository {
 
   Future<ParentHomeSummaryEntity> getSummary(String studentId);
 
+  Future<ParentChildDashboardSummaryEntity> getChildOverview(String studentId);
+
   Future<List<ParentRecentActivityEntity>> getRecentActivity(
     String studentId, {
     int limit = 10,

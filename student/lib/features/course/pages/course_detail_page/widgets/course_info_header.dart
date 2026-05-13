@@ -22,6 +22,7 @@ final class CourseInfoHeader extends StatelessWidget {
       children: [
         if (course.imageUrl != null)
           FadeInDown(
+            key: const ValueKey('course_header_image_fade'),
             duration: const Duration(milliseconds: 600),
             child: Stack(
               children: [
@@ -56,6 +57,7 @@ final class CourseInfoHeader extends StatelessWidget {
                   bottom: 16,
                   left: 16,
                   child: FadeInLeft(
+                    key: const ValueKey('course_header_preview_btn_fade'),
                     delay: const Duration(milliseconds: 400),
                     child: Container(
                       padding: const EdgeInsets.symmetric(
@@ -105,6 +107,7 @@ final class CourseInfoHeader extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               FadeInUp(
+                key: const ValueKey('course_header_title_fade'),
                 duration: const Duration(milliseconds: 500),
                 child: Text(
                   course.title,
@@ -120,6 +123,7 @@ final class CourseInfoHeader extends StatelessWidget {
               if (course.subtitle != null) ...[
                 const Gap(12),
                 FadeInUp(
+                  key: const ValueKey('course_header_subtitle_fade'),
                   delay: const Duration(milliseconds: 200),
                   child: Text(
                     course.subtitle!,
@@ -136,6 +140,7 @@ final class CourseInfoHeader extends StatelessWidget {
               ],
               const Gap(24),
               FadeInUp(
+                key: const ValueKey('course_header_stats_fade'),
                 delay: const Duration(milliseconds: 400),
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
@@ -163,6 +168,7 @@ final class CourseInfoHeader extends StatelessWidget {
               if (enrollment != null) ...[
                 const Gap(24),
                 FadeInUp(
+                  key: const ValueKey('course_header_progress_fade'),
                   delay: const Duration(milliseconds: 600),
                   child: _ProgressBar(
                     progressPercent: enrollment!.progressPercent,
@@ -214,11 +220,19 @@ final class _StatChip extends StatelessWidget {
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(18),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-            child: Row(
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: ExcludeSemantics(
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                  child: const SizedBox.expand(),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+              child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
@@ -241,10 +255,11 @@ final class _StatChip extends StatelessWidget {
               ],
             ),
           ),
-        ),
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
 }
 
 final class _ProgressBar extends StatelessWidget {
@@ -273,79 +288,94 @@ final class _ProgressBar extends StatelessWidget {
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(28),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Course Progress',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w900,
-                        color: context.textPrimaryColor,
-                        letterSpacing: -0.3,
-                      ),
-                    ),
-                    Text(
-                      '${progressPercent.toInt()}%',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w900,
-                        color: context.brandPrimaryColor,
-                      ),
-                    ),
-                  ],
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: ExcludeSemantics(
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                  child: const SizedBox.expand(),
                 ),
-                const Gap(16),
-                Stack(
-                  children: [
-                    Container(
-                      height: 10,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: context.backgroundPrimaryColor.withValues(alpha: 0.5),
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                    ),
-                    LayoutBuilder(
-                      builder: (context, constraints) {
-                        return AnimatedContainer(
-                          duration: const Duration(milliseconds: 800),
-                          curve: Curves.easeOutBack,
-                          height: 10,
-                          width: constraints.maxWidth * (progressPercent / 100),
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                context.brandPrimaryColor,
-                                context.brandPrimaryColor.withValues(alpha: 0.8),
-                              ],
-                            ),
-                            borderRadius: BorderRadius.circular(5),
-                            boxShadow: [
-                              BoxShadow(
-                                color: context.brandPrimaryColor.withValues(
-                                  alpha: 0.3,
-                                ),
-                                blurRadius: 8,
-                                offset: const Offset(0, 2),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ],
+              ),
             ),
-          ),
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Course Progress',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w900,
+                          color: context.textPrimaryColor,
+                          letterSpacing: -0.3,
+                        ),
+                      ),
+                      Text(
+                        '${progressPercent.toInt()}%',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w900,
+                          color: context.brandPrimaryColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Gap(16),
+                  Stack(
+                    children: [
+                      Container(
+                        height: 10,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color:
+                              context.backgroundPrimaryColor.withValues(alpha: 0.5),
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                      ),
+                      TweenAnimationBuilder<double>(
+                        tween: Tween<double>(begin: 0, end: progressPercent / 100),
+                        duration: const Duration(milliseconds: 800),
+                        curve: Curves.easeOutBack,
+                        builder: (context, value, child) {
+                          return FractionallySizedBox(
+                            alignment: Alignment.centerLeft,
+                            widthFactor: value.clamp(0, 1),
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 300),
+                              height: 10,
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    context.brandPrimaryColor,
+                                    context.brandPrimaryColor.withValues(alpha: 0.8),
+                                  ],
+                                ),
+                                borderRadius: BorderRadius.circular(5),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: context.brandPrimaryColor.withValues(
+                                      alpha: 0.3,
+                                    ),
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );

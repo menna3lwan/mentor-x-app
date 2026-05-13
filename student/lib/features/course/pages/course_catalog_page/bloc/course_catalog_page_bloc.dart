@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:mentorx_core/mentorx_core.dart';
+import 'package:analytics_service/analytics_service.dart';
 
 part 'course_catalog_page_event.dart';
 part 'course_catalog_page_state.dart';
@@ -24,12 +25,15 @@ final class CourseCatalogPageBloc
         > {
   final CourseRepository _courseRepository;
   final StudentRegistrationRepository _registrationRepository;
+  final AnalyticsService _analyticsService;
 
   CourseCatalogPageBloc({
     required CourseRepository courseRepository,
     required StudentRegistrationRepository registrationRepository,
+    required AnalyticsService analyticsService,
   }) : _courseRepository = courseRepository,
        _registrationRepository = registrationRepository,
+       _analyticsService = analyticsService,
        super(const CourseCatalogPageState()) {
     on<CourseCatalogPageInitialized>(_onInitialized);
     on<CourseCatalogPageSearchChanged>(_onSearchChanged);
@@ -43,6 +47,7 @@ final class CourseCatalogPageBloc
     CourseCatalogPageInitialized event,
     Emitter<CourseCatalogPageState> emit,
   ) async {
+    _analyticsService.logEvent(name: AnalyticsEvents.courseCatalogViewed);
     emit(
       state.copyWith(
         gradesStatus: CatalogSectionStatus.loading,

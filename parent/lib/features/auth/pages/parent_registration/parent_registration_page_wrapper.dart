@@ -19,6 +19,7 @@ final class ParentRegistrationPageWrapper extends StatelessWidget {
       create: (context) => ParentRegistrationBloc(
         authenticationRepository: context.read<AuthenticationRepository<ParentEntity>>(),
         deviceInfoService: context.read<DeviceInfoService>(),
+        analyticsService: context.read<AnalyticsService>(),
       ),
       child: const _ParentRegistrationPageContent(),
     );

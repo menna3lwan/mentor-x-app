@@ -1,0 +1,11 @@
+name: mock_student_card_repository
+description: A mock implementation of the Student Card repository.
+version: 0.0.1
+publish_to: none
+
+environment:
+  sdk: ^3.6.0
+
+dependencies:
+  mentorx_core:
+    path: ../../../mentorx_core

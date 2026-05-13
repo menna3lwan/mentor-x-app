@@ -81,4 +81,8 @@ mixin DataParsingMixin {
     if (value is String) return DateTime.tryParse(value);
     return null;
   }
+
+  /// Robust String parsing with fallback
+  String asString(dynamic value, {String fallback = ''}) =>
+      value?.toString() ?? fallback;
 }

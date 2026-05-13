@@ -11,6 +11,7 @@ final class SplashPageRoute extends GoRouteData with $SplashPageRoute {
         authenticationRepository: context
             .read<StudentAuthenticationRepository>(),
         cacheRepository: context.read<CacheRepository>(),
+        analyticsService: context.read<AnalyticsService>(),
       )..add(const SplashPageStarted()),
       child: const SplashPageWrapper(),
     );

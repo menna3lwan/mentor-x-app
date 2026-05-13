@@ -5,24 +5,33 @@ import 'package:mocktail/mocktail.dart';
 import 'package:mentorx_student/core/core.dart';
 import 'package:mentorx_student/features/quizzes/pages/quiz_result_page/bloc/quiz_result_page_bloc.dart';
 
+class MockAnalyticsService extends Mock implements AnalyticsService {}
+
+
 class MockQuizRepo extends Mock implements QuizRepository {}
 
 class MockLeaderboardRepo extends Mock implements LeaderboardRepository {}
 
 void main() {
+  late AnalyticsService analyticsService;
+  setUpAll(() {
+    registerFallbackValue('');
+  });
+
   late MockQuizRepo quizRepository;
   late MockLeaderboardRepo leaderboardRepository;
 
   setUp(() {
+    analyticsService = MockAnalyticsService();
     quizRepository = MockQuizRepo();
     leaderboardRepository = MockLeaderboardRepo();
   });
 
   group('QuizResultPageBloc', () {
     test('initial state is correct', () {
-      final bloc = QuizResultPageBloc(
-        quizRepository: quizRepository,
+      final bloc = QuizResultPageBloc(quizRepository: quizRepository,
         leaderboardRepository: leaderboardRepository,
+        analyticsService: analyticsService,
       );
       expect(bloc.state, QuizResultPageState.initial);
       expect(bloc.state.loadingState, LoadingState.initial);
@@ -60,10 +69,10 @@ void main() {
         when(
           () => leaderboardRepository.getQuizLeaderboard(any()),
         ).thenAnswer((_) async => [entry]);
-        return QuizResultPageBloc(
-          quizRepository: quizRepository,
+        return QuizResultPageBloc(quizRepository: quizRepository,
           leaderboardRepository: leaderboardRepository,
-        );
+        analyticsService: analyticsService,
+      );
       },
       act: (bloc) => bloc.add(const QuizResultPageLoadEvent(attemptId: '1')),
       wait: const Duration(milliseconds: 100),
@@ -104,10 +113,10 @@ void main() {
         when(
           () => leaderboardRepository.getQuizLeaderboard(any()),
         ).thenAnswer((_) async => []);
-        return QuizResultPageBloc(
-          quizRepository: quizRepository,
+        return QuizResultPageBloc(quizRepository: quizRepository,
           leaderboardRepository: leaderboardRepository,
-        );
+        analyticsService: analyticsService,
+      );
       },
       act: (bloc) => bloc.add(const QuizResultPageLoadEvent(attemptId: '1')),
       wait: const Duration(milliseconds: 100),

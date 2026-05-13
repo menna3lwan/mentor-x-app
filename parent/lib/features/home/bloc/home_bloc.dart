@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:analytics_service/analytics_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 
@@ -9,14 +10,17 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final ParentChildrenRepository _childrenRepository;
   final ParentHomeRepository _homeRepository;
   final CacheRepository _cacheRepository;
+  final AnalyticsService _analyticsService;
 
   HomeBloc({
     required ParentChildrenRepository childrenRepository,
     required ParentHomeRepository homeRepository,
     required CacheRepository cacheRepository,
+    required AnalyticsService analyticsService,
   })  : _childrenRepository = childrenRepository,
         _homeRepository = homeRepository,
         _cacheRepository = cacheRepository,
+        _analyticsService = analyticsService,
         super(const HomeState()) {
     on<HomeStarted>(_onStarted);
     on<HomeChildSwitched>(_onChildSwitched);
@@ -24,6 +28,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   Future<void> _onStarted(HomeStarted event, Emitter<HomeState> emit) async {
+    unawaited(_analyticsService.logEvent(name: AnalyticsEvents.homeViewed));
     emit(state.copyWith(status: HomeStatus.loading));
     try {
       final children = await _childrenRepository.getChildren();
@@ -59,6 +64,14 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   Future<void> _onChildSwitched(
       HomeChildSwitched event, Emitter<HomeState> emit) async {
     if (state.selectedChild?.id == event.child.id) return;
+
+    unawaited(_analyticsService.logEvent(
+      name: 'child_switched',
+      parameters: {
+        AnalyticsParams.childId: event.child.id,
+        AnalyticsParams.childName: event.child.name,
+      },
+    ));
 
     emit(state.copyWith(
       selectedChild: event.child,

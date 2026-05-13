@@ -16,8 +16,7 @@ class MentorXSkeleton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = MentorXThemeProvider.of(context);
-    final backgroundColor = color ?? theme.colors[$mentorxToken.color.backgroundTertiary]!;
+    final backgroundColor = color ?? context.backgroundTertiaryColor;
 
     return Container(
       width: width,

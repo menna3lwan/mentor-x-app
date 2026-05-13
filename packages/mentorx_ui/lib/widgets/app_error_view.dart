@@ -30,7 +30,7 @@ class AppErrorView extends StatelessWidget {
             const SizedBox(height: 16),
             Text(
               title,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              style: context.bodyPrimaryStyle.copyWith(
                 fontWeight: FontWeight.bold,
                 color: context.textPrimaryColor,
               ),
@@ -40,7 +40,7 @@ class AppErrorView extends StatelessWidget {
             Text(
               message,
               textAlign: TextAlign.center,
-              style: TextStyle(color: context.textSecondaryColor),
+              style: context.bodySecondaryStyle.copyWith(color: context.textSecondaryColor),
             ),
             if (onRetry != null) ...[
               const SizedBox(height: 24),

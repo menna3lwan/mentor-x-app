@@ -13,6 +13,7 @@ final class WalletOrdersPageRoute extends GoRouteData
     return BlocProvider<WalletOrdersPageBloc>(
       create: (context) => WalletOrdersPageBloc(
         walletRepository: context.read<WalletRepository>(),
+        analyticsService: context.read<AnalyticsService>(),
       )..add(const WalletOrdersPageLoadEvent()),
       child: const WalletOrdersPageWrapper(),
     );

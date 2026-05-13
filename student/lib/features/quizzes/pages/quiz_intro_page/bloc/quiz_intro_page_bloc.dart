@@ -20,18 +20,22 @@ final class QuizIntroPageBloc
           QuizIntroPageState,
           QuizIntroPagePresentationEvent
         > {
-  QuizIntroPageBloc({required this.quizRepository})
-    : super(QuizIntroPageState.initial) {
+  QuizIntroPageBloc({
+    required this.quizRepository,
+    required this.analyticsService,
+  }) : super(QuizIntroPageState.initial) {
     on<QuizIntroPageLoadEvent>(_onLoad);
   }
 
   final QuizRepository quizRepository;
+  final AnalyticsService analyticsService;
 
   Future<void> _onLoad(
     QuizIntroPageLoadEvent event,
     Emitter<QuizIntroPageState> emit,
   ) async {
     emit(state.copyWith(loadingState: LoadingState.loading));
+    analyticsService.logEvent(name: AnalyticsEvents.quizIntroViewed);
     emit(state.copyWith(loadingState: LoadingState.loaded));
   }
 }

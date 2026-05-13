@@ -23,12 +23,14 @@ final class QuizResultPageBloc
   QuizResultPageBloc({
     required this.quizRepository,
     required this.leaderboardRepository,
+    required this.analyticsService,
   }) : super(QuizResultPageState.initial) {
     on<QuizResultPageLoadEvent>(_onLoad);
   }
 
   final QuizRepository quizRepository;
   final LeaderboardRepository leaderboardRepository;
+  final AnalyticsService analyticsService;
 
   Future<void> _onLoad(
     QuizResultPageLoadEvent event,
@@ -37,6 +39,7 @@ final class QuizResultPageBloc
     emit(
       state.copyWith(loadingState: LoadingState.loading, errorMessage: null),
     );
+    analyticsService.logEvent(name: AnalyticsEvents.quizResultViewed);
     try {
       final result = await quizRepository.getResults(event.attemptId);
 

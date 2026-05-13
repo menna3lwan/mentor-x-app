@@ -39,13 +39,8 @@ final class ProfileViewPage extends StatelessWidget {
                       ),
                       const Gap(24),
     
-                      // Verification Section
-                      FadeInUp(
-                        duration: const Duration(milliseconds: 500),
-                        delay: const Duration(milliseconds: 100),
-                        child: _VerificationCard(t: t),
-                      ),
-                      const Gap(24),
+                      // Verification Section removed
+                      const Gap(0),
     
                       FadeInUp(
                         duration: const Duration(milliseconds: 500),
@@ -344,72 +339,6 @@ final class _StatCard extends StatelessWidget {
   }
 }
 
-final class _VerificationCard extends StatelessWidget {
-  final dynamic t;
-  const _VerificationCard({required this.t});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => context.push('/verify-identity'),
-      child: Container(
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: context.brandPrimaryColor.withValues(alpha: 0.08),
-          borderRadius: BorderRadius.circular(24),
-          border: Border.all(
-            color: context.brandPrimaryColor.withValues(alpha: 0.25),
-            width: 1.5,
-          ),
-        ),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: context.brandPrimaryColor.withValues(alpha: 0.1),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Icons.verified_user_rounded,
-                color: context.brandPrimaryColor,
-                size: 28,
-              ),
-            ),
-            const Gap(16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    t['identityVerification'],
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w900,
-                      color: context.textPrimaryColor,
-                      letterSpacing: -0.2,
-                    ),
-                  ),
-                  const Gap(4),
-                  Text(
-                    t['verifyNowDesc'],
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: context.textSecondaryColor,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const Gap(8),
-            Icon(Icons.chevron_right_rounded, color: context.brandPrimaryColor),
-          ],
-        ),
-      ),
-    );
-  }
-}
 
 final class _PersonalDetails extends StatelessWidget {
   const _PersonalDetails({
@@ -590,6 +519,14 @@ final class _ActionButtons extends StatelessWidget {
       children: [
         Row(
           children: [
+            Expanded(
+              child: _ActionButton(
+                label: t['studentDigitalId'] ?? 'Digital ID',
+                icon: Icons.badge_rounded,
+                onTap: () => context.push('/student-card'),
+              ),
+            ),
+            const Gap(12),
             Expanded(
               child: _ActionButton(
                 label: t['editProfile'],
