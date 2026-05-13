@@ -34,11 +34,8 @@ final class DioCourseRepository
         },
       );
 
-      final dataMap = asMap(response.data);
-      final rawList = dataMap['data']?['content'] ?? dataMap['content'] ?? response.data;
-      final list = asList(rawList);
-
-      return list
+      return response
+          .asList()
           .map(asMap)
           .map(EnrollmentModel.fromJson)
           .cast<EnrollmentEntity>()
@@ -73,11 +70,8 @@ final class DioCourseRepository
         },
       );
 
-      final dataMap = asMap(response.data);
-      final rawList = dataMap['data']?['content'] ?? dataMap['content'] ?? response.data;
-      final list = asList(rawList);
-
-      return list
+      return response
+          .asList()
           .map(asMap)
           .map(CourseSummaryModel.fromJson)
           .toList();
@@ -97,11 +91,8 @@ final class DioCourseRepository
         queryParameters: {if (gradeId != null) 'grade_id': gradeId},
       );
 
-      final dataMap = asMap(response.data);
-      final rawList = dataMap['data']?['content'] ?? dataMap['content'] ?? response.data;
-      final list = asList(rawList);
-
-      return list
+      return response
+          .asList()
           .map(asMap)
           .map(CategoryModel.fromJson)
           .toList();
@@ -118,8 +109,7 @@ final class DioCourseRepository
     try {
       final response = await httpClient.get('/api/courses/$courseId');
 
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
-      return CourseModel.fromJson(data);
+      return CourseModel.fromJson(response.asMap());
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
@@ -133,11 +123,8 @@ final class DioCourseRepository
     try {
       final response = await httpClient.get('/api/sessions/course/$courseId');
 
-      final dataMap = asMap(response.data);
-      final rawList = dataMap['data']?['content'] ?? dataMap['content'] ?? response.data;
-      final list = asList(rawList);
-
-      return list
+      return response
+          .asList()
           .map(asMap)
           .map(SessionModel.fromJson)
           .toList();
@@ -154,11 +141,8 @@ final class DioCourseRepository
     try {
       final response = await httpClient.get('/api/weeks/session/$sessionId');
 
-      final dataMap = asMap(response.data);
-      final rawList = dataMap['data']?['content'] ?? dataMap['content'] ?? response.data;
-      final list = asList(rawList);
-
-      return list
+      return response
+          .asList()
           .map(asMap)
           .map(WeekModel.fromJson)
           .toList();
@@ -176,9 +160,7 @@ final class DioCourseRepository
       // Hierarchy: Session → Weeks → Materials
       // Step 1: Get weeks for this session
       final weeksResponse = await httpClient.get('/api/weeks/session/$sessionId');
-      final weeksMap = asMap(weeksResponse.data);
-      final weeksRaw = weeksMap['data']?['content'] ?? weeksMap['content'] ?? weeksResponse.data;
-      final weekIds = asList(weeksRaw)
+      final weekIds = weeksResponse.asList()
           .map(asMap)
           .map((w) => stringOrNull(w['id']))
           .whereType<String>()
@@ -190,9 +172,7 @@ final class DioCourseRepository
       final materialFutures = weekIds.map((weekId) async {
         try {
           final res = await httpClient.get('/api/materials/lesson/$weekId');
-          final dataMap = asMap(res.data);
-          final raw = dataMap['data']?['content'] ?? dataMap['content'] ?? res.data;
-          return asList(raw).map(asMap).map(SessionItemModel.fromJson).toList();
+          return res.asList().map(asMap).map(SessionItemModel.fromJson).toList();
         } catch (_) {
           return <SessionItemModel>[];
         }
@@ -212,8 +192,8 @@ final class DioCourseRepository
   Future<EnrollmentEntity?> getCourseProgress(String courseId) async {
     try {
       final response = await httpClient.get('/api/enrollments/check/$courseId');
+      final data = response.asMap();
 
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
       // /api/enrollments/check/{id} returns {enrolled: bool, enrollment: {...}}
       if (data['enrolled'] != true) return null;
       final enrollmentData = asMap(data['enrollment']);

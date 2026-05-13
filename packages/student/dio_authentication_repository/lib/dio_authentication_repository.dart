@@ -318,7 +318,7 @@ final class DioAuthenticationRepository
         purpose: OtpVerificationPurpose.registration,
       );
 
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final data = response.asMap();
       final otpDuration = intOrNull(data['otp_expires_in_seconds']);
       final otpLength = intOrNull(data['otp_length']);
 
@@ -348,7 +348,7 @@ final class DioAuthenticationRepository
 
     try {
       final response = await _verifyOtpResponse(phone, otpInt);
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final data = response.asMap();
       await _setTokensIfPresent(data);
 
       final studentFromPayload = _extractStudentFromResponse(response.data);
@@ -591,8 +591,7 @@ final class DioAuthenticationRepository
   }
 
   StudentEntity? _extractStudentFromResponse(dynamic rawResponse) {
-    final root = asMap(rawResponse);
-    final data = asMap(root['data'] ?? root);
+    final data = ModelParser.extractData(rawResponse);
 
     if (data['user'] is Map ||
         data['id'] != null ||
@@ -602,8 +601,8 @@ final class DioAuthenticationRepository
       return StudentModel.fromJson(data);
     }
 
-    if (root['user'] is Map) {
-      return StudentModel.fromJson(asMap(root['user']));
+    if (data['user'] is Map) {
+      return StudentModel.fromJson(asMap(data['user']));
     }
 
     return null;

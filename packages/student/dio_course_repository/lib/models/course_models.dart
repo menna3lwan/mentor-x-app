@@ -38,44 +38,45 @@ final class CourseModel extends CourseEntity {
   });
 
   factory CourseModel.fromJson(Map<String, dynamic> json) {
+    final data = ModelParser.extractData(json);
+    
     // API sends categoryIds as List<int> — convert to List<String>
-    final rawCategoryIds = ModelParser.asList(json['categoryIds'] ?? json['category_ids']);
+    final rawCategoryIds = ModelParser.asList(data['categoryIds'] ?? data['category_ids']);
     final categoryIds = rawCategoryIds.map((e) => e.toString()).toList();
 
     return CourseModel(
-      id: ModelParser.asString(json['id']),
-      title: ModelParser.asString(json['title']),
-      description: _nullableString(json['description']),
-      subtitle: _nullableString(json['subtitle']),
+      id: ModelParser.asString(data['id']),
+      title: ModelParser.asString(data['title']),
+      description: _nullableString(data['description']),
+      subtitle: _nullableString(data['subtitle']),
       imageUrl: _nullableString(
-        json['imageUrl'] ?? json['image_url'] ?? json['thumbnailUrl'] ?? json['thumbnail_url'],
+        data['imageUrl'] ?? data['image_url'] ?? data['thumbnailUrl'] ?? data['thumbnail_url'],
       ),
-      price: ModelParser.asDouble(json['price']),
-      oldPrice: _nullableDouble(json['oldPrice'] ?? json['old_price']),
-      isFree: ModelParser.asBool(json['isFree'] ?? json['is_free']),
+      price: ModelParser.asDouble(data['price']),
+      oldPrice: _nullableDouble(data['oldPrice'] ?? data['old_price']),
+      isFree: ModelParser.asBool(data['isFree'] ?? data['is_free']),
       isActive: ModelParser.asBool(
-        json['active'] ?? json['isActive'] ?? json['is_active'],
+        data['active'] ?? data['isActive'] ?? data['is_active'],
         fallback: true,
       ),
-      orderNumber: ModelParser.asInt(json['orderNumber'] ?? json['order_number']),
-      type: _parseCourseType(json['type']),
-      orderingMode: _parseOrderingMode(json['orderingMode'] ?? json['ordering_mode']),
-      durationDays: _nullableInt(json['durationDays'] ?? json['duration_days']),
-      pointsReward: ModelParser.asInt(json['pointsReward'] ?? json['points_reward']),
-      gradeId: _nullableString(json['gradeId'] ?? json['grade_id']),
-      // API returns categoryIds[] (not a single categoryId) — use first as primary
+      orderNumber: ModelParser.asInt(data['orderNumber'] ?? data['order_number']),
+      type: _parseCourseType(data['type']),
+      orderingMode: _parseOrderingMode(data['orderingMode'] ?? data['ordering_mode']),
+      durationDays: _nullableInt(data['durationDays'] ?? data['duration_days']),
+      pointsReward: ModelParser.asInt(data['pointsReward'] ?? data['points_reward']),
+      gradeId: _nullableString(data['gradeId'] ?? data['grade_id']),
       categoryId: categoryIds.isNotEmpty ? categoryIds.first : null,
       categoryIds: categoryIds,
-      totalSessions: ModelParser.asInt(json['totalSessions'] ?? json['total_sessions']),
-      totalVideos: ModelParser.asInt(json['totalVideos'] ?? json['total_videos']),
+      totalSessions: ModelParser.asInt(data['totalSessions'] ?? data['total_sessions']),
+      totalVideos: ModelParser.asInt(data['totalVideos'] ?? data['total_videos']),
       totalDurationMinutes: ModelParser.asInt(
-        json['totalDurationMinutes'] ?? json['total_duration_minutes'],
+        data['totalDurationMinutes'] ?? data['total_duration_minutes'],
       ),
-      enrolledCount: ModelParser.asInt(json['enrolledCount'] ?? json['enrolled_count']),
-      featured: ModelParser.asBool(json['featured']),
-      pinned: ModelParser.asBool(json['pinned']),
-      createdAt: ModelParser.asDateTime(json['createdAt'] ?? json['created_at']),
-      updatedAt: ModelParser.asDateTime(json['updatedAt'] ?? json['updated_at']),
+      enrolledCount: ModelParser.asInt(data['enrolledCount'] ?? data['enrolled_count']),
+      featured: ModelParser.asBool(data['featured']),
+      pinned: ModelParser.asBool(data['pinned']),
+      createdAt: ModelParser.asDateTime(data['createdAt'] ?? data['created_at']),
+      updatedAt: ModelParser.asDateTime(data['updatedAt'] ?? data['updated_at']),
     );
   }
 
@@ -98,11 +99,6 @@ final class CourseModel extends CourseEntity {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// CourseSummaryModel
-// Used for course catalog cards — built from CourseResponse or enrollment data.
-// The API does not have a dedicated "summary" endpoint.
-// ─────────────────────────────────────────────────────────────────────────────
 final class CourseSummaryModel extends CourseSummaryEntity {
   const CourseSummaryModel({
     required super.id,
@@ -115,58 +111,26 @@ final class CourseSummaryModel extends CourseSummaryEntity {
   });
 
   factory CourseSummaryModel.fromJson(Map<String, dynamic> json) {
+    final data = ModelParser.extractData(json);
     return CourseSummaryModel(
-      id: ModelParser.asString(json['id'] ?? json['courseId'] ?? json['course_id']),
-      title: ModelParser.asString(json['title'] ?? json['courseTitle'] ?? json['course_title']),
-      description: _nullableString(json['description']),
+      id: ModelParser.asString(data['id']),
+      title: ModelParser.asString(data['title']),
+      description: _nullableString(data['description']),
       thumbnailUrl: _nullableString(
-        json['imageUrl'] ??
-            json['image_url'] ??
-            json['thumbnailUrl'] ??
-            json['thumbnail_url'] ??
-            json['courseThumbnailUrl'] ??
-            json['course_thumbnail_url'],
+        data['thumbnailUrl'] ??
+            data['thumbnail_url'] ??
+            data['imageUrl'] ??
+            data['image_url'],
       ),
-      enrolledCount: ModelParser.asInt(json['enrolledCount'] ?? json['enrolled_count']),
-      progressPercent: _nullableDouble(
-        json['progressPercent'] ?? json['progress_percent'] ?? json['progress'],
-      ),
-      price: _nullableDouble(json['price']),
-    );
-  }
-
-  factory CourseSummaryModel.fromEntity(CourseSummaryEntity entity) {
-    return CourseSummaryModel(
-      id: entity.id,
-      title: entity.title,
-      description: entity.description,
-      thumbnailUrl: entity.thumbnailUrl,
-      enrolledCount: entity.enrolledCount,
-      progressPercent: entity.progressPercent,
-      price: entity.price,
-    );
-  }
-
-  /// Build a summary from the richer CourseModel (avoids duplicate parsing)
-  factory CourseSummaryModel.fromCourseModel(CourseModel course) {
-    return CourseSummaryModel(
-      id: course.id,
-      title: course.title,
-      description: course.description,
-      thumbnailUrl: course.imageUrl,
-      enrolledCount: course.enrolledCount,
-      price: course.price > 0 ? course.price : null,
+      enrolledCount:
+          ModelParser.asInt(data['enrolledCount'] ?? data['enrolled_count']),
+      progressPercent:
+          _nullableDouble(data['progressPercent'] ?? data['progress_percent']),
+      price: _nullableDouble(data['price']),
     );
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// CategoryModel
-// Maps to: CategoryResponse (GET /api/categories, GET /api/categories/{id})
-// Live payload keys: id, name, description, active, levelId, createdAt, updatedAt
-// Note: gradeId and price are NOT in the live response — kept as nullable
-//       in case they appear in future or alternate endpoints.
-// ─────────────────────────────────────────────────────────────────────────────
 final class CategoryModel extends CategoryEntity {
   const CategoryModel({
     required super.id,
@@ -181,27 +145,21 @@ final class CategoryModel extends CategoryEntity {
   });
 
   factory CategoryModel.fromJson(Map<String, dynamic> json) {
+    final data = ModelParser.extractData(json);
     return CategoryModel(
-      id: ModelParser.asString(json['id']),
-      name: ModelParser.asString(json['name']),
-      description: _nullableString(json['description']),
-      gradeId: _nullableString(json['gradeId'] ?? json['grade_id']),
-      // levelId comes as int from the API — convert to string
-      levelId: _nullableString(json['levelId'] ?? json['level_id']),
-      price: _nullableDouble(json['price']),
-      active: ModelParser.asBool(json['active'], fallback: true),
-      createdAt: ModelParser.asDateTime(json['createdAt'] ?? json['created_at']),
-      updatedAt: ModelParser.asDateTime(json['updatedAt'] ?? json['updated_at']),
+      id: ModelParser.asString(data['id']),
+      name: ModelParser.asString(data['name']),
+      description: _nullableString(data['description']),
+      gradeId: _nullableString(data['gradeId'] ?? data['grade_id']),
+      levelId: _nullableString(data['levelId'] ?? data['level_id']),
+      price: _nullableDouble(data['price']),
+      active: ModelParser.asBool(data['active'], fallback: true),
+      createdAt: ModelParser.asDateTime(data['createdAt'] ?? data['created_at']),
+      updatedAt: ModelParser.asDateTime(data['updatedAt'] ?? data['updated_at']),
     );
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// EnrollmentModel
-// Maps to: EnrollmentResponse (PageEnrollmentResponse content items)
-// Used by: GET /api/enrollments/my-enrollments, /admin/student/{id},
-//           /admin/course/{id}, /check/{courseId}
-// ─────────────────────────────────────────────────────────────────────────────
 final class EnrollmentModel extends EnrollmentEntity {
   const EnrollmentModel({
     required super.id,
@@ -238,66 +196,67 @@ final class EnrollmentModel extends EnrollmentEntity {
   });
 
   factory EnrollmentModel.fromJson(Map<String, dynamic> json) {
+    final data = ModelParser.extractData(json);
     return EnrollmentModel(
-      id: ModelParser.asString(json['id']),
-      studentId: _nullableString(json['studentId'] ?? json['student_id']),
-      studentName: _nullableString(json['studentName'] ?? json['student_name']),
-      studentPhone: _nullableString(json['studentPhone'] ?? json['student_phone']),
-      courseId: ModelParser.asString(json['courseId'] ?? json['course_id']),
-      courseTitle: _nullableString(json['courseTitle'] ?? json['course_title']),
-      courseDescription: _nullableString(json['courseDescription'] ?? json['course_description']),
+      id: ModelParser.asString(data['id']),
+      studentId: _nullableString(data['studentId'] ?? data['student_id']),
+      studentName: _nullableString(data['studentName'] ?? data['student_name']),
+      studentPhone: _nullableString(data['studentPhone'] ?? data['student_phone']),
+      courseId: ModelParser.asString(data['courseId'] ?? data['course_id']),
+      courseTitle: _nullableString(data['courseTitle'] ?? data['course_title']),
+      courseDescription: _nullableString(data['courseDescription'] ?? data['course_description']),
       courseThumbnailUrl: _nullableString(
-        json['courseThumbnailUrl'] ??
-            json['course_thumbnail_url'] ??
-            json['thumbnailUrl'] ??
-            json['image_url'],
+        data['courseThumbnailUrl'] ??
+            data['course_thumbnail_url'] ??
+            data['thumbnailUrl'] ??
+            data['image_url'],
       ),
       enrolledAt:
-          ModelParser.asDateTime(json['enrolledAt'] ?? json['enrolled_at']) ?? DateTime.now(),
+          ModelParser.asDateTime(data['enrolledAt'] ?? data['enrolled_at']) ?? DateTime.now(),
       progressPercent: ModelParser.asDouble(
-        json['progressPercent'] ?? json['progress_percent'] ?? json['progress'],
+        data['progressPercent'] ?? data['progress_percent'] ?? data['progress'],
       ),
       completedSessions: ModelParser.asInt(
-        json['completedSessions'] ?? json['completed_sessions'],
+        data['completedSessions'] ?? data['completed_sessions'],
       ),
       completedLessons: ModelParser.asInt(
-        json['completedLessonsCount'] ?? json['completedLessons'] ?? json['completed_lessons'],
+        data['completedLessonsCount'] ?? data['completedLessons'] ?? data['completed_lessons'],
       ),
       totalLessons: ModelParser.asInt(
-        json['totalLessonsCount'] ?? json['totalLessons'] ?? json['total_lessons'],
+        data['totalLessonsCount'] ?? data['totalLessons'] ?? data['total_lessons'],
       ),
-      expiresAt: ModelParser.asDateTime(json['expiresAt'] ?? json['expires_at']),
-      completedAt: ModelParser.asDateTime(json['completedAt'] ?? json['completed_at']),
-      lastAccessedAt: ModelParser.asDateTime(json['lastAccessedAt'] ?? json['last_accessed_at']),
-      lastItemId: _nullableString(json['lastItemId'] ?? json['last_item_id']),
-      enrolledBy: _parseEnrolledBy(json['enrolledBy'] ?? json['enrolled_by']),
-      certificateUrl: _nullableString(json['certificateUrl'] ?? json['certificate_url']),
+      expiresAt: ModelParser.asDateTime(data['expiresAt'] ?? data['expires_at']),
+      completedAt: ModelParser.asDateTime(data['completedAt'] ?? data['completed_at']),
+      lastAccessedAt: ModelParser.asDateTime(data['lastAccessedAt'] ?? data['last_accessed_at']),
+      lastItemId: _nullableString(data['lastItemId'] ?? data['last_item_id']),
+      enrolledBy: _parseEnrolledBy(data['enrolledBy'] ?? data['enrolled_by']),
+      certificateUrl: _nullableString(data['certificateUrl'] ?? data['certificate_url']),
       totalWatchTimeSeconds: ModelParser.asInt(
-        json['totalWatchTimeSeconds'] ?? json['total_watch_time_seconds'],
+        data['totalWatchTimeSeconds'] ?? data['total_watch_time_seconds'],
       ),
-      quizzesTaken: ModelParser.asInt(json['quizzesTaken'] ?? json['quizzes_taken']),
-      quizzesPassed: ModelParser.asInt(json['quizzesPassed'] ?? json['quizzes_passed']),
+      quizzesTaken: ModelParser.asInt(data['quizzesTaken'] ?? data['quizzes_taken']),
+      quizzesPassed: ModelParser.asInt(data['quizzesPassed'] ?? data['quizzes_passed']),
       averageQuizScore: ModelParser.asDouble(
-        json['averageQuizScore'] ?? json['average_quiz_score'],
+        data['averageQuizScore'] ?? data['average_quiz_score'],
       ),
       assignmentsSubmitted: ModelParser.asInt(
-        json['assignmentsSubmitted'] ?? json['assignments_submitted'],
+        data['assignmentsSubmitted'] ?? data['assignments_submitted'],
       ),
       averageAssignmentScore: ModelParser.asDouble(
-        json['averageAssignmentScore'] ?? json['average_assignment_score'],
+        data['averageAssignmentScore'] ?? data['average_assignment_score'],
       ),
-      remainingDays: ModelParser.asInt(json['remainingDays'] ?? json['remaining_days']),
-      accessCount: ModelParser.asInt(json['accessCount'] ?? json['access_count']),
-      notes: _nullableString(json['notes']),
+      remainingDays: ModelParser.asInt(data['remainingDays'] ?? data['remaining_days']),
+      accessCount: ModelParser.asInt(data['accessCount'] ?? data['access_count']),
+      notes: _nullableString(data['notes']),
       isValidAccess: ModelParser.asBool(
-        json['isValidAccess'] ?? json['is_valid_access'],
+        data['isValidAccess'] ?? data['is_valid_access'],
         fallback: true,
       ),
       completionPercentage: _nullableString(
-        json['completionPercentage'] ?? json['completion_percentage'],
+        data['completionPercentage'] ?? data['completion_percentage'],
       ),
       timeSpentFormatted: _nullableString(
-        json['timeSpentFormatted'] ?? json['time_spent_formatted'],
+        data['timeSpentFormatted'] ?? data['time_spent_formatted'],
       ),
     );
   }

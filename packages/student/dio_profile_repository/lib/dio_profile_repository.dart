@@ -35,8 +35,7 @@ final class DioStudentProfileRepository
         },
       );
 
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
-      return ProfileEditRequestModel.fromJson(data);
+      return ProfileEditRequestModel.fromJson(response.asMap());
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
@@ -53,9 +52,8 @@ final class DioStudentProfileRepository
         queryParameters: {'status': 'pending'},
       );
 
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
-      final list = asList(data is Map ? data['content'] : data);
-      return list
+      return response
+          .asList()
           .map(asMap)
           .map(ProfileEditRequestModel.fromJson)
           .toList();
@@ -72,8 +70,7 @@ final class DioStudentProfileRepository
   Future<StudentEntity> getProfile() async {
     try {
       final response = await httpClient.get('/api/student/profile');
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
-      return StudentProfileModel.fromJson(data);
+      return StudentProfileModel.fromJson(response.asMap());
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
@@ -86,7 +83,7 @@ final class DioStudentProfileRepository
   Future<Map<String, dynamic>> getSummary() async {
     try {
       final response = await httpClient.get('/api/profile/student/summary');
-      return asMap(response.data);
+      return response.asMap();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(e, defaultCode: StudentProfileRepositoryExceptionCode.unknown);
     }
@@ -96,10 +93,8 @@ final class DioStudentProfileRepository
   Future<List<DeviceEntity>> getDevices() async {
     try {
       final response = await httpClient.get('/api/auth/session-status');
-      
-      final rootData = asMap(response.data);
+      final rootData = response.asMap();
 
-      // Handle the case where session-status returns a single status object instead of a list
       if (rootData.containsKey('hasSession')) {
         final hasSession = boolOrFalse(rootData['hasSession']);
         if (!hasSession) return const [];
@@ -115,10 +110,7 @@ final class DioStudentProfileRepository
         ];
       }
 
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
-      final list = asList(data is Map ? data['content'] : rootData['content'] ?? response.data);
-
-      return list.map(asMap).map(DeviceModel.fromJson).toList();
+      return response.asList().map(asMap).map(DeviceModel.fromJson).toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,

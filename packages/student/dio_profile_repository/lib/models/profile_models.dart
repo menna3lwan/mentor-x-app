@@ -72,34 +72,43 @@ final class StudentProfileModel extends StudentEntity {
   });
 
   factory StudentProfileModel.fromJson(Map<String, dynamic> json) {
-    final data = ModelParser.asMap(json['data'] ?? json);
+    // Standardize data extraction using ModelParser
+    final data = ModelParser.extractData(json);
 
-    // Build names from 4-part structure
+    // 1. Resolve ID (userId or id or studentCode)
+    final id = ModelParser.asString(data['id'] ?? data['userId'] ?? data['user_id'] ?? data['studentCode']);
+
+    // 2. Resolve Names (Handle 4-part names and fullName split)
     final String first = ModelParser.asString(data['firstName'] ?? data['first_name']);
     final String second = ModelParser.asString(data['secondName'] ?? data['second_name']);
     final String third = ModelParser.asString(data['thirdName'] ?? data['third_name']);
     final String fourth = ModelParser.asString(data['fourthName'] ?? data['fourth_name']);
-    
-    // Fallback: fullName split
-    final String fullName = ModelParser.asString(data['fullName'] ?? data['full_name']);
+
+    final String fullName = ModelParser.asString(data['fullName'] ?? data['full_name'] ?? data['name']);
     final nameParts = fullName.trim().split(' ');
-    final String fallbackFirst = nameParts.isNotEmpty ? nameParts.first : '';
-    final String fallbackLast = nameParts.length > 1 ? nameParts.sublist(1).join(' ') : '';
+    
+    final String resolvedFirst = first.isNotEmpty ? first : (nameParts.isNotEmpty ? nameParts.first : '');
+    final String resolvedLast = fourth.isNotEmpty 
+        ? fourth 
+        : (data['lastName'] ?? data['last_name'] ?? (nameParts.length > 1 ? nameParts.sublist(1).join(' ') : ''));
 
     return StudentProfileModel(
-      id: ModelParser.asString(data['id'] ?? data['userId'] ?? data['studentCode']),
-      firstName: first.isEmpty ? fallbackFirst : first,
+      id: id,
+      firstName: resolvedFirst,
       secondName: second,
       thirdName: third,
       fourthName: fourth,
-      lastName: fourth.isEmpty ? (data['lastName'] ?? data['last_name'] ?? fallbackLast) : fourth,
+      lastName: resolvedLast,
       email: ModelParser.asString(data['email']),
       phoneNumber: ModelParser.asString(data['phone'] ?? data['phoneNumber'] ?? data['phone_number']),
       profileImageUrl: ModelParser.asString(
-        data['profileImageUrl'] ?? data['image_url'] ?? data['profile_image_url'] ?? data['avatarUrl'],
+        data['profileImageUrl'] ??
+            data['image_url'] ??
+            data['profile_image_url'] ??
+            data['avatarUrl'],
       ),
       gender: _parseGender(data['gender']),
-      status: _parseStudentStatus(data['status']),
+      status: _parseStudentStatus(data['status'] ?? data['accountStatus'] ?? data['account_status']),
       gradeId: ModelParser.asString(data['gradeId'] ?? data['grade_id']),
       gradeName: ModelParser.asString(data['grade'] ?? data['gradeName'] ?? data['grade_name']),
       studentCode: ModelParser.asString(data['studentCode'] ?? data['student_code']),
@@ -115,7 +124,7 @@ final class StudentProfileModel extends StudentEntity {
       dateOfBirth: ModelParser.asDateTime(data['dateOfBirth'] ?? data['date_of_birth']),
       address: ModelParser.asString(data['address']),
       city: ModelParser.asString(data['city']),
-      area: ModelParser.asString(data['area']),
+      area: ModelParser.asString(data['area'] ?? data['district']),
       governorate: ModelParser.asString(data['governorate']),
       isOnline: ModelParser.asBool(data['online'] ?? data['isOnline'] ?? data['is_online']),
       enrolledCourseIds: ModelParser.asList(data['enrolledCourseIds'] ?? data['enrolled_course_ids'])
