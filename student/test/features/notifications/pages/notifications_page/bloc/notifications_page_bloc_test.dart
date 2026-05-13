@@ -1,4 +1,3 @@
-import 'package:mocktail/mocktail.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mock_notification_repository/mock_notification_repository.dart';

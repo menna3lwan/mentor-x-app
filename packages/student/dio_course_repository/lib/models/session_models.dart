@@ -1,5 +1,13 @@
 import 'package:mentorx_core/mentorx_core.dart';
 
+// ─────────────────────────────────────────────────────────────────────────────
+// SessionModel
+// Maps to: SessionResponse (GET /api/sessions/course/{courseId} content[])
+// Live payload keys: id, title, description, orderNumber, active,
+//                    courseIds[], createdAt, updatedAt
+// Note: The API does NOT return isFree, price, availableFrom, availableUntil,
+//       or itemCount in SessionResponse. These are kept as defaults (null/0).
+// ─────────────────────────────────────────────────────────────────────────────
 final class SessionModel extends SessionEntity {
   const SessionModel({
     required super.id,
@@ -9,28 +17,34 @@ final class SessionModel extends SessionEntity {
     super.description,
     super.orderNumber = 0,
     super.active = true,
-    required super.isFree,
+    super.isFree = false,
     super.price,
     super.availableFrom,
     super.availableUntil,
-    required super.itemCount,
+    super.itemCount = 0,
     super.createdAt,
     super.updatedAt,
   });
 
   factory SessionModel.fromJson(Map<String, dynamic> json) {
+    // API returns courseIds as List<int> — convert to List<String>
+    final rawCourseIds = ModelParser.asList(json['courseIds'] ?? json['course_ids']);
+    final courseIds = rawCourseIds.map((e) => e.toString()).toList();
+
     return SessionModel(
       id: ModelParser.asString(json['id']),
-      courseId: ModelParser.asString(json['courseId'] ?? json['course_id']),
-      courseIds: ModelParser.asList(json['courseIds'] ?? json['course_ids'])
-          .map((e) => e.toString())
-          .toList(),
+      // courseId: derive from first courseIds entry or direct field
+      courseId: ModelParser.asString(
+        json['courseId'] ?? json['course_id'] ?? (courseIds.isNotEmpty ? courseIds.first : ''),
+      ),
+      courseIds: courseIds,
       title: ModelParser.asString(json['title']),
-      description: ModelParser.asString(json['description']),
+      description: _nullableString(json['description']),
       orderNumber: ModelParser.asInt(json['orderNumber'] ?? json['order_number']),
       active: ModelParser.asBool(json['active'] ?? json['isActive'], fallback: true),
+      // isFree/price/availableFrom/availableUntil/itemCount not in SessionResponse
       isFree: ModelParser.asBool(json['isFree'] ?? json['is_free']),
-      price: ModelParser.asDouble(json['price']),
+      price: _nullableDouble(json['price']),
       availableFrom: ModelParser.asDateTime(json['availableFrom'] ?? json['available_from']),
       availableUntil: ModelParser.asDateTime(json['availableUntil'] ?? json['available_until']),
       itemCount: ModelParser.asInt(json['itemCount'] ?? json['item_count']),
@@ -40,6 +54,57 @@ final class SessionModel extends SessionEntity {
   }
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// WeekModel
+// Maps to: WeekResponse (GET /api/weeks/session/{sessionId} content[])
+// Live payload keys: id, title, description, orderNumber, active, sessionIds[],
+//                    createdAt, materials[], lockType, lockAfterDays, lockDate,
+//                    globallyLocked
+// Note: WeekEntity uses sessionId (single) + orderIndex.
+//       API returns sessionIds[] (multi) and orderNumber — we adapt here.
+// ─────────────────────────────────────────────────────────────────────────────
+final class WeekModel extends WeekEntity {
+  const WeekModel({
+    required super.id,
+    required super.sessionId,
+    required super.title,
+    super.orderIndex = 0,
+    super.items = const [],
+  });
+
+  factory WeekModel.fromJson(Map<String, dynamic> json) {
+    // API returns sessionIds[] as List<int> — use first as primary sessionId
+    final rawSessionIds = ModelParser.asList(json['sessionIds'] ?? json['session_ids']);
+    final sessionId = rawSessionIds.isNotEmpty
+        ? rawSessionIds.first.toString()
+        : ModelParser.asString(json['sessionId'] ?? json['session_id']);
+
+    // WeekResponse may embed materials[] directly
+    final rawMaterials = ModelParser.asList(json['materials']);
+    final items = rawMaterials
+        .map((e) => SessionItemModel.fromJson(ModelParser.asMap(e)))
+        .toList();
+
+    return WeekModel(
+      id: ModelParser.asString(json['id']),
+      sessionId: sessionId,
+      title: ModelParser.asString(json['title']),
+      orderIndex: ModelParser.asInt(json['orderNumber'] ?? json['order_number'] ?? json['orderIndex']),
+      items: items,
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SessionItemModel
+// Maps to: LessonMaterialResponse (GET /api/materials/lesson/{lessonId} content[])
+// Live payload keys: id, materialType, fileUrl, embedUrl, youtubeVideoId,
+//                    fileName, fileSize, weekIds[], downloadCount, preview,
+//                    durationSeconds, createdAt
+// Note: SessionItemEntity requires: id, sessionId, title, itemType.
+//       title is not in the API — use fileName as fallback.
+//       sessionId is derived from weekIds[0].
+// ─────────────────────────────────────────────────────────────────────────────
 final class SessionItemModel extends SessionItemEntity {
   const SessionItemModel({
     required super.id,
@@ -54,11 +119,11 @@ final class SessionItemModel extends SessionItemEntity {
     super.videoPlatform,
     super.videoThumbnailUrl,
     super.videoDuration,
-    required super.isFree,
-    required super.isPreview,
-    required super.required,
-    required super.skippable,
-    required super.downloadable,
+    super.isFree = false,
+    super.isPreview = false,
+    super.required = false,
+    super.skippable = true,
+    super.downloadable = false,
     super.downloadCount = 0,
     required super.orderIndex,
     super.durationSeconds,
@@ -67,137 +132,102 @@ final class SessionItemModel extends SessionItemEntity {
   });
 
   factory SessionItemModel.fromJson(Map<String, dynamic> json) {
+    // materialType is the authoritative type field from the API
+    final rawType = ModelParser.asString(
+      json['materialType'] ?? json['itemType'] ?? json['item_type'],
+    ).toUpperCase();
+    final isYoutube = rawType == 'YOUTUBE';
+
+    // weekIds is List<int> in the API — use first as sessionId
+    final rawWeekIds = ModelParser.asList(json['weekIds'] ?? json['week_ids']);
+    final sessionId = rawWeekIds.isNotEmpty
+        ? rawWeekIds.first.toString()
+        : ModelParser.asString(json['sessionId'] ?? json['session_id']);
+
+    // fileName is the best title fallback when no title field exists
+    final fileName = ModelParser.asString(json['fileName'] ?? json['file_name']);
+    final title = ModelParser.asString(
+      json['title'] ?? (fileName.isNotEmpty ? fileName : 'Item'),
+    );
+
+    // For YouTube: externalVideoUrl = youtubeVideoId (the player uses it as an ID)
+    final youtubeId = _nullableString(json['youtubeVideoId'] ?? json['youtube_video_id']);
+    final externalVideoUrl = isYoutube
+        ? (youtubeId ?? _nullableString(json['externalVideoUrl'] ?? json['external_video_url']))
+        : _nullableString(json['externalVideoUrl'] ?? json['external_video_url']);
+
     return SessionItemModel(
       id: ModelParser.asString(json['id']),
-      sessionId: ModelParser.asString(json['sessionId'] ?? json['session_id']),
-      title: ModelParser.asString(json['title']),
-      description: ModelParser.asString(json['description']),
-      itemType: _parseItemType(json['itemType'] ?? json['item_type'] ?? json['materialType']),
-      contentUrl: ModelParser.asString(json['contentUrl'] ?? json['content_url'] ?? json['fileUrl']),
-      fileName: ModelParser.asString(json['fileName'] ?? json['file_name']),
-      fileSize: ModelParser.asInt(json['fileSize'] ?? json['file_size']),
-      externalVideoUrl: ModelParser.asString(json['externalVideoUrl'] ?? json['external_video_url']),
-      videoPlatform: ModelParser.asString(json['videoPlatform'] ?? json['video_platform']),
-      videoThumbnailUrl: ModelParser.asString(json['videoThumbnailUrl'] ?? json['video_thumbnail_url']),
-      videoDuration: ModelParser.asString(json['videoDuration'] ?? json['video_duration']),
+      sessionId: sessionId,
+      title: title,
+      description: _nullableString(json['description']),
+      itemType: _parseItemType(rawType),
+      // fileUrl → contentUrl; embedUrl is for streaming
+      contentUrl: _nullableString(
+        json['contentUrl'] ?? json['content_url'] ?? json['fileUrl'] ?? json['file_url'],
+      ),
+      fileName: fileName.isNotEmpty ? fileName : null,
+      fileSize: _nullableInt(json['fileSize'] ?? json['file_size']),
+      externalVideoUrl: externalVideoUrl,
+      videoPlatform: isYoutube ? 'youtube' : _nullableString(json['videoPlatform'] ?? json['video_platform']),
+      videoThumbnailUrl: _nullableString(json['videoThumbnailUrl'] ?? json['video_thumbnail_url']),
+      videoDuration: _nullableString(json['videoDuration'] ?? json['video_duration']),
+      // 'preview' is the API field name (not isPreview)
       isFree: ModelParser.asBool(json['isFree'] ?? json['is_free']),
-      isPreview: ModelParser.asBool(json['isPreview'] ?? json['is_preview'] ?? json['preview']),
+      isPreview: ModelParser.asBool(json['preview'] ?? json['isPreview'] ?? json['is_preview']),
       required: ModelParser.asBool(json['required']),
       skippable: ModelParser.asBool(json['skippable'], fallback: true),
       downloadable: ModelParser.asBool(json['downloadable']),
       downloadCount: ModelParser.asInt(json['downloadCount'] ?? json['download_count']),
-      orderIndex: ModelParser.asInt(json['orderIndex'] ?? json['order_index']),
-      durationSeconds: ModelParser.asInt(json['durationSeconds'] ?? json['duration_seconds']),
-      pageCount: ModelParser.asInt(json['pageCount'] ?? json['page_count']),
+      orderIndex: ModelParser.asInt(
+        json['orderIndex'] ?? json['order_index'] ?? json['orderNumber'] ?? json['order_number'],
+      ),
+      durationSeconds: _nullableInt(json['durationSeconds'] ?? json['duration_seconds']),
+      pageCount: _nullableInt(json['pageCount'] ?? json['page_count']),
       createdAt: ModelParser.asDateTime(json['createdAt'] ?? json['created_at']),
     );
   }
 
-  static SessionItemType _parseItemType(dynamic value) {
-    final str = ModelParser.asString(value).toLowerCase();
-    for (final type in SessionItemType.values) {
-      if (type.name == str) return type;
+  static SessionItemType _parseItemType(String rawType) {
+    switch (rawType) {
+      case 'YOUTUBE':
+      case 'VIDEO':
+        return SessionItemType.video;
+      case 'PDF':
+      case 'DOC':
+      case 'PPT':
+      case 'IMAGE':
+        return SessionItemType.document;
+      case 'AUDIO':
+        return SessionItemType.audio;
+      case 'ARCHIVE':
+      case 'OTHER':
+        return SessionItemType.document;
+      default:
+        // Fallback: try matching by name
+        for (final type in SessionItemType.values) {
+          if (type.name == rawType.toLowerCase()) return type;
+        }
+        return SessionItemType.video;
     }
-    return SessionItemType.video;
   }
 }
 
-final class WeekModel extends WeekEntity {
-  const WeekModel({
-    required super.id,
-    required super.sessionId,
-    required super.title,
-    super.orderIndex = 0,
-    super.items = const [],
-  });
-
-  factory WeekModel.fromJson(Map<String, dynamic> json) {
-    return WeekModel(
-      id: ModelParser.asString(json['id']),
-      sessionId: ModelParser.asString(json['sessionId'] ?? json['session_id']),
-      title: ModelParser.asString(json['title']),
-      orderIndex: ModelParser.asInt(json['orderIndex'] ?? json['order_index']),
-      items: ModelParser.asList(json['items'] ?? json['materials'])
-          .map((e) => SessionItemModel.fromJson(ModelParser.asMap(e)))
-          .toList(),
-    );
-  }
+// ─────────────────────────────────────────────────────────────────────────────
+// Private helpers — return null for empty/null values from ModelParser
+// ─────────────────────────────────────────────────────────────────────────────
+String? _nullableString(dynamic value) {
+  if (value == null) return null;
+  final s = ModelParser.asString(value);
+  return s.isEmpty ? null : s;
 }
 
-final class EnrollmentModel extends EnrollmentEntity {
-  const EnrollmentModel({
-    required super.id,
-    super.studentId,
-    super.studentName,
-    super.studentPhone,
-    required super.courseId,
-    super.courseTitle,
-    super.courseDescription,
-    required super.enrolledAt,
-    super.progressPercent = 0,
-    super.completedSessions = 0,
-    super.completedLessons = 0,
-    super.totalLessons = 0,
-    super.expiresAt,
-    super.completedAt,
-    super.lastAccessedAt,
-    super.lastItemId,
-    super.enrolledBy = EnrolledBy.self,
-    super.certificateUrl,
-    super.totalWatchTimeSeconds = 0,
-    super.quizzesTaken = 0,
-    super.quizzesPassed = 0,
-    super.averageQuizScore = 0.0,
-    super.assignmentsSubmitted = 0,
-    super.averageAssignmentScore = 0.0,
-    super.remainingDays = 0,
-    super.accessCount = 0,
-    super.notes,
-    super.isValidAccess = true,
-    super.completionPercentage,
-    super.timeSpentFormatted,
-  });
+double? _nullableDouble(dynamic value) {
+  if (value == null) return null;
+  return ModelParser.asDouble(value);
+}
 
-  factory EnrollmentModel.fromJson(Map<String, dynamic> json) {
-    return EnrollmentModel(
-      id: ModelParser.asString(json['id']),
-      studentId: ModelParser.asString(json['studentId'] ?? json['student_id']),
-      studentName: ModelParser.asString(json['studentName'] ?? json['student_name']),
-      studentPhone: ModelParser.asString(json['studentPhone'] ?? json['student_phone']),
-      courseId: ModelParser.asString(json['courseId'] ?? json['course_id']),
-      courseTitle: ModelParser.asString(json['courseTitle'] ?? json['course_title']),
-      courseDescription: ModelParser.asString(json['courseDescription'] ?? json['course_description']),
-      enrolledAt: ModelParser.asDateTime(json['enrolledAt'] ?? json['enrolled_at']) ?? DateTime.now(),
-      progressPercent: ModelParser.asDouble(json['progressPercent'] ?? json['progress_percent'] ?? json['progress']),
-      completedSessions: ModelParser.asInt(json['completedSessions'] ?? json['completed_sessions']),
-      completedLessons: ModelParser.asInt(json['completedLessonsCount'] ?? json['completedLessons'] ?? json['completed_lessons']),
-      totalLessons: ModelParser.asInt(json['totalLessonsCount'] ?? json['totalLessons'] ?? json['total_lessons']),
-      expiresAt: ModelParser.asDateTime(json['expiresAt'] ?? json['expires_at']),
-      completedAt: ModelParser.asDateTime(json['completedAt'] ?? json['completed_at']),
-      lastAccessedAt: ModelParser.asDateTime(json['lastAccessedAt'] ?? json['last_accessed_at']),
-      lastItemId: ModelParser.asString(json['lastItemId'] ?? json['last_item_id']),
-      enrolledBy: _parseEnrolledBy(json['enrolledBy'] ?? json['enrolled_by']),
-      certificateUrl: ModelParser.asString(json['certificateUrl'] ?? json['certificate_url']),
-      totalWatchTimeSeconds: ModelParser.asInt(json['totalWatchTimeSeconds'] ?? json['total_watch_time_seconds']),
-      quizzesTaken: ModelParser.asInt(json['quizzesTaken'] ?? json['quizzes_taken']),
-      quizzesPassed: ModelParser.asInt(json['quizzesPassed'] ?? json['quizzes_passed']),
-      averageQuizScore: ModelParser.asDouble(json['averageQuizScore'] ?? json['average_quiz_score']),
-      assignmentsSubmitted: ModelParser.asInt(json['assignmentsSubmitted'] ?? json['assignments_submitted']),
-      averageAssignmentScore: ModelParser.asDouble(json['averageAssignmentScore'] ?? json['average_assignment_score']),
-      remainingDays: ModelParser.asInt(json['remainingDays'] ?? json['remaining_days']),
-      accessCount: ModelParser.asInt(json['accessCount'] ?? json['access_count']),
-      notes: ModelParser.asString(json['notes']),
-      isValidAccess: ModelParser.asBool(json['isValidAccess'] ?? json['is_valid_access'], fallback: true),
-      completionPercentage: ModelParser.asString(json['completionPercentage'] ?? json['completion_percentage']),
-      timeSpentFormatted: ModelParser.asString(json['timeSpentFormatted'] ?? json['time_spent_formatted']),
-    );
-  }
-
-  static EnrolledBy _parseEnrolledBy(dynamic value) {
-    final str = ModelParser.asString(value).toLowerCase();
-    for (final type in EnrolledBy.values) {
-      if (type.name == str) return type;
-    }
-    return EnrolledBy.self;
-  }
+int? _nullableInt(dynamic value) {
+  if (value == null) return null;
+  return ModelParser.asInt(value);
 }

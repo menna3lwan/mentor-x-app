@@ -32,10 +32,10 @@ final class DioLeaderboardRepository
         queryParameters: queryParams,
       );
 
-      final data = asList(asMap(response.data)['data'] ??
-          asMap(response.data)['content'] ??
-          response.data);
-      return data.map((e) => LeaderboardEntryModel.fromJson(asMap(e))).toList();
+      final dataMap = asMap(response.data)['data'] ?? asMap(response.data);
+      final entriesList = asList(dataMap['entries'] ?? dataMap['content'] ?? dataMap);
+      
+      return entriesList.map((e) => LeaderboardEntryModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
@@ -59,10 +59,10 @@ final class DioLeaderboardRepository
         queryParameters: queryParams,
       );
 
-      final data = asList(asMap(response.data)['data'] ??
-          asMap(response.data)['content'] ??
-          response.data);
-      return data.map((e) => LeaderboardEntryModel.fromJson(asMap(e))).toList();
+      final dataMap = asMap(response.data)['data'] ?? asMap(response.data);
+      final entriesList = asList(dataMap['entries'] ?? dataMap['content'] ?? dataMap);
+
+      return entriesList.map((e) => LeaderboardEntryModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
@@ -86,10 +86,10 @@ final class DioLeaderboardRepository
         queryParameters: queryParams,
       );
 
-      final data = asList(asMap(response.data)['data'] ??
-          asMap(response.data)['content'] ??
-          response.data);
-      return data.map((e) => LeaderboardEntryModel.fromJson(asMap(e))).toList();
+      final dataMap = asMap(response.data)['data'] ?? asMap(response.data);
+      final entriesList = asList(dataMap['entries'] ?? dataMap['content'] ?? dataMap);
+
+      return entriesList.map((e) => LeaderboardEntryModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,

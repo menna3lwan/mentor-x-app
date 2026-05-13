@@ -113,7 +113,7 @@ final class DioWalletRepository
   Future<PaymentEntity> getPaymentStatus(String paymentId) async {
     try {
       final response = await httpClient.get(
-        '/api/student/payments/$paymentId/status',
+        '/api/payment/$paymentId/status',
       );
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return PaymentModel.fromJson(data);
@@ -129,7 +129,7 @@ final class DioWalletRepository
   Future<Map<String, dynamic>> redeemCode(String code) async {
     try {
       final response = await httpClient.post(
-        '/api/access-codes/redeem',
+        '/api/v1/access-codes/redeem',
         data: {'code': code},
       );
       return asMap(response.data)['data'] ?? asMap(response.data);
@@ -147,7 +147,7 @@ final class DioWalletRepository
   }) async {
     try {
       final response = await httpClient.get(
-        '/api/access-codes/my-codes',
+        '/api/v1/access-codes/my-codes',
         queryParameters: {
           if (paginationInfo != null) ...paginationInfo.toJson(),
         },

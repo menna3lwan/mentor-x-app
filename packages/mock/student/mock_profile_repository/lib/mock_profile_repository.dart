@@ -80,10 +80,4 @@ final class MockProfileRepository implements StudentProfileRepository {
     await Future<void>.delayed(delay);
     return [];
   }
-
-
-  @override
-  Future<void> deleteAccount(String password) async {
-    await Future<void>.delayed(delay);
-  }
 }

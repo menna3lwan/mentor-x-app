@@ -34,12 +34,14 @@ final class DioCourseRepository
         },
       );
 
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
-      final list = asList(data is Map ? data['content'] : data);
+      final dataMap = asMap(response.data);
+      final rawList = dataMap['data']?['content'] ?? dataMap['content'] ?? response.data;
+      final list = asList(rawList);
 
       return list
           .map(asMap)
           .map(EnrollmentModel.fromJson)
+          .cast<EnrollmentEntity>()
           .toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
@@ -62,8 +64,8 @@ final class DioCourseRepository
       final response = await httpClient.get(
         '/api/courses',
         queryParameters: {
-          if (gradeId != null) 'grade_id': gradeId,
-          if (categoryId != null) 'category_id': categoryId,
+          if (gradeId != null) 'gradeId': gradeId,
+          if (categoryId != null) 'categoryId': categoryId,
           if (search != null) 'search': search,
           if (sort != null) 'sort': sort,
           if (order != null) 'order': order,
@@ -71,8 +73,9 @@ final class DioCourseRepository
         },
       );
 
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
-      final list = asList(data is Map ? data['content'] : data);
+      final dataMap = asMap(response.data);
+      final rawList = dataMap['data']?['content'] ?? dataMap['content'] ?? response.data;
+      final list = asList(rawList);
 
       return list
           .map(asMap)
@@ -94,9 +97,9 @@ final class DioCourseRepository
         queryParameters: {if (gradeId != null) 'grade_id': gradeId},
       );
 
-      final list = asList(asMap(response.data)['data'] ??
-          asMap(response.data)['content'] ??
-          response.data);
+      final dataMap = asMap(response.data);
+      final rawList = dataMap['data']?['content'] ?? dataMap['content'] ?? response.data;
+      final list = asList(rawList);
 
       return list
           .map(asMap)
@@ -130,9 +133,9 @@ final class DioCourseRepository
     try {
       final response = await httpClient.get('/api/sessions/course/$courseId');
 
-      final list = asList(asMap(response.data)['data'] ??
-          asMap(response.data)['content'] ??
-          response.data);
+      final dataMap = asMap(response.data);
+      final rawList = dataMap['data']?['content'] ?? dataMap['content'] ?? response.data;
+      final list = asList(rawList);
 
       return list
           .map(asMap)
@@ -151,9 +154,9 @@ final class DioCourseRepository
     try {
       final response = await httpClient.get('/api/weeks/session/$sessionId');
 
-      final list = asList(asMap(response.data)['data'] ??
-          asMap(response.data)['content'] ??
-          response.data);
+      final dataMap = asMap(response.data);
+      final rawList = dataMap['data']?['content'] ?? dataMap['content'] ?? response.data;
+      final list = asList(rawList);
 
       return list
           .map(asMap)
@@ -170,26 +173,33 @@ final class DioCourseRepository
   @override
   Future<List<SessionItemEntity>> getSessionItems(String sessionId) async {
     try {
-      final response = await httpClient.get('/api/weeks/session/$sessionId');
-
-      final list = asList(asMap(response.data)['data'] ??
-          asMap(response.data)['content'] ??
-          response.data);
-
-      // Try to parse as weeks first, then flatten items
-      try {
-        final weeks = list.map(asMap).map(WeekModel.fromJson).toList();
-        if (weeks.isNotEmpty && weeks.any((w) => w.items.isNotEmpty)) {
-          return weeks.expand((w) => w.items).toList();
-        }
-      } catch (_) {
-        // Fallback to direct item parsing if it's not a list of weeks
-      }
-
-      return list
+      // Hierarchy: Session → Weeks → Materials
+      // Step 1: Get weeks for this session
+      final weeksResponse = await httpClient.get('/api/weeks/session/$sessionId');
+      final weeksMap = asMap(weeksResponse.data);
+      final weeksRaw = weeksMap['data']?['content'] ?? weeksMap['content'] ?? weeksResponse.data;
+      final weekIds = asList(weeksRaw)
           .map(asMap)
-          .map(SessionItemModel.fromJson)
+          .map((w) => stringOrNull(w['id']))
+          .whereType<String>()
           .toList();
+
+      if (weekIds.isEmpty) return const [];
+
+      // Step 2: Fetch materials for each week in parallel
+      final materialFutures = weekIds.map((weekId) async {
+        try {
+          final res = await httpClient.get('/api/materials/lesson/$weekId');
+          final dataMap = asMap(res.data);
+          final raw = dataMap['data']?['content'] ?? dataMap['content'] ?? res.data;
+          return asList(raw).map(asMap).map(SessionItemModel.fromJson).toList();
+        } catch (_) {
+          return <SessionItemModel>[];
+        }
+      });
+
+      final results = await Future.wait(materialFutures);
+      return results.expand((items) => items).toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
@@ -201,12 +211,16 @@ final class DioCourseRepository
   @override
   Future<EnrollmentEntity?> getCourseProgress(String courseId) async {
     try {
-      final response = await httpClient.get('/api/enrollments/course/$courseId/progress');
+      final response = await httpClient.get('/api/enrollments/check/$courseId');
 
       final data = asMap(response.data)['data'] ?? asMap(response.data);
-      return EnrollmentModel.fromJson(data);
+      // /api/enrollments/check/{id} returns {enrolled: bool, enrollment: {...}}
+      if (data['enrolled'] != true) return null;
+      final enrollmentData = asMap(data['enrollment']);
+      if (enrollmentData.isEmpty) return null;
+      return EnrollmentModel.fromJson(enrollmentData);
     } on HttpClientResponse catch (e) {
-      if (e.statusCode == 404) return null;
+      if (e.statusCode == 404 || e.statusCode == 403) return null;
       return handleHttpClientErrorResponse(
         e,
         defaultCode: CourseRepositoryExceptionCode.failedToLoadProgress,
@@ -238,7 +252,11 @@ final class DioCourseRepository
       final response = await httpClient.get('/api/materials/$itemId');
 
       final data = asMap(response.data)['data'] ?? asMap(response.data);
-      return data['stream_url']?.toString() ?? data['url']?.toString() ?? '';
+      // LessonMaterialResponse uses embedUrl for streaming, fileUrl as fallback
+      return data['embedUrl']?.toString() ??
+          data['youtubeVideoId']?.toString() ??
+          data['fileUrl']?.toString() ??
+          '';
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
@@ -253,7 +271,10 @@ final class DioCourseRepository
       final response = await httpClient.get('/api/materials/$itemId');
 
       final data = asMap(response.data)['data'] ?? asMap(response.data);
-      return data['content_url']?.toString() ?? data['url']?.toString() ?? '';
+      // LessonMaterialResponse uses fileUrl for downloadable content
+      return data['fileUrl']?.toString() ??
+          data['embedUrl']?.toString() ??
+          '';
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
@@ -377,7 +398,7 @@ final class DioCourseRepository
     try {
       final response = await httpClient.get('/api/enrollments/admin/student/$studentId');
       final list = asList(asMap(response.data)['data'] ?? response.data);
-      return list.map(asMap).map(EnrollmentModel.fromJson).toList();
+      return list.map(asMap).map(EnrollmentModel.fromJson).cast<EnrollmentEntity>().toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(e, defaultCode: CourseRepositoryExceptionCode.unknown);
     }
@@ -388,7 +409,7 @@ final class DioCourseRepository
     try {
       final response = await httpClient.get('/api/enrollments/admin/course/$courseId');
       final list = asList(asMap(response.data)['data'] ?? response.data);
-      return list.map(asMap).map(EnrollmentModel.fromJson).toList();
+      return list.map(asMap).map(EnrollmentModel.fromJson).cast<EnrollmentEntity>().toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(e, defaultCode: CourseRepositoryExceptionCode.unknown);
     }

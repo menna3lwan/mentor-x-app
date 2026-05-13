@@ -36,7 +36,7 @@ final class DioStudentHomeRepository
     try {
       final response = await httpClient.get('/api/notifications/unread-count');
       final data = asMap(response.data)['data'] ?? asMap(response.data);
-      return intOrNull(data['count'] ?? data['unreadCount']) ?? 0;
+      return ModelParser.asInt(data is Map ? data['count'] ?? data['unreadCount'] : data);
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
@@ -59,8 +59,10 @@ final class DioStudentHomeRepository
         queryParameters: queryParams,
       );
 
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
-      final list = asList(data is Map ? data['content'] : data);
+      final dataMap = asMap(response.data);
+      final rawList = dataMap['data']?['content'] ?? dataMap['content'] ?? response.data;
+      final list = asList(rawList);
+
       return list
           .map(asMap)
           .map(BannerModel.fromJson)
@@ -88,9 +90,11 @@ final class DioStudentHomeRepository
         queryParameters: queryParams,
       );
 
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
-      final content = asList(data is Map ? data['content'] : data);
-      return content
+      final dataMap = asMap(response.data);
+      final rawList = dataMap['data']?['content'] ?? dataMap['content'] ?? response.data;
+      final list = asList(rawList);
+
+      return list
           .map(asMap)
           .map(CourseModel.fromJson)
           .toList();
@@ -118,9 +122,11 @@ final class DioStudentHomeRepository
         queryParameters: queryParams,
       );
 
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
-      final content = asList(data is Map ? data['content'] : data);
-      return content
+      final dataMap = asMap(response.data);
+      final rawList = dataMap['data']?['content'] ?? dataMap['content'] ?? response.data;
+      final list = asList(rawList);
+
+      return list
           .map(asMap)
           .map(CourseModel.fromJson)
           .toList();
@@ -141,8 +147,9 @@ final class DioStudentHomeRepository
         queryParameters: queryParams,
       );
 
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
-      final list = asList(data is Map ? data['content'] : data);
+      final dataMap = asMap(response.data);
+      final rawList = dataMap['data']?['content'] ?? dataMap['content'] ?? response.data;
+      final list = asList(rawList);
 
       return list
           .map(asMap)

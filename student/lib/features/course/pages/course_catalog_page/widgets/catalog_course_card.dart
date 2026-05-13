@@ -59,7 +59,7 @@ final class CatalogCourseCard extends StatelessWidget {
                           child: Hero(
                             tag: 'catalog_course_${course.id}',
                             child: AppDynamicImage(
-                              course.thumbnailUrl,
+                              course.thumbnailUrl ?? '',
                               fit: BoxFit.cover,
                             ),
                           ),

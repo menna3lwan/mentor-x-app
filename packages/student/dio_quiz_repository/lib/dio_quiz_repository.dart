@@ -115,9 +115,8 @@ final class DioQuizRepository
       await httpClient.post(
         '/api/quiz-attempts/$attemptId/answers',
         data: {
-          'question_id': questionId,
-          if (selectedOptions != null) 'selected_options': selectedOptions,
-          if (textAnswer != null) 'text_answer': textAnswer,
+          'questionId': questionId,
+          'selectedAnswer': selectedOptions?.firstOrNull ?? textAnswer ?? '',
         },
       );
     } on HttpClientResponse catch (e) {

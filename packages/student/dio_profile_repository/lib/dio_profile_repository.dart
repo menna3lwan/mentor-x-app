@@ -196,13 +196,4 @@ final class DioStudentProfileRepository
       );
     }
   }
-
-  @override
-  Future<void> deleteAccount(String password) async {
-    try {
-      await httpClient.post('/api/auth/delete-account', data: {'password': password});
-    } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(e, defaultCode: StudentProfileRepositoryExceptionCode.unknown);
-    }
-  }
 }

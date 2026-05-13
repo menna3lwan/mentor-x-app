@@ -5,7 +5,7 @@ base class CourseSummaryEntity extends Equatable {
   final String id;
   final String title;
   final String? description;
-  final String thumbnailUrl;
+  final String? thumbnailUrl;
   final double? progressPercent;
   final double? price;
   final int enrolledCount;
@@ -14,7 +14,7 @@ base class CourseSummaryEntity extends Equatable {
     required this.id,
     required this.title,
     this.description,
-    required this.thumbnailUrl,
+    this.thumbnailUrl,
     required this.enrolledCount,
     this.progressPercent,
     this.price,
@@ -25,7 +25,7 @@ base class CourseSummaryEntity extends Equatable {
   static const placeholder = CourseSummaryEntity(
     id: '',
     title: '',
-    thumbnailUrl: '',
+    thumbnailUrl: null,
     enrolledCount: 0,
   );
 
@@ -44,7 +44,7 @@ base class CourseSummaryEntity extends Equatable {
     String? id,
     String? title,
     MentorXNullableValue<String?>? description,
-    String? thumbnailUrl,
+    MentorXNullableValue<String?>? thumbnailUrl,
     MentorXNullableValue<double?>? progressPercent,
     MentorXNullableValue<double?>? price,
     int? enrolledCount,
@@ -53,7 +53,7 @@ base class CourseSummaryEntity extends Equatable {
       id: id ?? this.id,
       title: title ?? this.title,
       description: description != null ? description.value : this.description,
-      thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
+      thumbnailUrl: thumbnailUrl != null ? thumbnailUrl.value : this.thumbnailUrl,
       progressPercent: progressPercent != null ? progressPercent.value : this.progressPercent,
       price: price != null ? price.value : this.price,
       enrolledCount: enrolledCount ?? this.enrolledCount,

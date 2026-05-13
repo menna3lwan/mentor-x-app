@@ -42,7 +42,4 @@ abstract interface class StudentProfileRepository implements ProfileRepository {
     required String currentPassword,
     required String newPassword,
   });
-
-  @override
-  Future<void> deleteAccount(String password);
 }

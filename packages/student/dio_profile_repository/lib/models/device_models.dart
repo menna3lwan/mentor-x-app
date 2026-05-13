@@ -33,6 +33,9 @@ final class StudentProfileModel extends StudentEntity {
     required super.status,
     required super.createdAt,
     required super.updatedAt,
+    super.secondName,
+    super.thirdName,
+    super.fourthName,
     super.email,
     super.profileImageUrl,
     super.gender = Gender.male,
@@ -51,7 +54,9 @@ final class StudentProfileModel extends StudentEntity {
     super.dateOfBirth,
     super.address,
     super.city,
+    super.area,
     super.governorate,
+    super.isOnline,
     super.enrolledCourseIds,
     super.metadata,
   });
@@ -67,7 +72,10 @@ final class StudentProfileModel extends StudentEntity {
     return StudentProfileModel(
       id: ModelParser.asString(user['userId'] ?? user['id'] ?? user['studentCode']),
       firstName: ModelParser.asString(user['firstName'] ?? user['first_name'], fallback: fallbackFirst),
-      lastName: ModelParser.asString(user['lastName'] ?? user['last_name'], fallback: fallbackLast),
+      secondName: ModelParser.asString(user['secondName'] ?? user['second_name']),
+      thirdName: ModelParser.asString(user['thirdName'] ?? user['third_name']),
+      fourthName: ModelParser.asString(user['fourthName'] ?? user['fourth_name']),
+      lastName: ModelParser.asString(user['lastName'] ?? user['last_name'] ?? user['fourthName'], fallback: fallbackLast),
       email: ModelParser.asString(user['email']),
       phoneNumber: ModelParser.asString(user['phone'] ?? user['phoneNumber'] ?? user['phone_number']),
       profileImageUrl: ModelParser.asString(user['profileImageUrl'] ?? user['profileImage'] ?? user['avatarUrl'] ?? user['profile_photo_url']),
@@ -88,7 +96,9 @@ final class StudentProfileModel extends StudentEntity {
       dateOfBirth: ModelParser.asDateTime(user['dateOfBirth'] ?? user['date_of_birth']),
       address: ModelParser.asString(user['address']),
       city: ModelParser.asString(user['city']),
+      area: ModelParser.asString(user['area'] ?? user['city']),
       governorate: ModelParser.asString(user['governorate']),
+      isOnline: ModelParser.asBool(user['online'] ?? user['isOnline']),
       enrolledCourseIds: ModelParser.asList(user['enrolledCourseIds'] ?? user['enrolled_course_ids'])
           .map((e) => e.toString())
           .toList(),
@@ -102,10 +112,14 @@ final class StudentProfileModel extends StudentEntity {
     return {
       'id': id,
       'firstName': firstName,
+      'secondName': secondName,
+      'thirdName': thirdName,
+      'fourthName': fourthName,
       'lastName': lastName,
       'email': email,
       'phoneNumber': phoneNumber,
       'gender': gender.name,
+      'grade': gradeName,
       'gradeId': gradeId,
       'schoolName': schoolName,
       'centerId': centerId,
@@ -115,7 +129,9 @@ final class StudentProfileModel extends StudentEntity {
       'dateOfBirth': dateOfBirth?.toIso8601String(),
       'address': address,
       'city': city,
+      'area': area ?? city,
       'governorate': governorate,
+      'online': isOnline ?? true,
       'metadata': metadata,
     };
   }
@@ -124,6 +140,9 @@ final class StudentProfileModel extends StudentEntity {
     return StudentProfileModel(
       id: entity.id,
       firstName: entity.firstName,
+      secondName: entity.secondName,
+      thirdName: entity.thirdName,
+      fourthName: entity.fourthName,
       lastName: entity.lastName,
       email: entity.email,
       phoneNumber: entity.phoneNumber,
@@ -145,13 +164,16 @@ final class StudentProfileModel extends StudentEntity {
       dateOfBirth: entity.dateOfBirth,
       address: entity.address,
       city: entity.city,
+      area: entity.area,
       governorate: entity.governorate,
       enrolledCourseIds: entity.enrolledCourseIds,
+      isOnline: entity.isOnline,
       metadata: entity.metadata,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
     );
   }
+
 
   static Gender _parseGender(dynamic value) {
     final str = ModelParser.asString(value).toLowerCase();

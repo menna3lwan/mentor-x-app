@@ -25,13 +25,10 @@ final class DeviceManagementPageBloc
           DeviceManagementPagePresentationEvent
         > {
   final ProfileRepository _profileRepository;
-  final AnalyticsService _analyticsService;
 
   DeviceManagementPageBloc({
     required ProfileRepository profileRepository,
-    required AnalyticsService analyticsService,
   }) : _profileRepository = profileRepository,
-       _analyticsService = analyticsService,
       super(DeviceManagementPageState.initial) {
     on<DeviceManagementPageInitialized>(_onInitialized);
     on<DeviceManagementPageRefreshed>(_onRefreshed);

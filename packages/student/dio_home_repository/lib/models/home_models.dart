@@ -112,16 +112,18 @@ final class AnnouncementModel extends AnnouncementEntity {
     super.preview,
     required super.createdAt,
     super.isPinned = false,
+    super.expireAt,
   });
 
   factory AnnouncementModel.fromJson(Map<String, dynamic> json) {
     return AnnouncementModel(
       id: ModelParser.asString(json['id']),
       title: ModelParser.asString(json['title']),
-      content: ModelParser.asString(json['content'] ?? json['preview'] ?? json['body']),
-      preview: ModelParser.asString(json['preview'] ?? json['content'] ?? json['summary']),
-      createdAt: ModelParser.asDateTime(json['createdAt'] ?? json['created_at']) ?? DateTime.now(),
+      content: ModelParser.asString(json['description'] ?? json['content'] ?? json['body']),
+      preview: ModelParser.asString(json['preview'] ?? json['content'] ?? json['summary'] ?? json['description']),
+      createdAt: ModelParser.asDateTime(json['createdAt'] ?? json['created_at'] ?? json['announcementDate']) ?? DateTime.now(),
       isPinned: ModelParser.asBool(json['isPinned'] ?? json['is_pinned']),
+      expireAt: ModelParser.asDateTime(json['expiryDate'] ?? json['expireAt']),
     );
   }
 
