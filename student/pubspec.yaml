@@ -1,7 +1,7 @@
 name: mentorx_student
 description: "A new Flutter project."
 publish_to: "none"
-version: 1.0.0+6
+version: 1.0.0+7
 resolution: workspace
 
 environment:
@@ -55,7 +55,7 @@ dependencies:
   # For SMS OTP Auto filling on Android
   smart_auth: ^3.2.0
   image_picker: ^1.2.1
-  share_plus: ^13.1.0
+  share_plus: ^10.1.0
   percent_indicator: ^4.2.5
   qr_flutter: ^4.1.0
   url_launcher: ^6.3.2
