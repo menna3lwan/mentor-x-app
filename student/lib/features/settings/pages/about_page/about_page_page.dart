@@ -28,19 +28,9 @@ final class AboutPage extends StatelessWidget {
                 ),
               ),
             ),
-            child: AppBar(
+            child: MentorXAppBar(
               backgroundColor: Colors.transparent,
-              elevation: 0,
-              foregroundColor: context.textPrimaryColor,
-              centerTitle: true,
-              title: Text(
-                t['aboutTitle'] ?? 'About',
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w900,
-                  letterSpacing: -0.5,
-                ),
-              ),
+              titleText: t['aboutTitle'] ?? 'About',
             ),
           ),
         ),

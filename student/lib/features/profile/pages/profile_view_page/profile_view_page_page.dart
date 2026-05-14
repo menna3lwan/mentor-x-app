@@ -83,6 +83,9 @@ final class _ProfileHeader extends StatelessWidget {
       stretch: true,
       backgroundColor: context.backgroundPrimaryColor,
       elevation: 0,
+      systemOverlayStyle: Theme.of(context).brightness == Brightness.dark
+          ? SystemUiOverlayStyle.light
+          : SystemUiOverlayStyle.dark,
       flexibleSpace: FlexibleSpaceBar(
         stretchModes: const [
           StretchMode.zoomBackground,

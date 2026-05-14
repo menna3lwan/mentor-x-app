@@ -68,6 +68,7 @@ final class StudentProfileModel extends StudentEntity {
     super.governorate,
     super.isOnline,
     super.enrolledCourseIds,
+    super.educationDepartment,
     super.metadata,
   });
 
@@ -130,6 +131,7 @@ final class StudentProfileModel extends StudentEntity {
       enrolledCourseIds: ModelParser.asList(data['enrolledCourseIds'] ?? data['enrolled_course_ids'])
           .map((e) => e.toString())
           .toList(),
+      educationDepartment: ModelParser.asString(data['educationDepartment'] ?? data['education_department']),
       metadata: ModelParser.asMap(data['metadata']),
       createdAt: ModelParser.asDateTime(data['createdAt'] ?? data['created_at']) ?? DateTime.now(),
       updatedAt: ModelParser.asDateTime(data['updatedAt'] ?? data['updated_at']) ?? DateTime.now(),
@@ -185,6 +187,7 @@ final class StudentProfileModel extends StudentEntity {
       governorate: entity.governorate,
       enrolledCourseIds: entity.enrolledCourseIds,
       isOnline: entity.isOnline,
+      educationDepartment: entity.educationDepartment,
       metadata: entity.metadata,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,

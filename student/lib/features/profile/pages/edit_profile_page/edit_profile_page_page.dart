@@ -47,19 +47,9 @@ final class EditProfilePage extends StatelessWidget {
               ),
             ),
           ),
-          child: AppBar(
+          child: MentorXAppBar(
             backgroundColor: Colors.transparent,
-            elevation: 0,
-            foregroundColor: context.textPrimaryColor,
-            centerTitle: true,
-            title: Text(
-              t['editProfile'] ?? 'Edit Profile',
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w900,
-                letterSpacing: -0.5,
-              ),
-            ),
+            titleText: t['editProfile'] ?? 'Edit Profile',
           ),
         ),
       ),

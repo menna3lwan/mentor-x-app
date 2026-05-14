@@ -70,6 +70,7 @@ final class EditProfilePageBloc
     try {
       await studentRepo.submitEditRequest(
         fieldName: event.fieldName,
+        oldValue: event.oldValue,
         newValue: event.newValue,
         reason: event.reason,
       );

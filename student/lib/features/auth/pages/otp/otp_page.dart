@@ -89,26 +89,10 @@ final class OtpPage extends StatelessWidget {
                 ),
               ),
             ),
-            child: AppBar(
+            child: MentorXAppBar(
               backgroundColor: Colors.transparent,
-              elevation: 0,
-              leading: IconButton(
-                icon: Icon(
-                  Icons.arrow_back_ios_new_rounded,
-                  color: context.textPrimaryColor,
-                  size: 20,
-                ),
-                onPressed: onEditPhone,
-              ),
-              centerTitle: true,
-              title: const Text(
-                'OTP Verification',
-                style: TextStyle(
-                  fontWeight: FontWeight.w900,
-                  fontSize: 18,
-                  letterSpacing: -0.5,
-                ),
-              ),
+              leading: MentorXBackButton(onPressed: onEditPhone),
+              titleText: 'OTP Verification',
             ),
           ),
         ),

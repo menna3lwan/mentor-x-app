@@ -53,19 +53,9 @@ final class ChangePasswordPage extends StatelessWidget {
               ),
             ),
           ),
-          child: AppBar(
+          child: MentorXAppBar(
             backgroundColor: Colors.transparent,
-            elevation: 0,
-            foregroundColor: context.textPrimaryColor,
-            centerTitle: true,
-            title: Text(
-              t['changePassword'] ?? 'Change Password',
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w900,
-                letterSpacing: -0.5,
-              ),
-            ),
+            titleText: t['changePassword'] ?? 'Change Password',
           ),
         ),
       ),

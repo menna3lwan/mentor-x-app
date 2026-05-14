@@ -22,6 +22,7 @@ final class DioStudentProfileRepository
   @override
   Future<ProfileEditRequestEntity> submitEditRequest({
     required String fieldName,
+    required String oldValue,
     required String newValue,
     String? reason,
   }) async {
@@ -30,6 +31,7 @@ final class DioStudentProfileRepository
         '/api/student/profile/edit-requests',
         data: {
           'field_name': fieldName,
+          'old_value': oldValue,
           'new_value': newValue,
           if (reason != null) 'reason': reason,
         },
@@ -142,7 +144,6 @@ final class DioStudentProfileRepository
         '/api/student/profile/location',
         data: {
           'governorate': governorate,
-          'city': city,
           'area': area,
         },
       );
@@ -175,12 +176,11 @@ final class DioStudentProfileRepository
   @override
   Future<StudentEntity> updateProfile(StudentEntity profile) async {
     try {
-      final response = await httpClient.put(
+      final response = await httpClient.post(
         '/api/student/profile',
         data: StudentProfileModel.fromEntity(profile).toJson(),
       );
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
-      return StudentProfileModel.fromJson(data);
+      return StudentProfileModel.fromJson(response.asMap());
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,

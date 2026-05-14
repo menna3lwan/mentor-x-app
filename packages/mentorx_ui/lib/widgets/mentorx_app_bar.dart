@@ -12,6 +12,7 @@ class MentorXAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.showBackButton = true,
     this.elevation = 0,
     this.bottom,
+    this.systemOverlayStyle,
   });
 
   final Widget? title;
@@ -23,16 +24,22 @@ class MentorXAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool showBackButton;
   final double elevation;
   final PreferredSizeWidget? bottom;
+  final SystemUiOverlayStyle? systemOverlayStyle;
 
   @override
   Widget build(BuildContext context) {
+    final isDarkBackground = backgroundColor == context.brandPrimaryColor;
+    final isTransparent =
+        backgroundColor == null || backgroundColor == Colors.transparent;
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return AppBar(
       title: title ??
           (titleText != null
               ? Text(
                   titleText!,
                   style: context.titleH2Style.copyWith(
-                    color: backgroundColor == context.brandPrimaryColor
+                    color: isDarkBackground
                         ? Colors.white
                         : context.textPrimaryColor,
                     fontWeight: FontWeight.w900,
@@ -42,9 +49,7 @@ class MentorXAppBar extends StatelessWidget implements PreferredSizeWidget {
       leading: leading ??
           (showBackButton && Navigator.canPop(context)
               ? MentorXBackButton(
-                  color: backgroundColor == context.brandPrimaryColor
-                      ? Colors.white
-                      : context.brandPrimaryColor,
+                  color: isDarkBackground ? Colors.white : null,
                 )
               : null),
       actions: actions,
@@ -53,6 +58,12 @@ class MentorXAppBar extends StatelessWidget implements PreferredSizeWidget {
       elevation: elevation,
       surfaceTintColor: Colors.transparent,
       bottom: bottom,
+      systemOverlayStyle: systemOverlayStyle ??
+          (isTransparent
+              ? (isDarkMode
+                  ? SystemUiOverlayStyle.light
+                  : SystemUiOverlayStyle.dark)
+              : null),
     );
   }
 

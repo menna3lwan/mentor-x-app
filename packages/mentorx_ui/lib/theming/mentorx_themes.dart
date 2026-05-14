@@ -234,6 +234,14 @@ final class MentorXThemes {
           color: textForeground,
         ),
         iconTheme: IconThemeData(color: textForeground),
+        systemOverlayStyle: SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness:
+              defaultThemeData.brightness == Brightness.dark
+                  ? Brightness.light
+                  : Brightness.dark,
+          statusBarBrightness: defaultThemeData.brightness,
+        ),
       ),
       // Primary Button: Oxford Blue bg, white text, borderRadius 14, height 50, elevation 2
       elevatedButtonTheme: ElevatedButtonThemeData(

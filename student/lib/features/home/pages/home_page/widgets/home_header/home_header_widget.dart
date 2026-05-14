@@ -117,9 +117,7 @@ final class _NotificationButton extends StatelessWidget {
               child: Material(
                 color: Colors.transparent,
                 child: InkWell(
-                  onTap: () {
-                    // Navigate to notifications
-                  },
+                  onTap: () => const NotificationsPageRoute().push(context),
                   borderRadius: BorderRadius.circular(26),
                   child: Center(
                     child: Icon(

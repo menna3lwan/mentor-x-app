@@ -22,6 +22,7 @@ abstract interface class StudentProfileRepository implements ProfileRepository {
   /// Submit a profile edit request.
   Future<ProfileEditRequestEntity> submitEditRequest({
     required String fieldName,
+    required String oldValue,
     required String newValue,
     String? reason,
   });
