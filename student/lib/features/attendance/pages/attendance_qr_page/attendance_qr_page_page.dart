@@ -270,30 +270,7 @@ final class _InstructionCard extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
         ),
-        const Gap(24),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-          decoration: BoxDecoration(
-            color: context.statusWarningColor.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: context.statusWarningColor.withValues(alpha: 0.2)),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.timer_outlined, color: context.statusWarningColor, size: 18),
-              const Gap(10),
-              Text(
-                t['codeValidFor']!,
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w800,
-                  color: context.statusWarningColor,
-                ),
-              ),
-            ],
-          ),
-        ),
+
       ],
     );
   }

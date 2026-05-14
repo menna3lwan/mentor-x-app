@@ -341,7 +341,7 @@ final class _StatItem extends StatelessWidget {
                 letterSpacing: -0.8,
               ),
             ),
-            const Gap(4),
+            const SizedBox(width: 4),
             Text(
               unit,
               style: TextStyle(

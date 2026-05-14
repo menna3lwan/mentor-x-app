@@ -6,6 +6,7 @@ enum QuizRepositoryExceptionCode {
   failedToSaveAnswer,
   failedToSubmitQuiz,
   failedToLoadResults,
+  quizAlreadyStarted,
 }
 
 final class QuizRepositoryException

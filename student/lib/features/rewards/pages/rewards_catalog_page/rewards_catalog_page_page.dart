@@ -302,7 +302,7 @@ final class _PointsHeader extends StatelessWidget {
                       height: 1.0,
                     ),
                   ),
-                  const Gap(10),
+                    const SizedBox(width: 10),
                   Text(
                     t['points'] ?? 'Points',
                     style: TextStyle(

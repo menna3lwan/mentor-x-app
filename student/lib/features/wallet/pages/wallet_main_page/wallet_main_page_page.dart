@@ -352,7 +352,7 @@ final class _BalanceCard extends StatelessWidget {
                   letterSpacing: -2,
                 ),
               ),
-              const Gap(8),
+              const SizedBox(width: 8),
               Text(
                 t['egp']!,
                 style: TextStyle(

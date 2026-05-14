@@ -23,9 +23,18 @@ final class StudentCardPage extends StatelessWidget {
             physics: const BouncingScrollPhysics(),
             slivers: [
               appBar,
-              SliverFillRemaining(
-                hasScrollBody: false,
-                child: content,
+              SliverLayoutBuilder(
+                builder: (context, constraints) {
+                  return SliverFillRemaining(
+                    hasScrollBody: true,
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: constraints.remainingPaintExtent,
+                      ),
+                      child: content,
+                    ),
+                  );
+                },
               ),
             ],
           ),

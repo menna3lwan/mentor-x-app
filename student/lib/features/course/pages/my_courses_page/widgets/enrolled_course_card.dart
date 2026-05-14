@@ -34,7 +34,8 @@ final class EnrolledCourseCard extends StatelessWidget {
             ),
           ],
         ),
-        child: IntrinsicHeight(
+        child: SizedBox(
+          height: 110,
           child: Row(
             children: [
               SizedBox(
