@@ -10,10 +10,12 @@ import 'package:gap/gap.dart';
 
 final class ProfileViewPage extends StatelessWidget {
   final AppSessionState session;
+  final String? avatarUrl;
 
   const ProfileViewPage({
     super.key,
     required this.session,
+    this.avatarUrl,
   });
 
   @override
@@ -28,7 +30,7 @@ final class ProfileViewPage extends StatelessWidget {
           CustomScrollView(
             physics: const BouncingScrollPhysics(),
             slivers: [
-              _ProfileHeader(session: session),
+              _ProfileHeader(session: session, avatarUrl: avatarUrl),
               SliverToBoxAdapter(
                 child: Padding(
                   padding:
@@ -73,8 +75,10 @@ final class ProfileViewPage extends StatelessWidget {
 final class _ProfileHeader extends StatelessWidget {
   const _ProfileHeader({
     required this.session,
+    this.avatarUrl,
   });
   final AppSessionState session;
+  final String? avatarUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -142,10 +146,16 @@ final class _ProfileHeader extends StatelessWidget {
                           child: CircleAvatar(
                             radius: 64,
                             backgroundColor: context.backgroundPrimaryColor,
-                            child: Icon(
-                              Icons.person_rounded,
-                              size: 68,
-                              color: context.brandPrimaryColor,
+                            child: AppDynamicImage(
+                              avatarUrl ?? '',
+                              width: 128,
+                              height: 128,
+                              borderRadius: BorderRadius.circular(64),
+                              errorWidget: Icon(
+                                Icons.person_rounded,
+                                size: 68,
+                                color: context.brandPrimaryColor,
+                              ),
                             ),
                           ),
                         ),

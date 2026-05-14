@@ -30,7 +30,7 @@ final class QuizIntroPageBloc
   }
 
   final QuizRepository quizRepository;
-  final StudentProfileRepository profileRepository;
+  final ProfileRepository profileRepository;
   final AnalyticsService analyticsService;
 
   Future<void> _onLoad(

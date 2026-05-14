@@ -40,6 +40,24 @@
         "mentorXReadMore": {
             "more": "المزيد",
             "less": "أقل"
+        },
+        "widgets": {
+            "announcement": {
+                "pinned": "مثبت",
+                "update": "تحديث"
+            },
+            "attendance": {
+                "rate": "نسبة الحضور"
+            },
+            "error": {
+                "title": "حدث خطأ ما",
+                "retry": "إعادة المحاولة"
+            },
+            "common": {
+                "viewAll": "عرض الكل",
+                "readMore": "اقرأ المزيد",
+                "readLess": "اقرأ أقل"
+            }
         }
     },
     "core": {

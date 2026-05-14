@@ -84,7 +84,17 @@ class ParentProfileView extends StatelessWidget {
                                 child: CircleAvatar(
                                   radius: 60,
                                   backgroundColor: context.backgroundSecondaryColor.withValues(alpha: 0.6),
-                                  child: Icon(Icons.person_rounded, size: 70, color: context.brandPrimaryColor),
+                                  child: AppDynamicImage(
+                                    profile?.profileImageUrl ?? '',
+                                    width: 120,
+                                    height: 120,
+                                    borderRadius: BorderRadius.circular(60),
+                                    errorWidget: Icon(
+                                      Icons.person_rounded,
+                                      size: 70,
+                                      color: context.brandPrimaryColor,
+                                    ),
+                                  ),
                                 ),
                               ),
                               Container(

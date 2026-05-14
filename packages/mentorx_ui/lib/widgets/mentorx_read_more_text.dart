@@ -40,11 +40,16 @@ class _MentorXReadMoreTextState extends State<MentorXReadMoreText> {
         const Gap(4),
         GestureDetector(
           onTap: () => setState(() => _isExpanded = !_isExpanded),
-          child: Text(
-            _isExpanded ? 'Read Less' : 'Read More',
-            style: context.smallTextStyle.copyWith(
-              color: context.brandPrimaryColor,
-              fontWeight: FontWeight.w900,
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            padding: const EdgeInsets.symmetric(vertical: 4),
+            child: Text(
+              _isExpanded ? t.ui.widgets.common.readLess : t.ui.widgets.common.readMore,
+              style: context.smallTextStyle.copyWith(
+                color: context.brandPrimaryColor,
+                fontWeight: FontWeight.w900,
+                fontSize: 13,
+              ),
             ),
           ),
         ),

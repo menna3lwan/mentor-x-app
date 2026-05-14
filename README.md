@@ -2,8 +2,8 @@
 
 [![Flutter](https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white)](https://flutter.dev)
 [![Dart](https://img.shields.io/badge/Dart-0175C2?style=for-the-badge&logo=dart&logoColor=white)](https://dart.dev)
-[![Architecture](https://img.shields.io/badge/Architecture-Clean%20%2F%20DDD-183764?style=for-the-badge)](#technical-architecture)
-[![Workspaces](https://img.shields.io/badge/Monorepo-Melos-F59239?style=for-the-badge)](https://melos.invertase.dev)
+[![Architecture](https://img.shields.io/badge/Architecture-Clean%20%2F%20DDD-1E3ABA?style=for-the-badge)](#technical-architecture)
+[![Workspaces](https://img.shields.io/badge/Monorepo-Melos-FF9F1C?style=for-the-badge)](https://melos.invertase.dev)
 
 MentorX is a state-of-the-art, AI-driven educational platform designed to transform the learning experience for high school students. By integrating advanced performance analysis and personalized path-tracking, MentorX empowers students, parents, and educators with the tools needed for academic excellence.
 
@@ -25,9 +25,9 @@ MentorX is built as a unified monorepo containing multiple specialized applicati
 -   **📈 Deep Performance Insights**: Visual dashboards showing progress across various subjects and skill sets.
 -   **🌍 Multilingual Support**: Fully localized experience using `Slang` for seamless switching between languages.
 -   **🎨 Dynamic Brand Theming**: A premium UI kit built with a curated palette:
-    -   **Oxford Blue (#183764)**: Authority and Professionalism (Primary)
-    -   **Pumpkin Orange (#F59239)**: Energy and Action (Accent/CTA)
-    -   **Teal Green (#4BBBA0)**: Growth and Success
+    -   **Primary Blue (#1E3ABA)**: Authority and Professionalism (Primary)
+    -   **Accent Warm (#FF9F1C)**: Energy and Action (Accent/CTA)
+    -   **Secondary Green (#2EC4B6)**: Growth and Success
 -   **🔒 Secure & Resilient**: Modern authentication flows and robust offline caching.
 
 ---
@@ -64,7 +64,7 @@ The project follows high-standard software engineering principles to ensure scal
 │   └── parent/             # Parent-facing mobile application
 ├── packages/
 │   ├── mentorx_core/       # Shared domain models and logic
-│   ├── mentorx_ui/         # Unified UI kit and theme tokens (Oxford Blue / Pumpkin Orange)
+│   ├── mentorx_ui/         # Unified UI kit and theme tokens (Primary Blue / Accent Warm)
 │   ├── clients/            # Shared networking clients (Dio)
 │   ├── common/             # Shared utilities & repository interfaces
 │   └── mock_data/          # Centralized mock data for rapid prototyping

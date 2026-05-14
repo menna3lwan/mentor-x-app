@@ -7,7 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:mentorx_student/core/core.dart';
-import 'bloc/quiz_intro_page_bloc.dart';
+import 'package:mentorx_student/features/quizzes/pages/quiz_intro_page/bloc/quiz_intro_page_bloc.dart';
 
 final class QuizIntroPage extends StatelessWidget {
   const QuizIntroPage({super.key});

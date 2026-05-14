@@ -43,6 +43,8 @@ class MentorXAppBar extends StatelessWidget implements PreferredSizeWidget {
                         ? Colors.white
                         : context.textPrimaryColor,
                     fontWeight: FontWeight.w900,
+                    fontSize: 22,
+                    letterSpacing: -0.5,
                   ),
                 )
               : null),

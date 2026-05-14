@@ -5,6 +5,7 @@ class MentorXSkeleton extends StatelessWidget {
   final double? height;
   final double borderRadius;
   final Color? color;
+  final bool shimmer;
 
   const MentorXSkeleton({
     super.key,
@@ -12,13 +13,14 @@ class MentorXSkeleton extends StatelessWidget {
     this.height,
     this.borderRadius = 8,
     this.color,
+    this.shimmer = true,
   });
 
   @override
   Widget build(BuildContext context) {
     final backgroundColor = color ?? context.backgroundTertiaryColor;
 
-    return Container(
+    final skeleton = Container(
       width: width,
       height: height,
       decoration: BoxDecoration(
@@ -26,6 +28,12 @@ class MentorXSkeleton extends StatelessWidget {
         borderRadius: BorderRadius.circular(borderRadius),
       ),
     );
+
+    if (shimmer) {
+      return MentorXShimmer(child: skeleton);
+    }
+
+    return skeleton;
   }
 
   factory MentorXSkeleton.text({

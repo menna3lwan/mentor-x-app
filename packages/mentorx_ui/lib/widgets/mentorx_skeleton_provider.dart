@@ -7,13 +7,16 @@ final class MentorXSkeletonProvider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Note: This requires the 'skeletonizer' package to be added to pubspec.yaml
-    // Assuming it is already present or will be added.
     return SkeletonizerConfig(
-      data: const SkeletonizerConfigData(
+      data: SkeletonizerConfigData(
         enableSwitchAnimation: true,
-        switchAnimationConfig: SwitchAnimationConfig(
+        switchAnimationConfig: const SwitchAnimationConfig(
           reverseDuration: Duration.zero,
+        ),
+        effect: ShimmerEffect(
+          baseColor: context.backgroundTertiaryColor,
+          highlightColor: context.backgroundSecondaryColor,
+          duration: const Duration(milliseconds: 1500),
         ),
       ),
       child: child,

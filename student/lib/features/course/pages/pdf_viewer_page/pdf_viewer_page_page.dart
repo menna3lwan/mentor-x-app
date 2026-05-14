@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:gap/gap.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 final class PdfViewerPagePage extends StatelessWidget {
   final String title;
@@ -11,6 +12,7 @@ final class PdfViewerPagePage extends StatelessWidget {
   final bool isReady;
   final bool isCompleted;
   final String? errorMessage;
+  final String? watermarkText;
   final VoidCallback onMarkComplete;
   final VoidCallback? onDownloadTap;
 
@@ -23,6 +25,7 @@ final class PdfViewerPagePage extends StatelessWidget {
     required this.isCompleted,
     required this.errorMessage,
     required this.onMarkComplete,
+    this.watermarkText,
     this.onDownloadTap,
   });
 
@@ -103,6 +106,16 @@ final class PdfViewerPagePage extends StatelessWidget {
               ],
             ),
           ),
+          if (!isCompleted && isReady)
+            FadeInRight(
+              duration: const Duration(milliseconds: 600),
+              child: MentorXButton(
+                onPressed: onMarkComplete,
+                label: context.t.student['markAsDone'] as String? ?? 'Done',
+                size: MentorXButtonSize.small,
+                width: 100,
+              ),
+            ),
         ],
       ),
     );
@@ -123,147 +136,25 @@ final class PdfViewerPagePage extends StatelessWidget {
       );
     }
 
-    return Center(
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(32),
-        child: FadeInUp(
-          duration: const Duration(milliseconds: 600),
-          child: Container(
-            padding: const EdgeInsets.all(40),
-            decoration: BoxDecoration(
-              color: context.backgroundSecondaryColor.withValues(alpha: 0.45),
-              borderRadius: BorderRadius.circular(44),
-              border: Border.all(
-                color: context.borderPrimaryColor.withValues(alpha: 0.1),
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.1),
-                  blurRadius: 30,
-                  offset: const Offset(0, 15),
-                ),
-              ],
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(44),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Container(
-                          width: 140,
-                          height: 140,
-                          decoration: BoxDecoration(
-                            gradient: RadialGradient(
-                              colors: [
-                                context.brandPrimaryColor.withValues(alpha: 0.2),
-                                Colors.transparent,
-                              ],
-                            ),
-                          ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.all(28),
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                context.brandPrimaryColor.withValues(alpha: 0.15),
-                                context.brandPrimaryColor.withValues(alpha: 0.05),
-                              ],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                            ),
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: context.brandPrimaryColor.withValues(
-                                alpha: 0.1,
-                              ),
-                            ),
-                          ),
-                          child: Icon(
-                            Icons.picture_as_pdf_rounded,
-                            size: 64,
-                            color: context.brandPrimaryColor,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const Gap(32),
-                    Text(
-                      title,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w900,
-                        color: context.textPrimaryColor,
-                        letterSpacing: -0.8,
-                        height: 1.2,
-                      ),
-                    ),
-                    const Gap(12),
-                    Text(
-                      context.t.course.detail.sessions,
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                        color: context.textSecondaryColor.withValues(alpha: 0.6),
-                        letterSpacing: 0.5,
-                      ),
-                    ),
-                    if (isCompleted) ...[
-                      const Gap(24),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 8,
-                        ),
-                        decoration: BoxDecoration(
-                          color: context.statusSuccessColor.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color: context.statusSuccessColor.withValues(
-                              alpha: 0.2,
-                            ),
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              Icons.check_circle_rounded,
-                              size: 16,
-                              color: context.statusSuccessColor,
-                            ),
-                            const Gap(8),
-                            Text(
-                              context.t.student['completed'] as String? ?? 'Completed',
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w900,
-                                color: context.statusSuccessColor,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                    const Gap(40),
-                    SizedBox(
-                      width: double.infinity,
-                      child: MentorXButton(
-                        onPressed: onDownloadTap ?? onMarkComplete,
-                        label: context.t.ui.common.viewAll,
-                        icon: Icons.open_in_new_rounded,
-                        size: MentorXButtonSize.large,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+    if (contentUrl == null || contentUrl!.isEmpty) {
+      return Center(
+        child: Text(
+          'No document available',
+          style: TextStyle(color: context.textSecondaryColor),
+        ),
+      );
+    }
+
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: FadeInUp(
+        duration: const Duration(milliseconds: 600),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(24),
+          child: MentorXSecuredMediaWrapper(
+            watermarkText: watermarkText,
+            child: SfPdfViewer.network(
+              contentUrl!,
             ),
           ),
         ),

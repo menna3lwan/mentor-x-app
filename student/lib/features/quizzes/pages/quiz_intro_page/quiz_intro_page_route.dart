@@ -14,7 +14,7 @@ final class QuizIntroPageRoute extends GoRouteData with $QuizIntroPageRoute {
     return BlocProvider<QuizIntroPageBloc>(
       create: (context) => QuizIntroPageBloc(
         quizRepository: context.read<QuizRepository>(),
-        profileRepository: context.read<StudentProfileRepository>(),
+        profileRepository: context.read<ProfileRepository>(),
         analyticsService: context.read<AnalyticsService>(),
         quizId: quizId,
       )..add(const QuizIntroPageLoadEvent()),

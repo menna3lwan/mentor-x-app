@@ -27,17 +27,46 @@ final class DioStudentProfileRepository
     String? reason,
   }) async {
     try {
+      // Map field names to API keys
+      final String apiField = switch (fieldName.toLowerCase()) {
+        'name' || 'firstname' => 'firstName',
+        'secondname' => 'secondName',
+        'thirdname' => 'thirdName',
+        'fourthname' => 'fourthName',
+        'grade' => 'grade',
+        'school' || 'schoolname' => 'schoolName',
+        'center' || 'centername' => 'centerName',
+        'phone' || 'phonenumber' => 'phone',
+        _ => fieldName,
+      };
+
       final response = await httpClient.post(
-        '/api/student/profile/edit-requests',
+        '/api/student/profile',
+        queryParameters: {
+          if (reason != null && reason.isNotEmpty) 'reason': reason,
+        },
         data: {
-          'field_name': fieldName,
-          'old_value': oldValue,
-          'new_value': newValue,
-          if (reason != null) 'reason': reason,
+          apiField: newValue,
         },
       );
 
-      return ProfileEditRequestModel.fromJson(response.asMap());
+      final data = response.asMap();
+      
+      // If the backend returns the full profile instead of an edit request,
+      // we wrap it in a pseudo-edit request to maintain interface compatibility.
+      if (data.containsKey('id') && !data.containsKey('fieldName')) {
+        return ProfileEditRequestEntity(
+          id: ModelParser.asString(data['id']),
+          fieldName: fieldName,
+          oldValue: oldValue,
+          newValue: newValue,
+          status: EditRequestStatus.pending, // Assume pending if it's an edit-capable field
+          createdAt: DateTime.now(),
+          reason: reason,
+        );
+      }
+
+      return ProfileEditRequestModel.fromJson(data);
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,

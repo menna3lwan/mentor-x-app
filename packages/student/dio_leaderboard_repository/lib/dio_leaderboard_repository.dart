@@ -32,10 +32,13 @@ final class DioLeaderboardRepository
         queryParameters: queryParams,
       );
 
-      final dataMap = asMap(response.data)['data'] ?? asMap(response.data);
-      final entriesList = asList(dataMap['entries'] ?? dataMap['content'] ?? dataMap);
+      final dataMap = ModelParser.extractData(response.data);
+      final entriesList = ModelParser.asList(dataMap);
       
-      return entriesList.map((e) => LeaderboardEntryModel.fromJson(asMap(e))).toList();
+      return entriesList.map((e) {
+        final map = ModelParser.asMap(e);
+        return LeaderboardEntryModel.fromJson(map) as LeaderboardEntryEntity;
+      }).toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
@@ -59,10 +62,13 @@ final class DioLeaderboardRepository
         queryParameters: queryParams,
       );
 
-      final dataMap = asMap(response.data)['data'] ?? asMap(response.data);
-      final entriesList = asList(dataMap['entries'] ?? dataMap['content'] ?? dataMap);
+      final dataMap = ModelParser.extractData(response.data);
+      final entriesList = ModelParser.asList(dataMap);
 
-      return entriesList.map((e) => LeaderboardEntryModel.fromJson(asMap(e))).toList();
+      return entriesList.map((e) {
+        final map = ModelParser.asMap(e);
+        return LeaderboardEntryModel.fromJson(map) as LeaderboardEntryEntity;
+      }).toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
@@ -89,7 +95,10 @@ final class DioLeaderboardRepository
       final dataMap = ModelParser.extractData(response.data);
       final entriesList = ModelParser.asList(dataMap);
 
-      return entriesList.map((e) => LeaderboardEntryModel.fromJson(asMap(e))).toList();
+      return entriesList.map((e) {
+        final map = ModelParser.asMap(e);
+        return LeaderboardEntryModel.fromJson(map) as LeaderboardEntryEntity;
+      }).toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
@@ -104,8 +113,8 @@ final class DioLeaderboardRepository
       final response = await httpClient.get(
         '/api/leaderboard/quiz/$quizId/my-rank',
       );
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
-      return LeaderboardEntryModel.fromJson(data);
+      final data = ModelParser.extractData(response.data);
+      return LeaderboardEntryModel.fromJson(data) as LeaderboardEntryEntity;
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,

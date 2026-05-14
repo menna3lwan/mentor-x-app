@@ -452,8 +452,7 @@ final class RepositoriesFactory {
   }
 
   static Future<LeaderboardRepository> _initLeaderboardRepository() async {
-    switch (Env.homeRepositoryMode) {
-      // Reuse home mode for leaderboard or add its own env
+    switch (Env.leaderboardRepositoryMode) {
       case RepositoryMode.mock:
         return MockLeaderboardRepository(delay: Env.mockDelayDuration);
       case RepositoryMode.prod:

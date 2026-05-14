@@ -40,6 +40,24 @@
         "mentorXReadMore": {
             "more": "More",
             "less": "Less"
+        },
+        "widgets": {
+            "announcement": {
+                "pinned": "PINNED",
+                "update": "UPDATE"
+            },
+            "attendance": {
+                "rate": "Attendance Rate"
+            },
+            "error": {
+                "title": "Something went wrong",
+                "retry": "Retry"
+            },
+            "common": {
+                "viewAll": "View All",
+                "readMore": "Read More",
+                "readLess": "Read Less"
+            }
         }
     },
     "core": {

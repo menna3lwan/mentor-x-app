@@ -30,33 +30,35 @@ final class ParentApp extends StatelessWidget {
             // brightness: requirements.brightness,
             lightTheme: lightMixTheme,
             darkTheme: darkMixTheme,
-            child: Builder(
-              builder: (context) {
-                final String currentLanguageCode = TranslationProvider.of(
-                  context,
-                ).flutterLocale.languageCode;
-                final appKey = ValueKey(currentLanguageCode);
-                
-                return MaterialApp.router(
-                  key: appKey,
-                  title: 'MentorX Parent',
-                  debugShowCheckedModeBanner: false,
-                  routerConfig: requirements.routerConfig,
-                  locale: TranslationProvider.of(context).flutterLocale,
-                  supportedLocales: LocaleSettings.instance.supportedLocales,
-                  localizationsDelegates: const [
-                    ...GlobalMaterialLocalizations.delegates,
-                  ],
-                  theme: MentorXThemes.materialThemeDataFromTheme(
-                    lightMixTheme,
+            child: MentorXSkeletonProvider(
+              child: Builder(
+                builder: (context) {
+                  final String currentLanguageCode = TranslationProvider.of(
                     context,
-                  ),
-                  darkTheme: MentorXThemes.materialThemeDataFromTheme(
-                    darkMixTheme,
-                    context,
-                  ),
-                );
-              },
+                  ).flutterLocale.languageCode;
+                  final appKey = ValueKey(currentLanguageCode);
+                  
+                  return MaterialApp.router(
+                    key: appKey,
+                    title: 'MentorX Parent',
+                    debugShowCheckedModeBanner: false,
+                    routerConfig: requirements.routerConfig,
+                    locale: TranslationProvider.of(context).flutterLocale,
+                    supportedLocales: LocaleSettings.instance.supportedLocales,
+                    localizationsDelegates: const [
+                      ...GlobalMaterialLocalizations.delegates,
+                    ],
+                    theme: MentorXThemes.materialThemeDataFromTheme(
+                      lightMixTheme,
+                      context,
+                    ),
+                    darkTheme: MentorXThemes.materialThemeDataFromTheme(
+                      darkMixTheme,
+                      context,
+                    ),
+                  );
+                },
+              ),
             ),
           ),
         ),

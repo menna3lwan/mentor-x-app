@@ -40,21 +40,21 @@ class StatusBadge extends StatelessWidget {
     final effectiveColor = color!;
     return Container(
       padding: EdgeInsets.symmetric(
-        horizontal: isSmall ? 8 : 10,
-        vertical: isSmall ? 2 : 4,
+        horizontal: isSmall ? 10 : 14,
+        vertical: isSmall ? 4 : 6,
       ),
       decoration: BoxDecoration(
-        color: useSolidColor ? effectiveColor : effectiveColor.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(20),
-        border: useSolidColor ? null : Border.all(color: effectiveColor.withValues(alpha: 0.2)),
+        color: useSolidColor ? effectiveColor : effectiveColor.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(12),
+        border: useSolidColor ? null : Border.all(color: effectiveColor.withValues(alpha: 0.12), width: 1),
       ),
       child: Text(
         label!,
         style: TextStyle(
           color: useSolidColor ? Colors.white : effectiveColor,
-          fontSize: isSmall ? 10 : 11,
-          fontWeight: FontWeight.w700,
-          letterSpacing: 0.3,
+          fontSize: isSmall ? 11 : 12,
+          fontWeight: FontWeight.w800,
+          letterSpacing: 0.2,
         ),
       ),
     );
@@ -70,14 +70,24 @@ class StatusBadge extends StatelessWidget {
 
     return Container(
       width: isSmall ? null : double.infinity,
-      padding: EdgeInsets.all(isSmall ? 8 : 12),
+      padding: EdgeInsets.symmetric(
+        horizontal: isSmall ? 12 : 16,
+        vertical: isSmall ? 10 : 14,
+      ),
       decoration: BoxDecoration(
-        color: useSolidColor ? effectiveColor : effectiveColor.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(isSmall ? 8 : 12),
+        color: useSolidColor ? effectiveColor : effectiveColor.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(isSmall ? 12 : 16),
         border: Border.all(
-          color: effectiveColor.withValues(alpha: useSolidColor ? 0 : 0.3),
-          width: 1,
+          color: effectiveColor.withValues(alpha: useSolidColor ? 0 : 0.15),
+          width: 1.5,
         ),
+        boxShadow: useSolidColor ? [
+          BoxShadow(
+            color: effectiveColor.withValues(alpha: 0.2),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          )
+        ] : null,
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,

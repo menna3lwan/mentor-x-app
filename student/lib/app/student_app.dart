@@ -56,32 +56,33 @@ class _StudentAppState extends State<StudentApp> {
           child: MentorXThemeProvider(
             lightTheme: lightMixTheme,
             darkTheme: darkMixTheme,
-            child: Builder(
-              builder: (context) {
-                // This key is used to force the app to rebuild when the locale changes
-                final String currentLanguageCode = TranslationProvider.of(
-                  context,
-                ).flutterLocale.languageCode;
-                final appKey = ValueKey(currentLanguageCode);
-                return MaterialApp.router(
-                  key: appKey,
-                  debugShowCheckedModeBanner: false,
-                  routerConfig: widget.requirements.routerConfig,
-                  locale: TranslationProvider.of(context).flutterLocale,
-                  supportedLocales: LocaleSettings.instance.supportedLocales,
-                  localizationsDelegates: [
-                    ...GlobalMaterialLocalizations.delegates,
-                  ],
-                  theme: MentorXThemes.materialThemeDataFromTheme(
-                    lightMixTheme,
-                    context,
-                  ),
-                  darkTheme: MentorXThemes.materialThemeDataFromTheme(
-                    darkMixTheme,
-                    context,
-                  ),
-                );
-              },
+            child: MentorXSkeletonProvider(
+              child: Builder(
+                builder: (context) {
+                  // This key is used to force the app to rebuild when the locale changes
+                  final String currentLanguageCode =
+                      TranslationProvider.of(context).flutterLocale.languageCode;
+                  final appKey = ValueKey(currentLanguageCode);
+                  return MaterialApp.router(
+                    key: appKey,
+                    debugShowCheckedModeBanner: false,
+                    routerConfig: widget.requirements.routerConfig,
+                    locale: TranslationProvider.of(context).flutterLocale,
+                    supportedLocales: LocaleSettings.instance.supportedLocales,
+                    localizationsDelegates: const [
+                      ...GlobalMaterialLocalizations.delegates,
+                    ],
+                    theme: MentorXThemes.materialThemeDataFromTheme(
+                      lightMixTheme,
+                      context,
+                    ),
+                    darkTheme: MentorXThemes.materialThemeDataFromTheme(
+                      darkMixTheme,
+                      context,
+                    ),
+                  );
+                },
+              ),
             ),
           ),
         ),

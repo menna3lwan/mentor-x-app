@@ -9,13 +9,13 @@ class QuizUi {
   static const double radiusLg = 16;
 
   static const LinearGradient primaryGradient = LinearGradient(
-    colors: [AppColors.accent, AppColors.accentLight],
+    colors: [MentorXThemeColorPalette.accent, MentorXThemeColorPalette.accentLight],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
 
   static const LinearGradient tealGradient = LinearGradient(
-    colors: [AppColors.success, AppColors.tealLight],
+    colors: [MentorXThemeColorPalette.success, MentorXThemeColorPalette.tealLight],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
@@ -60,14 +60,14 @@ class QuizHeader extends StatelessWidget {
     final top = MediaQuery.paddingOf(context).top;
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle.light.copyWith(
-        statusBarColor: AppColors.primary,
+        statusBarColor: MentorXThemeColorPalette.primary,
         statusBarIconBrightness: Brightness.light,
         statusBarBrightness: Brightness.dark,
       ),
       child: Container(
         width: double.infinity,
         padding: EdgeInsets.fromLTRB(20, top + 12, 20, 20),
-        color: AppColors.primary,
+        color: MentorXThemeColorPalette.primary,
         child: IconTheme(
           data: const IconThemeData(color: Colors.white),
           child: Row(
@@ -223,12 +223,12 @@ class QuizGradientButton extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 14),
           decoration: BoxDecoration(
             gradient: enabled ? gradient : null,
-            color: enabled ? null : AppColors.greyLight,
+            color: enabled ? null : MentorXThemeColorPalette.greyLight,
             borderRadius: BorderRadius.circular(QuizUi.radiusMd),
             boxShadow: enabled
                 ? [
                     BoxShadow(
-                      color: AppColors.accent.withValues(alpha: 0.30),
+                      color: MentorXThemeColorPalette.accent.withValues(alpha: 0.30),
                       blurRadius: 15,
                       offset: const Offset(0, 4),
                     ),
@@ -241,7 +241,7 @@ class QuizGradientButton extends StatelessWidget {
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w700,
-                color: enabled ? Colors.white : AppColors.greyDark,
+                color: enabled ? Colors.white : MentorXThemeColorPalette.greyDark,
               ),
             ),
           ),
@@ -268,8 +268,8 @@ class QuizOutlineButton extends StatelessWidget {
       child: OutlinedButton(
         onPressed: onPressed,
         style: OutlinedButton.styleFrom(
-          side: const BorderSide(color: AppColors.primary, width: 2),
-          foregroundColor: AppColors.primary,
+          side: const BorderSide(color: MentorXThemeColorPalette.primary, width: 2),
+          foregroundColor: MentorXThemeColorPalette.primary,
           padding: const EdgeInsets.symmetric(vertical: 14),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(QuizUi.radiusMd),
@@ -302,33 +302,33 @@ class QuizResultCircle extends StatelessWidget {
     if (_percent >= 0.85) {
       return (
         gradient: const LinearGradient(
-          colors: [AppColors.greenLight, AppColors.greenLight],
+          colors: [MentorXThemeColorPalette.greenLight, MentorXThemeColorPalette.greenLight],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderColor: AppColors.green,
-        textColor: AppColors.green,
+        borderColor: MentorXThemeColorPalette.green,
+        textColor: MentorXThemeColorPalette.green,
       );
     }
     if (_percent >= 0.60) {
       return (
         gradient: const LinearGradient(
-          colors: [AppColors.background, AppColors.beige],
+          colors: [MentorXThemeColorPalette.background, MentorXThemeColorPalette.beige],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderColor: AppColors.accent,
-        textColor: AppColors.accent,
+        borderColor: MentorXThemeColorPalette.accent,
+        textColor: MentorXThemeColorPalette.accent,
       );
     }
     return (
       gradient: const LinearGradient(
-        colors: [AppColors.redLight, AppColors.redLight],
+        colors: [MentorXThemeColorPalette.redLight, MentorXThemeColorPalette.redLight],
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
       ),
-      borderColor: AppColors.red,
-      textColor: AppColors.red,
+      borderColor: MentorXThemeColorPalette.red,
+      textColor: MentorXThemeColorPalette.red,
     );
   }
 
@@ -365,7 +365,7 @@ class QuizResultCircle extends StatelessWidget {
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: AppColors.greyDark,
+                color: MentorXThemeColorPalette.greyDark,
               ),
             ),
             const SizedBox(height: 2),

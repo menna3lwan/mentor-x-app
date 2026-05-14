@@ -24,7 +24,7 @@ class AppSectionHeader extends StatelessWidget {
             style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w700,
-              color: AppColors.primary,
+              color: MentorXThemeColorPalette.primary,
             ),
           ),
           if (actionText != null)
@@ -35,7 +35,7 @@ class AppSectionHeader extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.accent,
+                  color: MentorXThemeColorPalette.accent,
                 ),
               ),
             ),

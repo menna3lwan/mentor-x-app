@@ -18,68 +18,84 @@ class AnnouncementCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final statusColor = isPinned ? context.brandPrimaryColor : context.textTertiaryColor;
+    final statusColor = isPinned ? context.brandPrimaryColor : context.secondaryGreen;
 
     return PressableBox(
       onPress: onTap,
       child: Container(
-        width: 240,
-        padding: const EdgeInsets.all(12),
+        width: 260,
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: statusColor.withValues(alpha: 0.05),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: statusColor.withValues(alpha: 0.2)),
+          color: context.backgroundSecondaryColor,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: statusColor.withValues(alpha: 0.1), width: 1.5),
+          boxShadow: [
+            BoxShadow(
+              color: context.backgroundElevatedSurfaceShadowColor.withValues(alpha: 0.5),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                Icon(
-                  isPinned ? Icons.push_pin : Icons.notifications_none,
-                  color: statusColor,
-                  size: 16,
+                Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: statusColor.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Icon(
+                    isPinned ? Icons.push_pin_rounded : Icons.campaign_rounded,
+                    color: statusColor,
+                    size: 14,
+                  ),
                 ),
-                const SizedBox(width: 4),
+                const SizedBox(width: 8),
                 Text(
-                  isPinned ? 'PINNED' : 'UPDATE',
+                  isPinned ? t.ui.widgets.announcement.pinned : t.ui.widgets.announcement.update,
                   style: TextStyle(
                     color: statusColor,
                     fontSize: 10,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w900,
                     letterSpacing: 0.5,
                   ),
                 ),
                 const Spacer(),
                 Text(
                   date,
-                  style: TextStyle(
-                    color: context.textTertiaryColor,
-                    fontSize: 9,
+                  style: context.smallTextStyle.copyWith(
+                    color: context.textSecondaryColor,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
             Text(
               title,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
+              style: context.bodyPrimaryStyle.copyWith(
+                fontWeight: FontWeight.w800,
+                fontSize: 15,
                 color: context.textPrimaryColor,
               ),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 6),
             Expanded(
               child: Text(
                 preview,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontSize: 11,
-                  color: context.textTertiaryColor,
+                style: context.bodySecondaryStyle.copyWith(
+                  fontSize: 12,
+                  color: context.textSecondaryColor,
+                  height: 1.4,
                 ),
               ),
             ),

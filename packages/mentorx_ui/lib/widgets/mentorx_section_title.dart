@@ -73,17 +73,18 @@ class MentorXSectionViewAllButton extends StatelessWidget {
     return PressableBox(
       onPress: onPressed,
       style: Style(
-        $box.padding.vertical(6),
-        $box.padding.horizontal(12),
-        $box.borderRadius(10),
-        $box.color(context.brandPrimaryColor.withValues(alpha: 0.05)),
-        $on.hover($box.color(context.brandPrimaryColor.withValues(alpha: 0.1))),
+        $box.padding.vertical(8),
+        $box.padding.horizontal(14),
+        $box.borderRadius(12),
+        $box.color(context.brandPrimaryColor.withValues(alpha: 0.08)),
+        $on.hover($box.color(context.brandPrimaryColor.withValues(alpha: 0.12))),
       ),
       child: Text(
-        text ?? 'View All',
+        text ?? t.ui.widgets.common.viewAll,
         style: context.smallTextStyle.copyWith(
           color: context.brandPrimaryColor,
           fontWeight: FontWeight.w900,
+          fontSize: 12,
         ),
       ),
     );

@@ -1,11 +1,8 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:gap/gap.dart';
 import '../../../../core/core.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
-import 'bloc/redeem_code_page_bloc.dart';
 
 final class RedeemCodePagePage extends StatelessWidget {
   final TextEditingController codeController;

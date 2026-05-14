@@ -1,8 +1,8 @@
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:flutter/material.dart';
 
-import 'bloc/quiz_intro_page_bloc.dart';
-import 'quiz_intro_page_page.dart';
+import 'package:mentorx_student/features/quizzes/pages/quiz_intro_page/bloc/quiz_intro_page_bloc.dart';
+import 'package:mentorx_student/features/quizzes/pages/quiz_intro_page/quiz_intro_page_page.dart';
 
 final class QuizIntroPageWrapper extends StatefulWidget {
   const QuizIntroPageWrapper({super.key});

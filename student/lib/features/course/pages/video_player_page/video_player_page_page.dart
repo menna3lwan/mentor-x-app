@@ -3,14 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:gap/gap.dart';
+import 'package:video_player/video_player.dart';
+import 'package:chewie/chewie.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-final class VideoPlayerPagePage extends StatelessWidget {
+final class VideoPlayerPagePage extends StatefulWidget {
   final String title;
   final String? streamUrl;
   final bool isLoading;
   final bool isReady;
   final bool isCompleted;
   final String? errorMessage;
+  final String? watermarkText;
   final int currentPositionSeconds;
   final int totalDurationSeconds;
   final void Function(int position, int total) onProgressChanged;
@@ -28,7 +32,127 @@ final class VideoPlayerPagePage extends StatelessWidget {
     required this.totalDurationSeconds,
     required this.onProgressChanged,
     required this.onCompleted,
+    this.watermarkText,
   });
+
+  @override
+  State<VideoPlayerPagePage> createState() => _VideoPlayerPagePageState();
+}
+
+class _VideoPlayerPagePageState extends State<VideoPlayerPagePage> {
+  VideoPlayerController? _videoPlayerController;
+  ChewieController? _chewieController;
+  YoutubePlayerController? _youtubeController;
+  int _lastReportedSecond = -1;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.streamUrl != null) {
+      _initializePlayer();
+    }
+  }
+
+  @override
+  void didUpdateWidget(VideoPlayerPagePage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.streamUrl != oldWidget.streamUrl && widget.streamUrl != null) {
+      _initializePlayer();
+    }
+  }
+
+  void _initializePlayer() {
+    _disposeControllers();
+    _lastReportedSecond = -1;
+
+    final url = widget.streamUrl!;
+    if (url.contains('youtube.com') || url.contains('youtu.be')) {
+      final videoId = YoutubePlayer.convertUrlToId(url);
+      if (videoId != null) {
+        _youtubeController = YoutubePlayerController(
+          initialVideoId: videoId,
+          flags: const YoutubePlayerFlags(
+            autoPlay: true,
+            mute: false,
+          ),
+        )..addListener(_onYoutubePlayerStateChange);
+      }
+      setState(() {});
+    } else {
+      _videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(url));
+      _videoPlayerController!.initialize().then((_) {
+        if (mounted) {
+          _chewieController = ChewieController(
+            videoPlayerController: _videoPlayerController!,
+            autoPlay: true,
+            looping: false,
+            aspectRatio: _videoPlayerController!.value.aspectRatio,
+            errorBuilder: (context, errorMessage) {
+              return Center(
+                child: Text(
+                  errorMessage,
+                  style: const TextStyle(color: Colors.white),
+                ),
+              );
+            },
+          );
+          _videoPlayerController!.addListener(_onVideoPlayerStateChange);
+          setState(() {});
+        }
+      }).catchError((error) {
+        debugPrint('Video initialization error: $error');
+      });
+    }
+  }
+
+  void _onVideoPlayerStateChange() {
+    if (_videoPlayerController == null) return;
+    final position = _videoPlayerController!.value.position.inSeconds;
+    final duration = _videoPlayerController!.value.duration.inSeconds;
+
+    if (position != _lastReportedSecond) {
+      _lastReportedSecond = position;
+      widget.onProgressChanged(position, duration);
+    }
+
+    if (_videoPlayerController!.value.position >=
+            _videoPlayerController!.value.duration &&
+        _videoPlayerController!.value.duration != Duration.zero) {
+      widget.onCompleted();
+    }
+  }
+
+  void _onYoutubePlayerStateChange() {
+    if (_youtubeController == null) return;
+    final position = _youtubeController!.value.position.inSeconds;
+    final duration = _youtubeController!.metadata.duration.inSeconds;
+
+    if (position != _lastReportedSecond) {
+      _lastReportedSecond = position;
+      widget.onProgressChanged(position, duration);
+    }
+
+    if (_youtubeController!.value.playerState == PlayerState.ended) {
+      widget.onCompleted();
+    }
+  }
+
+  void _disposeControllers() {
+    _videoPlayerController?.removeListener(_onVideoPlayerStateChange);
+    _videoPlayerController?.dispose();
+    _chewieController?.dispose();
+    _youtubeController?.removeListener(_onYoutubePlayerStateChange);
+    _youtubeController?.dispose();
+    _videoPlayerController = null;
+    _chewieController = null;
+    _youtubeController = null;
+  }
+
+  @override
+  void dispose() {
+    _disposeControllers();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +219,7 @@ final class VideoPlayerPagePage extends StatelessWidget {
                   duration: const Duration(milliseconds: 800),
                   delay: const Duration(milliseconds: 100),
                   child: Text(
-                    title,
+                    widget.title,
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w900,
@@ -118,13 +242,13 @@ final class VideoPlayerPagePage extends StatelessWidget {
     BuildContext context,
     dynamic t,
   ) {
-    if (errorMessage != null) {
+    if (widget.errorMessage != null) {
       return AppErrorView(
-        message: errorMessage!,
+        message: widget.errorMessage!,
       );
     }
 
-    if (isLoading) {
+    if (widget.isLoading) {
       return Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
@@ -136,7 +260,8 @@ final class VideoPlayerPagePage extends StatelessWidget {
                 padding: const EdgeInsets.all(32),
                 decoration: BoxDecoration(
                   color: context.backgroundSecondaryColor,
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(40)),
+                  borderRadius:
+                      const BorderRadius.vertical(top: Radius.circular(40)),
                 ),
                 child: Column(
                   children: List.generate(
@@ -154,7 +279,6 @@ final class VideoPlayerPagePage extends StatelessWidget {
       );
     }
 
-    // Video Player Placeholder
     return Column(
       children: [
         Padding(
@@ -179,114 +303,9 @@ final class VideoPlayerPagePage extends StatelessWidget {
                   ],
                 ),
                 clipBehavior: Clip.antiAlias,
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    // Gradient Background
-                    Container(
-                      decoration: BoxDecoration(
-                        gradient: RadialGradient(
-                          colors: [
-                            context.brandPrimaryColor.withValues(alpha: 0.25),
-                            Colors.transparent,
-                          ],
-                          radius: 1.2,
-                        ),
-                      ),
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ZoomIn(
-                          duration: const Duration(milliseconds: 600),
-                          child: Container(
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.15),
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                color: Colors.white.withValues(alpha: 0.25),
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: context.brandPrimaryColor.withValues(
-                                    alpha: 0.3,
-                                  ),
-                                  blurRadius: 20,
-                                ),
-                              ],
-                            ),
-                            child: const Icon(
-                              Icons.play_arrow_rounded,
-                              size: 64,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                        const Gap(24),
-                        Text(
-                          context.t.course.player.title,
-                          style: TextStyle(
-                            color: Colors.white.withValues(alpha: 0.6),
-                            fontSize: 12,
-                            fontWeight: FontWeight.w900,
-                            letterSpacing: 1.5,
-                          ),
-                        ),
-                      ],
-                    ),
-                    // Progress Overlay
-                    Positioned(
-                      bottom: 0,
-                      left: 0,
-                      right: 0,
-                      child: Container(
-                        padding: const EdgeInsets.fromLTRB(20, 40, 20, 20),
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              Colors.transparent,
-                              Colors.black.withValues(alpha: 0.9),
-                            ],
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                          ),
-                        ),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(6),
-                                child: LinearProgressIndicator(
-                                  value: totalDurationSeconds > 0
-                                      ? currentPositionSeconds /
-                                          totalDurationSeconds
-                                      : 0,
-                                  minHeight: 6,
-                                  backgroundColor: Colors.white.withValues(
-                                    alpha: 0.15,
-                                  ),
-                                  valueColor: AlwaysStoppedAnimation(
-                                    context.brandPrimaryColor,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const Gap(24),
-                            Text(
-                              '${_formatTime(currentPositionSeconds)} / ${_formatTime(totalDurationSeconds)}',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 11,
-                                fontWeight: FontWeight.w900,
-                                letterSpacing: 1.0,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
+                child: MentorXSecuredMediaWrapper(
+                  watermarkText: widget.watermarkText,
+                  child: _buildPlayer(context),
                 ),
               ),
             ),
@@ -332,7 +351,7 @@ final class VideoPlayerPagePage extends StatelessWidget {
                           children: [
                             Expanded(
                               child: Text(
-                                title,
+                                widget.title,
                                 style: TextStyle(
                                   fontSize: 24,
                                   fontWeight: FontWeight.w900,
@@ -341,7 +360,7 @@ final class VideoPlayerPagePage extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            if (isCompleted)
+                            if (widget.isCompleted)
                               Container(
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 14,
@@ -353,7 +372,8 @@ final class VideoPlayerPagePage extends StatelessWidget {
                                   ),
                                   borderRadius: BorderRadius.circular(12),
                                   border: Border.all(
-                                    color: context.statusSuccessColor.withValues(
+                                    color: context.statusSuccessColor
+                                        .withValues(
                                       alpha: 0.1,
                                     ),
                                   ),
@@ -367,7 +387,8 @@ final class VideoPlayerPagePage extends StatelessWidget {
                                     ),
                                     const Gap(8),
                                     Text(
-                                      context.t.course.player.completed.toUpperCase(),
+                                      context.t.course.player.completed
+                                          .toUpperCase(),
                                       style: TextStyle(
                                         color: context.statusSuccessColor,
                                         fontSize: 10,
@@ -383,13 +404,13 @@ final class VideoPlayerPagePage extends StatelessWidget {
                         const Gap(40),
                         _InfoTile(
                           label: t['videoDuration'] ?? 'Duration',
-                          value: _formatTime(totalDurationSeconds),
+                          value: _formatTime(widget.totalDurationSeconds),
                           icon: Icons.timer_rounded,
                         ),
                         const Gap(16),
                         _InfoTile(
                           label: t['videoStatus'] ?? 'Status',
-                          value: isCompleted
+                          value: widget.isCompleted
                               ? (t['videoCompleted'] ?? 'Completed')
                               : (t['videoWatching'] ?? 'Watching'),
                           icon: Icons.info_outline_rounded,
@@ -403,6 +424,24 @@ final class VideoPlayerPagePage extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildPlayer(BuildContext context) {
+    if (_youtubeController != null) {
+      return YoutubePlayer(
+        controller: _youtubeController!,
+        showVideoProgressIndicator: true,
+        progressIndicatorColor: context.brandPrimaryColor,
+      );
+    }
+
+    if (_chewieController != null) {
+      return Chewie(controller: _chewieController!);
+    }
+
+    return const Center(
+      child: CircularProgressIndicator(),
     );
   }
 

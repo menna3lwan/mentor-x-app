@@ -31,7 +31,13 @@ class _ProfileViewPageWrapperState extends State<ProfileViewPageWrapper> {
           final session = context.select<AppSessionCubit, AppSessionState>(
             (cubit) => cubit.state,
           );
-          return ProfileViewPage(session: session);
+          final user = context.select<AppAuthenticationCubit, StudentEntity?>(
+            (cubit) => cubit.state,
+          );
+          return ProfileViewPage(
+            session: session,
+            avatarUrl: user?.profileImageUrl,
+          );
         },
       ),
     );

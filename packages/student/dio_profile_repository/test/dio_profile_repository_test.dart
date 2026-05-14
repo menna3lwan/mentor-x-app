@@ -94,16 +94,17 @@ void main() {
       test('returns ProfileEditRequestEntity on success', () async {
         final mockData = {
           'id': 'req1',
-          'field_name': 'firstName',
-          'old_value': 'Old Name',
-          'new_value': 'New Name',
+          'fieldName': 'firstName',
+          'oldValue': 'Old Name',
+          'newValue': 'New Name',
           'status': 'pending',
-          'created_at': DateTime.now().toIso8601String(),
+          'createdAt': DateTime.now().toIso8601String(),
         };
 
         when(() => httpClient.post(
-          '/api/student/profile/edit-requests',
+          '/api/student/profile',
           data: any(named: 'data'),
+          queryParameters: any(named: 'queryParameters'),
         )).thenAnswer((_) async => HttpClientResponse(
           data: mockData,
           statusCode: 200,

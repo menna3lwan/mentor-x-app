@@ -23,16 +23,16 @@ class StatCard extends StatelessWidget {
     final textSecondary = theme.colors[$mentorxToken.color.textSecondary]!;
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: backgroundSecondary,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: backgroundElevatedSurfaceShadow.withValues(alpha: 0.1)),
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: textPrimary.withValues(alpha: 0.05)),
         boxShadow: [
           BoxShadow(
-            color: backgroundElevatedSurfaceShadow.withValues(alpha: 0.06),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
+            color: backgroundElevatedSurfaceShadow.withValues(alpha: 0.8),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
@@ -40,30 +40,32 @@ class StatCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            width: 40,
-            height: 40,
+            width: 48,
+            height: 48,
             decoration: BoxDecoration(
               color: iconColor.withValues(alpha: 0.1),
-              shape: BoxShape.circle,
+              borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(icon, size: 20, color: iconColor),
+            child: Icon(icon, size: 24, color: iconColor),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 14),
           Text(
             value,
             style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.w800,
+              fontSize: 26,
+              fontWeight: FontWeight.w900,
               color: textPrimary,
+              letterSpacing: -0.5,
             ),
           ),
-          const SizedBox(height: 2),
+          const SizedBox(height: 4),
           Text(
             label,
             style: TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.w600,
+              fontSize: 12,
+              fontWeight: FontWeight.w700,
               color: textSecondary,
+              letterSpacing: 0.2,
             ),
             textAlign: TextAlign.center,
           ),

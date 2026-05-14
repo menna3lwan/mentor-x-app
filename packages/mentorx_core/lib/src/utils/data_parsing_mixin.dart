@@ -7,6 +7,16 @@ mixin DataParsingMixin {
     if (value is Map) {
       return value.map((key, val) => MapEntry(key.toString(), val));
     }
+    if (value is String && value.isNotEmpty) {
+      try {
+        final decoded = jsonDecode(value);
+        if (decoded is Map) {
+          return decoded.map((key, val) => MapEntry(key.toString(), val));
+        }
+      } catch (_) {
+        // Not a valid JSON string
+      }
+    }
     return <String, dynamic>{};
   }
 
@@ -30,17 +40,29 @@ mixin DataParsingMixin {
       final d = value['data'] ??
           value['items'] ??
           value['content'] ??
-          value['entries'];
-      if (d is List<dynamic>) return d;
+          value['entries'] ??
+          value['rankings'] ??
+          value['results'];
+      if (d is List<dynamic> && d.isNotEmpty) return d;
 
       // 2. Deep check for nested data.content or data.items
       if (d is Map) {
-        final nested =
-            d['content'] ?? d['items'] ?? d['entries'] ?? d['data'];
+        final nested = d['content'] ??
+            d['items'] ??
+            d['entries'] ??
+            d['rankings'] ??
+            d['data'] ??
+            d['results'];
         if (nested is List<dynamic>) return nested;
       }
 
-      // 3. Fallback: if value itself is the list we want (handled by first if)
+      // 3. Last resort: search for ANY non-empty list
+      for (final val in value.values) {
+        if (val is List<dynamic> && val.isNotEmpty) return val;
+      }
+
+      // 4. Fallback: if value itself is the list we want (handled by first if)
+      if (d is List<dynamic>) return d;
     }
     return <dynamic>[];
   }

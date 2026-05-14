@@ -68,9 +68,9 @@ Common tasks are often wrapped in `makefile` files within the app directories (`
 ## 🎨 Design & UI Conventions
 
 - **Colors:**
-  - Primary: Oxford Blue (`#183764`)
-  - Accent: Pumpkin Orange (`#F59239`)
-  - Secondary: Teal Green (`#4BBBA0`)
+  - Primary Blue: `#1E3ABA`
+  - Accent Warm: `#FF9F1C`
+  - Secondary Green: `#2EC4B6`
 - **UI Kit:** Always prefer components from `packages/mentorx_ui`.
 - **Styling:** Use `Mix` primitives rather than raw `Container` or `DecoratedBox` whenever possible to maintain theme consistency.
 - **Assets:** Access assets via the generated `AppAssets` class (from `flutter_gen`).

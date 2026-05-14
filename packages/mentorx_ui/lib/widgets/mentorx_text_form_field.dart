@@ -75,7 +75,7 @@ class _MentorXTextFormFieldState extends State<MentorXTextFormField> {
         labelText: widget.label,
         labelStyle: context.bodyPrimaryStyle.copyWith(
           color: context.textSecondaryColor,
-          fontWeight: FontWeight.w500,
+          fontWeight: FontWeight.w600,
         ),
         hintText: widget.hintText ?? widget.hint,
         errorText: widget.errorText,
@@ -85,23 +85,23 @@ class _MentorXTextFormFieldState extends State<MentorXTextFormField> {
         ),
         errorStyle: context.smallTextStyle.copyWith(
           color: context.statusDangerColor,
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.w700,
         ),
         filled: true,
         fillColor: context.backgroundSecondaryColor,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 20,
-          vertical: 20,
+          vertical: 22,
         ),
         prefixIcon: (widget.prefixIcon ?? widget.icon) != null
-            ? Icon(widget.prefixIcon ?? widget.icon, color: context.textSecondaryColor, size: 20)
+            ? Icon(widget.prefixIcon ?? widget.icon, color: context.brandPrimaryColor.withValues(alpha: 0.7), size: 22)
             : null,
         suffixIcon: widget.isPassword
             ? IconButton(
                 icon: Icon(
                   effectiveObscure ? Icons.visibility_off_rounded : Icons.visibility_rounded,
                   color: context.textSecondaryColor,
-                  size: 20,
+                  size: 22,
                 ),
                 onPressed: () {
                   if (widget.onObscureTextToggled != null) {
@@ -115,7 +115,7 @@ class _MentorXTextFormFieldState extends State<MentorXTextFormField> {
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(20),
           borderSide: BorderSide(
-            color: context.borderPrimaryColor.withValues(alpha: 0.1),
+            color: context.brandPrimaryColor.withValues(alpha: 0.08),
             width: 1.5,
           ),
         ),
@@ -123,13 +123,13 @@ class _MentorXTextFormFieldState extends State<MentorXTextFormField> {
           borderRadius: BorderRadius.circular(20),
           borderSide: BorderSide(
             color: context.brandPrimaryColor,
-            width: 1.5,
+            width: 2.0,
           ),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(20),
           borderSide: BorderSide(
-            color: context.statusDangerColor.withValues(alpha: 0.5),
+            color: context.statusDangerColor.withValues(alpha: 0.3),
             width: 1.5,
           ),
         ),
@@ -137,7 +137,7 @@ class _MentorXTextFormFieldState extends State<MentorXTextFormField> {
           borderRadius: BorderRadius.circular(20),
           borderSide: BorderSide(
             color: context.statusDangerColor,
-            width: 1.5,
+            width: 2.0,
           ),
         ),
         disabledBorder: OutlineInputBorder(

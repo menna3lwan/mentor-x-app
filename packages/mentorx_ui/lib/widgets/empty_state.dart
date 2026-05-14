@@ -26,17 +26,17 @@ class EmptyState extends StatelessWidget {
               width: 80,
               height: 80,
               decoration: BoxDecoration(
-                color: AppColors.greyLight,
+                color: MentorXThemeColorPalette.greyLight,
                 shape: BoxShape.circle,
               ),
-              child: Icon(icon, size: 36, color: AppColors.grey),
+              child: Icon(icon, size: 36, color: MentorXThemeColorPalette.grey),
             ),
             const SizedBox(height: 16),
             Text(
               message,
               style: const TextStyle(
                 fontSize: 14,
-                color: AppColors.greyDark,
+                color: MentorXThemeColorPalette.greyDark,
                 fontWeight: FontWeight.w500,
               ),
               textAlign: TextAlign.center,
