@@ -25,6 +25,7 @@ final class QuickActionsGridWidget extends StatelessWidget {
         context.t.home.dashboard.actions.analytics,
         Icons.insights_rounded,
       ),
+      ('Leaderboard', Icons.emoji_events_rounded),
     ];
 
     return GridView.builder(

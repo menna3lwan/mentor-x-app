@@ -76,8 +76,56 @@ final class HomeHeaderWidget extends StatelessWidget {
             ),
           ),
           const Gap(12),
+          _LeaderboardButton(),
+          const Gap(12),
           _NotificationButton(unreadCount: unreadCount),
         ],
+      ),
+    );
+  }
+}
+
+final class _LeaderboardButton extends StatelessWidget {
+  const _LeaderboardButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 52,
+      height: 52,
+      decoration: BoxDecoration(
+        color: context.backgroundSecondaryColor.withValues(alpha: 0.45),
+        shape: BoxShape.circle,
+        border: Border.all(
+          color: context.borderPrimaryColor.withValues(alpha: 0.08),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.03),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(26),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () => const LeaderboardPageRoute().push(context),
+              borderRadius: BorderRadius.circular(26),
+              child: Center(
+                child: Icon(
+                  Icons.emoji_events_outlined,
+                  color: context.brandSecondaryColor,
+                  size: 26,
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

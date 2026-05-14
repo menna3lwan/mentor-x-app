@@ -48,6 +48,12 @@ final class HomePagePage extends StatelessWidget {
                       child: const WalletQuickViewCardWrapper(),
                     ),
                     const Gap(32),
+                    FadeInUp(
+                      duration: const Duration(milliseconds: 600),
+                      delay: const Duration(milliseconds: 150),
+                      child: const LeaderboardShortcutCardWidget(),
+                    ),
+                    const Gap(32),
                     _buildQuickActions(context),
                     const Gap(32),
                     FadeInUp(
@@ -139,6 +145,9 @@ final class HomePagePage extends StatelessWidget {
                   return;
                 case 7:
                   const AnalyticsDashboardPageRoute().push(context);
+                  return;
+                case 8:
+                  const LeaderboardPageRoute().push(context);
                   return;
                 default:
                   return;

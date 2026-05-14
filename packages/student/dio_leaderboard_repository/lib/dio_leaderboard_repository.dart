@@ -86,8 +86,8 @@ final class DioLeaderboardRepository
         queryParameters: queryParams,
       );
 
-      final dataMap = asMap(response.data)['data'] ?? asMap(response.data);
-      final entriesList = asList(dataMap['entries'] ?? dataMap['content'] ?? dataMap);
+      final dataMap = ModelParser.extractData(response.data);
+      final entriesList = ModelParser.asList(dataMap);
 
       return entriesList.map((e) => LeaderboardEntryModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {

@@ -50,6 +50,7 @@ final class HomeAsyncSection<T> extends Equatable {
 
 final class HomePageState extends Equatable {
   final String studentName;
+  final String? avatarUrl;
   final bool isRefreshing;
   final DateTime? lastUpdatedAt;
 
@@ -69,12 +70,17 @@ final class HomePageState extends Equatable {
     required this.continueLearningSection,
     required this.featuredCoursesSection,
     required this.announcementsSection,
+    this.avatarUrl,
     this.lastUpdatedAt,
   });
 
-  factory HomePageState.initial({required String studentName}) {
+  factory HomePageState.initial({
+    required String studentName,
+    String? avatarUrl,
+  }) {
     return HomePageState(
       studentName: studentName,
+      avatarUrl: avatarUrl,
       isRefreshing: false,
       walletSection: const HomeAsyncSection.initial(),
       unreadCountSection: const HomeAsyncSection.initial(),
@@ -95,6 +101,7 @@ final class HomePageState extends Equatable {
 
   HomePageState copyWith({
     String? studentName,
+    String? avatarUrl,
     bool? isRefreshing,
     DateTime? lastUpdatedAt,
     HomeAsyncSection<WalletSummaryEntity>? walletSection,
@@ -106,6 +113,7 @@ final class HomePageState extends Equatable {
   }) {
     return HomePageState(
       studentName: studentName ?? this.studentName,
+      avatarUrl: avatarUrl ?? this.avatarUrl,
       isRefreshing: isRefreshing ?? this.isRefreshing,
       lastUpdatedAt: lastUpdatedAt ?? this.lastUpdatedAt,
       walletSection: walletSection ?? this.walletSection,
@@ -122,6 +130,7 @@ final class HomePageState extends Equatable {
   @override
   List<Object?> get props => [
     studentName,
+    avatarUrl,
     isRefreshing,
     lastUpdatedAt,
     walletSection,

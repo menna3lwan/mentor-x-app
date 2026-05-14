@@ -127,8 +127,10 @@ final class QuizAttemptModel extends QuizAttemptEntity {
     required super.passed,
     required super.startedAt,
     super.submittedAt,
+    super.expiresAt,
     super.timeSpentSeconds = 0,
   });
+
 
   factory QuizAttemptModel.fromJson(Map<String, dynamic> json) {
     final data = ModelParser.extractData(json);
@@ -136,6 +138,7 @@ final class QuizAttemptModel extends QuizAttemptEntity {
     final bool isSubmitted = ModelParser.asBool(data['submitted']);
     final startedAt = ModelParser.asDateTime(data['startedAt'] ?? data['started_at']);
     final submittedAt = ModelParser.asDateTime(data['submittedAt'] ?? data['submitted_at']);
+    final expiresAt = ModelParser.asDateTime(data['expiresAt'] ?? data['expires_at']);
     
     int timeSpent = ModelParser.asInt(data['timeSpentSeconds'] ?? data['time_spent_seconds']);
     if (timeSpent == 0 && startedAt != null && submittedAt != null) {
@@ -156,8 +159,10 @@ final class QuizAttemptModel extends QuizAttemptEntity {
       passed: ModelParser.asBool(data['passed']),
       startedAt: startedAt ?? DateTime.now(),
       submittedAt: submittedAt,
+      expiresAt: expiresAt,
       timeSpentSeconds: timeSpent,
     );
+
   }
 
   static Map<String, String> _parseAnswers(dynamic json) {

@@ -16,6 +16,7 @@ class QuizAttemptEntity extends Equatable {
   final bool passed;
   final DateTime startedAt;
   final DateTime? submittedAt;
+  final DateTime? expiresAt;
   final int timeSpentSeconds;
 
   const QuizAttemptEntity({
@@ -32,6 +33,7 @@ class QuizAttemptEntity extends Equatable {
     required this.passed,
     required this.startedAt,
     this.submittedAt,
+    this.expiresAt,
     this.timeSpentSeconds = 0,
   });
 
@@ -62,6 +64,7 @@ class QuizAttemptEntity extends Equatable {
         passed,
         startedAt,
         submittedAt,
+        expiresAt,
         timeSpentSeconds,
       ];
 
@@ -79,6 +82,7 @@ class QuizAttemptEntity extends Equatable {
     bool? passed,
     DateTime? startedAt,
     DateTime? submittedAt,
+    DateTime? expiresAt,
     int? timeSpentSeconds,
   }) {
     return QuizAttemptEntity(
@@ -95,7 +99,9 @@ class QuizAttemptEntity extends Equatable {
       passed: passed ?? this.passed,
       startedAt: startedAt ?? this.startedAt,
       submittedAt: submittedAt ?? this.submittedAt,
+      expiresAt: expiresAt ?? this.expiresAt,
       timeSpentSeconds: timeSpentSeconds ?? this.timeSpentSeconds,
     );
   }
 }
+

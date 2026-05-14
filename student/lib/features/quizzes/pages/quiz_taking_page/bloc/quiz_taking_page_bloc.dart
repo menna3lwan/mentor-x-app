@@ -52,12 +52,25 @@ final class QuizTakingPageBloc
       final (attempt, questions) =
           startResult as (QuizAttemptEntity, List<QuizQuestionEntity>);
 
+      int? remainingSeconds;
+      if (quizEntity.timeRestricted) {
+        if (attempt.expiresAt != null) {
+          remainingSeconds = attempt.expiresAt!.difference(DateTime.now()).inSeconds;
+        } else {
+          remainingSeconds = quizEntity.durationMinutes * 60;
+        }
+        // Ensure we don't have negative time
+        if (remainingSeconds < 0) remainingSeconds = 0;
+      }
+
+
       analyticsService.logEvent(
         name: AnalyticsEvents.quizStarted,
         parameters: {
           AnalyticsParams.quizId: state.quizId,
           AnalyticsParams.name: quizEntity.title,
           'attempt_id': attempt.id,
+          'remaining_seconds': remainingSeconds,
         },
       );
 
@@ -68,8 +81,10 @@ final class QuizTakingPageBloc
           attemptId: attempt.id,
           questions: questions.isNotEmpty ? questions : quizEntity.questions,
           answers: attempt.answers,
+          remainingSeconds: remainingSeconds,
         ),
       );
+
     } catch (e) {
       emit(
         state.copyWith(

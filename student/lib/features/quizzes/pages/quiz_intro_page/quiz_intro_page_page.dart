@@ -94,12 +94,17 @@ final class QuizIntroPage extends StatelessWidget {
                               duration: const Duration(milliseconds: 600),
                               delay: const Duration(milliseconds: 400),
                               child: MentorXButton(
-                                label: t['startQuiz']!,
+                                label: state.activeAttempt != null &&
+                                        state.activeAttempt!.status ==
+                                            QuizAttemptStatus.inProgress
+                                    ? t['resumeQuiz'] ?? 'Resume Quiz'
+                                    : t['startQuiz']!,
                                 onPressed: () => QuizTakingPageRoute(
                                   quizId: quiz.id,
                                 ).push(context),
                               ),
                             ),
+
                             const Gap(16),
                             FadeInUp(
                               duration: const Duration(milliseconds: 600),

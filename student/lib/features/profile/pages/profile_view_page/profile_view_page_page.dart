@@ -9,13 +9,16 @@ import 'package:animate_do/animate_do.dart';
 import 'package:gap/gap.dart';
 
 final class ProfileViewPage extends StatelessWidget {
-  const ProfileViewPage({super.key});
+  final AppSessionState session;
+
+  const ProfileViewPage({
+    super.key,
+    required this.session,
+  });
 
   @override
   Widget build(BuildContext context) {
     final t = context.t.student;
-    final session = context.watch<AppSessionCubit>().state;
-    final isAr = context.isArabic;
 
     return Scaffold(
       backgroundColor: context.backgroundPrimaryColor,
@@ -25,7 +28,7 @@ final class ProfileViewPage extends StatelessWidget {
           CustomScrollView(
             physics: const BouncingScrollPhysics(),
             slivers: [
-              _ProfileHeader(session: session, isAr: isAr),
+              _ProfileHeader(session: session),
               SliverToBoxAdapter(
                 child: Padding(
                   padding:
@@ -45,7 +48,6 @@ final class ProfileViewPage extends StatelessWidget {
                         delay: const Duration(milliseconds: 100),
                         child: _PersonalDetails(
                           session: session,
-                          isAr: isAr,
                           t: t,
                         ),
                       ),
@@ -71,10 +73,8 @@ final class ProfileViewPage extends StatelessWidget {
 final class _ProfileHeader extends StatelessWidget {
   const _ProfileHeader({
     required this.session,
-    required this.isAr,
   });
   final AppSessionState session;
-  final bool isAr;
 
   @override
   Widget build(BuildContext context) {
@@ -184,7 +184,7 @@ final class _ProfileHeader extends StatelessWidget {
                 FadeInUp(
                   duration: const Duration(milliseconds: 700),
                   child: Text(
-                    isAr ? session.studentNameAr : session.studentName,
+                    context.isArabic ? session.studentNameAr : session.studentName,
                     style: TextStyle(
                       fontSize: 30,
                       fontWeight: FontWeight.w900,
@@ -374,11 +374,9 @@ final class _StatItem extends StatelessWidget {
 final class _PersonalDetails extends StatelessWidget {
   const _PersonalDetails({
     required this.session,
-    required this.isAr,
     required this.t,
   });
   final AppSessionState session;
-  final bool isAr;
   final dynamic t;
 
   @override
@@ -418,7 +416,7 @@ final class _PersonalDetails extends StatelessWidget {
               _DetailRow(
                 icon: Icons.person_outline_rounded,
                 label: t['name'],
-                value: isAr ? session.studentNameAr : session.studentName,
+                value: context.isArabic ? session.studentNameAr : session.studentName,
               ),
               _DetailRow(
                 icon: Icons.phone_android_rounded,
@@ -428,17 +426,17 @@ final class _PersonalDetails extends StatelessWidget {
               _DetailRow(
                 icon: Icons.school_outlined,
                 label: t['grade'],
-                value: isAr ? session.gradeAr : session.grade,
+                value: context.isArabic ? session.gradeAr : session.grade,
               ),
               _DetailRow(
                 icon: Icons.business_rounded,
                 label: t['center'],
-                value: isAr ? session.centerAr : session.center,
+                value: context.isArabic ? session.centerAr : session.center,
               ),
               _DetailRow(
                 icon: Icons.account_balance_rounded,
                 label: t['school'],
-                value: isAr ? session.schoolAr : session.school,
+                value: context.isArabic ? session.schoolAr : session.school,
                 isLast: true,
               ),
             ],

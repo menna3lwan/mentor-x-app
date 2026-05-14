@@ -26,9 +26,9 @@ final class _QuizTakingPageState extends State<QuizTakingPage> {
     super.dispose();
   }
 
-  void _startTimer(int minutes) {
+  void _startTimer(int seconds) {
     if (_timerInitialized) return;
-    _remainingSeconds = minutes * 60;
+    _remainingSeconds = seconds;
     _timerInitialized = true;
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
       if (!mounted) return;
@@ -40,6 +40,7 @@ final class _QuizTakingPageState extends State<QuizTakingPage> {
       setState(() => _remainingSeconds--);
     });
   }
+
 
   String get _timerText {
     final m = _remainingSeconds ~/ 60;
@@ -53,13 +54,14 @@ final class _QuizTakingPageState extends State<QuizTakingPage> {
 
     return BlocConsumer<QuizTakingPageBloc, QuizTakingPageState>(
       listener: (context, state) {
-        if (state.quiz != null && state.quiz!.timeRestricted) {
-          _startTimer(state.quiz!.durationMinutes);
+        if (state.remainingSeconds != null && !_timerInitialized) {
+          _startTimer(state.remainingSeconds!);
         }
         if (state.isSuccess && state.result != null) {
           QuizResultPageRoute(attemptId: state.result!.id).go(context);
         }
       },
+
       builder: (context, state) {
         if (state.isLoading) {
           return Scaffold(
@@ -371,12 +373,13 @@ final class _BuildHeader extends StatelessWidget {
         ),
         content: Text(
           t['exitQuizDesc'] ??
-              'Your progress will not be saved. Are you sure you want to exit?',
+              'Your progress is automatically saved. You can resume this quiz later from the intro page.',
           style: TextStyle(
             color: context.textSecondaryColor,
             fontWeight: FontWeight.w600,
           ),
         ),
+
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),

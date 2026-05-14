@@ -10,8 +10,28 @@ final class AddBalancePageWrapper extends StatefulWidget {
 }
 
 class _AddBalancePageWrapperState extends State<AddBalancePageWrapper> {
+  late final TextEditingController _amountController;
+  late final ValueNotifier<int> _selectedMethodNotifier;
+
+  @override
+  void initState() {
+    super.initState();
+    _amountController = TextEditingController();
+    _selectedMethodNotifier = ValueNotifier<int>(-1);
+  }
+
+  @override
+  void dispose() {
+    _amountController.dispose();
+    _selectedMethodNotifier.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return const AddBalancePage();
+    return AddBalancePage(
+      amountController: _amountController,
+      selectedMethodNotifier: _selectedMethodNotifier,
+    );
   }
 }

@@ -8,6 +8,7 @@ final class QuizTakingPageState extends Equatable {
   final List<QuizQuestionEntity> questions;
   final int currentQuestionIndex;
   final Map<String, String> answers;
+  final int? remainingSeconds;
   final QuizAttemptEntity? result;
   final String? errorMessage;
 
@@ -19,6 +20,7 @@ final class QuizTakingPageState extends Equatable {
     this.questions = const [],
     this.currentQuestionIndex = 0,
     this.answers = const {},
+    this.remainingSeconds,
     this.result,
     this.errorMessage,
   });
@@ -40,6 +42,7 @@ final class QuizTakingPageState extends Equatable {
     questions,
     currentQuestionIndex,
     answers,
+    remainingSeconds,
     result,
     errorMessage,
   ];
@@ -52,6 +55,7 @@ final class QuizTakingPageState extends Equatable {
     List<QuizQuestionEntity>? questions,
     int? currentQuestionIndex,
     Map<String, String>? answers,
+    int? remainingSeconds,
     QuizAttemptEntity? result,
     String? errorMessage,
   }) {
@@ -63,8 +67,10 @@ final class QuizTakingPageState extends Equatable {
       questions: questions ?? this.questions,
       currentQuestionIndex: currentQuestionIndex ?? this.currentQuestionIndex,
       answers: answers ?? this.answers,
+      remainingSeconds: remainingSeconds ?? this.remainingSeconds,
       result: result ?? this.result,
       errorMessage: errorMessage ?? this.errorMessage,
     );
   }
 }
+

@@ -29,12 +29,16 @@ final class ModelParser {
     if (value is List<dynamic>) return value;
     if (value is Map) {
       // 1. Direct check for common list keys
-      final d = value['data'] ?? value['items'] ?? value['content'];
+      final d = value['data'] ??
+          value['items'] ??
+          value['content'] ??
+          value['entries'];
       if (d is List<dynamic>) return d;
 
       // 2. Deep check for nested data.content or data.items
       if (d is Map) {
-        final nested = d['content'] ?? d['items'] ?? d['data'];
+        final nested =
+            d['content'] ?? d['items'] ?? d['entries'] ?? d['data'];
         if (nested is List<dynamic>) return nested;
       }
     }
