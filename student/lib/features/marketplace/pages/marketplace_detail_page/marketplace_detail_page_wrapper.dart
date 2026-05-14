@@ -1,5 +1,10 @@
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mentorx_student/core/core.dart';
+import 'package:mentorx_ui/mentorx_ui.dart';
+import '../../cubit/marketplace_cart_cubit.dart';
 
 import 'bloc/marketplace_detail_page_bloc.dart';
 import 'marketplace_detail_page_page.dart';
@@ -26,7 +31,35 @@ class _MarketplaceDetailPageWrapperState
             Navigator.of(context).pop();
         }
       },
-      child: const MarketplaceDetailPage(),
+      child: Builder(
+        builder: (context) {
+          final loadingState = context.select<MarketplaceDetailPageBloc, LoadingState>(
+            (bloc) => bloc.state.loadingState,
+          );
+          final item = context.select<MarketplaceDetailPageBloc, MarketplaceItemEntity?>(
+            (bloc) => bloc.state.item,
+          );
+
+          return MarketplaceDetailPagePage(
+            loadingState: loadingState,
+            item: item,
+            onRetry: () {
+              if (item?.id != null) {
+                context.read<MarketplaceDetailPageBloc>().add(
+                      MarketplaceDetailPageLoadEvent(item!.id),
+                    );
+              }
+            },
+            onAddToCart: (item) {
+              HapticFeedback.mediumImpact();
+              context.read<MarketplaceCartCubit>().addItem(item);
+              MentorXUI.showToast(
+                message: '${item.title} ${context.t.student['addedToCart'] ?? 'added to cart'}',
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }

@@ -5,7 +5,20 @@ import 'package:mocktail/mocktail.dart';
 import 'package:mentorx_student/core/core.dart';
 import 'package:mentorx_student/features/quizzes/pages/quiz_result_page/bloc/quiz_result_page_bloc.dart';
 
-class MockAnalyticsService extends Mock implements AnalyticsService {}
+class _MockAnalyticsService implements AnalyticsService {
+  @override
+  Future<void> initialize() async {}
+  @override
+  Future<void> logEvent({required String name, Map<String, Object?>? parameters}) async {}
+  @override
+  Future<void> setCurrentScreen({required String screenName, String? screenClassOverride}) async {}
+  @override
+  Future<void> setUserId(String? id) async {}
+  @override
+  Future<void> setUserProperty({required String name, required String? value}) async {}
+  @override
+  Future<void> resetAnalyticsData() async {}
+}
 
 
 class MockQuizRepo extends Mock implements QuizRepository {}
@@ -22,7 +35,7 @@ void main() {
   late MockLeaderboardRepo leaderboardRepository;
 
   setUp(() {
-    analyticsService = MockAnalyticsService();
+    analyticsService = _MockAnalyticsService();
     quizRepository = MockQuizRepo();
     leaderboardRepository = MockLeaderboardRepo();
   });

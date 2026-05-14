@@ -1,5 +1,7 @@
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mentorx_student/core/core.dart';
 
 import 'attendance_qr_page_page.dart';
 import 'bloc/attendance_qr_page_bloc.dart';
@@ -27,7 +29,12 @@ class _AttendanceQrPageWrapperState extends State<AttendanceQrPageWrapper> {
       },
       child: Builder(
         builder: (context) {
-          return const AttendanceQrPage();
+          final studentCode = context.select<AppSessionCubit, String>(
+            (cubit) => cubit.state.studentCode,
+          );
+          final code = studentCode.isNotEmpty ? studentCode : 'NO-CODE';
+
+          return AttendanceQrPagePage(code: code);
         },
       ),
     );

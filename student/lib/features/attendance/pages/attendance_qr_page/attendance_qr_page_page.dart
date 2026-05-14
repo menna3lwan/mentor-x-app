@@ -1,28 +1,24 @@
 import 'dart:ui';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
-import 'package:mentorx_student/core/core.dart';
 
-final class AttendanceQrPage extends StatelessWidget {
-  const AttendanceQrPage({super.key});
+final class AttendanceQrPagePage extends StatelessWidget {
+  final String code;
+
+  const AttendanceQrPagePage({
+    super.key,
+    required this.code,
+  });
 
   @override
   Widget build(BuildContext context) {
     final t = context.t.student;
 
-    return Builder(
-      builder: (context) {
-        final studentCode = context.select<AppSessionCubit, String>(
-          (cubit) => cubit.state.studentCode,
-        );
-        final code = studentCode.isNotEmpty ? studentCode : 'NO-CODE';
-
-        return Scaffold(
-          backgroundColor: context.backgroundPrimaryColor,
+    return Scaffold(
+      backgroundColor: context.backgroundPrimaryColor,
           body: Stack(
             children: [
               const _BackgroundDecorations(),
@@ -136,8 +132,6 @@ final class AttendanceQrPage extends StatelessWidget {
               ),
             ],
           ),
-        );
-      },
     );
   }
 }

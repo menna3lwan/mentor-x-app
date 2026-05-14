@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:gap/gap.dart';
 import 'bloc/whatsapp_groups_page_bloc.dart';
 
 final class WhatsappGroupsPagePage extends StatelessWidget {
+  final bool isLoading;
+  final List<WhatsappGroupUiModel> groups;
+  final String? joinedGroupId;
   final VoidCallback onRefresh;
   final ValueChanged<String> onJoinGroup;
 
   const WhatsappGroupsPagePage({
     super.key,
+    required this.isLoading,
+    required this.groups,
+    this.joinedGroupId,
     required this.onRefresh,
     required this.onJoinGroup,
   });
@@ -20,59 +25,51 @@ final class WhatsappGroupsPagePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = context.t.student;
 
-    return BlocBuilder<WhatsappGroupsPageBloc, WhatsappGroupsPageState>(
-      builder: (context, state) {
-        final isLoading = state.isLoading;
-
-        return Scaffold(
-          backgroundColor: context.backgroundPrimaryColor,
-          appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(70),
-            child: FadeInDown(
-              key: const ValueKey('whatsapp_app_bar_fade'),
-              duration: const Duration(milliseconds: 500),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: context.backgroundSecondaryColor,
-                  borderRadius: const BorderRadius.vertical(
-                    bottom: Radius.circular(28),
-                  ),
-                  border: Border(
-                    bottom: BorderSide(
-                      color: context.borderPrimaryColor.withValues(alpha: 0.05),
-                    ),
-                  ),
-                ),
-                child: MentorXAppBar(
-                  backgroundColor: Colors.transparent,
-                  titleText: t['whatsappGroups'] ?? 'WhatsApp Groups',
+    return Scaffold(
+      backgroundColor: context.backgroundPrimaryColor,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(70),
+        child: FadeInDown(
+          key: const ValueKey('whatsapp_app_bar_fade'),
+          duration: const Duration(milliseconds: 500),
+          child: Container(
+            decoration: BoxDecoration(
+              color: context.backgroundSecondaryColor,
+              borderRadius: const BorderRadius.vertical(
+                bottom: Radius.circular(28),
+              ),
+              border: Border(
+                bottom: BorderSide(
+                  color: context.borderPrimaryColor.withValues(alpha: 0.05),
                 ),
               ),
             ),
+            child: MentorXAppBar(
+              backgroundColor: Colors.transparent,
+              titleText: t['whatsappGroups'] ?? 'WhatsApp Groups',
+            ),
           ),
-          body: RefreshIndicator(
-            onRefresh: () async => onRefresh(),
-            color: context.brandPrimaryColor,
-            backgroundColor: context.backgroundSecondaryColor,
-            child: isLoading
-                ? ListView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-                    itemCount: 4,
-                    itemBuilder: (_, _) => const Padding(
-                      padding: EdgeInsets.only(bottom: 16),
-                      child: MentorXSkeleton(height: 200, borderRadius: 28),
-                    ),
-                  )
-                : _buildList(context, state),
-          ),
-        );
-      },
+        ),
+      ),
+      body: RefreshIndicator(
+        onRefresh: () async => onRefresh(),
+        color: context.brandPrimaryColor,
+        backgroundColor: context.backgroundSecondaryColor,
+        child: isLoading
+            ? ListView.builder(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+                itemCount: 4,
+                itemBuilder: (_, _) => const Padding(
+                  padding: EdgeInsets.only(bottom: 16),
+                  child: MentorXSkeleton(height: 200, borderRadius: 28),
+                ),
+              )
+            : _buildList(context),
+      ),
     );
   }
 
-  Widget _buildList(BuildContext context, WhatsappGroupsPageState state) {
-    final groups = state.groups;
-    final joinedGroupId = state.joinedGroupId;
+  Widget _buildList(BuildContext context) {
 
     return ListView(
       physics: const BouncingScrollPhysics(),

@@ -1,23 +1,32 @@
 import 'dart:ui';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import '../../../../core/core.dart';
-import '../../cubit/marketplace_cart_cubit.dart';
-import 'bloc/marketplace_detail_page_bloc.dart';
 import 'widgets/widgets.dart';
 
-class MarketplaceDetailPage extends StatefulWidget {
-  const MarketplaceDetailPage({super.key});
+final class MarketplaceDetailPagePage extends StatefulWidget {
+  final LoadingState loadingState;
+  final MarketplaceItemEntity? item;
+  final VoidCallback onRetry;
+  final Function(MarketplaceItemEntity) onAddToCart;
+
+  const MarketplaceDetailPagePage({
+    super.key,
+    required this.loadingState,
+    this.item,
+    required this.onRetry,
+    required this.onAddToCart,
+  });
 
   @override
-  State<MarketplaceDetailPage> createState() => _MarketplaceDetailPageState();
+  State<MarketplaceDetailPagePage> createState() =>
+      _MarketplaceDetailPagePageState();
 }
 
-final class _MarketplaceDetailPageState extends State<MarketplaceDetailPage> {
+final class _MarketplaceDetailPagePageState
+    extends State<MarketplaceDetailPagePage> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
@@ -30,16 +39,15 @@ final class _MarketplaceDetailPageState extends State<MarketplaceDetailPage> {
   @override
   Widget build(BuildContext context) {
     final t = context.t.student;
-    final state = context.watch<MarketplaceDetailPageBloc>().state;
 
-    if (state.loadingState == LoadingState.loading) {
+    if (widget.loadingState == LoadingState.loading) {
       return Scaffold(
         backgroundColor: context.backgroundPrimaryColor,
         body: const Center(child: MentorXLogo(size: 100)),
       );
     }
 
-    if (state.loadingState == LoadingState.error || state.item == null) {
+    if (widget.loadingState == LoadingState.error || widget.item == null) {
       return Scaffold(
         backgroundColor: context.backgroundPrimaryColor,
         appBar: AppBar(
@@ -62,20 +70,12 @@ final class _MarketplaceDetailPageState extends State<MarketplaceDetailPage> {
         ),
         body: AppErrorView(
           message: t['errorLoadingProduct'] ?? 'Error loading product',
-          onRetry: () {
-            final itemId =
-                context.read<MarketplaceDetailPageBloc>().state.item?.id;
-            if (itemId != null) {
-              context.read<MarketplaceDetailPageBloc>().add(
-                    MarketplaceDetailPageLoadEvent(itemId),
-                  );
-            }
-          },
+          onRetry: widget.onRetry,
         ),
       );
     }
 
-    final item = state.item!;
+    final item = widget.item!;
 
     return Scaffold(
       backgroundColor: context.backgroundPrimaryColor,
@@ -273,14 +273,7 @@ final class _MarketplaceDetailPageState extends State<MarketplaceDetailPage> {
                 Expanded(
                   child: MentorXButton(
                     onPressed: item.inStock
-                        ? () {
-                            HapticFeedback.mediumImpact();
-                            context.read<MarketplaceCartCubit>().addItem(item);
-                            MentorXUI.showToast(
-                              message:
-                                  '${item.title} ${t['addedToCart'] ?? 'added to cart'}',
-                            );
-                          }
+                        ? () => widget.onAddToCart(item)
                         : null,
                     label: t['addToCart'] ?? 'Add to Cart',
                     icon: Icons.shopping_cart_rounded,

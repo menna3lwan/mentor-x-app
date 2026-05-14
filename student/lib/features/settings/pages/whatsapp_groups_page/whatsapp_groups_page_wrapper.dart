@@ -28,15 +28,32 @@ final class _WhatsappGroupsPageWrapperState
             MentorXUI.showToast(message: message);
         }
       },
-      child: WhatsappGroupsPagePage(
-        onRefresh: () {
-          context.read<WhatsappGroupsPageBloc>().add(
-            const WhatsappGroupsPageRefreshed(),
+      child: Builder(
+        builder: (context) {
+          final isLoading = context.select(
+            (WhatsappGroupsPageBloc bloc) => bloc.state.isLoading,
           );
-        },
-        onJoinGroup: (groupId) {
-          context.read<WhatsappGroupsPageBloc>().add(
-            WhatsappGroupsPageJoinRequested(groupId: groupId),
+          final groups = context.select(
+            (WhatsappGroupsPageBloc bloc) => bloc.state.groups,
+          );
+          final joinedGroupId = context.select(
+            (WhatsappGroupsPageBloc bloc) => bloc.state.joinedGroupId,
+          );
+
+          return WhatsappGroupsPagePage(
+            isLoading: isLoading,
+            groups: groups,
+            joinedGroupId: joinedGroupId,
+            onRefresh: () {
+              context.read<WhatsappGroupsPageBloc>().add(
+                const WhatsappGroupsPageRefreshed(),
+              );
+            },
+            onJoinGroup: (groupId) {
+              context.read<WhatsappGroupsPageBloc>().add(
+                WhatsappGroupsPageJoinRequested(groupId: groupId),
+              );
+            },
           );
         },
       ),

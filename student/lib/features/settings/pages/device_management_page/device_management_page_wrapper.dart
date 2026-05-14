@@ -28,15 +28,40 @@ final class _DeviceManagementPageWrapperState
             MentorXUI.showToast(message: message);
         }
       },
-      child: DeviceManagementPagePage(
-        onRefresh: () {
-          context.read<DeviceManagementPageBloc>().add(
-            const DeviceManagementPageRefreshed(),
+      child: Builder(
+        builder: (context) {
+          final isLoading = context.select(
+            (DeviceManagementPageBloc bloc) => bloc.state.isLoading,
           );
-        },
-        onDeactivateTapped: (deviceId) {
-          context.read<DeviceManagementPageBloc>().add(
-            DeviceManagementPageDeactivateRequested(deviceId: deviceId),
+          final loadingState = context.select(
+            (DeviceManagementPageBloc bloc) => bloc.state.loadingState,
+          );
+          final errorMessage = context.select(
+            (DeviceManagementPageBloc bloc) => bloc.state.errorMessage,
+          );
+          final devices = context.select(
+            (DeviceManagementPageBloc bloc) => bloc.state.devices,
+          );
+          final deactivatingDeviceIds = context.select(
+            (DeviceManagementPageBloc bloc) => bloc.state.deactivatingDeviceIds,
+          );
+
+          return DeviceManagementPagePage(
+            isLoading: isLoading,
+            loadingState: loadingState,
+            errorMessage: errorMessage,
+            devices: devices,
+            deactivatingDeviceIds: deactivatingDeviceIds,
+            onRefresh: () {
+              context.read<DeviceManagementPageBloc>().add(
+                const DeviceManagementPageRefreshed(),
+              );
+            },
+            onDeactivateTapped: (deviceId) {
+              context.read<DeviceManagementPageBloc>().add(
+                DeviceManagementPageDeactivateRequested(deviceId: deviceId),
+              );
+            },
           );
         },
       ),

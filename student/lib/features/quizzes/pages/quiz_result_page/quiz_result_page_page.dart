@@ -1,60 +1,272 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:gap/gap.dart';
 import 'package:mentorx_student/core/core.dart';
 import 'package:flutter/services.dart';
-import 'bloc/quiz_result_page_bloc.dart';
 
-final class QuizResultPage extends StatelessWidget {
-  const QuizResultPage({super.key});
+final class QuizResultPagePage extends StatelessWidget {
+  final LoadingState loadingState;
+  final String? errorMessage;
+  final QuizAttemptEntity? result;
+  final List<LeaderboardEntryEntity> leaderboard;
+  final LeaderboardEntryEntity? myRank;
+  final VoidCallback onRetry;
+
+  const QuizResultPagePage({
+    super.key,
+    required this.loadingState,
+    this.errorMessage,
+    this.result,
+    required this.leaderboard,
+    this.myRank,
+    required this.onRetry,
+  });
 
   @override
   Widget build(BuildContext context) {
     final t = context.t.student;
 
-    return BlocBuilder<QuizResultPageBloc, QuizResultPageState>(
-      builder: (context, state) {
-        final loadingState = state.loadingState;
-        final errorMessage = state.errorMessage;
-        final result = state.result;
-        final leaderboard = state.leaderboard;
-        final myRank = state.myRank;
+    if (loadingState == LoadingState.loading) {
+      return Scaffold(
+        backgroundColor: context.backgroundPrimaryColor,
+        body: Column(
+          children: [
+            const MentorXSkeleton(height: 120, borderRadius: 32),
+            const Gap(32),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Column(
+                  children: [
+                    const Center(
+                      child: MentorXSkeleton(
+                        height: 220,
+                        width: 220,
+                        borderRadius: 110,
+                      ),
+                    ),
+                    const Gap(40),
+                    const MentorXSkeleton(height: 40, borderRadius: 12),
+                    const Gap(12),
+                    const MentorXSkeleton(height: 20, borderRadius: 12),
+                    const Gap(40),
+                    Row(
+                      children: List.generate(
+                        3,
+                        (index) => const Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 4),
+                            child: MentorXSkeleton(height: 100, borderRadius: 24),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
 
-        if (loadingState == LoadingState.loading) {
-          return Scaffold(
-            backgroundColor: context.backgroundPrimaryColor,
-            body: Column(
+    if (errorMessage != null) {
+      return Scaffold(
+        backgroundColor: context.backgroundPrimaryColor,
+        body: AppErrorView(
+          message: errorMessage!,
+          onRetry: onRetry,
+        ),
+      );
+    }
+
+    if (result == null) {
+      return Scaffold(
+        backgroundColor: context.backgroundPrimaryColor,
+        body: AppEmptyView(
+          title: t['resultNotFound'] ?? 'Result not found',
+          message: 'Try again later',
+        ),
+      );
+    }
+
+    final total = result!.totalMarks;
+    final correct = result!.score;
+    final wrong = total - correct;
+    final minutes = result!.timeSpentSeconds ~/ 60;
+    final seconds = result!.timeSpentSeconds % 60;
+    final timeTaken =
+        '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+    final percent = result!.percentage / 100;
+
+    final resultLabel = percent >= 0.85
+        ? t['excellent']!
+        : (percent >= 0.60 ? t['veryGood']! : t['fail']!);
+
+    final statusColor = percent >= 0.60
+        ? context.statusSuccessColor
+        : context.statusDangerColor;
+
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle.light.copyWith(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light,
+      ),
+      child: Scaffold(
+        backgroundColor: context.backgroundPrimaryColor,
+        body: Stack(
+          children: [
+            const _BackgroundDecorations(),
+            Column(
               children: [
-                const MentorXSkeleton(height: 120, borderRadius: 32),
-                const Gap(32),
+                _BuildHeader(t: t),
                 Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    padding: const EdgeInsets.fromLTRB(24, 32, 24, 40),
                     child: Column(
                       children: [
-                        const Center(
-                          child: MentorXSkeleton(
-                            height: 220,
-                            width: 220,
-                            borderRadius: 110,
+                        FadeInDown(
+                          key: const ValueKey('quiz_result_circle_fade'),
+                          duration: const Duration(milliseconds: 800),
+                          child: _BuildResultCircle(
+                            percent: percent,
+                            correct: correct,
+                            total: total,
+                            label: resultLabel,
+                            color: statusColor,
+                            t: t,
                           ),
                         ),
                         const Gap(40),
-                        const MentorXSkeleton(height: 40, borderRadius: 12),
-                        const Gap(12),
-                        const MentorXSkeleton(height: 20, borderRadius: 12),
+                        FadeInUp(
+                          key: const ValueKey('quiz_result_congrats_fade'),
+                          duration: const Duration(milliseconds: 600),
+                          child: Text(
+                            percent >= 0.60
+                                ? t['greatResult']!
+                                : (t['betterLuckNextTime'] ??
+                                    'Better luck next time!'),
+                            style: TextStyle(
+                              fontSize: 26,
+                              fontWeight: FontWeight.w900,
+                              color: context.textPrimaryColor,
+                              letterSpacing: -0.5,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        const Gap(8),
+                        FadeInUp(
+                          key: const ValueKey('quiz_result_score_text_fade'),
+                          duration: const Duration(milliseconds: 600),
+                          delay: const Duration(milliseconds: 300),
+                          child: Text(
+                            '${(percent * 100).toInt()}% - $resultLabel',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w800,
+                              color: context.textTertiaryColor,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
                         const Gap(40),
                         Row(
-                          children: List.generate(
-                            3,
-                            (index) => const Expanded(
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 4),
-                                child: MentorXSkeleton(height: 100, borderRadius: 24),
+                          children: [
+                            Expanded(
+                              child: FadeInUp(
+                                key: const ValueKey('quiz_result_stat_correct_fade'),
+                                duration: const Duration(milliseconds: 500),
+                                delay: const Duration(milliseconds: 400),
+                                child: _StatBox(
+                                  value: '$correct',
+                                  label: t['correctAnswers']!,
+                                  color: context.statusSuccessColor,
+                                ),
+                              ),
+                            ),
+                            const Gap(12),
+                            Expanded(
+                              child: FadeInUp(
+                                key: const ValueKey('quiz_result_stat_wrong_fade'),
+                                duration: const Duration(milliseconds: 500),
+                                delay: const Duration(milliseconds: 500),
+                                child: _StatBox(
+                                  value: '$wrong',
+                                  label: t['wrongAnswers']!,
+                                  color: context.statusDangerColor,
+                                ),
+                              ),
+                            ),
+                            const Gap(12),
+                            Expanded(
+                              child: FadeInUp(
+                                key: const ValueKey('quiz_result_stat_time_fade'),
+                                duration: const Duration(milliseconds: 500),
+                                delay: const Duration(milliseconds: 600),
+                                child: _StatBox(
+                                  value: timeTaken,
+                                  label: t['timeTaken']!,
+                                  color: context.brandSecondaryColor,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const Gap(40),
+                        FadeInUp(
+                          key: const ValueKey('quiz_result_leaderboard_fade'),
+                          duration: const Duration(milliseconds: 600),
+                          delay: const Duration(milliseconds: 700),
+                          child: _BuildLeaderboard(
+                            leaderboard: leaderboard,
+                            myRank: myRank,
+                            t: t,
+                          ),
+                        ),
+                        const Gap(40),
+                        FadeInUp(
+                          key: const ValueKey('quiz_result_review_btn_fade'),
+                          duration: const Duration(milliseconds: 600),
+                          delay: const Duration(milliseconds: 800),
+                          child: MentorXButton(
+                            label: t['reviewAnswers']!,
+                            onPressed: () => context.push(
+                              '/quiz-answers-review',
+                              extra: result,
+                            ),
+                          ),
+                        ),
+                        if (percent >= 0.85) ...[
+                          const Gap(12),
+                          FadeInUp(
+                            key: const ValueKey('quiz_result_claim_btn_fade'),
+                            duration: const Duration(milliseconds: 600),
+                            delay: const Duration(milliseconds: 900),
+                            child: MentorXButton(
+                              label: t['claimReward']!,
+                              color: context.backgroundPrimaryColor,
+                              onPressed: () => context.push('/quiz-rewards',
+                                  extra: result),
+                            ),
+                          ),
+                        ],
+                        const Gap(24),
+                        FadeInUp(
+                          key: const ValueKey('quiz_result_back_btn_fade'),
+                          duration: const Duration(milliseconds: 600),
+                          delay: const Duration(milliseconds: 1000),
+                          child: TextButton(
+                            onPressed: () => context.go('/'),
+                            child: Text(
+                              t['commonBack']!,
+                              style: TextStyle(
+                                color: context.textTertiaryColor,
+                                fontWeight: FontWeight.w800,
                               ),
                             ),
                           ),
@@ -65,226 +277,9 @@ final class QuizResultPage extends StatelessWidget {
                 ),
               ],
             ),
-          );
-        }
-
-        if (errorMessage != null) {
-          return Scaffold(
-            backgroundColor: context.backgroundPrimaryColor,
-            body: AppErrorView(
-              message: errorMessage,
-              onRetry: () {
-                final attemptId = context.read<QuizResultPageBloc>().state.result?.id;
-                if (attemptId != null) {
-                  context.read<QuizResultPageBloc>().add(
-                    QuizResultPageLoadEvent(attemptId: attemptId),
-                  );
-                }
-              },
-            ),
-          );
-        }
-
-        if (result == null) {
-          return Scaffold(
-            backgroundColor: context.backgroundPrimaryColor,
-            body: AppEmptyView(
-              title: t['resultNotFound'] ?? 'Result not found',
-              message: 'Try again later',
-            ),
-          );
-        }
-
-        final total = result.totalMarks;
-        final correct = result.score;
-        final wrong = total - correct;
-        final minutes = result.timeSpentSeconds ~/ 60;
-        final seconds = result.timeSpentSeconds % 60;
-        final timeTaken =
-            '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
-        final percent = result.percentage / 100;
-
-        final resultLabel = percent >= 0.85
-            ? t['excellent']!
-            : (percent >= 0.60 ? t['veryGood']! : t['fail']!);
-
-        final statusColor = percent >= 0.60
-            ? context.statusSuccessColor
-            : context.statusDangerColor;
-
-        return AnnotatedRegion<SystemUiOverlayStyle>(
-          value: SystemUiOverlayStyle.light.copyWith(
-            statusBarColor: Colors.transparent,
-            statusBarIconBrightness: Brightness.light,
-          ),
-          child: Scaffold(
-            backgroundColor: context.backgroundPrimaryColor,
-            body: Stack(
-              children: [
-                const _BackgroundDecorations(),
-                Column(
-                  children: [
-                    _BuildHeader(t: t),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        physics: const BouncingScrollPhysics(),
-                        padding: const EdgeInsets.fromLTRB(24, 32, 24, 40),
-                        child: Column(
-                          children: [
-                            FadeInDown(
-                              key: const ValueKey('quiz_result_circle_fade'),
-                              duration: const Duration(milliseconds: 800),
-                              child: _BuildResultCircle(
-                                percent: percent,
-                                correct: correct,
-                                total: total,
-                                label: resultLabel,
-                                color: statusColor,
-                                t: t,
-                              ),
-                            ),
-                            const Gap(40),
-                            FadeInUp(
-                              key: const ValueKey('quiz_result_congrats_fade'),
-                              duration: const Duration(milliseconds: 600),
-                              delay: const Duration(milliseconds: 200),
-                              child: Text(
-                                percent >= 0.60
-                                    ? t['greatResult']!
-                                    : (t['betterLuckNextTime'] ??
-                                        'Better luck next time!'),
-                                style: TextStyle(
-                                  fontSize: 26,
-                                  fontWeight: FontWeight.w900,
-                                  color: context.textPrimaryColor,
-                                  letterSpacing: -0.5,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                            const Gap(8),
-                            FadeInUp(
-                              key: const ValueKey('quiz_result_score_text_fade'),
-                              duration: const Duration(milliseconds: 600),
-                              delay: const Duration(milliseconds: 300),
-                              child: Text(
-                                '${(percent * 100).toInt()}% - $resultLabel',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w800,
-                                  color: context.textTertiaryColor,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                            const Gap(40),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: FadeInUp(
-                                    key: const ValueKey('quiz_result_stat_correct_fade'),
-                                    duration: const Duration(milliseconds: 500),
-                                    delay: const Duration(milliseconds: 400),
-                                    child: _StatBox(
-                                      value: '$correct',
-                                      label: t['correctAnswers']!,
-                                      color: context.statusSuccessColor,
-                                    ),
-                                  ),
-                                ),
-                                const Gap(12),
-                                Expanded(
-                                  child: FadeInUp(
-                                    key: const ValueKey('quiz_result_stat_wrong_fade'),
-                                    duration: const Duration(milliseconds: 500),
-                                    delay: const Duration(milliseconds: 500),
-                                    child: _StatBox(
-                                      value: '$wrong',
-                                      label: t['wrongAnswers']!,
-                                      color: context.statusDangerColor,
-                                    ),
-                                  ),
-                                ),
-                                const Gap(12),
-                                Expanded(
-                                  child: FadeInUp(
-                                    key: const ValueKey('quiz_result_stat_time_fade'),
-                                    duration: const Duration(milliseconds: 500),
-                                    delay: const Duration(milliseconds: 600),
-                                    child: _StatBox(
-                                      value: timeTaken,
-                                      label: t['timeTaken']!,
-                                      color: context.brandSecondaryColor,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const Gap(40),
-                            FadeInUp(
-                              key: const ValueKey('quiz_result_leaderboard_fade'),
-                              duration: const Duration(milliseconds: 600),
-                              delay: const Duration(milliseconds: 700),
-                              child: _BuildLeaderboard(
-                                leaderboard: leaderboard,
-                                myRank: myRank,
-                                t: t,
-                              ),
-                            ),
-                            const Gap(40),
-                            FadeInUp(
-                              key: const ValueKey('quiz_result_review_btn_fade'),
-                              duration: const Duration(milliseconds: 600),
-                              delay: const Duration(milliseconds: 800),
-                              child: MentorXButton(
-                                label: t['reviewAnswers']!,
-                                onPressed: () => context.push(
-                                  '/quiz-answers-review',
-                                  extra: result,
-                                ),
-                              ),
-                            ),
-                            if (percent >= 0.85) ...[
-                              const Gap(12),
-                              FadeInUp(
-                                key: const ValueKey('quiz_result_claim_btn_fade'),
-                                duration: const Duration(milliseconds: 600),
-                                delay: const Duration(milliseconds: 900),
-                                child: MentorXButton(
-                                  label: t['claimReward']!,
-                                  color: context.backgroundPrimaryColor,
-                                  onPressed: () => context.push('/quiz-rewards',
-                                      extra: result),
-                                ),
-                              ),
-                            ],
-                            const Gap(24),
-                            FadeInUp(
-                              key: const ValueKey('quiz_result_back_btn_fade'),
-                              duration: const Duration(milliseconds: 600),
-                              delay: const Duration(milliseconds: 1000),
-                              child: TextButton(
-                                onPressed: () => context.go('/'),
-                                child: Text(
-                                  t['commonBack']!,
-                                  style: TextStyle(
-                                    color: context.textTertiaryColor,
-                                    fontWeight: FontWeight.w800,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        );
-      },
+          ],
+        ),
+      ),
     );
   }
 }

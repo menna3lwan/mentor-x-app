@@ -1,17 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mentorx_student/core/core.dart';
 import 'package:intl/intl.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:gap/gap.dart';
-import 'bloc/device_management_page_bloc.dart';
 
 final class DeviceManagementPagePage extends StatelessWidget {
+  final bool isLoading;
+  final LoadingState loadingState;
+  final String? errorMessage;
+  final List<DeviceEntity> devices;
+  final Set<String> deactivatingDeviceIds;
   final VoidCallback onRefresh;
   final ValueChanged<String> onDeactivateTapped;
 
   const DeviceManagementPagePage({
     super.key,
+    required this.isLoading,
+    required this.loadingState,
+    this.errorMessage,
+    required this.devices,
+    required this.deactivatingDeviceIds,
     required this.onRefresh,
     required this.onDeactivateTapped,
   });
@@ -20,62 +29,53 @@ final class DeviceManagementPagePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = context.t.student;
 
-    return BlocBuilder<DeviceManagementPageBloc, DeviceManagementPageState>(
-      builder: (context, state) {
-        final isLoading = state.isLoading;
-        final isError = state.loadingState.isError;
-
-        return Scaffold(
-          backgroundColor: context.backgroundPrimaryColor,
-          appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(70),
-            child: FadeInDown(
-              duration: const Duration(milliseconds: 500),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: context.backgroundSecondaryColor,
-                  borderRadius: const BorderRadius.vertical(
-                    bottom: Radius.circular(28),
-                  ),
-                  border: Border(
-                    bottom: BorderSide(
-                      color: context.borderPrimaryColor.withValues(alpha: 0.05),
-                    ),
-                  ),
-                ),
-                child: MentorXAppBar(
-                  backgroundColor: Colors.transparent,
-                  titleText: t['deviceManagement'] ?? 'Device Management',
+    return Scaffold(
+      backgroundColor: context.backgroundPrimaryColor,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(70),
+        child: FadeInDown(
+          duration: const Duration(milliseconds: 500),
+          child: Container(
+            decoration: BoxDecoration(
+              color: context.backgroundSecondaryColor,
+              borderRadius: const BorderRadius.vertical(
+                bottom: Radius.circular(28),
+              ),
+              border: Border(
+                bottom: BorderSide(
+                  color: context.borderPrimaryColor.withValues(alpha: 0.05),
                 ),
               ),
             ),
+            child: MentorXAppBar(
+              backgroundColor: Colors.transparent,
+              titleText: t['deviceManagement'] ?? 'Device Management',
+            ),
           ),
-          body: RefreshIndicator(
-            onRefresh: () async => onRefresh(),
-            color: context.brandPrimaryColor,
-            backgroundColor: context.backgroundSecondaryColor,
-            child: isLoading
-                ? ListView.separated(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-                    itemCount: 3,
-                    separatorBuilder: (_, _) => const Gap(16),
-                    itemBuilder: (_, _) => const MentorXSkeleton(height: 220, borderRadius: 28),
-                  )
-                : isError
-                ? AppErrorView(
-                    message: state.errorMessage ?? 'Unable to load devices.',
-                    onRetry: onRefresh,
-                  )
-                : _buildLoaded(context, state),
-          ),
-        );
-      },
+        ),
+      ),
+      body: RefreshIndicator(
+        onRefresh: () async => onRefresh(),
+        color: context.brandPrimaryColor,
+        backgroundColor: context.backgroundSecondaryColor,
+        child: isLoading
+            ? ListView.separated(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+                itemCount: 3,
+                separatorBuilder: (_, _) => const Gap(16),
+                itemBuilder: (_, _) => const MentorXSkeleton(height: 220, borderRadius: 28),
+              )
+            : loadingState.isError
+            ? AppErrorView(
+                message: errorMessage ?? 'Unable to load devices.',
+                onRetry: onRefresh,
+              )
+            : _buildLoaded(context),
+      ),
     );
   }
 
-
-  Widget _buildLoaded(BuildContext context, DeviceManagementPageState state) {
-    final devices = state.devices;
+  Widget _buildLoaded(BuildContext context) {
     if (devices.isEmpty) {
       return AppEmptyView(
         title: 'No registered devices',
@@ -91,7 +91,7 @@ final class DeviceManagementPagePage extends StatelessWidget {
       separatorBuilder: (_, _) => const Gap(16),
       itemBuilder: (context, index) {
         final device = devices[index];
-        final isDeactivating = state.deactivatingDeviceIds.contains(device.id);
+        final isDeactivating = deactivatingDeviceIds.contains(device.id);
 
         return FadeInUp(
           duration: const Duration(milliseconds: 500),

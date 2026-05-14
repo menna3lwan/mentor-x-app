@@ -35,6 +35,8 @@ final class RedeemCodePageBloc
     RedeemCodePageLoadEvent event,
     Emitter<RedeemCodePageState> emit,
   ) async {
+    emit(state.copyWith(loadingState: LoadingState.loading));
+    // No async work for now, just simulating the pattern
     emit(state.copyWith(loadingState: LoadingState.loaded));
   }
 

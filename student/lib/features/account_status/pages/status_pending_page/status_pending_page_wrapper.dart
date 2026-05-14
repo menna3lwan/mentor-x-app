@@ -44,10 +44,14 @@ final class _StatusPendingPageWrapperState
             const LoginPageRoute().go(context);
         }
       },
-      child: BlocBuilder<StatusPendingPageBloc, StatusPendingPageState>(
-        builder: (context, state) {
-          final studentCode = state.studentCode;
-          final isRefreshing = state.isRefreshing;
+      child: Builder(
+        builder: (context) {
+          final studentCode = context.select(
+            (StatusPendingPageBloc bloc) => bloc.state.studentCode,
+          );
+          final isRefreshing = context.select(
+            (StatusPendingPageBloc bloc) => bloc.state.isRefreshing,
+          );
 
           return StatusPendingPagePage(
             studentCode: studentCode ?? '',

@@ -6,30 +6,37 @@ import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:gap/gap.dart';
 import 'package:mentorx_student/core/core.dart';
-import 'bloc/marketplace_grid_page_bloc.dart';
 import '../../cubit/marketplace_cart_cubit.dart';
 
-final class MarketplaceGridPage extends StatefulWidget {
-  const MarketplaceGridPage({super.key});
+final class MarketplaceGridPagePage extends StatelessWidget {
+  final LoadingState loadingState;
+  final List<MarketplaceItemEntity> items;
+  final List<MarketplaceCategoryEntity> categories;
+  final String? selectedCategoryId;
+  final TextEditingController searchController;
+  final Function(String) onSearchChanged;
+  final Function(String?) onCategorySelected;
+  final VoidCallback onRetry;
+  final VoidCallback onCartPressed;
+  final VoidCallback onOrdersPressed;
 
-  @override
-  State<MarketplaceGridPage> createState() => _MarketplaceGridPageState();
-}
-
-final class _MarketplaceGridPageState extends State<MarketplaceGridPage> {
-  final TextEditingController _searchController = TextEditingController();
-
-  @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
-  }
+  const MarketplaceGridPagePage({
+    super.key,
+    required this.loadingState,
+    required this.items,
+    required this.categories,
+    this.selectedCategoryId,
+    required this.searchController,
+    required this.onSearchChanged,
+    required this.onCategorySelected,
+    required this.onRetry,
+    required this.onCartPressed,
+    required this.onOrdersPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
     final t = context.t.student;
-    final bloc = context.watch<MarketplaceGridPageBloc>();
-    final state = bloc.state;
 
     return Scaffold(
       backgroundColor: context.backgroundPrimaryColor,
@@ -38,7 +45,11 @@ final class _MarketplaceGridPageState extends State<MarketplaceGridPage> {
           const _BackgroundDecorations(),
           Column(
             children: [
-              _BuildHeader(t: t),
+              _BuildHeader(
+                t: t,
+                onCartPressed: onCartPressed,
+                onOrdersPressed: onOrdersPressed,
+              ),
               const Gap(16),
               FadeInDown(
                 duration: const Duration(milliseconds: 400),
@@ -58,16 +69,14 @@ final class _MarketplaceGridPageState extends State<MarketplaceGridPage> {
                       label: t['search'] ?? 'Search',
                       hintText: t['searchProducts'] ?? 'Search products...',
                       prefixIcon: Icons.search_rounded,
-                      controller: _searchController,
-                      onChanged: (value) {
-                        bloc.add(MarketplaceGridPageSearchQueryChangedEvent(value));
-                      },
+                      controller: searchController,
+                      onChanged: onSearchChanged,
                     ),
                   ),
                 ),
               ),
               const Gap(20),
-              if (state.categories.isNotEmpty)
+              if (categories.isNotEmpty)
                 FadeInLeft(
                   duration: const Duration(milliseconds: 400),
                   child: SizedBox(
@@ -76,14 +85,14 @@ final class _MarketplaceGridPageState extends State<MarketplaceGridPage> {
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       scrollDirection: Axis.horizontal,
                       physics: const BouncingScrollPhysics(),
-                      itemCount: state.categories.length + 1,
+                      itemCount: categories.length + 1,
                       separatorBuilder: (_, _) => const Gap(12),
                       itemBuilder: (context, index) {
                         final isAll = index == 0;
-                        final category = isAll ? null : state.categories[index - 1];
+                        final category = isAll ? null : categories[index - 1];
                         final isSelected = isAll
-                            ? state.selectedCategoryId == null
-                            : state.selectedCategoryId == category?.id;
+                            ? selectedCategoryId == null
+                            : selectedCategoryId == category?.id;
 
                         return AnimatedContainer(
                           duration: const Duration(milliseconds: 300),
@@ -92,11 +101,7 @@ final class _MarketplaceGridPageState extends State<MarketplaceGridPage> {
                             selected: isSelected,
                             onSelected: (selected) {
                               if (selected) {
-                                bloc.add(
-                                  MarketplaceGridPageCategorySelectedEvent(
-                                    category?.id,
-                                  ),
-                                );
+                                onCategorySelected(category?.id);
                               }
                             },
                             selectedColor: context.brandPrimaryColor,
@@ -131,7 +136,7 @@ final class _MarketplaceGridPageState extends State<MarketplaceGridPage> {
                 ),
               const Gap(24),
               Expanded(
-                child: state.loadingState == LoadingState.loading
+                child: loadingState == LoadingState.loading
                     ? GridView.builder(
                         padding: const EdgeInsets.fromLTRB(20, 0, 20, 100),
                         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -146,12 +151,12 @@ final class _MarketplaceGridPageState extends State<MarketplaceGridPage> {
                           borderRadius: 28,
                         ),
                       )
-                    : state.loadingState == LoadingState.error
+                    : loadingState == LoadingState.error
                         ? AppErrorView(
                             message: t['errorLoadingProducts'] ?? 'Error loading products',
-                            onRetry: () => bloc.add(const MarketplaceGridPageLoadEvent()),
+                            onRetry: onRetry,
                           )
-                        : state.items.isEmpty
+                        : items.isEmpty
                             ? AppEmptyView(
                                 title: t['noProductsFound'] ?? 'No products found',
                                 message: 'Try again later',
@@ -167,13 +172,13 @@ final class _MarketplaceGridPageState extends State<MarketplaceGridPage> {
                                   mainAxisSpacing: 16,
                                   childAspectRatio: 0.62,
                                 ),
-                                itemCount: state.items.length,
+                                itemCount: items.length,
                                 itemBuilder: (context, index) {
                                   return FadeInUp(
                                     duration: const Duration(milliseconds: 500),
                                     delay: Duration(milliseconds: 50 * index),
                                     child: _ProductCard(
-                                      item: state.items[index],
+                                      item: items[index],
                                       t: t,
                                     ),
                                   );
@@ -190,8 +195,14 @@ final class _MarketplaceGridPageState extends State<MarketplaceGridPage> {
 
 final class _BuildHeader extends StatelessWidget {
   final dynamic t;
+  final VoidCallback onCartPressed;
+  final VoidCallback onOrdersPressed;
 
-  const _BuildHeader({required this.t});
+  const _BuildHeader({
+    required this.t,
+    required this.onCartPressed,
+    required this.onOrdersPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -263,12 +274,11 @@ final class _BuildHeader extends StatelessWidget {
               ),
               MentorXIconButton(
                 icon: Icons.receipt_long_rounded,
-                onPressed: () =>
-                    const MarketplaceOrdersPageRoute().push(context),
+                onPressed: onOrdersPressed,
                 color: context.textPrimaryColor,
                 size: MentorXIconButtonSize.small,
               ),
-              const _CartBadge(),
+              _CartBadge(onPressed: onCartPressed),
             ],
           ),
         ),
@@ -278,7 +288,8 @@ final class _BuildHeader extends StatelessWidget {
 }
 
 final class _CartBadge extends StatelessWidget {
-  const _CartBadge();
+  final VoidCallback onPressed;
+  const _CartBadge({required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -293,7 +304,7 @@ final class _CartBadge extends StatelessWidget {
           children: [
             MentorXIconButton(
               icon: Icons.shopping_cart_outlined,
-              onPressed: () => const MarketplaceCartPageRoute().push(context),
+              onPressed: onPressed,
               color: context.textPrimaryColor,
               size: MentorXIconButtonSize.small,
             ),

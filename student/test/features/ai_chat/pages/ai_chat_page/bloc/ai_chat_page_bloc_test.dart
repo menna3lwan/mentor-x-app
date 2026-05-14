@@ -47,6 +47,7 @@ void main() {
         analyticsService: analyticsService,
       ),
       act: (bloc) => bloc.add(const AiChatPageLoadEvent()),
+      wait: const Duration(milliseconds: 100),
       expect: () => [
         isA<AiChatPageState>().having(
           (s) => s.loadingState,

@@ -1,136 +1,140 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:mentorx_student/core/core.dart';
-import 'package:mentorx_student/features/quizzes/pages/quiz_intro_page/bloc/quiz_intro_page_bloc.dart';
 
-final class QuizIntroPage extends StatelessWidget {
-  const QuizIntroPage({super.key});
+final class QuizIntroPagePage extends StatelessWidget {
+  final LoadingState loadingState;
+  final String? errorMessage;
+  final QuizEntity? quiz;
+  final QuizAttemptEntity? activeAttempt;
+  final VoidCallback onRetry;
+  final VoidCallback onStartResume;
+
+  const QuizIntroPagePage({
+    super.key,
+    required this.loadingState,
+    this.errorMessage,
+    this.quiz,
+    this.activeAttempt,
+    required this.onRetry,
+    required this.onStartResume,
+  });
 
   @override
   Widget build(BuildContext context) {
     final t = context.t.student;
 
-    return BlocBuilder<QuizIntroPageBloc, QuizIntroPageState>(
-      builder: (context, state) {
-        if (state.loadingState == LoadingState.loading) {
-          return Scaffold(
-            backgroundColor: context.backgroundPrimaryColor,
-            body: Column(
+    if (loadingState == LoadingState.loading) {
+      return Scaffold(
+        backgroundColor: context.backgroundPrimaryColor,
+        body: Column(
+          children: [
+            const MentorXSkeleton(height: 250, borderRadius: 32),
+            const Gap(32),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Column(
+                  children: [
+                    const MentorXSkeleton(height: 300, borderRadius: 32),
+                    const Gap(32),
+                    const MentorXSkeleton(height: 56, borderRadius: 16),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    if (errorMessage != null) {
+      return Scaffold(
+        backgroundColor: context.backgroundPrimaryColor,
+        body: AppErrorView(
+          message: errorMessage!,
+          onRetry: onRetry,
+        ),
+      );
+    }
+
+    if (quiz == null) {
+      return Scaffold(
+        backgroundColor: context.backgroundPrimaryColor,
+        body: AppEmptyView(
+          title: t['quizNotFound'] ?? 'Quiz not found',
+          message: 'Try again later',
+        ),
+      );
+    }
+
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle.light.copyWith(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light,
+      ),
+      child: Scaffold(
+        backgroundColor: context.backgroundPrimaryColor,
+        body: Stack(
+          children: [
+            const _BackgroundDecorations(),
+            Column(
               children: [
-                const MentorXSkeleton(height: 250, borderRadius: 32),
-                const Gap(32),
+                _BuildHeader(quiz: quiz!),
                 Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    padding: const EdgeInsets.all(24),
                     child: Column(
                       children: [
-                        const MentorXSkeleton(height: 300, borderRadius: 32),
+                        FadeInUp(
+                          duration: const Duration(milliseconds: 600),
+                          delay: const Duration(milliseconds: 200),
+                          child: _BuildContentCard(quiz: quiz!),
+                        ),
                         const Gap(32),
-                        const MentorXSkeleton(height: 56, borderRadius: 16),
+                        FadeInUp(
+                          duration: const Duration(milliseconds: 600),
+                          delay: const Duration(milliseconds: 400),
+                          child: MentorXButton(
+                            label: activeAttempt != null &&
+                                    activeAttempt!.status ==
+                                        QuizAttemptStatus.inProgress
+                                ? t['resumeQuiz'] ?? 'Resume Quiz'
+                                : t['startQuiz']!,
+                            onPressed: onStartResume,
+                          ),
+                        ),
+
+                        const Gap(16),
+                        FadeInUp(
+                          duration: const Duration(milliseconds: 600),
+                          delay: const Duration(milliseconds: 500),
+                          child: TextButton(
+                            onPressed: () => context.pop(),
+                            child: Text(
+                              t['commonBack']!,
+                              style: TextStyle(
+                                color: context.textTertiaryColor,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
                 ),
               ],
             ),
-          );
-        }
-
-        if (state.errorMessage != null) {
-          return Scaffold(
-            backgroundColor: context.backgroundPrimaryColor,
-            body: AppErrorView(
-              message: state.errorMessage!,
-              onRetry: () => context.read<QuizIntroPageBloc>().add(
-                    const QuizIntroPageLoadEvent(),
-                  ),
-            ),
-          );
-        }
-
-        final quiz = state.quiz;
-        if (quiz == null) {
-          return Scaffold(
-            backgroundColor: context.backgroundPrimaryColor,
-            body: AppEmptyView(
-              title: t['quizNotFound'] ?? 'Quiz not found',
-              message: 'Try again later',
-            ),
-          );
-        }
-
-        return AnnotatedRegion<SystemUiOverlayStyle>(
-          value: SystemUiOverlayStyle.light.copyWith(
-            statusBarColor: Colors.transparent,
-            statusBarIconBrightness: Brightness.light,
-          ),
-          child: Scaffold(
-            backgroundColor: context.backgroundPrimaryColor,
-            body: Stack(
-              children: [
-                const _BackgroundDecorations(),
-                Column(
-                  children: [
-                    _BuildHeader(quiz: quiz),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        physics: const BouncingScrollPhysics(),
-                        padding: const EdgeInsets.all(24),
-                        child: Column(
-                          children: [
-                            FadeInUp(
-                              duration: const Duration(milliseconds: 600),
-                              delay: const Duration(milliseconds: 200),
-                              child: _BuildContentCard(quiz: quiz),
-                            ),
-                            const Gap(32),
-                            FadeInUp(
-                              duration: const Duration(milliseconds: 600),
-                              delay: const Duration(milliseconds: 400),
-                              child: MentorXButton(
-                                label: state.activeAttempt != null &&
-                                        state.activeAttempt!.status ==
-                                            QuizAttemptStatus.inProgress
-                                    ? t['resumeQuiz'] ?? 'Resume Quiz'
-                                    : t['startQuiz']!,
-                                onPressed: () => QuizTakingPageRoute(
-                                  quizId: quiz.id,
-                                ).push(context),
-                              ),
-                            ),
-
-                            const Gap(16),
-                            FadeInUp(
-                              duration: const Duration(milliseconds: 600),
-                              delay: const Duration(milliseconds: 500),
-                              child: TextButton(
-                                onPressed: () => context.pop(),
-                                child: Text(
-                                  t['commonBack']!,
-                                  style: TextStyle(
-                                    color: context.textTertiaryColor,
-                                    fontWeight: FontWeight.w800,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        );
-      },
+          ],
+        ),
+      ),
     );
   }
 }

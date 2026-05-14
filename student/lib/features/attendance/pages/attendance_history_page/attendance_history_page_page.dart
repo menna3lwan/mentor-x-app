@@ -1,44 +1,36 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:gap/gap.dart';
 import '../../../../core/core.dart';
 
-import 'bloc/attendance_history_page_bloc.dart';
 
-final class AttendanceHistoryPage extends StatelessWidget {
-  const AttendanceHistoryPage({super.key});
+final class AttendanceHistoryPagePage extends StatelessWidget {
+  final LoadingState loadingState;
+  final List<AttendanceRecordEntity> records;
+  final int presentCount;
+  final int totalCount;
+  final int absentCount;
+  final VoidCallback onRefresh;
+
+  const AttendanceHistoryPagePage({
+    super.key,
+    required this.loadingState,
+    required this.records,
+    required this.presentCount,
+    required this.totalCount,
+    required this.absentCount,
+    required this.onRefresh,
+  });
 
   @override
   Widget build(BuildContext context) {
     final t = context.t.student;
+    final isLoading = loadingState == LoadingState.loading;
 
-    return Builder(
-      builder: (context) {
-        final loadingState = context.select<
-          AttendanceHistoryPageBloc,
-          LoadingState
-        >((bloc) => bloc.state.loadingState);
-        final records = context.select<
-          AttendanceHistoryPageBloc,
-          List<AttendanceRecordEntity>
-        >((bloc) => bloc.state.records);
-        final presentCount = context.select<AttendanceHistoryPageBloc, int>(
-          (bloc) => bloc.state.presentCount,
-        );
-        final totalCount = context.select<AttendanceHistoryPageBloc, int>(
-          (bloc) => bloc.state.totalCount,
-        );
-        final absentCount = context.select<AttendanceHistoryPageBloc, int>(
-          (bloc) => bloc.state.absentCount,
-        );
-
-        final isLoading = loadingState == LoadingState.loading;
-
-        return Scaffold(
+    return Scaffold(
           backgroundColor: context.backgroundPrimaryColor,
           body: Stack(
             children: [
@@ -54,11 +46,7 @@ final class AttendanceHistoryPage extends StatelessWidget {
                     )
                   : RefreshIndicator(
                       color: context.brandPrimaryColor,
-                      onRefresh: () async {
-                        context.read<AttendanceHistoryPageBloc>().add(
-                          const AttendanceHistoryPageLoadEvent(),
-                        );
-                      },
+                      onRefresh: () async => onRefresh(),
                       child: CustomScrollView(
                         physics: const BouncingScrollPhysics(),
                         slivers: [
@@ -120,8 +108,6 @@ final class AttendanceHistoryPage extends StatelessWidget {
             ],
           ),
         );
-      },
-    );
   }
 
   Widget _buildHeader(BuildContext context, dynamic t) {

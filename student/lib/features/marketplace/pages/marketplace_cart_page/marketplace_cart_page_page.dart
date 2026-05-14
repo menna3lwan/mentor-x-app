@@ -8,24 +8,37 @@ import '../../../../core/core.dart';
 import '../../cubit/marketplace_cart_cubit.dart';
 import 'bloc/marketplace_cart_page_bloc.dart';
 
-final class MarketplaceCartPage extends StatelessWidget {
-  const MarketplaceCartPage({super.key});
+final class MarketplaceCartPagePage extends StatelessWidget {
+  final List<MarketplaceCartItem> cartItems;
+  final double cartSubtotal;
+  final double cartDiscountAmount;
+  final double cartTotal;
+  final double walletBalance;
+  final LoadingState loadingState;
+  final CouponEntity? appliedCoupon;
+  final Function(String, int) onUpdateQuantity;
+  final VoidCallback onViewCoupons;
+  final VoidCallback onRemoveCoupon;
+  final Function(String, String, String) onPlaceOrder;
+
+  const MarketplaceCartPagePage({
+    super.key,
+    required this.cartItems,
+    required this.cartSubtotal,
+    required this.cartDiscountAmount,
+    required this.cartTotal,
+    required this.walletBalance,
+    required this.loadingState,
+    this.appliedCoupon,
+    required this.onUpdateQuantity,
+    required this.onViewCoupons,
+    required this.onRemoveCoupon,
+    required this.onPlaceOrder,
+  });
 
   @override
   Widget build(BuildContext context) {
     final t = context.t.student;
-    final cartItems = context.select(
-      (MarketplaceCartCubit cubit) => cubit.state.items,
-    );
-    final cartSubtotal = context.select(
-      (MarketplaceCartCubit cubit) => cubit.state.subtotal,
-    );
-    final cartDiscountAmount = context.select(
-      (MarketplaceCartCubit cubit) => cubit.state.discountAmount,
-    );
-    final cartTotal = context.select(
-      (MarketplaceCartCubit cubit) => cubit.state.total,
-    );
 
     return Scaffold(
       backgroundColor: context.backgroundPrimaryColor,
@@ -83,6 +96,7 @@ final class MarketplaceCartPage extends StatelessWidget {
                         delay: Duration(milliseconds: 50 * index),
                         child: _MarketplaceCartItemTile(
                           cartItem: cartItem,
+                          onUpdateQuantity: onUpdateQuantity,
                         ),
                       );
                     },
@@ -91,7 +105,11 @@ final class MarketplaceCartPage extends StatelessWidget {
                 FadeInUp(
                   key: const ValueKey('cart_coupon_section'),
                   duration: const Duration(milliseconds: 600),
-                  child: _CouponSection(),
+                  child: _CouponSection(
+                    appliedCoupon: appliedCoupon,
+                    onViewCoupons: onViewCoupons,
+                    onRemoveCoupon: onRemoveCoupon,
+                  ),
                 ),
                 const Gap(16),
                 FadeInUp(
@@ -101,6 +119,7 @@ final class MarketplaceCartPage extends StatelessWidget {
                     subtotal: cartSubtotal,
                     discountAmount: cartDiscountAmount,
                     total: cartTotal,
+                    walletBalance: walletBalance,
                     onCheckout: () => _showCheckoutSheet(context),
                   ),
                 ),
@@ -187,65 +206,40 @@ final class MarketplaceCartPage extends StatelessWidget {
               maxLines: 2,
             ),
             const Gap(32),
-            Builder(
-              builder: (context) {
-                final loadingState = context.select(
-                  (MarketplaceCartPageBloc bloc) => bloc.state.loadingState,
-                );
-                return MentorXButton(
-                  loading: loadingState == LoadingState.loading,
-                  onPressed: () {
-                    if (addressController.text.isEmpty ||
-                        phoneController.text.isEmpty) {
-                      MentorXUI.showToast(
-                        message: 'Please fill all required fields',
-                      );
-                      return;
-                    }
-                    Navigator.pop(context);
-                    _placeOrder(
-                      context,
-                      addressController.text,
-                      phoneController.text,
-                      notesController.text,
-                    );
-                  },
-                  label: context.t.student['confirmOrder']!,
+            MentorXButton(
+              loading: loadingState == LoadingState.loading,
+              onPressed: () {
+                if (addressController.text.isEmpty ||
+                    phoneController.text.isEmpty) {
+                  MentorXUI.showToast(
+                    message: 'Please fill all required fields',
+                  );
+                  return;
+                }
+                Navigator.pop(context);
+                onPlaceOrder(
+                  addressController.text,
+                  phoneController.text,
+                  notesController.text,
                 );
               },
+              label: context.t.student['confirmOrder']!,
             ),
           ],
         ),
       ),
-    ));
-  }
-
-  void _placeOrder(
-    BuildContext context,
-    String address,
-    String phone,
-    String notes,
-  ) {
-    final cartCubit = context.read<MarketplaceCartCubit>();
-    final items = cartCubit.state.items
-        .map((i) => (itemId: i.item.id, quantity: i.quantity))
-        .toList();
-
-    context.read<MarketplaceCartPageBloc>().add(
-      MarketplaceCartPagePlaceOrderEvent(
-        items: items,
-        address: address,
-        phone: phone,
-      ),
+    ),
     );
   }
 }
 
 final class _MarketplaceCartItemTile extends StatelessWidget {
   final MarketplaceCartItem cartItem;
+  final Function(String, int) onUpdateQuantity;
 
   const _MarketplaceCartItemTile({
     required this.cartItem,
+    required this.onUpdateQuantity,
   });
 
   @override
@@ -318,9 +312,7 @@ final class _MarketplaceCartItemTile extends StatelessWidget {
               children: [
                 _IconButton(
                   icon: Icons.remove_rounded,
-                  onPressed: () => context
-                      .read<MarketplaceCartCubit>()
-                      .updateQuantity(item.id, cartItem.quantity - 1),
+                  onPressed: () => onUpdateQuantity(item.id, cartItem.quantity - 1),
                 ),
                 Text(
                   '${cartItem.quantity}',
@@ -332,9 +324,7 @@ final class _MarketplaceCartItemTile extends StatelessWidget {
                 ),
                 _IconButton(
                   icon: Icons.add_rounded,
-                  onPressed: () => context
-                      .read<MarketplaceCartCubit>()
-                      .updateQuantity(item.id, cartItem.quantity + 1),
+                  onPressed: () => onUpdateQuantity(item.id, cartItem.quantity + 1),
                 ),
               ],
             ),
@@ -366,23 +356,22 @@ final class _OrderSummary extends StatelessWidget {
   final double subtotal;
   final double discountAmount;
   final double total;
+  final double walletBalance;
   final VoidCallback onCheckout;
 
   const _OrderSummary({
     required this.subtotal,
     required this.discountAmount,
     required this.total,
+    required this.walletBalance,
     required this.onCheckout,
   });
 
   @override
   Widget build(BuildContext context) {
-    final walletBalance = context.select(
-      (MarketplaceCartPageBloc bloc) =>
-          bloc.state.walletSummary?.walletBalance ?? 0.0,
-    );
-    final isBalanceSufficient = walletBalance >= total;
-    final deficit = total - walletBalance;
+    final walletBalanceValue = walletBalance;
+    final isBalanceSufficient = walletBalanceValue >= total;
+    final deficit = total - walletBalanceValue;
 
     return Container(
       padding: const EdgeInsets.all(24),
@@ -406,7 +395,7 @@ final class _OrderSummary extends StatelessWidget {
           children: [
             _SummaryRow(
               label: 'Wallet Balance',
-              value: '${walletBalance.toStringAsFixed(2)} EGP',
+              value: '${walletBalanceValue.toStringAsFixed(2)} EGP',
               valueColor: isBalanceSufficient
                   ? context.statusSuccessColor
                   : context.statusDangerColor,
@@ -492,10 +481,18 @@ final class _OrderSummary extends StatelessWidget {
 }
 
 final class _CouponSection extends StatelessWidget {
+  final CouponEntity? appliedCoupon;
+  final VoidCallback onViewCoupons;
+  final VoidCallback onRemoveCoupon;
+
+  const _CouponSection({
+    required this.appliedCoupon,
+    required this.onViewCoupons,
+    required this.onRemoveCoupon,
+  });
+
   @override
   Widget build(BuildContext context) {
-    final cartCubit = context.watch<MarketplaceCartCubit>();
-    final appliedCoupon = cartCubit.state.appliedCoupon;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -525,7 +522,7 @@ final class _CouponSection extends StatelessWidget {
                     ),
                   ),
                   TextButton(
-                    onPressed: () => _showCouponsSheet(context),
+                    onPressed: onViewCoupons,
                     child: Text(
                       'View Codes',
                       style: TextStyle(
@@ -554,7 +551,7 @@ final class _CouponSection extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          appliedCoupon.code,
+                          appliedCoupon!.code,
                           style: TextStyle(
                             fontWeight: FontWeight.w700,
                             fontSize: 12,
@@ -567,7 +564,7 @@ final class _CouponSection extends StatelessWidget {
                   MentorXIconButton(
                     icon: Icons.close_rounded,
                     color: context.statusDangerColor,
-                    onPressed: () => cartCubit.removeCoupon(),
+                    onPressed: onRemoveCoupon,
                     size: MentorXIconButtonSize.small,
                   ),
                 ],
@@ -576,125 +573,6 @@ final class _CouponSection extends StatelessWidget {
     );
   }
 
-  void _showCouponsSheet(BuildContext context) {
-    final cartCubit = context.read<MarketplaceCartCubit>();
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      isScrollControlled: true,
-      builder: (_) {
-        return BlocProvider.value(
-          value: context.read<MarketplaceCartPageBloc>(),
-          child: Container(
-            height: MediaQuery.of(context).size.height * 0.6,
-            decoration: BoxDecoration(
-              color: context.backgroundSecondaryColor,
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
-            ),
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
-                  child: Container(
-                    width: 40,
-                    height: 4,
-                    decoration: BoxDecoration(
-                      color: context.textTertiaryColor.withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(2),
-                    ),
-                  ),
-                ),
-                const Gap(24),
-                Text(
-                  'Available Coupons',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w900,
-                    color: context.textPrimaryColor,
-                  ),
-                ),
-                const Gap(16),
-                Expanded(
-                  child: Builder(
-                    builder: (context) {
-                      final loadingState = context.select(
-                        (MarketplaceCartPageBloc bloc) => bloc.state.loadingState,
-                      );
-                      final validCoupons = context.select(
-                        (MarketplaceCartPageBloc bloc) => bloc.state.validCoupons,
-                      );
-
-                      if (loadingState == LoadingState.loading &&
-                          validCoupons.isEmpty) {
-                        return ListView.separated(
-                          itemCount: 3,
-                          separatorBuilder: (_, _) => const Gap(12),
-                          itemBuilder: (_, _) => const MentorXSkeleton(
-                            height: 72,
-                            borderRadius: 16,
-                          ),
-                        );
-                      }
-                      if (validCoupons.isEmpty) {
-                        return Center(
-                          child: Text(
-                            'No valid coupons found.',
-                            style: TextStyle(color: context.textSecondaryColor),
-                          ),
-                        );
-                      }
-                      return ListView.separated(
-                        itemCount: validCoupons.length,
-                        separatorBuilder: (_, _) => const Gap(12),
-                        itemBuilder: (context, index) {
-                          final coupon = validCoupons[index];
-                          return Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: context.borderPrimaryColor.withValues(
-                                  alpha: 0.1,
-                                ),
-                              ),
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: ListTile(
-                              leading: Icon(
-                                Icons.local_offer,
-                                color: context.brandPrimaryColor,
-                              ),
-                              title: Text(
-                                coupon.code,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w900,
-                                ),
-                              ),
-                              subtitle: Text(
-                                coupon.type == 'percentage'
-                                    ? '${coupon.discountPercentage}% OFF'
-                                    : '${coupon.discountAmount} EGP OFF',
-                              ),
-                              trailing: TextButton(
-                                onPressed: () {
-                                  cartCubit.applyCoupon(coupon);
-                                  Navigator.pop(context);
-                                },
-                                child: const Text('Apply'),
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
 }
 
 final class _SummaryRow extends StatelessWidget {
