@@ -161,6 +161,14 @@ final class CourseInfoHeader extends StatelessWidget {
                         icon: Icons.access_time_filled_rounded,
                         label: _formatDuration(course.totalDurationMinutes),
                       ),
+                      if (enrollment != null && enrollment!.remainingDays > 0) ...[
+                        const Gap(12),
+                        _StatChip(
+                          icon: Icons.event_available_rounded,
+                          label: '${enrollment!.remainingDays} Days Left',
+                          isHighlight: true,
+                        ),
+                      ],
                     ],
                   ),
                 ),
@@ -195,24 +203,32 @@ final class CourseInfoHeader extends StatelessWidget {
 final class _StatChip extends StatelessWidget {
   final IconData icon;
   final String label;
+  final bool isHighlight;
 
   const _StatChip({
     required this.icon,
     required this.label,
+    this.isHighlight = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: context.backgroundSecondaryColor.withValues(alpha: 0.45),
+        color: isHighlight
+            ? context.brandPrimaryColor.withValues(alpha: 0.15)
+            : context.backgroundSecondaryColor.withValues(alpha: 0.45),
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
-          color: context.borderPrimaryColor.withValues(alpha: 0.1),
+          color: isHighlight
+              ? context.brandPrimaryColor.withValues(alpha: 0.3)
+              : context.borderPrimaryColor.withValues(alpha: 0.1),
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: isHighlight
+                ? context.brandPrimaryColor.withValues(alpha: 0.1)
+                : Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -222,45 +238,57 @@ final class _StatChip extends StatelessWidget {
         borderRadius: BorderRadius.circular(18),
         child: Stack(
           children: [
-            Positioned.fill(
-              child: ExcludeSemantics(
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                  child: const SizedBox.expand(),
+            if (!isHighlight)
+              Positioned.fill(
+                child: ExcludeSemantics(
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                    child: const SizedBox.expand(),
+                  ),
                 ),
               ),
-            ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
               child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    color: context.brandPrimaryColor.withValues(alpha: 0.1),
-                    shape: BoxShape.circle,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      color: isHighlight
+                          ? context.brandPrimaryColor.withValues(alpha: 0.2)
+                          : context.brandPrimaryColor.withValues(alpha: 0.1),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      icon,
+                      size: 14,
+                      color: isHighlight
+                          ? context.brandPrimaryColor
+                          : context.brandPrimaryColor,
+                    ),
                   ),
-                  child: Icon(icon, size: 14, color: context.brandPrimaryColor),
-                ),
-                const Gap(8),
-                Text(
-                  label,
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w800,
-                    color: context.textPrimaryColor.withValues(alpha: 0.8),
+                  const Gap(8),
+                  Text(
+                    label,
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w800,
+                      color: isHighlight
+                          ? context.brandPrimaryColor
+                          : context.textPrimaryColor.withValues(alpha: 0.8),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
-  );
+    );
+  }
 }
-}
+
 
 final class _ProgressBar extends StatelessWidget {
   final double progressPercent;

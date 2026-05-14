@@ -140,12 +140,32 @@ final class DioCourseRepository
   Future<List<WeekEntity>> getSessionWeeks(String sessionId) async {
     try {
       final response = await httpClient.get('/api/weeks/session/$sessionId');
-
-      return response
+      final weeks = response
           .asList()
           .map(asMap)
           .map(WeekModel.fromJson)
+          .cast<WeekEntity>()
           .toList();
+
+      if (weeks.isEmpty) return const [];
+
+      // Fetch materials for each week in parallel to populate week.items
+      final weekWithItemsFutures = weeks.map((week) async {
+        try {
+          final res = await httpClient.get('/api/materials/lesson/${week.id}');
+          final items = res
+              .asList()
+              .map(asMap)
+              .map(SessionItemModel.fromJson)
+              .cast<SessionItemEntity>()
+              .toList();
+          return week.copyWith(items: items);
+        } catch (_) {
+          return week;
+        }
+      });
+
+      return await Future.wait(weekWithItemsFutures);
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
@@ -157,29 +177,9 @@ final class DioCourseRepository
   @override
   Future<List<SessionItemEntity>> getSessionItems(String sessionId) async {
     try {
-      // Hierarchy: Session → Weeks → Materials
-      // Step 1: Get weeks for this session
-      final weeksResponse = await httpClient.get('/api/weeks/session/$sessionId');
-      final weekIds = weeksResponse.asList()
-          .map(asMap)
-          .map((w) => stringOrNull(w['id']))
-          .whereType<String>()
-          .toList();
-
-      if (weekIds.isEmpty) return const [];
-
-      // Step 2: Fetch materials for each week in parallel
-      final materialFutures = weekIds.map((weekId) async {
-        try {
-          final res = await httpClient.get('/api/materials/lesson/$weekId');
-          return res.asList().map(asMap).map(SessionItemModel.fromJson).toList();
-        } catch (_) {
-          return <SessionItemModel>[];
-        }
-      });
-
-      final results = await Future.wait(materialFutures);
-      return results.expand((items) => items).toList();
+      // Use getSessionWeeks which now populates items, then flatten
+      final weeks = await getSessionWeeks(sessionId);
+      return weeks.expand((w) => w.items).toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
@@ -187,6 +187,7 @@ final class DioCourseRepository
       );
     }
   }
+
 
   @override
   Future<EnrollmentEntity?> getCourseProgress(String courseId) async {

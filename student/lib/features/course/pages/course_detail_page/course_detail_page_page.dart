@@ -125,8 +125,17 @@ final class CourseDetailPagePage extends StatelessWidget {
                 enrollment: enrollment,
               ),
             ),
+            if (enrollment != null)
+              FadeInUp(
+                duration: const Duration(milliseconds: 600),
+                delay: const Duration(milliseconds: 200),
+                child: CourseAnalyticsCard(enrollment: enrollment!),
+              ),
             FadeInUp(
               duration: const Duration(milliseconds: 400),
+              delay: enrollment != null
+                  ? const Duration(milliseconds: 400)
+                  : Duration.zero,
               child: _DetailTabBar(
                 selectedTab: selectedTab,
                 onTabChanged: onTabChanged,
