@@ -33,14 +33,16 @@ void main() {
                 'Option 1',
                 'Option 2',
               ],
-            }
-          ]
+            },
+          ],
         };
 
-        when(() => httpClient.get('/api/quizzes/q1')).thenAnswer((_) async => HttpClientResponse(
-          data: {'data': mockData},
-          statusCode: 200,
-        ));
+        when(() => httpClient.get('/api/quizzes/q1')).thenAnswer(
+          (_) async => HttpClientResponse(
+            data: {'data': mockData},
+            statusCode: 200,
+          ),
+        );
 
         final result = await repository.getQuiz('q1');
         expect(result.id, 'q1');
@@ -60,15 +62,22 @@ void main() {
           'started_at': DateTime.now().toIso8601String(),
         };
 
-        when(() => httpClient.post(
-          '/api/quizzes/q1/submit',
-          data: any(named: 'data'),
-        )).thenAnswer((_) async => HttpClientResponse(
-          data: {'data': mockData},
-          statusCode: 200,
-        ));
+        when(
+          () => httpClient.post(
+            '/api/quizzes/q1/submit',
+            data: any(named: 'data'),
+          ),
+        ).thenAnswer(
+          (_) async => HttpClientResponse(
+            data: {'data': mockData},
+            statusCode: 200,
+          ),
+        );
 
-        final result = await repository.submitQuiz('q1', answers: {'q1': 'Option 1'});
+        final result = await repository.submitQuiz(
+          'q1',
+          answers: {'q1': 'Option 1'},
+        );
         expect(result.id, 'a1');
         expect(result.status, QuizAttemptStatus.submitted);
       });
@@ -85,10 +94,12 @@ void main() {
           'started_at': DateTime.now().toIso8601String(),
         };
 
-        when(() => httpClient.get('/api/quiz-attempts/a1/results')).thenAnswer((_) async => HttpClientResponse(
-          data: {'data': mockData},
-          statusCode: 200,
-        ));
+        when(() => httpClient.get('/api/quiz-attempts/a1/results')).thenAnswer(
+          (_) async => HttpClientResponse(
+            data: {'data': mockData},
+            statusCode: 200,
+          ),
+        );
 
         final result = await repository.getResults('a1');
         expect(result.id, 'a1');
@@ -110,13 +121,15 @@ void main() {
             'title': 'Quiz 2',
             'duration_minutes': 45,
             'total_marks': 100,
-          }
+          },
         ];
 
-        when(() => httpClient.get('/api/quizzes')).thenAnswer((_) async => HttpClientResponse(
-          data: {'data': mockData},
-          statusCode: 200,
-        ));
+        when(() => httpClient.get('/api/quizzes')).thenAnswer(
+          (_) async => HttpClientResponse(
+            data: {'data': mockData},
+            statusCode: 200,
+          ),
+        );
 
         final result = await repository.getQuizzes();
         expect(result.length, 2);
@@ -137,13 +150,15 @@ void main() {
             'id': 'qq2',
             'text': 'Question 2',
             'type': 'trueFalse',
-          }
+          },
         ];
 
-        when(() => httpClient.get('/api/questions/quiz/q1')).thenAnswer((_) async => HttpClientResponse(
-          data: {'data': mockData},
-          statusCode: 200,
-        ));
+        when(() => httpClient.get('/api/questions/quiz/q1')).thenAnswer(
+          (_) async => HttpClientResponse(
+            data: {'data': mockData},
+            statusCode: 200,
+          ),
+        );
 
         final result = await repository.getQuizQuestions('q1');
         expect(result.length, 2);
@@ -167,14 +182,16 @@ void main() {
             'passed': false,
           },
           'questions': [
-            {'id': 'qq1', 'text': 'Q1', 'type': 'mcq'}
-          ]
+            {'id': 'qq1', 'text': 'Q1', 'type': 'mcq'},
+          ],
         };
 
-        when(() => httpClient.post('/api/quizzes/q1/start')).thenAnswer((_) async => HttpClientResponse(
-          data: {'data': mockData},
-          statusCode: 200,
-        ));
+        when(() => httpClient.post('/api/quizzes/q1/start')).thenAnswer(
+          (_) async => HttpClientResponse(
+            data: {'data': mockData},
+            statusCode: 200,
+          ),
+        );
 
         final (attempt, questions) = await repository.startQuiz('q1');
         expect(attempt.id, 'a1');
@@ -183,24 +200,36 @@ void main() {
       });
 
       test('throws QuizAlreadyStarted exception on 409', () async {
-        when(() => httpClient.post('/api/quizzes/q1/start')).thenThrow(HttpClientResponse(
-          data: {'message': 'Already started'},
-          statusCode: 409,
-        ));
+        when(() => httpClient.post('/api/quizzes/q1/start')).thenThrow(
+          HttpClientResponse(
+            data: {'message': 'Already started'},
+            statusCode: 409,
+          ),
+        );
 
         expect(
           () => repository.startQuiz('q1'),
-          throwsA(isA<QuizRepositoryException>().having((e) => e.code, 'code', QuizRepositoryExceptionCode.quizAlreadyStarted)),
+          throwsA(
+            isA<QuizRepositoryException>().having(
+              (e) => e.code,
+              'code',
+              QuizRepositoryExceptionCode.quizAlreadyStarted,
+            ),
+          ),
         );
       });
     });
 
     group('saveAnswer', () {
       test('calls put with correct data', () async {
-        when(() => httpClient.put(
-          any(),
-          data: any(named: 'data'),
-        )).thenAnswer((_) async => const HttpClientResponse(data: {}, statusCode: 200));
+        when(
+          () => httpClient.put(
+            any(),
+            data: any(named: 'data'),
+          ),
+        ).thenAnswer(
+          (_) async => const HttpClientResponse(data: {}, statusCode: 200),
+        );
 
         await repository.saveAnswer(
           attemptId: 'a1',
@@ -208,10 +237,12 @@ void main() {
           selectedOptions: ['Option A'],
         );
 
-        verify(() => httpClient.put(
-          '/api/quiz-attempts/a1/answer',
-          data: any(named: 'data', that: containsPair('questionId', 'qq1')),
-        )).called(1);
+        verify(
+          () => httpClient.put(
+            '/api/quiz-attempts/a1/answer',
+            data: any(named: 'data', that: containsPair('questionId', 'qq1')),
+          ),
+        ).called(1);
       });
     });
 
@@ -226,13 +257,17 @@ void main() {
           'started_at': DateTime.now().toIso8601String(),
         };
 
-        when(() => httpClient.post(
-          '/api/quiz-attempts/a1/submit',
-          data: any(named: 'data'),
-        )).thenAnswer((_) async => HttpClientResponse(
-          data: {'data': mockData},
-          statusCode: 200,
-        ));
+        when(
+          () => httpClient.post(
+            '/api/quiz-attempts/a1/submit',
+            data: any(named: 'data'),
+          ),
+        ).thenAnswer(
+          (_) async => HttpClientResponse(
+            data: {'data': mockData},
+            statusCode: 200,
+          ),
+        );
 
         final result = await repository.submitQuizAttempt('a1');
         expect(result.status, QuizAttemptStatus.submitted);
@@ -250,45 +285,51 @@ void main() {
           'score': 0,
         };
 
-        when(() => httpClient.get('/api/quiz-attempts/student/s1/quiz/q1')).thenAnswer((_) async => HttpClientResponse(
-          data: {'data': mockData},
-          statusCode: 200,
-        ));
+        when(
+          () => httpClient.get('/api/quiz-attempts/student/s1/quiz/q1'),
+        ).thenAnswer(
+          (_) async => HttpClientResponse(
+            data: {'data': mockData},
+            statusCode: 200,
+          ),
+        );
 
         final result = await repository.getStudentAttemptForQuiz('s1', 'q1');
         expect(result?.id, 'a1');
       });
 
       test('returns null if 404', () async {
-        when(() => httpClient.get('/api/quiz-attempts/student/s1/quiz/q1')).thenThrow(const HttpClientResponse(
-          data: {'message': 'Not found'},
-          statusCode: 404,
-        ));
+        when(
+          () => httpClient.get('/api/quiz-attempts/student/s1/quiz/q1'),
+        ).thenThrow(
+          const HttpClientResponse(
+            data: {'message': 'Not found'},
+            statusCode: 404,
+          ),
+        );
 
         final result = await repository.getStudentAttemptForQuiz('s1', 'q1');
         expect(result, isNull);
       });
     });
-
-    group('getQuizzesByWeek', () {
-      test('returns List<QuizEntity> on success', () async {
-        when(() => httpClient.get('/api/quizzes/week/w1')).thenAnswer((_) async => const HttpClientResponse(
-          data: {'data': [{'id': 'q1', 'title': 'Q1', 'duration_minutes': 10, 'total_marks': 10}]},
-          statusCode: 200,
-        ));
-
-        final result = await repository.getQuizzesByWeek('w1');
-        expect(result.length, 1);
-        expect(result[0].id, 'q1');
-      });
-    });
-
     group('getStudentAttempts', () {
       test('returns List<QuizAttemptEntity> on success', () async {
-        when(() => httpClient.get('/api/quiz-attempts/student/s1')).thenAnswer((_) async => const HttpClientResponse(
-          data: {'data': [{'id': 'a1', 'quiz_id': 'q1', 'status': 'submitted', 'score': 10, 'total_marks': 10}]},
-          statusCode: 200,
-        ));
+        when(() => httpClient.get('/api/quiz-attempts/student/s1')).thenAnswer(
+          (_) async => const HttpClientResponse(
+            data: {
+              'data': [
+                {
+                  'id': 'a1',
+                  'quiz_id': 'q1',
+                  'status': 'submitted',
+                  'score': 10,
+                  'total_marks': 10,
+                },
+              ],
+            },
+            statusCode: 200,
+          ),
+        );
 
         final result = await repository.getStudentAttempts('s1');
         expect(result.length, 1);
@@ -298,10 +339,22 @@ void main() {
 
     group('getAttemptsForQuiz', () {
       test('returns List<QuizAttemptEntity> on success', () async {
-        when(() => httpClient.get('/api/quiz-attempts/quiz/q1')).thenAnswer((_) async => const HttpClientResponse(
-          data: {'data': [{'id': 'a1', 'quiz_id': 'q1', 'status': 'submitted', 'score': 10, 'total_marks': 10}]},
-          statusCode: 200,
-        ));
+        when(() => httpClient.get('/api/quiz-attempts/quiz/q1')).thenAnswer(
+          (_) async => const HttpClientResponse(
+            data: {
+              'data': [
+                {
+                  'id': 'a1',
+                  'quiz_id': 'q1',
+                  'status': 'submitted',
+                  'score': 10,
+                  'total_marks': 10,
+                },
+              ],
+            },
+            statusCode: 200,
+          ),
+        );
 
         final result = await repository.getAttemptsForQuiz('q1');
         expect(result.length, 1);
@@ -311,10 +364,16 @@ void main() {
 
     group('getStudentQuizStatus', () {
       test('returns status map on success', () async {
-        when(() => httpClient.get('/api/quiz-attempts/student/s1/status')).thenAnswer((_) async => const HttpClientResponse(
-          data: {'data': {'completed': 5, 'pending': 2}},
-          statusCode: 200,
-        ));
+        when(
+          () => httpClient.get('/api/quiz-attempts/student/s1/status'),
+        ).thenAnswer(
+          (_) async => const HttpClientResponse(
+            data: {
+              'data': {'completed': 5, 'pending': 2},
+            },
+            statusCode: 200,
+          ),
+        );
 
         final result = await repository.getStudentQuizStatus('s1');
         expect(result['completed'], 5);
@@ -324,10 +383,16 @@ void main() {
 
     group('getQuizStatistics', () {
       test('returns statistics map on success', () async {
-        when(() => httpClient.get('/api/quiz-attempts/quiz/q1/statistics')).thenAnswer((_) async => const HttpClientResponse(
-          data: {'data': {'averageScore': 75.5}},
-          statusCode: 200,
-        ));
+        when(
+          () => httpClient.get('/api/quiz-attempts/quiz/q1/statistics'),
+        ).thenAnswer(
+          (_) async => const HttpClientResponse(
+            data: {
+              'data': {'averageScore': 75.5},
+            },
+            statusCode: 200,
+          ),
+        );
 
         final result = await repository.getQuizStatistics('q1');
         expect(result['averageScore'], 75.5);

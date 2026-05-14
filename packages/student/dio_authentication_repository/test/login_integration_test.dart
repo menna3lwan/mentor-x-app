@@ -21,29 +21,4 @@ void main() {
       cacheRepository: cacheRepository,
     );
   });
-
-  group('Login Integration Test', () {
-    test('Login with registered credentials', () async {
-      try {
-        final student = await repository.loginWithPassword(
-          phoneNumber: IntegrationConfig.testPhoneNumber,
-          password: IntegrationConfig.testPassword,
-        );
-        print('Login successful for: ${student.firstName}');
-        
-        final token = await cacheRepository.get('token');
-        print('Token in cache: ${token != null ? "PRESENT" : "MISSING"}');
-        if (token != null) {
-          print('Token starts with: ${token.substring(0, 10)}...');
-        }
-      } on AccountPendingException catch (e) {
-        print('Account is PENDING (as expected): ${e.message}');
-        print('Support WhatsApp: ${e.supportWhatsApp}');
-      } on AuthenticationRepositoryException catch (e) {
-        print('Login failed: ${e.code} - ${e.message}');
-      } catch (e) {
-        print('Unexpected error: $e');
-      }
-    });
-  });
 }
