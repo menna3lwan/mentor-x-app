@@ -61,6 +61,7 @@ final class MockProfileRepository implements StudentProfileRepository {
   @override
   Future<ProfileEditRequestEntity> submitEditRequest({
     required String fieldName,
+    required String oldValue,
     required String newValue,
     String? reason,
   }) async {
@@ -68,7 +69,7 @@ final class MockProfileRepository implements StudentProfileRepository {
     return ProfileEditRequestEntity(
       id: 'req-1',
       fieldName: fieldName,
-      oldValue: 'Old Value',
+      oldValue: oldValue,
       newValue: newValue,
       status: EditRequestStatus.pending,
       createdAt: DateTime.now(),

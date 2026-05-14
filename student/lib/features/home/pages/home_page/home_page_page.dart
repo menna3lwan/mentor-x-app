@@ -138,7 +138,7 @@ final class HomePagePage extends StatelessWidget {
                   const MarketplaceGridPageRoute().push(context);
                   return;
                 case 7:
-                  const StudentCardPageRoute().push(context);
+                  const AnalyticsDashboardPageRoute().push(context);
                   return;
                 default:
                   return;

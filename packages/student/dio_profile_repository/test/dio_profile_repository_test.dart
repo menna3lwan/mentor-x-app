@@ -111,6 +111,7 @@ void main() {
 
         final result = await repository.submitEditRequest(
           fieldName: 'firstName',
+          oldValue: 'Old Name',
           newValue: 'New Name',
         );
         expect(result.id, 'req1');
