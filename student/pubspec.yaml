@@ -1,7 +1,7 @@
 name: mentorx_student
 description: "A new Flutter project."
 publish_to: "none"
-version: 1.0.0+7
+version: 1.1.0+8
 resolution: workspace
 
 environment:
