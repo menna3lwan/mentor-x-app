@@ -7,10 +7,12 @@ void main() {
     testWidgets('renders correctly with given icon', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
-          home: Scaffold(
-            body: MentorXIconButton(
-              icon: Icons.add,
-              onPressed: () {},
+          home: MentorXThemeProvider(
+            child: Scaffold(
+              body: MentorXIconButton(
+                icon: Icons.add,
+                onPressed: () {},
+              ),
             ),
           ),
         ),
@@ -23,13 +25,15 @@ void main() {
       bool tapped = false;
       await tester.pumpWidget(
         MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: MentorXIconButton(
-                icon: Icons.add,
-                onPressed: () {
-                  tapped = true;
-                },
+          home: MentorXThemeProvider(
+            child: Scaffold(
+              body: Center(
+                child: MentorXIconButton(
+                  icon: Icons.add,
+                  onPressed: () {
+                    tapped = true;
+                  },
+                ),
               ),
             ),
           ),

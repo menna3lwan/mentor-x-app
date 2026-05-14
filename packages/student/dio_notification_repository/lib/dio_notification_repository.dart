@@ -31,8 +31,8 @@ final class DioNotificationRepository
         queryParameters: queryParams,
       );
 
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
-      final list = asList(data is Map ? data['content'] : data);
+      final data = asMap(response.data)['data'] ?? response.data;
+      final list = asList(data is Map ? (data['content'] ?? data['notifications'] ?? data['items'] ?? data) : data);
       return list.map((e) => NotificationModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(

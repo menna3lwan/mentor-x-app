@@ -22,28 +22,4 @@ void main() {
     httpClient.setDefaultHeader(NetworkConstants.deviceIdHeader, 'student-app');
     repository = DioWalletRepository(httpClient: httpClient);
   });
-
-  group('Wallet Discovery & Integration', () {
-    test('Get Wallet Summary (Discovery)', () async {
-      try {
-        final summary = await repository.getSummary();
-        _log.info('Wallet Balance: ${summary.walletBalance}');
-      } on WalletRepositoryException catch (e) {
-        _log.error('Failed to load wallet: ${e.code} - ${e.message}');
-      } catch (e) {
-        _log.error('Unexpected error: $e');
-      }
-    });
-
-    test('Get Transactions (Discovery)', () async {
-      try {
-        final transactions = await repository.getTransactions();
-        _log.info('Transactions loaded: ${transactions.length}');
-      } on WalletRepositoryException catch (e) {
-        _log.error('Failed to load transactions: ${e.code} - ${e.message}');
-      } catch (e) {
-        _log.error('Unexpected error: $e');
-      }
-    });
-  });
 }

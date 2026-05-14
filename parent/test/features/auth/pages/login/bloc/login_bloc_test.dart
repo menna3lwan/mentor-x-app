@@ -15,7 +15,20 @@ class MockDeviceInfoService extends Mock implements DeviceInfoService {
   @override
   Future<String> getAppVersion() async => '1.0.0';
 }
-class MockAnalyticsService extends Mock implements AnalyticsService {}
+class MockAnalyticsService implements AnalyticsService {
+  @override
+  Future<void> initialize() async {}
+  @override
+  Future<void> logEvent({required String name, Map<String, Object?>? parameters}) async {}
+  @override
+  Future<void> setCurrentScreen({required String screenName, String? screenClassOverride}) async {}
+  @override
+  Future<void> setUserId(String? id) async {}
+  @override
+  Future<void> setUserProperty({required String name, required String? value}) async {}
+  @override
+  Future<void> resetAnalyticsData() async {}
+}
 
 void main() {
   late MockAuthRepository authRepository;
@@ -40,11 +53,6 @@ void main() {
     authRepository = MockAuthRepository();
     deviceInfoService = MockDeviceInfoService();
     analyticsService = MockAnalyticsService();
-    
-    when(() => analyticsService.logEvent(
-      name: any(named: 'name'),
-      parameters: any(named: 'parameters'),
-    )).thenAnswer((_) async => {});
   });
 
   group('LoginBloc', () {

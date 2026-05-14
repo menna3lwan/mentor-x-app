@@ -10,7 +10,20 @@ class _MockStudentAuthenticationRepository extends Mock
 
 class _MockCacheRepository extends Mock implements CacheRepository {}
 
-class _MockAnalyticsService extends Mock implements AnalyticsService {}
+class _MockAnalyticsService implements AnalyticsService {
+  @override
+  Future<void> initialize() async {}
+  @override
+  Future<void> logEvent({required String name, Map<String, Object?>? parameters}) async {}
+  @override
+  Future<void> setCurrentScreen({required String screenName, String? screenClassOverride}) async {}
+  @override
+  Future<void> setUserId(String? id) async {}
+  @override
+  Future<void> setUserProperty({required String name, required String? value}) async {}
+  @override
+  Future<void> resetAnalyticsData() async {}
+}
 
 void main() {
   late _MockStudentAuthenticationRepository authenticationRepository;

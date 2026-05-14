@@ -1,5 +1,4 @@
 import 'package:mentorx_student/core/core.dart';
-import 'package:mocktail/mocktail.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mock_course_repository/mock_course_repository.dart';
@@ -7,7 +6,20 @@ import 'package:mock_course_repository/mock_course_repository.dart';
 import 'package:mentorx_student/features/course/pages/course_catalog_page/bloc/course_catalog_page_bloc.dart';
 import 'package:mock_student_registration_repository/mock_student_registration_repository.dart';
 
-class MockAnalyticsService extends Mock implements AnalyticsService {}
+class MockAnalyticsService implements AnalyticsService {
+  @override
+  Future<void> initialize() async {}
+  @override
+  Future<void> logEvent({required String name, Map<String, Object?>? parameters}) async {}
+  @override
+  Future<void> setCurrentScreen({required String screenName, String? screenClassOverride}) async {}
+  @override
+  Future<void> setUserId(String? id) async {}
+  @override
+  Future<void> setUserProperty({required String name, required String? value}) async {}
+  @override
+  Future<void> resetAnalyticsData() async {}
+}
 
 
 void main() {

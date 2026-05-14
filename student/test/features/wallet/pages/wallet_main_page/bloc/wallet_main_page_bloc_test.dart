@@ -47,6 +47,7 @@ void main() {
         analyticsService: analyticsService,
       ),
       act: (bloc) => bloc.add(const WalletMainPageLoadEvent()),
+      wait: const Duration(milliseconds: 100),
       expect: () => [
         isA<WalletMainPageState>().having(
           (s) => s.loadingState,

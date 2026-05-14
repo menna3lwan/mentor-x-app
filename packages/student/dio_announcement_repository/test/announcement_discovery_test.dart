@@ -21,20 +21,4 @@ void main() {
     );
     repository = DioAnnouncementRepository(httpClient: httpClient);
   });
-
-  group('Announcement Discovery Tests', () {
-    test('Get Announcements', () async {
-      try {
-        final announcements = await repository.getAnnouncements();
-        _log.info('Announcements count: ${announcements.length}');
-        for (var a in announcements.take(5)) {
-          _log.info('Announcement: ${a.id} - ${a.title}');
-        }
-      } on HttpClientResponse catch (e) {
-        _log.error('Error: ${e.statusCode} ${e.data}');
-      } catch (e) {
-        _log.error('Failed to get announcements: $e');
-      }
-    });
-  });
 }

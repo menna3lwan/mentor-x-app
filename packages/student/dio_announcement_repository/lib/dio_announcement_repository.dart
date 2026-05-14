@@ -33,8 +33,7 @@ final class DioAnnouncementRepository
         },
       );
 
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
-      final list = asList(data is Map ? data['content'] : data);
+      final list = asList(response.data);
       return list.map((e) => AnnouncementModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
@@ -48,7 +47,7 @@ final class DioAnnouncementRepository
   Future<AnnouncementEntity> getAnnouncementDetail(String announcementId) async {
     try {
       final response = await httpClient.get('/api/announcements/$announcementId');
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final data = extractData(response.data);
       return AnnouncementModel.fromJson(data);
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
