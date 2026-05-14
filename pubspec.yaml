@@ -69,6 +69,13 @@ workspace:
   - packages/parent/dio_attendance_repository
   - packages/parent/dio_grade_repository
   - packages/parent/dio_communication_repository
+  - packages/parent/dio_profile_repository
+  - packages/parent/dio_parent_analytics_repository
+
+  # Services
+  - packages/services/analytics_service
+  - packages/services/device_info_service
+  - packages/services/error_tracking_service
 
   # Common
   - packages/common/onboarding_repository

@@ -34,11 +34,8 @@ final class DioCourseRepository
         },
       );
 
-      final dataMap = asMap(response.data);
-      final rawList = dataMap['data']?['content'] ?? dataMap['content'] ?? response.data;
-      final list = asList(rawList);
-
-      return list
+      return response
+          .asList()
           .map(asMap)
           .map(EnrollmentModel.fromJson)
           .cast<EnrollmentEntity>()
@@ -73,11 +70,8 @@ final class DioCourseRepository
         },
       );
 
-      final dataMap = asMap(response.data);
-      final rawList = dataMap['data']?['content'] ?? dataMap['content'] ?? response.data;
-      final list = asList(rawList);
-
-      return list
+      return response
+          .asList()
           .map(asMap)
           .map(CourseSummaryModel.fromJson)
           .toList();
@@ -97,11 +91,8 @@ final class DioCourseRepository
         queryParameters: {if (gradeId != null) 'grade_id': gradeId},
       );
 
-      final dataMap = asMap(response.data);
-      final rawList = dataMap['data']?['content'] ?? dataMap['content'] ?? response.data;
-      final list = asList(rawList);
-
-      return list
+      return response
+          .asList()
           .map(asMap)
           .map(CategoryModel.fromJson)
           .toList();
@@ -118,8 +109,7 @@ final class DioCourseRepository
     try {
       final response = await httpClient.get('/api/courses/$courseId');
 
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
-      return CourseModel.fromJson(data);
+      return CourseModel.fromJson(response.asMap());
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
@@ -133,11 +123,8 @@ final class DioCourseRepository
     try {
       final response = await httpClient.get('/api/sessions/course/$courseId');
 
-      final dataMap = asMap(response.data);
-      final rawList = dataMap['data']?['content'] ?? dataMap['content'] ?? response.data;
-      final list = asList(rawList);
-
-      return list
+      return response
+          .asList()
           .map(asMap)
           .map(SessionModel.fromJson)
           .toList();
@@ -153,15 +140,32 @@ final class DioCourseRepository
   Future<List<WeekEntity>> getSessionWeeks(String sessionId) async {
     try {
       final response = await httpClient.get('/api/weeks/session/$sessionId');
-
-      final dataMap = asMap(response.data);
-      final rawList = dataMap['data']?['content'] ?? dataMap['content'] ?? response.data;
-      final list = asList(rawList);
-
-      return list
+      final weeks = response
+          .asList()
           .map(asMap)
           .map(WeekModel.fromJson)
+          .cast<WeekEntity>()
           .toList();
+
+      if (weeks.isEmpty) return const [];
+
+      // Fetch materials for each week in parallel to populate week.items
+      final weekWithItemsFutures = weeks.map((week) async {
+        try {
+          final res = await httpClient.get('/api/materials/lesson/${week.id}');
+          final items = res
+              .asList()
+              .map(asMap)
+              .map(SessionItemModel.fromJson)
+              .cast<SessionItemEntity>()
+              .toList();
+          return week.copyWith(items: items);
+        } catch (_) {
+          return week;
+        }
+      });
+
+      return await Future.wait(weekWithItemsFutures);
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
@@ -173,33 +177,9 @@ final class DioCourseRepository
   @override
   Future<List<SessionItemEntity>> getSessionItems(String sessionId) async {
     try {
-      // Hierarchy: Session → Weeks → Materials
-      // Step 1: Get weeks for this session
-      final weeksResponse = await httpClient.get('/api/weeks/session/$sessionId');
-      final weeksMap = asMap(weeksResponse.data);
-      final weeksRaw = weeksMap['data']?['content'] ?? weeksMap['content'] ?? weeksResponse.data;
-      final weekIds = asList(weeksRaw)
-          .map(asMap)
-          .map((w) => stringOrNull(w['id']))
-          .whereType<String>()
-          .toList();
-
-      if (weekIds.isEmpty) return const [];
-
-      // Step 2: Fetch materials for each week in parallel
-      final materialFutures = weekIds.map((weekId) async {
-        try {
-          final res = await httpClient.get('/api/materials/lesson/$weekId');
-          final dataMap = asMap(res.data);
-          final raw = dataMap['data']?['content'] ?? dataMap['content'] ?? res.data;
-          return asList(raw).map(asMap).map(SessionItemModel.fromJson).toList();
-        } catch (_) {
-          return <SessionItemModel>[];
-        }
-      });
-
-      final results = await Future.wait(materialFutures);
-      return results.expand((items) => items).toList();
+      // Use getSessionWeeks which now populates items, then flatten
+      final weeks = await getSessionWeeks(sessionId);
+      return weeks.expand((w) => w.items).toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
@@ -208,12 +188,13 @@ final class DioCourseRepository
     }
   }
 
+
   @override
   Future<EnrollmentEntity?> getCourseProgress(String courseId) async {
     try {
       final response = await httpClient.get('/api/enrollments/check/$courseId');
+      final data = response.asMap();
 
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
       // /api/enrollments/check/{id} returns {enrolled: bool, enrollment: {...}}
       if (data['enrolled'] != true) return null;
       final enrollmentData = asMap(data['enrollment']);

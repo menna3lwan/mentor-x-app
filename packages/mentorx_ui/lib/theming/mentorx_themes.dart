@@ -4,33 +4,33 @@ final class MentorXThemes {
   MentorXThemes._();
 
   static final MixThemeData light = _createTheme(
-    brandPrimary: const Color(0xFF183764),
-    brandPressed: const Color(0xFF0F2647),
-    brandTransparent: const Color(0x66183764),
-    brandSecondary: const Color(0xFFF59239),
-    brandTertiary: const Color(0xFFFFF2DB),
-    textPrimary: const Color(0xFF183764),
-    textSecondary: const Color(0xFFB3B4B5),
-    textTertiary: const Color(0xFFD1D2D3),
+    brandPrimary: const Color(0xFF1E3ABA),
+    brandPressed: const Color(0xFF182E95),
+    brandTransparent: const Color(0x661E3ABA),
+    brandSecondary: const Color(0xFFFF9F1C),
+    brandTertiary: const Color(0xFFF2E1DB),
+    textPrimary: const Color(0xFF1E3ABA),
+    textSecondary: const Color(0xFF8F9091),
+    textTertiary: const Color(0xFFB3B4B5),
     textForeground: const Color(0xFFFFFFFF),
-    backgroundPrimary: const Color(0xFFFFF2DB),
+    backgroundPrimary: const Color(0xFFF2E1DB),
     backgroundSecondary: const Color(0xFFFFFFFF),
-    backgroundTertiary: const Color(0xFFF5E6C8),
-    backgroundPrimaryTransparent: const Color(0xCCFFF2DB),
+    backgroundTertiary: const Color(0xFFF9F7F5),
+    backgroundPrimaryTransparent: const Color(0xCCF2E1DB),
     backgroundElevatedSurface: const Color(0xFFFFFFFF),
-    backgroundElevatedSurfaceShadow: const Color(0x1A000000),
+    backgroundElevatedSurfaceShadow: const Color(0x261E3ABA), // 15% opacity Primary Blue
     statusDanger: const Color(0xFFD64545),
-    statusSuccess: const Color(0xFF4BBBA0),
-    statusWarning: const Color(0xFFF59239),
+    statusSuccess: const Color(0xFF2EC4B6),
+    statusWarning: const Color(0xFFFF9F1C),
     borderPrimary: const Color(0xFFE5E6E7),
     borderSecondary: const Color(0xFFF1F2F3),
   );
 
   static final MixThemeData dark = _createTheme(
-    brandPrimary: const Color(0xFF4A7BBF),
-    brandPressed: const Color(0xFF3A6BAF),
-    brandTransparent: const Color(0x664A7BBF),
-    brandSecondary: const Color(0xFFF59239),
+    brandPrimary: const Color(0xFF3F59C7),
+    brandPressed: const Color(0xFF2E45B0),
+    brandTransparent: const Color(0x663F59C7),
+    brandSecondary: const Color(0xFFFF9F1C),
     brandTertiary: const Color(0xFF3D3426),
     textPrimary: const Color(0xFFFFFFFF),
     textSecondary: const Color(0xFFA1A9B4),
@@ -43,8 +43,8 @@ final class MentorXThemes {
     backgroundElevatedSurface: const Color(0xFF2A2E36),
     backgroundElevatedSurfaceShadow: const Color(0x4D000000),
     statusDanger: const Color(0xFFE06B6B),
-    statusSuccess: const Color(0xFF6DD4BE),
-    statusWarning: const Color(0xFFF7A85C),
+    statusSuccess: const Color(0xFF58D0C5),
+    statusWarning: const Color(0xFFFFAE42),
     borderPrimary: const Color(0xFF3A3F48),
     borderSecondary: const Color(0xFF2C3138),
   );
@@ -103,41 +103,44 @@ final class MentorXThemes {
       },
       textStyles: {
         styleTokens.titleH1: GoogleFonts.cairo(
-          fontSize: 24,
-          fontWeight: FontWeight.w700,
+          fontSize: 26,
+          fontWeight: FontWeight.w800,
           color: textPrimary,
+          letterSpacing: -0.5,
         ),
         styleTokens.titleH2: GoogleFonts.cairo(
-          fontSize: 20,
-          fontWeight: FontWeight.w600,
+          fontSize: 22,
+          fontWeight: FontWeight.w700,
           color: textPrimary,
+          letterSpacing: -0.3,
         ),
         styleTokens.sectionTitle: GoogleFonts.cairo(
           fontSize: 18,
-          fontWeight: FontWeight.w500,
+          fontWeight: FontWeight.w600,
           color: textPrimary,
         ),
         styleTokens.bodyPrimary: GoogleFonts.cairo(
           fontSize: 16,
-          fontWeight: FontWeight.w400,
+          fontWeight: FontWeight.w500,
           color: textPrimary,
         ),
         styleTokens.bodySecondary: GoogleFonts.cairo(
           fontSize: 14,
-          fontWeight: FontWeight.w400,
+          fontWeight: FontWeight.w500,
           color: textSecondary,
         ),
         styleTokens.smallText: GoogleFonts.cairo(
           fontSize: 12,
-          fontWeight: FontWeight.w400,
+          fontWeight: FontWeight.w500,
           color: textSecondary,
         ),
       },
+
       radii: {
-        radiusTokens.thin: const Radius.circular(2),
-        radiusTokens.extraSmall: const Radius.circular(4),
-        radiusTokens.small: const Radius.circular(8),
-        radiusTokens.medium: const Radius.circular(16),
+        radiusTokens.thin: const Radius.circular(4),
+        radiusTokens.extraSmall: const Radius.circular(8),
+        radiusTokens.small: const Radius.circular(12),
+        radiusTokens.medium: const Radius.circular(20),
         radiusTokens.large: const Radius.circular(32),
       },
     );
@@ -152,21 +155,22 @@ final class MentorXThemes {
     final ThemeData defaultThemeData = Theme.of(context);
 
     // Resolve colors from theme tokens
-    final oxfordBlue = theme.colors[$mentorxToken.color.brandPrimary]!;
-    final pumpkinOrange = theme.colors[$mentorxToken.color.brandSecondary]!;
-    final tealGreen = theme.colors[$mentorxToken.color.statusSuccess]!;
-    final ashGrey = theme.colors[$mentorxToken.color.textSecondary]!;
-    final lightBeige = theme.colors[$mentorxToken.color.backgroundPrimary]!;
-    final white = theme.colors[$mentorxToken.color.backgroundSecondary]!;
+    final primaryBlue = theme.colors[$mentorxToken.color.brandPrimary]!;
+    final accentWarm = theme.colors[$mentorxToken.color.brandSecondary]!;
+    final secondaryGreen = theme.colors[$mentorxToken.color.statusSuccess]!;
+    final neutralGrey = theme.colors[$mentorxToken.color.textSecondary]!;
+    final neutralLight = theme.colors[$mentorxToken.color.backgroundPrimary]!;
+    final surfaceWhite = theme.colors[$mentorxToken.color.backgroundSecondary]!;
+    final shadowColor = theme.colors[$mentorxToken.color.backgroundElevatedSurfaceShadow]!;
     final textPrimary = theme.colors[$mentorxToken.color.textPrimary]!;
     final textForeground = theme.colors[$mentorxToken.color.textForeground]!;
     final statusDanger = theme.colors[$mentorxToken.color.statusDanger]!;
 
     // Input decoration
-    const inputBorderRadius = BorderRadius.all(Radius.circular(12));
-    final focusedBorderSide = BorderSide(color: oxfordBlue, width: 1.5);
-    final inactiveBorderSide = BorderSide(color: ashGrey, width: 1);
-    final errorBorderSide = BorderSide(color: statusDanger, width: 1.5);
+    const inputBorderRadius = BorderRadius.all(Radius.circular(14));
+    final focusedBorderSide = BorderSide(color: primaryBlue, width: 2.0);
+    final inactiveBorderSide = BorderSide(color: neutralGrey.withValues(alpha: 0.2), width: 1.5);
+    final errorBorderSide = BorderSide(color: statusDanger, width: 2.0);
 
     final focusedBorder = OutlineInputBorder(
       borderSide: focusedBorderSide,
@@ -175,16 +179,16 @@ final class MentorXThemes {
 
     final mainInputDecoration = InputDecorationTheme(
       filled: true,
-      fillColor: white,
+      fillColor: surfaceWhite,
       helperMaxLines: 1,
-      iconColor: oxfordBlue,
-      suffixIconColor: oxfordBlue,
-      prefixIconColor: oxfordBlue,
-      labelStyle: GoogleFonts.cairo(color: ashGrey, fontSize: 14),
-      hintStyle: GoogleFonts.cairo(color: ashGrey, fontSize: 14),
-      floatingLabelStyle: GoogleFonts.cairo(color: oxfordBlue, fontSize: 14),
+      iconColor: primaryBlue,
+      suffixIconColor: primaryBlue,
+      prefixIconColor: primaryBlue,
+      labelStyle: GoogleFonts.cairo(color: neutralGrey, fontSize: 14),
+      hintStyle: GoogleFonts.cairo(color: neutralGrey, fontSize: 14),
+      floatingLabelStyle: GoogleFonts.cairo(color: primaryBlue, fontSize: 14),
       contentPadding:
-          const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+          const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
       focusedBorder: focusedBorder,
       enabledBorder: OutlineInputBorder(
         borderSide: inactiveBorderSide,
@@ -200,7 +204,7 @@ final class MentorXThemes {
       ),
       disabledBorder: OutlineInputBorder(
         borderSide: BorderSide(
-          color: ashGrey.withValues(alpha: 0.3),
+          color: neutralGrey.withValues(alpha: 0.1),
           width: 1,
         ),
         borderRadius: inputBorderRadius,
@@ -208,153 +212,161 @@ final class MentorXThemes {
     );
 
     return defaultThemeData.copyWith(
-      scaffoldBackgroundColor: lightBeige,
-      canvasColor: lightBeige,
-      primaryColor: oxfordBlue,
+      scaffoldBackgroundColor: neutralLight,
+      canvasColor: neutralLight,
+      primaryColor: primaryBlue,
       colorScheme: ColorScheme.fromSeed(
-        seedColor: oxfordBlue,
-        primary: oxfordBlue,
-        secondary: pumpkinOrange,
-        surface: lightBeige,
+        seedColor: primaryBlue,
+        primary: primaryBlue,
+        secondary: accentWarm,
+        surface: surfaceWhite,
         error: statusDanger,
         onPrimary: textForeground,
         onSecondary: textForeground,
         onSurface: textPrimary,
-        tertiary: tealGreen,
+        tertiary: secondaryGreen,
+        shadow: shadowColor,
       ),
-      // AppBar: Oxford Blue bg, white title, elevation 0, centered
+      // AppBar: Primary Blue bg, white title, elevation 0, centered
       appBarTheme: AppBarTheme(
-        backgroundColor: oxfordBlue,
+        backgroundColor: primaryBlue,
         foregroundColor: textForeground,
         elevation: 0,
         centerTitle: true,
         titleTextStyle: GoogleFonts.cairo(
           fontSize: 20,
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.w700,
           color: textForeground,
         ),
         iconTheme: IconThemeData(color: textForeground),
+        systemOverlayStyle: SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.light,
+          statusBarBrightness: Brightness.dark,
+        ),
       ),
-      // Primary Button: Oxford Blue bg, white text, borderRadius 14, height 50, elevation 2
+      // Primary Button: Primary Blue bg, white text, borderRadius 16, height 54
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: oxfordBlue,
+          backgroundColor: primaryBlue,
           foregroundColor: textForeground,
-          elevation: 2,
-          minimumSize: const Size.fromHeight(50),
+          elevation: 4,
+          shadowColor: shadowColor.withValues(alpha: 0.5),
+          minimumSize: const Size.fromHeight(54),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(16),
           ),
           textStyle: GoogleFonts.cairo(
             fontSize: 16,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w700,
+            letterSpacing: 0.5,
           ),
-          disabledBackgroundColor: ashGrey.withValues(alpha: 0.3),
+          disabledBackgroundColor: neutralGrey.withValues(alpha: 0.2),
           disabledForegroundColor: textForeground.withValues(alpha: 0.5),
         ),
       ),
-      // CTA / accent buttons use Pumpkin Orange
+      // CTA / accent buttons use Accent Warm
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
-          backgroundColor: pumpkinOrange,
+          backgroundColor: accentWarm,
           foregroundColor: textForeground,
-          minimumSize: const Size.fromHeight(50),
+          elevation: 4,
+          shadowColor: accentWarm.withValues(alpha: 0.3),
+          minimumSize: const Size.fromHeight(54),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(16),
           ),
           textStyle: GoogleFonts.cairo(
             fontSize: 16,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w700,
+            letterSpacing: 0.5,
           ),
-          disabledBackgroundColor: ashGrey.withValues(alpha: 0.3),
+          disabledBackgroundColor: neutralGrey.withValues(alpha: 0.2),
           disabledForegroundColor: textForeground.withValues(alpha: 0.5),
         ),
       ),
-      // Text button with Pumpkin Orange text
+      // Text button with Accent Warm text
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
-          foregroundColor: pumpkinOrange,
+          foregroundColor: accentWarm,
           textStyle: GoogleFonts.cairo(
             fontSize: 14,
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.w600,
           ),
         ),
       ),
       // Outlined button
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
-          foregroundColor: oxfordBlue,
-          minimumSize: const Size.fromHeight(50),
-          side: BorderSide(color: oxfordBlue),
+          foregroundColor: primaryBlue,
+          minimumSize: const Size.fromHeight(54),
+          side: BorderSide(color: primaryBlue.withValues(alpha: 0.2), width: 1.5),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(16),
           ),
           textStyle: GoogleFonts.cairo(
             fontSize: 16,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w700,
           ),
         ),
       ),
-      // Card: white bg, borderRadius 16, soft shadow
+      // Card: white bg, borderRadius 20, soft colored shadow
       cardTheme: CardThemeData(
-        color: white,
+        color: surfaceWhite,
         elevation: 0,
+        margin: const EdgeInsets.only(bottom: 12),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(20),
+          side: BorderSide(color: primaryBlue.withValues(alpha: 0.05), width: 1),
         ),
-        shadowColor: Colors.black.withValues(alpha: 0.1),
+        shadowColor: shadowColor,
       ),
       // Checkbox
       checkboxTheme: CheckboxThemeData(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(2),
+          borderRadius: BorderRadius.circular(6),
         ),
         fillColor: WidgetStateProperty.fromMap({
-          WidgetState.selected: oxfordBlue,
-          WidgetState.any: ashGrey,
+          WidgetState.selected: primaryBlue,
+          WidgetState.any: neutralGrey.withValues(alpha: 0.3),
         }),
-        checkColor: WidgetStateProperty.fromMap({
-          WidgetState.selected: textForeground,
-          WidgetState.any: textForeground,
-        }),
+        checkColor: WidgetStateProperty.all(textForeground),
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        visualDensity: const VisualDensity(
-          horizontal: VisualDensity.minimumDensity,
-          vertical: VisualDensity.minimumDensity,
-        ),
       ),
-      // Text theme using Poppins
+      // Text theme using Cairo
       textTheme: GoogleFonts.cairoTextTheme(defaultThemeData.textTheme)
           .copyWith(
         headlineLarge: GoogleFonts.cairo(
-          fontSize: 24,
-          fontWeight: FontWeight.w700,
+          fontSize: 26,
+          fontWeight: FontWeight.w800,
           color: textPrimary,
+          letterSpacing: -0.5,
         ),
         headlineMedium: GoogleFonts.cairo(
-          fontSize: 20,
-          fontWeight: FontWeight.w600,
+          fontSize: 22,
+          fontWeight: FontWeight.w700,
           color: textPrimary,
+          letterSpacing: -0.3,
         ),
         titleLarge: GoogleFonts.cairo(
           fontSize: 18,
-          fontWeight: FontWeight.w500,
+          fontWeight: FontWeight.w600,
           color: textPrimary,
         ),
         bodyLarge: GoogleFonts.cairo(
           fontSize: 16,
-          fontWeight: FontWeight.w400,
+          fontWeight: FontWeight.w500,
           color: textPrimary,
         ),
         bodyMedium: GoogleFonts.cairo(
           fontSize: 14,
-          fontWeight: FontWeight.w400,
-          color: ashGrey,
+          fontWeight: FontWeight.w500,
+          color: neutralGrey,
         ),
         bodySmall: GoogleFonts.cairo(
           fontSize: 12,
-          fontWeight: FontWeight.w400,
-          color: ashGrey,
+          fontWeight: FontWeight.w500,
+          color: neutralGrey,
         ),
       ),
       inputDecorationTheme: mainInputDecoration,

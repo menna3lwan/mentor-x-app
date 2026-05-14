@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:mentorx_student/core/core.dart';
-import 'package:analytics_service/analytics_service.dart';
 
 part 'quiz_taking_page_event.dart';
 part 'quiz_taking_page_state.dart';
@@ -21,6 +20,8 @@ final class QuizTakingPageBloc
           QuizTakingPageState,
           QuizTakingPagePresentationEvent
         > {
+  static final MentorXLogger _log = MentorXLogger('QuizTakingPageBloc');
+
   QuizTakingPageBloc({
     required this.quizRepository,
     required this.analyticsService,
@@ -42,21 +43,48 @@ final class QuizTakingPageBloc
   ) async {
     emit(state.copyWith(loadingState: LoadingState.loading));
     try {
-      final quiz = await quizRepository.getQuiz(state.quizId);
+      final [quiz, startResult] = await Future.wait([
+        quizRepository.getQuiz(state.quizId),
+        quizRepository.startQuiz(state.quizId),
+      ]);
+
+      final quizEntity = quiz as QuizEntity;
+      final (attempt, questions) =
+          startResult as (QuizAttemptEntity, List<QuizQuestionEntity>);
+
+      int? remainingSeconds;
+      if (quizEntity.timeRestricted) {
+        if (attempt.expiresAt != null) {
+          remainingSeconds = attempt.expiresAt!.difference(DateTime.now()).inSeconds;
+        } else {
+          remainingSeconds = quizEntity.durationMinutes * 60;
+        }
+        // Ensure we don't have negative time
+        if (remainingSeconds < 0) remainingSeconds = 0;
+      }
+
+
       analyticsService.logEvent(
         name: AnalyticsEvents.quizStarted,
         parameters: {
           AnalyticsParams.quizId: state.quizId,
-          AnalyticsParams.name: quiz.title,
+          AnalyticsParams.name: quizEntity.title,
+          'attempt_id': attempt.id,
+          'remaining_seconds': remainingSeconds,
         },
       );
+
       emit(
         state.copyWith(
           loadingState: LoadingState.loaded,
-          quiz: quiz,
-          questions: quiz.questions,
+          quiz: quizEntity,
+          attemptId: attempt.id,
+          questions: questions.isNotEmpty ? questions : quizEntity.questions,
+          answers: attempt.answers,
+          remainingSeconds: remainingSeconds,
         ),
       );
+
     } catch (e) {
       emit(
         state.copyWith(
@@ -64,23 +92,29 @@ final class QuizTakingPageBloc
           errorMessage: e.toString(),
         ),
       );
-      analyticsService.logEvent(
-        name: AnalyticsEvents.quizSubmitFailed,
-        parameters: {
-          AnalyticsParams.quizId: state.quizId,
-          AnalyticsParams.errorMessage: e.toString(),
-        },
-      );
     }
   }
 
-  void _onAnswerSelected(
+  Future<void> _onAnswerSelected(
     QuizTakingPageAnswerSelected event,
     Emitter<QuizTakingPageState> emit,
-  ) {
+  ) async {
     final newAnswers = Map<String, String>.from(state.answers);
     newAnswers[event.questionId] = event.selectedAnswer;
     emit(state.copyWith(answers: newAnswers));
+
+    if (state.attemptId != null) {
+      try {
+        await quizRepository.saveAnswer(
+          attemptId: state.attemptId!,
+          questionId: event.questionId,
+          selectedOptions: [event.selectedAnswer],
+        );
+      } catch (e) {
+        // Optionally handle save error (e.g. show a toast)
+        _log.warning('Failed to save answer: $e');
+      }
+    }
   }
 
   void _onNextQuestion(
@@ -109,16 +143,16 @@ final class QuizTakingPageBloc
     QuizTakingPageSubmit event,
     Emitter<QuizTakingPageState> emit,
   ) async {
+    if (state.attemptId == null) return;
+
     emit(state.copyWith(loadingState: LoadingState.actionInProgress));
     try {
-      final result = await quizRepository.submitQuiz(
-        state.quizId,
-        answers: state.answers,
-      );
+      final result = await quizRepository.submitQuizAttempt(state.attemptId!);
       analyticsService.logEvent(
         name: 'quiz_submit_success',
         parameters: {
           'quiz_id': state.quizId,
+          'attempt_id': state.attemptId,
           'score': result.score,
         },
       );
@@ -134,13 +168,6 @@ final class QuizTakingPageBloc
           loadingState: LoadingState.error,
           errorMessage: e.toString(),
         ),
-      );
-      analyticsService.logEvent(
-        name: AnalyticsEvents.quizSubmitFailed,
-        parameters: {
-          AnalyticsParams.quizId: state.quizId,
-          AnalyticsParams.errorMessage: e.toString(),
-        },
       );
     }
   }

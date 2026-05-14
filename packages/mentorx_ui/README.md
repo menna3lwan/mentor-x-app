@@ -1,7 +1,7 @@
 # 🎨 MentorX UI Kit
 
 [![Flutter](https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white)](https://flutter.dev)
-[![Package](https://img.shields.io/badge/Package-mentorx__ui-4BBBA0?style=for-the-badge)](#)
+[![Package](https://img.shields.io/badge/Package-mentorx__ui-2EC4B6?style=for-the-badge)](#)
 
 The **MentorX UI Kit** is the design foundation for the entire MentorX ecosystem. it provides a unified set of widgets, theme tokens, and design patterns to ensure a premium, consistent experience across all applications.
 

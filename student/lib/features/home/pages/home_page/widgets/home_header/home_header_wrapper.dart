@@ -16,6 +16,9 @@ final class HomeHeaderWrapper extends StatelessWidget {
     final unreadCount = context.select<HomePageBloc, int>(
       (bloc) => bloc.state.unreadCountSection.data ?? 0,
     );
+    final avatarUrl = context.select<HomePageBloc, String?>(
+      (bloc) => bloc.state.avatarUrl,
+    );
 
     final hour = DateTime.now().hour;
     final greeting = (hour >= 5 && hour < 12)
@@ -26,6 +29,7 @@ final class HomeHeaderWrapper extends StatelessWidget {
       studentName: studentName,
       greetingText: greeting,
       unreadCount: unreadCount,
+      avatarUrl: avatarUrl,
     );
   }
 }

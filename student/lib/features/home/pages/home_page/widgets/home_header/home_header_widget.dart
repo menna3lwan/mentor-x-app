@@ -2,62 +2,46 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:gap/gap.dart';
+import '../../../../../../core/routing/app_routes.dart';
 
 final class HomeHeaderWidget extends StatelessWidget {
   final String studentName;
   final String greetingText;
   final int unreadCount;
+  final String? avatarUrl;
 
   const HomeHeaderWidget({
     super.key,
     required this.studentName,
     required this.greetingText,
     required this.unreadCount,
+    this.avatarUrl,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 24),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         children: [
-          Container(
-            padding: const EdgeInsets.all(3.5),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: LinearGradient(
-                colors: [
-                  context.brandPrimaryColor,
-                  context.brandSecondaryColor.withValues(alpha: 0.8),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: context.brandPrimaryColor.withValues(alpha: 0.2),
-                  blurRadius: 20,
-                  offset: const Offset(0, 10),
-                  spreadRadius: -2,
-                ),
-              ],
-            ),
+          GestureDetector(
+            onTap: () => const ProfileViewPageRoute().push(context),
             child: Container(
-              padding: const EdgeInsets.all(2.5),
+              padding: const EdgeInsets.all(2),
               decoration: BoxDecoration(
-                color: context.backgroundPrimaryColor,
                 shape: BoxShape.circle,
+                border: Border.all(
+                  color: context.brandPrimaryColor.withValues(alpha: 0.2),
+                  width: 2,
+                ),
               ),
               child: Hero(
                 tag: 'student_avatar',
-                child: CircleAvatar(
-                  radius: 28,
-                  backgroundColor: context.backgroundSecondaryColor,
-                  child: Icon(
-                    Icons.person_rounded,
-                    color: context.brandPrimaryColor.withValues(alpha: 0.8),
-                    size: 32,
-                  ),
+                child: AppDynamicImage(
+                  avatarUrl ?? '',
+                  width: 52,
+                  height: 52,
+                  borderRadius: BorderRadius.circular(26),
                 ),
               ),
             ),
@@ -68,24 +52,23 @@ final class HomeHeaderWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  greetingText.toUpperCase(),
+                  greetingText,
                   style: TextStyle(
-                    fontSize: 10,
-                    color: context.brandPrimaryColor,
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: 2.0,
+                    fontSize: 13,
+                    color: context.textSecondaryColor,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
-                const Gap(4),
+                const Gap(2),
                 Text(
                   studentName,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    fontSize: 26,
+                    fontSize: 22,
                     fontWeight: FontWeight.w900,
                     color: context.textPrimaryColor,
-                    letterSpacing: -1.2,
+                    letterSpacing: -0.8,
                     height: 1.1,
                   ),
                 ),
@@ -93,8 +76,56 @@ final class HomeHeaderWidget extends StatelessWidget {
             ),
           ),
           const Gap(12),
+          _LeaderboardButton(),
+          const Gap(12),
           _NotificationButton(unreadCount: unreadCount),
         ],
+      ),
+    );
+  }
+}
+
+final class _LeaderboardButton extends StatelessWidget {
+  const _LeaderboardButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 52,
+      height: 52,
+      decoration: BoxDecoration(
+        color: context.backgroundSecondaryColor.withValues(alpha: 0.45),
+        shape: BoxShape.circle,
+        border: Border.all(
+          color: context.borderPrimaryColor.withValues(alpha: 0.08),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.03),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(26),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () => const LeaderboardPageRoute().push(context),
+              borderRadius: BorderRadius.circular(26),
+              child: Center(
+                child: Icon(
+                  Icons.emoji_events_outlined,
+                  color: context.brandSecondaryColor,
+                  size: 26,
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -134,9 +165,7 @@ final class _NotificationButton extends StatelessWidget {
               child: Material(
                 color: Colors.transparent,
                 child: InkWell(
-                  onTap: () {
-                    // Navigate to notifications
-                  },
+                  onTap: () => const NotificationsPageRoute().push(context),
                   borderRadius: BorderRadius.circular(26),
                   child: Center(
                     child: Icon(

@@ -105,16 +105,22 @@ final class DioAssignmentRepository
         '/api/assignments/$assignmentId/submit',
         data: {
           'assignmentId': assignmentId,
+          'assignment_id': assignmentId,
           'answers': answers.entries
               .map(
                 (e) => {
                   'questionId': e.key,
+                  'question_id': e.key,
                   'selectedAnswer': e.value,
+                  'selected_answer': e.value,
                 },
               )
               .toList(),
           'fileUrls': filePaths,
+          'file_urls': filePaths,
           'contentText': contentText,
+          'notes': contentText,
+          'content_text': contentText,
         },
       );
 

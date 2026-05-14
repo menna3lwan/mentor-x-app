@@ -15,9 +15,9 @@ class MentorXBackButton extends StatelessWidget {
     return MentorXIconButton(
       icon: Icons.arrow_back_ios_new_rounded,
       onPressed: onPressed ?? () => Navigator.maybePop(context),
-      color: color ?? context.brandPrimaryColor,
+      color: color,
       variant: MentorXIconButtonVariant.ghost,
-      size: MentorXIconButtonSize.small,
+      size: MentorXIconButtonSize.medium,
       tooltip: MaterialLocalizations.of(context).backButtonTooltip,
     );
   }

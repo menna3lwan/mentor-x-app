@@ -11,8 +11,8 @@ final class PerformanceSnapshotModel extends PerformanceSnapshotEntity {
   factory PerformanceSnapshotModel.fromJson(Map<String, dynamic> json) {
     return PerformanceSnapshotModel(
       label: ModelParser.asString(json['label'] ?? json['title']),
-      studentScore: ModelParser.asDouble(json['studentScore'] ?? json['student_score']),
-      averageScore: ModelParser.asDouble(json['averageScore'] ?? json['average_score']),
+      studentScore: ModelParser.asDouble(json['studentScore'] ?? json['myAvgPercentage']),
+      averageScore: ModelParser.asDouble(json['averageScore'] ?? json['classAvgPercentage']),
       date: ModelParser.asDateTime(json['date'] ?? json['timestamp']) ?? DateTime.now(),
     );
   }
@@ -27,9 +27,9 @@ final class ActivityHeatmapModel extends ActivityHeatmapEntity {
 
   factory ActivityHeatmapModel.fromJson(Map<String, dynamic> json) {
     return ActivityHeatmapModel(
-      dayOfWeek: ModelParser.asInt(json['dayOfWeek'] ?? json['day_of_week']),
-      hourOfDay: ModelParser.asInt(json['hourOfDay'] ?? json['hour_of_day']),
-      intensity: ModelParser.asInt(json['intensity']),
+      dayOfWeek: ModelParser.asInt(json['dayOfWeek'] ?? json['day']),
+      hourOfDay: ModelParser.asInt(json['hourOfDay'] ?? json['hour']),
+      intensity: ModelParser.asInt(json['intensity'] ?? json['count']),
     );
   }
 }
@@ -49,8 +49,8 @@ final class AchievementModel extends AchievementEntity {
       id: ModelParser.asString(json['id']),
       title: ModelParser.asString(json['title']),
       description: ModelParser.asString(json['description']),
-      iconUrl: ModelParser.asString(json['iconUrl'] ?? json['icon_url']),
-      isUnlocked: ModelParser.asBool(json['isUnlocked'] ?? json['unlocked'] ?? json['is_unlocked']),
+      iconUrl: ModelParser.asString(json['icon'] ?? json['iconUrl']),
+      isUnlocked: ModelParser.asBool(json['unlocked'] ?? json['isUnlocked']),
       unlockedAt: ModelParser.asDateTime(json['unlockedAt'] ?? json['unlocked_at']),
     );
   }
@@ -65,9 +65,9 @@ final class StreakModel extends StreakEntity {
 
   factory StreakModel.fromJson(Map<String, dynamic> json) {
     return StreakModel(
-      currentStreak: ModelParser.asInt(json['currentStreak'] ?? json['current_streak']),
-      longestStreak: ModelParser.asInt(json['longestStreak'] ?? json['longest_streak']),
-      lastActivityAt: ModelParser.asDateTime(json['lastActivityAt'] ?? json['last_activity_at']),
+      currentStreak: ModelParser.asInt(json['currentStreakDays'] ?? json['currentStreak']),
+      longestStreak: ModelParser.asInt(json['longestStreakDays'] ?? json['longestStreak']),
+      lastActivityAt: ModelParser.asDateTime(json['lastActivityDate'] ?? json['lastActivityAt']),
     );
   }
 }
@@ -83,13 +83,16 @@ final class QuizSpeedMetricModel extends QuizSpeedMetricEntity {
   });
 
   factory QuizSpeedMetricModel.fromJson(Map<String, dynamic> json) {
+    final int duration = ModelParser.asInt(json['durationSeconds'] ?? json['timeSpentSeconds']);
+    final int qCount = ModelParser.asInt(json['questionCount']);
+    
     return QuizSpeedMetricModel(
-      quizId: ModelParser.asString(json['quizId'] ?? json['quiz_id']),
-      quizTitle: ModelParser.asString(json['quizTitle'] ?? json['quiz_title']),
-      timeSpentSeconds: ModelParser.asInt(json['timeSpentSeconds'] ?? json['time_spent_seconds']),
-      questionCount: ModelParser.asInt(json['questionCount'] ?? json['question_count']),
-      secondsPerQuestion: ModelParser.asDouble(json['secondsPerQuestion'] ?? json['seconds_per_question']),
-      averageSecondsPerQuestion: ModelParser.asDouble(json['averageSecondsPerQuestion'] ?? json['average_seconds_per_question']),
+      quizId: ModelParser.asString(json['quizId'] ?? json['id']),
+      quizTitle: ModelParser.asString(json['quizTitle'] ?? json['title']),
+      timeSpentSeconds: duration,
+      questionCount: qCount,
+      secondsPerQuestion: ModelParser.asDouble(json['secondsPerQuestion'] ?? (qCount > 0 ? duration / qCount : 0)),
+      averageSecondsPerQuestion: ModelParser.asDouble(json['averageSecondsPerQuestion']),
     );
   }
 }

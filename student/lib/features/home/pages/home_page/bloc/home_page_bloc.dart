@@ -25,11 +25,13 @@ final class HomePageBloc extends Bloc<HomePageEvent, HomePageState>
     required StudentHomeRepository homeRepository,
     required AnalyticsService analyticsService,
     required String studentName,
+    String? avatarUrl,
   }) : _homeRepository = homeRepository,
        _analyticsService = analyticsService,
        super(
          HomePageState.initial(
            studentName: studentName.trim().isEmpty ? 'Student' : studentName,
+           avatarUrl: avatarUrl,
          ),
        ) {
     on<HomePageInitializedEvent>(_onInitialized);

@@ -19,40 +19,57 @@ class ChildSwitcher extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    return Container(
-      height: 140,
-      margin: const EdgeInsets.symmetric(vertical: 12),
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.symmetric(horizontal: 24),
-        itemCount: children.length + 1,
-        itemBuilder: (context, index) {
-          if (index == children.length) {
-            return FadeInRight(
-              duration: const Duration(milliseconds: 600),
-              delay: Duration(milliseconds: 80 * index),
-              child: const _AddChildButton(),
-            );
-          }
-
-          final child = children[index];
-          final isSelected = child.id == selectedChild.id;
-
-          return FadeInRight(
-            duration: const Duration(milliseconds: 600),
-            delay: Duration(milliseconds: 80 * index),
-            child: _ChildAvatarItem(
-              name: child.name.split(' ').first,
-              imageUrl: child.profileImageUrl,
-              isSelected: isSelected,
-              onTap: () {
-                context.read<HomeBloc>().add(HomeChildSwitched(child));
-              },
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4),
+          child: Text(
+            'SELECT CHILD',
+            style: TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.w900,
+              color: context.textTertiaryColor,
+              letterSpacing: 2.0,
             ),
-          );
-        },
-      ),
+          ),
+        ),
+        const Gap(16),
+        SizedBox(
+          height: 120,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
+            clipBehavior: Clip.none,
+            itemCount: children.length + 1,
+            itemBuilder: (context, index) {
+              if (index == children.length) {
+                return FadeInRight(
+                  duration: const Duration(milliseconds: 600),
+                  delay: Duration(milliseconds: 100 * index),
+                  child: const _AddChildButton(),
+                );
+              }
+
+              final child = children[index];
+              final isSelected = child.id == selectedChild.id;
+
+              return FadeInRight(
+                duration: const Duration(milliseconds: 600),
+                delay: Duration(milliseconds: 100 * index),
+                child: _ChildAvatarItem(
+                  name: child.name.split(' ').first,
+                  imageUrl: child.profileImageUrl,
+                  isSelected: isSelected,
+                  onTap: () {
+                    context.read<HomeBloc>().add(HomeChildSwitched(child));
+                  },
+                ),
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 }
@@ -73,56 +90,62 @@ class _ChildAvatarItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(right: 24),
+      padding: const EdgeInsets.only(right: 20),
       child: GestureDetector(
         onTap: onTap,
         behavior: HitTestBehavior.opaque,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            AnimatedScale(
+            AnimatedContainer(
               duration: const Duration(milliseconds: 400),
-              curve: Curves.easeOutBack,
-              scale: isSelected ? 1.15 : 1.0,
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 400),
-                padding: const EdgeInsets.all(4),
+              curve: Curves.easeOutQuart,
+              padding: const EdgeInsets.all(3),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: isSelected 
+                      ? context.brandPrimaryColor 
+                      : context.borderPrimaryColor.withValues(alpha: 0.1),
+                  width: isSelected ? 2.5 : 1,
+                ),
+                boxShadow: isSelected ? [
+                  BoxShadow(
+                    color: context.brandPrimaryColor.withValues(alpha: 0.2),
+                    blurRadius: 15,
+                    offset: const Offset(0, 8),
+                  ),
+                ] : [],
+              ),
+              child: Container(
+                padding: const EdgeInsets.all(2),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border: Border.all(
-                    color: isSelected ? context.brandPrimaryColor : context.borderPrimaryColor.withValues(alpha: 0.1),
-                    width: isSelected ? 3 : 1.5,
-                  ),
-                  boxShadow: isSelected ? [
-                    BoxShadow(
-                      color: context.brandPrimaryColor.withValues(alpha: 0.3),
-                      blurRadius: 20,
-                      offset: const Offset(0, 10),
-                    ),
-                  ] : [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.03),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
+                  color: isSelected 
+                      ? context.brandPrimaryColor.withValues(alpha: 0.05) 
+                      : Colors.transparent,
                 ),
                 child: Hero(
                   tag: 'child_avatar_${name}_$isSelected',
-                  child: CircleAvatar(
-                    radius: 32,
-                    backgroundColor: isSelected ? context.brandPrimaryColor.withValues(alpha: 0.05) : context.backgroundSecondaryColor,
-                    backgroundImage: imageUrl != null ? NetworkImage(imageUrl!) : null,
-                    child: imageUrl == null 
-                        ? Text(
+                  child: ClipOval(
+                    child: AppDynamicImage(
+                      imageUrl ?? '',
+                      width: 64,
+                      height: 64,
+                      fit: BoxFit.cover,
+                      errorWidget: Container(
+                        color: context.backgroundSecondaryColor,
+                        child: Center(
+                          child: Text(
                             name[0].toUpperCase(),
                             style: TextStyle(
                               color: context.brandPrimaryColor,
                               fontSize: 24,
                               fontWeight: FontWeight.w900,
                             ),
-                          )
-                        : null,
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -131,23 +154,23 @@ class _ChildAvatarItem extends StatelessWidget {
             AnimatedDefaultTextStyle(
               duration: const Duration(milliseconds: 300),
               style: TextStyle(
-                fontSize: 14,
+                fontSize: 13,
                 fontWeight: isSelected ? FontWeight.w900 : FontWeight.w700,
                 color: isSelected ? context.textPrimaryColor : context.textTertiaryColor,
-                letterSpacing: isSelected ? -0.2 : 0,
+                letterSpacing: -0.2,
               ),
               child: Text(name),
             ),
             if (isSelected)
-              FadeInDown(
+              FadeInUp(
                 duration: const Duration(milliseconds: 400),
                 child: Container(
                   margin: const EdgeInsets.only(top: 6),
-                  width: 6,
-                  height: 6,
+                  width: 16,
+                  height: 3,
                   decoration: BoxDecoration(
                     color: context.brandPrimaryColor,
-                    shape: BoxShape.circle,
+                    borderRadius: BorderRadius.circular(2),
                   ),
                 ),
               ),
@@ -167,35 +190,35 @@ class _AddChildButton extends StatelessWidget {
       onTap: () => const AddChildLinkRoute().go(context),
       behavior: HitTestBehavior.opaque,
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            padding: const EdgeInsets.all(4),
+            width: 72,
+            height: 72,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               border: Border.all(
-                color: context.borderPrimaryColor.withValues(alpha: 0.3),
+                color: context.borderPrimaryColor.withValues(alpha: 0.2),
                 width: 1.5,
-                style: BorderStyle.solid, // Using solid for simplicity but visually distinct
+                style: BorderStyle.solid,
               ),
+              color: context.backgroundSecondaryColor.withValues(alpha: 0.3),
             ),
-            child: CircleAvatar(
-              radius: 32,
-              backgroundColor: Colors.white,
-              child: Icon(Icons.add_rounded, color: context.textTertiaryColor, size: 32),
+            child: Icon(
+              Icons.add_rounded, 
+              color: context.textTertiaryColor, 
+              size: 28,
             ),
           ),
           const Gap(12),
           Text(
-            'Add Child',
+            'Add',
             style: TextStyle(
-              fontSize: 14,
+              fontSize: 13,
               fontWeight: FontWeight.w700,
               color: context.textTertiaryColor,
               letterSpacing: -0.2,
             ),
           ),
-          const Gap(12), // Align with indicator height
         ],
       ),
     );

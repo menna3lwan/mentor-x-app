@@ -126,7 +126,7 @@ final class _CourseDetailPageWrapperState
           );
         }
       case SessionItemType.quiz:
-        QuizTakingPageRoute(quizId: item.id).push(context);
+        QuizIntroPageRoute(quizId: item.id).push(context);
       case SessionItemType.assignment:
         AssignmentDetailPageRoute(assignmentId: item.id).push(context);
       case SessionItemType.audio:

@@ -688,7 +688,10 @@ class TranslationsAr with BaseTranslations<AppLocale, Translations> implements T
 		'continueBtn': 'متابعة',
 		'redeemCode': 'استخدام كود',
 		'enterCodeDesc': 'أدخل كود الخصم أو الحصة',
+		'redeemPolicy': 'بتفعيل هذا الكود، أنت توافق على الشروط والأحكام الخاصة بنا.',
 		'activateCode': 'تفعيل الكود',
+		'codeActivated': 'تم تفعيل الكود بنجاح',
+		'invalidCode': 'كود غير صحيح',
 		'purchaseConfirm': 'تأكيد العملية',
 		'paymentMethod': 'وسيلة الدفع',
 		'total': 'الإجمالي',
@@ -720,6 +723,7 @@ class _TranslationsUiAr implements TranslationsUiEn {
 	@override late final _TranslationsUiErrorsAr errors = _TranslationsUiErrorsAr._(_root);
 	@override late final _TranslationsUiDateTimeAr dateTime = _TranslationsUiDateTimeAr._(_root);
 	@override late final _TranslationsUiMentorXReadMoreAr mentorXReadMore = _TranslationsUiMentorXReadMoreAr._(_root);
+	@override late final _TranslationsUiWidgetsAr widgets = _TranslationsUiWidgetsAr._(_root);
 }
 
 // Path: core
@@ -1093,6 +1097,19 @@ class _TranslationsUiMentorXReadMoreAr implements TranslationsUiMentorXReadMoreE
 	@override String get less => 'أقل';
 }
 
+// Path: ui.widgets
+class _TranslationsUiWidgetsAr implements TranslationsUiWidgetsEn {
+	_TranslationsUiWidgetsAr._(this._root);
+
+	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
+	@override late final _TranslationsUiWidgetsAnnouncementAr announcement = _TranslationsUiWidgetsAnnouncementAr._(_root);
+	@override late final _TranslationsUiWidgetsAttendanceAr attendance = _TranslationsUiWidgetsAttendanceAr._(_root);
+	@override late final _TranslationsUiWidgetsErrorAr error = _TranslationsUiWidgetsErrorAr._(_root);
+	@override late final _TranslationsUiWidgetsCommonAr common = _TranslationsUiWidgetsCommonAr._(_root);
+}
+
 // Path: onboarding.steps
 class _TranslationsOnboardingStepsAr implements TranslationsOnboardingStepsEn {
 	_TranslationsOnboardingStepsAr._(this._root);
@@ -1342,6 +1359,50 @@ class _TranslationsCourseErrorsAr implements TranslationsCourseErrorsEn {
 	@override String get failedToLoadSessions => 'فشل تحميل الحصص';
 }
 
+// Path: ui.widgets.announcement
+class _TranslationsUiWidgetsAnnouncementAr implements TranslationsUiWidgetsAnnouncementEn {
+	_TranslationsUiWidgetsAnnouncementAr._(this._root);
+
+	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
+	@override String get pinned => 'مثبت';
+	@override String get update => 'تحديث';
+}
+
+// Path: ui.widgets.attendance
+class _TranslationsUiWidgetsAttendanceAr implements TranslationsUiWidgetsAttendanceEn {
+	_TranslationsUiWidgetsAttendanceAr._(this._root);
+
+	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
+	@override String get rate => 'نسبة الحضور';
+}
+
+// Path: ui.widgets.error
+class _TranslationsUiWidgetsErrorAr implements TranslationsUiWidgetsErrorEn {
+	_TranslationsUiWidgetsErrorAr._(this._root);
+
+	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'حدث خطأ ما';
+	@override String get retry => 'إعادة المحاولة';
+}
+
+// Path: ui.widgets.common
+class _TranslationsUiWidgetsCommonAr implements TranslationsUiWidgetsCommonEn {
+	_TranslationsUiWidgetsCommonAr._(this._root);
+
+	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
+	@override String get viewAll => 'عرض الكل';
+	@override String get readMore => 'اقرأ المزيد';
+	@override String get readLess => 'اقرأ أقل';
+}
+
 // Path: onboarding.steps.learn
 class _TranslationsOnboardingStepsLearnAr implements TranslationsOnboardingStepsLearnEn {
 	_TranslationsOnboardingStepsLearnAr._(this._root);
@@ -1431,6 +1492,14 @@ extension on TranslationsAr {
 			'ui.dateTime.weekdays.sunday' => 'الأحد',
 			'ui.mentorXReadMore.more' => 'المزيد',
 			'ui.mentorXReadMore.less' => 'أقل',
+			'ui.widgets.announcement.pinned' => 'مثبت',
+			'ui.widgets.announcement.update' => 'تحديث',
+			'ui.widgets.attendance.rate' => 'نسبة الحضور',
+			'ui.widgets.error.title' => 'حدث خطأ ما',
+			'ui.widgets.error.retry' => 'إعادة المحاولة',
+			'ui.widgets.common.viewAll' => 'عرض الكل',
+			'ui.widgets.common.readMore' => 'اقرأ المزيد',
+			'ui.widgets.common.readLess' => 'اقرأ أقل',
 			'core.appName' => 'MentorX Student',
 			'core.currency' => 'ج.م',
 			'core.price' => ({required num amount}) => '${amount} ${_root.core.currency}',
@@ -1904,6 +1973,8 @@ extension on TranslationsAr {
 			'student.commonSubmit' => 'إرسال',
 			'student.review' => 'مراجعة',
 			'student.quizNotFound' => 'الاختبار غير موجود',
+			_ => null,
+		} ?? switch (path) {
 			'student.noQuestions' => 'لا توجد أسئلة متاحة',
 			'student.yourAnswer' => 'إجابتك:',
 			'student.typeAnswerHere' => 'اكتب إجابتك هنا...',
@@ -1912,8 +1983,6 @@ extension on TranslationsAr {
 			'student.viewAttendance' => 'سجل الحضور',
 			'student.totalAttendance' => 'نسبة الحضور الكلية',
 			'student.present' => 'حاضر',
-			_ => null,
-		} ?? switch (path) {
 			'student.absent' => 'غائب',
 			'student.presentCount' => '%s حضور',
 			'student.absentCount' => '%s غياب',
@@ -2298,7 +2367,10 @@ extension on TranslationsAr {
 			'student.continueBtn' => 'متابعة',
 			'student.redeemCode' => 'استخدام كود',
 			'student.enterCodeDesc' => 'أدخل كود الخصم أو الحصة',
+			'student.redeemPolicy' => 'بتفعيل هذا الكود، أنت توافق على الشروط والأحكام الخاصة بنا.',
 			'student.activateCode' => 'تفعيل الكود',
+			'student.codeActivated' => 'تم تفعيل الكود بنجاح',
+			'student.invalidCode' => 'كود غير صحيح',
 			'student.purchaseConfirm' => 'تأكيد العملية',
 			'student.paymentMethod' => 'وسيلة الدفع',
 			'student.total' => 'الإجمالي',

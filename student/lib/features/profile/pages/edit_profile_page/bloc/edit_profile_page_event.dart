@@ -13,15 +13,17 @@ final class EditProfilePageLoadEvent extends EditProfilePageEvent {
 
 final class EditProfilePageSubmitRequestEvent extends EditProfilePageEvent {
   final String fieldName;
+  final String oldValue;
   final String newValue;
   final String reason;
 
   const EditProfilePageSubmitRequestEvent({
     required this.fieldName,
+    required this.oldValue,
     required this.newValue,
     required this.reason,
   });
 
   @override
-  List<Object?> get props => [fieldName, newValue, reason];
+  List<Object?> get props => [fieldName, oldValue, newValue, reason];
 }

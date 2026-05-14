@@ -1,5 +1,9 @@
 import 'package:mentorx_core/mentorx_core.dart';
 
+// ─────────────────────────────────────────────────────────────────────────────
+// QuizModel
+// Maps to: QuizResponse (GET /api/quizzes content[])
+// ─────────────────────────────────────────────────────────────────────────────
 final class QuizModel extends QuizEntity {
   const QuizModel({
     required super.id,
@@ -21,38 +25,48 @@ final class QuizModel extends QuizEntity {
   });
 
   factory QuizModel.fromJson(Map<String, dynamic> json) {
-    final totalMarks = ModelParser.asInt(json['totalMarks'] ?? json['total_marks']);
-    final passingPercentage = ModelParser.asDouble(json['passingPercentage'] ?? json['passing_percentage']);
+    final data = ModelParser.extractData(json);
+    
+    // API sends totalMarks and passingPercentage (or passMarks)
+    final totalMarks = ModelParser.asInt(data['totalMarks'] ?? data['total_marks']);
+    final passingPercentage = ModelParser.asDouble(data['passingPercentage'] ?? data['passing_percentage']);
     final passMarks = ModelParser.asInt(
-      json['passMarks'] ?? json['pass_marks'],
+      data['passMarks'] ?? data['pass_marks'],
       fallback: (totalMarks * passingPercentage / 100).round(),
     );
 
+    final rawQuestions = ModelParser.asList(data['questions']);
+    final questions = rawQuestions
+        .map((e) => QuizQuestionModel.fromJson(ModelParser.asMap(e)))
+        .toList();
+
     return QuizModel(
-      id: ModelParser.asString(json['id']),
-      title: ModelParser.asString(json['title']),
-      description: ModelParser.asString(json['description']),
-      active: ModelParser.asBool(json['active'], fallback: true),
-      deleted: ModelParser.asBool(json['deleted']),
-      timeRestricted: ModelParser.asBool(json['timeRestricted'] ?? json['time_restricted']),
+      id: ModelParser.asString(data['id']),
+      title: ModelParser.asString(data['title']),
+      description: _nullableString(data['description']),
+      active: ModelParser.asBool(data['active'], fallback: true),
+      deleted: ModelParser.asBool(data['deleted']),
+      timeRestricted: ModelParser.asBool(data['timeRestricted'] ?? data['time_restricted']),
       durationMinutes: ModelParser.asInt(
-        json['durationMinutes'] ?? json['duration_minutes'] ?? json['timeLimitMinutes'] ?? json['time_limit'],
+        data['durationMinutes'] ?? data['duration_minutes'] ?? data['timeLimitMinutes'] ?? data['time_limit'],
       ),
-      deadline: ModelParser.asDateTime(json['deadline']),
-      weekId: ModelParser.asString(json['weekId'] ?? json['week_id']),
-      courseId: ModelParser.asString(json['courseId'] ?? json['course_id']),
+      deadline: ModelParser.asDateTime(data['deadline']),
+      weekId: ModelParser.asString(data['weekId'] ?? data['week_id']),
+      courseId: ModelParser.asString(data['courseId'] ?? data['course_id']),
       totalMarks: totalMarks,
       passMarks: passMarks,
-      questionsCount: ModelParser.asInt(json['questionsCount'] ?? json['questions_count']),
-      questions: ModelParser.asList(json['questions'])
-          .map((e) => QuizQuestionModel.fromJson(ModelParser.asMap(e)))
-          .toList(),
-      createdAt: ModelParser.asDateTime(json['createdAt'] ?? json['created_at']),
-      updatedAt: ModelParser.asDateTime(json['updatedAt'] ?? json['updated_at']),
+      questionsCount: ModelParser.asInt(data['questionsCount'] ?? data['questions_count'] ?? questions.length),
+      questions: questions,
+      createdAt: ModelParser.asDateTime(data['createdAt'] ?? data['created_at']),
+      updatedAt: ModelParser.asDateTime(data['updatedAt'] ?? data['updated_at']),
     );
   }
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// QuizQuestionModel
+// Maps to: QuizQuestionResponse (Nested in QuizModel or from /questions/quiz/id)
+// ─────────────────────────────────────────────────────────────────────────────
 final class QuizQuestionModel extends QuizQuestionEntity {
   const QuizQuestionModel({
     required super.id,
@@ -66,29 +80,38 @@ final class QuizQuestionModel extends QuizQuestionEntity {
   });
 
   factory QuizQuestionModel.fromJson(Map<String, dynamic> json) {
+    final data = ModelParser.extractData(json);
+    
+    final rawOptions = ModelParser.asList(data['options']);
+    final options = rawOptions.map((e) => e.toString()).toList();
+
     return QuizQuestionModel(
-      id: ModelParser.asString(json['id']),
-      text: ModelParser.asString(json['description'] ?? json['text'] ?? json['title']),
-      type: _parseType(json['type']),
-      imageUrl: ModelParser.asString(json['imageUrl'] ?? json['image_url']),
-      mark: ModelParser.asInt(json['mark']),
-      optionsCount: ModelParser.asInt(json['optionsCount'] ?? json['options_count']),
-      order: ModelParser.asInt(json['order'] ?? json['order_number']),
-      options: ModelParser.asList(json['options'])
-          .map((e) => e.toString())
-          .toList(),
+      id: ModelParser.asString(data['id']),
+      text: ModelParser.asString(data['description'] ?? data['text'] ?? data['title']),
+      type: _parseType(data['type']),
+      imageUrl: _nullableString(data['imageUrl'] ?? data['image_url']),
+      mark: ModelParser.asInt(data['mark']),
+      optionsCount: ModelParser.asInt(data['optionsCount'] ?? data['options_count'] ?? options.length),
+      order: ModelParser.asInt(data['order'] ?? data['order_number'] ?? data['orderIndex']),
+      options: options,
     );
   }
 
   static QuizQuestionType _parseType(dynamic value) {
     final str = ModelParser.asString(value).toLowerCase();
-    return QuizQuestionType.values.firstWhere(
-      (e) => e.name == str,
-      orElse: () => QuizQuestionType.multipleChoice,
-    );
+    for (final type in QuizQuestionType.values) {
+      if (type.name.toLowerCase() == str) return type;
+    }
+    if (str == 'mcq') return QuizQuestionType.multipleChoice;
+    if (str == 'tf') return QuizQuestionType.trueFalse;
+    return QuizQuestionType.multipleChoice;
   }
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// QuizAttemptModel
+// Maps to: QuizAttemptResponse (POST /api/quizzes/{id}/submit, GET /results)
+// ─────────────────────────────────────────────────────────────────────────────
 final class QuizAttemptModel extends QuizAttemptEntity {
   const QuizAttemptModel({
     required super.id,
@@ -104,41 +127,79 @@ final class QuizAttemptModel extends QuizAttemptEntity {
     required super.passed,
     required super.startedAt,
     super.submittedAt,
+    super.expiresAt,
     super.timeSpentSeconds = 0,
   });
 
+
   factory QuizAttemptModel.fromJson(Map<String, dynamic> json) {
+    final data = ModelParser.extractData(json);
+    
+    final bool isSubmitted = ModelParser.asBool(data['submitted']);
+    final startedAt = ModelParser.asDateTime(data['startedAt'] ?? data['started_at']);
+    final submittedAt = ModelParser.asDateTime(data['submittedAt'] ?? data['submitted_at']);
+    final expiresAt = ModelParser.asDateTime(data['expiresAt'] ?? data['expires_at']);
+    
+    int timeSpent = ModelParser.asInt(data['timeSpentSeconds'] ?? data['time_spent_seconds']);
+    if (timeSpent == 0 && startedAt != null && submittedAt != null) {
+      timeSpent = submittedAt.difference(startedAt).inSeconds;
+    }
+
     return QuizAttemptModel(
-      id: ModelParser.asString(
-        json['id'] ?? json['attemptId'] ?? json['attempt_id'],
-      ),
-      quizId: ModelParser.asString(json['quizId'] ?? json['quiz_id']),
-      courseId: ModelParser.asString(json['courseId'] ?? json['course_id']),
-      courseName: ModelParser.asString(json['courseName'] ?? json['course_name']),
-      attemptNumber:
-          ModelParser.asInt(json['attemptNumber'] ?? json['attempt_number']),
-      status: _parseStatus(json['status']),
-      answers: ModelParser.asMap(json['answers']).map(
-        (k, v) => MapEntry(k, v.toString()),
-      ),
-      score: ModelParser.asInt(json['score']),
-      totalMarks: ModelParser.asInt(json['totalMarks'] ?? json['total_marks']),
-      percentage: ModelParser.asDouble(json['percentage']),
-      passed: ModelParser.asBool(json['passed']),
-      startedAt: ModelParser.asDateTime(json['startedAt'] ?? json['started_at']) ??
-          DateTime.now(),
-      submittedAt:
-          ModelParser.asDateTime(json['submittedAt'] ?? json['submitted_at']),
-      timeSpentSeconds:
-          ModelParser.asInt(json['timeSpentSeconds'] ?? json['time_spent_seconds']),
+      id: ModelParser.asString(data['attemptId'] ?? data['id'] ?? data['attempt_id']),
+      quizId: ModelParser.asString(data['quizId'] ?? data['quiz_id']),
+      courseId: ModelParser.asString(data['courseId'] ?? data['course_id']),
+      courseName: ModelParser.asString(data['courseName'] ?? data['quizTitle'] ?? data['quiz_title']),
+      attemptNumber: ModelParser.asInt(data['attemptNumber'] ?? data['attempt_number']),
+      status: _parseStatus(data['status'] ?? (isSubmitted ? 'submitted' : 'in_progress')),
+      answers: _parseAnswers(data['answers']),
+      score: ModelParser.asInt(data['score']),
+      totalMarks: ModelParser.asInt(data['totalMarks'] ?? data['total_marks']),
+      percentage: ModelParser.asDouble(data['percentage']),
+      passed: ModelParser.asBool(data['passed']),
+      startedAt: startedAt ?? DateTime.now(),
+      submittedAt: submittedAt,
+      expiresAt: expiresAt,
+      timeSpentSeconds: timeSpent,
     );
+
+  }
+
+  static Map<String, String> _parseAnswers(dynamic json) {
+    if (json is Map) {
+      return json.map((k, v) => MapEntry(k.toString(), v.toString()));
+    }
+    if (json is List) {
+      final map = <String, String>{};
+      for (final item in json) {
+        final entry = ModelParser.asMap(item);
+        final qId = ModelParser.asString(entry['questionId'] ?? entry['question_id']);
+        final ans = ModelParser.asString(entry['selectedAnswer'] ?? entry['selected_answer'] ?? entry['answer']);
+        if (qId.isNotEmpty) {
+          map[qId] = ans;
+        }
+      }
+      return map;
+    }
+    return const {};
   }
 
   static QuizAttemptStatus _parseStatus(dynamic value) {
     final str = ModelParser.asString(value).toLowerCase();
+    if (str == 'completed' || str == 'submitted' || str == 'finished') return QuizAttemptStatus.submitted;
+    if (str == 'started' || str == 'in_progress' || str == 'active') return QuizAttemptStatus.inProgress;
+    
     return QuizAttemptStatus.values.firstWhere(
-      (e) => e.name == str,
+      (e) => e.name.toLowerCase() == str,
       orElse: () => QuizAttemptStatus.inProgress,
     );
   }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Private helpers
+// ─────────────────────────────────────────────────────────────────────────────
+String? _nullableString(dynamic value) {
+  final s = ModelParser.asString(value);
+  return s.isEmpty ? null : s;
 }

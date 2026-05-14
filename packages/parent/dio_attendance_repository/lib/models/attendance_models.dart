@@ -18,27 +18,39 @@ final class AttendanceRecordModel extends AttendanceRecordEntity {
   });
 
   factory AttendanceRecordModel.fromJson(Map<String, dynamic> json) {
+    // Matches AttendanceResponse schema
+    final String typeStr = ModelParser.asString(json['type']).toUpperCase();
+    final String sourceStr = ModelParser.asString(json['source']).toUpperCase();
+    
     return AttendanceRecordModel(
       id: ModelParser.asString(json['id']),
-      status: AttendanceStatus.values.firstWhere(
-        (e) => e.name == ModelParser.asString(json['status'], fallback: 'absent'),
-        orElse: () => AttendanceStatus.absent,
-      ),
-      date: ModelParser.asDateTime(json['date']) ?? DateTime.now(),
-      courseId: ModelParser.asString(json['course_id'] ?? json['courseId']),
-      courseName: ModelParser.asString(json['course_name'] ?? json['courseName']),
-      sessionTitle: ModelParser.asString(json['session_title'] ?? json['sessionTitle']),
-      checkInMethod: CheckInMethod.values.firstWhere(
-        (e) => e.name == ModelParser.asString(json['check_in_method'] ?? json['checkInMethod'], fallback: 'manual'),
-        orElse: () => CheckInMethod.manual,
-      ),
-      checkInTime: ModelParser.asDateTime(json['check_in_time'] ?? json['checkInTime']),
-      teacherNotes: ModelParser.asString(json['teacher_notes'] ?? json['teacherNotes']),
-      centerName: ModelParser.asString(json['center_name'] ?? json['centerName']),
-      startTime: ModelParser.asString(json['start_time'] ?? json['startTime']),
-      endTime: ModelParser.asString(json['end_time'] ?? json['endTime']),
-      isOnline: ModelParser.asBool(json['is_online'] ?? json['isOnline']),
+      status: _parseStatus(json['status'] ?? 'present'), // Default to present if record exists
+      date: ModelParser.asDateTime(json['attendedAt'] ?? json['date']) ?? DateTime.now(),
+      courseId: ModelParser.asString(json['weekId'] ?? json['id']),
+      courseName: ModelParser.asString(json['weekTitle'] ?? json['title']),
+      sessionTitle: ModelParser.asString(json['notes'] ?? json['sessionTitle']),
+      checkInMethod: _parseMethod(sourceStr),
+      checkInTime: ModelParser.asDateTime(json['attendedAt']),
+      teacherNotes: ModelParser.asString(json['notes'] ?? json['scannedBy']),
+      centerName: ModelParser.asString(json['centerName']),
+      startTime: ModelParser.asString(json['startTime']),
+      endTime: ModelParser.asString(json['endTime']),
+      isOnline: typeStr == 'ONLINE',
     );
+  }
+
+  static AttendanceStatus _parseStatus(dynamic value) {
+    final str = ModelParser.asString(value).toLowerCase();
+    if (str == 'present' || str == 'attended' || str == 'attended_at') return AttendanceStatus.present;
+    if (str == 'late') return AttendanceStatus.late;
+    if (str == 'excused') return AttendanceStatus.excused;
+    return AttendanceStatus.absent;
+  }
+
+  static CheckInMethod _parseMethod(String source) {
+    if (source == 'QR_SCAN') return CheckInMethod.qr;
+    if (source == 'ONLINE_ACCESS') return CheckInMethod.manual; // Map online to manual for now
+    return CheckInMethod.manual;
   }
 }
 
@@ -49,11 +61,12 @@ final class AttendanceSummaryModel extends AttendanceSummaryEntity {
     required super.late,
     required super.absent,
     required super.excused,
-    super.online = 0,
+    super.online,
     required super.attendanceRate,
-    super.punctualityRate = 0.0,
+    super.punctualityRate,
     super.periodFrom,
     super.periodTo,
+    super.recentRecords,
   });
 
   factory AttendanceSummaryModel.fromJson(Map<String, dynamic> json) {
@@ -68,6 +81,9 @@ final class AttendanceSummaryModel extends AttendanceSummaryEntity {
       punctualityRate: ModelParser.asDouble(json['punctuality_rate'] ?? json['punctualityRate']),
       periodFrom: ModelParser.asDateTime(json['period_from'] ?? json['periodFrom']),
       periodTo: ModelParser.asDateTime(json['period_to'] ?? json['periodTo']),
+      recentRecords: ModelParser.asList(json['recent_records'] ?? json['recentRecords'])
+          .map((e) => AttendanceRecordModel.fromJson(ModelParser.asMap(e)))
+          .toList(),
     );
   }
 }

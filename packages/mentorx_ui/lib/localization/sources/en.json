@@ -40,6 +40,24 @@
         "mentorXReadMore": {
             "more": "More",
             "less": "Less"
+        },
+        "widgets": {
+            "announcement": {
+                "pinned": "PINNED",
+                "update": "UPDATE"
+            },
+            "attendance": {
+                "rate": "Attendance Rate"
+            },
+            "error": {
+                "title": "Something went wrong",
+                "retry": "Retry"
+            },
+            "common": {
+                "viewAll": "View All",
+                "readMore": "Read More",
+                "readLess": "Read Less"
+            }
         }
     },
     "core": {
@@ -982,7 +1000,10 @@
         "continueBtn": "Continue",
         "redeemCode": "Redeem Code",
         "enterCodeDesc": "Enter discount or session code",
+        "redeemPolicy": "By activating this code, you agree to our terms and conditions.",
         "activateCode": "Activate Code",
+        "codeActivated": "Code activated successfully",
+        "invalidCode": "Invalid code",
         "purchaseConfirm": "Purchase Confirmation",
         "paymentMethod": "Payment Method",
         "total": "Total",

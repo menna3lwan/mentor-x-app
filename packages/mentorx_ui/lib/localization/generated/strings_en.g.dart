@@ -682,7 +682,10 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 		'continueBtn': 'Continue',
 		'redeemCode': 'Redeem Code',
 		'enterCodeDesc': 'Enter discount or session code',
+		'redeemPolicy': 'By activating this code, you agree to our terms and conditions.',
 		'activateCode': 'Activate Code',
+		'codeActivated': 'Code activated successfully',
+		'invalidCode': 'Invalid code',
 		'purchaseConfirm': 'Purchase Confirmation',
 		'paymentMethod': 'Payment Method',
 		'total': 'Total',
@@ -714,6 +717,7 @@ class TranslationsUiEn {
 	late final TranslationsUiErrorsEn errors = TranslationsUiErrorsEn._(_root);
 	late final TranslationsUiDateTimeEn dateTime = TranslationsUiDateTimeEn._(_root);
 	late final TranslationsUiMentorXReadMoreEn mentorXReadMore = TranslationsUiMentorXReadMoreEn._(_root);
+	late final TranslationsUiWidgetsEn widgets = TranslationsUiWidgetsEn._(_root);
 }
 
 // Path: core
@@ -1424,6 +1428,19 @@ class TranslationsUiMentorXReadMoreEn {
 	String get less => 'Less';
 }
 
+// Path: ui.widgets
+class TranslationsUiWidgetsEn {
+	TranslationsUiWidgetsEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+	late final TranslationsUiWidgetsAnnouncementEn announcement = TranslationsUiWidgetsAnnouncementEn._(_root);
+	late final TranslationsUiWidgetsAttendanceEn attendance = TranslationsUiWidgetsAttendanceEn._(_root);
+	late final TranslationsUiWidgetsErrorEn error = TranslationsUiWidgetsErrorEn._(_root);
+	late final TranslationsUiWidgetsCommonEn common = TranslationsUiWidgetsCommonEn._(_root);
+}
+
 // Path: onboarding.steps
 class TranslationsOnboardingStepsEn {
 	TranslationsOnboardingStepsEn._(this._root);
@@ -1894,6 +1911,66 @@ class TranslationsCourseErrorsEn {
 	String get failedToLoadSessions => 'Failed to load sessions';
 }
 
+// Path: ui.widgets.announcement
+class TranslationsUiWidgetsAnnouncementEn {
+	TranslationsUiWidgetsAnnouncementEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'PINNED'
+	String get pinned => 'PINNED';
+
+	/// en: 'UPDATE'
+	String get update => 'UPDATE';
+}
+
+// Path: ui.widgets.attendance
+class TranslationsUiWidgetsAttendanceEn {
+	TranslationsUiWidgetsAttendanceEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Attendance Rate'
+	String get rate => 'Attendance Rate';
+}
+
+// Path: ui.widgets.error
+class TranslationsUiWidgetsErrorEn {
+	TranslationsUiWidgetsErrorEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Something went wrong'
+	String get title => 'Something went wrong';
+
+	/// en: 'Retry'
+	String get retry => 'Retry';
+}
+
+// Path: ui.widgets.common
+class TranslationsUiWidgetsCommonEn {
+	TranslationsUiWidgetsCommonEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'View All'
+	String get viewAll => 'View All';
+
+	/// en: 'Read More'
+	String get readMore => 'Read More';
+
+	/// en: 'Read Less'
+	String get readLess => 'Read Less';
+}
+
 // Path: onboarding.steps.learn
 class TranslationsOnboardingStepsLearnEn {
 	TranslationsOnboardingStepsLearnEn._(this._root);
@@ -2011,6 +2088,14 @@ extension on Translations {
 			'ui.dateTime.weekdays.sunday' => 'Sun',
 			'ui.mentorXReadMore.more' => 'More',
 			'ui.mentorXReadMore.less' => 'Less',
+			'ui.widgets.announcement.pinned' => 'PINNED',
+			'ui.widgets.announcement.update' => 'UPDATE',
+			'ui.widgets.attendance.rate' => 'Attendance Rate',
+			'ui.widgets.error.title' => 'Something went wrong',
+			'ui.widgets.error.retry' => 'Retry',
+			'ui.widgets.common.viewAll' => 'View All',
+			'ui.widgets.common.readMore' => 'Read More',
+			'ui.widgets.common.readLess' => 'Read Less',
 			'core.appName' => 'MentorX Student',
 			'core.currency' => 'EGP',
 			'core.price' => ({required num amount}) => '${amount} ${_root.core.currency}',
@@ -2484,6 +2569,8 @@ extension on Translations {
 			'student.commonSubmit' => 'Submit',
 			'student.review' => 'Review',
 			'student.quizNotFound' => 'Quiz not found',
+			_ => null,
+		} ?? switch (path) {
 			'student.noQuestions' => 'No questions available',
 			'student.yourAnswer' => 'Your answer:',
 			'student.typeAnswerHere' => 'Type your answer here...',
@@ -2492,8 +2579,6 @@ extension on Translations {
 			'student.viewAttendance' => 'Attendance Record',
 			'student.totalAttendance' => 'Total attendance rate',
 			'student.present' => 'Present',
-			_ => null,
-		} ?? switch (path) {
 			'student.absent' => 'Absent',
 			'student.presentCount' => '%s present',
 			'student.absentCount' => '%s absent',
@@ -2869,7 +2954,10 @@ extension on Translations {
 			'student.continueBtn' => 'Continue',
 			'student.redeemCode' => 'Redeem Code',
 			'student.enterCodeDesc' => 'Enter discount or session code',
+			'student.redeemPolicy' => 'By activating this code, you agree to our terms and conditions.',
 			'student.activateCode' => 'Activate Code',
+			'student.codeActivated' => 'Code activated successfully',
+			'student.invalidCode' => 'Invalid code',
 			'student.purchaseConfirm' => 'Purchase Confirmation',
 			'student.paymentMethod' => 'Payment Method',
 			'student.total' => 'Total',

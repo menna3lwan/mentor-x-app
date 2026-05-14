@@ -846,6 +846,12 @@ RouteBase get $shellPageRoute => StatefulShellRouteData.$route(
             GoRouteData.$route(
               path: 'analytics',
               factory: $AnalyticsDashboardPageRoute._fromState,
+              routes: [
+                GoRouteData.$route(
+                  path: 'leaderboard',
+                  factory: $LeaderboardPageRoute._fromState,
+                ),
+              ],
             ),
           ],
         ),
@@ -921,6 +927,32 @@ mixin $AnalyticsDashboardPageRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/analytics');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $LeaderboardPageRoute on GoRouteData {
+  static LeaderboardPageRoute _fromState(GoRouterState state) =>
+      LeaderboardPageRoute(courseId: state.uri.queryParameters['course-id']);
+
+  LeaderboardPageRoute get _self => this as LeaderboardPageRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/analytics/leaderboard',
+    queryParams: {if (_self.courseId != null) 'course-id': _self.courseId},
+  );
 
   @override
   void go(BuildContext context) => context.go(location);
@@ -1522,17 +1554,20 @@ mixin $QuizReviewPageRoute on GoRouteData {
 }
 
 RouteBase get $quizIntroPageRoute => GoRouteData.$route(
-  path: '/quiz-intro',
+  path: '/quiz-intro/:quizId',
   name: 'quizIntro',
   factory: $QuizIntroPageRoute._fromState,
 );
 
 mixin $QuizIntroPageRoute on GoRouteData {
   static QuizIntroPageRoute _fromState(GoRouterState state) =>
-      const QuizIntroPageRoute();
+      QuizIntroPageRoute(quizId: state.pathParameters['quizId']!);
+
+  QuizIntroPageRoute get _self => this as QuizIntroPageRoute;
 
   @override
-  String get location => GoRouteData.$location('/quiz-intro');
+  String get location =>
+      GoRouteData.$location('/quiz-intro/${Uri.encodeComponent(_self.quizId)}');
 
   @override
   void go(BuildContext context) => context.go(location);

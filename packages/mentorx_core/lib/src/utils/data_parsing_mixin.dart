@@ -7,15 +7,61 @@ mixin DataParsingMixin {
     if (value is Map) {
       return value.map((key, val) => MapEntry(key.toString(), val));
     }
+    if (value is String && value.isNotEmpty) {
+      try {
+        final decoded = jsonDecode(value);
+        if (decoded is Map) {
+          return decoded.map((key, val) => MapEntry(key.toString(), val));
+        }
+      } catch (_) {
+        // Not a valid JSON string
+      }
+    }
     return <String, dynamic>{};
   }
 
-  /// Converts dynamic value to `List<dynamic>` safely
-  /// Prioritizes 'data' or 'items' keys if value is a Map
+  /// Extracts the main data payload from a potentially wrapped response.
+  /// If the map contains a 'data' key which is also a Map, it returns that nested map.
+  Map<String, dynamic> extractData(dynamic value) {
+    final map = asMap(value);
+    final data = map['data'];
+    if (data is Map) {
+      return asMap(data);
+    }
+    return map;
+  }
+
+  /// Converts dynamic value to `List<dynamic>` safely.
+  /// Robustly handles 'data', 'items', 'content' keys and nested 'data.content'.
   List<dynamic> asList(dynamic value) {
     if (value is List<dynamic>) return value;
     if (value is Map) {
-      final d = value['data'] ?? value['items'];
+      // 1. Direct check for common list keys
+      final d = value['data'] ??
+          value['items'] ??
+          value['content'] ??
+          value['entries'] ??
+          value['rankings'] ??
+          value['results'];
+      if (d is List<dynamic> && d.isNotEmpty) return d;
+
+      // 2. Deep check for nested data.content or data.items
+      if (d is Map) {
+        final nested = d['content'] ??
+            d['items'] ??
+            d['entries'] ??
+            d['rankings'] ??
+            d['data'] ??
+            d['results'];
+        if (nested is List<dynamic>) return nested;
+      }
+
+      // 3. Last resort: search for ANY non-empty list
+      for (final val in value.values) {
+        if (val is List<dynamic> && val.isNotEmpty) return val;
+      }
+
+      // 4. Fallback: if value itself is the list we want (handled by first if)
       if (d is List<dynamic>) return d;
     }
     return <dynamic>[];

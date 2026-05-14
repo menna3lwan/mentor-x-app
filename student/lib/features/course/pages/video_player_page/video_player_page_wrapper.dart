@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 
+import '../../../../core/blocs/app_authentication_cubit/app_authentication_cubit.dart';
 import 'bloc/video_player_page_bloc.dart';
 import 'video_player_page_page.dart';
 
@@ -56,6 +57,11 @@ final class _VideoPlayerPageWrapperState extends State<VideoPlayerPageWrapper> {
             (VideoPlayerPageBloc bloc) => bloc.state.totalDurationSeconds,
           );
 
+          final user = context.select(
+            (AppAuthenticationCubit cubit) => cubit.state,
+          );
+          final watermarkText = user != null ? '${user.fullName}\n${user.phoneNumber}' : null;
+
           return VideoPlayerPagePage(
             title: title,
             streamUrl: streamUrl,
@@ -65,6 +71,7 @@ final class _VideoPlayerPageWrapperState extends State<VideoPlayerPageWrapper> {
             errorMessage: isFailure ? errorMessage : null,
             currentPositionSeconds: currentPositionSeconds,
             totalDurationSeconds: totalDurationSeconds,
+            watermarkText: watermarkText,
             onProgressChanged: (position, total) => bloc.add(
               VideoPlayerPageProgressUpdated(
                 positionSeconds: position,

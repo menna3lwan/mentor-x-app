@@ -6,6 +6,7 @@ import '../../../../core/core.dart';
 import 'bloc/wallet_orders_page_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:intl/intl.dart';
 
 final class WalletOrdersPage extends StatelessWidget {
   const WalletOrdersPage({super.key});
@@ -45,10 +46,10 @@ final class WalletOrdersPage extends StatelessWidget {
 
               if (loadingState == LoadingState.loading) {
                 return ListView.separated(
-                  padding: const EdgeInsets.all(24),
+                  padding: const EdgeInsets.all(20),
                   itemCount: 4,
                   separatorBuilder: (_, _) => const Gap(16),
-                  itemBuilder: (_, _) => const MentorXSkeleton(height: 180, borderRadius: 28),
+                  itemBuilder: (_, _) => const MentorXSkeleton(height: 160, borderRadius: 24),
                 );
               }
 
@@ -70,9 +71,9 @@ final class WalletOrdersPage extends StatelessWidget {
               }
 
               return ListView.separated(
-                padding: const EdgeInsets.all(24),
+                padding: const EdgeInsets.all(20),
                 itemCount: orders.length,
-                separatorBuilder: (context, index) => const Gap(16),
+                separatorBuilder: (context, index) => const Gap(12),
                 itemBuilder: (context, index) {
                   final order = orders[index];
                   return FadeInUp(
@@ -90,15 +91,25 @@ final class WalletOrdersPage extends StatelessWidget {
 
   Widget _buildHeader(BuildContext context, dynamic t) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
+      padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
       child: Row(
         children: [
-          MentorXIconButton(
-            onPressed: () => Navigator.of(context).pop(),
-            icon: Icons.arrow_back_ios_new_rounded,
-            color: context.textPrimaryColor,
+          Container(
+            decoration: BoxDecoration(
+              color: context.backgroundSecondaryColor.withValues(alpha: 0.6),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: context.borderPrimaryColor.withValues(alpha: 0.1),
+              ),
+            ),
+            child: MentorXIconButton(
+              onPressed: () => Navigator.of(context).pop(),
+              icon: Icons.arrow_back_ios_new_rounded,
+              color: context.textPrimaryColor,
+              size: MentorXIconButtonSize.small,
+            ),
           ),
-          const Gap(16),
+          const Gap(20),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -106,26 +117,26 @@ final class WalletOrdersPage extends StatelessWidget {
                 FadeInLeft(
                   duration: const Duration(milliseconds: 600),
                   child: Text(
-                    'Transaction Logs',
+                    'TRANSACTIONS',
                     style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w800,
+                      fontSize: 10,
+                      fontWeight: FontWeight.w900,
                       color: context.brandPrimaryColor,
-                      letterSpacing: 1.2,
+                      letterSpacing: 2.0,
                     ),
                   ),
                 ),
-                const Gap(2),
+                const Gap(4),
                 FadeInLeft(
                   duration: const Duration(milliseconds: 800),
                   delay: const Duration(milliseconds: 100),
                   child: Text(
                     t['myOrders'] ?? 'My Orders',
                     style: TextStyle(
-                      fontSize: 24,
+                      fontSize: 26,
                       fontWeight: FontWeight.w900,
                       color: context.textPrimaryColor,
-                      letterSpacing: -0.5,
+                      letterSpacing: -0.8,
                     ),
                   ),
                 ),
@@ -146,19 +157,19 @@ class _BackgroundDecorations extends StatelessWidget {
     return Stack(
       children: [
         Positioned(
-          top: -50,
-          left: -50,
+          top: -100,
+          right: -50,
           child: _BlurredBlob(
             color: context.brandPrimaryColor.withValues(alpha: 0.1),
-            size: 300,
+            size: 350,
           ),
         ),
         Positioned(
-          bottom: 100,
-          right: -100,
+          bottom: -50,
+          left: -100,
           child: _BlurredBlob(
             color: context.brandSecondaryColor.withValues(alpha: 0.08),
-            size: 400,
+            size: 300,
           ),
         ),
       ],
@@ -182,7 +193,7 @@ class _BlurredBlob extends StatelessWidget {
         shape: BoxShape.circle,
       ),
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 60, sigmaY: 60),
+        filter: ImageFilter.blur(sigmaX: 70, sigmaY: 70),
         child: const SizedBox.expand(),
       ),
     );
@@ -211,115 +222,120 @@ final class _OrderCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(22),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: context.backgroundSecondaryColor.withValues(alpha: 0.45),
-        borderRadius: BorderRadius.circular(28),
+        color: context.backgroundSecondaryColor.withValues(alpha: 0.6),
+        borderRadius: BorderRadius.circular(24),
         border: Border.all(
           color: context.borderPrimaryColor.withValues(alpha: 0.1),
         ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 15,
+            offset: const Offset(0, 8),
+          ),
+        ],
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(28),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
-                    ),
-                    decoration: BoxDecoration(
-                      color: context.brandPrimaryColor.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Text(
-                      '#${order.orderNumber}',
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w900,
-                        color: context.brandPrimaryColor,
-                      ),
-                    ),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
+                decoration: BoxDecoration(
+                  color: context.brandPrimaryColor.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  '#${order.orderNumber}',
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w900,
+                    color: context.brandPrimaryColor,
                   ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
-                    ),
-                    decoration: BoxDecoration(
-                      color: _getStatusColor(context).withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Text(
-                      order.status.name.toUpperCase(),
-                      style: TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w900,
-                        color: _getStatusColor(context),
-                        letterSpacing: 0.5,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const Gap(18),
-              Text(
-                order.description ?? 'Subscription Payment',
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w800,
-                  color: context.textPrimaryColor,
-                  letterSpacing: -0.2,
                 ),
               ),
-              const Gap(20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Total Amount',
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: context.textTertiaryColor,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 0.5,
-                        ),
-                      ),
-                      const Gap(4),
-                      Text(
-                        '${order.amount} ${order.currency}',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w900,
-                          color: context.textPrimaryColor,
-                          letterSpacing: -1,
-                        ),
-                      ),
-                    ],
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
+                decoration: BoxDecoration(
+                  color: _getStatusColor(context).withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  order.status.name.toUpperCase(),
+                  style: TextStyle(
+                    fontSize: 9,
+                    fontWeight: FontWeight.w900,
+                    color: _getStatusColor(context),
+                    letterSpacing: 0.5,
                   ),
+                ),
+              ),
+            ],
+          ),
+          const Gap(16),
+          Text(
+            order.description ?? 'Payment Transaction',
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w800,
+              color: context.textPrimaryColor,
+              letterSpacing: -0.2,
+            ),
+          ),
+          const Gap(16),
+          Divider(
+            height: 1,
+            color: context.borderPrimaryColor.withValues(alpha: 0.05),
+          ),
+          const Gap(16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   Text(
-                    order.createdAt.toLocal().toString().split(' ')[0],
+                    'Amount',
                     style: TextStyle(
-                      fontSize: 12,
+                      fontSize: 10,
                       color: context.textTertiaryColor,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
+                  const Gap(4),
+                  Text(
+                    '${order.amount} ${order.currency}',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w900,
+                      color: context.textPrimaryColor,
+                      letterSpacing: -0.5,
+                    ),
+                  ),
                 ],
+              ),
+              Text(
+                DateFormat('dd MMM yyyy').format(order.createdAt),
+                style: TextStyle(
+                  fontSize: 12,
+                  color: context.textTertiaryColor,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ],
           ),
-        ),
+        ],
       ),
     );
   }

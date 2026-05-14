@@ -29,7 +29,7 @@ class HomePageWrapper extends StatelessWidget {
             );
           }
         },
-        child: const HomePage(),
+        child: const HomePagePage(),
       ),
     );
   }

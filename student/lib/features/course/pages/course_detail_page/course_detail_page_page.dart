@@ -125,8 +125,17 @@ final class CourseDetailPagePage extends StatelessWidget {
                 enrollment: enrollment,
               ),
             ),
+            if (enrollment != null)
+              FadeInUp(
+                duration: const Duration(milliseconds: 600),
+                delay: const Duration(milliseconds: 200),
+                child: CourseAnalyticsCard(enrollment: enrollment!),
+              ),
             FadeInUp(
               duration: const Duration(milliseconds: 400),
+              delay: enrollment != null
+                  ? const Duration(milliseconds: 400)
+                  : Duration.zero,
               child: _DetailTabBar(
                 selectedTab: selectedTab,
                 onTabChanged: onTabChanged,
@@ -144,7 +153,7 @@ final class CourseDetailPagePage extends StatelessWidget {
                       onItemTap: onSessionItemTap,
                     ),
             ),
-            const Gap(120), // Space for bottom bar
+            const Gap(140), // Space for bottom bar
           ],
         ),
       ),
@@ -158,7 +167,7 @@ final class CourseDetailPagePage extends StatelessWidget {
         children: [
           Container(
             decoration: BoxDecoration(
-              color: context.backgroundSecondaryColor.withValues(alpha: 0.45),
+              color: context.backgroundSecondaryColor.withValues(alpha: 0.6),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
                 color: context.borderPrimaryColor.withValues(alpha: 0.1),
@@ -173,17 +182,36 @@ final class CourseDetailPagePage extends StatelessWidget {
           ),
           const Gap(20),
           Expanded(
-            child: FadeInLeft(
-              duration: const Duration(milliseconds: 800),
-              child: Text(
-                context.t.course.courseDetail,
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w900,
-                  color: context.textPrimaryColor,
-                  letterSpacing: -0.8,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                FadeInLeft(
+                  duration: const Duration(milliseconds: 600),
+                  child: Text(
+                    'COURSE DETAILS',
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w900,
+                      color: context.brandPrimaryColor,
+                      letterSpacing: 2.0,
+                    ),
+                  ),
                 ),
-              ),
+                const Gap(4),
+                FadeInLeft(
+                  duration: const Duration(milliseconds: 800),
+                  delay: const Duration(milliseconds: 100),
+                  child: Text(
+                    context.t.course.courseDetail,
+                    style: TextStyle(
+                      fontSize: 26,
+                      fontWeight: FontWeight.w900,
+                      color: context.textPrimaryColor,
+                      letterSpacing: -0.8,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -266,76 +294,69 @@ final class _DetailTabBar extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       padding: const EdgeInsets.all(6),
       decoration: BoxDecoration(
-        color: context.backgroundSecondaryColor.withValues(alpha: 0.45),
+        color: context.backgroundSecondaryColor.withValues(alpha: 0.6),
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
           color: context.borderPrimaryColor.withValues(alpha: 0.1),
         ),
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(24),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-          child: Row(
-            children: CourseDetailTab.values.map((tab) {
-              final isSelected = tab == selectedTab;
-              final label = switch (tab) {
-                CourseDetailTab.description =>
-                  context.t.course.tabs.description,
-                CourseDetailTab.sessions => context.t.course.tabs.sessions,
-              };
+      child: Row(
+        children: CourseDetailTab.values.map((tab) {
+          final isSelected = tab == selectedTab;
+          final label = switch (tab) {
+            CourseDetailTab.description =>
+              context.t.course.tabs.description,
+            CourseDetailTab.sessions => context.t.course.tabs.sessions,
+          };
 
-              return Expanded(
-                child: GestureDetector(
-                  onTap: () => onTabChanged(tab),
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 400),
-                    curve: Curves.easeOutCubic,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    decoration: BoxDecoration(
-                      gradient: isSelected
-                          ? LinearGradient(
-                              colors: [
-                                context.brandPrimaryColor,
-                                context.brandSecondaryColor,
-                              ],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                            )
-                          : null,
-                      color: isSelected ? null : Colors.transparent,
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: isSelected
-                          ? [
-                              BoxShadow(
-                                color: context.brandPrimaryColor.withValues(
-                                  alpha: 0.3,
-                                ),
-                                blurRadius: 12,
-                                offset: const Offset(0, 4),
-                              ),
-                            ]
-                          : null,
-                    ),
-                    child: Text(
-                      label,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: isSelected
-                            ? FontWeight.w900
-                            : FontWeight.w800,
-                        color: isSelected
-                            ? Colors.white
-                            : context.textPrimaryColor.withValues(alpha: 0.7),
-                      ),
-                    ),
+          return Expanded(
+            child: GestureDetector(
+              onTap: () => onTabChanged(tab),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 400),
+                curve: Curves.easeOutCubic,
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                decoration: BoxDecoration(
+                  gradient: isSelected
+                      ? LinearGradient(
+                          colors: [
+                            context.brandPrimaryColor,
+                            context.brandSecondaryColor,
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        )
+                      : null,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: isSelected
+                      ? [
+                          BoxShadow(
+                            color: context.brandPrimaryColor.withValues(
+                              alpha: 0.35,
+                            ),
+                            blurRadius: 15,
+                            offset: const Offset(0, 8),
+                          ),
+                        ]
+                      : null,
+                ),
+                child: Text(
+                  label,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: isSelected
+                        ? FontWeight.w900
+                        : FontWeight.w800,
+                    color: isSelected
+                        ? Colors.white
+                        : context.textPrimaryColor.withValues(alpha: 0.7),
                   ),
                 ),
-              );
-            }).toList(),
-          ),
-        ),
+              ),
+            ),
+          );
+        }).toList(),
       ),
     );
   }
@@ -396,13 +417,13 @@ final class _DescriptionTab extends StatelessWidget {
                       '${course.enrolledCount} ${context.t.course.detail.students}',
                 ),
                 _InfoChip(
-                  icon: Icons.library_books_rounded,
+                  icon: Icons.auto_stories_rounded,
                   label:
                       '${course.totalSessions} ${context.t.course.detail.sessions}',
                 ),
                 if (course.pointsReward > 0)
                   _InfoChip(
-                    icon: Icons.stars_rounded,
+                    icon: Icons.auto_awesome_rounded,
                     label: '${course.pointsReward} Points Reward',
                     isHighlight: true,
                   ),
@@ -432,7 +453,7 @@ final class _InfoChip extends StatelessWidget {
       decoration: BoxDecoration(
         color: isHighlight
             ? context.brandPrimaryColor.withValues(alpha: 0.1)
-            : context.backgroundSecondaryColor.withValues(alpha: 0.45),
+            : context.backgroundSecondaryColor.withValues(alpha: 0.6),
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
           color: isHighlight
@@ -440,36 +461,30 @@ final class _InfoChip extends StatelessWidget {
               : context.borderPrimaryColor.withValues(alpha: 0.1),
         ),
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(18),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  icon,
-                  size: 18,
-                  color: isHighlight
-                      ? context.brandPrimaryColor
-                      : context.brandPrimaryColor.withValues(alpha: 0.7),
-                ),
-                const Gap(8),
-                Text(
-                  label,
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w800,
-                    color: isHighlight
-                        ? context.brandPrimaryColor
-                        : context.textPrimaryColor.withValues(alpha: 0.8),
-                  ),
-                ),
-              ],
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              size: 18,
+              color: isHighlight
+                  ? context.brandPrimaryColor
+                  : context.brandPrimaryColor.withValues(alpha: 0.7),
             ),
-          ),
+            const Gap(8),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w800,
+                color: isHighlight
+                    ? context.brandPrimaryColor
+                    : context.textPrimaryColor.withValues(alpha: 0.8),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -498,8 +513,8 @@ final class _SessionsTab extends StatelessWidget {
         children: List.generate(
           3,
           (index) => const Padding(
-            padding: EdgeInsets.only(bottom: 12),
-            child: MentorXSkeleton(height: 70, borderRadius: 16),
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+            child: MentorXSkeleton(height: 70, borderRadius: 24),
           ),
         ),
       );
@@ -557,7 +572,7 @@ final class _EnrollmentBar extends StatelessWidget {
       duration: const Duration(milliseconds: 600),
       child: Container(
         decoration: BoxDecoration(
-          color: context.backgroundSecondaryColor.withValues(alpha: 0.45),
+          color: context.backgroundPrimaryColor.withValues(alpha: 0.8),
           border: Border(
             top: BorderSide(
               color: context.borderPrimaryColor.withValues(alpha: 0.1),
@@ -573,7 +588,7 @@ final class _EnrollmentBar extends StatelessWidget {
         ),
         child: ClipRRect(
           child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 15, sigmaY: 10),
+            filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
             child: SafeArea(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),

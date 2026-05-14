@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:sentry_flutter/sentry_flutter.dart';
+
 import 'student_app.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:flutter/foundation.dart';
@@ -128,7 +130,7 @@ final class StudentRequirements {
   }
 
   static Future<void> _initSystemUIStyle() async {
-    WidgetsFlutterBinding.ensureInitialized();
+    SentryWidgetsFlutterBinding.ensureInitialized();
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,

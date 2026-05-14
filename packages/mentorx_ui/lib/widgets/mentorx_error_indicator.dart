@@ -16,29 +16,37 @@ class MentorXErrorIndicator extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(24.0),
+        padding: const EdgeInsets.all(32.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              icon,
-              size: 48,
-              color: context.statusDangerColor,
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: context.statusDangerColor.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                icon,
+                size: 40,
+                color: context.statusDangerColor,
+              ),
             ),
-            const Gap(16),
+            const Gap(20),
             Text(
-              message ?? 'Something went wrong',
+              message ?? t.ui.widgets.error.title,
               textAlign: TextAlign.center,
               style: context.bodyPrimaryStyle.copyWith(
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w800,
+                fontSize: 16,
               ),
             ),
             if (onRetry != null) ...[
               const Gap(24),
               MentorXButton(
-                label: 'Retry',
+                label: t.ui.widgets.error.retry,
                 onPressed: onRetry,
-                width: 120,
+                width: 140,
                 size: MentorXButtonSize.small,
               ),
             ],

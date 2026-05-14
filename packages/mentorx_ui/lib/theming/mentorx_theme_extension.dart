@@ -11,20 +11,20 @@ extension MentorXThemeExtension on BuildContext {
 
   // ── Brand Colors ──────────────────────────────────────────────────────
 
-  /// Oxford Blue (#183764) - Primary brand color
-  Color get oxfordBlue => colors[$mentorxToken.color.brandPrimary]!;
+  /// Primary Blue (#1E3ABA) - Primary brand color
+  Color get primaryBlue => colors[$mentorxToken.color.brandPrimary]!;
 
-  /// Pumpkin Orange (#F59239) - Accent / CTA color
-  Color get pumpkinOrange => colors[$mentorxToken.color.brandSecondary]!;
+  /// Accent Warm (#FF9F1C) - Accent / CTA color
+  Color get accentWarm => colors[$mentorxToken.color.brandSecondary]!;
 
-  /// Teal Green (#4BBBA0) - Success state color
-  Color get tealGreen => colors[$mentorxToken.color.statusSuccess]!;
+  /// Secondary Green (#2EC4B6) - Success state color
+  Color get secondaryGreen => colors[$mentorxToken.color.statusSuccess]!;
 
-  /// Ash Grey (#B3B4B5) - Secondary text / borders
-  Color get ashGrey => colors[$mentorxToken.color.textSecondary]!;
+  /// Neutral Grey (#B3B4B5) - Secondary text / borders
+  Color get neutralGrey => colors[$mentorxToken.color.textSecondary]!;
 
-  /// Light Beige (#FFF2DB) - Background color
-  Color get lightBeige => colors[$mentorxToken.color.backgroundPrimary]!;
+  /// Neutral Light (#F2E1DB) - Background color
+  Color get neutralLight => colors[$mentorxToken.color.backgroundPrimary]!;
 
   // ── Semantic Color Getters ────────────────────────────────────────────
 
@@ -63,25 +63,25 @@ extension MentorXThemeExtension on BuildContext {
 
   // ── TextStyle Getters ─────────────────────────────────────────────────
 
-  /// H1: 24px, Bold, Oxford Blue
+  /// H1: 24px, Bold, Primary Blue
   TextStyle get titleH1Style => textStyles[$mentorxToken.textStyle.titleH1]!;
 
-  /// H2: 20px, SemiBold, Oxford Blue
+  /// H2: 20px, SemiBold, Primary Blue
   TextStyle get titleH2Style => textStyles[$mentorxToken.textStyle.titleH2]!;
 
-  /// Section Title: 18px, Medium, Oxford Blue
+  /// Section Title: 18px, Medium, Primary Blue
   TextStyle get sectionTitleStyle =>
       textStyles[$mentorxToken.textStyle.sectionTitle]!;
 
-  /// Body Primary: 16px, Regular, Oxford Blue
+  /// Body Primary: 16px, Regular, Primary Blue
   TextStyle get bodyPrimaryStyle =>
       textStyles[$mentorxToken.textStyle.bodyPrimary]!;
 
-  /// Body Secondary: 14px, Regular, Ash Grey
+  /// Body Secondary: 14px, Regular, Neutral Grey
   TextStyle get bodySecondaryStyle =>
       textStyles[$mentorxToken.textStyle.bodySecondary]!;
 
-  /// Small Text: 12px, Regular, Ash Grey
+  /// Small Text: 12px, Regular, Neutral Grey
   TextStyle get smallTextStyle =>
       textStyles[$mentorxToken.textStyle.smallText]!;
 

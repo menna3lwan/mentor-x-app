@@ -1,7 +1,7 @@
 # 📱 MentorX — Student Application
 
 [![Flutter](https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white)](https://flutter.dev)
-[![Role](https://img.shields.io/badge/Role-Student-183764?style=for-the-badge)](#)
+[![Role](https://img.shields.io/badge/Role-Student-1E3ABA?style=for-the-badge)](#)
 
 The **MentorX Student App** is the primary mobile interface for students to engage with the educational ecosystem. It provides a personalized, AI-driven experience designed to optimize learning outcomes and academic tracking.
 

@@ -100,7 +100,7 @@ final class WalletMainPage extends StatelessWidget {
                           duration: const Duration(milliseconds: 500),
                           delay: const Duration(milliseconds: 200),
                           child: _ActionButton(
-                            icon: Icons.qr_code_scanner_rounded,
+                            icon: Icons.confirmation_number_rounded,
                             label: t['redeemCode']!,
                             onTap: () => context.push('/redeem-code'),
                             color: context.brandSecondaryColor,
@@ -113,7 +113,7 @@ final class WalletMainPage extends StatelessWidget {
                           duration: const Duration(milliseconds: 500),
                           delay: const Duration(milliseconds: 300),
                           child: _ActionButton(
-                            icon: Icons.history_rounded,
+                            icon: Icons.receipt_long_rounded,
                             label: t['myOrders'] ?? 'Orders',
                             onTap: () =>
                                 const WalletOrdersPageRoute().push(context),
@@ -137,9 +137,10 @@ final class WalletMainPage extends StatelessWidget {
                         Text(
                           t['recentTransactions']!,
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: 18,
                             fontWeight: FontWeight.w900,
                             color: context.textPrimaryColor,
+                            letterSpacing: -0.5,
                           ),
                         ),
                         TextButton(
@@ -152,14 +153,14 @@ final class WalletMainPage extends StatelessWidget {
                                 t['seeAll'] ?? 'See All',
                                 style: TextStyle(
                                   fontSize: 13,
-                                  fontWeight: FontWeight.w900,
+                                  fontWeight: FontWeight.w800,
                                   color: context.brandPrimaryColor,
                                 ),
                               ),
                               const Gap(4),
                               Icon(
                                 Icons.arrow_forward_ios_rounded,
-                                size: 10,
+                                size: 12,
                                 color: context.brandPrimaryColor,
                               ),
                             ],
@@ -179,8 +180,8 @@ final class WalletMainPage extends StatelessWidget {
               sliver: SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (context, index) => const Padding(
-                    padding: EdgeInsets.only(bottom: 16),
-                    child: MentorXSkeleton(height: 80, borderRadius: 28),
+                    padding: EdgeInsets.only(bottom: 12),
+                    child: MentorXSkeleton(height: 80, borderRadius: 24),
                   ),
                   childCount: 5,
                 ),
@@ -192,7 +193,7 @@ final class WalletMainPage extends StatelessWidget {
               child: AppEmptyView(
                 title: t['noTransactions'] ?? 'No transactions yet',
                 message: 'Start using your wallet to see transactions here.',
-                icon: Icons.receipt_long_rounded,
+                icon: Icons.account_balance_wallet_rounded,
               ),
             )
           else
@@ -214,7 +215,7 @@ final class WalletMainPage extends StatelessWidget {
                 ),
               ),
             ),
-          const SliverToBoxAdapter(child: Gap(40)),
+          const SliverToBoxAdapter(child: Gap(100)),
         ],
       ),
     );
@@ -222,9 +223,25 @@ final class WalletMainPage extends StatelessWidget {
 
   Widget _buildHeader(BuildContext context, dynamic t) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
+      padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
       child: Row(
         children: [
+          Container(
+            decoration: BoxDecoration(
+              color: context.backgroundSecondaryColor.withValues(alpha: 0.6),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: context.borderPrimaryColor.withValues(alpha: 0.1),
+              ),
+            ),
+            child: MentorXIconButton(
+              onPressed: () => Navigator.of(context).pop(),
+              icon: Icons.arrow_back_ios_new_rounded,
+              color: context.textPrimaryColor,
+              size: MentorXIconButtonSize.small,
+            ),
+          ),
+          const Gap(20),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -232,12 +249,12 @@ final class WalletMainPage extends StatelessWidget {
                 FadeInLeft(
                   duration: const Duration(milliseconds: 600),
                   child: Text(
-                    'Financial Overview',
+                    'FINANCES',
                     style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w800,
+                      fontSize: 10,
+                      fontWeight: FontWeight.w900,
                       color: context.brandPrimaryColor,
-                      letterSpacing: 1.2,
+                      letterSpacing: 2.0,
                     ),
                   ),
                 ),
@@ -251,28 +268,11 @@ final class WalletMainPage extends StatelessWidget {
                       fontSize: 26,
                       fontWeight: FontWeight.w900,
                       color: context.textPrimaryColor,
-                      letterSpacing: -1,
+                      letterSpacing: -0.8,
                     ),
                   ),
                 ),
               ],
-            ),
-          ),
-          FadeInRight(
-            duration: const Duration(milliseconds: 600),
-            child: Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: context.backgroundSecondaryColor,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: context.borderPrimaryColor.withValues(alpha: 0.05),
-                ),
-              ),
-              child: Icon(
-                Icons.settings_outlined,
-                color: context.textPrimaryColor,
-              ),
             ),
           ),
         ],
@@ -297,7 +297,7 @@ final class _BalanceCard extends StatelessWidget {
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.all(20),
-      padding: const EdgeInsets.all(28),
+      padding: const EdgeInsets.all(32),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
@@ -316,125 +316,98 @@ final class _BalanceCard extends StatelessWidget {
           ),
         ],
       ),
-      child: Stack(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Positioned(
-            right: -30,
-            top: -30,
-            child: Opacity(
-              opacity: 0.15,
-              child: Container(
-                width: 150,
-                height: 150,
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                (t['walletBalance'] as String).toUpperCase(),
+                style: TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w900,
+                  color: Colors.white.withValues(alpha: 0.7),
+                  letterSpacing: 2,
                 ),
               ),
-            ),
+              const Icon(
+                Icons.credit_card_rounded,
+                color: Colors.white70,
+                size: 24,
+              ),
+            ],
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          const Gap(16),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    (t['walletBalance'] as String).toUpperCase(),
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w900,
-                      color: Colors.white.withValues(alpha: 0.8),
-                      letterSpacing: 2,
-                    ),
-                  ),
-                  const Icon(
-                    Icons.contactless_outlined,
-                    color: Colors.white,
-                    size: 24,
-                  ),
-                ],
+              Text(
+                balance.toStringAsFixed(0),
+                style: const TextStyle(
+                  fontSize: 52,
+                  fontWeight: FontWeight.w900,
+                  color: Colors.white,
+                  letterSpacing: -2,
+                ),
               ),
-              const Gap(12),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.baseline,
-                textBaseline: TextBaseline.alphabetic,
-                children: [
-                  Text(
-                    balance.toStringAsFixed(0),
-                    style: const TextStyle(
-                      fontSize: 56,
-                      fontWeight: FontWeight.w900,
-                      color: Colors.white,
-                      letterSpacing: -2,
-                    ),
-                  ),
-                  const Gap(8),
-                  Text(
-                    t['egp']!,
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w900,
-                      color: Colors.white.withValues(alpha: 0.9),
-                    ),
-                  ),
-                ],
-              ),
-              const Gap(32),
-              Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  onTap: () {},
-                  borderRadius: BorderRadius.circular(20),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 12,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                        color: Colors.white.withValues(alpha: 0.2),
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(
-                          Icons.auto_awesome_rounded,
-                          color: Colors.amberAccent,
-                          size: 18,
-                        ),
-                        const Gap(10),
-                        Text(
-                          '$points ${t['points'] ?? 'Loyalty Points'}',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w900,
-                            letterSpacing: -0.2,
-                          ),
-                        ),
-                        const Gap(10),
-                        Icon(
-                          Icons.arrow_forward_ios_rounded,
-                          color: Colors.white.withValues(alpha: 0.6),
-                          size: 10,
-                        ),
-                      ],
-                    ),
-                  ),
+              const SizedBox(width: 8),
+              Text(
+                t['egp']!,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w900,
+                  color: Colors.white.withValues(alpha: 0.8),
                 ),
               ),
             ],
+          ),
+          const Gap(32),
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 12,
+            ),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: Colors.white.withValues(alpha: 0.1),
+              ),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Icons.auto_awesome_rounded,
+                  color: Colors.amberAccent,
+                  size: 16,
+                ),
+                const Gap(10),
+                Text(
+                  '$points ${t['points'] ?? 'Points'}',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: -0.2,
+                  ),
+                ),
+                const Gap(8),
+                Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  color: Colors.white.withValues(alpha: 0.6),
+                  size: 10,
+                ),
+              ],
+            ),
           ),
         ],
       ),
     );
   }
 }
-
 
 final class _ActionButton extends StatelessWidget {
   final IconData icon;
@@ -452,46 +425,43 @@ final class _ActionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: context.backgroundSecondaryColor.withValues(alpha: 0.5),
+      color: context.backgroundSecondaryColor.withValues(alpha: 0.6),
       borderRadius: BorderRadius.circular(24),
-      child: ClipRRect(
+      child: InkWell(
+        onTap: onTap,
         borderRadius: BorderRadius.circular(24),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-          child: InkWell(
-            onTap: onTap,
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(24),
-                border: Border.all(
-                  color: context.borderPrimaryColor.withValues(alpha: 0.1),
-                ),
-              ),
-              child: Column(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: color.withValues(alpha: 0.1),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(icon, color: color, size: 24),
-                  ),
-                  const Gap(12),
-                  Text(
-                    label,
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w800,
-                      color: context.textPrimaryColor,
-                    ),
-                    textAlign: TextAlign.center,
-                    maxLines: 1,
-                  ),
-                ],
-              ),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 8),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(24),
+            border: Border.all(
+              color: context.borderPrimaryColor.withValues(alpha: 0.1),
             ),
+          ),
+          child: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(icon, color: color, size: 24),
+              ),
+              const Gap(12),
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w800,
+                  color: context.textPrimaryColor,
+                  letterSpacing: -0.2,
+                ),
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
           ),
         ),
       ),
@@ -508,18 +478,18 @@ class _BackgroundDecorations extends StatelessWidget {
       children: [
         Positioned(
           top: -100,
-          right: -100,
+          right: -50,
           child: _BlurredBlob(
             color: context.brandPrimaryColor.withValues(alpha: 0.1),
-            size: 400,
+            size: 350,
           ),
         ),
         Positioned(
-          bottom: 100,
-          left: -150,
+          bottom: -50,
+          left: -100,
           child: _BlurredBlob(
             color: context.brandSecondaryColor.withValues(alpha: 0.08),
-            size: 500,
+            size: 300,
           ),
         ),
       ],
@@ -543,7 +513,7 @@ class _BlurredBlob extends StatelessWidget {
         shape: BoxShape.circle,
       ),
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 80, sigmaY: 80),
+        filter: ImageFilter.blur(sigmaX: 70, sigmaY: 70),
         child: const SizedBox.expand(),
       ),
     );
@@ -561,104 +531,71 @@ final class _TransactionItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isCredit = transaction.isCredit;
-    final formattedDate = DateFormat(
-      'dd MMM, hh:mm a',
-    ).format(transaction.createdAt);
+    final formattedDate = DateFormat('dd MMM, hh:mm a').format(transaction.createdAt);
+    final statusColor = isCredit ? context.statusSuccessColor : context.statusDangerColor;
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(18),
+      margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: context.backgroundSecondaryColor.withValues(alpha: 0.4),
-        borderRadius: BorderRadius.circular(28),
+        color: context.backgroundSecondaryColor.withValues(alpha: 0.6),
+        borderRadius: BorderRadius.circular(20),
         border: Border.all(
           color: context.borderPrimaryColor.withValues(alpha: 0.1),
         ),
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(28),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(14),
-                decoration: BoxDecoration(
-                  color:
-                      (isCredit
-                              ? context.statusSuccessColor
-                              : context.statusDangerColor)
-                          .withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(18),
-                ),
-                child: Icon(
-                  isCredit
-                      ? Icons.arrow_downward_rounded
-                      : Icons.arrow_upward_rounded,
-                  size: 22,
-                  color: isCredit
-                      ? context.statusSuccessColor
-                      : context.statusDangerColor,
-                ),
-              ),
-              const Gap(16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      transaction.typeBadge ??
-                          transaction.transactionType.name.toUpperCase(),
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w900,
-                        color: context.textPrimaryColor,
-                        letterSpacing: -0.3,
-                      ),
-                    ),
-                    const Gap(6),
-                    Text(
-                      formattedDate,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: context.textTertiaryColor,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const Gap(12),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    '${isCredit ? '+' : '-'}${transaction.amount.toStringAsFixed(0)}',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w900,
-                      color: isCredit
-                          ? context.statusSuccessColor
-                          : context.statusDangerColor,
-                      letterSpacing: -1,
-                    ),
-                  ),
-                  Text(
-                    t['egp']!,
-                    style: TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w900,
-                      color:
-                          (isCredit
-                                  ? context.statusSuccessColor
-                                  : context.statusDangerColor)
-                              .withValues(alpha: 0.6),
-                    ),
-                  ),
-                ],
-              ),
-            ],
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        leading: Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: statusColor.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(12),
           ),
+          child: Icon(
+            isCredit ? Icons.add_rounded : Icons.remove_rounded,
+            size: 20,
+            color: statusColor,
+          ),
+        ),
+        title: Text(
+          transaction.typeBadge ?? transaction.transactionType.name.toUpperCase(),
+          style: TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.w800,
+            color: context.textPrimaryColor,
+            letterSpacing: -0.3,
+          ),
+        ),
+        subtitle: Text(
+          formattedDate,
+          style: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w700,
+            color: context.textTertiaryColor,
+          ),
+        ),
+        trailing: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Text(
+              '${isCredit ? '+' : '-'}${transaction.amount.toStringAsFixed(0)}',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w900,
+                color: statusColor,
+                letterSpacing: -0.5,
+              ),
+            ),
+            Text(
+              t['egp']!,
+              style: TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.w800,
+                color: statusColor.withValues(alpha: 0.6),
+              ),
+            ),
+          ],
         ),
       ),
     );

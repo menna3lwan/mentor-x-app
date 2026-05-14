@@ -24,35 +24,32 @@ final class AppDynamicImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Widget imageWidget;
+
     if (path.isEmpty) {
-      if (errorWidget != null) return errorWidget!;
-      return ColoredBox(
-        color: context.backgroundSecondaryColor,
-        child: SizedBox(width: width, height: height),
-      );
-    }
-    if (path.endsWith('svg')) {
-      return VectorGraphic(
+      if (errorWidget != null) {
+        imageWidget = errorWidget!;
+      } else {
+        imageWidget = _PlaceHolderImage(
+          height: height,
+          width: width,
+          borderRadius: borderRadius,
+        );
+      }
+    } else if (path.endsWith('svg')) {
+      imageWidget = VectorGraphic(
         loader: AssetBytesLoader(path),
         fit: fit,
         width: width,
         height: height,
         matchTextDirection: matchTextDirection,
-        colorFilter: color != null
-            ? ColorFilter.mode(color!, BlendMode.srcIn)
-            : null,
+        colorFilter: color != null ? ColorFilter.mode(color!, BlendMode.srcIn) : null,
       );
-    }
-    if (path.startsWith('http')) {
-      return LayoutBuilder(
+    } else if (path.startsWith('http')) {
+      imageWidget = LayoutBuilder(
         builder: (context, constraints) {
-          // Use explicit constraints when available, fallback to provided dimensions
-          final imageWidth = constraints.hasBoundedWidth
-              ? constraints.maxWidth
-              : width;
-          final imageHeight = constraints.hasBoundedHeight
-              ? constraints.maxHeight
-              : height;
+          final imageWidth = constraints.hasBoundedWidth ? constraints.maxWidth : width;
+          final imageHeight = constraints.hasBoundedHeight ? constraints.maxHeight : height;
 
           return CachedNetworkImage(
             fit: fit,
@@ -61,37 +58,55 @@ final class AppDynamicImage extends StatelessWidget {
             imageUrl: path,
             height: imageHeight,
             matchTextDirection: matchTextDirection,
-            placeholder: (context, url) =>
-                _PlaceHolderImage(height: imageHeight, width: imageWidth, borderRadius: borderRadius),
+            placeholder: (context, url) => _PlaceHolderImage(
+              height: imageHeight,
+              width: imageWidth,
+              borderRadius: borderRadius,
+            ),
             errorWidget: (context, url, error) =>
-                errorWidget ?? _PlaceHolderImage(height: imageHeight, width: imageWidth, borderRadius: borderRadius),
-            imageBuilder: borderRadius != null 
-              ? (context, imageProvider) => Container(
-                  width: imageWidth,
+                errorWidget ??
+                _PlaceHolderImage(
                   height: imageHeight,
-                  decoration: BoxDecoration(
-                    borderRadius: borderRadius,
-                    image: DecorationImage(
-                      image: imageProvider,
-                      fit: fit,
-                    ),
-                  ),
-                )
-              : null,
+                  width: imageWidth,
+                  borderRadius: borderRadius,
+                ),
+            imageBuilder: borderRadius != null
+                ? (context, imageProvider) => Container(
+                      width: imageWidth,
+                      height: imageHeight,
+                      decoration: BoxDecoration(
+                        borderRadius: borderRadius,
+                        image: DecorationImage(
+                          image: imageProvider,
+                          fit: fit,
+                        ),
+                      ),
+                    )
+                : null,
           );
         },
       );
+    } else {
+      imageWidget = Image.asset(
+        path,
+        fit: fit,
+        color: color,
+        width: width,
+        height: height,
+        matchTextDirection: matchTextDirection,
+        errorBuilder: (context, error, stackTrace) =>
+            errorWidget ?? _PlaceHolderImage(height: height, width: width, borderRadius: borderRadius),
+      );
     }
-    return Image.asset(
-      path,
-      fit: fit,
-      color: color,
-      width: width,
-      height: height,
-      matchTextDirection: matchTextDirection,
-      errorBuilder: (context, error, stackTrace) =>
-          errorWidget ?? _PlaceHolderImage(height: height, width: width, borderRadius: borderRadius),
-    );
+
+    if (borderRadius != null) {
+      return ClipRRect(
+        borderRadius: borderRadius!,
+        child: imageWidget,
+      );
+    }
+
+    return imageWidget;
   }
 }
 

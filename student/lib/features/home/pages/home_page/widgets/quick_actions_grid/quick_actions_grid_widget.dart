@@ -1,4 +1,4 @@
-import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:gap/gap.dart';
@@ -11,20 +11,21 @@ final class QuickActionsGridWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final actions = [
-      (context.t.home.dashboard.actions.myCourses, Icons.menu_book_rounded),
+      (context.t.home.dashboard.actions.myCourses, Icons.auto_stories_rounded),
       (
         context.t.home.dashboard.actions.attendance,
-        Icons.qr_code_scanner_rounded,
+        Icons.fact_check_rounded,
       ),
-      (context.t.home.dashboard.actions.grades, Icons.grading_rounded),
-      (context.t.home.dashboard.actions.aiAssistant, Icons.smart_toy_rounded),
-      (context.t.home.dashboard.actions.assignments, Icons.assignment_rounded),
-      (context.t.home.dashboard.actions.rewards, Icons.emoji_events_rounded),
-      (context.t.home.dashboard.actions.marketplace, Icons.storefront_rounded),
+      (context.t.home.dashboard.actions.grades, Icons.workspace_premium_rounded),
+      (context.t.home.dashboard.actions.aiAssistant, Icons.psychology_rounded),
+      (context.t.home.dashboard.actions.assignments, Icons.task_rounded),
+      (context.t.home.dashboard.actions.rewards, Icons.redeem_rounded),
+      (context.t.home.dashboard.actions.marketplace, Icons.shopping_bag_rounded),
       (
         context.t.home.dashboard.actions.analytics,
-        Icons.bar_chart_rounded,
+        Icons.insights_rounded,
       ),
+      ('Leaderboard', Icons.emoji_events_rounded),
     ];
 
     return GridView.builder(
@@ -34,8 +35,8 @@ final class QuickActionsGridWidget extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 4,
-        childAspectRatio: 0.8,
-        mainAxisSpacing: 16,
+        childAspectRatio: 0.75,
+        mainAxisSpacing: 12,
         crossAxisSpacing: 12,
       ),
       itemBuilder: (context, index) {
@@ -46,54 +47,31 @@ final class QuickActionsGridWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                width: 64,
-                height: 64,
+                width: 56,
+                height: 56,
                 decoration: BoxDecoration(
-                  color: context.backgroundSecondaryColor.withValues(alpha: 0.4),
-                  borderRadius: BorderRadius.circular(24),
+                  color: context.backgroundSecondaryColor.withValues(alpha: 0.6),
+                  borderRadius: BorderRadius.circular(20),
                   border: Border.all(
-                    color: context.borderPrimaryColor.withValues(alpha: 0.08),
+                    color: context.borderPrimaryColor.withValues(alpha: 0.1),
                   ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.04),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
                 ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(24),
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-                    child: Center(
-                      child: Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              context.brandPrimaryColor.withValues(alpha: 0.15),
-                              context.brandPrimaryColor.withValues(alpha: 0.02),
-                            ],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: context.brandPrimaryColor.withValues(alpha: 0.05),
-                          ),
-                        ),
-                        child: Icon(
-                          action.$2,
-                          color: context.brandPrimaryColor,
-                          size: 24,
-                        ),
-                      ),
+                child: Center(
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: context.brandPrimaryColor.withValues(alpha: 0.1),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      action.$2,
+                      color: context.brandPrimaryColor,
+                      size: 22,
                     ),
                   ),
                 ),
               ),
-              const Gap(10),
+              const Gap(8),
               Text(
                 action.$1,
                 textAlign: TextAlign.center,
@@ -101,9 +79,9 @@ final class QuickActionsGridWidget extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   color: context.textPrimaryColor,
-                  fontSize: 10.5,
-                  fontWeight: FontWeight.w900,
-                  letterSpacing: -0.3,
+                  fontSize: 10,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: -0.2,
                 ),
               ),
             ],

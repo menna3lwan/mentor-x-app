@@ -22,27 +22,27 @@ class ParentActivityFeed extends StatelessWidget {
           width: double.infinity,
           padding: const EdgeInsets.symmetric(vertical: 48, horizontal: 32),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: context.backgroundSecondaryColor.withValues(alpha: 0.4),
             borderRadius: BorderRadius.circular(32),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.03),
-                blurRadius: 20,
-                offset: const Offset(0, 10),
-              ),
-            ],
+            border: Border.all(
+              color: context.borderPrimaryColor.withValues(alpha: 0.1),
+            ),
           ),
           child: Column(
             children: [
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: context.backgroundSecondaryColor,
+                  color: context.brandPrimaryColor.withValues(alpha: 0.05),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(Icons.history_rounded, size: 40, color: context.textTertiaryColor.withValues(alpha: 0.3)),
+                child: Icon(
+                  Icons.history_rounded, 
+                  size: 40, 
+                  color: context.brandPrimaryColor.withValues(alpha: 0.3),
+                ),
               ),
-              const Gap(20),
+              const Gap(24),
               Text(
                 'No Recent Activity',
                 style: TextStyle(
@@ -75,16 +75,13 @@ class ParentActivityFeed extends StatelessWidget {
         final date = DateFormat('dd MMM, hh:mm a').format(activity.timestamp);
         final iconData = _getIconData(context, activity.type);
         
-        return FadeInUp(
-          duration: const Duration(milliseconds: 500),
-          delay: Duration(milliseconds: 100 * index),
-          child: ActivityListTile(
-            title: activity.title,
-            description: activity.description,
-            date: date,
-            icon: iconData.icon,
-            onTap: () {},
-          ),
+        return _ActivityCard(
+          title: activity.title,
+          description: activity.description,
+          date: date,
+          icon: iconData.icon,
+          iconColor: iconData.color,
+          index: index,
         );
       }).toList(),
     );
@@ -103,5 +100,89 @@ class ParentActivityFeed extends StatelessWidget {
       default: 
         return (icon: Icons.notifications_rounded, color: context.textTertiaryColor);
     }
+  }
+}
+
+class _ActivityCard extends StatelessWidget {
+  final String title;
+  final String description;
+  final String date;
+  final IconData icon;
+  final Color iconColor;
+  final int index;
+
+  const _ActivityCard({
+    required this.title,
+    required this.description,
+    required this.date,
+    required this.icon,
+    required this.iconColor,
+    required this.index,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeInUp(
+      duration: const Duration(milliseconds: 500),
+      delay: Duration(milliseconds: 100 * index),
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: context.backgroundSecondaryColor.withValues(alpha: 0.4),
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(
+            color: context.borderPrimaryColor.withValues(alpha: 0.1),
+          ),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: iconColor.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: Icon(icon, color: iconColor, size: 20),
+            ),
+            const Gap(16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w800,
+                      color: context.textPrimaryColor,
+                      fontSize: 14,
+                      letterSpacing: -0.2,
+                    ),
+                  ),
+                  const Gap(2),
+                  Text(
+                    description,
+                    style: TextStyle(
+                      color: context.textSecondaryColor,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const Gap(12),
+            Text(
+              date.split(',').first,
+              style: TextStyle(
+                color: context.textTertiaryColor,
+                fontSize: 10,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

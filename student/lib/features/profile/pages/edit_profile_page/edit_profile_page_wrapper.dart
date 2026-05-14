@@ -16,8 +16,9 @@ final class EditProfilePageWrapper extends StatefulWidget {
 
 class _AddRequest {
   final String field;
-  final String value;
-  _AddRequest(this.field, this.value);
+  final String oldValue;
+  final String newValue;
+  _AddRequest(this.field, this.oldValue, this.newValue);
 }
 
 class _EditProfilePageWrapperState extends State<EditProfilePageWrapper> {
@@ -81,30 +82,30 @@ class _EditProfilePageWrapperState extends State<EditProfilePageWrapper> {
         ? _initialSession.studentNameAr
         : _initialSession.studentName;
     if (_nameController.text != currentName) {
-      requests.add(_AddRequest('name', _nameController.text));
+      requests.add(_AddRequest('name', currentName, _nameController.text));
     }
 
     if (_phoneController.text != _initialSession.phone) {
-      requests.add(_AddRequest('phone', _phoneController.text));
+      requests.add(_AddRequest('phone', _initialSession.phone, _phoneController.text));
     }
 
     final currentGrade = isAr ? _initialSession.gradeAr : _initialSession.grade;
     if (_gradeController.text != currentGrade) {
-      requests.add(_AddRequest('grade', _gradeController.text));
+      requests.add(_AddRequest('grade', currentGrade, _gradeController.text));
     }
 
     final currentCenter = isAr
         ? _initialSession.centerAr
         : _initialSession.center;
     if (_centerController.text != currentCenter) {
-      requests.add(_AddRequest('center', _centerController.text));
+      requests.add(_AddRequest('center', currentCenter, _centerController.text));
     }
 
     final currentSchool = isAr
         ? _initialSession.schoolAr
         : _initialSession.school;
     if (_schoolController.text != currentSchool) {
-      requests.add(_AddRequest('school', _schoolController.text));
+      requests.add(_AddRequest('school', currentSchool, _schoolController.text));
     }
 
     if (requests.isEmpty) {
@@ -120,7 +121,8 @@ class _EditProfilePageWrapperState extends State<EditProfilePageWrapper> {
     context.read<EditProfilePageBloc>().add(
       EditProfilePageSubmitRequestEvent(
         fieldName: first.field,
-        newValue: first.value,
+        oldValue: first.oldValue,
+        newValue: first.newValue,
         reason: _reasonController.text,
       ),
     );

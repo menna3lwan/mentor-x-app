@@ -16,15 +16,21 @@ class AttendanceRateCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final activeColor = color ?? context.brandPrimaryColor;
 
-    return Card(
-      elevation: 0,
-      color: context.backgroundSecondaryColor,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-        side: BorderSide(color: context.textTertiaryColor.withValues(alpha: 0.1)),
+    return Container(
+      decoration: BoxDecoration(
+        color: context.backgroundSecondaryColor,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: context.brandPrimaryColor.withValues(alpha: 0.05), width: 1.5),
+        boxShadow: [
+          BoxShadow(
+            color: context.backgroundElevatedSurfaceShadowColor.withValues(alpha: 0.8),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Padding(
-        padding: const EdgeInsets.all(24.0),
+        padding: const EdgeInsets.all(28.0),
         child: Column(
           children: [
             Row(
@@ -34,34 +40,36 @@ class AttendanceRateCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Attendance Rate',
-                      style: TextStyle(
+                      t.ui.widgets.attendance.rate,
+                      style: context.bodySecondaryStyle.copyWith(
                         color: context.textSecondaryColor,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w700,
                         fontSize: 14,
+                        letterSpacing: 0.2,
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 6),
                     Text(
                       '${(rate * 100).toStringAsFixed(0)}%',
                       style: TextStyle(
                         color: activeColor,
-                        fontSize: 36,
-                        fontWeight: FontWeight.w800,
+                        fontSize: 40,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: -1,
                       ),
                     ),
                   ],
                 ),
                 SizedBox(
-                  width: 64,
-                  height: 64,
+                  width: 72,
+                  height: 72,
                   child: Stack(
                     fit: StackFit.expand,
                     children: [
                       CircularProgressIndicator(
                         value: rate,
-                        strokeWidth: 8,
-                        backgroundColor: context.textTertiaryColor.withValues(alpha: 0.1),
+                        strokeWidth: 10,
+                        backgroundColor: context.brandPrimaryColor.withValues(alpha: 0.08),
                         color: activeColor,
                         strokeCap: StrokeCap.round,
                       ),
@@ -69,7 +77,7 @@ class AttendanceRateCard extends StatelessWidget {
                         child: Icon(
                           Icons.calendar_today_rounded, 
                           color: activeColor, 
-                          size: 24
+                          size: 28
                         ),
                       ),
                     ],
@@ -77,9 +85,12 @@ class AttendanceRateCard extends StatelessWidget {
                 ),
               ],
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 20),
-              child: Divider(height: 1),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 24),
+              child: Divider(
+                height: 1,
+                color: context.brandPrimaryColor.withValues(alpha: 0.05),
+              ),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

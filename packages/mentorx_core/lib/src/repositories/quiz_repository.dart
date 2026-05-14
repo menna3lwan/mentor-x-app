@@ -6,6 +6,7 @@ enum QuizRepositoryExceptionCode {
   failedToSaveAnswer,
   failedToSubmitQuiz,
   failedToLoadResults,
+  quizAlreadyStarted,
 }
 
 final class QuizRepositoryException
@@ -32,7 +33,7 @@ abstract interface class QuizRepository {
   });
 
   /// Start a new quiz attempt. Returns the attempt and questions.
-  Future<Map<String, dynamic>> startQuiz(String quizId);
+  Future<(QuizAttemptEntity, List<QuizQuestionEntity>)> startQuiz(String quizId);
 
   /// Save a quiz answer during an attempt.
   Future<void> saveAnswer({

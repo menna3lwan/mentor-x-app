@@ -1,7 +1,7 @@
 # 👨‍👩‍👧 MentorX — Parent Application
 
 [![Flutter](https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white)](https://flutter.dev)
-[![Role](https://img.shields.io/badge/Role-Parent-F59239?style=for-the-badge)](#)
+[![Role](https://img.shields.io/badge/Role-Parent-FF9F1C?style=for-the-badge)](#)
 
 The **MentorX Parent App** provides parents with direct visibility into their children's educational journey. It bridges the gap between students, educators, and guardians through real-time data and communication.
 

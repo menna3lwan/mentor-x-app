@@ -92,32 +92,36 @@ final class StudentModel extends StudentEntity {
   }
 
   factory StudentModel.fromJson(Map<String, dynamic> json) {
-    final user = ModelParser.asMap(json['user'] ?? json);
+    // Standardize data extraction using ModelParser
+    final user = ModelParser.extractData(json);
 
-    // Build lastName from the 4-part Arabic name structure
-    final String secondName = ModelParser.asString(user['secondName'] ?? user['second_name']);
-    final String thirdName = ModelParser.asString(user['thirdName'] ?? user['third_name']);
-    final String fourthName = ModelParser.asString(user['fourthName'] ?? user['fourth_name']);
+    // 1. Resolve ID (userId or id or studentCode)
+    final id = ModelParser.asString(user['id'] ?? user['userId'] ?? user['user_id'] ?? user['studentCode']);
 
-    // Fallback: if no firstName, try 'name' or 'fullName'
-    final String rawName = ModelParser.asString(user['name'] ?? user['fullName'] ?? user['full_name']);
-    final nameParts = rawName.trim().split(' ');
-    final String fallbackFirst = nameParts.isNotEmpty ? nameParts.first : '';
-    final String fallbackLast = nameParts.length > 1 ? nameParts.sublist(1).join(' ') : '';
+    // 2. Resolve Names (Handle 4-part names and fullName split)
+    final String first = ModelParser.asString(user['firstName'] ?? user['first_name']);
+    final String second = ModelParser.asString(user['secondName'] ?? user['second_name']);
+    final String third = ModelParser.asString(user['thirdName'] ?? user['third_name']);
+    final String fourth = ModelParser.asString(user['fourthName'] ?? user['fourth_name']);
 
-    // Compute lastName: prefer fourthName, then explicit lastName, then fallback
-    final String lastName = ModelParser.asString(
-      user['lastName'] ?? user['last_name'] ?? fourthName,
-      fallback: fallbackLast,
-    );
+    final String fullName = ModelParser.asString(user['fullName'] ?? user['full_name'] ?? user['name']);
+    final nameParts = fullName.trim().split(' ');
+    
+    final String resolvedFirst = first.isNotEmpty ? first : (nameParts.isNotEmpty ? nameParts.first : '');
+    final String resolvedLast = fourth.isNotEmpty 
+        ? fourth 
+        : (user['lastName'] ?? user['last_name'] ?? (nameParts.length > 1 ? nameParts.sublist(1).join(' ') : ''));
+
+    // 3. Resolve Status
+    final status = _parseStatus(user['status'] ?? user['accountStatus'] ?? user['account_status']);
 
     return StudentModel(
-      id: ModelParser.asString(user['id'] ?? user['userId']),
-      firstName: ModelParser.asString(user['firstName'] ?? user['first_name'], fallback: fallbackFirst),
-      secondName: secondName,
-      thirdName: thirdName,
-      fourthName: fourthName,
-      lastName: lastName,
+      id: id,
+      firstName: resolvedFirst,
+      secondName: second,
+      thirdName: third,
+      fourthName: fourth,
+      lastName: resolvedLast.toString(),
       email: ModelParser.asString(user['email']),
       phoneNumber: ModelParser.asString(user['phone'] ?? user['phoneNumber'] ?? user['phone_number']),
       profileImageUrl: ModelParser.asString(
@@ -129,14 +133,14 @@ final class StudentModel extends StudentEntity {
       ),
       identityDocumentUrl: ModelParser.asString(user['identityDocumentUrl'] ?? user['identity_document_url']),
       gender: _parseGender(user['gender']),
-      status: _parseStatus(user['status']),
+      status: status,
       gradeId: ModelParser.asString(user['gradeId'] ?? user['grade_id']),
       gradeName: ModelParser.asString(user['gradeName'] ?? user['grade_name'] ?? user['grade']),
       studentCode: ModelParser.asString(user['studentCode'] ?? user['student_code']),
       studyType: ModelParser.asString(user['studyType'] ?? user['study_type']),
       studyLocation: ModelParser.asString(user['studyLocation'] ?? user['study_location']),
-      walletBalance: ModelParser.asDouble(user['walletBalance'] ?? user['wallet_balance']),
-      totalPoints: ModelParser.asInt(user['totalPoints'] ?? user['total_points']),
+      walletBalance: ModelParser.asDouble(user['walletBalance'] ?? user['wallet_balance'] ?? user['balance']),
+      totalPoints: ModelParser.asInt(user['totalPoints'] ?? user['total_points'] ?? user['points']),
       schoolName: ModelParser.asString(user['schoolName'] ?? user['school_name']),
       educationDepartment: ModelParser.asString(user['educationDepartment'] ?? user['education_department']),
       centerId: ModelParser.asString(user['centerId'] ?? user['center_id']),
@@ -149,9 +153,9 @@ final class StudentModel extends StudentEntity {
       city: ModelParser.asString(user['city']),
       area: ModelParser.asString(user['area'] ?? user['district']),
       governorate: ModelParser.asString(user['governorate']),
-      isOnline: ModelParser.asBool(user['online'] ?? user['isOnline']),
-      enabled: ModelParser.asBool(user['enabled']),
-      hasActiveSession: ModelParser.asBool(user['hasActiveSession']),
+      isOnline: ModelParser.asBool(user['online'] ?? user['isOnline'] ?? user['is_online']),
+      enabled: ModelParser.asBool(user['enabled'] ?? user['active'], fallback: true),
+      hasActiveSession: ModelParser.asBool(user['hasActiveSession'] ?? user['hasSession']),
       devicesCount: ModelParser.asInt(user['devicesCount'] ?? user['devices_count']),
       loginCount: ModelParser.asInt(user['loginCount'] ?? user['login_count']),
       lastLoginAt: ModelParser.asDateTime(user['lastLoginAt'] ?? user['last_login_at']),

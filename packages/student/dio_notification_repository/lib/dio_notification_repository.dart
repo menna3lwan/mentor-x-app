@@ -45,7 +45,7 @@ final class DioNotificationRepository
   @override
   Future<void> markAsRead(String notificationId) async {
     try {
-      await httpClient.post('/api/notifications/$notificationId/read');
+      await httpClient.patch('/api/notifications/$notificationId/read');
     } on HttpClientResponse catch (e) {
       handleHttpClientErrorResponse(
         e,
@@ -57,7 +57,7 @@ final class DioNotificationRepository
   @override
   Future<void> markAllAsRead() async {
     try {
-      await httpClient.post('/api/notifications/read-all');
+      await httpClient.patch('/api/notifications/read-all');
     } on HttpClientResponse catch (e) {
       handleHttpClientErrorResponse(
         e,

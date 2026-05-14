@@ -47,11 +47,17 @@ final class LeaderboardPagePage extends StatelessWidget {
                           child: MentorXSkeleton(height: 70, borderRadius: 24),
                         ),
                       )
-                    : RefreshIndicator(
-                        onRefresh: () async => onRefresh(),
-                        color: context.brandPrimaryColor,
-                        child: _buildContent(context, t),
-                      ),
+                    : state.loadingState == LoadingState.error
+                        ? AppErrorView(
+                            title: 'Error loading leaderboard',
+                            message: state.errorMessage ?? 'Something went wrong',
+                            onRetry: onRefresh,
+                          )
+                        : RefreshIndicator(
+                            onRefresh: () async => onRefresh(),
+                            color: context.brandPrimaryColor,
+                            child: _buildContent(context, t),
+                          ),
               ),
             ],
           ),
@@ -400,7 +406,7 @@ final class _PodiumSpot extends StatelessWidget {
         ),
         const Gap(4),
         Text(
-          '${entry.score}%',
+          '${entry.score.toStringAsFixed(1)}%',
           style: TextStyle(
             color: color,
             fontWeight: FontWeight.w900,
@@ -526,7 +532,7 @@ final class _LeaderboardTile extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    '${entry.score}%',
+                    '${entry.score.toStringAsFixed(1)}%',
                     style: TextStyle(
                       color: context.brandPrimaryColor,
                       fontWeight: FontWeight.w900,
@@ -631,7 +637,7 @@ final class _MyRankBar extends StatelessWidget {
             ),
           ),
           Text(
-            '${entry.score}%',
+            '${entry.score.toStringAsFixed(1)}%',
             style: TextStyle(
               color: context.brandPrimaryColor,
               fontWeight: FontWeight.w900,

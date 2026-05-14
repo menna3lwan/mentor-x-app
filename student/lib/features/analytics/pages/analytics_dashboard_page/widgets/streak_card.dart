@@ -68,7 +68,7 @@ final class StreakCard extends StatelessWidget {
                         letterSpacing: -1,
                       ),
                     ),
-                    const Gap(8),
+                    const SizedBox(width: 8),
                     Text(
                       'DAYS STREAK',
                       style: TextStyle(

@@ -89,7 +89,7 @@ class MentorXButton extends StatelessWidget {
       $text.style.ref($mentorxToken.textStyle.bodyPrimary),
       $text.style.letterSpacing(-0.2),
       $on.disabled(
-        $box.color(context.backgroundSecondaryColor),
+        $box.color(context.backgroundSecondaryColor.withValues(alpha: 0.5)),
         $text.style.color(context.textTertiaryColor),
         $box.border.all.color(Colors.transparent),
       ),

@@ -43,19 +43,9 @@ final class DeviceManagementPagePage extends StatelessWidget {
                     ),
                   ),
                 ),
-                child: AppBar(
+                child: MentorXAppBar(
                   backgroundColor: Colors.transparent,
-                  elevation: 0,
-                  foregroundColor: context.textPrimaryColor,
-                  centerTitle: true,
-                  title: Text(
-                    t['deviceManagement'] ?? 'Device Management',
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: -0.5,
-                    ),
-                  ),
+                  titleText: t['deviceManagement'] ?? 'Device Management',
                 ),
               ),
             ),

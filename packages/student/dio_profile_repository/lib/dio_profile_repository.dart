@@ -22,20 +22,50 @@ final class DioStudentProfileRepository
   @override
   Future<ProfileEditRequestEntity> submitEditRequest({
     required String fieldName,
+    required String oldValue,
     required String newValue,
     String? reason,
   }) async {
     try {
+      // Map field names to API keys
+      final String apiField = switch (fieldName.toLowerCase()) {
+        'name' || 'firstname' => 'firstName',
+        'secondname' => 'secondName',
+        'thirdname' => 'thirdName',
+        'fourthname' => 'fourthName',
+        'grade' => 'grade',
+        'school' || 'schoolname' => 'schoolName',
+        'center' || 'centername' => 'centerName',
+        'phone' || 'phonenumber' => 'phone',
+        _ => fieldName,
+      };
+
       final response = await httpClient.post(
-        '/api/student/profile/edit-requests',
+        '/api/student/profile',
+        queryParameters: {
+          if (reason != null && reason.isNotEmpty) 'reason': reason,
+        },
         data: {
-          'field_name': fieldName,
-          'new_value': newValue,
-          if (reason != null) 'reason': reason,
+          apiField: newValue,
         },
       );
 
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final data = response.asMap();
+      
+      // If the backend returns the full profile instead of an edit request,
+      // we wrap it in a pseudo-edit request to maintain interface compatibility.
+      if (data.containsKey('id') && !data.containsKey('fieldName')) {
+        return ProfileEditRequestEntity(
+          id: ModelParser.asString(data['id']),
+          fieldName: fieldName,
+          oldValue: oldValue,
+          newValue: newValue,
+          status: EditRequestStatus.pending, // Assume pending if it's an edit-capable field
+          createdAt: DateTime.now(),
+          reason: reason,
+        );
+      }
+
       return ProfileEditRequestModel.fromJson(data);
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
@@ -53,9 +83,8 @@ final class DioStudentProfileRepository
         queryParameters: {'status': 'pending'},
       );
 
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
-      final list = asList(data is Map ? data['content'] : data);
-      return list
+      return response
+          .asList()
           .map(asMap)
           .map(ProfileEditRequestModel.fromJson)
           .toList();
@@ -72,8 +101,7 @@ final class DioStudentProfileRepository
   Future<StudentEntity> getProfile() async {
     try {
       final response = await httpClient.get('/api/student/profile');
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
-      return StudentProfileModel.fromJson(data);
+      return StudentProfileModel.fromJson(response.asMap());
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
@@ -86,7 +114,7 @@ final class DioStudentProfileRepository
   Future<Map<String, dynamic>> getSummary() async {
     try {
       final response = await httpClient.get('/api/profile/student/summary');
-      return asMap(response.data);
+      return response.asMap();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(e, defaultCode: StudentProfileRepositoryExceptionCode.unknown);
     }
@@ -96,10 +124,8 @@ final class DioStudentProfileRepository
   Future<List<DeviceEntity>> getDevices() async {
     try {
       final response = await httpClient.get('/api/auth/session-status');
-      
-      final rootData = asMap(response.data);
+      final rootData = response.asMap();
 
-      // Handle the case where session-status returns a single status object instead of a list
       if (rootData.containsKey('hasSession')) {
         final hasSession = boolOrFalse(rootData['hasSession']);
         if (!hasSession) return const [];
@@ -115,10 +141,7 @@ final class DioStudentProfileRepository
         ];
       }
 
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
-      final list = asList(data is Map ? data['content'] : rootData['content'] ?? response.data);
-
-      return list.map(asMap).map(DeviceModel.fromJson).toList();
+      return response.asList().map(asMap).map(DeviceModel.fromJson).toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
@@ -150,7 +173,6 @@ final class DioStudentProfileRepository
         '/api/student/profile/location',
         data: {
           'governorate': governorate,
-          'city': city,
           'area': area,
         },
       );
@@ -183,12 +205,11 @@ final class DioStudentProfileRepository
   @override
   Future<StudentEntity> updateProfile(StudentEntity profile) async {
     try {
-      final response = await httpClient.put(
+      final response = await httpClient.post(
         '/api/student/profile',
         data: StudentProfileModel.fromEntity(profile).toJson(),
       );
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
-      return StudentProfileModel.fromJson(data);
+      return StudentProfileModel.fromJson(response.asMap());
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,

@@ -16,14 +16,12 @@ final class Env {
   // MentorX Configuration
   static const String mentorXBaseUrl = String.fromEnvironment(
     'MENTORX_API_BASE_URL',
-    defaultValue: '',
   );
 
   static bool get hasMentorXBaseUrl => mentorXBaseUrl.trim().isNotEmpty;
+
   static const String sentryDsn = String.fromEnvironment(
     'SENTRY_DSN',
-    defaultValue:
-        'https://d670c06af420324e69b2345020158b5b@o4511367439187968.ingest.us.sentry.io/4511367449149440',
   );
 
   static final authenticationRepositoryMode = RepositoryMode.fromString(
@@ -142,6 +140,27 @@ final class Env {
     ),
   );
 
+  static final leaderboardRepositoryMode = RepositoryMode.fromString(
+    const String.fromEnvironment(
+      'LEADERBOARD_REPOSITORY_MODE',
+      defaultValue: 'mock',
+    ),
+  );
+
+  static final studentCardRepositoryMode = RepositoryMode.fromString(
+    const String.fromEnvironment(
+      'STUDENT_CARD_REPOSITORY_MODE',
+      defaultValue: 'mock',
+    ),
+  );
+
+  static final communicationRepositoryMode = RepositoryMode.fromString(
+    const String.fromEnvironment(
+      'COMMUNICATION_REPOSITORY_MODE',
+      defaultValue: 'mock',
+    ),
+  );
+
   static bool get usesAnyProdRepository =>
       authenticationRepositoryMode == RepositoryMode.prod ||
       homeRepositoryMode == RepositoryMode.prod ||
@@ -159,7 +178,10 @@ final class Env {
       rewardsRepositoryMode == RepositoryMode.prod ||
       gradeRepositoryMode == RepositoryMode.prod ||
       registrationRepositoryMode == RepositoryMode.prod ||
-      analyticsRepositoryMode == RepositoryMode.prod;
+      analyticsRepositoryMode == RepositoryMode.prod ||
+      leaderboardRepositoryMode == RepositoryMode.prod ||
+      studentCardRepositoryMode == RepositoryMode.prod ||
+      communicationRepositoryMode == RepositoryMode.prod;
 
   // Mock values:
   static const int _mockDelayDurationInSeconds = int.fromEnvironment(

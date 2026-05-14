@@ -1,5 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:analytics_service/analytics_service.dart';
 import '../../../core/core.dart';
 
 part 'onboarding_event.dart';

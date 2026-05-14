@@ -18,48 +18,35 @@ final class ParentModel extends ParentEntity {
   });
 
   factory ParentModel.fromJson(Map<String, dynamic> json) {
-    final user = json['user'] as Map<String, dynamic>? ?? json;
+    final user = ModelParser.asMap(json['user'] ?? json['data'] ?? json);
 
-    final String name = user['name'] as String? ?? '';
+    final String name = ModelParser.asString(user['name'] ?? user['fullName']);
     final nameParts = name.trim().split(' ');
-    final String fallbackFirst = nameParts.first;
+    final String fallbackFirst = nameParts.isNotEmpty ? nameParts.first : '';
     final String fallbackLast = nameParts.length > 1 ? nameParts.sublist(1).join(' ') : '';
 
     return ParentModel(
-      id: (user['id'] ?? user['userId'])?.toString() ?? '',
-      firstName: user['firstName'] as String? ??
-          user['first_name'] as String? ??
-          fallbackFirst,
-      lastName: user['lastName'] as String? ??
-          user['last_name'] as String? ??
-          fallbackLast,
-      email: user['email'] as String? ?? '',
-      phoneNumber: (user['phone'] ?? user['phoneNumber'] ?? user['phone_number'])
-              ?.toString() ??
-          '',
-      profileImageUrl: (user['profileImageUrl'] ??
-              user['profileImage'] ??
-              user['avatarUrl'] ??
-              user['profile_photo_url'])
-          ?.toString(),
+      id: ModelParser.asString(user['id'] ?? user['userId']),
+      firstName: ModelParser.asString(user['firstName'] ?? user['first_name'], fallback: fallbackFirst),
+      lastName: ModelParser.asString(user['lastName'] ?? user['last_name'], fallback: fallbackLast),
+      email: ModelParser.asString(user['email']),
+      phoneNumber: ModelParser.asString(user['phone'] ?? user['phoneNumber'] ?? user['phone_number']),
+      profileImageUrl: ModelParser.asString(
+        user['profileImageUrl'] ?? user['image_url'] ?? user['avatarUrl'] ?? user['profile_photo_url'],
+      ),
       status: _parseStatus(user['status']),
-      childrenCount: (user['childrenCount'] ?? user['children_count'] ?? 0).toInt(),
-      walletBalance: (user['walletBalance'] ?? user['wallet_balance'] ?? 0.0)
-          .toDouble(),
-      totalPoints: (user['totalPoints'] ?? user['total_points'] ?? 0).toInt(),
-      metadata: user['metadata'] as Map<String, dynamic>?,
-      createdAt: DateTime.tryParse(
-              (user['createdAt'] ?? user['created_at'])?.toString() ?? '') ??
-          DateTime.now(),
-      updatedAt: DateTime.tryParse(
-              (user['updatedAt'] ?? user['updated_at'])?.toString() ?? '') ??
-          DateTime.now(),
+      childrenCount: ModelParser.asInt(user['childrenCount'] ?? user['students'] is List ? (user['students'] as List).length : 0),
+      walletBalance: ModelParser.asDouble(user['walletBalance'] ?? user['balance']),
+      totalPoints: ModelParser.asInt(user['totalPoints'] ?? user['points']),
+      metadata: ModelParser.asMap(user['metadata']),
+      createdAt: ModelParser.asDateTime(user['createdAt'] ?? user['created_at']) ?? DateTime.now(),
+      updatedAt: ModelParser.asDateTime(user['updatedAt'] ?? user['updated_at']) ?? DateTime.now(),
     );
   }
 
   static ParentStatus _parseStatus(dynamic value) {
-    if (value == null) return ParentStatus.pending;
-    final str = value.toString().toLowerCase();
+    final str = ModelParser.asString(value).toLowerCase();
+    if (str == 'active' || str == 'approved') return ParentStatus.active;
     return ParentStatus.values.firstWhere(
       (e) => e.name == str,
       orElse: () => ParentStatus.pending,
@@ -68,18 +55,12 @@ final class ParentModel extends ParentEntity {
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        'first_name': firstName,
-        'last_name': lastName,
+        'firstName': firstName,
+        'lastName': lastName,
         'email': email,
-        'phone_number': phoneNumber,
-        'profile_image_url': profileImageUrl,
+        'phone': phoneNumber,
+        'profileImageUrl': profileImageUrl,
         'status': status.name,
-        'children_count': childrenCount,
-        'wallet_balance': walletBalance,
-        'total_points': totalPoints,
-        'metadata': metadata,
-        'created_at': createdAt.toIso8601String(),
-        'updated_at': updatedAt.toIso8601String(),
       };
 
   factory ParentModel.fromEntity(ParentEntity entity) {

@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
@@ -22,249 +21,139 @@ final class EnrolledCourseCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: context.backgroundSecondaryColor.withValues(alpha: 0.45),
-          borderRadius: BorderRadius.circular(28),
+          color: context.backgroundSecondaryColor.withValues(alpha: 0.6),
+          borderRadius: BorderRadius.circular(24),
           border: Border.all(
             color: context.borderPrimaryColor.withValues(alpha: 0.1),
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
-              blurRadius: 15,
-              offset: const Offset(0, 8),
+              color: Colors.black.withValues(alpha: 0.04),
+              blurRadius: 20,
+              offset: const Offset(0, 10),
             ),
           ],
         ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(28),
-          child: Stack(
+        child: SizedBox(
+          height: 110,
+          child: Row(
             children: [
-              Positioned.fill(
-                child: ExcludeSemantics(
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                    child: const SizedBox.expand(),
+              SizedBox(
+                width: 110,
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.horizontal(
+                    left: Radius.circular(24),
+                  ),
+                  child: Stack(
+                    children: [
+                      Positioned.fill(
+                        child: Hero(
+                          tag: 'course_image_${course.courseId}',
+                          child: AppDynamicImage(
+                            course.courseThumbnailUrl ?? '',
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.centerLeft,
+                            end: Alignment.centerRight,
+                            colors: [
+                              Colors.black.withValues(alpha: 0.2),
+                              Colors.transparent,
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
-              IntrinsicHeight(
-              child: Row(
-                children: [
-                  SizedBox(
-                    width: 130,
-                    child: Stack(
-                      children: [
-                        Positioned.fill(
-                          child: Hero(
-                            tag: 'course_image_${course.courseId}',
-                            child: AppDynamicImage(
-                              course.courseThumbnailUrl ?? '',
-                              fit: BoxFit.cover,
-                            ),
-                          ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        course.courseTitle ?? '',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w800,
+                          fontSize: 15,
+                          color: context.textPrimaryColor,
+                          letterSpacing: -0.2,
                         ),
-                        Positioned.fill(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.centerLeft,
-                                end: Alignment.centerRight,
-                                colors: [
-                                  Colors.transparent,
-                                  context.backgroundSecondaryColor.withValues(alpha: 0.2),
-                                ],
-                              ),
-                            ),
-                          ),
+                      ),
+                      const Gap(4),
+                      Text(
+                        '${course.completedLessons}/${course.totalLessons} Lessons',
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w700,
+                          color: context.textTertiaryColor,
                         ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
+                      ),
+                      const Spacer(),
+                      const Gap(12),
+                      Row(
                         children: [
-                          Text(
-                            course.courseTitle ?? '',
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w900,
-                              fontSize: 16,
-                              color: context.textPrimaryColor,
-                              letterSpacing: -0.3,
-                              height: 1.2,
-                            ),
-                          ),
-                          if (course.timeSpentFormatted != null || course.totalLessons > 0) ...[
-                            const Gap(8),
-                            Row(
+                          Expanded(
+                            child: Stack(
                               children: [
-                                if (course.timeSpentFormatted != null)
-                                  _StatChip(
-                                    icon: Icons.timer_outlined,
-                                    label: course.timeSpentFormatted!,
-                                  ),
-                                if (course.totalLessons > 0) ...[
-                                  const Gap(8),
-                                  _StatChip(
-                                    icon: Icons.play_lesson_outlined,
-                                    label: '${course.completedLessons}/${course.totalLessons}',
-                                  ),
-                                ],
-                              ],
-                            ),
-                          ],
-                          if (course.quizzesTaken > 0) ...[
-                            const Gap(8),
-                            _StatChip(
-                              icon: Icons.quiz_outlined,
-                              label: 'Score: ${course.averageQuizScore.toInt()}%',
-                              color: context.brandSecondaryColor,
-                            ),
-                          ],
-                          const Gap(16),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                decoration: BoxDecoration(
-                                  color: (progress >= 100
-                                          ? context.statusSuccessColor
-                                          : context.brandPrimaryColor)
-                                      .withValues(alpha: 0.1),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Text(
-                                  progress >= 100 ? 'COMPLETED' : 'IN PROGRESS',
-                                  style: TextStyle(
-                                    fontSize: 9,
-                                    fontWeight: FontWeight.w900,
-                                    color: progress >= 100
-                                        ? context.statusSuccessColor
-                                        : context.brandPrimaryColor,
-                                    letterSpacing: 0.5,
+                                Container(
+                                  height: 6,
+                                  decoration: BoxDecoration(
+                                    color: context.backgroundPrimaryColor,
+                                    borderRadius: BorderRadius.circular(3),
                                   ),
                                 ),
-                              ),
-                              Text(
-                                '${progress.toInt()}%',
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w900,
-                                  color: context.textPrimaryColor,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const Gap(10),
-                          Stack(
-                            children: [
-                              Container(
-                                height: 6,
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                  color: context.backgroundPrimaryColor.withValues(alpha: 0.5),
-                                  borderRadius: BorderRadius.circular(3),
-                                ),
-                              ),
-                              TweenAnimationBuilder<double>(
-                                tween: Tween<double>(begin: 0, end: progress / 100),
-                                duration: const Duration(milliseconds: 800),
-                                curve: Curves.easeOutBack,
-                                builder: (context, value, child) {
-                                  return FractionallySizedBox(
-                                    alignment: Alignment.centerLeft,
-                                    widthFactor: value.clamp(0, 1),
-                                    child: AnimatedContainer(
-                                      duration: const Duration(milliseconds: 300),
-                                      height: 6,
-                                      decoration: BoxDecoration(
-                                        gradient: LinearGradient(
-                                          colors: progress >= 100
-                                              ? [
-                                                  context.statusSuccessColor,
-                                                  context.statusSuccessColor.withValues(alpha: 0.8),
-                                                ]
-                                              : [
-                                                  context.brandPrimaryColor,
-                                                  context.brandPrimaryColor.withValues(alpha: 0.8),
-                                                ],
-                                        ),
-                                        borderRadius: BorderRadius.circular(3),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: (progress >= 100
-                                                    ? context.statusSuccessColor
-                                                    : context.brandPrimaryColor)
-                                                .withValues(alpha: 0.3),
-                                            blurRadius: 8,
-                                            offset: const Offset(0, 2),
-                                          ),
+                                FractionallySizedBox(
+                                  widthFactor: (progress / 100).clamp(0.05, 1.0),
+                                  child: Container(
+                                    height: 6,
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          context.brandPrimaryColor,
+                                          context.brandSecondaryColor,
                                         ],
                                       ),
+                                      borderRadius: BorderRadius.circular(3),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: context.brandPrimaryColor.withValues(alpha: 0.3),
+                                          blurRadius: 6,
+                                          offset: const Offset(0, 2),
+                                        ),
+                                      ],
                                     ),
-                                  );
-                                },
-                              ),
-                            ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const Gap(12),
+                          Text(
+                            '${progress.toInt()}%',
+                            style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w900,
+                              color: context.textPrimaryColor,
+                            ),
                           ),
                         ],
                       ),
-                    ),
+                    ],
                   ),
-                ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-    ));
-  }
-}
-
-class _StatChip extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final Color? color;
-
-  const _StatChip({
-    required this.icon,
-    required this.label,
-    this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final effectiveColor = color ?? context.textSecondaryColor.withValues(alpha: 0.7);
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-      decoration: BoxDecoration(
-        color: effectiveColor.withValues(alpha: 0.05),
-        borderRadius: BorderRadius.circular(6),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            icon,
-            size: 10,
-            color: effectiveColor,
-          ),
-          const Gap(4),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 10,
-              fontWeight: FontWeight.w700,
-              color: effectiveColor,
-            ),
-          ),
-        ],
       ),
     );
   }

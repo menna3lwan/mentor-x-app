@@ -35,7 +35,13 @@ final class LeaderboardPageBloc
     );
 
     try {
-      final courses = await _courseRepository.getEnrolledCourses();
+      late final List<EnrollmentEntity> courses;
+      try {
+        courses = await _courseRepository.getEnrolledCourses();
+      } catch (e) {
+        // Fallback to empty courses if fetch fails, but don't fail the whole page
+        courses = [];
+      }
 
       final List<LeaderboardEntryEntity> leaderboard;
       if (event.courseId == null) {

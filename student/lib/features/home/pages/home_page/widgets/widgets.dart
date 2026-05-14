@@ -4,6 +4,7 @@ export 'continue_learning_section/continue_learning_section.dart';
 export 'featured_courses_section/featured_courses_section.dart';
 export 'home_header/home_header.dart';
 export 'inline_section_error/inline_section_error.dart';
+export 'leaderboard_shortcut_card/leaderboard_shortcut_card.dart';
 export 'quick_actions_grid/quick_actions_grid.dart';
 export 'section_header/section_header.dart';
 export 'wallet_quick_view_card/wallet_quick_view_card.dart';

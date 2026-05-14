@@ -10,14 +10,61 @@ final class ModelParser {
     if (value is Map) {
       return value.map((key, val) => MapEntry(key.toString(), val));
     }
+    if (value is String && value.isNotEmpty) {
+      try {
+        final decoded = jsonDecode(value);
+        if (decoded is Map) {
+          return decoded.map((key, val) => MapEntry(key.toString(), val));
+        }
+      } catch (_) {
+        // Not a valid JSON string
+      }
+    }
     return <String, dynamic>{};
   }
 
-  /// Converts dynamic value to `List<dynamic>` safely
+  /// Extracts the main data payload from a potentially wrapped response.
+  static Map<String, dynamic> extractData(dynamic value) {
+    final map = asMap(value);
+    final data = map['data'];
+    if (data is Map) {
+      return asMap(data);
+    }
+    return map;
+  }
+
+  /// Converts dynamic value to `List<dynamic>` safely.
+  /// Robustly handles 'data', 'items', 'content' keys and nested 'data.content'.
   static List<dynamic> asList(dynamic value) {
     if (value is List<dynamic>) return value;
     if (value is Map) {
-      final d = value['data'] ?? value['items'] ?? value['content'];
+      // 1. Direct check for common list keys
+      final d = value['data'] ??
+          value['items'] ??
+          value['content'] ??
+          value['entries'] ??
+          value['rankings'] ??
+          value['results'];
+      if (d is List<dynamic> && d.isNotEmpty) return d;
+
+      // 2. Deep check for nested data.content or data.items
+      if (d is Map) {
+        final nested = d['content'] ??
+            d['items'] ??
+            d['entries'] ??
+            d['rankings'] ??
+            d['data'] ??
+            d['results'];
+        if (nested is List<dynamic>) return nested;
+      }
+
+      // 3. Last resort: if value['data'] was an empty list but there is another list, or if no key matched
+      // Search for ANY list in the map
+      for (final val in value.values) {
+        if (val is List<dynamic> && val.isNotEmpty) return val;
+      }
+      
+      // If we found a list in step 1 but it was empty, and no other list found, return it
       if (d is List<dynamic>) return d;
     }
     return <dynamic>[];

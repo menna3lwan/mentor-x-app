@@ -29,17 +29,122 @@ extension ContextExtensions on BuildContext {
     await LocaleSettings.instance.setLocaleRaw(newCode);
   }
 
+  // Screen size
+  Size get size => MediaQuery.sizeOf(this);
+  double get width => size.width;
+  double get height => size.height;
+  bool get isTablet => width >= 600;
+  bool get isDarkMode => Theme.brightnessOf(this) == Brightness.dark;
+
+  // Platform-adaptive bottom sheet
+  Future<T?> showBottomSheet<T>({
+    required WidgetBuilder builder,
+    bool enableDrag = true,
+    bool useRootNavigator = true,
+    bool isScrollControlled = true,
+  }) {
+    if (MentorXPlatformChecker.isIOS) {
+      return showModalBottomSheet<T>(
+        context: this,
+        enableDrag: enableDrag,
+        useRootNavigator: useRootNavigator,
+        isScrollControlled: isScrollControlled,
+        backgroundColor: Colors.transparent,
+        builder: (context) => CupertinoPopupSurface(
+          isSurfacePainted: true,
+          child: builder(context),
+        ),
+      );
+    } else {
+      return showModalBottomSheet<T>(
+        context: this,
+        enableDrag: enableDrag,
+        useRootNavigator: useRootNavigator,
+        isScrollControlled: isScrollControlled,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        builder: builder,
+      );
+    }
+  }
+
+  // Platform-adaptive alert dialog
+  Future<T?> showAlertDialog<T>({
+    String? title,
+    String? content,
+    String? confirmText,
+    String? cancelText,
+    VoidCallback? onConfirm,
+    VoidCallback? onCancel,
+  }) {
+    if (MentorXPlatformChecker.isIOS) {
+      return showCupertinoDialog<T>(
+        context: this,
+        builder: (context) => CupertinoAlertDialog(
+          title: title != null ? Text(title) : null,
+          content: content != null ? Text(content) : null,
+          actions: [
+            if (cancelText != null)
+              CupertinoDialogAction(
+                onPressed: () {
+                  Navigator.pop(context);
+                  onCancel?.call();
+                },
+                child: Text(cancelText),
+              ),
+            if (confirmText != null)
+              CupertinoDialogAction(
+                onPressed: () {
+                  Navigator.pop(context);
+                  onConfirm?.call();
+                },
+                child: Text(confirmText),
+              ),
+          ],
+        ),
+      );
+    } else {
+      return showDialog<T>(
+        context: this,
+        builder: (context) => AlertDialog(
+          title: title != null ? Text(title) : null,
+          content: content != null ? Text(content) : null,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          actions: [
+            if (cancelText != null)
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  onCancel?.call();
+                },
+                child: Text(cancelText),
+              ),
+            if (confirmText != null)
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  onConfirm?.call();
+                },
+                child: Text(confirmText),
+              ),
+          ],
+        ),
+      );
+    }
+  }
+
   void showSuccessSnackBar(String message) {
     ScaffoldMessenger.of(this).showSnackBar(
       SnackBar(
         content: Text(
           message,
-          style: const TextStyle(fontWeight: FontWeight.w700),
+          style: const TextStyle(fontWeight: FontWeight.w800),
         ),
-        backgroundColor: Colors.green,
+        backgroundColor: statusSuccessColor,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        margin: const EdgeInsets.all(16),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        margin: const EdgeInsets.all(20),
       ),
     );
   }

@@ -42,24 +42,39 @@ final class HttpClientResponse {
     required this.statusCode,
   });
 
-  /// Converts data to `Map<String, dynamic>` safely
+  /// Converts data to `Map<String, dynamic>` safely.
+  /// Automatically strips the 'data' wrapper if present.
   Map<String, dynamic> asMap() {
     final value = data;
-    if (value is Map<String, dynamic>) return value;
-    if (value is Map) {
-      return value.map((key, val) => MapEntry(key.toString(), val));
+    if (value is! Map) return <String, dynamic>{};
+
+    final map = value is Map<String, dynamic>
+        ? value
+        : value.map((key, val) => MapEntry(key.toString(), val));
+
+    final nestedData = map['data'];
+    if (nestedData is Map) {
+      return nestedData is Map<String, dynamic>
+          ? nestedData
+          : nestedData.map((key, val) => MapEntry(key.toString(), val));
     }
-    return <String, dynamic>{};
+
+    return map;
   }
 
-  /// Converts data to `List<dynamic>` safely
-  /// Prioritizes 'data' or 'items' keys if value is a Map
+  /// Converts data to `List<dynamic>` safely.
+  /// Robustly handles 'data', 'items', 'content' keys and nested 'data.content'.
   List<dynamic> asList() {
     final value = data;
     if (value is List<dynamic>) return value;
     if (value is Map) {
       final d = value['data'] ?? value['items'] ?? value['content'];
       if (d is List<dynamic>) return d;
+
+      if (d is Map) {
+        final nested = d['content'] ?? d['items'] ?? d['data'];
+        if (nested is List<dynamic>) return nested;
+      }
     }
     return <dynamic>[];
   }

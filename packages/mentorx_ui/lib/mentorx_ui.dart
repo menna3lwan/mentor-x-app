@@ -1,4 +1,6 @@
 import 'dart:ui' as ui;
+import 'dart:async';
+import 'dart:math';
 
 // import 'package:mentorx_ui/assets/gen/assets.gen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -6,6 +8,7 @@ import 'package:gap/gap.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/gestures.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -14,6 +17,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:vector_graphics/vector_graphics.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:screen_protector/screen_protector.dart';
 
 import 'localization/generated/strings.g.dart';
 
@@ -32,7 +36,7 @@ part 'theming/mentorx_theme_extension.dart';
 part 'theming/mentorx_theme_provider.dart';
 part 'theming/mentorx_theme_tokens.dart';
 part 'theming/mentorx_themes.dart';
-part 'theming/app_colors.dart';
+part 'theming/mentorx_theme_color_palette.dart';
 
 /// Utils
 part 'utils/mentorx_platform_checker.dart';
@@ -82,6 +86,7 @@ part 'widgets/mentorx_radio_button.dart';
 part 'widgets/mentorx_selection_chip.dart';
 part 'widgets/mentorx_switch.dart';
 part 'widgets/mentorx_setting_tile.dart';
+part 'widgets/mentorx_secured_media_wrapper.dart';
 part 'widgets/mentorx_conditional_wrapper.dart';
 part 'widgets/mentorx_skeleton_provider.dart';
 part 'widgets/mentorx_error_indicator.dart';
