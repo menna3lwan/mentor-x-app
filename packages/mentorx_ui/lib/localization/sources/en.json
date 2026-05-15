@@ -1054,6 +1054,32 @@
             "schedule": "Schedule",
             "support": "Support"
         },
+        "communication": {
+            "notificationsTitle": "Notifications",
+            "announcementsTitle": "Announcements",
+            "whatsAppTitle": "WhatsApp Groups",
+            "noNotificationsTitle": "No Notifications",
+            "noNotificationsHint": "You're all caught up — new updates will appear here.",
+            "noAnnouncementsTitle": "No Announcements",
+            "noAnnouncementsHint": "Stay tuned! School announcements will appear here.",
+            "noGroupsTitle": "No Groups",
+            "noGroupsHint": "No WhatsApp groups are available for this child yet.",
+            "readMore": "Read More",
+            "joinGroup": "Join",
+            "groupSubtitle": "Tap to join for the latest updates"
+        },
+        "academic": {
+            "pageTitle": "Academic Monitor",
+            "overallAverageHeading": "Overall Average",
+            "averageLabel": "Average",
+            "gradedLabel": "Graded",
+            "pendingLabel": "Pending",
+            "noCoursesTitle": "No Courses",
+            "noCoursesHint": "Academic data will appear here once available.",
+            "sessionsCount": "${count} sessions",
+            "completedSessionsLabel": "${completed} / ${total} sessions",
+            "courseDetailsTitle": "Course Progress"
+        },
         "financial": {
             "balance": "Balance",
             "spent": "Spent",

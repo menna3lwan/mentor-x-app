@@ -1063,6 +1063,32 @@
             "schedule": "الجدول",
             "support": "الدعم"
         },
+        "communication": {
+            "notificationsTitle": "الإشعارات",
+            "announcementsTitle": "الإعلانات",
+            "whatsAppTitle": "مجموعات واتساب",
+            "noNotificationsTitle": "لا توجد إشعارات",
+            "noNotificationsHint": "كل شيء على ما يرام — ستظهر التحديثات الجديدة هنا.",
+            "noAnnouncementsTitle": "لا توجد إعلانات",
+            "noAnnouncementsHint": "ابق على اطلاع! ستظهر إعلانات المدرسة هنا.",
+            "noGroupsTitle": "لا توجد مجموعات",
+            "noGroupsHint": "لا توجد مجموعات واتساب متاحة لهذا الابن بعد.",
+            "readMore": "اقرأ المزيد",
+            "joinGroup": "انضمام",
+            "groupSubtitle": "اضغط للانضمام والحصول على آخر التحديثات"
+        },
+        "academic": {
+            "pageTitle": "المتابعة الأكاديمية",
+            "overallAverageHeading": "المعدل العام",
+            "averageLabel": "المعدل",
+            "gradedLabel": "المصححة",
+            "pendingLabel": "المعلقة",
+            "noCoursesTitle": "لا توجد كورسات",
+            "noCoursesHint": "ستظهر البيانات الأكاديمية هنا بمجرد توفرها.",
+            "sessionsCount": "${count} حصة",
+            "completedSessionsLabel": "${completed} / ${total} حصة",
+            "courseDetailsTitle": "تفاصيل الكورس"
+        },
         "financial": {
             "balance": "الرصيد",
             "spent": "المنفق",

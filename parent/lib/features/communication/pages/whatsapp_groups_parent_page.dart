@@ -1,17 +1,18 @@
+import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:flutter/material.dart';
-import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_core/mentorx_core.dart';
+import 'package:mentorx_ui/mentorx_ui.dart';
+import 'package:animate_do/animate_do.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 import '../bloc/communication_bloc.dart';
+import '../widgets/widgets.dart';
 
 class WhatsAppGroupsParentPage extends StatelessWidget {
   final String childId;
 
-  const WhatsAppGroupsParentPage({
-    super.key,
-    required this.childId,
-  });
+  const WhatsAppGroupsParentPage({super.key, required this.childId});
 
   @override
   Widget build(BuildContext context) {
@@ -19,104 +20,112 @@ class WhatsAppGroupsParentPage extends StatelessWidget {
       create: (context) => CommunicationBloc(
         repository: context.read<ParentCommunicationRepository>(),
       )..add(CommunicationStarted(childId)),
-      child: BlocBuilder<CommunicationBloc, CommunicationState>(
-        builder: (context, state) {
-          return AppDashboardScaffold(
-            title: 'WhatsApp Groups',
-            onRefresh: () async {
-              context.read<CommunicationBloc>().add(CommunicationRefreshRequested(childId));
-            },
-            actions: [
-              IconButton(
-                onPressed: () => context.read<CommunicationBloc>().add(CommunicationRefreshRequested(childId)),
-                icon: const Icon(Icons.refresh_rounded),
+      child: _WhatsAppGroupsView(childId: childId),
+    );
+  }
+}
+
+class _WhatsAppGroupsView extends StatelessWidget {
+  final String childId;
+  const _WhatsAppGroupsView({required this.childId});
+
+  @override
+  Widget build(BuildContext context) {
+    final t = Translations.of(context).parent;
+
+    return BlocPresentationListener<CommunicationBloc,
+        CommunicationPresentationEvent>(
+      listener: (context, event) {
+        switch (event) {
+          case CommunicationFailurePresentationEvent(:final message):
+            MentorXUI.showToast(message: message, isError: true);
+        }
+      },
+      child: AppDashboardScaffold(
+        title: t.communication.whatsAppTitle,
+        onRefresh: () async => context
+            .read<CommunicationBloc>()
+            .add(CommunicationRefreshRequested(childId)),
+        actions: [
+          IconButton(
+            tooltip: t.retry,
+            onPressed: () => context
+                .read<CommunicationBloc>()
+                .add(CommunicationRefreshRequested(childId)),
+            icon: const Icon(Icons.refresh_rounded),
+          ),
+        ],
+        body: BlocBuilder<CommunicationBloc, CommunicationState>(
+          buildWhen: (a, b) =>
+              a.whatsAppGroupsSection != b.whatsAppGroupsSection,
+          builder: (context, state) {
+            final section = state.whatsAppGroupsSection;
+
+            if (section.isLoading && state.whatsAppGroups.isEmpty) {
+              return ListView.builder(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 20,
+                ),
+                itemCount: 4,
+                itemBuilder: (_, __) => const WhatsAppGroupCardSkeleton(),
+              );
+            }
+
+            if (section.isFailure && state.whatsAppGroups.isEmpty) {
+              return AppErrorView(
+                message: section.errorMessage ?? t.unableToLoad,
+                onRetry: () =>
+                    context.read<CommunicationBloc>().add(
+                          const CommunicationRetrySectionRequested(
+                            CommunicationSection.whatsAppGroups,
+                          ),
+                        ),
+              );
+            }
+
+            if (state.whatsAppGroups.isEmpty) {
+              return AppEmptyView(
+                title: t.communication.noGroupsTitle,
+                message: t.communication.noGroupsHint,
+                icon: Icons.forum_outlined,
+              );
+            }
+
+            return ListView.builder(
+              physics: const BouncingScrollPhysics(
+                parent: AlwaysScrollableScrollPhysics(),
               ),
-            ],
-            body: _buildBody(context, state),
-          );
-        },
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20,
+                vertical: 20,
+              ),
+              itemCount: state.whatsAppGroups.length,
+              itemBuilder: (context, index) {
+                final group = state.whatsAppGroups[index];
+                return FadeInUp(
+                  duration: const Duration(milliseconds: 400),
+                  delay: Duration(milliseconds: 40 * index),
+                  child: WhatsAppGroupCardWidget(
+                    group: group,
+                    subtitle: t.communication.groupSubtitle,
+                    joinLabel: t.communication.joinGroup,
+                    onTap: () => _launchGroup(group.url),
+                  ),
+                );
+              },
+            );
+          },
+        ),
       ),
     );
   }
 
-  Widget _buildBody(BuildContext context, CommunicationState state) {
-    if (state.status == CommunicationStatus.loading) {
-      return const Center(child: CircularProgressIndicator());
+  Future<void> _launchGroup(String url) async {
+    final uri = Uri.tryParse(url);
+    if (uri == null) return;
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
     }
-
-    if (state.status == CommunicationStatus.failure) {
-      return AppErrorView(
-        message: state.errorMessage ?? 'Failed to load groups',
-        onRetry: () => context.read<CommunicationBloc>().add(CommunicationStarted(childId)),
-      );
-    }
-
-    if (state.whatsAppGroups.isEmpty) {
-      return AppEmptyView(
-        title: 'No Groups',
-        message: 'No WhatsApp groups available for this child.',
-        icon: Icons.forum_outlined,
-        onAction: () => context.read<CommunicationBloc>().add(CommunicationRefreshRequested(childId)),
-        actionLabel: 'Refresh',
-      );
-    }
-
-    return ListView.builder(
-      physics: const BouncingScrollPhysics(),
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-      itemCount: state.whatsAppGroups.length,
-      itemBuilder: (context, index) {
-        final group = state.whatsAppGroups[index];
-        return Container(
-          margin: const EdgeInsets.only(bottom: 12),
-          decoration: BoxDecoration(
-            color: context.backgroundSecondaryColor,
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: context.textTertiaryColor.withValues(alpha: 0.1)),
-          ),
-          child: ListTile(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-            leading: Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: context.statusSuccessColor.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Icon(
-                Icons.chat_rounded,
-                color: context.statusSuccessColor,
-                size: 24,
-              ),
-            ),
-            title: Text(
-              group.name,
-              style: TextStyle(
-                fontWeight: FontWeight.w800,
-                color: context.textPrimaryColor,
-                fontSize: 15,
-              ),
-            ),
-            subtitle: Text(
-              'Join to get the latest updates',
-              style: TextStyle(
-                color: context.textSecondaryColor,
-                fontSize: 13,
-              ),
-            ),
-            trailing: Icon(
-              Icons.chevron_right_rounded,
-              color: context.textTertiaryColor,
-              size: 18,
-            ),
-            onTap: () async {
-              final url = Uri.parse(group.url);
-              if (await canLaunchUrl(url)) {
-                await launchUrl(url, mode: LaunchMode.externalApplication);
-              }
-            },
-          ),
-        );
-      },
-    );
   }
 }

@@ -1285,6 +1285,54 @@ class TranslationsParentEn {
 
 	late final TranslationsParentFinancialEn financial =
 			TranslationsParentFinancialEn._(_root);
+
+	late final TranslationsParentAcademicEn academic =
+			TranslationsParentAcademicEn._(_root);
+
+	late final TranslationsParentCommunicationEn communication =
+			TranslationsParentCommunicationEn._(_root);
+}
+
+// Path: parent.communication
+class TranslationsParentCommunicationEn {
+	TranslationsParentCommunicationEn._(this._root);
+	final Translations _root; // ignore: unused_field
+
+	String get notificationsTitle => 'Notifications';
+	String get announcementsTitle => 'Announcements';
+	String get whatsAppTitle => 'WhatsApp Groups';
+	String get noNotificationsTitle => 'No Notifications';
+	String get noNotificationsHint =>
+			"You're all caught up — new updates will appear here.";
+	String get noAnnouncementsTitle => 'No Announcements';
+	String get noAnnouncementsHint =>
+			'Stay tuned! School announcements will appear here.';
+	String get noGroupsTitle => 'No Groups';
+	String get noGroupsHint =>
+			'No WhatsApp groups are available for this child yet.';
+	String get readMore => 'Read More';
+	String get joinGroup => 'Join';
+	String get groupSubtitle => 'Tap to join for the latest updates';
+}
+
+// Path: parent.academic
+class TranslationsParentAcademicEn {
+	TranslationsParentAcademicEn._(this._root);
+	final Translations _root; // ignore: unused_field
+
+	String get pageTitle => 'Academic Monitor';
+	String get overallAverageHeading => 'Overall Average';
+	String get averageLabel => 'Average';
+	String get gradedLabel => 'Graded';
+	String get pendingLabel => 'Pending';
+	String get noCoursesTitle => 'No Courses';
+	String get noCoursesHint => 'Academic data will appear here once available.';
+	String sessionsCount({required Object count}) => '${count} sessions';
+	String completedSessionsLabel({
+		required Object completed,
+		required Object total,
+	}) => '${completed} / ${total} sessions';
+	String get courseDetailsTitle => 'Course Progress';
 }
 
 // Path: parent.financial

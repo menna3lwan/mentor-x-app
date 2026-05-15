@@ -1022,6 +1022,56 @@ class _TranslationsParentAr implements TranslationsParentEn {
 
 	@override late final _TranslationsParentFinancialAr financial =
 			_TranslationsParentFinancialAr._(_root);
+
+	@override late final _TranslationsParentAcademicAr academic =
+			_TranslationsParentAcademicAr._(_root);
+
+	@override late final _TranslationsParentCommunicationAr communication =
+			_TranslationsParentCommunicationAr._(_root);
+}
+
+// Path: parent.communication
+class _TranslationsParentCommunicationAr
+		implements TranslationsParentCommunicationEn {
+	_TranslationsParentCommunicationAr._(this._root);
+	final TranslationsAr _root; // ignore: unused_field
+
+	@override String get notificationsTitle => 'الإشعارات';
+	@override String get announcementsTitle => 'الإعلانات';
+	@override String get whatsAppTitle => 'مجموعات واتساب';
+	@override String get noNotificationsTitle => 'لا توجد إشعارات';
+	@override String get noNotificationsHint =>
+			'كل شيء على ما يرام — ستظهر التحديثات الجديدة هنا.';
+	@override String get noAnnouncementsTitle => 'لا توجد إعلانات';
+	@override String get noAnnouncementsHint =>
+			'ابق على اطلاع! ستظهر إعلانات المدرسة هنا.';
+	@override String get noGroupsTitle => 'لا توجد مجموعات';
+	@override String get noGroupsHint =>
+			'لا توجد مجموعات واتساب متاحة لهذا الابن بعد.';
+	@override String get readMore => 'اقرأ المزيد';
+	@override String get joinGroup => 'انضمام';
+	@override String get groupSubtitle => 'اضغط للانضمام والحصول على آخر التحديثات';
+}
+
+// Path: parent.academic
+class _TranslationsParentAcademicAr implements TranslationsParentAcademicEn {
+	_TranslationsParentAcademicAr._(this._root);
+	final TranslationsAr _root; // ignore: unused_field
+
+	@override String get pageTitle => 'المتابعة الأكاديمية';
+	@override String get overallAverageHeading => 'المعدل العام';
+	@override String get averageLabel => 'المعدل';
+	@override String get gradedLabel => 'المصححة';
+	@override String get pendingLabel => 'المعلقة';
+	@override String get noCoursesTitle => 'لا توجد كورسات';
+	@override String get noCoursesHint =>
+			'ستظهر البيانات الأكاديمية هنا بمجرد توفرها.';
+	@override String sessionsCount({required Object count}) => '${count} حصة';
+	@override String completedSessionsLabel({
+		required Object completed,
+		required Object total,
+	}) => '${completed} / ${total} حصة';
+	@override String get courseDetailsTitle => 'تفاصيل الكورس';
 }
 
 // Path: parent.financial
