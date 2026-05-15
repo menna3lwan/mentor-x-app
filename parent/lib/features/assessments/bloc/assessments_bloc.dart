@@ -1,50 +1,150 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:bloc/bloc.dart';
+import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 
 part 'assessments_event.dart';
 part 'assessments_state.dart';
 
-class AssessmentsBloc extends Bloc<AssessmentsEvent, AssessmentsState> {
+sealed class AssessmentsPresentationEvent {
+  const AssessmentsPresentationEvent();
+}
+
+final class AssessmentsFailurePresentationEvent
+    extends AssessmentsPresentationEvent {
+  final String message;
+  const AssessmentsFailurePresentationEvent({required this.message});
+}
+
+/// Drives the parent grade-monitor screen. Loads three independent sections
+/// (assessment history, overall summary, monthly trend) so a partial failure
+/// doesn't blank the whole page.
+final class AssessmentsBloc extends Bloc<AssessmentsEvent, AssessmentsState>
+    with
+        BlocPresentationMixin<AssessmentsState, AssessmentsPresentationEvent> {
   final ParentGradeRepository _repository;
 
-  AssessmentsBloc({
-    required ParentGradeRepository repository,
-  })  : _repository = repository,
-        super(const AssessmentsState()) {
+  AssessmentsBloc({required ParentGradeRepository repository})
+      : _repository = repository,
+        super(AssessmentsState.initial()) {
     on<AssessmentsStarted>(_onStarted);
     on<AssessmentsRefreshRequested>(_onRefreshRequested);
+    on<AssessmentsRetrySectionRequested>(_onRetrySection);
   }
 
   Future<void> _onStarted(
     AssessmentsStarted event,
     Emitter<AssessmentsState> emit,
   ) async {
-    emit(state.copyWith(status: AssessmentsStatus.loading));
-    try {
-      final results = await Future.wait([
-        _repository.getAssessments(event.childId),
-        _repository.getGradeSummary(event.childId),
-        _repository.getGradeTrend(event.childId),
-      ]);
-
-      emit(state.copyWith(
-        status: AssessmentsStatus.success,
-        assessments: results[0] as List<QuizAttemptEntity>,
-        gradeSummary: results[1] as ParentGradeSummaryEntity,
-        gradeTrend: results[2] as ParentGradeTrendEntity,
-      ));
-    } catch (e) {
-      emit(state.copyWith(
-        status: AssessmentsStatus.failure,
-        errorMessage: e.toString(),
-      ));
+    if (state.childId == event.childId &&
+        (state.assessmentsSection.isLoaded ||
+            state.assessmentsSection.isLoading)) {
+      return;
     }
+    emit(state.copyWith(childId: event.childId));
+    await _loadAll(emit, event.childId);
   }
 
   Future<void> _onRefreshRequested(
     AssessmentsRefreshRequested event,
     Emitter<AssessmentsState> emit,
   ) async {
-    add(AssessmentsStarted(event.childId));
+    emit(state.copyWith(isRefreshing: true, childId: event.childId));
+    await _loadAll(emit, event.childId);
+    emit(state.copyWith(isRefreshing: false));
+  }
+
+  Future<void> _onRetrySection(
+    AssessmentsRetrySectionRequested event,
+    Emitter<AssessmentsState> emit,
+  ) async {
+    final childId = state.childId;
+    if (childId == null) return;
+
+    switch (event.section) {
+      case AssessmentsSection.history:
+        emit(state.copyWith(
+          assessmentsSection: state.assessmentsSection.toLoading(),
+        ));
+        await _loadHistory(emit, childId);
+      case AssessmentsSection.summary:
+        emit(state.copyWith(
+          summarySection: state.summarySection.toLoading(),
+        ));
+        await _loadSummary(emit, childId);
+      case AssessmentsSection.trend:
+        emit(state.copyWith(trendSection: state.trendSection.toLoading()));
+        await _loadTrend(emit, childId);
+    }
+  }
+
+  Future<void> _loadAll(Emitter<AssessmentsState> emit, String childId) async {
+    emit(state.copyWith(
+      assessmentsSection: state.assessmentsSection.toLoading(),
+      summarySection: state.summarySection.toLoading(),
+      trendSection: state.trendSection.toLoading(),
+    ));
+
+    await Future.wait([
+      _loadHistory(emit, childId),
+      _loadSummary(emit, childId),
+      _loadTrend(emit, childId),
+    ]);
+  }
+
+  Future<void> _loadHistory(
+    Emitter<AssessmentsState> emit,
+    String childId,
+  ) async {
+    try {
+      final list = await _repository.getAssessments(childId);
+      emit(state.copyWith(
+        assessmentsSection: AssessmentsAsyncSection.loaded(list),
+      ));
+    } catch (e) {
+      emit(state.copyWith(
+        assessmentsSection: AssessmentsAsyncSection.failure(e.toString()),
+      ));
+      emitPresentation(
+        AssessmentsFailurePresentationEvent(message: e.toString()),
+      );
+    }
+  }
+
+  Future<void> _loadSummary(
+    Emitter<AssessmentsState> emit,
+    String childId,
+  ) async {
+    try {
+      final summary = await _repository.getGradeSummary(childId);
+      emit(state.copyWith(
+        summarySection: AssessmentsAsyncSection.loaded(summary),
+      ));
+    } catch (e) {
+      emit(state.copyWith(
+        summarySection: AssessmentsAsyncSection.failure(e.toString()),
+      ));
+      emitPresentation(
+        AssessmentsFailurePresentationEvent(message: e.toString()),
+      );
+    }
+  }
+
+  Future<void> _loadTrend(
+    Emitter<AssessmentsState> emit,
+    String childId,
+  ) async {
+    try {
+      final trend = await _repository.getGradeTrend(childId);
+      emit(state.copyWith(
+        trendSection: AssessmentsAsyncSection.loaded(trend),
+      ));
+    } catch (e) {
+      emit(state.copyWith(
+        trendSection: AssessmentsAsyncSection.failure(e.toString()),
+      ));
+      emitPresentation(
+        AssessmentsFailurePresentationEvent(message: e.toString()),
+      );
+    }
   }
 }

@@ -1268,6 +1268,178 @@ class TranslationsParentEn {
 
 	/// en: 'Points Earned'
 	String get pointsEarned => 'Points Earned';
+
+	late final TranslationsParentHomeEn home = TranslationsParentHomeEn._(_root);
+
+	late final TranslationsParentQuickActionsEn quickActions =
+			TranslationsParentQuickActionsEn._(_root);
+
+	late final TranslationsParentChildrenEn children =
+			TranslationsParentChildrenEn._(_root);
+
+	late final TranslationsParentAssessmentsEn assessments =
+			TranslationsParentAssessmentsEn._(_root);
+
+	late final TranslationsParentAttendanceTrackingEn attendanceTracking =
+			TranslationsParentAttendanceTrackingEn._(_root);
+
+	late final TranslationsParentFinancialEn financial =
+			TranslationsParentFinancialEn._(_root);
+}
+
+// Path: parent.financial
+class TranslationsParentFinancialEn {
+	TranslationsParentFinancialEn._(this._root);
+	final Translations _root; // ignore: unused_field
+
+	String get balance => 'Balance';
+	String get spent => 'Spent';
+	String get points => 'Points';
+	String get noDataTitle => 'No Data';
+	String get noDataHint => 'Financial data will appear here once available.';
+	String get noTransactionsTitle => 'No Transactions';
+	String get noTransactionsHint =>
+			'No transaction history found for this child.';
+	String get credit => 'Credit';
+	String get debit => 'Debit';
+	String get deposit => 'Top Up';
+	String get withdrawal => 'Withdrawal';
+	String get payment => 'Payment';
+	String get refund => 'Refund';
+	String get reward => 'Reward';
+	String get statusPending => 'Pending';
+	String get statusSuccess => 'Success';
+	String get statusFailed => 'Failed';
+}
+
+// Path: parent.attendanceTracking
+class TranslationsParentAttendanceTrackingEn {
+	TranslationsParentAttendanceTrackingEn._(this._root);
+	final Translations _root; // ignore: unused_field
+
+	String get pageTitle => 'Attendance Monitor';
+	String get attendanceLog => 'Attendance Log';
+	String get present => 'Present';
+	String get absent => 'Absent';
+	String get late => 'Late';
+	String get excused => 'Excused';
+	String get noRecordsTitle => 'No Records';
+	String get noRecordsHint =>
+			'No attendance records found for this student.';
+	String get regularSession => 'Regular Session';
+	String get generalAcademic => 'General Academic';
+	String get onlineSession => 'Online';
+	String checkInTimeLabel({required Object time}) => 'Checked in at ${time}';
+}
+
+// Path: parent.assessments
+class TranslationsParentAssessmentsEn {
+	TranslationsParentAssessmentsEn._(this._root);
+	final Translations _root; // ignore: unused_field
+
+	String get pageTitle => 'Academic Performance';
+	String get overallPerformance => 'Overall Performance';
+	String get average => 'Average';
+	String get graded => 'Graded';
+	String get pending => 'Pending';
+	String get passed => 'Passed';
+	String get failed => 'Failed';
+	String get assessmentHistory => 'Assessment History';
+	String get noAssessmentsTitle => 'No Assessments';
+	String get noAssessmentsHint =>
+			'Academic evaluation data will appear here once submitted.';
+	String get passLabel => 'Passed';
+	String get failLabel => 'Failed';
+	String scoreLabel({required Object score, required Object total}) =>
+			'Score: ${score}/${total}';
+	String get quizPrefix => 'Quiz';
+	String get assignmentPrefix => 'Assignment';
+	String get examPrefix => 'Exam';
+	String get trendUp => 'Trending up';
+	String get trendDown => 'Trending down';
+	String get trendStable => 'Stable';
+}
+
+// Path: parent.home
+class TranslationsParentHomeEn {
+	TranslationsParentHomeEn._(this._root);
+	final Translations _root; // ignore: unused_field
+
+	String get parentAccount => 'Parent Account';
+	String get addChild => 'Add Child';
+	String get academicStanding => 'Academic Standing';
+	String get avgGrade => 'Avg Grade';
+	String get attendance => 'Attendance';
+	String get unpaidFees => 'Unpaid Fees';
+	String get noRecentActivity => 'No Recent Activity';
+	String get noRecentActivityHint =>
+			'Activities will appear here once your child starts their learning journey.';
+	String get noChildrenTitle => 'No Children Linked';
+	String get noChildrenHint =>
+			'Link your first child to start tracking their progress.';
+	String get linkChild => 'Link a Child';
+	String updatedAt({required Object time}) => 'Updated ${time}';
+	String get upcomingSessions => 'Upcoming Sessions';
+	String get noUpcomingSessions => 'No upcoming sessions';
+	String get recentGrades => 'Recent Grades';
+	String get noRecentGrades => 'No grades yet';
+	String get viewDetails => 'View details';
+}
+
+// Path: parent.quickActions
+class TranslationsParentQuickActionsEn {
+	TranslationsParentQuickActionsEn._(this._root);
+	final Translations _root; // ignore: unused_field
+
+	String get attendance => 'Attendance';
+	String get courses => 'Courses';
+	String get fees => 'Fees';
+	String get messages => 'Messages';
+	String get grades => 'Grades';
+	String get announcements => 'News';
+	String get schedule => 'Schedule';
+	String get support => 'Support';
+}
+
+// Path: parent.children
+class TranslationsParentChildrenEn {
+	TranslationsParentChildrenEn._(this._root);
+	final Translations _root; // ignore: unused_field
+
+	String get title => 'Linked Children';
+	String get linkNewChild => 'Link New Child';
+	String get linkChildTitle => 'Link Your Child';
+	String get linkChildHint =>
+			"Enter your child's admission number or registered phone number to link their account.";
+	String get searchLabel => 'Search Child';
+	String get searchHint => 'Admission Number / Phone';
+	String get confirmLink => 'Confirm & Link Child';
+	String get specifyRelationship => 'Specify Relationship';
+	String get linkSuccess => 'Child linked successfully';
+	String get unlinkConfirmTitle => 'Remove Child?';
+	String unlinkConfirmMessage({required Object name}) =>
+			'${name} will be unlinked from your account. You can re-link them at any time.';
+	String get unlink => 'Unlink';
+	String get unlinkSuccess => 'Child unlinked';
+	String studentIdLabel({required Object id}) => 'Student ID: ${id}';
+	String studentCodeLabel({required Object code}) => 'Code: ${code}';
+	String gradeLabel({required Object grade}) => 'Grade: ${grade}';
+	String centerLabel({required Object center}) => 'Center: ${center}';
+	String get cancel => 'Cancel';
+
+	late final TranslationsParentChildrenRelationshipEn relationship =
+			TranslationsParentChildrenRelationshipEn._(_root);
+}
+
+// Path: parent.children.relationship
+class TranslationsParentChildrenRelationshipEn {
+	TranslationsParentChildrenRelationshipEn._(this._root);
+	final Translations _root; // ignore: unused_field
+
+	String get father => 'Father';
+	String get mother => 'Mother';
+	String get guardian => 'Guardian';
+	String get other => 'Other';
 }
 
 // Path: assignments

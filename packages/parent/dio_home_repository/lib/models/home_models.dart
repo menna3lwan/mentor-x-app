@@ -21,10 +21,10 @@ final class ParentHomeSummaryModel extends ParentHomeSummaryEntity {
               totalPoints: 0,
             ),
       upcomingSessions: ModelParser.asList(json['upcomingSessions'] ?? json['upcoming_sessions'])
-          .map((e) => SessionModel.fromJson(ModelParser.asMap(e)))
+          .map((e) => ParentUpcomingSessionModel.fromJson(ModelParser.asMap(e)))
           .toList(),
       recentGrades: ModelParser.asList(json['recentGrades'] ?? json['recent_grades'])
-          .map((e) => QuizAttemptModel.fromJson(ModelParser.asMap(e)))
+          .map((e) => ParentRecentGradeModel.fromJson(ModelParser.asMap(e)))
           .toList(),
       latestAnnouncement: (json['latestAnnouncement'] != null || json['latest_announcement'] != null)
           ? AnnouncementModel.fromJson(ModelParser.asMap(json['latestAnnouncement'] ?? json['latest_announcement']))
@@ -102,71 +102,144 @@ final class ParentChildSummaryModel extends ParentChildSummaryEntity {
   }
 }
 
-// Re-using common models or defining local ones if shared logic is needed
-final class SessionModel extends SessionEntity {
-  const SessionModel({
+// ───────────────────────────────────────────────────────────────────────────
+// Parent-context dashboard models
+// ───────────────────────────────────────────────────────────────────────────
+
+final class ParentUpcomingSessionModel extends ParentUpcomingSessionEntity {
+  const ParentUpcomingSessionModel({
     required super.id,
-    required super.courseId,
     required super.title,
-    super.orderNumber = 0,
-    super.isFree = false,
-    super.price,
-    super.availableFrom,
-    super.availableUntil,
-    super.itemCount = 0,
+    required super.courseName,
+    required super.scheduledAt,
+    required super.status,
+    super.teacherName,
+    super.duration,
+    super.location,
   });
 
-  factory SessionModel.fromJson(Map<String, dynamic> json) {
-    return SessionModel(
-      id: ModelParser.asString(json['id']),
-      courseId: ModelParser.asString(json['course_id'] ?? json['courseId']),
-      title: ModelParser.asString(json['title']),
-      orderNumber: ModelParser.asInt(json['order_number'] ?? json['order_index'] ?? json['orderNumber']),
-      isFree: ModelParser.asBool(json['is_free'] ?? json['isFree']),
-      price: ModelParser.asDouble(json['price'] ?? json['priceAmount']),
-      availableFrom: ModelParser.asDateTime(json['available_from'] ?? json['availableFrom']),
-      availableUntil: ModelParser.asDateTime(json['available_until'] ?? json['availableUntil']),
-      itemCount: ModelParser.asInt(json['item_count'] ?? json['itemCount']),
+  factory ParentUpcomingSessionModel.fromJson(Map<String, dynamic> json) {
+    final scheduled = ModelParser.asDateTime(
+          json['scheduled_at'] ??
+              json['scheduledAt'] ??
+              json['start_at'] ??
+              json['startAt'] ??
+              json['available_from'] ??
+              json['availableFrom'],
+        ) ??
+        DateTime.now();
+
+    final durationMinutes = ModelParser.asInt(
+      json['duration_minutes'] ?? json['durationMinutes'],
     );
+
+    return ParentUpcomingSessionModel(
+      id: ModelParser.asString(json['id']),
+      title: ModelParser.asString(json['title'] ?? json['name']),
+      courseName: ModelParser.asString(
+        json['course_name'] ?? json['courseName'] ?? json['course']?['name'],
+      ),
+      teacherName: ModelParser.asString(
+        json['teacher_name'] ?? json['teacherName'] ?? json['teacher']?['name'],
+      ),
+      scheduledAt: scheduled,
+      duration: durationMinutes > 0 ? Duration(minutes: durationMinutes) : null,
+      status: _parseStatus(
+        ModelParser.asString(json['status'], fallback: 'scheduled'),
+      ),
+      location: ModelParser.asString(json['location'] ?? json['venue']),
+    );
+  }
+
+  static ParentSessionStatus _parseStatus(String raw) {
+    switch (raw.toLowerCase()) {
+      case 'live':
+      case 'in_progress':
+      case 'ongoing':
+        return ParentSessionStatus.live;
+      case 'completed':
+      case 'done':
+        return ParentSessionStatus.completed;
+      case 'missed':
+      case 'absent':
+        return ParentSessionStatus.missed;
+      case 'cancelled':
+      case 'canceled':
+        return ParentSessionStatus.cancelled;
+      case 'scheduled':
+      case 'upcoming':
+      default:
+        return ParentSessionStatus.scheduled;
+    }
   }
 }
 
-final class QuizAttemptModel extends QuizAttemptEntity {
-  const QuizAttemptModel({
+final class ParentRecentGradeModel extends ParentRecentGradeEntity {
+  const ParentRecentGradeModel({
     required super.id,
-    required super.quizId,
-    super.courseId,
-    super.courseName,
-    required super.attemptNumber,
-    required super.status,
+    required super.kind,
+    required super.title,
+    required super.courseName,
     required super.score,
     required super.totalMarks,
     required super.percentage,
-    required super.passed,
-    required super.startedAt,
-    super.submittedAt,
-    super.timeSpentSeconds = 0,
+    required super.gradedAt,
+    super.passed,
   });
 
-  factory QuizAttemptModel.fromJson(Map<String, dynamic> json) {
-    return QuizAttemptModel(
-      id: ModelParser.asString(json['id']),
-      quizId: ModelParser.asString(json['quiz_id'] ?? json['quizId']),
-      courseId: ModelParser.asString(json['course_id'] ?? json['courseId']),
-      courseName: ModelParser.asString(json['course_name'] ?? json['courseName']),
-      attemptNumber: ModelParser.asInt(json['attempt_number'] ?? json['attemptNumber'], fallback: 1),
-      status: QuizAttemptStatus.values.firstWhere(
-        (e) => e.name == ModelParser.asString(json['status'], fallback: 'submitted'),
-        orElse: () => QuizAttemptStatus.submitted,
-      ),
-      score: ModelParser.asInt(json['score']),
-      totalMarks: ModelParser.asInt(json['total_marks'] ?? json['totalMarks'], fallback: 100),
-      percentage: ModelParser.asDouble(json['percentage']),
-      passed: ModelParser.asBool(json['passed'] ?? json['is_passed'] ?? json['isPassed']),
-      startedAt: ModelParser.asDateTime(json['started_at'] ?? json['startedAt']) ?? DateTime.now(),
-      submittedAt: ModelParser.asDateTime(json['submitted_at'] ?? json['submittedAt']),
-      timeSpentSeconds: ModelParser.asInt(json['time_spent_seconds'] ?? json['timeSpentSeconds']),
+  factory ParentRecentGradeModel.fromJson(Map<String, dynamic> json) {
+    final score = ModelParser.asDouble(json['score'] ?? json['grade']);
+    final total = ModelParser.asDouble(
+      json['total_marks'] ?? json['totalMarks'] ?? json['max_score'],
     );
+    final percentageRaw = ModelParser.asDouble(json['percentage']);
+    final percentage = percentageRaw > 0
+        ? percentageRaw
+        : (total > 0 ? (score / total) * 100 : 0);
+
+    return ParentRecentGradeModel(
+      id: ModelParser.asString(json['id']),
+      kind: _parseKind(
+        ModelParser.asString(
+          json['kind'] ?? json['type'] ?? json['source'],
+          fallback: 'other',
+        ),
+      ),
+      title: ModelParser.asString(json['title'] ?? json['name']),
+      courseName: ModelParser.asString(
+        json['course_name'] ?? json['courseName'] ?? json['course']?['name'],
+      ),
+      score: score,
+      totalMarks: total > 0 ? total : 100,
+      percentage: percentage,
+      passed: json['passed'] == null && json['is_passed'] == null
+          ? null
+          : ModelParser.asBool(json['passed'] ?? json['is_passed']),
+      gradedAt: ModelParser.asDateTime(
+            json['graded_at'] ??
+                json['gradedAt'] ??
+                json['submitted_at'] ??
+                json['submittedAt'] ??
+                json['created_at'],
+          ) ??
+          DateTime.now(),
+    );
+  }
+
+  static ParentGradeKind _parseKind(String raw) {
+    switch (raw.toLowerCase()) {
+      case 'quiz':
+        return ParentGradeKind.quiz;
+      case 'assignment':
+        return ParentGradeKind.assignment;
+      case 'exam':
+      case 'final':
+        return ParentGradeKind.exam;
+      case 'project':
+        return ParentGradeKind.project;
+      default:
+        return ParentGradeKind.other;
+    }
   }
 }
 

@@ -1,9 +1,15 @@
+import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mentorx_core/mentorx_core.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
-import 'package:parent/core/core.dart';
-import '../bloc/children_bloc.dart';
 
+import '../../../core/routing/app_routes.dart';
+import '../bloc/children_bloc.dart';
+import '../widgets/widgets.dart';
+
+/// Lists the parent's currently linked children and lets them link new ones
+/// or unlink existing ones.
 class LinkedChildrenManagementPage extends StatelessWidget {
   const LinkedChildrenManagementPage({super.key});
 
@@ -12,143 +18,64 @@ class LinkedChildrenManagementPage extends StatelessWidget {
     return BlocProvider(
       create: (context) => ChildrenBloc(
         childrenRepository: context.read<ParentChildrenRepository>(),
-      )..add(ChildrenStarted()),
-      child: BlocBuilder<ChildrenBloc, ChildrenState>(
-        builder: (context, state) {
-          return AppDashboardScaffold(
-            title: 'Linked Children',
-            body: const LinkedChildrenListView(),
-            floatingActionButton: Container(
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: context.brandPrimaryColor.withValues(alpha: 0.3),
-                    blurRadius: 12,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: FloatingActionButton.extended(
-                onPressed: () => const AddChildLinkRoute().go(context),
-                backgroundColor: context.brandPrimaryColor,
-                foregroundColor: Colors.white,
-                elevation: 0,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                icon: const Icon(Icons.person_add_rounded),
-                label: const Text('Link New Child', style: TextStyle(fontWeight: FontWeight.w700)),
-              ),
-            ),
-          );
-        },
+      )..add(const ChildrenStarted()),
+      child: const _LinkedChildrenView(),
+    );
+  }
+}
+
+class _LinkedChildrenView extends StatelessWidget {
+  const _LinkedChildrenView();
+
+  @override
+  Widget build(BuildContext context) {
+    final t = Translations.of(context).parent;
+
+    return BlocPresentationListener<ChildrenBloc, ChildrenPresentationEvent>(
+      listener: (context, event) {
+        switch (event) {
+          case ChildUnlinkSucceededPresentationEvent():
+            MentorXUI.showToast(message: t.children.unlinkSuccess);
+          case ChildLinkSucceededPresentationEvent():
+            MentorXUI.showToast(message: t.children.linkSuccess);
+          case ChildrenFailurePresentationEvent(:final message):
+            MentorXUI.showToast(message: message, isError: true);
+        }
+      },
+      child: AppDashboardScaffold(
+        title: t.children.title,
+        body: const LinkedChildrenListWrapper(),
+        floatingActionButton: _LinkChildFab(label: t.children.linkNewChild),
       ),
     );
   }
 }
 
-// Removed _BuildHeader in favor of AppDashboardScaffold
-
-class LinkedChildrenListView extends StatelessWidget {
-  const LinkedChildrenListView({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<ChildrenBloc, ChildrenState>(
-      builder: (context, state) {
-        if (state.status == ChildrenStatus.loading) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        if (state.children.isEmpty) {
-          return AppEmptyView(
-            title: 'No Children Linked',
-            message: 'You haven\'t linked any children to your account yet.',
-            icon: Icons.people_outline_rounded,
-            onAction: () => const AddChildLinkRoute().go(context),
-            actionLabel: 'Link Child',
-          );
-        }
-
-        return ListView.builder(
-          padding: const EdgeInsets.all(20),
-          itemCount: state.children.length,
-          itemBuilder: (context, index) {
-            final child = state.children[index];
-            return _ChildManagementCard(child: child);
-          },
-        );
-      },
-    );
-  }
-}
-
-class _ChildManagementCard extends StatelessWidget {
-  final ParentChildEntity child;
-
-  const _ChildManagementCard({required this.child});
+class _LinkChildFab extends StatelessWidget {
+  final String label;
+  const _LinkChildFab({required this.label});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: context.backgroundSecondaryColor,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: context.textTertiaryColor.withValues(alpha: 0.1)),
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(2),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(
-                  color: context.brandPrimaryColor.withValues(alpha: 0.2),
-                  width: 2),
-            ),
-            child: CircleAvatar(
-              radius: 28,
-              backgroundColor: context.backgroundSecondaryColor,
-              backgroundImage: child.profileImageUrl != null
-                  ? NetworkImage(child.profileImageUrl!)
-                  : null,
-              child: child.profileImageUrl == null
-                  ? Icon(Icons.person_rounded,
-                      color: context.brandPrimaryColor, size: 32)
-                  : null,
-            ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  child.name,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w800,
-                    color: context.textPrimaryColor,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  'Student ID: ${child.id}',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: context.textTertiaryColor,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.settings_outlined,
-                color: context.textTertiaryColor, size: 20),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: context.brandPrimaryColor.withValues(alpha: 0.3),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
           ),
         ],
+      ),
+      child: FloatingActionButton.extended(
+        onPressed: () => const AddChildLinkRoute().go(context),
+        backgroundColor: context.brandPrimaryColor,
+        foregroundColor: Colors.white,
+        elevation: 0,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        icon: const Icon(Icons.person_add_rounded),
+        label: Text(label, style: const TextStyle(fontWeight: FontWeight.w800)),
       ),
     );
   }

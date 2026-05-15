@@ -9,27 +9,24 @@ sealed class FinancialEvent extends Equatable {
 
 final class FinancialStarted extends FinancialEvent {
   final String? childId;
-
   const FinancialStarted({this.childId});
 
   @override
   List<Object?> get props => [childId];
 }
 
-final class FinancialFilterChanged extends FinancialEvent {
-  final String filter;
-
-  const FinancialFilterChanged(this.filter);
-
-  @override
-  List<Object?> get props => [filter];
-}
-
 final class FinancialRefreshRequested extends FinancialEvent {
   final String? childId;
-
   const FinancialRefreshRequested({this.childId});
 
   @override
   List<Object?> get props => [childId];
+}
+
+final class FinancialRetrySectionRequested extends FinancialEvent {
+  final FinancialSection section;
+  const FinancialRetrySectionRequested(this.section);
+
+  @override
+  List<Object?> get props => [section];
 }

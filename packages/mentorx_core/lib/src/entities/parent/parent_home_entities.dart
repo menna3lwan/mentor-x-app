@@ -2,8 +2,8 @@ part of 'package:mentorx_core/mentorx_core.dart';
 
 class ParentHomeSummaryEntity extends Equatable {
   final ParentHomeOverviewEntity overview;
-  final List<SessionEntity> upcomingSessions;
-  final List<QuizAttemptEntity> recentGrades;
+  final List<ParentUpcomingSessionEntity> upcomingSessions;
+  final List<ParentRecentGradeEntity> recentGrades;
   final AnnouncementEntity? latestAnnouncement;
   final List<ParentChildSummaryEntity> childrenSummaries;
 
@@ -34,8 +34,8 @@ class ParentHomeSummaryEntity extends Equatable {
 
   ParentHomeSummaryEntity copyWith({
     ParentHomeOverviewEntity? overview,
-    List<SessionEntity>? upcomingSessions,
-    List<QuizAttemptEntity>? recentGrades,
+    List<ParentUpcomingSessionEntity>? upcomingSessions,
+    List<ParentRecentGradeEntity>? recentGrades,
     AnnouncementEntity? latestAnnouncement,
     List<ParentChildSummaryEntity>? childrenSummaries,
   }) {

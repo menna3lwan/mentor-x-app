@@ -1004,6 +1004,181 @@ class _TranslationsParentAr implements TranslationsParentEn {
 	@override String get spentThisMonth => 'المنفق هذا الشهر';
 	@override String get transactionHistory => 'سجل المعاملات';
 	@override String get pointsEarned => 'النقاط المكتسبة';
+
+	@override late final _TranslationsParentHomeAr home =
+			_TranslationsParentHomeAr._(_root);
+
+	@override late final _TranslationsParentQuickActionsAr quickActions =
+			_TranslationsParentQuickActionsAr._(_root);
+
+	@override late final _TranslationsParentChildrenAr children =
+			_TranslationsParentChildrenAr._(_root);
+
+	@override late final _TranslationsParentAssessmentsAr assessments =
+			_TranslationsParentAssessmentsAr._(_root);
+
+	@override late final _TranslationsParentAttendanceTrackingAr attendanceTracking =
+			_TranslationsParentAttendanceTrackingAr._(_root);
+
+	@override late final _TranslationsParentFinancialAr financial =
+			_TranslationsParentFinancialAr._(_root);
+}
+
+// Path: parent.financial
+class _TranslationsParentFinancialAr implements TranslationsParentFinancialEn {
+	_TranslationsParentFinancialAr._(this._root);
+	final TranslationsAr _root; // ignore: unused_field
+
+	@override String get balance => 'الرصيد';
+	@override String get spent => 'المنفق';
+	@override String get points => 'النقاط';
+	@override String get noDataTitle => 'لا توجد بيانات';
+	@override String get noDataHint => 'ستظهر البيانات المالية هنا بمجرد توفرها.';
+	@override String get noTransactionsTitle => 'لا توجد معاملات';
+	@override String get noTransactionsHint =>
+			'لم يتم العثور على سجل معاملات لهذا الابن.';
+	@override String get credit => 'إيداع';
+	@override String get debit => 'خصم';
+	@override String get deposit => 'شحن';
+	@override String get withdrawal => 'سحب';
+	@override String get payment => 'دفع';
+	@override String get refund => 'استرجاع';
+	@override String get reward => 'مكافأة';
+	@override String get statusPending => 'قيد المعالجة';
+	@override String get statusSuccess => 'ناجحة';
+	@override String get statusFailed => 'فاشلة';
+}
+
+// Path: parent.attendanceTracking
+class _TranslationsParentAttendanceTrackingAr
+		implements TranslationsParentAttendanceTrackingEn {
+	_TranslationsParentAttendanceTrackingAr._(this._root);
+	final TranslationsAr _root; // ignore: unused_field
+
+	@override String get pageTitle => 'متابعة الحضور';
+	@override String get attendanceLog => 'سجل الحضور';
+	@override String get present => 'حاضر';
+	@override String get absent => 'غائب';
+	@override String get late => 'متأخر';
+	@override String get excused => 'بعذر';
+	@override String get noRecordsTitle => 'لا توجد سجلات';
+	@override String get noRecordsHint =>
+			'لم يتم العثور على سجلات حضور لهذا الطالب.';
+	@override String get regularSession => 'حصة عادية';
+	@override String get generalAcademic => 'عام';
+	@override String get onlineSession => 'أونلاين';
+	@override String checkInTimeLabel({required Object time}) =>
+			'تم التسجيل في ${time}';
+}
+
+// Path: parent.assessments
+class _TranslationsParentAssessmentsAr implements TranslationsParentAssessmentsEn {
+	_TranslationsParentAssessmentsAr._(this._root);
+	final TranslationsAr _root; // ignore: unused_field
+
+	@override String get pageTitle => 'الأداء الأكاديمي';
+	@override String get overallPerformance => 'الأداء العام';
+	@override String get average => 'المعدل';
+	@override String get graded => 'المصححة';
+	@override String get pending => 'المعلقة';
+	@override String get passed => 'ناجح';
+	@override String get failed => 'راسب';
+	@override String get assessmentHistory => 'سجل التقييمات';
+	@override String get noAssessmentsTitle => 'لا توجد تقييمات';
+	@override String get noAssessmentsHint =>
+			'ستظهر بيانات التقييم الأكاديمي هنا فور تقديمها.';
+	@override String get passLabel => 'ناجح';
+	@override String get failLabel => 'راسب';
+	@override String scoreLabel({required Object score, required Object total}) =>
+			'الدرجة: ${score}/${total}';
+	@override String get quizPrefix => 'اختبار';
+	@override String get assignmentPrefix => 'واجب';
+	@override String get examPrefix => 'امتحان';
+	@override String get trendUp => 'في تحسن';
+	@override String get trendDown => 'في انخفاض';
+	@override String get trendStable => 'مستقر';
+}
+
+// Path: parent.home
+class _TranslationsParentHomeAr implements TranslationsParentHomeEn {
+	_TranslationsParentHomeAr._(this._root);
+	final TranslationsAr _root; // ignore: unused_field
+
+	@override String get parentAccount => 'حساب ولي الأمر';
+	@override String get addChild => 'إضافة ابن';
+	@override String get academicStanding => 'المستوى الأكاديمي';
+	@override String get avgGrade => 'متوسط الدرجات';
+	@override String get attendance => 'الحضور';
+	@override String get unpaidFees => 'رسوم غير مدفوعة';
+	@override String get noRecentActivity => 'لا يوجد نشاط حديث';
+	@override String get noRecentActivityHint =>
+			'ستظهر النشاطات هنا بمجرد أن يبدأ ابنك في رحلته التعليمية.';
+	@override String get noChildrenTitle => 'لم يتم ربط أبناء';
+	@override String get noChildrenHint => 'اربط أول ابن لك لمتابعة تقدمه.';
+	@override String get linkChild => 'ربط ابن';
+	@override String updatedAt({required Object time}) => 'آخر تحديث ${time}';
+	@override String get upcomingSessions => 'الحصص القادمة';
+	@override String get noUpcomingSessions => 'لا توجد حصص قادمة';
+	@override String get recentGrades => 'أحدث الدرجات';
+	@override String get noRecentGrades => 'لا توجد درجات بعد';
+	@override String get viewDetails => 'عرض التفاصيل';
+}
+
+// Path: parent.quickActions
+class _TranslationsParentQuickActionsAr implements TranslationsParentQuickActionsEn {
+	_TranslationsParentQuickActionsAr._(this._root);
+	final TranslationsAr _root; // ignore: unused_field
+
+	@override String get attendance => 'الحضور';
+	@override String get courses => 'الكورسات';
+	@override String get fees => 'المصاريف';
+	@override String get messages => 'الرسائل';
+	@override String get grades => 'الدرجات';
+	@override String get announcements => 'الإعلانات';
+	@override String get schedule => 'الجدول';
+	@override String get support => 'الدعم';
+}
+
+// Path: parent.children
+class _TranslationsParentChildrenAr implements TranslationsParentChildrenEn {
+	_TranslationsParentChildrenAr._(this._root);
+	final TranslationsAr _root; // ignore: unused_field
+
+	@override String get title => 'الأبناء المرتبطين';
+	@override String get linkNewChild => 'ربط ابن جديد';
+	@override String get linkChildTitle => 'اربط ابنك';
+	@override String get linkChildHint =>
+			'أدخل رقم القيد الخاص بابنك أو رقم الهاتف المسجل لربط حسابه.';
+	@override String get searchLabel => 'ابحث عن الابن';
+	@override String get searchHint => 'رقم القيد / رقم الهاتف';
+	@override String get confirmLink => 'تأكيد وربط الابن';
+	@override String get specifyRelationship => 'حدد صلة القرابة';
+	@override String get linkSuccess => 'تم ربط الابن بنجاح';
+	@override String get unlinkConfirmTitle => 'إزالة الابن؟';
+	@override String unlinkConfirmMessage({required Object name}) =>
+			'سيتم إلغاء ربط ${name} من حسابك. يمكنك إعادة الربط في أي وقت.';
+	@override String get unlink => 'إلغاء الربط';
+	@override String get unlinkSuccess => 'تم إلغاء ربط الابن';
+	@override String studentIdLabel({required Object id}) => 'رقم الطالب: ${id}';
+	@override String studentCodeLabel({required Object code}) => 'الكود: ${code}';
+	@override String gradeLabel({required Object grade}) => 'الصف: ${grade}';
+	@override String centerLabel({required Object center}) => 'السنتر: ${center}';
+	@override String get cancel => 'إلغاء';
+
+	@override late final _TranslationsParentChildrenRelationshipAr relationship =
+			_TranslationsParentChildrenRelationshipAr._(_root);
+}
+
+// Path: parent.children.relationship
+class _TranslationsParentChildrenRelationshipAr
+		implements TranslationsParentChildrenRelationshipEn {
+	_TranslationsParentChildrenRelationshipAr._(this._root);
+	final TranslationsAr _root; // ignore: unused_field
+
+	@override String get father => 'أب';
+	@override String get mother => 'أم';
+	@override String get guardian => 'وصي';
+	@override String get other => 'أخرى';
 }
 
 // Path: assignments

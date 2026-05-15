@@ -34,6 +34,7 @@ part 'src/entities/student_entity.dart';
 part 'src/entities/parent_entity.dart';
 part 'src/entities/parent/parent_child_entity.dart';
 part 'src/entities/parent/parent_home_entities.dart';
+part 'src/entities/parent/parent_dashboard_entities.dart';
 part 'src/entities/parent/parent_financial_entities.dart';
 part 'src/entities/parent/parent_grade_entities.dart';
 part 'src/entities/tenant_entity.dart';

@@ -1,15 +1,24 @@
 part of 'children_bloc.dart';
 
-abstract class ChildrenEvent extends Equatable {
+sealed class ChildrenEvent extends Equatable {
   const ChildrenEvent();
 
   @override
   List<Object?> get props => [];
 }
 
-class ChildrenStarted extends ChildrenEvent {}
+/// First entry to the children-management surface.
+final class ChildrenStarted extends ChildrenEvent {
+  const ChildrenStarted();
+}
 
-class ChildrenLookupRequested extends ChildrenEvent {
+/// Pull-to-refresh on the linked children list.
+final class ChildrenRefreshRequested extends ChildrenEvent {
+  const ChildrenRefreshRequested();
+}
+
+/// Search-by-admission-code or phone — populates `state.lookupSection.data`.
+final class ChildrenLookupRequested extends ChildrenEvent {
   final String query;
   const ChildrenLookupRequested(this.query);
 
@@ -17,7 +26,14 @@ class ChildrenLookupRequested extends ChildrenEvent {
   List<Object?> get props => [query];
 }
 
-class ChildLinkConfirmed extends ChildrenEvent {
+/// Clears the result of a previous lookup (e.g. after editing the search box).
+final class ChildrenLookupCleared extends ChildrenEvent {
+  const ChildrenLookupCleared();
+}
+
+/// Commits the lookup + relationship choice and links the child to the
+/// parent account.
+final class ChildLinkConfirmed extends ChildrenEvent {
   final String studentId;
   final String relationship;
   const ChildLinkConfirmed({
@@ -27,4 +43,13 @@ class ChildLinkConfirmed extends ChildrenEvent {
 
   @override
   List<Object?> get props => [studentId, relationship];
+}
+
+/// Detaches the given child from the parent account.
+final class ChildUnlinkRequested extends ChildrenEvent {
+  final String childId;
+  const ChildUnlinkRequested(this.childId);
+
+  @override
+  List<Object?> get props => [childId];
 }
