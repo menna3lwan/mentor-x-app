@@ -51,7 +51,6 @@ import 'package:mock_leaderboard_repository/mock_leaderboard_repository.dart';
 import 'package:mock_student_analytics_repository/mock_student_analytics_repository.dart';
 import 'package:mock_student_card_repository/mock_student_card_repository.dart';
 
-
 final class AppRepositories {
   final CacheRepository cacheRepository;
   final StudentAuthenticationRepository authenticationRepository;
@@ -210,7 +209,7 @@ final class RepositoriesFactory {
     _analyticsService = analyticsService;
     return analyticsService;
   }
-  
+
   static Future<ErrorTrackingService> _initErrorTrackingService() async {
     if (_errorTrackingService != null) return _errorTrackingService!;
     final ErrorTrackingService errorTrackingService =
@@ -233,9 +232,9 @@ final class RepositoriesFactory {
 
   static Future<HttpClient> _initHttpClient() async {
     if (_httpClientCompleter != null) return _httpClientCompleter!.future;
-    
+
     _httpClientCompleter = Completer<HttpClient>();
-    
+
     try {
       if (!Env.hasMentorXBaseUrl) {
         throw StateError(
@@ -257,11 +256,14 @@ final class RepositoriesFactory {
       // Use DeviceInfoService to get the hardware identifier as a fallback.
       final deviceInfoService = _initDeviceInfoService();
       final hardwareId = await deviceInfoService.getDeviceHash();
-      
-      // Only set the hardware ID as default if we don't already have a cached one 
+
+      // Only set the hardware ID as default if we don't already have a cached one
       // (e.g., a server-generated hash from a previous session).
       if (httpClient.deviceId == null || httpClient.deviceId!.isEmpty) {
-        httpClient.setDefaultHeader(NetworkConstants.deviceIdHeader, hardwareId);
+        httpClient.setDefaultHeader(
+          NetworkConstants.deviceIdHeader,
+          hardwareId,
+        );
       }
 
       isHttpClientInitialized = true;
@@ -457,8 +459,10 @@ final class RepositoriesFactory {
     }
   }
 
-  static Future<StudentCommunicationRepository> _initCommunicationRepository() async {
-    switch (Env.homeRepositoryMode) { // Reusing home mode for now
+  static Future<StudentCommunicationRepository>
+  _initCommunicationRepository() async {
+    switch (Env.homeRepositoryMode) {
+      // Reusing home mode for now
       case RepositoryMode.mock:
         return MockStudentCommunicationRepository(delay: Env.mockDelayDuration);
       case RepositoryMode.prod:
@@ -466,6 +470,7 @@ final class RepositoriesFactory {
         return DioStudentCommunicationRepository(httpClient: httpClient);
     }
   }
+
   static Future<StudentAnalyticsRepository>
   _initStudentAnalyticsRepository() async {
     switch (Env.analyticsRepositoryMode) {
@@ -515,7 +520,7 @@ final class RepositoriesFactory {
         ) ??
         _defaultLanguageCode();
 
-    // Initialize HttpClient early and once to avoid race conditions when 
+    // Initialize HttpClient early and once to avoid race conditions when
     // multiple repositories are initialized in parallel via Future.wait
     await _initHttpClient();
 

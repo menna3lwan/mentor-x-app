@@ -16,7 +16,13 @@ final class QuizIntroPageState extends Equatable {
   });
 
   @override
-  List<Object?> get props => [loadingState, quizId, quiz, activeAttempt, errorMessage];
+  List<Object?> get props => [
+    loadingState,
+    quizId,
+    quiz,
+    activeAttempt,
+    errorMessage,
+  ];
 
   QuizIntroPageState copyWith({
     LoadingState? loadingState,
@@ -34,4 +40,3 @@ final class QuizIntroPageState extends Equatable {
     );
   }
 }
-

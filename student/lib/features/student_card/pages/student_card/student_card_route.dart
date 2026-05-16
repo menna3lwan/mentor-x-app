@@ -4,7 +4,8 @@ part of '../../../../core/routing/app_routes.dart';
   path: '/student-card',
   name: 'studentCard',
 )
-final class StudentCardPageRoute extends GoRouteData with $StudentCardPageRoute {
+final class StudentCardPageRoute extends GoRouteData
+    with $StudentCardPageRoute {
   const StudentCardPageRoute();
 
   @override

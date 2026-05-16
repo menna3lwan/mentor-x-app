@@ -15,14 +15,16 @@ final class BannersCarouselWrapper extends StatelessWidget {
       (bloc) => bloc.state.bannersSection.data ?? const [],
     );
     final isLoading = context.select<HomePageBloc, bool>(
-      (bloc) => bloc.state.isFirstLoading || bloc.state.bannersSection.isLoading,
+      (bloc) =>
+          bloc.state.isFirstLoading || bloc.state.bannersSection.isLoading,
     );
 
     return BannersCarouselWidget(
       banners: banners,
       isLoading: isLoading,
-      onTapBanner: (bannerId) =>
-          context.read<HomePageBloc>().add(HomePageBannerClickedEvent(bannerId)),
+      onTapBanner: (bannerId) => context.read<HomePageBloc>().add(
+        HomePageBannerClickedEvent(bannerId),
+      ),
     );
   }
 }

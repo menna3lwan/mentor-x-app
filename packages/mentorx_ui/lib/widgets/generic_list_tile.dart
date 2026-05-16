@@ -24,7 +24,9 @@ class GenericListTile extends StatelessWidget {
       color: context.backgroundSecondaryColor,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        side: BorderSide(color: context.textTertiaryColor.withValues(alpha: 0.1)),
+        side: BorderSide(
+          color: context.textTertiaryColor.withValues(alpha: 0.1),
+        ),
       ),
       child: ListTile(
         onTap: onTap,

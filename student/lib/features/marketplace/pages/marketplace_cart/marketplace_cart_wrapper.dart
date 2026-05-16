@@ -39,9 +39,13 @@ class _MarketplaceCartPageWrapperState
       },
       child: Builder(
         builder: (context) {
-          final cartState = context.select((MarketplaceCartCubit cubit) => cubit.state);
-          final blocState = context.select((MarketplaceCartPageBloc bloc) => bloc.state);
-          
+          final cartState = context.select(
+            (MarketplaceCartCubit cubit) => cubit.state,
+          );
+          final blocState = context.select(
+            (MarketplaceCartPageBloc bloc) => bloc.state,
+          );
+
           return MarketplaceCartPagePage(
             cartItems: cartState.items,
             cartSubtotal: cartState.subtotal,
@@ -51,7 +55,10 @@ class _MarketplaceCartPageWrapperState
             loadingState: blocState.loadingState,
             appliedCoupon: cartState.appliedCoupon,
             onUpdateQuantity: (itemId, quantity) {
-              context.read<MarketplaceCartCubit>().updateQuantity(itemId, quantity);
+              context.read<MarketplaceCartCubit>().updateQuantity(
+                itemId,
+                quantity,
+              );
             },
             onViewCoupons: () => _showCouponsSheet(context),
             onRemoveCoupon: () {
@@ -63,12 +70,12 @@ class _MarketplaceCartPageWrapperState
                   .toList();
 
               context.read<MarketplaceCartPageBloc>().add(
-                    MarketplaceCartPagePlaceOrderEvent(
-                      items: items,
-                      address: address,
-                      phone: phone,
-                    ),
-                  );
+                MarketplaceCartPagePlaceOrderEvent(
+                  items: items,
+                  address: address,
+                  phone: phone,
+                ),
+              );
             },
           );
         },
@@ -89,7 +96,9 @@ class _MarketplaceCartPageWrapperState
             height: MediaQuery.of(context).size.height * 0.6,
             decoration: BoxDecoration(
               color: context.backgroundSecondaryColor,
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(32),
+              ),
             ),
             padding: const EdgeInsets.all(24),
             child: Column(
@@ -119,10 +128,12 @@ class _MarketplaceCartPageWrapperState
                   child: Builder(
                     builder: (context) {
                       final loadingState = context.select(
-                        (MarketplaceCartPageBloc bloc) => bloc.state.loadingState,
+                        (MarketplaceCartPageBloc bloc) =>
+                            bloc.state.loadingState,
                       );
                       final validCoupons = context.select(
-                        (MarketplaceCartPageBloc bloc) => bloc.state.validCoupons,
+                        (MarketplaceCartPageBloc bloc) =>
+                            bloc.state.validCoupons,
                       );
 
                       if (loadingState == LoadingState.loading &&

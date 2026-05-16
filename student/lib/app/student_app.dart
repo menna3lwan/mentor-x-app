@@ -4,7 +4,8 @@ import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:mentorx_ui/mentorx_ui.dart' hide LocaleSettings, TranslationProvider;
+import 'package:mentorx_ui/mentorx_ui.dart'
+    hide LocaleSettings, TranslationProvider;
 import 'package:go_router/go_router.dart';
 
 import 'app.dart';
@@ -26,15 +27,20 @@ final class StudentApp extends StatefulWidget {
 }
 
 class _StudentAppState extends State<StudentApp> {
-  late final StreamSubscription<AppAuthenticationLogoutEvent> _logoutSubscription;
+  late final StreamSubscription<AppAuthenticationLogoutEvent>
+  _logoutSubscription;
 
   @override
   void initState() {
     super.initState();
-    _logoutSubscription = appEventBus.on<AppAuthenticationLogoutEvent>().listen((event) {
-      StudentApp._logger.info('Global auth event: Session cleared, redirecting to login');
-      rootNavigatorKey.currentContext?.go('/login');
-    });
+    _logoutSubscription = appEventBus.on<AppAuthenticationLogoutEvent>().listen(
+      (event) {
+        StudentApp._logger.info(
+          'Global auth event: Session cleared, redirecting to login',
+        );
+        rootNavigatorKey.currentContext?.go('/login');
+      },
+    );
   }
 
   @override
@@ -52,36 +58,40 @@ class _StudentAppState extends State<StudentApp> {
       providers: widget.requirements.repositories.toProviders(),
       child: MultiBlocProvider(
         providers: widget.requirements.blocs.toProviders(),
-        child: MentorXTranslationProvider(
-          child: MentorXThemeProvider(
-            lightTheme: lightMixTheme,
-            darkTheme: darkMixTheme,
-            child: MentorXSkeletonProvider(
-              child: Builder(
-                builder: (context) {
-                  // This key is used to force the app to rebuild when the locale changes
-                  final String currentLanguageCode =
-                      TranslationProvider.of(context).flutterLocale.languageCode;
-                  final appKey = ValueKey(currentLanguageCode);
-                  return MaterialApp.router(
-                    key: appKey,
-                    debugShowCheckedModeBanner: false,
-                    routerConfig: widget.requirements.routerConfig,
-                    locale: TranslationProvider.of(context).flutterLocale,
-                    supportedLocales: LocaleSettings.instance.supportedLocales,
-                    localizationsDelegates: const [
-                      ...GlobalMaterialLocalizations.delegates,
-                    ],
-                    theme: MentorXThemes.materialThemeDataFromTheme(
-                      lightMixTheme,
+        child: TranslationProvider(
+          child: MentorXTranslationProvider(
+            child: MentorXThemeProvider(
+              lightTheme: lightMixTheme,
+              darkTheme: darkMixTheme,
+              child: MentorXSkeletonProvider(
+                child: Builder(
+                  builder: (context) {
+                    // This key is used to force the app to rebuild when the locale changes
+                    final String currentLanguageCode = TranslationProvider.of(
                       context,
-                    ),
-                    darkTheme: MentorXThemes.materialThemeDataFromTheme(
-                      darkMixTheme,
-                      context,
-                    ),
-                  );
-                },
+                    ).flutterLocale.languageCode;
+                    final appKey = ValueKey(currentLanguageCode);
+                    return MaterialApp.router(
+                      key: appKey,
+                      debugShowCheckedModeBanner: false,
+                      routerConfig: widget.requirements.routerConfig,
+                      locale: TranslationProvider.of(context).flutterLocale,
+                      supportedLocales:
+                          LocaleSettings.instance.supportedLocales,
+                      localizationsDelegates: const [
+                        ...GlobalMaterialLocalizations.delegates,
+                      ],
+                      theme: MentorXThemes.materialThemeDataFromTheme(
+                        lightMixTheme,
+                        context,
+                      ),
+                      darkTheme: MentorXThemes.materialThemeDataFromTheme(
+                        darkMixTheme,
+                        context,
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
           ),

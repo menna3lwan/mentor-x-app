@@ -166,13 +166,17 @@ final class _BannersCarouselWidgetState extends State<BannersCarouselWidget> {
                         ? context.brandPrimaryColor
                         : context.brandPrimaryColor.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(3),
-                    boxShadow: isActive ? [
-                      BoxShadow(
-                        color: context.brandPrimaryColor.withValues(alpha: 0.3),
-                        blurRadius: 8,
-                        offset: const Offset(0, 2),
-                      ),
-                    ] : null,
+                    boxShadow: isActive
+                        ? [
+                            BoxShadow(
+                              color: context.brandPrimaryColor.withValues(
+                                alpha: 0.3,
+                              ),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            ),
+                          ]
+                        : null,
                   ),
                 );
               },

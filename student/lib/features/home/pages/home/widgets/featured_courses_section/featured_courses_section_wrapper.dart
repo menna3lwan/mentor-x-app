@@ -10,9 +10,10 @@ final class FeaturedCoursesSectionWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final section = context.select<HomePageBloc, HomeAsyncSection<List<CourseSummaryEntity>>>(
-      (bloc) => bloc.state.featuredCoursesSection,
-    );
+    final section = context
+        .select<HomePageBloc, HomeAsyncSection<List<CourseSummaryEntity>>>(
+          (bloc) => bloc.state.featuredCoursesSection,
+        );
 
     return FeaturedCoursesSectionWidget(
       courses: section.data,

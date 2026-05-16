@@ -18,7 +18,9 @@ class AnnouncementCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final statusColor = isPinned ? context.brandPrimaryColor : context.secondaryGreen;
+    final statusColor = isPinned
+        ? context.brandPrimaryColor
+        : context.secondaryGreen;
 
     return PressableBox(
       onPress: onTap,
@@ -28,10 +30,15 @@ class AnnouncementCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: context.backgroundSecondaryColor,
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: statusColor.withValues(alpha: 0.1), width: 1.5),
+          border: Border.all(
+            color: statusColor.withValues(alpha: 0.1),
+            width: 1.5,
+          ),
           boxShadow: [
             BoxShadow(
-              color: context.backgroundElevatedSurfaceShadowColor.withValues(alpha: 0.5),
+              color: context.backgroundElevatedSurfaceShadowColor.withValues(
+                alpha: 0.5,
+              ),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -56,7 +63,9 @@ class AnnouncementCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  isPinned ? t_ui.widgets.announcement.pinned : t_ui.widgets.announcement.update,
+                  isPinned
+                      ? t_ui.widgets.announcement.pinned
+                      : t_ui.widgets.announcement.update,
                   style: TextStyle(
                     color: statusColor,
                     fontSize: 10,

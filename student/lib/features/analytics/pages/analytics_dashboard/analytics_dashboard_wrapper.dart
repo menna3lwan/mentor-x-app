@@ -17,26 +17,27 @@ final class AnalyticsDashboardPageWrapper extends StatelessWidget {
       )..add(const AnalyticsDashboardPageLoadRequested()),
       child: Builder(
         builder: (context) {
-          final status = context.select<
-            AnalyticsDashboardPageBloc,
-            AnalyticsDashboardStatus
-          >((bloc) => bloc.state.status);
-          final courses = context.select<
-            AnalyticsDashboardPageBloc,
-            List<EnrollmentEntity>
-          >((bloc) => bloc.state.courses);
-          final selectedCourseId = context.select<
-            AnalyticsDashboardPageBloc,
-            String?
-          >((bloc) => bloc.state.selectedCourseId);
-          final summary = context.select<
-            AnalyticsDashboardPageBloc,
-            StudentAnalyticsSummaryEntity?
-          >((bloc) => bloc.state.summary);
-          final errorMessage = context.select<
-            AnalyticsDashboardPageBloc,
-            String?
-          >((bloc) => bloc.state.errorMessage);
+          final status = context
+              .select<AnalyticsDashboardPageBloc, AnalyticsDashboardStatus>(
+                (bloc) => bloc.state.status,
+              );
+          final courses = context
+              .select<AnalyticsDashboardPageBloc, List<EnrollmentEntity>>(
+                (bloc) => bloc.state.courses,
+              );
+          final selectedCourseId = context
+              .select<AnalyticsDashboardPageBloc, String?>(
+                (bloc) => bloc.state.selectedCourseId,
+              );
+          final summary = context
+              .select<
+                AnalyticsDashboardPageBloc,
+                StudentAnalyticsSummaryEntity?
+              >((bloc) => bloc.state.summary);
+          final errorMessage = context
+              .select<AnalyticsDashboardPageBloc, String?>(
+                (bloc) => bloc.state.errorMessage,
+              );
 
           return AnalyticsDashboardPagePage(
             status: status,

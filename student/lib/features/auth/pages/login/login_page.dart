@@ -167,11 +167,19 @@ final class LoginPage extends StatelessWidget {
                         $box.padding.vertical(16),
                         $box.padding.horizontal(32),
                         $box.borderRadius.all(20),
-                        $box.border.all.color(context.brandPrimaryColor.withValues(alpha: 0.1)),
+                        $box.border.all.color(
+                          context.brandPrimaryColor.withValues(alpha: 0.1),
+                        ),
                         $box.border.all.width(1.5),
-                        $box.color(context.backgroundSecondaryColor.withValues(alpha: 0.5)),
+                        $box.color(
+                          context.backgroundSecondaryColor.withValues(
+                            alpha: 0.5,
+                          ),
+                        ),
                         $on.hover(
-                          $box.color(context.brandPrimaryColor.withValues(alpha: 0.05)),
+                          $box.color(
+                            context.brandPrimaryColor.withValues(alpha: 0.05),
+                          ),
                           $box.border.all.color(context.brandPrimaryColor),
                         ),
                       ),

@@ -55,7 +55,9 @@ final class _PdfViewerPageWrapperState extends State<PdfViewerPageWrapper> {
           final user = context.select(
             (AppAuthenticationCubit cubit) => cubit.state,
           );
-          final watermarkText = user != null ? '${user.fullName}\n${user.phoneNumber}' : null;
+          final watermarkText = user != null
+              ? '${user.fullName}\n${user.phoneNumber}'
+              : null;
 
           return PdfViewerPagePage(
             title: title,

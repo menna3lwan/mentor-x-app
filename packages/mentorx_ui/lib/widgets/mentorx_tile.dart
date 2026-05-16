@@ -23,7 +23,7 @@ class MentorXTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final baseColor = color ?? context.backgroundSecondaryColor;
-    
+
     var style = Style(
       $box.borderRadius(borderRadius),
       $box.color(baseColor),
@@ -31,10 +31,14 @@ class MentorXTile extends StatelessWidget {
     );
 
     if (showBorder) {
-      style = style.merge(Style(
-        $box.border.all.color(context.borderPrimaryColor.withValues(alpha: 0.1)),
-        $box.border.all.width(1.5),
-      ));
+      style = style.merge(
+        Style(
+          $box.border.all.color(
+            context.borderPrimaryColor.withValues(alpha: 0.1),
+          ),
+          $box.border.all.width(1.5),
+        ),
+      );
     }
 
     return Container(

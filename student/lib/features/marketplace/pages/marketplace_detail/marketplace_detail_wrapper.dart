@@ -33,12 +33,14 @@ class _MarketplaceDetailPageWrapperState
       },
       child: Builder(
         builder: (context) {
-          final loadingState = context.select<MarketplaceDetailPageBloc, LoadingState>(
-            (bloc) => bloc.state.loadingState,
-          );
-          final item = context.select<MarketplaceDetailPageBloc, MarketplaceItemEntity?>(
-            (bloc) => bloc.state.item,
-          );
+          final loadingState = context
+              .select<MarketplaceDetailPageBloc, LoadingState>(
+                (bloc) => bloc.state.loadingState,
+              );
+          final item = context
+              .select<MarketplaceDetailPageBloc, MarketplaceItemEntity?>(
+                (bloc) => bloc.state.item,
+              );
 
           return MarketplaceDetailPagePage(
             loadingState: loadingState,
@@ -46,8 +48,8 @@ class _MarketplaceDetailPageWrapperState
             onRetry: () {
               if (item?.id != null) {
                 context.read<MarketplaceDetailPageBloc>().add(
-                      MarketplaceDetailPageLoadEvent(item!.id),
-                    );
+                  MarketplaceDetailPageLoadEvent(item!.id),
+                );
               }
             },
             onAddToCart: (item) {

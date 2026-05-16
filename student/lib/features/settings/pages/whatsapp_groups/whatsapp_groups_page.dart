@@ -38,7 +38,10 @@ final class WhatsappGroupsPagePage extends StatelessWidget {
               backgroundColor: context.backgroundSecondaryColor,
               child: isLoading
                   ? ListView.builder(
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 24,
+                      ),
                       itemCount: 4,
                       itemBuilder: (_, _) => const Padding(
                         padding: EdgeInsets.only(bottom: 16),
@@ -243,7 +246,9 @@ final class _GroupCard extends StatelessWidget {
                     ),
                     const Gap(2),
                     Text(
-                      context.t.settings.membersActive(count: group.participantsCount.toString()),
+                      context.t.settings.membersActive(
+                        count: group.participantsCount.toString(),
+                      ),
                       style: context.bodySecondaryStyle.copyWith(
                         color: context.textTertiaryColor,
                         fontSize: 12,
@@ -270,7 +275,9 @@ final class _GroupCard extends StatelessWidget {
             width: double.infinity,
             child: MentorXButton(
               onPressed: onJoin,
-              label: isJoined ? context.t.settings.linkCopied : context.t.settings.copyInviteLink,
+              label: isJoined
+                  ? context.t.settings.linkCopied
+                  : context.t.settings.copyInviteLink,
               color: isJoined ? context.statusSuccessColor : waColor,
               icon: isJoined
                   ? Icons.check_circle_rounded

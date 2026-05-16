@@ -22,7 +22,10 @@ class AnnouncementListItem extends StatelessWidget {
       elevation: 0,
       color: context.backgroundSecondaryColor,
       child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 12,
+        ),
         leading: Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
@@ -53,8 +56,8 @@ class AnnouncementListItem extends StatelessWidget {
         ),
         onTap: onTap,
         trailing: Icon(
-          Icons.chevron_right_rounded, 
-          color: context.textTertiaryColor.withValues(alpha: 0.5)
+          Icons.chevron_right_rounded,
+          color: context.textTertiaryColor.withValues(alpha: 0.5),
         ),
       ),
     );

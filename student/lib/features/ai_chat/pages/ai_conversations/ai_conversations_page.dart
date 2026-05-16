@@ -82,7 +82,10 @@ final class AiConversationsPagePage extends StatelessWidget {
             icon: const Icon(Icons.add_comment_rounded),
             label: Text(
               context.t.aichat.newChat,
-              style: const TextStyle(fontWeight: FontWeight.w900, letterSpacing: 0.5),
+              style: const TextStyle(
+                fontWeight: FontWeight.w900,
+                letterSpacing: 0.5,
+              ),
             ),
           ),
         ),
@@ -101,7 +104,8 @@ final class AiConversationsPagePage extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(16, 20, 16, 120),
         itemCount: 8,
         separatorBuilder: (_, _) => const Gap(16),
-        itemBuilder: (_, _) => const MentorXSkeleton(height: 96, borderRadius: 24),
+        itemBuilder: (_, _) =>
+            const MentorXSkeleton(height: 96, borderRadius: 24),
       );
     }
 
@@ -210,7 +214,9 @@ final class AiConversationsPagePage extends StatelessWidget {
                               ),
                               const Gap(6),
                               Text(
-                                context.t.aichat.messagesCount(count: conversation.messageCount),
+                                context.t.aichat.messagesCount(
+                                  count: conversation.messageCount,
+                                ),
                                 style: TextStyle(
                                   color: context.textSecondaryColor,
                                   fontSize: 12,
@@ -340,7 +346,10 @@ final class AiConversationsPagePage extends StatelessWidget {
     );
   }
 
-  String _conversationTitle(BuildContext context, AIConversationEntity conversation) {
+  String _conversationTitle(
+    BuildContext context,
+    AIConversationEntity conversation,
+  ) {
     final title = conversation.title?.trim();
     if (title != null && title.isNotEmpty) return title;
     final subject = conversation.subject?.trim();

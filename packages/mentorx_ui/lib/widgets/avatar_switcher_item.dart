@@ -25,7 +25,7 @@ class AvatarSwitcherItem extends StatelessWidget {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               border: Border.all(
-                color: isSelected 
+                color: isSelected
                     ? context.brandPrimaryColor
                     : Colors.transparent,
                 width: 2,
@@ -33,17 +33,19 @@ class AvatarSwitcherItem extends StatelessWidget {
             ),
             child: CircleAvatar(
               radius: 28,
-              backgroundColor: isSelected 
+              backgroundColor: isSelected
                   ? context.brandPrimaryColor.withValues(alpha: 0.1)
                   : context.backgroundSecondaryColor,
-              backgroundImage: imageUrl != null 
-                  ? NetworkImage(imageUrl!) 
+              backgroundImage: imageUrl != null
+                  ? NetworkImage(imageUrl!)
                   : null,
-              child: imageUrl == null 
+              child: imageUrl == null
                   ? Text(
                       name.isNotEmpty ? name[0] : '?',
                       style: TextStyle(
-                        color: isSelected ? context.brandPrimaryColor : context.textSecondaryColor,
+                        color: isSelected
+                            ? context.brandPrimaryColor
+                            : context.textSecondaryColor,
                         fontWeight: FontWeight.bold,
                         fontSize: 20,
                       ),
@@ -57,7 +59,9 @@ class AvatarSwitcherItem extends StatelessWidget {
             style: TextStyle(
               fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
               fontSize: 13,
-              color: isSelected ? context.brandPrimaryColor : context.textPrimaryColor,
+              color: isSelected
+                  ? context.brandPrimaryColor
+                  : context.textPrimaryColor,
             ),
           ),
         ],

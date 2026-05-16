@@ -43,11 +43,15 @@ final class RedeemCodePagePage extends StatelessWidget {
                         color: context.brandPrimaryColor.withValues(alpha: 0.1),
                         shape: BoxShape.circle,
                         border: Border.all(
-                          color: context.brandPrimaryColor.withValues(alpha: 0.2),
+                          color: context.brandPrimaryColor.withValues(
+                            alpha: 0.2,
+                          ),
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: context.brandPrimaryColor.withValues(alpha: 0.1),
+                            color: context.brandPrimaryColor.withValues(
+                              alpha: 0.1,
+                            ),
                             blurRadius: 20,
                             offset: const Offset(0, 10),
                           ),
@@ -110,7 +114,9 @@ final class RedeemCodePagePage extends StatelessWidget {
                           hintText: 'XXXX-XXXX-XXXX',
                           hintStyle: context.bodyPrimaryStyle.copyWith(
                             fontSize: 20,
-                            color: context.textTertiaryColor.withValues(alpha: 0.2),
+                            color: context.textTertiaryColor.withValues(
+                              alpha: 0.2,
+                            ),
                             letterSpacing: 4,
                             fontWeight: FontWeight.w800,
                           ),
@@ -140,7 +146,8 @@ final class RedeemCodePagePage extends StatelessWidget {
                     duration: const Duration(milliseconds: 500),
                     delay: const Duration(milliseconds: 300),
                     child: MentorXButton(
-                      onPressed: codeController.text.isNotEmpty &&
+                      onPressed:
+                          codeController.text.isNotEmpty &&
                               loadingState != LoadingState.loading
                           ? () => onSubmit(codeController.text)
                           : null,

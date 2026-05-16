@@ -68,10 +68,10 @@ final class _ForgotPasswordPageWrapperState
                 final isLoading = context.select<ForgotPasswordBloc, bool>(
                   (bloc) => bloc.state.loadingState.isLoading,
                 );
-                final errorMessage = context.select<
-                  ForgotPasswordBloc,
-                  String?
-                >((bloc) => bloc.state.errorMessage);
+                final errorMessage = context
+                    .select<ForgotPasswordBloc, String?>(
+                      (bloc) => bloc.state.errorMessage,
+                    );
                 final bloc = context.read<ForgotPasswordBloc>();
 
                 return ForgotPasswordPage(

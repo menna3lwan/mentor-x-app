@@ -40,7 +40,7 @@ final class QuizIntroPageBloc
     emit(state.copyWith(loadingState: LoadingState.loading));
     try {
       final quiz = await quizRepository.getQuiz(state.quizId);
-      
+
       QuizAttemptEntity? activeAttempt;
       try {
         final profile = await profileRepository.getProfile();
@@ -57,7 +57,8 @@ final class QuizIntroPageBloc
         parameters: {
           AnalyticsParams.quizId: state.quizId,
           AnalyticsParams.name: quiz.title,
-          if (activeAttempt != null) 'attempt_status': activeAttempt.status.name,
+          if (activeAttempt != null)
+            'attempt_status': activeAttempt.status.name,
         },
       );
 
@@ -77,5 +78,4 @@ final class QuizIntroPageBloc
       );
     }
   }
-
 }

@@ -16,22 +16,21 @@ final class AssignmentDetailPage extends StatelessWidget {
 
     return Builder(
       builder: (context) {
-        final loadingState = context.select<
-          AssignmentDetailPageBloc,
-          LoadingState
-        >((bloc) => bloc.state.loadingState);
-        final errorMessage = context.select<
-          AssignmentDetailPageBloc,
-          String?
-        >((bloc) => bloc.state.errorMessage);
-        final assignment = context.select<
-          AssignmentDetailPageBloc,
-          AssignmentEntity?
-        >((bloc) => bloc.state.assignment);
-        final submission = context.select<
-          AssignmentDetailPageBloc,
-          AssignmentSubmissionEntity?
-        >((bloc) => bloc.state.submission);
+        final loadingState = context
+            .select<AssignmentDetailPageBloc, LoadingState>(
+              (bloc) => bloc.state.loadingState,
+            );
+        final errorMessage = context.select<AssignmentDetailPageBloc, String?>(
+          (bloc) => bloc.state.errorMessage,
+        );
+        final assignment = context
+            .select<AssignmentDetailPageBloc, AssignmentEntity?>(
+              (bloc) => bloc.state.assignment,
+            );
+        final submission = context
+            .select<AssignmentDetailPageBloc, AssignmentSubmissionEntity?>(
+              (bloc) => bloc.state.submission,
+            );
 
         if (loadingState == LoadingState.loading) {
           return Scaffold(
@@ -54,9 +53,13 @@ final class AssignmentDetailPage extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: 24),
                   child: Row(
                     children: [
-                      Expanded(child: MentorXSkeleton(height: 80, borderRadius: 24)),
+                      Expanded(
+                        child: MentorXSkeleton(height: 80, borderRadius: 24),
+                      ),
                       Gap(16),
-                      Expanded(child: MentorXSkeleton(height: 80, borderRadius: 24)),
+                      Expanded(
+                        child: MentorXSkeleton(height: 80, borderRadius: 24),
+                      ),
                     ],
                   ),
                 ),
@@ -78,7 +81,11 @@ final class AssignmentDetailPage extends StatelessWidget {
             body: AppErrorView(
               message: errorMessage,
               onRetry: () {
-                final assignmentId = context.read<AssignmentDetailPageBloc>().state.assignment?.id;
+                final assignmentId = context
+                    .read<AssignmentDetailPageBloc>()
+                    .state
+                    .assignment
+                    ?.id;
                 if (assignmentId != null) {
                   context.read<AssignmentDetailPageBloc>().add(
                     AssignmentDetailPageLoadEvent(assignmentId: assignmentId),
@@ -115,10 +122,10 @@ final class AssignmentDetailPage extends StatelessWidget {
                 child: RefreshIndicator(
                   onRefresh: () async {
                     context.read<AssignmentDetailPageBloc>().add(
-                          AssignmentDetailPageLoadEvent(
-                            assignmentId: assignment.id,
-                          ),
-                        );
+                      AssignmentDetailPageLoadEvent(
+                        assignmentId: assignment.id,
+                      ),
+                    );
                   },
                   color: context.brandPrimaryColor,
                   child: SingleChildScrollView(
@@ -249,8 +256,10 @@ final class AssignmentDetailPage extends StatelessWidget {
                                       decoration: BoxDecoration(
                                         gradient: LinearGradient(
                                           colors: [
-                                            context.brandPrimaryColor.withValues(alpha: 0.2),
-                                            context.brandPrimaryColor.withValues(alpha: 0.05),
+                                            context.brandPrimaryColor
+                                                .withValues(alpha: 0.2),
+                                            context.brandPrimaryColor
+                                                .withValues(alpha: 0.05),
                                           ],
                                         ),
                                         shape: BoxShape.circle,
@@ -264,21 +273,26 @@ final class AssignmentDetailPage extends StatelessWidget {
                                     const Gap(16),
                                     Expanded(
                                       child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Text(
                                             t.file,
-                                            style: context.bodyPrimaryStyle.copyWith(
-                                              fontWeight: FontWeight.w900,
-                                            ),
+                                            style: context.bodyPrimaryStyle
+                                                .copyWith(
+                                                  fontWeight: FontWeight.w900,
+                                                ),
                                           ),
                                           const Gap(4),
                                           Text(
-                                            assignment.fileName ?? 'attachment.pdf',
-                                            style: context.smallTextStyle.copyWith(
-                                              color: context.textTertiaryColor,
-                                              fontWeight: FontWeight.w700,
-                                            ),
+                                            assignment.fileName ??
+                                                'attachment.pdf',
+                                            style: context.smallTextStyle
+                                                .copyWith(
+                                                  color:
+                                                      context.textTertiaryColor,
+                                                  fontWeight: FontWeight.w700,
+                                                ),
                                           ),
                                         ],
                                       ),

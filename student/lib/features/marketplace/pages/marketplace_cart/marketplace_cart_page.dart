@@ -144,90 +144,90 @@ final class MarketplaceCartPagePage extends StatelessWidget {
       builder: (_) => BlocProvider.value(
         value: context.read<MarketplaceCartPageBloc>(),
         child: Container(
-        decoration: BoxDecoration(
-          color: context.backgroundSecondaryColor,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
-          border: Border.all(
-            color: context.borderPrimaryColor.withValues(alpha: 0.05),
+          decoration: BoxDecoration(
+            color: context.backgroundSecondaryColor,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+            border: Border.all(
+              color: context.borderPrimaryColor.withValues(alpha: 0.05),
+            ),
           ),
-        ),
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom + 32,
-          left: 24,
-          right: 24,
-          top: 12,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: context.textTertiaryColor.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(2),
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom + 32,
+            left: 24,
+            right: 24,
+            top: 12,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: context.textTertiaryColor.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
                 ),
               ),
-            ),
-            const Gap(32),
-            Text(
-              t.marketplace.cart.deliveryDetails,
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w900,
-                color: context.textPrimaryColor,
-                letterSpacing: -0.5,
+              const Gap(32),
+              Text(
+                t.marketplace.cart.deliveryDetails,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w900,
+                  color: context.textPrimaryColor,
+                  letterSpacing: -0.5,
+                ),
               ),
-            ),
-            const Gap(24),
-            MentorXTextFormField(
-              label: t.marketplace.deliveryAddress,
-              controller: addressController,
-              hintText: t.marketplace.deliveryAddress,
-              prefixIcon: Icons.location_on_rounded,
-            ),
-            const Gap(16),
-            MentorXTextFormField(
-              label: t.marketplace.phoneNumber,
-              controller: phoneController,
-              hintText: t.marketplace.phoneNumber,
-              prefixIcon: Icons.phone_rounded,
-              keyboardType: TextInputType.phone,
-            ),
-            const Gap(16),
-            MentorXTextFormField(
-              label: t.marketplace.deliveryNotes,
-              controller: notesController,
-              hintText: t.marketplace.deliveryNotes,
-              prefixIcon: Icons.note_rounded,
-              maxLines: 2,
-            ),
-            const Gap(32),
-            MentorXButton(
-              loading: loadingState == LoadingState.loading,
-              onPressed: () {
-                if (addressController.text.isEmpty ||
-                    phoneController.text.isEmpty) {
-                  MentorXUI.showToast(
-                    message: 'Please fill all required fields',
+              const Gap(24),
+              MentorXTextFormField(
+                label: t.marketplace.deliveryAddress,
+                controller: addressController,
+                hintText: t.marketplace.deliveryAddress,
+                prefixIcon: Icons.location_on_rounded,
+              ),
+              const Gap(16),
+              MentorXTextFormField(
+                label: t.marketplace.phoneNumber,
+                controller: phoneController,
+                hintText: t.marketplace.phoneNumber,
+                prefixIcon: Icons.phone_rounded,
+                keyboardType: TextInputType.phone,
+              ),
+              const Gap(16),
+              MentorXTextFormField(
+                label: t.marketplace.deliveryNotes,
+                controller: notesController,
+                hintText: t.marketplace.deliveryNotes,
+                prefixIcon: Icons.note_rounded,
+                maxLines: 2,
+              ),
+              const Gap(32),
+              MentorXButton(
+                loading: loadingState == LoadingState.loading,
+                onPressed: () {
+                  if (addressController.text.isEmpty ||
+                      phoneController.text.isEmpty) {
+                    MentorXUI.showToast(
+                      message: 'Please fill all required fields',
+                    );
+                    return;
+                  }
+                  Navigator.pop(context);
+                  onPlaceOrder(
+                    addressController.text,
+                    phoneController.text,
+                    notesController.text,
                   );
-                  return;
-                }
-                Navigator.pop(context);
-                onPlaceOrder(
-                  addressController.text,
-                  phoneController.text,
-                  notesController.text,
-                );
-              },
-              label: t.marketplace.cart.confirmOrder,
-            ),
-          ],
+                },
+                label: t.marketplace.cart.confirmOrder,
+              ),
+            ],
+          ),
         ),
       ),
-    ),
     );
   }
 }
@@ -311,7 +311,8 @@ final class _MarketplaceCartItemTile extends StatelessWidget {
               children: [
                 _IconButton(
                   icon: Icons.remove_rounded,
-                  onPressed: () => onUpdateQuantity(item.id, cartItem.quantity - 1),
+                  onPressed: () =>
+                      onUpdateQuantity(item.id, cartItem.quantity - 1),
                 ),
                 Text(
                   '${cartItem.quantity}',
@@ -323,7 +324,8 @@ final class _MarketplaceCartItemTile extends StatelessWidget {
                 ),
                 _IconButton(
                   icon: Icons.add_rounded,
-                  onPressed: () => onUpdateQuantity(item.id, cartItem.quantity + 1),
+                  onPressed: () =>
+                      onUpdateQuantity(item.id, cartItem.quantity + 1),
                 ),
               ],
             ),
@@ -394,7 +396,8 @@ final class _OrderSummary extends StatelessWidget {
           children: [
             _SummaryRow(
               label: t.marketplace.walletBalance,
-              value: '${walletBalanceValue.toStringAsFixed(2)} ${context.t.core.currency}',
+              value:
+                  '${walletBalanceValue.toStringAsFixed(2)} ${context.t.core.currency}',
               valueColor: isBalanceSufficient
                   ? context.statusSuccessColor
                   : context.statusDangerColor,
@@ -403,7 +406,8 @@ final class _OrderSummary extends StatelessWidget {
             const Gap(12),
             _SummaryRow(
               label: t.marketplace.subtotal,
-              value: '${subtotal.toStringAsFixed(2)} ${context.t.core.currency}',
+              value:
+                  '${subtotal.toStringAsFixed(2)} ${context.t.core.currency}',
             ),
             if (discountAmount > 0) ...[
               const Gap(8),
@@ -492,7 +496,6 @@ final class _CouponSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Container(
@@ -508,7 +511,10 @@ final class _CouponSection extends StatelessWidget {
             ? Row(
                 key: const ValueKey('coupon_input'),
                 children: [
-                  Icon(Icons.local_offer_rounded, color: context.brandPrimaryColor),
+                  Icon(
+                    Icons.local_offer_rounded,
+                    color: context.brandPrimaryColor,
+                  ),
                   const Gap(12),
                   Expanded(
                     child: Text(
@@ -535,7 +541,10 @@ final class _CouponSection extends StatelessWidget {
             : Row(
                 key: const ValueKey('applied_coupon'),
                 children: [
-                  Icon(Icons.check_circle_rounded, color: context.statusSuccessColor),
+                  Icon(
+                    Icons.check_circle_rounded,
+                    color: context.statusSuccessColor,
+                  ),
                   const Gap(12),
                   Expanded(
                     child: Column(
@@ -571,7 +580,6 @@ final class _CouponSection extends StatelessWidget {
       ),
     );
   }
-
 }
 
 final class _SummaryRow extends StatelessWidget {

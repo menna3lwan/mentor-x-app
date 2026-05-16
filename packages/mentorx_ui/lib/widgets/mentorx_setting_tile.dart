@@ -26,9 +26,13 @@ class MentorXSettingTile extends StatelessWidget {
         $box.padding.all(16),
         $box.borderRadius(16),
         $box.color(context.backgroundSecondaryColor),
-        $box.border.all.color(context.borderPrimaryColor.withValues(alpha: 0.1)),
+        $box.border.all.color(
+          context.borderPrimaryColor.withValues(alpha: 0.1),
+        ),
         $box.border.all.width(1.5),
-        $on.hover($box.color(context.backgroundTertiaryColor.withValues(alpha: 0.3))),
+        $on.hover(
+          $box.color(context.backgroundTertiaryColor.withValues(alpha: 0.3)),
+        ),
       ),
       child: Row(
         children: [
@@ -45,7 +49,9 @@ class MentorXSettingTile extends StatelessWidget {
                   title,
                   style: context.bodyPrimaryStyle.copyWith(
                     fontWeight: FontWeight.w700,
-                    color: isDestructive ? context.statusDangerColor : context.textPrimaryColor,
+                    color: isDestructive
+                        ? context.statusDangerColor
+                        : context.textPrimaryColor,
                   ),
                 ),
                 if (subtitle != null)

@@ -18,28 +18,28 @@ class AppErrorView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(32.0),
+        padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 24.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
-                color: context.statusDangerColor.withValues(alpha: 0.1),
+                color: context.statusDangerColor.withValues(alpha: 0.05),
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 Icons.error_outline_rounded,
                 size: 64,
-                color: context.statusDangerColor,
+                color: context.statusDangerColor.withValues(alpha: 0.8),
               ),
             ),
             const SizedBox(height: 24),
             Text(
               title ?? t_ui.widgets.error.title,
               style: context.bodyPrimaryStyle.copyWith(
-                fontWeight: FontWeight.w900,
-                fontSize: 20,
+                fontWeight: FontWeight.w800,
+                fontSize: 22,
                 color: context.textPrimaryColor,
               ),
               textAlign: TextAlign.center,

@@ -80,28 +80,31 @@ class _VideoPlayerPagePageState extends State<VideoPlayerPagePage> {
       setState(() {});
     } else {
       _videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(url));
-      _videoPlayerController!.initialize().then((_) {
-        if (mounted) {
-          _chewieController = ChewieController(
-            videoPlayerController: _videoPlayerController!,
-            autoPlay: true,
-            looping: false,
-            aspectRatio: _videoPlayerController!.value.aspectRatio,
-            errorBuilder: (context, errorMessage) {
-              return Center(
-                child: Text(
-                  errorMessage,
-                  style: const TextStyle(color: Colors.white),
-                ),
+      _videoPlayerController!
+          .initialize()
+          .then((_) {
+            if (mounted) {
+              _chewieController = ChewieController(
+                videoPlayerController: _videoPlayerController!,
+                autoPlay: true,
+                looping: false,
+                aspectRatio: _videoPlayerController!.value.aspectRatio,
+                errorBuilder: (context, errorMessage) {
+                  return Center(
+                    child: Text(
+                      errorMessage,
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  );
+                },
               );
-            },
-          );
-          _videoPlayerController!.addListener(_onVideoPlayerStateChange);
-          setState(() {});
-        }
-      }).catchError((error) {
-        debugPrint('Video initialization error: $error');
-      });
+              _videoPlayerController!.addListener(_onVideoPlayerStateChange);
+              setState(() {});
+            }
+          })
+          .catchError((error) {
+            debugPrint('Video initialization error: $error');
+          });
     }
   }
 
@@ -260,8 +263,9 @@ class _VideoPlayerPagePageState extends State<VideoPlayerPagePage> {
                 padding: const EdgeInsets.all(32),
                 decoration: BoxDecoration(
                   color: context.backgroundSecondaryColor,
-                  borderRadius:
-                      const BorderRadius.vertical(top: Radius.circular(40)),
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(40),
+                  ),
                 ),
                 child: Column(
                   children: List.generate(
@@ -374,8 +378,8 @@ class _VideoPlayerPagePageState extends State<VideoPlayerPagePage> {
                                   border: Border.all(
                                     color: context.statusSuccessColor
                                         .withValues(
-                                      alpha: 0.1,
-                                    ),
+                                          alpha: 0.1,
+                                        ),
                                   ),
                                 ),
                                 child: Row(

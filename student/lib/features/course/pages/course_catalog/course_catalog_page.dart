@@ -422,4 +422,3 @@ final class _SortDropdown extends StatelessWidget {
     );
   }
 }
-

@@ -103,25 +103,7 @@ final class HomePagePage extends StatelessWidget {
             title: context.t.analytics.performanceDashboard,
           ),
           const Gap(16),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            clipBehavior: Clip.none,
-            physics: const BouncingScrollPhysics(),
-            child: Row(
-              children: [
-                SizedBox(
-                  width: MediaQuery.sizeOf(context).width * 0.85,
-                  child: const WalletQuickViewCardWrapper(),
-                ),
-                const Gap(16),
-                SizedBox(
-                  width: MediaQuery.sizeOf(context).width * 0.8,
-                  child: const LeaderboardShortcutCardWidget(),
-                ),
-                const Gap(20),
-              ],
-            ),
-          ),
+          const WalletQuickViewCardWrapper(),
         ],
       ),
     );
@@ -243,5 +225,3 @@ final class HomePagePage extends StatelessWidget {
     );
   }
 }
-
-

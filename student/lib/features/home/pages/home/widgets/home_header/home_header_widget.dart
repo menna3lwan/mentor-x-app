@@ -103,7 +103,9 @@ final class _SearchShortcut extends StatelessWidget {
         $box.padding.all(16),
         $box.borderRadius(20),
         $box.color(context.backgroundSecondaryColor.withValues(alpha: 0.5)),
-        $box.border.all.color(context.borderPrimaryColor.withValues(alpha: 0.1)),
+        $box.border.all.color(
+          context.borderPrimaryColor.withValues(alpha: 0.1),
+        ),
         $on.hover(
           $box.color(context.backgroundSecondaryColor.withValues(alpha: 0.8)),
         ),

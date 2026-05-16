@@ -153,7 +153,10 @@ final class _BuildHeader extends StatelessWidget {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: context.brandPrimaryColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
@@ -296,7 +299,7 @@ final class _QuestionStatusBox extends StatelessWidget {
     return MentorXGlassCard(
       style: Style(
         $box.borderRadius(16),
-        isAnswered 
+        isAnswered
             ? $box.color(context.brandPrimaryColor)
             : $box.color(context.backgroundPrimaryColor.withValues(alpha: 0.3)),
       ),

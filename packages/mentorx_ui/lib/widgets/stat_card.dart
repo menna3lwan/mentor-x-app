@@ -17,8 +17,10 @@ class StatCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = MentorXThemeProvider.of(context);
-    final backgroundSecondary = theme.colors[$mentorxToken.color.backgroundSecondary]!;
-    final backgroundElevatedSurfaceShadow = theme.colors[$mentorxToken.color.backgroundElevatedSurfaceShadow]!;
+    final backgroundSecondary =
+        theme.colors[$mentorxToken.color.backgroundSecondary]!;
+    final backgroundElevatedSurfaceShadow =
+        theme.colors[$mentorxToken.color.backgroundElevatedSurfaceShadow]!;
     final textPrimary = theme.colors[$mentorxToken.color.textPrimary]!;
     final textSecondary = theme.colors[$mentorxToken.color.textSecondary]!;
 

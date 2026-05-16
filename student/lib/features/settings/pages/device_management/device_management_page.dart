@@ -41,10 +41,14 @@ final class DeviceManagementPagePage extends StatelessWidget {
               backgroundColor: context.backgroundSecondaryColor,
               child: isLoading
                   ? ListView.separated(
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 24,
+                      ),
                       itemCount: 3,
                       separatorBuilder: (_, _) => const Gap(16),
-                      itemBuilder: (_, _) => const MentorXSkeleton(height: 220, borderRadius: 28),
+                      itemBuilder: (_, _) =>
+                          const MentorXSkeleton(height: 220, borderRadius: 28),
                     )
                   : loadingState.isError
                   ? AppErrorView(
@@ -279,7 +283,9 @@ final class _StatusChip extends StatelessWidget {
         border: Border.all(color: color.withValues(alpha: 0.2)),
       ),
       child: Text(
-        isActive ? context.t.settings.activeLabel : context.t.settings.inactiveLabel,
+        isActive
+            ? context.t.settings.activeLabel
+            : context.t.settings.inactiveLabel,
         style: context.bodySecondaryStyle.copyWith(
           color: color,
           fontWeight: FontWeight.w900,

@@ -53,24 +53,25 @@ final class MyGradesPagePage extends StatelessWidget {
                             itemCount: 3,
                             separatorBuilder: (_, _) => const Gap(16),
                             itemBuilder: (_, _) => const MentorXSkeleton(
-                                height: 180, borderRadius: 24),
+                              height: 180,
+                              borderRadius: 24,
+                            ),
                           ),
                         ),
                       ],
                     )
                   : state.loadingState.isError
-                      ? AppErrorView(
-                          message:
-                              state.errorMessage ?? 'Unable to load grades.',
-                          onRetry: onRefresh,
-                        )
-                      : Column(
-                          children: [
-                            Gap(MediaQuery.paddingOf(context).top + 20),
-                            _buildHeader(context, t),
-                            Expanded(child: _buildLoaded(context, t)),
-                          ],
-                        ),
+                  ? AppErrorView(
+                      message: state.errorMessage ?? 'Unable to load grades.',
+                      onRetry: onRefresh,
+                    )
+                  : Column(
+                      children: [
+                        Gap(MediaQuery.paddingOf(context).top + 20),
+                        _buildHeader(context, t),
+                        Expanded(child: _buildLoaded(context, t)),
+                      ],
+                    ),
             ),
           ),
         ],
@@ -278,7 +279,9 @@ final class _SummaryHeader extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w900,
-                          color: context.textForegroundColor.withValues(alpha: 0.7),
+                          color: context.textForegroundColor.withValues(
+                            alpha: 0.7,
+                          ),
                         ),
                       ),
                     ),
@@ -522,9 +525,7 @@ final class _AssessmentTile extends StatelessWidget {
         ),
       ),
       trailing: Text(
-        percentage == null
-            ? '--'
-            : '${percentage!.toStringAsFixed(1)}%',
+        percentage == null ? '--' : '${percentage!.toStringAsFixed(1)}%',
         style: TextStyle(
           color: color,
           fontWeight: FontWeight.w900,
@@ -593,4 +594,3 @@ class _BlurredBlob extends StatelessWidget {
     );
   }
 }
-

@@ -42,7 +42,9 @@ final class WhatsappGroupsPageBloc
     WhatsappGroupsPageInitialized event,
     Emitter<WhatsappGroupsPageState> emit,
   ) async {
-    await _analyticsService.logEvent(name: AnalyticsEvents.whatsappGroupsViewed);
+    await _analyticsService.logEvent(
+      name: AnalyticsEvents.whatsappGroupsViewed,
+    );
     await _load(emit);
   }
 
@@ -58,14 +60,17 @@ final class WhatsappGroupsPageBloc
     Emitter<WhatsappGroupsPageState> emit,
   ) async {
     final groupName = state.groups
-        .firstWhere((group) => group.id == event.groupId,
-            orElse: () => const WhatsappGroupUiModel(
-                id: '',
-                title: 'Unknown',
-                description: '',
-                inviteLink: '',
-                participantsCount: 0,
-                iconUrl: ''))
+        .firstWhere(
+          (group) => group.id == event.groupId,
+          orElse: () => const WhatsappGroupUiModel(
+            id: '',
+            title: 'Unknown',
+            description: '',
+            inviteLink: '',
+            participantsCount: 0,
+            iconUrl: '',
+          ),
+        )
         .title;
 
     await _analyticsService.logEvent(
@@ -89,15 +94,19 @@ final class WhatsappGroupsPageBloc
 
     try {
       final entities = await _repository.getWhatsAppGroups();
-      
-      final groups = entities.map((entity) => WhatsappGroupUiModel(
-        id: entity.id,
-        title: entity.name,
-        description: entity.description ?? '',
-        inviteLink: entity.url,
-        participantsCount: 0, // Not provided by the current entity
-        iconUrl: entity.imageUrl,
-      )).toList();
+
+      final groups = entities
+          .map(
+            (entity) => WhatsappGroupUiModel(
+              id: entity.id,
+              title: entity.name,
+              description: entity.description ?? '',
+              inviteLink: entity.url,
+              participantsCount: 0, // Not provided by the current entity
+              iconUrl: entity.imageUrl,
+            ),
+          )
+          .toList();
 
       emit(
         state.copyWith(

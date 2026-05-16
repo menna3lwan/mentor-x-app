@@ -7,20 +7,26 @@ class GradientCard extends StatelessWidget {
   final EdgeInsetsGeometry margin;
   final double borderRadius;
   final VoidCallback? onTap;
+  final List<BoxShadow>? boxShadow;
 
   const GradientCard({
     super.key,
     required this.child,
     required this.colors,
-    this.padding = const EdgeInsets.all(16.0),
+    this.padding = const EdgeInsets.all(20.0),
     this.margin = EdgeInsets.zero,
-    this.borderRadius = 16.0,
+    this.borderRadius = 24.0,
     this.onTap,
+    this.boxShadow,
   });
 
   @override
   Widget build(BuildContext context) {
-    final card = Container(
+    final shadowColor = colors.isNotEmpty
+        ? colors.first.withValues(alpha: 0.3)
+        : const Color(0x261E3ABA);
+
+    return Container(
       margin: margin,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(borderRadius),
@@ -29,13 +35,15 @@ class GradientCard extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0x261E3ABA),
-            blurRadius: 12,
-            offset: const Offset(0, 6),
-          ),
-        ],
+        boxShadow:
+            boxShadow ??
+            [
+              BoxShadow(
+                color: shadowColor,
+                blurRadius: 20,
+                offset: const Offset(0, 8),
+              ),
+            ],
       ),
       child: Material(
         color: Colors.transparent,
@@ -49,6 +57,5 @@ class GradientCard extends StatelessWidget {
         ),
       ),
     );
-    return card;
   }
 }

@@ -46,7 +46,9 @@ final class AddBalancePage extends StatelessWidget {
     >(
       listener: (context, event) {
         if (event is AddBalancePageSuccess) {
-          PurchaseConfirmPageRoute(paymentId: event.payment.id ?? '').push(context);
+          PurchaseConfirmPageRoute(
+            paymentId: event.payment.id ?? '',
+          ).push(context);
         }
       },
       child: Scaffold(
@@ -106,7 +108,8 @@ final class AddBalancePage extends StatelessWidget {
                               final isSelected =
                                   amountController.text == p.toString();
                               return GestureDetector(
-                                onTap: () => amountController.text = p.toString(),
+                                onTap: () =>
+                                    amountController.text = p.toString(),
                                 child: AnimatedContainer(
                                   duration: const Duration(milliseconds: 300),
                                   padding: const EdgeInsets.symmetric(
@@ -116,14 +119,16 @@ final class AddBalancePage extends StatelessWidget {
                                   decoration: BoxDecoration(
                                     color: isSelected
                                         ? context.brandPrimaryColor
-                                        : context.backgroundSecondaryColor.withValues(alpha: 0.45),
+                                        : context.backgroundSecondaryColor
+                                              .withValues(alpha: 0.45),
                                     borderRadius: BorderRadius.circular(16),
                                     border: Border.all(
                                       color: isSelected
                                           ? context.brandPrimaryColor
-                                          : context.borderPrimaryColor.withValues(
-                                              alpha: 0.1,
-                                            ),
+                                          : context.borderPrimaryColor
+                                                .withValues(
+                                                  alpha: 0.1,
+                                                ),
                                     ),
                                     boxShadow: isSelected
                                         ? [
@@ -184,7 +189,11 @@ final class AddBalancePage extends StatelessWidget {
                                   style: Style(
                                     $box.margin.bottom(16),
                                     $box.borderRadius(28),
-                                    $box.border.color(isSelected ? context.brandPrimaryColor : Colors.transparent),
+                                    $box.border.color(
+                                      isSelected
+                                          ? context.brandPrimaryColor
+                                          : Colors.transparent,
+                                    ),
                                     $box.border.width(isSelected ? 2 : 0),
                                   ),
                                   child: Padding(
@@ -196,13 +205,31 @@ final class AddBalancePage extends StatelessWidget {
                                           decoration: BoxDecoration(
                                             gradient: LinearGradient(
                                               colors: [
-                                                (isSelected ? context.brandPrimaryColor : context.textTertiaryColor).withValues(alpha: 0.2),
-                                                (isSelected ? context.brandPrimaryColor : context.textTertiaryColor).withValues(alpha: 0.05),
+                                                (isSelected
+                                                        ? context
+                                                              .brandPrimaryColor
+                                                        : context
+                                                              .textTertiaryColor)
+                                                    .withValues(alpha: 0.2),
+                                                (isSelected
+                                                        ? context
+                                                              .brandPrimaryColor
+                                                        : context
+                                                              .textTertiaryColor)
+                                                    .withValues(alpha: 0.05),
                                               ],
                                             ),
-                                            borderRadius: BorderRadius.circular(16),
+                                            borderRadius: BorderRadius.circular(
+                                              16,
+                                            ),
                                             border: Border.all(
-                                              color: (isSelected ? context.brandPrimaryColor : context.textTertiaryColor).withValues(alpha: 0.1),
+                                              color:
+                                                  (isSelected
+                                                          ? context
+                                                                .brandPrimaryColor
+                                                          : context
+                                                                .textTertiaryColor)
+                                                      .withValues(alpha: 0.1),
                                             ),
                                           ),
                                           child: Icon(
@@ -216,35 +243,45 @@ final class AddBalancePage extends StatelessWidget {
                                         const Gap(16),
                                         Expanded(
                                           child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
                                               Text(
                                                 title,
-                                                style: context.bodyPrimaryStyle.copyWith(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w900,
-                                                  letterSpacing: -0.2,
-                                                ),
+                                                style: context.bodyPrimaryStyle
+                                                    .copyWith(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w900,
+                                                      letterSpacing: -0.2,
+                                                    ),
                                               ),
                                               const Gap(4),
                                               Text(
                                                 desc,
-                                                style: context.bodySecondaryStyle.copyWith(
-                                                  fontSize: 12,
-                                                  color: context.textSecondaryColor,
-                                                  fontWeight: FontWeight.w700,
-                                                ),
+                                                style: context
+                                                    .bodySecondaryStyle
+                                                    .copyWith(
+                                                      fontSize: 12,
+                                                      color: context
+                                                          .textSecondaryColor,
+                                                      fontWeight:
+                                                          FontWeight.w700,
+                                                    ),
                                               ),
                                             ],
                                           ),
                                         ),
                                         if (isSelected)
                                           ZoomIn(
-                                            key: const ValueKey('add_balance_check_icon_zoom'),
+                                            key: const ValueKey(
+                                              'add_balance_check_icon_zoom',
+                                            ),
                                             child: Container(
                                               padding: const EdgeInsets.all(4),
                                               decoration: BoxDecoration(
-                                                color: context.brandPrimaryColor,
+                                                color:
+                                                    context.brandPrimaryColor,
                                                 shape: BoxShape.circle,
                                               ),
                                               child: const Icon(
@@ -404,21 +441,28 @@ class _SubmitButton extends StatelessWidget {
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
           child: ListenableBuilder(
-            listenable: Listenable.merge([amountController, selectedMethodNotifier]),
+            listenable: Listenable.merge([
+              amountController,
+              selectedMethodNotifier,
+            ]),
             builder: (context, _) {
-              final canSubmit = amountController.text.isNotEmpty &&
+              final canSubmit =
+                  amountController.text.isNotEmpty &&
                   selectedMethodNotifier.value >= 0;
 
               return MentorXButton(
                 onPressed: canSubmit
                     ? () {
-                        final amount = double.tryParse(amountController.text) ?? 0.0;
+                        final amount =
+                            double.tryParse(amountController.text) ?? 0.0;
                         context.read<AddBalancePageBloc>().add(
-                              AddBalancePageSubmitEvent(
-                                amount: amount,
-                                method: getPaymentMethod(selectedMethodNotifier.value),
-                              ),
-                            );
+                          AddBalancePageSubmitEvent(
+                            amount: amount,
+                            method: getPaymentMethod(
+                              selectedMethodNotifier.value,
+                            ),
+                          ),
+                        );
                       }
                     : null,
                 label: t.continueBtn,

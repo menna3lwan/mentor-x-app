@@ -44,18 +44,22 @@ class _MarketplaceGridPageWrapperState
       },
       child: Builder(
         builder: (context) {
-          final loadingState = context.select<MarketplaceGridPageBloc, LoadingState>(
-            (bloc) => bloc.state.loadingState,
-          );
-          final items = context.select<MarketplaceGridPageBloc, List<MarketplaceItemEntity>>(
-            (bloc) => bloc.state.items,
-          );
-          final categories = context.select<MarketplaceGridPageBloc, List<MarketplaceCategoryEntity>>(
-            (bloc) => bloc.state.categories,
-          );
-          final selectedCategoryId = context.select<MarketplaceGridPageBloc, String?>(
-            (bloc) => bloc.state.selectedCategoryId,
-          );
+          final loadingState = context
+              .select<MarketplaceGridPageBloc, LoadingState>(
+                (bloc) => bloc.state.loadingState,
+              );
+          final items = context
+              .select<MarketplaceGridPageBloc, List<MarketplaceItemEntity>>(
+                (bloc) => bloc.state.items,
+              );
+          final categories = context
+              .select<MarketplaceGridPageBloc, List<MarketplaceCategoryEntity>>(
+                (bloc) => bloc.state.categories,
+              );
+          final selectedCategoryId = context
+              .select<MarketplaceGridPageBloc, String?>(
+                (bloc) => bloc.state.selectedCategoryId,
+              );
 
           return MarketplaceGridPagePage(
             loadingState: loadingState,
@@ -65,21 +69,22 @@ class _MarketplaceGridPageWrapperState
             searchController: _searchController,
             onSearchChanged: (value) {
               context.read<MarketplaceGridPageBloc>().add(
-                    MarketplaceGridPageSearchQueryChangedEvent(value),
-                  );
+                MarketplaceGridPageSearchQueryChangedEvent(value),
+              );
             },
             onCategorySelected: (id) {
               context.read<MarketplaceGridPageBloc>().add(
-                    MarketplaceGridPageCategorySelectedEvent(id),
-                  );
+                MarketplaceGridPageCategorySelectedEvent(id),
+              );
             },
             onRetry: () {
               context.read<MarketplaceGridPageBloc>().add(
-                    const MarketplaceGridPageLoadEvent(),
-                  );
+                const MarketplaceGridPageLoadEvent(),
+              );
             },
             onCartPressed: () => const MarketplaceCartPageRoute().push(context),
-            onOrdersPressed: () => const MarketplaceOrdersPageRoute().push(context),
+            onOrdersPressed: () =>
+                const MarketplaceOrdersPageRoute().push(context),
           );
         },
       ),

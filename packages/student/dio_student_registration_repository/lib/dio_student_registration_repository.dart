@@ -255,7 +255,7 @@ final class DioStudentRegistrationRepository
         '/api/student/register/check-phone/$phone',
       );
       final data = response.asMap();
-      return boolOrNull(data['exists']) ?? false;
+      return boolOrNull(data['exists']) ?? true;
     } on HttpClientResponse catch (e) {
       if (e.statusCode == 409) {
         return true; // Status code conflict means it exists

@@ -17,9 +17,10 @@ class StatusBadge extends StatelessWidget {
     this.useSolidColor = false,
     this.isSmall = false,
   }) : assert(
-          (label != null && color != null) || (message != null && status != null),
-          'Either (label and color) or (message and status) must be provided',
-        );
+         (label != null && color != null) ||
+             (message != null && status != null),
+         'Either (label and color) or (message and status) must be provided',
+       );
 
   final String? label;
   final Color? color;
@@ -44,9 +45,16 @@ class StatusBadge extends StatelessWidget {
         vertical: isSmall ? 4 : 6,
       ),
       decoration: BoxDecoration(
-        color: useSolidColor ? effectiveColor : effectiveColor.withValues(alpha: 0.08),
+        color: useSolidColor
+            ? effectiveColor
+            : effectiveColor.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(12),
-        border: useSolidColor ? null : Border.all(color: effectiveColor.withValues(alpha: 0.12), width: 1),
+        border: useSolidColor
+            ? null
+            : Border.all(
+                color: effectiveColor.withValues(alpha: 0.12),
+                width: 1,
+              ),
       ),
       child: Text(
         label!,
@@ -75,19 +83,23 @@ class StatusBadge extends StatelessWidget {
         vertical: isSmall ? 10 : 14,
       ),
       decoration: BoxDecoration(
-        color: useSolidColor ? effectiveColor : effectiveColor.withValues(alpha: 0.08),
+        color: useSolidColor
+            ? effectiveColor
+            : effectiveColor.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(isSmall ? 12 : 16),
         border: Border.all(
           color: effectiveColor.withValues(alpha: useSolidColor ? 0 : 0.15),
           width: 1.5,
         ),
-        boxShadow: useSolidColor ? [
-          BoxShadow(
-            color: effectiveColor.withValues(alpha: 0.2),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          )
-        ] : null,
+        boxShadow: useSolidColor
+            ? [
+                BoxShadow(
+                  color: effectiveColor.withValues(alpha: 0.2),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ]
+            : null,
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -162,7 +174,7 @@ class _LinkifiedTextState extends State<_LinkifiedText> {
   @override
   Widget build(BuildContext context) {
     _disposeRecognizers();
-    
+
     // Improved regex to better match international and local phone numbers
     final phoneRegex = RegExp(r'\+?\d{8,15}');
     final matches = phoneRegex.allMatches(widget.text);
@@ -176,7 +188,9 @@ class _LinkifiedTextState extends State<_LinkifiedText> {
 
     for (final match in matches) {
       if (match.start > lastIndex) {
-        spans.add(TextSpan(text: widget.text.substring(lastIndex, match.start)));
+        spans.add(
+          TextSpan(text: widget.text.substring(lastIndex, match.start)),
+        );
       }
 
       final phoneNumber = match.group(0)!;

@@ -43,12 +43,14 @@ final class _NotificationsPageState extends State<NotificationsPage> {
 
     return Builder(
       builder: (context) {
-        final notifications = context.select<NotificationsPageBloc, List<NotificationEntity>>(
-          (bloc) => bloc.state.notifications,
-        );
-        final loadingState = context.select<NotificationsPageBloc, LoadingState>(
-          (bloc) => bloc.state.loadingState,
-        );
+        final notifications = context
+            .select<NotificationsPageBloc, List<NotificationEntity>>(
+              (bloc) => bloc.state.notifications,
+            );
+        final loadingState = context
+            .select<NotificationsPageBloc, LoadingState>(
+              (bloc) => bloc.state.loadingState,
+            );
         final hasMore = context.select<NotificationsPageBloc, bool>(
           (bloc) => bloc.state.hasMore,
         );
@@ -67,7 +69,10 @@ final class _NotificationsPageState extends State<NotificationsPage> {
               Expanded(
                 child: isInitialLoading
                     ? ListView.builder(
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 24,
+                        ),
                         itemCount: 8,
                         itemBuilder: (_, _) => const Padding(
                           padding: EdgeInsets.only(bottom: 16),
@@ -75,54 +80,57 @@ final class _NotificationsPageState extends State<NotificationsPage> {
                         ),
                       )
                     : notifications.isEmpty
-                        ? AppEmptyView(
-                            title: t.noNotifications,
-                            message: t.noNotificationsDesc,
-                            icon: Icons.notifications_off_rounded,
-                          )
-                        : RefreshIndicator(
-                            color: context.brandPrimaryColor,
-                            onRefresh: () async {
-                              context.read<NotificationsPageBloc>().add(
-                                const NotificationsPageLoadEvent(),
-                              );
-                            },
-                            child: ListView.builder(
-                              controller: _scrollController,
-                              physics: const BouncingScrollPhysics(),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 20,
-                                vertical: 24,
-                              ),
-                              itemCount: notifications.length + (hasMore ? 1 : 0),
-                              itemBuilder: (context, i) {
-                                if (i == notifications.length) {
-                                  return const Padding(
-                                    padding: EdgeInsets.all(16.0),
-                                    child: MentorXSkeleton(height: 60, borderRadius: 20),
-                                  );
-                                }
-
-                                final notification = notifications[i];
-                                return FadeInUp(
-                                  duration: const Duration(milliseconds: 500),
-                                  delay: Duration(milliseconds: 50 * i),
-                                  child: _NotificationItem(
-                                    notification: notification,
-                                    onTap: () {
-                                      if (!notification.isRead) {
-                                        context.read<NotificationsPageBloc>().add(
-                                          NotificationsPageMarkAsReadEvent(
-                                            notification.id,
-                                          ),
-                                        );
-                                      }
-                                    },
-                                  ),
-                                );
-                              },
-                            ),
+                    ? AppEmptyView(
+                        title: t.noNotifications,
+                        message: t.noNotificationsDesc,
+                        icon: Icons.notifications_off_rounded,
+                      )
+                    : RefreshIndicator(
+                        color: context.brandPrimaryColor,
+                        onRefresh: () async {
+                          context.read<NotificationsPageBloc>().add(
+                            const NotificationsPageLoadEvent(),
+                          );
+                        },
+                        child: ListView.builder(
+                          controller: _scrollController,
+                          physics: const BouncingScrollPhysics(),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 24,
                           ),
+                          itemCount: notifications.length + (hasMore ? 1 : 0),
+                          itemBuilder: (context, i) {
+                            if (i == notifications.length) {
+                              return const Padding(
+                                padding: EdgeInsets.all(16.0),
+                                child: MentorXSkeleton(
+                                  height: 60,
+                                  borderRadius: 20,
+                                ),
+                              );
+                            }
+
+                            final notification = notifications[i];
+                            return FadeInUp(
+                              duration: const Duration(milliseconds: 500),
+                              delay: Duration(milliseconds: 50 * i),
+                              child: _NotificationItem(
+                                notification: notification,
+                                onTap: () {
+                                  if (!notification.isRead) {
+                                    context.read<NotificationsPageBloc>().add(
+                                      NotificationsPageMarkAsReadEvent(
+                                        notification.id,
+                                      ),
+                                    );
+                                  }
+                                },
+                              ),
+                            );
+                          },
+                        ),
+                      ),
               ),
             ],
           ),
@@ -241,7 +249,11 @@ final class _NotificationItem extends StatelessWidget {
       child: MentorXGlassCard(
         style: Style(
           $box.padding.all(0),
-          isUnread ? $box.border.all.color(context.brandPrimaryColor.withValues(alpha: 0.2)) : null,
+          isUnread
+              ? $box.border.all.color(
+                  context.brandPrimaryColor.withValues(alpha: 0.2),
+                )
+              : null,
           isUnread ? $box.border.all.width(1.5) : null,
         ),
         child: InkWell(
@@ -299,9 +311,10 @@ final class _NotificationItem extends StatelessWidget {
                                 shape: BoxShape.circle,
                                 boxShadow: [
                                   BoxShadow(
-                                    color: context.brandSecondaryColor.withValues(
-                                      alpha: 0.4,
-                                    ),
+                                    color: context.brandSecondaryColor
+                                        .withValues(
+                                          alpha: 0.4,
+                                        ),
                                     blurRadius: 4,
                                   ),
                                 ],

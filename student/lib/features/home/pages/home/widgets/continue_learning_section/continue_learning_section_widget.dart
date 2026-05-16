@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:skeletonizer/skeletonizer.dart';

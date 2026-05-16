@@ -6,9 +6,9 @@ class MentorXGlassCard extends StatelessWidget {
     required this.child,
     this.style,
     this.blur,
-    this.opacity = 0.1,
+    this.opacity = 0.2,
     this.borderRadius,
-    this.borderOpacity = 0.2,
+    this.borderOpacity = 0.3,
   });
 
   final Widget child;
@@ -20,16 +20,18 @@ class MentorXGlassCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final effectiveBlur = blur ?? 15.0;
-    final effectiveBorderRadius = borderRadius ?? context.mediumRadius;
+    final effectiveBlur = blur ?? 20.0;
+    final effectiveBorderRadius = borderRadius ?? context.largeRadius;
 
     return Box(
       style: Style(
         $box.clipBehavior.antiAlias(),
         $box.borderRadius.all(effectiveBorderRadius.topLeft.x),
         $box.color(context.backgroundSecondaryColor.withValues(alpha: opacity)),
-        $box.border.all.color(context.borderPrimaryColor.withValues(alpha: borderOpacity)),
-        $box.border.all.width(1.5),
+        $box.border.all.color(
+          Colors.white.withValues(alpha: borderOpacity),
+        ),
+        $box.border.all.width(1.0),
       ).merge(style),
       child: BackdropFilter(
         filter: ui.ImageFilter.blur(sigmaX: effectiveBlur, sigmaY: effectiveBlur),

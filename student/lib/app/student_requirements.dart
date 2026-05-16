@@ -3,7 +3,8 @@ import 'dart:ui';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 import 'student_app.dart';
-import 'package:mentorx_ui/mentorx_ui.dart' hide LocaleSettings, TranslationProvider;
+import 'package:mentorx_ui/mentorx_ui.dart'
+    hide LocaleSettings, TranslationProvider;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

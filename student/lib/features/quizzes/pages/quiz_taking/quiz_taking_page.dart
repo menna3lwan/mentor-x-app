@@ -40,7 +40,6 @@ final class _QuizTakingPageState extends State<QuizTakingPage> {
     });
   }
 
-
   String get _timerText {
     final m = _remainingSeconds ~/ 60;
     final s = _remainingSeconds % 60;
@@ -80,7 +79,10 @@ final class _QuizTakingPageState extends State<QuizTakingPage> {
                           3,
                           (index) => const Padding(
                             padding: EdgeInsets.only(bottom: 12),
-                            child: MentorXSkeleton(height: 72, borderRadius: 24),
+                            child: MentorXSkeleton(
+                              height: 72,
+                              borderRadius: 24,
+                            ),
                           ),
                         ),
                       ],
@@ -130,46 +132,46 @@ final class _QuizTakingPageState extends State<QuizTakingPage> {
             canPop: false,
             child: Scaffold(
               backgroundColor: context.backgroundPrimaryColor,
-        body: Column(
-          children: [
-            _BuildHeader(
-              title: state.quiz!.title,
-              timerText: _timerText,
-              showTimer: state.quiz!.timeRestricted,
-              progress: progress,
-              current: currentQuestionIndex + 1,
-              total: totalQuestions,
-            ),
-            Expanded(
-              child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                padding: const EdgeInsets.fromLTRB(20, 24, 20, 32),
-                child: q != null
-                    ? _QuestionCard(
-                        q: q,
-                        current: currentQuestionIndex + 1,
-                        total: totalQuestions,
-                        selectedAnswer: state.answers[q.id],
-                      )
-                    : Center(
-                        child: Text(
-                          t.noQuestions,
-                          style: context.bodySecondaryStyle.copyWith(
-                            color: context.textTertiaryColor,
-                            fontWeight: FontWeight.w800,
-                          ),
-                        ),
-                      ),
+              body: Column(
+                children: [
+                  _BuildHeader(
+                    title: state.quiz!.title,
+                    timerText: _timerText,
+                    showTimer: state.quiz!.timeRestricted,
+                    progress: progress,
+                    current: currentQuestionIndex + 1,
+                    total: totalQuestions,
+                  ),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      padding: const EdgeInsets.fromLTRB(20, 24, 20, 32),
+                      child: q != null
+                          ? _QuestionCard(
+                              q: q,
+                              current: currentQuestionIndex + 1,
+                              total: totalQuestions,
+                              selectedAnswer: state.answers[q.id],
+                            )
+                          : Center(
+                              child: Text(
+                                t.noQuestions,
+                                style: context.bodySecondaryStyle.copyWith(
+                                  color: context.textTertiaryColor,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              ),
+                            ),
+                    ),
+                  ),
+                  _BuildNavigation(
+                    isFirst: currentQuestionIndex == 0,
+                    isLast: currentQuestionIndex == totalQuestions - 1,
+                    isSubmitting: state.isSubmitting,
+                  ),
+                ],
               ),
             ),
-            _BuildNavigation(
-              isFirst: currentQuestionIndex == 0,
-              isLast: currentQuestionIndex == totalQuestions - 1,
-              isSubmitting: state.isSubmitting,
-            ),
-          ],
-        ),
-      ),
           ),
         );
       },
@@ -246,10 +248,14 @@ class _BuildHeader extends StatelessWidget {
                         vertical: 6,
                       ),
                       decoration: BoxDecoration(
-                        color: context.backgroundPrimaryColor.withValues(alpha: 0.4),
+                        color: context.backgroundPrimaryColor.withValues(
+                          alpha: 0.4,
+                        ),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: context.borderPrimaryColor.withValues(alpha: 0.1),
+                          color: context.borderPrimaryColor.withValues(
+                            alpha: 0.1,
+                          ),
                         ),
                       ),
                       child: Row(
@@ -279,10 +285,14 @@ class _BuildHeader extends StatelessWidget {
                       vertical: 6,
                     ),
                     decoration: BoxDecoration(
-                      color: context.backgroundPrimaryColor.withValues(alpha: 0.4),
+                      color: context.backgroundPrimaryColor.withValues(
+                        alpha: 0.4,
+                      ),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: context.borderPrimaryColor.withValues(alpha: 0.1),
+                        color: context.borderPrimaryColor.withValues(
+                          alpha: 0.1,
+                        ),
                       ),
                     ),
                     child: Text(
@@ -305,7 +315,9 @@ class _BuildHeader extends StatelessWidget {
                       height: 8,
                       width: double.infinity,
                       decoration: BoxDecoration(
-                        color: context.backgroundPrimaryColor.withValues(alpha: 0.5),
+                        color: context.backgroundPrimaryColor.withValues(
+                          alpha: 0.5,
+                        ),
                         borderRadius: BorderRadius.circular(4),
                       ),
                     ),
@@ -319,7 +331,9 @@ class _BuildHeader extends StatelessWidget {
                           borderRadius: BorderRadius.circular(4),
                           boxShadow: [
                             BoxShadow(
-                              color: context.brandPrimaryColor.withValues(alpha: 0.3),
+                              color: context.brandPrimaryColor.withValues(
+                                alpha: 0.3,
+                              ),
                               blurRadius: 10,
                             ),
                           ],
@@ -342,7 +356,9 @@ class _BuildHeader extends StatelessWidget {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: context.backgroundSecondaryColor.withValues(alpha: 0.9),
+        backgroundColor: context.backgroundSecondaryColor.withValues(
+          alpha: 0.9,
+        ),
         surfaceTintColor: Colors.transparent,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         title: Text(
@@ -485,11 +501,11 @@ class _QuestionCard extends StatelessWidget {
               text: optionText,
               isSelected: isSelected,
               onTap: () => context.read<QuizTakingPageBloc>().add(
-                    QuizTakingPageAnswerSelected(
-                      questionId: q.id,
-                      selectedAnswer: optionText,
-                    ),
-                  ),
+                QuizTakingPageAnswerSelected(
+                  questionId: q.id,
+                  selectedAnswer: optionText,
+                ),
+              ),
             );
           })
         else if (q.type == QuizQuestionType.shortAnswer ||
@@ -556,11 +572,11 @@ class _TextAnswerFieldState extends State<_TextAnswerField> {
         maxLines: widget.isLong ? 6 : 1,
         onChanged: (value) {
           context.read<QuizTakingPageBloc>().add(
-                QuizTakingPageAnswerSelected(
-                  questionId: widget.questionId,
-                  selectedAnswer: value,
-                ),
-              );
+            QuizTakingPageAnswerSelected(
+              questionId: widget.questionId,
+              selectedAnswer: value,
+            ),
+          );
         },
       ),
     );
@@ -590,7 +606,9 @@ class _OptionTile extends StatelessWidget {
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeOutCubic,
           decoration: BoxDecoration(
-            color: isSelected ? null : context.backgroundSecondaryColor.withValues(alpha: 0.45),
+            color: isSelected
+                ? null
+                : context.backgroundSecondaryColor.withValues(alpha: 0.45),
             gradient: isSelected
                 ? LinearGradient(
                     colors: [
@@ -623,12 +641,16 @@ class _OptionTile extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: isSelected
                             ? Colors.white.withValues(alpha: 0.2)
-                            : context.backgroundPrimaryColor.withValues(alpha: 0.5),
+                            : context.backgroundPrimaryColor.withValues(
+                                alpha: 0.5,
+                              ),
                         shape: BoxShape.circle,
                         border: Border.all(
                           color: isSelected
                               ? Colors.white.withValues(alpha: 0.4)
-                              : context.borderPrimaryColor.withValues(alpha: 0.1),
+                              : context.borderPrimaryColor.withValues(
+                                  alpha: 0.1,
+                                ),
                         ),
                       ),
                       child: Center(
@@ -636,7 +658,9 @@ class _OptionTile extends StatelessWidget {
                           label,
                           style: context.bodyPrimaryStyle.copyWith(
                             fontWeight: FontWeight.w900,
-                            color: isSelected ? Colors.white : context.textPrimaryColor,
+                            color: isSelected
+                                ? Colors.white
+                                : context.textPrimaryColor,
                           ),
                         ),
                       ),
@@ -646,8 +670,12 @@ class _OptionTile extends StatelessWidget {
                       child: Text(
                         text,
                         style: context.bodyPrimaryStyle.copyWith(
-                          fontWeight: isSelected ? FontWeight.w900 : FontWeight.w700,
-                          color: isSelected ? Colors.white : context.textPrimaryColor,
+                          fontWeight: isSelected
+                              ? FontWeight.w900
+                              : FontWeight.w700,
+                          color: isSelected
+                              ? Colors.white
+                              : context.textPrimaryColor,
                         ),
                       ),
                     ),
@@ -709,8 +737,8 @@ class _BuildNavigation extends StatelessWidget {
               flex: 1,
               child: MentorXButton(
                 onPressed: () => context.read<QuizTakingPageBloc>().add(
-                      const QuizTakingPagePreviousQuestion(),
-                    ),
+                  const QuizTakingPagePreviousQuestion(),
+                ),
                 label: t.commonPrevious,
                 color: context.backgroundPrimaryColor,
               ),
@@ -724,12 +752,12 @@ class _BuildNavigation extends StatelessWidget {
               onPressed: () {
                 if (!isLast) {
                   context.read<QuizTakingPageBloc>().add(
-                        const QuizTakingPageNextQuestion(),
-                      );
+                    const QuizTakingPageNextQuestion(),
+                  );
                 } else {
                   context.read<QuizTakingPageBloc>().add(
-                        const QuizTakingPageSubmit(),
-                      );
+                    const QuizTakingPageSubmit(),
+                  );
                 }
               },
               label: isLast ? t.commonSubmit : t.commonNext,

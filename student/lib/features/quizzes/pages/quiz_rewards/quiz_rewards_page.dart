@@ -41,8 +41,8 @@ final class QuizRewardsPage extends StatelessWidget {
                   return AppErrorView(
                     message: 'Failed to load rewards',
                     onRetry: () => context.read<QuizRewardsPageBloc>().add(
-                          const QuizRewardsPageLoadEvent(),
-                        ),
+                      const QuizRewardsPageLoadEvent(),
+                    ),
                   );
                 }
 
@@ -468,7 +468,7 @@ final class _DailyStreakSection extends StatelessWidget {
           ),
           const Gap(8),
           Text(
-                t.quizzes.rewards.streakDaysMsg(days: '5'),
+            t.quizzes.rewards.streakDaysMsg(days: '5'),
             style: context.bodySecondaryStyle.copyWith(
               fontSize: 13,
               color: context.textTertiaryColor,
@@ -490,7 +490,9 @@ final class _DailyStreakSection extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: isChecked
                           ? context.statusSuccessColor
-                          : context.backgroundPrimaryColor.withValues(alpha: 0.3),
+                          : context.backgroundPrimaryColor.withValues(
+                              alpha: 0.3,
+                            ),
                       shape: BoxShape.circle,
                       border: Border.all(
                         color: isToday
@@ -693,7 +695,9 @@ final class _BadgeCard extends StatelessWidget {
             style: context.bodySecondaryStyle.copyWith(
               fontSize: 11,
               fontWeight: FontWeight.w900,
-              color: earned ? context.textPrimaryColor : context.textTertiaryColor,
+              color: earned
+                  ? context.textPrimaryColor
+                  : context.textTertiaryColor,
             ),
             textAlign: TextAlign.center,
             maxLines: 1,
@@ -751,7 +755,9 @@ final class _LeaderboardSection extends StatelessWidget {
             $box.padding.vertical(12),
           ),
           child: Column(
-            children: entries.map((entry) => _LeaderboardTile(entry: entry)).toList(),
+            children: entries
+                .map((entry) => _LeaderboardTile(entry: entry))
+                .toList(),
           ),
         ),
       ],
@@ -768,10 +774,10 @@ final class _LeaderboardTile extends StatelessWidget {
     final color = entry.rank == 1
         ? const Color(0xFFFFD700)
         : (entry.rank == 2
-            ? const Color(0xFFC0C0C0)
-            : (entry.rank == 3
-                ? const Color(0xFFCD7F32)
-                : context.brandSecondaryColor));
+              ? const Color(0xFFC0C0C0)
+              : (entry.rank == 3
+                    ? const Color(0xFFCD7F32)
+                    : context.brandSecondaryColor));
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
@@ -823,9 +829,9 @@ final class _LeaderboardTile extends StatelessWidget {
 
 String _formatNumber(int number) {
   return number.toString().replaceAllMapped(
-        RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-        (Match m) => '${m[1]},',
-      );
+    RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+    (Match m) => '${m[1]},',
+  );
 }
 
 String _getDayName(dynamic t, String key) {

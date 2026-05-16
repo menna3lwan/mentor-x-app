@@ -95,7 +95,6 @@ final class MarketplaceOrdersPagePage extends StatelessWidget {
   }
 }
 
-
 final class _OrderCard extends StatelessWidget {
   final MarketplaceOrderEntity order;
   final dynamic t;
@@ -150,7 +149,9 @@ final class _OrderCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          t.marketplace.orders.orderNumber(number: order.orderNumber),
+                          t.marketplace.orders.orderNumber(
+                            number: order.orderNumber,
+                          ),
                           style: TextStyle(
                             fontWeight: FontWeight.w900,
                             fontSize: 16,

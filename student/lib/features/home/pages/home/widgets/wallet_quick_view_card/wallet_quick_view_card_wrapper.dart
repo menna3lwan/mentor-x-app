@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'wallet_quick_view_card_widget.dart';
 
-
 import 'package:mentorx_core/mentorx_core.dart';
 import 'package:mentorx_student/core/core.dart';
 import '../../bloc/home_page_bloc.dart';

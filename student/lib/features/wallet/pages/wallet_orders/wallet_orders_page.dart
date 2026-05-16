@@ -27,22 +27,26 @@ final class WalletOrdersPage extends StatelessWidget {
         Expanded(
           child: Builder(
             builder: (context) {
-              final loadingState = context.select<WalletOrdersPageBloc, LoadingState>(
-                (bloc) => bloc.state.loadingState,
-              );
-              final errorMessage = context.select<WalletOrdersPageBloc, String?>(
-                (bloc) => bloc.state.errorMessage,
-              );
-              final orders = context.select<WalletOrdersPageBloc, List<PaymentOrderEntity>>(
-                (bloc) => bloc.state.orders,
-              );
+              final loadingState = context
+                  .select<WalletOrdersPageBloc, LoadingState>(
+                    (bloc) => bloc.state.loadingState,
+                  );
+              final errorMessage = context
+                  .select<WalletOrdersPageBloc, String?>(
+                    (bloc) => bloc.state.errorMessage,
+                  );
+              final orders = context
+                  .select<WalletOrdersPageBloc, List<PaymentOrderEntity>>(
+                    (bloc) => bloc.state.orders,
+                  );
 
               if (loadingState == LoadingState.loading) {
                 return ListView.separated(
                   padding: const EdgeInsets.all(20),
                   itemCount: 4,
                   separatorBuilder: (_, _) => const Gap(16),
-                  itemBuilder: (_, _) => const MentorXSkeleton(height: 160, borderRadius: 24),
+                  itemBuilder: (_, _) =>
+                      const MentorXSkeleton(height: 160, borderRadius: 24),
                 );
               }
 

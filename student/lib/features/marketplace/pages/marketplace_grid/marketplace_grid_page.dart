@@ -84,7 +84,9 @@ final class MarketplaceGridPagePage extends StatelessWidget {
                     return AnimatedContainer(
                       duration: const Duration(milliseconds: 300),
                       child: ChoiceChip(
-                        label: Text(isAll ? context.t.marketplace.all : category!.name),
+                        label: Text(
+                          isAll ? context.t.marketplace.all : category!.name,
+                        ),
                         selected: isSelected,
                         onSelected: (selected) {
                           if (selected) {
@@ -99,7 +101,8 @@ final class MarketplaceGridPagePage extends StatelessWidget {
                           fontWeight: FontWeight.w900,
                           fontSize: 13,
                         ),
-                        backgroundColor: context.backgroundSecondaryColor.withValues(alpha: 0.6),
+                        backgroundColor: context.backgroundSecondaryColor
+                            .withValues(alpha: 0.6),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
                           side: BorderSide(
@@ -126,12 +129,13 @@ final class MarketplaceGridPagePage extends StatelessWidget {
             child: loadingState == LoadingState.loading
                 ? GridView.builder(
                     padding: const EdgeInsets.fromLTRB(20, 0, 20, 100),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 16,
-                      mainAxisSpacing: 16,
-                      childAspectRatio: 0.62,
-                    ),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 16,
+                          mainAxisSpacing: 16,
+                          childAspectRatio: 0.62,
+                        ),
                     itemCount: 6,
                     itemBuilder: (context, index) => const MentorXSkeleton(
                       height: 250,
@@ -139,37 +143,37 @@ final class MarketplaceGridPagePage extends StatelessWidget {
                     ),
                   )
                 : loadingState == LoadingState.error
-                    ? AppErrorView(
-                        message: context.t.marketplace.errorLoadingProducts,
-                        onRetry: onRetry,
-                      )
-                    : items.isEmpty
-                        ? AppEmptyView(
-                            title: context.t.marketplace.noProductsFound,
-                            message: context.t.marketplace.tryAgainLater,
-                            icon: Icons.inventory_2_outlined,
-                          )
-                        : GridView.builder(
-                            physics: const BouncingScrollPhysics(),
-                            padding: const EdgeInsets.fromLTRB(20, 0, 20, 100),
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 16,
-                              mainAxisSpacing: 16,
-                              childAspectRatio: 0.62,
-                            ),
-                            itemCount: items.length,
-                            itemBuilder: (context, index) {
-                              return FadeInUp(
-                                duration: const Duration(milliseconds: 500),
-                                delay: Duration(milliseconds: 50 * index),
-                                child: _ProductCard(
-                                  item: items[index],
-                                ),
-                              );
-                            },
-                          ),
+                ? AppErrorView(
+                    message: context.t.marketplace.errorLoadingProducts,
+                    onRetry: onRetry,
+                  )
+                : items.isEmpty
+                ? AppEmptyView(
+                    title: context.t.marketplace.noProductsFound,
+                    message: context.t.marketplace.tryAgainLater,
+                    icon: Icons.inventory_2_outlined,
+                  )
+                : GridView.builder(
+                    physics: const BouncingScrollPhysics(),
+                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 100),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 16,
+                          mainAxisSpacing: 16,
+                          childAspectRatio: 0.62,
+                        ),
+                    itemCount: items.length,
+                    itemBuilder: (context, index) {
+                      return FadeInUp(
+                        duration: const Duration(milliseconds: 500),
+                        delay: Duration(milliseconds: 50 * index),
+                        child: _ProductCard(
+                          item: items[index],
+                        ),
+                      );
+                    },
+                  ),
           ),
         ],
       ),
@@ -381,13 +385,17 @@ final class _ProductCard extends StatelessWidget {
                           gradient: LinearGradient(
                             colors: [
                               context.brandSecondaryColor,
-                              context.brandSecondaryColor.withValues(alpha: 0.8),
+                              context.brandSecondaryColor.withValues(
+                                alpha: 0.8,
+                              ),
                             ],
                           ),
                           borderRadius: BorderRadius.circular(10),
                           boxShadow: [
                             BoxShadow(
-                              color: context.brandSecondaryColor.withValues(alpha: 0.3),
+                              color: context.brandSecondaryColor.withValues(
+                                alpha: 0.3,
+                              ),
                               blurRadius: 8,
                             ),
                           ],
@@ -462,7 +470,9 @@ final class _ProductCard extends StatelessWidget {
                             style: context.bodySecondaryStyle.copyWith(
                               fontSize: 10,
                               fontWeight: FontWeight.w900,
-                              color: context.brandPrimaryColor.withValues(alpha: 0.5),
+                              color: context.brandPrimaryColor.withValues(
+                                alpha: 0.5,
+                              ),
                             ),
                           ),
                         ),
@@ -502,13 +512,15 @@ final class _AddToCartButton extends StatelessWidget {
             ? null
             : context.backgroundPrimaryColor.withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(14),
-        boxShadow: inStock ? [
-          BoxShadow(
-            color: context.brandPrimaryColor.withValues(alpha: 0.35),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ] : null,
+        boxShadow: inStock
+            ? [
+                BoxShadow(
+                  color: context.brandPrimaryColor.withValues(alpha: 0.35),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ]
+            : null,
       ),
       child: Material(
         color: Colors.transparent,
@@ -527,12 +539,8 @@ final class _AddToCartButton extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(10),
             child: Icon(
-              inStock
-                  ? Icons.add_rounded
-                  : Icons.not_interested_rounded,
-              color: inStock
-                  ? Colors.white
-                  : context.textTertiaryColor,
+              inStock ? Icons.add_rounded : Icons.not_interested_rounded,
+              color: inStock ? Colors.white : context.textTertiaryColor,
               size: 22,
             ),
           ),
@@ -541,5 +549,3 @@ final class _AddToCartButton extends StatelessWidget {
     );
   }
 }
-
-

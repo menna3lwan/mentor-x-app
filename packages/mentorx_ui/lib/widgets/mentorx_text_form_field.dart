@@ -94,12 +94,18 @@ class _MentorXTextFormFieldState extends State<MentorXTextFormField> {
           vertical: 22,
         ),
         prefixIcon: (widget.prefixIcon ?? widget.icon) != null
-            ? Icon(widget.prefixIcon ?? widget.icon, color: context.brandPrimaryColor.withValues(alpha: 0.7), size: 22)
+            ? Icon(
+                widget.prefixIcon ?? widget.icon,
+                color: context.brandPrimaryColor.withValues(alpha: 0.7),
+                size: 22,
+              )
             : null,
         suffixIcon: widget.isPassword
             ? IconButton(
                 icon: Icon(
-                  effectiveObscure ? Icons.visibility_off_rounded : Icons.visibility_rounded,
+                  effectiveObscure
+                      ? Icons.visibility_off_rounded
+                      : Icons.visibility_rounded,
                   color: context.textSecondaryColor,
                   size: 22,
                 ),

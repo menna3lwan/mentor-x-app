@@ -177,7 +177,9 @@ final class _AnswerReviewCard extends StatelessWidget {
             _InfoTile(
               label: t.quizzes.yourAnswer,
               value: userAnswer,
-              icon: isCorrect ? Icons.check_circle_rounded : Icons.cancel_rounded,
+              icon: isCorrect
+                  ? Icons.check_circle_rounded
+                  : Icons.cancel_rounded,
               color: statusColor,
             ),
             if (!isCorrect) ...[

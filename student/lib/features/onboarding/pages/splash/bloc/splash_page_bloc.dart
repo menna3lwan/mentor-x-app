@@ -87,17 +87,21 @@ final class SplashPageBloc extends Bloc<SplashPageEvent, SplashPageState>
       } catch (e) {
         final MentorXLogger logger = MentorXLogger('SplashPageBloc');
         logger.warning('Failed to refresh account status: $e');
-        
+
         if (e is AuthenticationRepositoryException) {
-          if (e.code == AuthenticationRepositoryExceptionCode.invalidCredentials ||
-              e.code == AuthenticationRepositoryExceptionCode.failedToRefreshToken) {
+          if (e.code ==
+                  AuthenticationRepositoryExceptionCode.invalidCredentials ||
+              e.code ==
+                  AuthenticationRepositoryExceptionCode.failedToRefreshToken) {
             logger.info('Session is invalid or expired, redirecting to login');
             return '/login';
           }
         }
-        
+
         // Fallback to cached user in unstable network conditions (e.g. timeouts, server errors)
-        logger.debug('Non-auth error during status check, falling back to cached user data');
+        logger.debug(
+          'Non-auth error during status check, falling back to cached user data',
+        );
       }
 
       final resolvedUser = user;

@@ -203,12 +203,16 @@ final class _MarketplaceDetailPagePageState
                             ? context.brandPrimaryColor
                             : Colors.white.withValues(alpha: 0.5),
                         borderRadius: BorderRadius.circular(4),
-                        boxShadow: _currentPage == index ? [
-                          BoxShadow(
-                            color: context.brandPrimaryColor.withValues(alpha: 0.3),
-                            blurRadius: 8,
-                          ),
-                        ] : null,
+                        boxShadow: _currentPage == index
+                            ? [
+                                BoxShadow(
+                                  color: context.brandPrimaryColor.withValues(
+                                    alpha: 0.3,
+                                  ),
+                                  blurRadius: 8,
+                                ),
+                              ]
+                            : null,
                       ),
                     ),
                   ),
@@ -235,7 +239,10 @@ final class _MarketplaceDetailPagePageState
   }
 
   Widget _buildBottomAction(
-      BuildContext context, MarketplaceItemEntity item, dynamic t) {
+    BuildContext context,
+    MarketplaceItemEntity item,
+    dynamic t,
+  ) {
     return Positioned(
       bottom: 0,
       left: 0,

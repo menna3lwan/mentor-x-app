@@ -110,8 +110,8 @@ final class WalletMainPage extends StatelessWidget {
                                 child: _ActionButton(
                                   icon: Icons.receipt_long_rounded,
                                   label: t.myOrders,
-                                  onTap: () =>
-                                      const WalletOrdersPageRoute().push(context),
+                                  onTap: () => const WalletOrdersPageRoute()
+                                      .push(context),
                                   color: context.statusSuccessColor,
                                 ),
                               ),
@@ -145,11 +145,12 @@ final class WalletMainPage extends StatelessWidget {
                                   children: [
                                     Text(
                                       t.seeAll,
-                                      style: context.bodySecondaryStyle.copyWith(
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w900,
-                                        color: context.brandPrimaryColor,
-                                      ),
+                                      style: context.bodySecondaryStyle
+                                          .copyWith(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w900,
+                                            color: context.brandPrimaryColor,
+                                          ),
                                     ),
                                     const Gap(4),
                                     Icon(
@@ -186,7 +187,8 @@ final class WalletMainPage extends StatelessWidget {
                     hasScrollBody: false,
                     child: AppEmptyView(
                       title: t.noTransactions,
-                      message: 'Start using your wallet to see transactions here.',
+                      message:
+                          'Start using your wallet to see transactions here.',
                       icon: Icons.account_balance_wallet_rounded,
                     ),
                   )
@@ -308,7 +310,7 @@ final class _BalanceCard extends StatelessWidget {
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-         ),
+        ),
         borderRadius: BorderRadius.circular(32),
         boxShadow: [
           BoxShadow(
@@ -478,8 +480,12 @@ final class _TransactionItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isCredit = transaction.isCredit;
-    final formattedDate = DateFormat('dd MMM, hh:mm a').format(transaction.createdAt);
-    final statusColor = isCredit ? context.statusSuccessColor : context.statusDangerColor;
+    final formattedDate = DateFormat(
+      'dd MMM, hh:mm a',
+    ).format(transaction.createdAt);
+    final statusColor = isCredit
+        ? context.statusSuccessColor
+        : context.statusDangerColor;
 
     return MentorXGlassCard(
       style: Style(
@@ -501,7 +507,8 @@ final class _TransactionItem extends StatelessWidget {
           ),
         ),
         title: Text(
-          transaction.typeBadge ?? transaction.transactionType.name.toUpperCase(),
+          transaction.typeBadge ??
+              transaction.transactionType.name.toUpperCase(),
           style: context.bodyPrimaryStyle.copyWith(
             fontSize: 15,
             fontWeight: FontWeight.w900,

@@ -5,7 +5,8 @@ enum MentorXIconButtonVariant { filled, outline, ghost }
 enum MentorXIconButtonSize {
   small(16, 8),
   medium(24, 12),
-  large(32, 16);
+  large(32, 16)
+  ;
 
   final double iconSize;
   final double padding;
@@ -46,13 +47,13 @@ class MentorXIconButton extends StatelessWidget {
     ).merge(
       switch (variant) {
         MentorXIconButtonVariant.filled => Style(
-            $box.color(baseColor),
-            $on.hover($box.color(baseColor.withValues(alpha: 0.9))),
-          ),
+          $box.color(baseColor),
+          $on.hover($box.color(baseColor.withValues(alpha: 0.9))),
+        ),
         MentorXIconButtonVariant.outline => Style(
-            $box.border.all.color(baseColor.withValues(alpha: 0.2)),
-            $box.border.all.width(1.5),
-          ),
+          $box.border.all.color(baseColor.withValues(alpha: 0.2)),
+          $box.border.all.width(1.5),
+        ),
         MentorXIconButtonVariant.ghost => Style(),
       },
     );

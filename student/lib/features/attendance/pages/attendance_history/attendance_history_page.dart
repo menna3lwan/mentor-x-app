@@ -5,7 +5,6 @@ import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:mentorx_student/core/core.dart';
 
-
 final class AttendanceHistoryPagePage extends StatelessWidget {
   final LoadingState loadingState;
   final List<AttendanceRecordEntity> records;
@@ -47,7 +46,12 @@ final class AttendanceHistoryPagePage extends StatelessWidget {
                           child: Column(
                             children: [
                               Padding(
-                                padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
+                                padding: const EdgeInsets.fromLTRB(
+                                  20,
+                                  16,
+                                  20,
+                                  16,
+                                ),
                                 child: FadeInDown(
                                   duration: const Duration(milliseconds: 600),
                                   child: _StatsHeader(
@@ -204,7 +208,9 @@ final class _StatsHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final rate = totalCount == 0 ? 0 : (presentCount / totalCount * 100).toInt();
+    final rate = totalCount == 0
+        ? 0
+        : (presentCount / totalCount * 100).toInt();
 
     return MentorXGlassCard(
       style: Style(
@@ -268,7 +274,9 @@ final class _StatsHeader extends StatelessWidget {
                   value: totalCount == 0 ? 0 : presentCount / totalCount,
                   strokeWidth: 6,
                   color: context.brandPrimaryColor,
-                  backgroundColor: context.brandPrimaryColor.withValues(alpha: 0.1),
+                  backgroundColor: context.brandPrimaryColor.withValues(
+                    alpha: 0.1,
+                  ),
                   strokeCap: StrokeCap.round,
                 ),
               ),
@@ -362,7 +370,9 @@ final class _AttendanceItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final present = record.status == AttendanceStatus.present;
     final formattedDate = DateFormat('dd MMM yyyy').format(record.date);
-    final statusColor = present ? context.statusSuccessColor : context.statusDangerColor;
+    final statusColor = present
+        ? context.statusSuccessColor
+        : context.statusDangerColor;
 
     return MentorXGlassCard(
       style: Style(

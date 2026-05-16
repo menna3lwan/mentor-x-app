@@ -100,7 +100,8 @@ final class _StartStepState extends State<StartStep> {
                             ? context.t.auth.phoneAlreadyRegistered
                             : null,
                         controller: _phoneController,
-                        onChanged: (v) => bloc.add(StudentRegistrationPhoneChanged(v)),
+                        onChanged: (v) =>
+                            bloc.add(StudentRegistrationPhoneChanged(v)),
                       ),
                       const Gap(20),
                       MentorXTextFormField(

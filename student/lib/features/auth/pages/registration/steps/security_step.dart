@@ -108,11 +108,13 @@ final class _SecurityStepState extends State<SecurityStep> {
                         controller: _confirmPasswordController,
                         isPassword: true,
                         errorText:
-                            password != confirmPassword && confirmPassword.isNotEmpty
-                                ? context.t.auth.passwordMismatch
-                                : null,
-                        onChanged: (value) =>
-                            bloc.add(StudentRegistrationConfirmPasswordChanged(value)),
+                            password != confirmPassword &&
+                                confirmPassword.isNotEmpty
+                            ? context.t.auth.passwordMismatch
+                            : null,
+                        onChanged: (value) => bloc.add(
+                          StudentRegistrationConfirmPasswordChanged(value),
+                        ),
                       ),
                     ],
                   ),
@@ -162,7 +164,9 @@ final class _SecurityStepState extends State<SecurityStep> {
                   value: score == 0 ? 0.05 : score,
                   minHeight: 8,
                   color: color,
-                  backgroundColor: context.backgroundSecondaryColor.withValues(alpha: 0.5),
+                  backgroundColor: context.backgroundSecondaryColor.withValues(
+                    alpha: 0.5,
+                  ),
                 ),
               ),
             ),

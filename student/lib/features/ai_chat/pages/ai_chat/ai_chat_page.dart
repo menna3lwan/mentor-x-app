@@ -133,10 +133,15 @@ final class _AiChatPageState extends State<AiChatPage> {
               Expanded(
                 child: state.isLoading && state.messages.isEmpty
                     ? ListView.builder(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 20,
+                        ),
                         itemCount: 4,
                         itemBuilder: (context, i) => Align(
-                          alignment: i.isEven ? Alignment.centerLeft : Alignment.centerRight,
+                          alignment: i.isEven
+                              ? Alignment.centerLeft
+                              : Alignment.centerRight,
                           child: Padding(
                             padding: const EdgeInsets.only(bottom: 16),
                             child: MentorXSkeleton(

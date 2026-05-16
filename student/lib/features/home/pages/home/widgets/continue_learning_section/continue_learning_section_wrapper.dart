@@ -9,9 +9,10 @@ final class ContinueLearningSectionWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final section = context.select<HomePageBloc, HomeAsyncSection<List<CourseSummaryEntity>>>(
-      (bloc) => bloc.state.continueLearningSection,
-    );
+    final section = context
+        .select<HomePageBloc, HomeAsyncSection<List<CourseSummaryEntity>>>(
+          (bloc) => bloc.state.continueLearningSection,
+        );
 
     return ContinueLearningSectionWidget(
       courses: section.data,

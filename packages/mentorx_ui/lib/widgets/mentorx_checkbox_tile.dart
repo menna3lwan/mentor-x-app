@@ -32,7 +32,9 @@ class MentorXCheckboxTile extends StatelessWidget {
               : context.borderPrimaryColor.withValues(alpha: 0.1),
         ),
         $box.border.all.width(1.5),
-        $on.hover($box.color(context.backgroundTertiaryColor.withValues(alpha: 0.3))),
+        $on.hover(
+          $box.color(context.backgroundTertiaryColor.withValues(alpha: 0.3)),
+        ),
       ),
       child: Row(
         children: [
@@ -64,7 +66,9 @@ class MentorXCheckboxTile extends StatelessWidget {
             value: value,
             onChanged: onChanged,
             activeColor: context.brandPrimaryColor,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(4),
+            ),
           ),
         ],
       ),
@@ -106,7 +110,9 @@ class MentorXRadioTile<T> extends StatelessWidget {
               : context.borderPrimaryColor.withValues(alpha: 0.1),
         ),
         $box.border.all.width(1.5),
-        $on.hover($box.color(context.backgroundTertiaryColor.withValues(alpha: 0.3))),
+        $on.hover(
+          $box.color(context.backgroundTertiaryColor.withValues(alpha: 0.3)),
+        ),
       ),
       child: Row(
         children: [

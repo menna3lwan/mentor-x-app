@@ -52,7 +52,8 @@ final class CourseAnalyticsCard extends StatelessWidget {
                 duration: const Duration(milliseconds: 500),
                 child: StatCard(
                   icon: Icons.auto_stories_rounded,
-                  value: '${enrollment.completedLessons}/${enrollment.totalLessons}',
+                  value:
+                      '${enrollment.completedLessons}/${enrollment.totalLessons}',
                   label: 'Lessons Completed',
                   iconColor: context.brandPrimaryColor,
                 ),

@@ -24,7 +24,9 @@ final class SessionExpansionTile extends StatelessWidget {
       borderRadius: BorderRadius.circular(28),
       style: Style(
         $box.color(context.backgroundSecondaryColor.withValues(alpha: 0.45)),
-        $box.border.all.color(context.borderPrimaryColor.withValues(alpha: 0.1)),
+        $box.border.all.color(
+          context.borderPrimaryColor.withValues(alpha: 0.1),
+        ),
         $box.shadows(context.softShadow),
       ),
       child: Theme(

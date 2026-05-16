@@ -30,12 +30,14 @@ class _AttendanceHistoryPageWrapperState
       },
       child: Builder(
         builder: (context) {
-          final loadingState = context.select<AttendanceHistoryPageBloc, LoadingState>(
-            (bloc) => bloc.state.loadingState,
-          );
-          final records = context.select<AttendanceHistoryPageBloc, List<AttendanceRecordEntity>>(
-            (bloc) => bloc.state.records,
-          );
+          final loadingState = context
+              .select<AttendanceHistoryPageBloc, LoadingState>(
+                (bloc) => bloc.state.loadingState,
+              );
+          final records = context
+              .select<AttendanceHistoryPageBloc, List<AttendanceRecordEntity>>(
+                (bloc) => bloc.state.records,
+              );
           final presentCount = context.select<AttendanceHistoryPageBloc, int>(
             (bloc) => bloc.state.presentCount,
           );
@@ -54,8 +56,8 @@ class _AttendanceHistoryPageWrapperState
             absentCount: absentCount,
             onRefresh: () {
               context.read<AttendanceHistoryPageBloc>().add(
-                    const AttendanceHistoryPageLoadEvent(),
-                  );
+                const AttendanceHistoryPageLoadEvent(),
+              );
             },
           );
         },

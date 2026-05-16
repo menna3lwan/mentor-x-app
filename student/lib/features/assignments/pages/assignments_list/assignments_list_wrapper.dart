@@ -39,18 +39,17 @@ class _AssignmentsListPageView extends StatelessWidget {
       },
       child: Builder(
         builder: (context) {
-          final loadingState = context.select<
-            AssignmentsListPageBloc,
-            LoadingState
-          >((bloc) => bloc.state.loadingState);
-          final assignments = context.select<
-            AssignmentsListPageBloc,
-            List<AssignmentEntity>
-          >((bloc) => bloc.state.assignments);
-          final errorMessage = context.select<
-            AssignmentsListPageBloc,
-            String?
-          >((bloc) => bloc.state.errorMessage);
+          final loadingState = context
+              .select<AssignmentsListPageBloc, LoadingState>(
+                (bloc) => bloc.state.loadingState,
+              );
+          final assignments = context
+              .select<AssignmentsListPageBloc, List<AssignmentEntity>>(
+                (bloc) => bloc.state.assignments,
+              );
+          final errorMessage = context.select<AssignmentsListPageBloc, String?>(
+            (bloc) => bloc.state.errorMessage,
+          );
 
           return AssignmentsListPagePage(
             isLoading: loadingState == LoadingState.loading,

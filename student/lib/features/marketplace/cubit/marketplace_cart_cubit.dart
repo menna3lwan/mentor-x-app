@@ -27,7 +27,7 @@ final class MarketplaceCartState extends Equatable {
 
   double get subtotal =>
       items.fold(0, (sum, item) => sum + item.item.price * item.quantity);
-      
+
   int get totalCount => items.fold(0, (sum, item) => sum + item.quantity);
 
   double get discountAmount {
@@ -38,11 +38,11 @@ final class MarketplaceCartState extends Equatable {
     } else {
       discount = appliedCoupon!.discountAmount ?? 0;
     }
-    
+
     if (appliedCoupon!.maxDiscount != null && appliedCoupon!.maxDiscount! > 0) {
       discount = min(discount, appliedCoupon!.maxDiscount!);
     }
-    
+
     return min(discount, subtotal);
   }
 
@@ -65,7 +65,12 @@ final class MarketplaceCartCubit extends Cubit<MarketplaceCartState> {
       updatedItems[existingIndex] = updatedItems[existingIndex].copyWith(
         quantity: updatedItems[existingIndex].quantity + 1,
       );
-      emit(MarketplaceCartState(items: updatedItems, appliedCoupon: state.appliedCoupon));
+      emit(
+        MarketplaceCartState(
+          items: updatedItems,
+          appliedCoupon: state.appliedCoupon,
+        ),
+      );
     } else {
       emit(
         MarketplaceCartState(
@@ -89,7 +94,12 @@ final class MarketplaceCartCubit extends Cubit<MarketplaceCartState> {
 
   void removeItem(String itemId) {
     final updatedItems = state.items.where((i) => i.item.id != itemId).toList();
-    emit(MarketplaceCartState(items: updatedItems, appliedCoupon: state.appliedCoupon));
+    emit(
+      MarketplaceCartState(
+        items: updatedItems,
+        appliedCoupon: state.appliedCoupon,
+      ),
+    );
     analyticsService.logEvent(
       name: AnalyticsEvents.removeFromCart,
       parameters: {AnalyticsParams.itemId: itemId},
@@ -107,7 +117,12 @@ final class MarketplaceCartCubit extends Cubit<MarketplaceCartState> {
       updatedItems[existingIndex] = updatedItems[existingIndex].copyWith(
         quantity: quantity,
       );
-      emit(MarketplaceCartState(items: updatedItems, appliedCoupon: state.appliedCoupon));
+      emit(
+        MarketplaceCartState(
+          items: updatedItems,
+          appliedCoupon: state.appliedCoupon,
+        ),
+      );
     }
   }
 

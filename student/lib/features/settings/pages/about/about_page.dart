@@ -21,7 +21,10 @@ final class AboutPage extends StatelessWidget {
             child: Center(
               child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 24,
+                ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -42,7 +45,9 @@ final class AboutPage extends StatelessWidget {
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: context.brandPrimaryColor.withValues(alpha: 0.2),
+                              color: context.brandPrimaryColor.withValues(
+                                alpha: 0.2,
+                              ),
                               blurRadius: 20,
                               offset: const Offset(0, 10),
                             ),
@@ -83,7 +88,9 @@ final class AboutPage extends StatelessWidget {
                               vertical: 6,
                             ),
                             decoration: BoxDecoration(
-                              color: context.brandPrimaryColor.withValues(alpha: 0.1),
+                              color: context.brandPrimaryColor.withValues(
+                                alpha: 0.1,
+                              ),
                               borderRadius: BorderRadius.circular(20),
                               border: Border.all(
                                 color: context.brandPrimaryColor.withValues(

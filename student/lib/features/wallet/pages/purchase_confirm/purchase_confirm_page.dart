@@ -66,7 +66,10 @@ final class PurchaseConfirmPage extends StatelessWidget {
           ? AppErrorView(
               message: t.failedToLoadPayment,
               onRetry: () {
-                final paymentId = context.read<PurchaseConfirmPageBloc>().state.paymentId;
+                final paymentId = context
+                    .read<PurchaseConfirmPageBloc>()
+                    .state
+                    .paymentId;
                 if (paymentId != null) {
                   context.read<PurchaseConfirmPageBloc>().add(
                     PurchaseConfirmPageLoadEvent(paymentId: paymentId),

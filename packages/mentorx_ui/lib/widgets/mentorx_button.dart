@@ -39,45 +39,50 @@ class MentorXButton extends StatelessWidget {
 
     return switch (variant) {
       MentorXButtonVariant.filled => Style(
-          $box.color(baseColor),
-          $text.style.color(Colors.white),
-          $on.hover($box.color(baseColor.withValues(alpha: 0.9))),
+        $box.color(baseColor),
+        $text.style.color(Colors.white),
+        $box.shadow(
+          color: baseColor.withValues(alpha: 0.3),
+          blurRadius: 12,
+          offset: const Offset(0, 4),
         ),
+        $on.hover($box.color(baseColor.withValues(alpha: 0.9))),
+      ),
       MentorXButtonVariant.outline => Style(
-          $box.color(Colors.transparent),
-          $box.border.all.color(baseColor),
-          $box.border.all.width(1.5),
-          $text.style.color(baseColor),
-          $on.hover($box.color(baseColor.withValues(alpha: 0.05))),
-        ),
+        $box.color(Colors.transparent),
+        $box.border.all.color(baseColor),
+        $box.border.all.width(1.5),
+        $text.style.color(baseColor),
+        $on.hover($box.color(baseColor.withValues(alpha: 0.05))),
+      ),
       MentorXButtonVariant.text || MentorXButtonVariant.ghost => Style(
-          $box.color(Colors.transparent),
-          $text.style.color(baseColor),
-          $on.hover($box.color(baseColor.withValues(alpha: 0.05))),
-        ),
+        $box.color(Colors.transparent),
+        $text.style.color(baseColor),
+        $on.hover($box.color(baseColor.withValues(alpha: 0.05))),
+      ),
     };
   }
 
   Style _sizeStyle() {
     return switch (size) {
       MentorXButtonSize.small => Style(
-          $box.padding.vertical(10),
-          $box.padding.horizontal(16),
-          $text.style.fontSize(13),
-          $text.style.fontWeight.w700(),
-        ),
+        $box.padding.vertical(10),
+        $box.padding.horizontal(16),
+        $text.style.fontSize(13),
+        $text.style.fontWeight.w700(),
+      ),
       MentorXButtonSize.medium => Style(
-          $box.padding.vertical(16),
-          $box.padding.horizontal(24),
-          $text.style.fontSize(15),
-          $text.style.fontWeight.w800(),
-        ),
+        $box.padding.vertical(16),
+        $box.padding.horizontal(24),
+        $text.style.fontSize(15),
+        $text.style.fontWeight.w800(),
+      ),
       MentorXButtonSize.large => Style(
-          $box.padding.vertical(20),
-          $box.padding.horizontal(32),
-          $text.style.fontSize(17),
-          $text.style.fontWeight.w900(),
-        ),
+        $box.padding.vertical(20),
+        $box.padding.horizontal(32),
+        $text.style.fontSize(17),
+        $text.style.fontWeight.w900(),
+      ),
     };
   }
 
@@ -99,18 +104,17 @@ class MentorXButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PressableBox(
-      onPress:
-          loading
-              ? null
-              : () {
-                if (analyticsName != null) {
-                  MentorXUI.onAnalyticsEvent?.call('button_click', {
-                    'button_name': analyticsName,
-                    'button_text': _displayText,
-                  });
-                }
-                onPressed?.call();
-              },
+      onPress: loading
+          ? null
+          : () {
+              if (analyticsName != null) {
+                MentorXUI.onAnalyticsEvent?.call('button_click', {
+                  'button_name': analyticsName,
+                  'button_text': _displayText,
+                });
+              }
+              onPressed?.call();
+            },
       style: _defaultStyle(context).merge(style),
       child: loading
           ? SizedBox(

@@ -34,7 +34,8 @@ class MentorXAppBar extends StatelessWidget implements PreferredSizeWidget {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return AppBar(
-      title: title ??
+      title:
+          title ??
           (titleText != null
               ? Text(
                   titleText!,
@@ -48,7 +49,8 @@ class MentorXAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                 )
               : null),
-      leading: leading ??
+      leading:
+          leading ??
           (showBackButton && Navigator.canPop(context)
               ? MentorXBackButton(
                   color: isDarkBackground ? Colors.white : null,
@@ -60,17 +62,18 @@ class MentorXAppBar extends StatelessWidget implements PreferredSizeWidget {
       elevation: elevation,
       surfaceTintColor: Colors.transparent,
       bottom: bottom,
-      systemOverlayStyle: systemOverlayStyle ??
+      systemOverlayStyle:
+          systemOverlayStyle ??
           (isTransparent
               ? (isDarkMode
-                  ? SystemUiOverlayStyle.light
-                  : SystemUiOverlayStyle.dark)
+                    ? SystemUiOverlayStyle.light
+                    : SystemUiOverlayStyle.dark)
               : null),
     );
   }
 
   @override
   Size get preferredSize => Size.fromHeight(
-        kToolbarHeight + (bottom?.preferredSize.height ?? 0),
-      );
+    kToolbarHeight + (bottom?.preferredSize.height ?? 0),
+  );
 }

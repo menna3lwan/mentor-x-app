@@ -30,9 +30,10 @@ final class _MarketplaceOrdersPageWrapperState
       },
       child: Builder(
         builder: (context) {
-          final state = context.select<MarketplaceOrdersPageBloc, MarketplaceOrdersPageState>(
-            (bloc) => bloc.state,
-          );
+          final state = context
+              .select<MarketplaceOrdersPageBloc, MarketplaceOrdersPageState>(
+                (bloc) => bloc.state,
+              );
           return MarketplaceOrdersPagePage(
             state: state,
             onRefresh: () {

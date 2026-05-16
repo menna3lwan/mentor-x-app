@@ -99,7 +99,9 @@ final class StreakCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      t.personalBestLabel(count: streak.longestStreak.toString()),
+                      t.personalBestLabel(
+                        count: streak.longestStreak.toString(),
+                      ),
                       style: TextStyle(
                         fontSize: 11,
                         color: context.textTertiaryColor,

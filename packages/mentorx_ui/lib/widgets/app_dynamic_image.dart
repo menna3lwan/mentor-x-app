@@ -43,13 +43,19 @@ final class AppDynamicImage extends StatelessWidget {
         width: width,
         height: height,
         matchTextDirection: matchTextDirection,
-        colorFilter: color != null ? ColorFilter.mode(color!, BlendMode.srcIn) : null,
+        colorFilter: color != null
+            ? ColorFilter.mode(color!, BlendMode.srcIn)
+            : null,
       );
     } else if (path.startsWith('http')) {
       imageWidget = LayoutBuilder(
         builder: (context, constraints) {
-          final imageWidth = constraints.hasBoundedWidth ? constraints.maxWidth : width;
-          final imageHeight = constraints.hasBoundedHeight ? constraints.maxHeight : height;
+          final imageWidth = constraints.hasBoundedWidth
+              ? constraints.maxWidth
+              : width;
+          final imageHeight = constraints.hasBoundedHeight
+              ? constraints.maxHeight
+              : height;
 
           return CachedNetworkImage(
             fit: fit,
@@ -72,16 +78,16 @@ final class AppDynamicImage extends StatelessWidget {
                 ),
             imageBuilder: borderRadius != null
                 ? (context, imageProvider) => Container(
-                      width: imageWidth,
-                      height: imageHeight,
-                      decoration: BoxDecoration(
-                        borderRadius: borderRadius,
-                        image: DecorationImage(
-                          image: imageProvider,
-                          fit: fit,
-                        ),
+                    width: imageWidth,
+                    height: imageHeight,
+                    decoration: BoxDecoration(
+                      borderRadius: borderRadius,
+                      image: DecorationImage(
+                        image: imageProvider,
+                        fit: fit,
                       ),
-                    )
+                    ),
+                  )
                 : null,
           );
         },
@@ -95,7 +101,12 @@ final class AppDynamicImage extends StatelessWidget {
         height: height,
         matchTextDirection: matchTextDirection,
         errorBuilder: (context, error, stackTrace) =>
-            errorWidget ?? _PlaceHolderImage(height: height, width: width, borderRadius: borderRadius),
+            errorWidget ??
+            _PlaceHolderImage(
+              height: height,
+              width: width,
+              borderRadius: borderRadius,
+            ),
       );
     }
 
@@ -115,7 +126,11 @@ final class _PlaceHolderImage extends StatelessWidget {
   final double? height;
   final BorderRadius? borderRadius;
 
-  const _PlaceHolderImage({required this.height, required this.width, this.borderRadius});
+  const _PlaceHolderImage({
+    required this.height,
+    required this.width,
+    this.borderRadius,
+  });
 
   @override
   Widget build(BuildContext context) {

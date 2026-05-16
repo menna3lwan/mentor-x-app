@@ -94,8 +94,9 @@ final class _PersonalInfoStepState extends State<PersonalInfoStep> {
                         label: context.t.auth.secondNameLabel,
                         icon: Icons.person_outline_rounded,
                         controller: _secondNameController,
-                        onChanged: (value) =>
-                            bloc.add(StudentRegistrationSecondNameChanged(value)),
+                        onChanged: (value) => bloc.add(
+                          StudentRegistrationSecondNameChanged(value),
+                        ),
                       ),
                       const Gap(20),
                       MentorXTextFormField(
@@ -103,8 +104,9 @@ final class _PersonalInfoStepState extends State<PersonalInfoStep> {
                         label: context.t.auth.thirdNameLabel,
                         icon: Icons.person_outline_rounded,
                         controller: _thirdNameController,
-                        onChanged: (value) =>
-                            bloc.add(StudentRegistrationThirdNameChanged(value)),
+                        onChanged: (value) => bloc.add(
+                          StudentRegistrationThirdNameChanged(value),
+                        ),
                       ),
                       const Gap(20),
                       MentorXTextFormField(
@@ -112,8 +114,9 @@ final class _PersonalInfoStepState extends State<PersonalInfoStep> {
                         label: context.t.auth.fourthNameLabel,
                         icon: Icons.people_outline_rounded,
                         controller: _fourthNameController,
-                        onChanged: (value) =>
-                            bloc.add(StudentRegistrationFourthNameChanged(value)),
+                        onChanged: (value) => bloc.add(
+                          StudentRegistrationFourthNameChanged(value),
+                        ),
                       ),
                     ],
                   ),
@@ -140,7 +143,9 @@ final class _PersonalInfoStepState extends State<PersonalInfoStep> {
               $box.height(120),
               $box.borderRadius(60),
               $box.padding.all(4),
-              $box.color(context.backgroundSecondaryColor.withValues(alpha: 0.5)),
+              $box.color(
+                context.backgroundSecondaryColor.withValues(alpha: 0.5),
+              ),
             ),
             child: Container(
               decoration: BoxDecoration(

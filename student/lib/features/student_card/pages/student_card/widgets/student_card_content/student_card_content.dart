@@ -159,10 +159,16 @@ final class _DigitalIdCard extends StatelessWidget {
                                 ),
                               ),
                               const Gap(10),
-                              _CardInfoRow(label: context.t.studentcard.codeLabel, value: card.studentCode),
+                              _CardInfoRow(
+                                label: context.t.studentcard.codeLabel,
+                                value: card.studentCode,
+                              ),
                               const Gap(4),
                               if (card.grade != null)
-                                _CardInfoRow(label: context.t.studentcard.gradeLabel, value: card.grade!),
+                                _CardInfoRow(
+                                  label: context.t.studentcard.gradeLabel,
+                                  value: card.grade!,
+                                ),
                             ],
                           ),
                         ),

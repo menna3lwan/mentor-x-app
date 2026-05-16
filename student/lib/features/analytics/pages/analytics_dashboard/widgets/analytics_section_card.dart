@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 
-
 final class AnalyticsSectionCard extends StatelessWidget {
   final String title;
   final Widget child;

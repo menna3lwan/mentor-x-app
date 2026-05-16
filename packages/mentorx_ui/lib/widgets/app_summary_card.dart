@@ -38,9 +38,9 @@ class AppSummaryCard extends StatelessWidget {
                   Text(
                     title,
                     style: context.smallTextStyle.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: context.textSecondaryColor,
-                        ),
+                      fontWeight: FontWeight.w600,
+                      color: context.textSecondaryColor,
+                    ),
                   ),
                 ],
               ),
@@ -48,9 +48,9 @@ class AppSummaryCard extends StatelessWidget {
               Text(
                 value,
                 style: context.titleH2Style.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: color,
-                    ),
+                  fontWeight: FontWeight.bold,
+                  color: color,
+                ),
               ),
             ],
           ),

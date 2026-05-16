@@ -99,7 +99,9 @@ final class _AssignmentSubmitPageState extends State<AssignmentSubmitPage> {
                       _BuildHeader(
                         title: state.assignment!.title,
                         progress: progress,
-                        current: totalQuestions > 0 ? currentQuestionIndex + 1 : 1,
+                        current: totalQuestions > 0
+                            ? currentQuestionIndex + 1
+                            : 1,
                         total: totalQuestions > 0 ? totalQuestions : 1,
                       ),
                       Expanded(
@@ -108,7 +110,9 @@ final class _AssignmentSubmitPageState extends State<AssignmentSubmitPage> {
                           padding: const EdgeInsets.fromLTRB(24, 32, 24, 120),
                           child: totalQuestions > 0
                               ? FadeInRight(
-                                  key: ValueKey('question_$currentQuestionIndex'),
+                                  key: ValueKey(
+                                    'question_$currentQuestionIndex',
+                                  ),
                                   duration: const Duration(milliseconds: 400),
                                   child: _QuestionCard(
                                     q: q!,
@@ -120,7 +124,9 @@ final class _AssignmentSubmitPageState extends State<AssignmentSubmitPage> {
                               : Column(
                                   children: [
                                     FadeInUp(
-                                      duration: const Duration(milliseconds: 600),
+                                      duration: const Duration(
+                                        milliseconds: 600,
+                                      ),
                                       child: _EssayCard(
                                         initialValue: state.contentText ?? '',
                                         onChanged: (val) => context
@@ -134,12 +140,15 @@ final class _AssignmentSubmitPageState extends State<AssignmentSubmitPage> {
                                     ),
                                     const Gap(32),
                                     FadeInUp(
-                                      duration: const Duration(milliseconds: 600),
+                                      duration: const Duration(
+                                        milliseconds: 600,
+                                      ),
                                       delay: const Duration(milliseconds: 200),
                                       child: _FileUploadCard(
                                         filePaths: state.filePaths,
                                         onAdd: () async {
-                                          final result = await FilePicker.platform
+                                          final result = await FilePicker
+                                              .platform
                                               .pickFiles(allowMultiple: true);
                                           if (!context.mounted) return;
                                           if (result != null &&
@@ -162,7 +171,9 @@ final class _AssignmentSubmitPageState extends State<AssignmentSubmitPage> {
                                         onRemove: (path) => context
                                             .read<AssignmentSubmitPageBloc>()
                                             .add(
-                                              AssignmentSubmitPageFileRemoved(path),
+                                              AssignmentSubmitPageFileRemoved(
+                                                path,
+                                              ),
                                             ),
                                       ),
                                     ),
@@ -210,7 +221,9 @@ final class _BuildHeader extends StatelessWidget {
       borderRadius: const BorderRadius.vertical(bottom: Radius.circular(32)),
       style: Style(
         $box.color(context.backgroundSecondaryColor.withValues(alpha: 0.45)),
-        $box.border.bottom.color(context.borderPrimaryColor.withValues(alpha: 0.1)),
+        $box.border.bottom.color(
+          context.borderPrimaryColor.withValues(alpha: 0.1),
+        ),
         $box.padding.only(
           left: 16,
           top: MediaQuery.paddingOf(context).top + 16,
@@ -307,7 +320,9 @@ final class _BuildHeader extends StatelessWidget {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: context.backgroundSecondaryColor.withValues(alpha: 0.9),
+        backgroundColor: context.backgroundSecondaryColor.withValues(
+          alpha: 0.9,
+        ),
         surfaceTintColor: Colors.transparent,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(32),
@@ -375,7 +390,9 @@ final class _BuildNavigation extends StatelessWidget {
       borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
       style: Style(
         $box.color(context.backgroundSecondaryColor.withValues(alpha: 0.45)),
-        $box.border.top.color(context.borderPrimaryColor.withValues(alpha: 0.1)),
+        $box.border.top.color(
+          context.borderPrimaryColor.withValues(alpha: 0.1),
+        ),
         $box.padding.only(
           left: 16,
           top: 20,
@@ -391,8 +408,8 @@ final class _BuildNavigation extends StatelessWidget {
                 padding: const EdgeInsets.only(right: 12),
                 child: MentorXButton(
                   onPressed: () => context.read<AssignmentSubmitPageBloc>().add(
-                        const AssignmentSubmitPagePreviousQuestion(),
-                      ),
+                    const AssignmentSubmitPagePreviousQuestion(),
+                  ),
                   label: context.t.assignments.previous,
                   variant: MentorXButtonVariant.outline,
                 ),
@@ -406,15 +423,17 @@ final class _BuildNavigation extends StatelessWidget {
                   : () {
                       if (isLast) {
                         context.read<AssignmentSubmitPageBloc>().add(
-                              const AssignmentSubmitPageSubmit(),
-                            );
+                          const AssignmentSubmitPageSubmit(),
+                        );
                       } else {
                         context.read<AssignmentSubmitPageBloc>().add(
-                              const AssignmentSubmitPageNextQuestion(),
-                            );
+                          const AssignmentSubmitPageNextQuestion(),
+                        );
                       }
                     },
-              label: isLast ? context.t.assignments.submit : context.t.assignments.next,
+              label: isLast
+                  ? context.t.assignments.submit
+                  : context.t.assignments.next,
               loading: isSubmitting,
             ),
           ),
@@ -458,7 +477,9 @@ final class _EssayCardState extends State<_EssayCard> {
       borderRadius: BorderRadius.circular(32),
       style: Style(
         $box.color(context.backgroundSecondaryColor.withValues(alpha: 0.45)),
-        $box.border.all.color(context.borderPrimaryColor.withValues(alpha: 0.1)),
+        $box.border.all.color(
+          context.borderPrimaryColor.withValues(alpha: 0.1),
+        ),
         $box.shadows(context.softShadow),
         $box.padding.all(32),
       ),
@@ -504,7 +525,9 @@ final class _FileUploadCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(32),
       style: Style(
         $box.color(context.backgroundSecondaryColor.withValues(alpha: 0.45)),
-        $box.border.all.color(context.borderPrimaryColor.withValues(alpha: 0.1)),
+        $box.border.all.color(
+          context.borderPrimaryColor.withValues(alpha: 0.1),
+        ),
         $box.shadows(context.softShadow),
         $box.padding.all(32),
       ),
@@ -566,8 +589,12 @@ final class _FileUploadCard extends StatelessWidget {
                   child: MentorXGlassCard(
                     borderRadius: BorderRadius.circular(20),
                     style: Style(
-                      $box.color(context.backgroundPrimaryColor.withValues(alpha: 0.4)),
-                      $box.border.all.color(context.borderPrimaryColor.withValues(alpha: 0.1)),
+                      $box.color(
+                        context.backgroundPrimaryColor.withValues(alpha: 0.4),
+                      ),
+                      $box.border.all.color(
+                        context.borderPrimaryColor.withValues(alpha: 0.1),
+                      ),
                       $box.padding.all(16),
                     ),
                     child: Row(
@@ -636,8 +663,12 @@ final class _QuestionCard extends StatelessWidget {
         MentorXGlassCard(
           borderRadius: BorderRadius.circular(32),
           style: Style(
-            $box.color(context.backgroundSecondaryColor.withValues(alpha: 0.45)),
-            $box.border.all.color(context.borderPrimaryColor.withValues(alpha: 0.1)),
+            $box.color(
+              context.backgroundSecondaryColor.withValues(alpha: 0.45),
+            ),
+            $box.border.all.color(
+              context.borderPrimaryColor.withValues(alpha: 0.1),
+            ),
             $box.shadows(context.softShadow),
             $box.padding.all(32),
           ),
@@ -752,7 +783,9 @@ final class _OptionTile extends StatelessWidget {
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeOutCubic,
           decoration: BoxDecoration(
-            color: isSelected ? null : context.backgroundSecondaryColor.withValues(alpha: 0.45),
+            color: isSelected
+                ? null
+                : context.backgroundSecondaryColor.withValues(alpha: 0.45),
             gradient: isSelected
                 ? LinearGradient(
                     colors: [
@@ -800,12 +833,16 @@ final class _OptionTile extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: isSelected
                             ? Colors.white.withValues(alpha: 0.2)
-                            : context.backgroundPrimaryColor.withValues(alpha: 0.5),
+                            : context.backgroundPrimaryColor.withValues(
+                                alpha: 0.5,
+                              ),
                         shape: BoxShape.circle,
                         border: Border.all(
                           color: isSelected
                               ? Colors.white.withValues(alpha: 0.4)
-                              : context.borderPrimaryColor.withValues(alpha: 0.1),
+                              : context.borderPrimaryColor.withValues(
+                                  alpha: 0.1,
+                                ),
                         ),
                       ),
                       child: Center(
@@ -813,7 +850,9 @@ final class _OptionTile extends StatelessWidget {
                           label,
                           style: context.bodyPrimaryStyle.copyWith(
                             fontWeight: FontWeight.w900,
-                            color: isSelected ? Colors.white : context.textPrimaryColor,
+                            color: isSelected
+                                ? Colors.white
+                                : context.textPrimaryColor,
                           ),
                         ),
                       ),
@@ -823,8 +862,12 @@ final class _OptionTile extends StatelessWidget {
                       child: Text(
                         text,
                         style: context.bodyPrimaryStyle.copyWith(
-                          fontWeight: isSelected ? FontWeight.w900 : FontWeight.w700,
-                          color: isSelected ? Colors.white : context.textPrimaryColor,
+                          fontWeight: isSelected
+                              ? FontWeight.w900
+                              : FontWeight.w700,
+                          color: isSelected
+                              ? Colors.white
+                              : context.textPrimaryColor,
                         ),
                       ),
                     ),

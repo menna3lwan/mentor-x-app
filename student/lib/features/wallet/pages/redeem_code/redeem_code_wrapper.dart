@@ -24,8 +24,10 @@ class _RedeemCodePageWrapperState extends State<RedeemCodePageWrapper> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocPresentationListener<RedeemCodePageBloc,
-        RedeemCodePagePresentationEvent>(
+    return BlocPresentationListener<
+      RedeemCodePageBloc,
+      RedeemCodePagePresentationEvent
+    >(
       listener: (context, event) {
         switch (event) {
           case RedeemCodePageNavigateBack():
@@ -49,8 +51,8 @@ class _RedeemCodePageWrapperState extends State<RedeemCodePageWrapper> {
                 loadingState: loadingState,
                 errorMessage: errorMessage,
                 onSubmit: (code) => context.read<RedeemCodePageBloc>().add(
-                      RedeemCodePageSubmitEvent(code),
-                    ),
+                  RedeemCodePageSubmitEvent(code),
+                ),
               );
             },
           );

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
@@ -56,8 +55,11 @@ class _AnnouncementCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isPinned = announcement?.isPinned ?? false;
-    final title = announcement?.title ?? context.t.home.dashboard.loadingAnnouncement;
-    final preview = announcement?.preview ?? context.t.home.dashboard.loadingAnnouncementDetails;
+    final title =
+        announcement?.title ?? context.t.home.dashboard.loadingAnnouncement;
+    final preview =
+        announcement?.preview ??
+        context.t.home.dashboard.loadingAnnouncementDetails;
     final createdAt = announcement?.createdAt ?? DateTime.now();
 
     return MentorXGlassCard(

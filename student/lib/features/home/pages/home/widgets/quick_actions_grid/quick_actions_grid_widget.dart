@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:mentorx_student/core/core.dart';
 
-
-
 final class QuickActionsGridWidget extends StatelessWidget {
   final ValueChanged<int>? onActionTap;
 
@@ -12,15 +10,43 @@ final class QuickActionsGridWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final actions = [
-      (context.t.home.dashboard.myCourses, Icons.auto_stories_rounded, context.brandPrimaryColor),
-      (context.t.home.dashboard.attendance, Icons.fact_check_rounded, context.brandSecondaryColor),
-      (context.t.home.dashboard.grades, Icons.workspace_premium_rounded, Colors.orange),
-      (context.t.home.dashboard.aiAssistant, Icons.psychology_rounded, Colors.purple),
+      (
+        context.t.home.dashboard.myCourses,
+        Icons.auto_stories_rounded,
+        context.brandPrimaryColor,
+      ),
+      (
+        context.t.home.dashboard.attendance,
+        Icons.fact_check_rounded,
+        context.brandSecondaryColor,
+      ),
+      (
+        context.t.home.dashboard.grades,
+        Icons.workspace_premium_rounded,
+        Colors.orange,
+      ),
+      (
+        context.t.home.dashboard.aiAssistant,
+        Icons.psychology_rounded,
+        Colors.purple,
+      ),
       (context.t.home.dashboard.assignments, Icons.task_rounded, Colors.teal),
       (context.t.home.dashboard.rewards, Icons.redeem_rounded, Colors.pink),
-      (context.t.home.dashboard.marketplace, Icons.shopping_bag_rounded, Colors.indigo),
-      (context.t.home.dashboard.analytics, Icons.insights_rounded, context.brandPrimaryColor),
-      (context.t.home.dashboard.leaderboard, Icons.emoji_events_rounded, context.brandSecondaryColor),
+      (
+        context.t.home.dashboard.marketplace,
+        Icons.shopping_bag_rounded,
+        Colors.indigo,
+      ),
+      (
+        context.t.home.dashboard.analytics,
+        Icons.insights_rounded,
+        context.brandPrimaryColor,
+      ),
+      (
+        context.t.home.dashboard.leaderboard,
+        Icons.emoji_events_rounded,
+        context.brandSecondaryColor,
+      ),
     ];
 
     return GridView.builder(
@@ -42,9 +68,13 @@ final class QuickActionsGridWidget extends StatelessWidget {
             $box.padding.all(16),
             $box.borderRadius(24),
             $box.color(context.backgroundSecondaryColor.withValues(alpha: 0.4)),
-            $box.border.all.color(context.borderPrimaryColor.withValues(alpha: 0.1)),
+            $box.border.all.color(
+              context.borderPrimaryColor.withValues(alpha: 0.1),
+            ),
             $on.hover(
-              $box.color(context.backgroundSecondaryColor.withValues(alpha: 0.7)),
+              $box.color(
+                context.backgroundSecondaryColor.withValues(alpha: 0.7),
+              ),
               $box.shadows(context.softShadow),
             ),
           ),

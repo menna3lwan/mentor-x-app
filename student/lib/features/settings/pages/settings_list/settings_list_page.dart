@@ -2,7 +2,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mentorx_ui/mentorx_ui.dart' hide LocaleSettings, TranslationProvider;
+import 'package:mentorx_ui/mentorx_ui.dart'
+    hide LocaleSettings, TranslationProvider;
 import 'package:animate_do/animate_do.dart';
 import 'package:mentorx_student/core/core.dart';
 
@@ -222,68 +223,68 @@ final class _BuildHeader extends StatelessWidget {
   }
 }
 
-  void _showLogoutDialog(BuildContext context, dynamic t) {
-    showDialog(
-      context: context,
-      builder: (ctx) => ZoomIn(
-        duration: const Duration(milliseconds: 300),
-        child: AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(32),
+void _showLogoutDialog(BuildContext context, dynamic t) {
+  showDialog(
+    context: context,
+    builder: (ctx) => ZoomIn(
+      duration: const Duration(milliseconds: 300),
+      child: AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(32),
+        ),
+        backgroundColor: context.backgroundPrimaryColor,
+        surfaceTintColor: Colors.transparent,
+        title: Text(
+          t.logoutConfirmTitle,
+          style: context.titleH2Style.copyWith(
+            fontWeight: FontWeight.w900,
+            letterSpacing: -0.5,
           ),
-          backgroundColor: context.backgroundPrimaryColor,
-          surfaceTintColor: Colors.transparent,
-          title: Text(
-            t.logoutConfirmTitle,
-            style: context.titleH2Style.copyWith(
-              fontWeight: FontWeight.w900,
-              letterSpacing: -0.5,
-            ),
+        ),
+        content: Text(
+          t.logoutConfirmDesc,
+          style: context.bodyPrimaryStyle.copyWith(
+            color: context.textSecondaryColor,
+            fontWeight: FontWeight.w700,
+            height: 1.5,
           ),
-          content: Text(
-            t.logoutConfirmDesc,
-            style: context.bodyPrimaryStyle.copyWith(
-              color: context.textSecondaryColor,
-              fontWeight: FontWeight.w700,
-              height: 1.5,
-            ),
-          ),
-          actions: [
-            Row(
-              children: [
-                Expanded(
-                  child: TextButton(
-                    onPressed: () => Navigator.pop(ctx),
-                    child: Text(
-                      context.t.core.cancel,
-                      style: context.bodySecondaryStyle.copyWith(
-                        color: context.textTertiaryColor,
-                        fontWeight: FontWeight.w900,
-                      ),
+        ),
+        actions: [
+          Row(
+            children: [
+              Expanded(
+                child: TextButton(
+                  onPressed: () => Navigator.pop(ctx),
+                  child: Text(
+                    context.t.core.cancel,
+                    style: context.bodySecondaryStyle.copyWith(
+                      color: context.textTertiaryColor,
+                      fontWeight: FontWeight.w900,
                     ),
                   ),
                 ),
-                const Gap(16),
-                Expanded(
-                  child: MentorXButton(
-                    onPressed: () {
-                      Navigator.pop(ctx);
-                      context.read<AppAuthenticationCubit>().logout();
-                      context.go('/login');
-                    },
-                    label: t.logoutSetting,
-                    color: context.statusDangerColor,
-                    size: MentorXButtonSize.medium,
-                  ),
+              ),
+              const Gap(16),
+              Expanded(
+                child: MentorXButton(
+                  onPressed: () {
+                    Navigator.pop(ctx);
+                    context.read<AppAuthenticationCubit>().logout();
+                    context.go('/login');
+                  },
+                  label: t.logoutSetting,
+                  color: context.statusDangerColor,
+                  size: MentorXButtonSize.medium,
                 ),
-              ],
-            ),
-          ],
-          actionsPadding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-        ),
+              ),
+            ],
+          ),
+        ],
+        actionsPadding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
       ),
-    );
-  }
+    ),
+  );
+}
 
 final class _SectionTitle extends StatelessWidget {
   final String title;
@@ -373,7 +374,9 @@ final class _LanguageOption extends StatelessWidget {
                   end: Alignment.bottomRight,
                 )
               : null,
-          color: isSelected ? null : context.backgroundPrimaryColor.withValues(alpha: 0.3),
+          color: isSelected
+              ? null
+              : context.backgroundPrimaryColor.withValues(alpha: 0.3),
           borderRadius: BorderRadius.circular(16),
           boxShadow: isSelected
               ? [
@@ -480,5 +483,3 @@ final class _SettingsItem extends StatelessWidget {
     );
   }
 }
-
-

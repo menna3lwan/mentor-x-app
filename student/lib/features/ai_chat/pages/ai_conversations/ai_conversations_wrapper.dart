@@ -33,10 +33,10 @@ final class _AiConversationsPageWrapperState
       },
       child: Builder(
         builder: (context) {
-          final state = context.select<
-            AiConversationsPageBloc,
-            AiConversationsPageState
-          >((bloc) => bloc.state);
+          final state = context
+              .select<AiConversationsPageBloc, AiConversationsPageState>(
+                (bloc) => bloc.state,
+              );
           return AiConversationsPagePage(
             state: state,
             onRefresh: () {

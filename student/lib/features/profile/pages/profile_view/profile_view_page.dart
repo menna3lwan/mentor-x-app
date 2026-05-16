@@ -17,8 +17,6 @@ final class ProfileViewPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
       backgroundColor: context.backgroundPrimaryColor,
       body: CustomScrollView(
@@ -88,7 +86,6 @@ final class _ProfileHeader extends StatelessWidget {
       flexibleSpace: FlexibleSpaceBar(
         stretchModes: const [
           StretchMode.zoomBackground,
-          StretchMode.blurBackground,
         ],
         background: Stack(
           alignment: Alignment.center,
@@ -128,7 +125,9 @@ final class _ProfileHeader extends StatelessWidget {
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: context.brandPrimaryColor.withValues(alpha: 0.4),
+                              color: context.brandPrimaryColor.withValues(
+                                alpha: 0.4,
+                              ),
                               blurRadius: 30,
                               offset: const Offset(0, 15),
                             ),
@@ -176,7 +175,9 @@ final class _ProfileHeader extends StatelessWidget {
                 FadeInUp(
                   duration: const Duration(milliseconds: 700),
                   child: Text(
-                    context.isArabic ? session.studentNameAr : session.studentName,
+                    context.isArabic
+                        ? session.studentNameAr
+                        : session.studentName,
                     style: context.titleH1Style.copyWith(
                       fontSize: 32,
                       fontWeight: FontWeight.w900,
@@ -229,7 +230,8 @@ final class _QuickStats extends StatelessWidget {
         $box.padding.all(28),
         $box.borderRadius(32),
       ),
-      child: IntrinsicHeight(
+      child: SizedBox(
+        height: 110,
         child: Row(
           children: [
             Expanded(
@@ -369,7 +371,9 @@ final class _PersonalDetails extends StatelessWidget {
               _DetailRow(
                 icon: Icons.person_outline_rounded,
                 label: t.name,
-                value: context.isArabic ? session.studentNameAr : session.studentName,
+                value: context.isArabic
+                    ? session.studentNameAr
+                    : session.studentName,
               ),
               _DetailRow(
                 icon: Icons.phone_android_rounded,

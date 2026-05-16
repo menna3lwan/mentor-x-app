@@ -112,7 +112,9 @@ final class _BuildHeader extends StatelessWidget {
             children: [
               Container(
                 decoration: BoxDecoration(
-                  color: context.backgroundSecondaryColor.withValues(alpha: 0.6),
+                  color: context.backgroundSecondaryColor.withValues(
+                    alpha: 0.6,
+                  ),
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
                     color: context.borderPrimaryColor.withValues(alpha: 0.1),
@@ -123,7 +125,7 @@ final class _BuildHeader extends StatelessWidget {
                   icon: Icons.arrow_back_ios_new_rounded,
                   color: context.textPrimaryColor,
                   size: MentorXIconButtonSize.small,
-                 ),
+                ),
               ),
               const Gap(16),
               Expanded(
@@ -173,10 +175,12 @@ final class _PointsTransactionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isEarned = tx.isCredit;
-    final color =
-        isEarned ? context.statusSuccessColor : context.statusDangerColor;
-    final iconColor =
-        isEarned ? context.statusSuccessColor : context.brandPrimaryColor;
+    final color = isEarned
+        ? context.statusSuccessColor
+        : context.statusDangerColor;
+    final iconColor = isEarned
+        ? context.statusSuccessColor
+        : context.brandPrimaryColor;
     final formattedDate = DateFormat('dd MMM, hh:mm a').format(tx.createdAt);
 
     return Container(

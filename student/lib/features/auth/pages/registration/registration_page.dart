@@ -277,7 +277,7 @@ final class RegistrationPage extends StatelessWidget {
                 const Gap(20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
+                  children: [
                     Text(
                       context.t.auth.alreadyHaveAccount,
                       style: context.bodySecondaryStyle.copyWith(
@@ -309,8 +309,6 @@ final class RegistrationPage extends StatelessWidget {
     );
   }
 }
-
-
 
 class _FadeInScale extends StatefulWidget {
   final Widget child;

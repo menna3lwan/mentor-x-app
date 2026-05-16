@@ -44,7 +44,8 @@ final class TransactionsHistoryPage extends StatelessWidget {
                     padding: const EdgeInsets.all(20),
                     itemCount: 8,
                     separatorBuilder: (_, _) => const Gap(12),
-                    itemBuilder: (_, _) => const MentorXSkeleton(height: 90, borderRadius: 24),
+                    itemBuilder: (_, _) =>
+                        const MentorXSkeleton(height: 90, borderRadius: 24),
                   )
                 : transactions.isEmpty
                 ? AppEmptyView(
@@ -64,7 +65,10 @@ final class TransactionsHistoryPage extends StatelessWidget {
                         if (i == transactions.length) {
                           return const Padding(
                             padding: EdgeInsets.all(16.0),
-                            child: MentorXSkeleton(height: 60, borderRadius: 20),
+                            child: MentorXSkeleton(
+                              height: 60,
+                              borderRadius: 20,
+                            ),
                           );
                         }
                         final tx = transactions[i];
@@ -274,4 +278,3 @@ final class _TransactionItem extends StatelessWidget {
     );
   }
 }
-

@@ -30,7 +30,9 @@ final class AssignmentResultPage extends StatelessWidget {
                         duration: const Duration(milliseconds: 600),
                         child: Container(
                           decoration: BoxDecoration(
-                            color: context.backgroundSecondaryColor.withValues(alpha: 0.45),
+                            color: context.backgroundSecondaryColor.withValues(
+                              alpha: 0.45,
+                            ),
                             borderRadius: BorderRadius.circular(32),
                             border: Border.all(
                               color: context.borderPrimaryColor.withValues(
@@ -76,14 +78,16 @@ final class AssignmentResultPage extends StatelessWidget {
                                         vertical: 8,
                                       ),
                                       decoration: BoxDecoration(
-                                        color: context.statusSuccessColor.withValues(
-                                          alpha: 0.1,
-                                        ),
+                                        color: context.statusSuccessColor
+                                            .withValues(
+                                              alpha: 0.1,
+                                            ),
                                         borderRadius: BorderRadius.circular(14),
                                         border: Border.all(
-                                          color: context.statusSuccessColor.withValues(
-                                            alpha: 0.1,
-                                          ),
+                                          color: context.statusSuccessColor
+                                              .withValues(
+                                                alpha: 0.1,
+                                              ),
                                         ),
                                       ),
                                       child: Text(
@@ -248,7 +252,11 @@ final class _InfoSection extends StatelessWidget {
                         color: context.brandPrimaryColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Icon(icon, color: context.brandPrimaryColor, size: 24),
+                      child: Icon(
+                        icon,
+                        color: context.brandPrimaryColor,
+                        size: 24,
+                      ),
                     ),
                     const Gap(16),
                     Text(

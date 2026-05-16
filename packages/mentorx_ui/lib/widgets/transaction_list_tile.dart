@@ -22,14 +22,18 @@ class TransactionListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final statusColor = isCredit ? context.statusSuccessColor : context.statusDangerColor;
+    final statusColor = isCredit
+        ? context.statusSuccessColor
+        : context.statusDangerColor;
 
     return Card(
       elevation: 0,
       margin: const EdgeInsets.only(bottom: 12),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        side: BorderSide(color: context.textTertiaryColor.withValues(alpha: 0.1)),
+        side: BorderSide(
+          color: context.textTertiaryColor.withValues(alpha: 0.1),
+        ),
       ),
       color: context.backgroundSecondaryColor,
       child: ListTile(
@@ -48,7 +52,7 @@ class TransactionListTile extends StatelessWidget {
           ),
         ),
         title: Text(
-          title, 
+          title,
           style: TextStyle(
             fontWeight: FontWeight.bold,
             color: context.textPrimaryColor,
@@ -64,7 +68,10 @@ class TransactionListTile extends StatelessWidget {
             if (subtitle != null)
               Text(
                 subtitle!,
-                style: TextStyle(color: context.textTertiaryColor, fontSize: 11),
+                style: TextStyle(
+                  color: context.textTertiaryColor,
+                  fontSize: 11,
+                ),
               ),
           ],
         ),
@@ -90,7 +97,10 @@ class TransactionListTile extends StatelessWidget {
                 ),
                 child: Text(
                   badge!,
-                  style: TextStyle(fontSize: 10, color: context.textSecondaryColor),
+                  style: TextStyle(
+                    fontSize: 10,
+                    color: context.textSecondaryColor,
+                  ),
                 ),
               ),
           ],

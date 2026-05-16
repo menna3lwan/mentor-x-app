@@ -95,8 +95,9 @@ final class _AcademicInfoStepState extends State<AcademicInfoStep> {
                         label: context.t.auth.schoolNameLabel,
                         icon: Icons.school_rounded,
                         controller: _schoolNameController,
-                        onChanged: (value) =>
-                            bloc.add(StudentRegistrationSchoolNameChanged(value)),
+                        onChanged: (value) => bloc.add(
+                          StudentRegistrationSchoolNameChanged(value),
+                        ),
                       ),
                       const Gap(20),
                       MentorXTextFormField(
@@ -130,8 +131,9 @@ final class _AcademicInfoStepState extends State<AcademicInfoStep> {
                             label: context.t.auth.centerNameLabel,
                             icon: Icons.location_on_rounded,
                             controller: _centerNameController,
-                            onChanged: (value) =>
-                                bloc.add(StudentRegistrationCenterNameChanged(value)),
+                            onChanged: (value) => bloc.add(
+                              StudentRegistrationCenterNameChanged(value),
+                            ),
                           ),
                         ),
                       ],

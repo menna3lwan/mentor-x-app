@@ -151,14 +151,19 @@ final class EditProfilePage extends StatelessWidget {
                         MentorXGlassCard(
                           style: Style(
                             $box.borderRadius(24),
-                            $box.color(context.backgroundSecondaryColor.withValues(alpha: 0.5)),
+                            $box.color(
+                              context.backgroundSecondaryColor.withValues(
+                                alpha: 0.5,
+                              ),
+                            ),
                           ),
                           child: TextFormField(
                             controller: reasonController,
                             maxLines: 4,
                             enabled: !isSubmitting,
-                            validator: (v) =>
-                                v == null || v.trim().isEmpty ? t.provideReason : null,
+                            validator: (v) => v == null || v.trim().isEmpty
+                                ? t.provideReason
+                                : null,
                             style: context.bodyPrimaryStyle.copyWith(
                               fontWeight: FontWeight.w800,
                               fontSize: 14,

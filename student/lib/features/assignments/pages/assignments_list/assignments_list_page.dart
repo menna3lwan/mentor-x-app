@@ -124,7 +124,9 @@ final class _BuildHeader extends StatelessWidget {
             children: [
               Container(
                 decoration: BoxDecoration(
-                  color: context.backgroundSecondaryColor.withValues(alpha: 0.6),
+                  color: context.backgroundSecondaryColor.withValues(
+                    alpha: 0.6,
+                  ),
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
                     color: context.borderPrimaryColor.withValues(alpha: 0.1),
@@ -288,6 +290,7 @@ final class _AssignmentCard extends StatelessWidget {
     );
   }
 }
+
 class _BackgroundDecorations extends StatelessWidget {
   const _BackgroundDecorations();
 

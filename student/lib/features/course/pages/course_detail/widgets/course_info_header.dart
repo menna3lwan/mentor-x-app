@@ -144,23 +144,27 @@ final class CourseInfoHeader extends StatelessWidget {
                     children: [
                       _StatChip(
                         icon: Icons.people_alt_rounded,
-                        label: '${course.enrolledCount} ${context.t.course.detail.students}',
+                        label:
+                            '${course.enrolledCount} ${context.t.course.detail.students}',
                       ),
                       const Gap(12),
                       _StatChip(
                         icon: Icons.play_circle_filled_rounded,
-                        label: '${course.totalVideos} ${context.t.course.detail.videos}',
+                        label:
+                            '${course.totalVideos} ${context.t.course.detail.videos}',
                       ),
                       const Gap(12),
                       _StatChip(
                         icon: Icons.access_time_filled_rounded,
                         label: _formatDuration(course.totalDurationMinutes),
                       ),
-                      if (enrollment != null && enrollment!.remainingDays > 0) ...[
+                      if (enrollment != null &&
+                          enrollment!.remainingDays > 0) ...[
                         const Gap(12),
                         _StatChip(
                           icon: Icons.event_available_rounded,
-                          label: '${enrollment!.remainingDays} ${context.t.course.detail.daysLeft}',
+                          label:
+                              '${enrollment!.remainingDays} ${context.t.course.detail.daysLeft}',
                           isHighlight: true,
                         ),
                       ],
@@ -215,7 +219,9 @@ final class _StatChip extends StatelessWidget {
         $box.padding.vertical(10),
         isHighlight
             ? $box.color(context.brandPrimaryColor.withValues(alpha: 0.15))
-            : $box.color(context.backgroundSecondaryColor.withValues(alpha: 0.45)),
+            : $box.color(
+                context.backgroundSecondaryColor.withValues(alpha: 0.45),
+              ),
         $box.border.all.color(
           isHighlight
               ? context.brandPrimaryColor.withValues(alpha: 0.3)
@@ -269,7 +275,9 @@ final class _ProgressBar extends StatelessWidget {
         $box.padding.all(20),
         $box.shadows(context.mediumShadow),
         $box.color(context.backgroundSecondaryColor.withValues(alpha: 0.45)),
-        $box.border.all.color(context.borderPrimaryColor.withValues(alpha: 0.1)),
+        $box.border.all.color(
+          context.borderPrimaryColor.withValues(alpha: 0.1),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

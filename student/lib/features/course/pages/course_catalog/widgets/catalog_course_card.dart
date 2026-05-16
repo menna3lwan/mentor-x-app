@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:mentorx_student/core/core.dart';
@@ -61,7 +60,9 @@ final class CatalogCourseCard extends StatelessWidget {
                       vertical: 6,
                     ),
                     decoration: BoxDecoration(
-                      color: context.backgroundPrimaryColor.withValues(alpha: 0.9),
+                      color: context.backgroundPrimaryColor.withValues(
+                        alpha: 0.9,
+                      ),
                       borderRadius: BorderRadius.circular(10),
                       boxShadow: [
                         BoxShadow(

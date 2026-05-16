@@ -58,7 +58,10 @@ final class QuizResultPagePage extends StatelessWidget {
                         (index) => const Expanded(
                           child: Padding(
                             padding: EdgeInsets.symmetric(horizontal: 4),
-                            child: MentorXSkeleton(height: 100, borderRadius: 24),
+                            child: MentorXSkeleton(
+                              height: 100,
+                              borderRadius: 24,
+                            ),
                           ),
                         ),
                       ),
@@ -141,9 +144,7 @@ final class QuizResultPagePage extends StatelessWidget {
                       key: const ValueKey('quiz_result_congrats_fade'),
                       duration: const Duration(milliseconds: 600),
                       child: Text(
-                        percent >= 0.60
-                            ? t.greatResult
-                            : t.fail,
+                        percent >= 0.60 ? t.greatResult : t.fail,
                         style: context.titleH1Style.copyWith(
                           fontSize: 26,
                           fontWeight: FontWeight.w900,
@@ -171,7 +172,9 @@ final class QuizResultPagePage extends StatelessWidget {
                       children: [
                         Expanded(
                           child: FadeInUp(
-                            key: const ValueKey('quiz_result_stat_correct_fade'),
+                            key: const ValueKey(
+                              'quiz_result_stat_correct_fade',
+                            ),
                             duration: const Duration(milliseconds: 500),
                             delay: const Duration(milliseconds: 400),
                             child: _StatBox(
@@ -242,8 +245,8 @@ final class QuizResultPagePage extends StatelessWidget {
                         child: MentorXButton(
                           label: t.claimReward,
                           color: context.backgroundPrimaryColor,
-                          onPressed: () => context.push('/quiz-rewards',
-                              extra: result),
+                          onPressed: () =>
+                              context.push('/quiz-rewards', extra: result),
                         ),
                       ),
                     ],
@@ -369,7 +372,9 @@ class _BuildResultCircle extends StatelessWidget {
           ),
           child: MentorXGlassCard(
             style: Style(
-              $box.color(context.backgroundSecondaryColor.withValues(alpha: 0.45)),
+              $box.color(
+                context.backgroundSecondaryColor.withValues(alpha: 0.45),
+              ),
               $box.borderRadius(110),
             ),
             child: Stack(
@@ -381,8 +386,9 @@ class _BuildResultCircle extends StatelessWidget {
                   child: CircularProgressIndicator(
                     value: value,
                     strokeWidth: 14,
-                    backgroundColor:
-                        context.backgroundPrimaryColor.withValues(alpha: 0.5),
+                    backgroundColor: context.backgroundPrimaryColor.withValues(
+                      alpha: 0.5,
+                    ),
                     valueColor: AlwaysStoppedAnimation<Color>(color),
                     strokeCap: StrokeCap.round,
                   ),
@@ -469,7 +475,9 @@ class _BuildLeaderboard extends StatelessWidget {
           ),
           child: Column(
             children: [
-              ...leaderboard.take(3).map(
+              ...leaderboard
+                  .take(3)
+                  .map(
                     (entry) => _LeaderboardTile(
                       entry: entry,
                     ),
@@ -512,10 +520,10 @@ class _LeaderboardTile extends StatelessWidget {
     final color = entry.rank == 1
         ? const Color(0xFFFFD700)
         : (entry.rank == 2
-            ? const Color(0xFFC0C0C0)
-            : (entry.rank == 3
-                ? const Color(0xFFCD7F32)
-                : context.brandSecondaryColor));
+              ? const Color(0xFFC0C0C0)
+              : (entry.rank == 3
+                    ? const Color(0xFFCD7F32)
+                    : context.brandSecondaryColor));
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),

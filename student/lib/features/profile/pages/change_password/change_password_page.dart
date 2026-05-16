@@ -63,7 +63,9 @@ final class ChangePasswordPage extends StatelessWidget {
                           $box.width(112),
                           $box.height(112),
                           $box.borderRadius(56),
-                          $box.color(context.brandPrimaryColor.withValues(alpha: 0.1)),
+                          $box.color(
+                            context.brandPrimaryColor.withValues(alpha: 0.1),
+                          ),
                         ),
                         child: Center(
                           child: Icon(
@@ -97,9 +99,8 @@ final class ChangePasswordPage extends StatelessWidget {
                       controller: currentController,
                       obscure: obscureCurrent,
                       onToggle: onToggleCurrent,
-                      validator: (v) => v == null || v.isEmpty
-                          ? t.requiredField
-                          : null,
+                      validator: (v) =>
+                          v == null || v.isEmpty ? t.requiredField : null,
                       enabled: !isSubmitting,
                     ),
                   ),

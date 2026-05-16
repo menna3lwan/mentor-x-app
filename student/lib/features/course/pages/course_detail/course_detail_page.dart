@@ -206,8 +206,6 @@ final class CourseDetailPagePage extends StatelessWidget {
   }
 }
 
-
-
 final class _DetailTabBar extends StatelessWidget {
   final CourseDetailTab selectedTab;
   final ValueChanged<CourseDetailTab> onTabChanged;
@@ -238,31 +236,34 @@ final class _DetailTabBar extends StatelessWidget {
             return Expanded(
               child: PressableBox(
                 onPress: () => onTabChanged(tab),
-                style: Style(
-                  $box.padding.vertical(14),
-                  $box.borderRadius.all(20),
-                  $box.alignment.center(),
-                ).merge(
-                  isSelected
-                      ? Style(
-                          $box.gradient.linear(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              context.brandPrimaryColor,
-                              context.brandSecondaryColor,
-                            ],
-                          ),
-                          $box.shadows(context.softShadow),
-                          $text.style.color(Colors.white),
-                          $text.style.fontWeight.w900(),
-                        )
-                      : Style(
-                          $box.color(Colors.transparent),
-                          $text.style.color(context.textPrimaryColor.withValues(alpha: 0.7)),
-                          $text.style.fontWeight.w800(),
-                        ),
-                ),
+                style:
+                    Style(
+                      $box.padding.vertical(14),
+                      $box.borderRadius.all(20),
+                      $box.alignment.center(),
+                    ).merge(
+                      isSelected
+                          ? Style(
+                              $box.gradient.linear(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  context.brandPrimaryColor,
+                                  context.brandSecondaryColor,
+                                ],
+                              ),
+                              $box.shadows(context.softShadow),
+                              $text.style.color(Colors.white),
+                              $text.style.fontWeight.w900(),
+                            )
+                          : Style(
+                              $box.color(Colors.transparent),
+                              $text.style.color(
+                                context.textPrimaryColor.withValues(alpha: 0.7),
+                              ),
+                              $text.style.fontWeight.w800(),
+                            ),
+                    ),
                 child: Text(
                   label,
                   textAlign: TextAlign.center,
@@ -341,7 +342,8 @@ final class _DescriptionTab extends StatelessWidget {
                 if (course.pointsReward > 0)
                   _InfoChip(
                     icon: Icons.auto_awesome_rounded,
-                    label: '${course.pointsReward} ${context.t.course.detail.pointsReward}',
+                    label:
+                        '${course.pointsReward} ${context.t.course.detail.pointsReward}',
                     isHighlight: true,
                   ),
               ],
@@ -373,7 +375,9 @@ final class _InfoChip extends StatelessWidget {
         $box.padding.vertical(12),
         isHighlight
             ? $box.color(context.brandPrimaryColor.withValues(alpha: 0.1))
-            : $box.color(context.backgroundSecondaryColor.withValues(alpha: 0.6)),
+            : $box.color(
+                context.backgroundSecondaryColor.withValues(alpha: 0.6),
+              ),
         $box.border.all.color(
           isHighlight
               ? context.brandPrimaryColor.withValues(alpha: 0.2)
@@ -503,7 +507,9 @@ final class _EnrollmentBar extends StatelessWidget {
           opacity: 0.85,
           blur: 25,
           style: Style(
-            $box.border.all.color(context.borderPrimaryColor.withValues(alpha: 0.1)),
+            $box.border.all.color(
+              context.borderPrimaryColor.withValues(alpha: 0.1),
+            ),
             $box.border.top.width(1.5),
             $box.border.left.none(),
             $box.border.right.none(),
@@ -567,7 +573,8 @@ final class _EnrollmentBar extends StatelessWidget {
                           const Gap(4),
                           Text(
                             context.t.course.detail.completePercent(
-                              percent: (enrollment?.progressPercent ?? 0).toInt(),
+                              percent: (enrollment?.progressPercent ?? 0)
+                                  .toInt(),
                             ),
                             style: context.titleH2Style.copyWith(
                               fontSize: 26,

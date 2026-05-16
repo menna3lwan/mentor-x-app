@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -63,7 +62,8 @@ class _FeaturedCourseCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final thumbnailUrl =
         course?.thumbnailUrl ?? 'https://picsum.photos/400/400?placeholder2';
-    final title = course?.title ?? context.t.home.dashboard.loadingFeaturedCourse;
+    final title =
+        course?.title ?? context.t.home.dashboard.loadingFeaturedCourse;
     final isFree = course?.isFree ?? true;
     final price = course?.price ?? 0;
     final enrolledCount = course?.enrolledCount ?? 100;
@@ -109,7 +109,9 @@ class _FeaturedCourseCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10),
                           boxShadow: [
                             BoxShadow(
-                              color: context.brandSecondaryColor.withValues(alpha: 0.3),
+                              color: context.brandSecondaryColor.withValues(
+                                alpha: 0.3,
+                              ),
                               blurRadius: 8,
                             ),
                           ],

@@ -29,7 +29,7 @@ class StepProgressIndicator extends StatelessWidget {
             height: height,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(height * 2),
-              color: isActive 
+              color: isActive
                   ? (activeColor ?? context.brandPrimaryColor)
                   : (inactiveColor ?? context.backgroundSecondaryColor),
             ),

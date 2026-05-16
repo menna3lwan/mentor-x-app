@@ -41,8 +41,10 @@ class _MentorXShimmerState extends State<MentorXShimmer>
   Widget build(BuildContext context) {
     if (!widget.enabled) return widget.child;
 
-    final effectiveBaseColor = widget.baseColor ?? context.backgroundTertiaryColor;
-    final effectiveHighlightColor = widget.highlightColor ?? context.backgroundSecondaryColor;
+    final effectiveBaseColor =
+        widget.baseColor ?? context.backgroundTertiaryColor;
+    final effectiveHighlightColor =
+        widget.highlightColor ?? context.backgroundSecondaryColor;
 
     return AnimatedBuilder(
       animation: _controller,

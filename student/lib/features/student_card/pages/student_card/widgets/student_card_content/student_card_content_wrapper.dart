@@ -30,7 +30,9 @@ final class StudentCardContentWrapper extends StatelessWidget {
           children: [
             Text(t.errorLoading),
             MentorXButton(
-              onPressed: () => context.read<StudentCardBloc>().add(const StudentCardLoadEvent()),
+              onPressed: () => context.read<StudentCardBloc>().add(
+                const StudentCardLoadEvent(),
+              ),
               label: context.t.core.retry,
             ),
           ],

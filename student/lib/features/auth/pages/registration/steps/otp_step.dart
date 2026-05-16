@@ -62,7 +62,9 @@ final class OtpStep extends StatelessWidget {
                     $box.width(120),
                     $box.height(120),
                     $box.borderRadius(60),
-                    $box.color(context.brandPrimaryColor.withValues(alpha: 0.1)),
+                    $box.color(
+                      context.brandPrimaryColor.withValues(alpha: 0.1),
+                    ),
                   ),
                   child: Center(
                     child: Icon(
@@ -101,8 +103,7 @@ final class OtpStep extends StatelessWidget {
                     ),
                     children: [
                       TextSpan(
-                        text:
-                            '${context.t.auth.otpSentWhatsapp}\n',
+                        text: '${context.t.auth.otpSentWhatsapp}\n',
                       ),
                       TextSpan(
                         text: phone,
@@ -135,15 +136,16 @@ final class OtpStep extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                        "${context.t.auth.didNotReceiveCode} ",
+                      "${context.t.auth.didNotReceiveCode} ",
                       style: context.bodySecondaryStyle.copyWith(
                         color: context.textSecondaryColor,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
                     TextButton(
-                      onPressed: () =>
-                          bloc.add(const StudentRegistrationResendOtpRequested()),
+                      onPressed: () => bloc.add(
+                        const StudentRegistrationResendOtpRequested(),
+                      ),
                       child: Text(
                         context.t.auth.resendCode,
                         style: context.bodySecondaryStyle.copyWith(

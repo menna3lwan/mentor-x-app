@@ -20,10 +20,15 @@ class AttendanceRateCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: context.backgroundSecondaryColor,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: context.brandPrimaryColor.withValues(alpha: 0.05), width: 1.5),
+        border: Border.all(
+          color: context.brandPrimaryColor.withValues(alpha: 0.05),
+          width: 1.5,
+        ),
         boxShadow: [
           BoxShadow(
-            color: context.backgroundElevatedSurfaceShadowColor.withValues(alpha: 0.8),
+            color: context.backgroundElevatedSurfaceShadowColor.withValues(
+              alpha: 0.8,
+            ),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -69,15 +74,17 @@ class AttendanceRateCard extends StatelessWidget {
                       CircularProgressIndicator(
                         value: rate,
                         strokeWidth: 10,
-                        backgroundColor: context.brandPrimaryColor.withValues(alpha: 0.08),
+                        backgroundColor: context.brandPrimaryColor.withValues(
+                          alpha: 0.08,
+                        ),
                         color: activeColor,
                         strokeCap: StrokeCap.round,
                       ),
                       Center(
                         child: Icon(
-                          Icons.calendar_today_rounded, 
-                          color: activeColor, 
-                          size: 28
+                          Icons.calendar_today_rounded,
+                          color: activeColor,
+                          size: 28,
                         ),
                       ),
                     ],
@@ -94,7 +101,9 @@ class AttendanceRateCard extends StatelessWidget {
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: stats.map((stat) => _AttendanceStatItem(stat: stat)).toList(),
+              children: stats
+                  .map((stat) => _AttendanceStatItem(stat: stat))
+                  .toList(),
             ),
           ],
         ),

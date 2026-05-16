@@ -46,8 +46,8 @@ class _QuizIntroPageWrapperState extends State<QuizIntroPageWrapper> {
             quiz: quiz,
             activeAttempt: activeAttempt,
             onRetry: () => context.read<QuizIntroPageBloc>().add(
-                  const QuizIntroPageLoadEvent(),
-                ),
+              const QuizIntroPageLoadEvent(),
+            ),
             onStartResume: () {
               if (quiz != null) {
                 QuizTakingPageRoute(quizId: quiz.id).push(context);

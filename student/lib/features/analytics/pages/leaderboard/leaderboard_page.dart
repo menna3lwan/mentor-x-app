@@ -44,16 +44,16 @@ final class LeaderboardPagePage extends StatelessWidget {
                     ),
                   )
                 : state.loadingState == LoadingState.error
-                    ? AppErrorView(
-                        title: t.leaderboardError,
-                        message: state.errorMessage ?? t.title,
-                        onRetry: onRefresh,
-                      )
-                    : RefreshIndicator(
-                        onRefresh: () async => onRefresh(),
-                        color: context.brandPrimaryColor,
-                        child: _buildContent(context, t),
-                      ),
+                ? AppErrorView(
+                    title: t.leaderboardError,
+                    message: state.errorMessage ?? t.title,
+                    onRetry: onRefresh,
+                  )
+                : RefreshIndicator(
+                    onRefresh: () async => onRefresh(),
+                    color: context.brandPrimaryColor,
+                    child: _buildContent(context, t),
+                  ),
           ),
         ],
       ),
@@ -649,5 +649,3 @@ final class _MyRankBar extends StatelessWidget {
     );
   }
 }
-
-

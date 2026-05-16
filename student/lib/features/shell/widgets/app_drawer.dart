@@ -110,7 +110,10 @@ final class AppDrawer extends StatelessWidget {
             // Menu Items
             Expanded(
               child: ListView(
-                padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 24,
+                  horizontal: 16,
+                ),
                 physics: const BouncingScrollPhysics(),
                 children: [
                   _DrawerItem(
@@ -293,4 +296,3 @@ final class _DrawerItem extends StatelessWidget {
     );
   }
 }
-

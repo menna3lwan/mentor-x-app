@@ -35,12 +35,13 @@ final class RewardsCatalogPage extends StatelessWidget {
                       Expanded(
                         child: GridView.builder(
                           padding: const EdgeInsets.symmetric(horizontal: 20),
-                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            childAspectRatio: 0.72,
-                            mainAxisSpacing: 16,
-                            crossAxisSpacing: 16,
-                          ),
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                childAspectRatio: 0.72,
+                                mainAxisSpacing: 16,
+                                crossAxisSpacing: 16,
+                              ),
                           itemCount: 6,
                           itemBuilder: (_, _) => const MentorXSkeleton(
                             height: 200,
@@ -55,7 +56,9 @@ final class RewardsCatalogPage extends StatelessWidget {
                 return RefreshIndicator(
                   color: context.brandPrimaryColor,
                   onRefresh: () async {
-                    context.read<RewardsPageBloc>().add(RewardsPageStartedEvent());
+                    context.read<RewardsPageBloc>().add(
+                      RewardsPageStartedEvent(),
+                    );
                   },
                   child: CustomScrollView(
                     physics: const BouncingScrollPhysics(),
@@ -96,11 +99,11 @@ final class RewardsCatalogPage extends StatelessWidget {
                             sliver: SliverGrid(
                               gridDelegate:
                                   const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                childAspectRatio: 0.68,
-                                mainAxisSpacing: 16,
-                                crossAxisSpacing: 16,
-                              ),
+                                    crossAxisCount: 2,
+                                    childAspectRatio: 0.68,
+                                    mainAxisSpacing: 16,
+                                    crossAxisSpacing: 16,
+                                  ),
                               delegate: SliverChildBuilderDelegate(
                                 (context, index) {
                                   final item = items[index];
@@ -112,7 +115,9 @@ final class RewardsCatalogPage extends StatelessWidget {
                                       t: t,
                                       onRedeem: () {
                                         context.read<RewardsPageBloc>().add(
-                                          RewardsPageClaimRequestedEvent(item.id),
+                                          RewardsPageClaimRequestedEvent(
+                                            item.id,
+                                          ),
                                         );
                                       },
                                     ),
@@ -299,7 +304,10 @@ final class _PointsHeader extends StatelessWidget {
               ),
               const Gap(24),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 10,
+                ),
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(14),

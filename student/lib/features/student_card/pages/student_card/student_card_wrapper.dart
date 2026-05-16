@@ -11,7 +11,10 @@ final class StudentCardPageWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocPresentationListener<StudentCardBloc, StudentCardPresentationEvent>(
+    return BlocPresentationListener<
+      StudentCardBloc,
+      StudentCardPresentationEvent
+    >(
       listener: (context, event) {
         switch (event) {
           case StudentCardFailurePresentationEvent(:final exception):

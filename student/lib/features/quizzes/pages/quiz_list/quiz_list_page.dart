@@ -21,12 +21,14 @@ final class QuizListPage extends StatelessWidget {
           Expanded(
             child: Builder(
               builder: (context) {
-                final loadingState = context.select<QuizListPageBloc, LoadingState>(
-                  (bloc) => bloc.state.loadingState,
-                );
-                final quizzes = context.select<QuizListPageBloc, List<QuizEntity>>(
-                  (bloc) => bloc.state.quizzes,
-                );
+                final loadingState = context
+                    .select<QuizListPageBloc, LoadingState>(
+                      (bloc) => bloc.state.loadingState,
+                    );
+                final quizzes = context
+                    .select<QuizListPageBloc, List<QuizEntity>>(
+                      (bloc) => bloc.state.quizzes,
+                    );
 
                 if (loadingState == LoadingState.loading) {
                   return ListView.separated(
@@ -203,12 +205,14 @@ final class _QuizItemCard extends StatelessWidget {
                     children: [
                       _QuizInfoLabel(
                         icon: Icons.help_outline_rounded,
-                        label: '${quiz.questionsCount ?? 0} ${context.t.quizzes.questions}',
+                        label:
+                            '${quiz.questionsCount ?? 0} ${context.t.quizzes.questions}',
                       ),
                       const Gap(16),
                       _QuizInfoLabel(
                         icon: Icons.access_time_rounded,
-                        label: '${quiz.durationMinutes} ${context.t.quizzes.minutesShort}',
+                        label:
+                            '${quiz.durationMinutes} ${context.t.quizzes.minutesShort}',
                       ),
                     ],
                   ),

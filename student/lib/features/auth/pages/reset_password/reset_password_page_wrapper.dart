@@ -42,13 +42,14 @@ final class _ResetPasswordPageWrapperState
       ),
       child:
           BlocPresentationListener<
-
             ResetPasswordBloc,
             ResetPasswordPresentationEvent
           >(
             listener: (context, event) {
               if (event is ResetPasswordSuccessPresentationEvent) {
-                context.showSuccessSnackBar(context.t.auth.passwordResetSuccess);
+                context.showSuccessSnackBar(
+                  context.t.auth.passwordResetSuccess,
+                );
                 const LoginPageRoute().go(context);
               }
             },

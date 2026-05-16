@@ -11,9 +11,10 @@ final class AnnouncementsSectionWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final section = context.select<HomePageBloc, HomeAsyncSection<List<AnnouncementEntity>>>(
-      (bloc) => bloc.state.announcementsSection,
-    );
+    final section = context
+        .select<HomePageBloc, HomeAsyncSection<List<AnnouncementEntity>>>(
+          (bloc) => bloc.state.announcementsSection,
+        );
 
     return AnnouncementsSectionWidget(
       announcements: section.data,

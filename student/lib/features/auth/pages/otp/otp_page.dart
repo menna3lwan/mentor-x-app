@@ -100,7 +100,9 @@ final class OtpPage extends StatelessWidget {
                             $box.width(112),
                             $box.height(112),
                             $box.borderRadius(56),
-                            $box.color(context.brandPrimaryColor.withValues(alpha: 0.1)),
+                            $box.color(
+                              context.brandPrimaryColor.withValues(alpha: 0.1),
+                            ),
                           ),
                           child: Center(
                             child: Icon(
@@ -176,30 +178,41 @@ final class OtpPage extends StatelessWidget {
                                     children: [
                                       Text(
                                         context.t.auth.didNotReceiveCode,
-                                        style: context.bodySecondaryStyle.copyWith(
-                                          color: context.textSecondaryColor,
-                                          fontWeight: FontWeight.w700,
-                                        ),
+                                        style: context.bodySecondaryStyle
+                                            .copyWith(
+                                              color: context.textSecondaryColor,
+                                              fontWeight: FontWeight.w700,
+                                            ),
                                       ),
                                       TextButton(
-                                        onPressed: isResending ? null : onResend,
+                                        onPressed: isResending
+                                            ? null
+                                            : onResend,
                                         child: isResending
                                             ? SizedBox(
                                                 width: 16,
                                                 height: 16,
                                                 child: CircularProgressIndicator(
                                                   strokeWidth: 2.5,
-                                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                                    context.brandPrimaryColor,
-                                                  ),
+                                                  valueColor:
+                                                      AlwaysStoppedAnimation<
+                                                        Color
+                                                      >(
+                                                        context
+                                                            .brandPrimaryColor,
+                                                      ),
                                                 ),
                                               )
                                             : Text(
                                                 context.t.auth.resendCode,
-                                                style: context.bodySecondaryStyle.copyWith(
-                                                  fontWeight: FontWeight.w900,
-                                                  color: context.brandPrimaryColor,
-                                                ),
+                                                style: context
+                                                    .bodySecondaryStyle
+                                                    .copyWith(
+                                                      fontWeight:
+                                                          FontWeight.w900,
+                                                      color: context
+                                                          .brandPrimaryColor,
+                                                    ),
                                               ),
                                       ),
                                     ],
@@ -215,9 +228,10 @@ final class OtpPage extends StatelessWidget {
                                             height: 16,
                                             child: CircularProgressIndicator(
                                               strokeWidth: 2.5,
-                                              valueColor: AlwaysStoppedAnimation<Color>(
-                                                Colors.green,
-                                              ),
+                                              valueColor:
+                                                  AlwaysStoppedAnimation<Color>(
+                                                    Colors.green,
+                                                  ),
                                             ),
                                           )
                                         : const Icon(
@@ -227,10 +241,11 @@ final class OtpPage extends StatelessWidget {
                                           ),
                                     label: Text(
                                       context.t.auth.resendWhatsapp,
-                                      style: context.bodySecondaryStyle.copyWith(
-                                        fontWeight: FontWeight.w900,
-                                        color: Colors.green,
-                                      ),
+                                      style: context.bodySecondaryStyle
+                                          .copyWith(
+                                            fontWeight: FontWeight.w900,
+                                            color: Colors.green,
+                                          ),
                                     ),
                                   ),
                                 ],
@@ -241,7 +256,11 @@ final class OtpPage extends StatelessWidget {
                                   $box.padding.vertical(16),
                                   $box.padding.horizontal(24),
                                   $box.borderRadius(20),
-                                  $box.color(context.backgroundSecondaryColor.withValues(alpha: 0.5)),
+                                  $box.color(
+                                    context.backgroundSecondaryColor.withValues(
+                                      alpha: 0.5,
+                                    ),
+                                  ),
                                 ),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
@@ -254,11 +273,12 @@ final class OtpPage extends StatelessWidget {
                                     const Gap(12),
                                     Text(
                                       '${context.t.auth.resendIn} $formattedCountdown',
-                                      style: context.bodySecondaryStyle.copyWith(
-                                        color: context.textSecondaryColor,
-                                        fontWeight: FontWeight.w800,
-                                        fontSize: 14,
-                                      ),
+                                      style: context.bodySecondaryStyle
+                                          .copyWith(
+                                            color: context.textSecondaryColor,
+                                            fontWeight: FontWeight.w800,
+                                            fontSize: 14,
+                                          ),
                                     ),
                                   ],
                                 ),

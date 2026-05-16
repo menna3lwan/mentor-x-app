@@ -104,8 +104,8 @@ class MentorXBottomSheetTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final effectiveColor = isDestructive 
-        ? context.statusDangerColor 
+    final effectiveColor = isDestructive
+        ? context.statusDangerColor
         : (color ?? context.textPrimaryColor);
 
     return PressableBox(
@@ -115,7 +115,9 @@ class MentorXBottomSheetTile extends StatelessWidget {
         $box.padding.horizontal(16),
         $box.borderRadius(16),
         $box.color(Colors.transparent),
-        $on.hover($box.color(context.backgroundTertiaryColor.withValues(alpha: 0.5))),
+        $on.hover(
+          $box.color(context.backgroundTertiaryColor.withValues(alpha: 0.5)),
+        ),
       ),
       child: Row(
         children: [
@@ -142,7 +144,7 @@ class MentorXBottomSheetTile extends StatelessWidget {
                   Text(
                     subtitle!,
                     style: context.smallTextStyle.copyWith(
-                      color: isDestructive 
+                      color: isDestructive
                           ? context.statusDangerColor.withValues(alpha: 0.7)
                           : context.textSecondaryColor,
                     ),

@@ -298,7 +298,9 @@ class _ModernFilterChip extends StatelessWidget {
                   ],
                 )
               : null,
-          color: isSelected ? null : context.backgroundSecondaryColor.withValues(alpha: 0.6),
+          color: isSelected
+              ? null
+              : context.backgroundSecondaryColor.withValues(alpha: 0.6),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: isSelected
@@ -327,5 +329,3 @@ class _ModernFilterChip extends StatelessWidget {
     );
   }
 }
-
-

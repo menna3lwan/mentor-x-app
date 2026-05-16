@@ -1,7 +1,7 @@
 part of '../mentorx_ui.dart';
 
 /// A wrapper that provides screenshot protection and a dynamic watermark.
-/// 
+///
 /// This widget is part of the mentorx_ui kit and should be used to protect
 /// sensitive media content like videos and PDFs.
 class MentorXSecuredMediaWrapper extends StatefulWidget {
@@ -17,10 +17,12 @@ class MentorXSecuredMediaWrapper extends StatefulWidget {
   });
 
   @override
-  State<MentorXSecuredMediaWrapper> createState() => _MentorXSecuredMediaWrapperState();
+  State<MentorXSecuredMediaWrapper> createState() =>
+      _MentorXSecuredMediaWrapperState();
 }
 
-class _MentorXSecuredMediaWrapperState extends State<MentorXSecuredMediaWrapper> {
+class _MentorXSecuredMediaWrapperState
+    extends State<MentorXSecuredMediaWrapper> {
   @override
   void initState() {
     super.initState();

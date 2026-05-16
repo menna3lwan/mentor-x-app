@@ -240,5 +240,3 @@ final class _HeroIcon extends StatelessWidget {
     );
   }
 }
-
-

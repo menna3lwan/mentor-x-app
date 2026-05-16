@@ -18,10 +18,12 @@ class AppHeroCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GradientCard(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      colors: colors ?? [
-        context.brandPrimaryColor,
-        context.brandPrimaryColor.withValues(alpha: 0.85),
-      ],
+      colors:
+          colors ??
+          [
+            context.brandPrimaryColor,
+            context.brandPrimaryColor.withValues(alpha: 0.85),
+          ],
       padding: const EdgeInsets.all(24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -32,11 +34,11 @@ class AppHeroCard extends StatelessWidget {
               Text(
                 title,
                 style: context.bodyPrimaryStyle.copyWith(
-                      color: context.backgroundSecondaryColor,
-                      fontWeight: FontWeight.w900,
-                      fontSize: 18,
-                      letterSpacing: -0.4,
-                    ),
+                  color: context.backgroundSecondaryColor,
+                  fontWeight: FontWeight.w900,
+                  fontSize: 18,
+                  letterSpacing: -0.4,
+                ),
               ),
               Container(
                 padding: const EdgeInsets.all(8),
@@ -45,9 +47,9 @@ class AppHeroCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
-                  icon, 
-                  color: context.backgroundSecondaryColor, 
-                  size: 20
+                  icon,
+                  color: context.backgroundSecondaryColor,
+                  size: 20,
                 ),
               ),
             ],
@@ -89,16 +91,16 @@ class _StatItem extends StatelessWidget {
           Text(
             stat.value,
             style: context.titleH2Style.copyWith(
-                  fontWeight: FontWeight.w800,
-                  color: context.backgroundSecondaryColor,
-                ),
+              fontWeight: FontWeight.w800,
+              color: context.backgroundSecondaryColor,
+            ),
           ),
           const SizedBox(height: 4),
           Text(
             stat.label,
             style: context.smallTextStyle.copyWith(
-                  color: context.backgroundSecondaryColor.withValues(alpha: 0.7),
-                ),
+              color: context.backgroundSecondaryColor.withValues(alpha: 0.7),
+            ),
           ),
         ],
       ),

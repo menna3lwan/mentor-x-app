@@ -35,7 +35,7 @@ class AuthScaffold extends StatelessWidget {
     return Scaffold(
       backgroundColor: backgroundColor ?? context.backgroundPrimaryColor,
       resizeToAvoidBottomInset: resizeToAvoidBottomInset,
-      appBar: appBarLeading != null 
+      appBar: appBarLeading != null
           ? AppBar(
               backgroundColor: Colors.transparent,
               elevation: 0,

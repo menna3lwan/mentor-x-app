@@ -86,7 +86,9 @@ class _EditProfilePageWrapperState extends State<EditProfilePageWrapper> {
     }
 
     if (_phoneController.text != _initialSession.phone) {
-      requests.add(_AddRequest('phone', _initialSession.phone, _phoneController.text));
+      requests.add(
+        _AddRequest('phone', _initialSession.phone, _phoneController.text),
+      );
     }
 
     final currentGrade = isAr ? _initialSession.gradeAr : _initialSession.grade;
@@ -98,20 +100,23 @@ class _EditProfilePageWrapperState extends State<EditProfilePageWrapper> {
         ? _initialSession.centerAr
         : _initialSession.center;
     if (_centerController.text != currentCenter) {
-      requests.add(_AddRequest('center', currentCenter, _centerController.text));
+      requests.add(
+        _AddRequest('center', currentCenter, _centerController.text),
+      );
     }
 
     final currentSchool = isAr
         ? _initialSession.schoolAr
         : _initialSession.school;
     if (_schoolController.text != currentSchool) {
-      requests.add(_AddRequest('school', currentSchool, _schoolController.text));
+      requests.add(
+        _AddRequest('school', currentSchool, _schoolController.text),
+      );
     }
 
     if (requests.isEmpty) {
       MentorXUI.showToast(
-        message:
-            context.t.profile.noChangesDetected,
+        message: context.t.profile.noChangesDetected,
       );
       return;
     }
@@ -140,8 +145,7 @@ class _EditProfilePageWrapperState extends State<EditProfilePageWrapper> {
             Navigator.of(context).pop();
           case EditProfilePageSuccess():
             MentorXUI.showToast(
-              message:
-                  context.t.profile.requestSentSuccess,
+              message: context.t.profile.requestSentSuccess,
             );
             Navigator.of(context).pop();
         }

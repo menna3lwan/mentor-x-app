@@ -158,8 +158,6 @@ final class MyCoursesPagePage extends StatelessWidget {
   }
 }
 
-
-
 final class _TabBar extends StatelessWidget {
   final MyCoursesTab selectedTab;
   final ValueChanged<MyCoursesTab> onTabChanged;

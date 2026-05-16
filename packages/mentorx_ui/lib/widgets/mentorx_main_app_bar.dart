@@ -21,7 +21,12 @@ class MentorXMainAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.fromLTRB(20, MediaQuery.of(context).padding.top + 8, 20, 16),
+      padding: EdgeInsets.fromLTRB(
+        20,
+        MediaQuery.of(context).padding.top + 8,
+        20,
+        16,
+      ),
       child: Row(
         children: [
           GestureDetector(
@@ -117,10 +122,18 @@ final class _NotificationButton extends StatelessWidget {
           style: Style(
             $box.width(48),
             $box.height(48),
-            $box.color(context.backgroundSecondaryColor.withValues(alpha: 0.45)),
+            $box.color(
+              context.backgroundSecondaryColor.withValues(alpha: 0.45),
+            ),
             $box.shape.circle(),
-            $box.border.all.color(context.borderPrimaryColor.withValues(alpha: 0.1)),
-            $on.hover($box.color(context.backgroundSecondaryColor.withValues(alpha: 0.6))),
+            $box.border.all.color(
+              context.borderPrimaryColor.withValues(alpha: 0.1),
+            ),
+            $on.hover(
+              $box.color(
+                context.backgroundSecondaryColor.withValues(alpha: 0.6),
+              ),
+            ),
           ),
           child: Icon(
             Icons.notifications_none_rounded,

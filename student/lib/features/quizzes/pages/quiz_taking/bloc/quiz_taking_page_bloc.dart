@@ -55,14 +55,15 @@ final class QuizTakingPageBloc
       int? remainingSeconds;
       if (quizEntity.timeRestricted) {
         if (attempt.expiresAt != null) {
-          remainingSeconds = attempt.expiresAt!.difference(DateTime.now()).inSeconds;
+          remainingSeconds = attempt.expiresAt!
+              .difference(DateTime.now())
+              .inSeconds;
         } else {
           remainingSeconds = quizEntity.durationMinutes * 60;
         }
         // Ensure we don't have negative time
         if (remainingSeconds < 0) remainingSeconds = 0;
       }
-
 
       analyticsService.logEvent(
         name: AnalyticsEvents.quizStarted,
@@ -84,7 +85,6 @@ final class QuizTakingPageBloc
           remainingSeconds: remainingSeconds,
         ),
       );
-
     } catch (e) {
       emit(
         state.copyWith(

@@ -6,7 +6,7 @@ final class MentorXPaginatedList extends StatefulWidget {
   final VoidCallback onPaginationTriggered;
   final ScrollController? scrollController;
   final Widget Function(BuildContext context, ScrollController scrollController)
-      builder;
+  builder;
 
   const MentorXPaginatedList({
     super.key,
@@ -45,7 +45,8 @@ class _MentorXPaginatedListState extends State<MentorXPaginatedList> {
       oldWidget.scrollController?.removeListener(_onScroll);
       _internalScrollController?.removeListener(_onScroll);
 
-      if (widget.scrollController == null && _internalScrollController == null) {
+      if (widget.scrollController == null &&
+          _internalScrollController == null) {
         _internalScrollController = ScrollController();
       } else if (widget.scrollController != null) {
         _internalScrollController?.dispose();

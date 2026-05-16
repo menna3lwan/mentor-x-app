@@ -98,7 +98,8 @@ final class QuizIntroPagePage extends StatelessWidget {
                       duration: const Duration(milliseconds: 600),
                       delay: const Duration(milliseconds: 400),
                       child: MentorXButton(
-                        label: activeAttempt != null &&
+                        label:
+                            activeAttempt != null &&
                                 activeAttempt!.status ==
                                     QuizAttemptStatus.inProgress
                             ? t.resumeQuiz
@@ -228,8 +229,7 @@ final class _BuildHeader extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 32),
                   child: Text(
-                    quiz.description ??
-                        context.t.quizzes.quizSubtitle,
+                    quiz.description ?? context.t.quizzes.quizSubtitle,
                     textAlign: TextAlign.center,
                     style: context.bodySecondaryStyle.copyWith(
                       color: context.textTertiaryColor,
