@@ -586,7 +586,6 @@ final class _EnrollmentBar extends StatelessWidget {
                         ],
                       ),
                     ),
-                  const Spacer(),
                   _buildActionButton(context),
                 ],
               ),
@@ -601,7 +600,7 @@ final class _EnrollmentBar extends StatelessWidget {
     if (isEnrolled) {
       final status = enrollment!.status;
       return MentorXButton(
-        width: 180,
+        width: 220,
         onPressed: status == EnrollmentStatus.active ? () {} : null,
         label: status == EnrollmentStatus.active
             ? context.t.course.detail.continueStudying
@@ -618,7 +617,7 @@ final class _EnrollmentBar extends StatelessWidget {
     }
 
     return MentorXButton(
-      width: 180,
+      width: 220,
       onPressed: onEnrollTap,
       loading: isEnrolling,
       label: context.t.course.detail.enrollNow,

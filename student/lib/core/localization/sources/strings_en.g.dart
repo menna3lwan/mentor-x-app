@@ -924,6 +924,9 @@ class TranslationsCourseEn {
 	/// en: 'Quizzes Taken'
 	String get quizzesTaken => 'Quizzes Taken';
 
+	/// en: 'Avg. Quiz Score'
+	String get avgQuizScore => 'Avg. Quiz Score';
+
 	late final TranslationsCourseCatalogEn catalog = TranslationsCourseCatalogEn.internal(_root);
 	late final TranslationsCourseMyGradesEn myGrades = TranslationsCourseMyGradesEn.internal(_root);
 
@@ -2615,6 +2618,7 @@ extension on Translations {
 			'course.lessonsCompleted' => 'Lessons Completed',
 			'course.timeSpent' => 'Time Spent',
 			'course.quizzesTaken' => 'Quizzes Taken',
+			'course.avgQuizScore' => 'Avg. Quiz Score',
 			'course.catalog.allCategories' => 'All Categories',
 			'course.catalog.allLevels' => 'All Levels',
 			'course.catalog.coursesFound' => ({required Object count}) => '${count} courses found',
@@ -2823,9 +2827,9 @@ extension on Translations {
 			'quizzes.rewards.days.fri' => 'FRI',
 			'quizzes.rewards.badges.lightningSpeed' => 'Lightning Speed',
 			'quizzes.rewards.badges.perfectScore' => 'Perfect Score',
-			'quizzes.rewards.badges.fiveDayStreak' => '5 Day Streak',
 			_ => null,
 		} ?? switch (path) {
+			'quizzes.rewards.badges.fiveDayStreak' => '5 Day Streak',
 			'quizzes.rewards.badges.tenQuizzes' => '10 Quizzes',
 			'quizzes.rewards.badges.physicsLion' => 'Physics Lion',
 			'quizzes.review.title' => 'Review Answers',

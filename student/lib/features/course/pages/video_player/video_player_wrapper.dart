@@ -63,7 +63,7 @@ final class _VideoPlayerPageWrapperState extends State<VideoPlayerPageWrapper> {
           );
           final watermarkText = user != null
               ? '${user.fullName}\n${user.phoneNumber}'
-              : null;
+              : 'MentorX Protected';
 
           return VideoPlayerPagePage(
             title: title,

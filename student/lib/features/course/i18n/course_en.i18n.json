@@ -50,6 +50,7 @@
     "lessonsCompleted": "Lessons Completed",
     "timeSpent": "Time Spent",
     "quizzesTaken": "Quizzes Taken",
+    "avgQuizScore": "Avg. Quiz Score",
     "catalog": {
         "allCategories": "All Categories",
         "allLevels": "All Levels",

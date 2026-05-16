@@ -161,264 +161,127 @@ class _VideoPlayerPagePageState extends State<VideoPlayerPagePage> {
   Widget build(BuildContext context) {
     final t = context.t;
 
-    return Scaffold(
-      backgroundColor: context.backgroundPrimaryColor,
-      body: Column(
-        children: [
-          Gap(MediaQuery.paddingOf(context).top + 20),
-          _buildHeader(context),
-          Expanded(child: _buildBody(context, t)),
-        ],
-      ),
-    );
-  }
+    Widget buildContent(Widget playerWidget) {
+      if (widget.errorMessage != null) {
+        return AppErrorView(
+          message: widget.errorMessage!,
+        );
+      }
 
-  Widget _buildHeader(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
-      child: Row(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              color: context.backgroundSecondaryColor.withValues(alpha: 0.45),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: context.borderPrimaryColor.withValues(alpha: 0.1),
-              ),
-            ),
-            child: MentorXIconButton(
-              onPressed: () => Navigator.of(context).pop(),
-              icon: Icons.arrow_back_ios_new_rounded,
-              color: context.textPrimaryColor,
-              size: MentorXIconButtonSize.small,
-            ),
-          ),
-          const Gap(20),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                FadeInLeft(
-                  duration: const Duration(milliseconds: 600),
-                  child: Text(
-                    'NOW PLAYING',
-                    style: TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w900,
-                      color: context.brandPrimaryColor,
-                      letterSpacing: 2.0,
+      if (widget.isLoading) {
+        return Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            children: [
+              const MentorXSkeleton(height: 200, borderRadius: 32),
+              const Gap(40),
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.all(32),
+                  decoration: BoxDecoration(
+                    color: context.backgroundSecondaryColor,
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(40),
+                    ),
+                  ),
+                  child: Column(
+                    children: List.generate(
+                      3,
+                      (index) => const Padding(
+                        padding: EdgeInsets.only(bottom: 16),
+                        child: MentorXSkeleton(height: 60, borderRadius: 20),
+                      ),
                     ),
                   ),
                 ),
-                const Gap(4),
-                FadeInLeft(
-                  duration: const Duration(milliseconds: 800),
-                  delay: const Duration(milliseconds: 100),
-                  child: Text(
+              ),
+            ],
+          ),
+        );
+      }
+
+      return Column(
+        children: [
+          // Player at the top (full width)
+          AspectRatio(
+            aspectRatio: 16 / 9,
+            child: MentorXSecuredMediaWrapper(
+              watermarkText: widget.watermarkText,
+              child: playerWidget,
+            ),
+          ),
+          
+          // Info Section below
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
                     widget.title,
                     style: TextStyle(
-                      fontSize: 18,
+                      fontSize: 22,
                       fontWeight: FontWeight.w900,
                       color: context.textPrimaryColor,
                       letterSpacing: -0.5,
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
-              ],
+                  const Gap(16),
+                  _buildInfoSection(context),
+                ],
+              ),
             ),
           ),
         ],
+      );
+    }
+
+    if (_youtubeController != null) {
+      return YoutubePlayerBuilder(
+        player: YoutubePlayer(
+          controller: _youtubeController!,
+          showVideoProgressIndicator: true,
+          progressIndicatorColor: context.brandPrimaryColor,
+        ),
+        builder: (context, player) {
+          return Scaffold(
+            backgroundColor: context.backgroundPrimaryColor,
+            appBar: MentorXAppBar(
+              titleText: widget.title,
+              backgroundColor: Colors.transparent,
+            ),
+            body: buildContent(player),
+          );
+        },
+      );
+    }
+
+    return Scaffold(
+      backgroundColor: context.backgroundPrimaryColor,
+      appBar: MentorXAppBar(
+        titleText: widget.title,
+        backgroundColor: Colors.transparent,
       ),
+      body: buildContent(_buildPlayer(context)),
     );
   }
 
-  Widget _buildBody(
-    BuildContext context,
-    dynamic t,
-  ) {
-    if (widget.errorMessage != null) {
-      return AppErrorView(
-        message: widget.errorMessage!,
-      );
-    }
-
-    if (widget.isLoading) {
-      return Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          children: [
-            const MentorXSkeleton(height: 200, borderRadius: 32),
-            const Gap(40),
-            Expanded(
-              child: Container(
-                padding: const EdgeInsets.all(32),
-                decoration: BoxDecoration(
-                  color: context.backgroundSecondaryColor,
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(40),
-                  ),
-                ),
-                child: Column(
-                  children: List.generate(
-                    3,
-                    (index) => const Padding(
-                      padding: EdgeInsets.only(bottom: 16),
-                      child: MentorXSkeleton(height: 60, borderRadius: 20),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-
+  Widget _buildInfoSection(BuildContext context) {
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.all(24),
-          child: FadeInDown(
-            duration: const Duration(milliseconds: 600),
-            child: AspectRatio(
-              aspectRatio: 16 / 9,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.black,
-                  borderRadius: BorderRadius.circular(32),
-                  border: Border.all(
-                    color: context.borderPrimaryColor.withValues(alpha: 0.1),
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.4),
-                      blurRadius: 30,
-                      offset: const Offset(0, 15),
-                    ),
-                  ],
-                ),
-                clipBehavior: Clip.antiAlias,
-                child: MentorXSecuredMediaWrapper(
-                  watermarkText: widget.watermarkText,
-                  child: _buildPlayer(context),
-                ),
-              ),
-            ),
-          ),
+        _InfoTile(
+          label: context.t.course.player.duration,
+          value: _formatTime(widget.totalDurationSeconds),
+          icon: Icons.timer_rounded,
         ),
-
-        // Video Info Section
-        Expanded(
-          child: FadeInUp(
-            duration: const Duration(milliseconds: 600),
-            child: Container(
-              width: double.infinity,
-              margin: const EdgeInsets.symmetric(horizontal: 24),
-              padding: const EdgeInsets.all(32),
-              decoration: BoxDecoration(
-                color: context.backgroundSecondaryColor.withValues(alpha: 0.45),
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(44),
-                ),
-                border: Border.all(
-                  color: context.borderPrimaryColor.withValues(alpha: 0.1),
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.1),
-                    blurRadius: 30,
-                    offset: const Offset(0, -10),
-                  ),
-                ],
-              ),
-              child: ClipRRect(
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(44),
-                ),
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.all(32),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                widget.title,
-                                style: TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.w900,
-                                  color: context.textPrimaryColor,
-                                  letterSpacing: -0.8,
-                                ),
-                              ),
-                            ),
-                            if (widget.isCompleted)
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 14,
-                                  vertical: 8,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: context.statusSuccessColor.withValues(
-                                    alpha: 0.1,
-                                  ),
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(
-                                    color: context.statusSuccessColor
-                                        .withValues(
-                                          alpha: 0.1,
-                                        ),
-                                  ),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.check_circle_rounded,
-                                      color: context.statusSuccessColor,
-                                      size: 16,
-                                    ),
-                                    const Gap(8),
-                                    Text(
-                                      context.t.course.player.completed
-                                          .toUpperCase(),
-                                      style: TextStyle(
-                                        color: context.statusSuccessColor,
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.w900,
-                                        letterSpacing: 1.0,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                          ],
-                        ),
-                        const Gap(40),
-                        _InfoTile(
-                          label: context.t.course.player.duration,
-                          value: _formatTime(widget.totalDurationSeconds),
-                          icon: Icons.timer_rounded,
-                        ),
-                        const Gap(16),
-                        _InfoTile(
-                          label: context.t.course.player.status,
-                          value: widget.isCompleted
-                              ? context.t.course.player.completed
-                              : context.t.course.player.watching,
-                          icon: Icons.info_outline_rounded,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
+        const Gap(12),
+        _InfoTile(
+          label: context.t.course.player.status,
+          value: widget.isCompleted
+              ? context.t.course.player.completed
+              : context.t.course.player.watching,
+          icon: Icons.info_outline_rounded,
         ),
       ],
     );

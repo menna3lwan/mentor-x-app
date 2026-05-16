@@ -104,6 +104,7 @@ final class _CourseDetailPageWrapperState
 
     switch (item.itemType) {
       case SessionItemType.video:
+      case SessionItemType.youtube:
         VideoPlayerPageRoute(
           itemId: item.id,
           title: item.title,
@@ -125,8 +126,7 @@ final class _CourseDetailPageWrapperState
             context.t.core.opening(url: item.fileUrl!),
           );
         }
-      case SessionItemType.youtube:
-        context.showInfoSnackBar(context.t.core.comingSoon);
+
       case SessionItemType.quiz:
         QuizIntroPageRoute(quizId: item.id).push(context);
       case SessionItemType.assignment:

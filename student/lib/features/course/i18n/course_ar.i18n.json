@@ -50,6 +50,7 @@
     "lessonsCompleted": "الدروس المكتملة",
     "timeSpent": "الوقت المستغرق",
     "quizzesTaken": "الاختبارات المجتازة",
+    "avgQuizScore": "متوسط درجة الاختبار",
     "catalog": {
         "allCategories": "كل التصنيفات",
         "allLevels": "كل المستويات",

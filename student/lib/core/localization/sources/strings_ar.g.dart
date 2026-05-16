@@ -401,6 +401,7 @@ class _TranslationsCourseAr extends TranslationsCourseEn {
 	@override String get lessonsCompleted => 'الدروس المكتملة';
 	@override String get timeSpent => 'الوقت المستغرق';
 	@override String get quizzesTaken => 'الاختبارات المجتازة';
+	@override String get avgQuizScore => 'متوسط درجة الاختبار';
 	@override late final _TranslationsCourseCatalogAr catalog = _TranslationsCourseCatalogAr._(_root);
 	@override late final _TranslationsCourseMyGradesAr myGrades = _TranslationsCourseMyGradesAr._(_root);
 	@override String get markAsDone => 'تحديد كمكتمل';
@@ -1379,6 +1380,7 @@ extension on TranslationsAr {
 			'course.lessonsCompleted' => 'الدروس المكتملة',
 			'course.timeSpent' => 'الوقت المستغرق',
 			'course.quizzesTaken' => 'الاختبارات المجتازة',
+			'course.avgQuizScore' => 'متوسط درجة الاختبار',
 			'course.catalog.allCategories' => 'كل التصنيفات',
 			'course.catalog.allLevels' => 'كل المستويات',
 			'course.catalog.coursesFound' => ({required Object count}) => 'تم العثور على ${count} دورة',
@@ -1587,9 +1589,9 @@ extension on TranslationsAr {
 			'quizzes.rewards.days.fri' => 'جمعة',
 			'quizzes.rewards.badges.lightningSpeed' => 'سرعة البرق',
 			'quizzes.rewards.badges.perfectScore' => 'الدرجة الكاملة',
-			'quizzes.rewards.badges.fiveDayStreak' => '5 أيام متتالية',
 			_ => null,
 		} ?? switch (path) {
+			'quizzes.rewards.badges.fiveDayStreak' => '5 أيام متتالية',
 			'quizzes.rewards.badges.tenQuizzes' => '10 اختبارات',
 			'quizzes.rewards.badges.physicsLion' => 'أسد الفيزياء',
 			'quizzes.review.title' => 'مراجعة الإجابات',
