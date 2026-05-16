@@ -174,18 +174,6 @@ final class CourseDetailPagePage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 FadeInLeft(
-                  duration: const Duration(milliseconds: 600),
-                  child: Text(
-                    context.t.course.courseDetail,
-                    style: context.smallTextStyle.copyWith(
-                      fontWeight: FontWeight.w900,
-                      color: context.brandPrimaryColor,
-                      letterSpacing: 2.0,
-                    ),
-                  ),
-                ),
-                const Gap(4),
-                FadeInLeft(
                   duration: const Duration(milliseconds: 800),
                   delay: const Duration(milliseconds: 100),
                   child: Text(
@@ -249,7 +237,7 @@ final class _DetailTabBar extends StatelessWidget {
                                 end: Alignment.bottomRight,
                                 colors: [
                                   context.brandPrimaryColor,
-                                  context.brandSecondaryColor,
+                                  const Color(0xFF2EC4B6),
                                 ],
                               ),
                               $box.shadows(context.softShadow),
@@ -525,40 +513,42 @@ final class _EnrollmentBar extends StatelessWidget {
               child: Row(
                 children: [
                   if (!isEnrolled)
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        if (course.isFree || course.price == 0)
-                          Text(
-                            context.t.course.detail.free,
-                            style: context.titleH1Style.copyWith(
-                              fontSize: 32,
-                              fontWeight: FontWeight.w900,
-                              color: context.statusSuccessColor,
-                              letterSpacing: -1,
-                            ),
-                          )
-                        else ...[
-                          Text(
-                            '${course.price.toInt()} ${context.t.core.currency}',
-                            style: context.titleH1Style.copyWith(
-                              fontSize: 32,
-                              fontWeight: FontWeight.w900,
-                              letterSpacing: -1,
-                            ),
-                          ),
-                          if (course.oldPrice != null)
+                    Expanded(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (course.isFree || course.price == 0)
                             Text(
-                              '${course.oldPrice!.toInt()} ${context.t.core.currency}',
-                              style: context.smallTextStyle.copyWith(
-                                decoration: TextDecoration.lineThrough,
+                              context.t.course.detail.free,
+                              style: context.titleH1Style.copyWith(
+                                fontSize: 32,
                                 fontWeight: FontWeight.w900,
-                                color: context.textTertiaryColor,
+                                color: context.statusSuccessColor,
+                                letterSpacing: -1,
+                              ),
+                            )
+                          else ...[
+                            Text(
+                              '${course.price.toInt()} ${context.t.core.currency}',
+                              style: context.titleH1Style.copyWith(
+                                fontSize: 32,
+                                fontWeight: FontWeight.w900,
+                                letterSpacing: -1,
                               ),
                             ),
+                            if (course.oldPrice != null)
+                              Text(
+                                '${course.oldPrice!.toInt()} ${context.t.core.currency}',
+                                style: context.smallTextStyle.copyWith(
+                                  decoration: TextDecoration.lineThrough,
+                                  fontWeight: FontWeight.w900,
+                                  color: context.textTertiaryColor,
+                                ),
+                              ),
+                          ],
                         ],
-                      ],
+                      ),
                     )
                   else
                     Expanded(

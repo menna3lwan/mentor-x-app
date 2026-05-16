@@ -1131,6 +1131,27 @@ class TranslationsProfileEn {
 	/// en: 'School'
 	String get school => 'School';
 
+	/// en: 'First Name'
+	String get firstName => 'First Name';
+
+	/// en: 'Second Name'
+	String get secondName => 'Second Name';
+
+	/// en: 'Third Name'
+	String get thirdName => 'Third Name';
+
+	/// en: 'Fourth Name'
+	String get fourthName => 'Fourth Name';
+
+	/// en: 'Governorate'
+	String get governorate => 'Governorate';
+
+	/// en: 'Area'
+	String get area => 'Area';
+
+	/// en: 'Education Department'
+	String get educationDepartment => 'Education Department';
+
 	/// en: 'Digital ID'
 	String get digitalId => 'Digital ID';
 
@@ -2763,6 +2784,13 @@ extension on Translations {
 			'profile.grade' => 'Grade',
 			'profile.center' => 'Center',
 			'profile.school' => 'School',
+			'profile.firstName' => 'First Name',
+			'profile.secondName' => 'Second Name',
+			'profile.thirdName' => 'Third Name',
+			'profile.fourthName' => 'Fourth Name',
+			'profile.governorate' => 'Governorate',
+			'profile.area' => 'Area',
+			'profile.educationDepartment' => 'Education Department',
 			'profile.digitalId' => 'Digital ID',
 			'profile.editProfile' => 'Edit Profile',
 			'profile.settingsTitle' => 'Settings',
@@ -2841,6 +2869,8 @@ extension on Translations {
 			'quizzes.rewards.xpPoints' => 'XP Points',
 			'quizzes.rewards.quizCompleted' => 'Quizzes',
 			'quizzes.rewards.badge' => 'Badges',
+			_ => null,
+		} ?? switch (path) {
 			'quizzes.rewards.dailyStreak' => 'Daily Streak',
 			'quizzes.rewards.streakDaysMsg' => ({required Object days}) => 'You have a ${days}-day streak!',
 			'quizzes.rewards.earnedBadges' => 'Badges',
@@ -2848,8 +2878,6 @@ extension on Translations {
 			'quizzes.rewards.days.sat' => 'SAT',
 			'quizzes.rewards.days.sun' => 'SUN',
 			'quizzes.rewards.days.mon' => 'MON',
-			_ => null,
-		} ?? switch (path) {
 			'quizzes.rewards.days.tue' => 'TUE',
 			'quizzes.rewards.days.wed' => 'WED',
 			'quizzes.rewards.days.thu' => 'THU',

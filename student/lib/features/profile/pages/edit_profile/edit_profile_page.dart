@@ -7,24 +7,34 @@ import 'package:mentorx_student/core/core.dart';
 
 final class EditProfilePage extends StatelessWidget {
   final GlobalKey<FormState> formKey;
-  final TextEditingController nameController;
+  final TextEditingController firstNameController;
+  final TextEditingController secondNameController;
+  final TextEditingController thirdNameController;
+  final TextEditingController fourthNameController;
   final TextEditingController phoneController;
   final TextEditingController gradeController;
   final TextEditingController centerController;
   final TextEditingController schoolController;
-  final TextEditingController reasonController;
+  final TextEditingController governorateController;
+  final TextEditingController areaController;
+  final TextEditingController educationDepartmentController;
   final bool isSubmitting;
   final VoidCallback onSubmit;
 
   const EditProfilePage({
     super.key,
     required this.formKey,
-    required this.nameController,
+    required this.firstNameController,
+    required this.secondNameController,
+    required this.thirdNameController,
+    required this.fourthNameController,
     required this.phoneController,
     required this.gradeController,
     required this.centerController,
     required this.schoolController,
-    required this.reasonController,
+    required this.governorateController,
+    required this.areaController,
+    required this.educationDepartmentController,
     required this.isSubmitting,
     required this.onSubmit,
   });
@@ -73,8 +83,8 @@ final class EditProfilePage extends StatelessWidget {
                           ),
                           const Gap(24),
                           _PremiumField(
-                            label: t.name,
-                            controller: nameController,
+                            label: t.firstName,
+                            controller: firstNameController,
                             icon: Icons.person_outline_rounded,
                             enabled: !isSubmitting,
                             validator: (v) =>
@@ -82,13 +92,45 @@ final class EditProfilePage extends StatelessWidget {
                           ),
                           const Gap(20),
                           _PremiumField(
+                            label: t.secondName,
+                            controller: secondNameController,
+                            icon: Icons.person_outline_rounded,
+                            enabled: !isSubmitting,
+                          ),
+                          const Gap(20),
+                          _PremiumField(
+                            label: t.thirdName,
+                            controller: thirdNameController,
+                            icon: Icons.person_outline_rounded,
+                            enabled: !isSubmitting,
+                          ),
+                          const Gap(20),
+                          _PremiumField(
+                            label: t.fourthName,
+                            controller: fourthNameController,
+                            icon: Icons.person_outline_rounded,
+                            enabled: !isSubmitting,
+                          ),
+                          const Gap(20),
+                          _PremiumField(
                             label: t.phone,
                             controller: phoneController,
                             icon: Icons.phone_android_rounded,
+                            enabled: false,
+                          ),
+                          const Gap(20),
+                          _PremiumField(
+                            label: t.governorate,
+                            controller: governorateController,
+                            icon: Icons.map_outlined,
                             enabled: !isSubmitting,
-                            keyboardType: TextInputType.phone,
-                            validator: (v) =>
-                                v == null || v.isEmpty ? t.requiredField : null,
+                          ),
+                          const Gap(20),
+                          _PremiumField(
+                            label: t.area,
+                            controller: areaController,
+                            icon: Icons.location_on_outlined,
+                            enabled: !isSubmitting,
                           ),
                         ],
                       ),
@@ -132,57 +174,19 @@ final class EditProfilePage extends StatelessWidget {
                             icon: Icons.account_balance_rounded,
                             enabled: !isSubmitting,
                           ),
+                          const Gap(20),
+                          _PremiumField(
+                            label: t.educationDepartment,
+                            controller: educationDepartmentController,
+                            icon: Icons.domain_outlined,
+                            enabled: !isSubmitting,
+                          ),
                         ],
                       ),
                     ),
                   ),
 
                   const Gap(32),
-                  FadeInUp(
-                    duration: const Duration(milliseconds: 600),
-                    delay: const Duration(milliseconds: 200),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _BuildSectionTitle(
-                          title: t.reasonForEdit,
-                        ),
-                        const Gap(20),
-                        MentorXGlassCard(
-                          style: Style(
-                            $box.borderRadius(24),
-                            $box.color(
-                              context.backgroundSecondaryColor.withValues(
-                                alpha: 0.5,
-                              ),
-                            ),
-                          ),
-                          child: TextFormField(
-                            controller: reasonController,
-                            maxLines: 4,
-                            enabled: !isSubmitting,
-                            validator: (v) => v == null || v.trim().isEmpty
-                                ? t.provideReason
-                                : null,
-                            style: context.bodyPrimaryStyle.copyWith(
-                              fontWeight: FontWeight.w800,
-                              fontSize: 14,
-                            ),
-                            decoration: InputDecoration(
-                              hintText: t.reasonHint,
-                              hintStyle: context.bodySecondaryStyle.copyWith(
-                                fontSize: 14,
-                                color: context.textTertiaryColor,
-                                fontWeight: FontWeight.w700,
-                              ),
-                              border: InputBorder.none,
-                              contentPadding: const EdgeInsets.all(20),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
                   const Gap(48),
 
                   FadeInUp(
@@ -353,7 +357,6 @@ final class _PremiumField extends StatelessWidget {
   final TextEditingController controller;
   final IconData icon;
   final bool enabled;
-  final TextInputType? keyboardType;
   final String? Function(String?)? validator;
 
   const _PremiumField({
@@ -361,7 +364,6 @@ final class _PremiumField extends StatelessWidget {
     required this.controller,
     required this.icon,
     this.enabled = true,
-    this.keyboardType,
     this.validator,
   });
 
@@ -389,7 +391,7 @@ final class _PremiumField extends StatelessWidget {
           child: TextFormField(
             controller: controller,
             enabled: enabled,
-            keyboardType: keyboardType ?? TextInputType.text,
+            keyboardType: TextInputType.text,
             validator: validator,
             style: context.bodyPrimaryStyle.copyWith(
               fontSize: 15,

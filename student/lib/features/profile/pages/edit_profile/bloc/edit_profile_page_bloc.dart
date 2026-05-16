@@ -32,6 +32,7 @@ final class EditProfilePageBloc
   }) : super(EditProfilePageState.initial) {
     on<EditProfilePageLoadEvent>(_onLoad);
     on<EditProfilePageSubmitRequestEvent>(_onSubmitRequest);
+    on<EditProfilePageUpdateProfileEvent>(_onUpdateProfile);
   }
 
   final ProfileRepository profileRepository;
@@ -90,6 +91,48 @@ final class EditProfilePageBloc
         name: AnalyticsEvents.profileEditRequested,
         parameters: {
           AnalyticsParams.fieldName: event.fieldName,
+        },
+      );
+      emitPresentation(const EditProfilePageSuccess());
+    } on MentorXException catch (e) {
+      emit(
+        state.copyWith(
+          loadingState: LoadingState.error,
+          errorMessage: MentorXNullableValue(e.message),
+        ),
+      );
+    } catch (e) {
+      emit(
+        state.copyWith(
+          loadingState: LoadingState.error,
+          errorMessage: MentorXNullableValue(e.toString()),
+        ),
+      );
+    }
+  }
+
+  Future<void> _onUpdateProfile(
+    EditProfilePageUpdateProfileEvent event,
+    Emitter<EditProfilePageState> emit,
+  ) async {
+    emit(
+      state.copyWith(
+        loadingState: LoadingState.loading,
+        errorMessage: const MentorXNullableValue(null),
+      ),
+    );
+
+    try {
+      final updatedProfile = await profileRepository.updateProfile(event.updatedUser);
+      
+      // Update state using event bus
+      appEventBus.fire(AppAuthenticationUpdateEvent(user: updatedProfile));
+
+      emit(state.copyWith(loadingState: LoadingState.loaded));
+      analyticsService.logEvent(
+        name: AnalyticsEvents.profileEditRequested,
+        parameters: {
+          'batch_update': true,
         },
       );
       emitPresentation(const EditProfilePageSuccess());

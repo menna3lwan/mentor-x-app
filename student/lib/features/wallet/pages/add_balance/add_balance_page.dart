@@ -64,111 +64,101 @@ final class AddBalancePage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _ErrorSection(),
-                    FadeInUp(
-                      key: const ValueKey('add_balance_amount_label_fade'),
-                      duration: const Duration(milliseconds: 500),
-                      child: Text(
-                        t.amount,
-                        style: context.bodyPrimaryStyle.copyWith(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w900,
-                          letterSpacing: -0.2,
-                        ),
+                    Text(
+                      t.amount,
+                      style: context.bodyPrimaryStyle.copyWith(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: -0.2,
                       ),
                     ),
                     const Gap(16),
-                    FadeInUp(
-                      key: const ValueKey('add_balance_amount_input_fade'),
-                      duration: const Duration(milliseconds: 500),
-                      child: ListenableBuilder(
-                        listenable: amountController,
-                        builder: (context, _) {
-                          return MentorXTextFormField(
-                            controller: amountController,
-                            keyboardType: TextInputType.number,
-                            label: t.amount,
-                            hintText: '0.00',
-                            prefixIcon: Icons.monetization_on_outlined,
-                          );
-                        },
+                    MentorXGlassCard(
+                      style: Style(
+                        $box.borderRadius(24),
+                        $box.margin.bottom(24),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: ListenableBuilder(
+                          listenable: amountController,
+                          builder: (context, _) {
+                            return MentorXTextFormField(
+                              controller: amountController,
+                              keyboardType: TextInputType.number,
+                              label: t.amount,
+                              hintText: '0.00',
+                              prefixIcon: Icons.monetization_on_outlined,
+                            );
+                          },
+                        ),
                       ),
                     ),
-                    const Gap(24),
-                    FadeInUp(
-                      key: const ValueKey('add_balance_presets_fade'),
-                      duration: const Duration(milliseconds: 500),
-                      delay: const Duration(milliseconds: 200),
-                      child: ListenableBuilder(
-                        listenable: amountController,
-                        builder: (context, _) {
-                          return Wrap(
-                            spacing: 12,
-                            runSpacing: 12,
-                            children: presets.map((p) {
-                              final isSelected =
-                                  amountController.text == p.toString();
-                              return GestureDetector(
-                                onTap: () =>
-                                    amountController.text = p.toString(),
-                                child: AnimatedContainer(
-                                  duration: const Duration(milliseconds: 300),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 20,
-                                    vertical: 12,
-                                  ),
-                                  decoration: BoxDecoration(
+                    ListenableBuilder(
+                      listenable: amountController,
+                      builder: (context, _) {
+                        return Wrap(
+                          spacing: 12,
+                          runSpacing: 12,
+                          children: presets.map((p) {
+                            final isSelected =
+                                amountController.text == p.toString();
+                            return GestureDetector(
+                              onTap: () =>
+                                  amountController.text = p.toString(),
+                              child: AnimatedContainer(
+                                duration: const Duration(milliseconds: 300),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                  vertical: 12,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: isSelected
+                                      ? context.brandPrimaryColor
+                                      : context.backgroundSecondaryColor
+                                            .withValues(alpha: 0.45),
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(
                                     color: isSelected
                                         ? context.brandPrimaryColor
-                                        : context.backgroundSecondaryColor
-                                              .withValues(alpha: 0.45),
-                                    borderRadius: BorderRadius.circular(16),
-                                    border: Border.all(
-                                      color: isSelected
-                                          ? context.brandPrimaryColor
-                                          : context.borderPrimaryColor
-                                                .withValues(
-                                                  alpha: 0.1,
-                                                ),
-                                    ),
-                                    boxShadow: isSelected
-                                        ? [
-                                            BoxShadow(
-                                              color: context.brandPrimaryColor
-                                                  .withValues(alpha: 0.3),
-                                              blurRadius: 10,
-                                            ),
-                                          ]
-                                        : null,
+                                        : context.borderPrimaryColor
+                                              .withValues(
+                                                alpha: 0.1,
+                                              ),
                                   ),
-                                  child: Text(
-                                    '$p ${t.egp}',
-                                    style: context.bodyPrimaryStyle.copyWith(
-                                      color: isSelected
-                                          ? Colors.white
-                                          : context.textPrimaryColor,
-                                      fontWeight: FontWeight.w900,
-                                      fontSize: 14,
-                                    ),
+                                  boxShadow: isSelected
+                                      ? [
+                                          BoxShadow(
+                                            color: context.brandPrimaryColor
+                                                .withValues(alpha: 0.3),
+                                            blurRadius: 10,
+                                          ),
+                                        ]
+                                      : null,
+                                ),
+                                child: Text(
+                                  '$p ${t.egp}',
+                                  style: context.bodyPrimaryStyle.copyWith(
+                                    color: isSelected
+                                        ? Colors.white
+                                        : context.textPrimaryColor,
+                                    fontWeight: FontWeight.w900,
+                                    fontSize: 14,
                                   ),
                                 ),
-                              );
-                            }).toList(),
-                          );
-                        },
-                      ),
+                              ),
+                            );
+                          }).toList(),
+                        );
+                      },
                     ),
                     const Gap(48),
-                    FadeInUp(
-                      key: const ValueKey('add_balance_payment_label_fade'),
-                      duration: const Duration(milliseconds: 500),
-                      delay: const Duration(milliseconds: 300),
-                      child: Text(
-                        t.choosePaymentMethod,
-                        style: context.bodyPrimaryStyle.copyWith(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w900,
-                          letterSpacing: -0.2,
-                        ),
+                    Text(
+                      t.choosePaymentMethod,
+                      style: context.bodyPrimaryStyle.copyWith(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: -0.2,
                       ),
                     ),
                     const Gap(20),
@@ -179,120 +169,115 @@ final class AddBalancePage extends StatelessWidget {
                           children: List.generate(methods.length, (i) {
                             final (icon, title, desc) = methods[i];
                             final isSelected = selectedIndex == i;
-                            return FadeInUp(
-                              key: ValueKey('add_balance_method_fade_$i'),
-                              duration: const Duration(milliseconds: 500),
-                              delay: Duration(milliseconds: 400 + (100 * i)),
-                              child: GestureDetector(
-                                onTap: () => selectedMethodNotifier.value = i,
-                                child: MentorXGlassCard(
-                                  style: Style(
-                                    $box.margin.bottom(16),
-                                    $box.borderRadius(28),
-                                    $box.border.color(
-                                      isSelected
-                                          ? context.brandPrimaryColor
-                                          : Colors.transparent,
-                                    ),
-                                    $box.border.width(isSelected ? 2 : 0),
+                            return GestureDetector(
+                              onTap: () => selectedMethodNotifier.value = i,
+                              child: MentorXGlassCard(
+                                style: Style(
+                                  $box.margin.bottom(16),
+                                  $box.borderRadius(28),
+                                  $box.border.color(
+                                    isSelected
+                                        ? context.brandPrimaryColor
+                                        : Colors.transparent,
                                   ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(20),
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          padding: const EdgeInsets.all(12),
-                                          decoration: BoxDecoration(
-                                            gradient: LinearGradient(
-                                              colors: [
-                                                (isSelected
-                                                        ? context
-                                                              .brandPrimaryColor
-                                                        : context
-                                                              .textTertiaryColor)
-                                                    .withValues(alpha: 0.2),
-                                                (isSelected
-                                                        ? context
-                                                              .brandPrimaryColor
-                                                        : context
-                                                              .textTertiaryColor)
-                                                    .withValues(alpha: 0.05),
-                                              ],
-                                            ),
-                                            borderRadius: BorderRadius.circular(
-                                              16,
-                                            ),
-                                            border: Border.all(
-                                              color:
-                                                  (isSelected
-                                                          ? context
-                                                                .brandPrimaryColor
-                                                          : context
-                                                                .textTertiaryColor)
-                                                      .withValues(alpha: 0.1),
-                                            ),
-                                          ),
-                                          child: Icon(
-                                            icon,
-                                            size: 24,
-                                            color: isSelected
-                                                ? context.brandPrimaryColor
-                                                : context.textTertiaryColor,
-                                          ),
-                                        ),
-                                        const Gap(16),
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                title,
-                                                style: context.bodyPrimaryStyle
-                                                    .copyWith(
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.w900,
-                                                      letterSpacing: -0.2,
-                                                    ),
-                                              ),
-                                              const Gap(4),
-                                              Text(
-                                                desc,
-                                                style: context
-                                                    .bodySecondaryStyle
-                                                    .copyWith(
-                                                      fontSize: 12,
-                                                      color: context
-                                                          .textSecondaryColor,
-                                                      fontWeight:
-                                                          FontWeight.w700,
-                                                    ),
-                                              ),
+                                  $box.border.width(isSelected ? 2 : 0),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(20),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.all(12),
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            colors: [
+                                              (isSelected
+                                                      ? context
+                                                            .brandPrimaryColor
+                                                      : context
+                                                            .textTertiaryColor)
+                                                  .withValues(alpha: 0.2),
+                                              (isSelected
+                                                      ? context
+                                                            .brandPrimaryColor
+                                                      : context
+                                                            .textTertiaryColor)
+                                                  .withValues(alpha: 0.05),
                                             ],
                                           ),
+                                          borderRadius: BorderRadius.circular(
+                                            16,
+                                          ),
+                                          border: Border.all(
+                                            color:
+                                                (isSelected
+                                                        ? context
+                                                              .brandPrimaryColor
+                                                        : context
+                                                              .textTertiaryColor)
+                                                    .withValues(alpha: 0.1),
+                                          ),
                                         ),
-                                        if (isSelected)
-                                          ZoomIn(
-                                            key: const ValueKey(
-                                              'add_balance_check_icon_zoom',
+                                        child: Icon(
+                                          icon,
+                                          size: 24,
+                                          color: isSelected
+                                              ? context.brandPrimaryColor
+                                              : context.textTertiaryColor,
+                                        ),
+                                      ),
+                                      const Gap(16),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              title,
+                                              style: context.bodyPrimaryStyle
+                                                  .copyWith(
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.w900,
+                                                    letterSpacing: -0.2,
+                                                  ),
                                             ),
-                                            child: Container(
-                                              padding: const EdgeInsets.all(4),
-                                              decoration: BoxDecoration(
-                                                color:
-                                                    context.brandPrimaryColor,
-                                                shape: BoxShape.circle,
-                                              ),
-                                              child: const Icon(
-                                                Icons.check_rounded,
-                                                color: Colors.white,
-                                                size: 16,
-                                              ),
+                                            const Gap(4),
+                                            Text(
+                                              desc,
+                                              style: context
+                                                  .bodySecondaryStyle
+                                                  .copyWith(
+                                                    fontSize: 12,
+                                                    color: context
+                                                        .textSecondaryColor,
+                                                    fontWeight:
+                                                        FontWeight.w700,
+                                                  ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      if (isSelected)
+                                        ZoomIn(
+                                          key: const ValueKey(
+                                            'add_balance_check_icon_zoom',
+                                          ),
+                                          child: Container(
+                                            padding: const EdgeInsets.all(4),
+                                            decoration: BoxDecoration(
+                                              color:
+                                                  context.brandPrimaryColor,
+                                              shape: BoxShape.circle,
+                                            ),
+                                            child: const Icon(
+                                              Icons.check_rounded,
+                                              color: Colors.white,
+                                              size: 16,
                                             ),
                                           ),
-                                      ],
-                                    ),
+                                        ),
+                                    ],
                                   ),
                                 ),
                               ),

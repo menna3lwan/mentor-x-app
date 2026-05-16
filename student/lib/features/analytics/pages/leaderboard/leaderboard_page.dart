@@ -22,40 +22,53 @@ final class LeaderboardPagePage extends StatelessWidget {
     final t = context.t.analytics;
 
     return Scaffold(
-      backgroundColor: context.backgroundPrimaryColor,
-      body: Column(
-        children: [
-          Gap(MediaQuery.paddingOf(context).top + 12),
-          _buildAppBar(context, t),
-          _CourseFilter(
-            selectedId: state.selectedCourseId,
-            courses: state.courses,
-            onChanged: onCourseChanged,
-            t: t,
+      backgroundColor: const Color(0xFF0B0D19),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFF0B0D19),
+              Color(0xFF161A30),
+              Color(0xFF0B0D19),
+            ],
           ),
-          Expanded(
-            child: state.loadingState == LoadingState.loading
-                ? ListView.builder(
-                    padding: const EdgeInsets.all(24),
-                    itemCount: 8,
-                    itemBuilder: (_, _) => const Padding(
-                      padding: EdgeInsets.only(bottom: 12),
-                      child: MentorXSkeleton(height: 70, borderRadius: 24),
+        ),
+        child: Column(
+          children: [
+            Gap(MediaQuery.paddingOf(context).top + 12),
+            _buildAppBar(context, t),
+            _CourseFilter(
+              selectedId: state.selectedCourseId,
+              courses: state.courses,
+              onChanged: onCourseChanged,
+              t: t,
+            ),
+            Expanded(
+              child: state.loadingState == LoadingState.loading
+                  ? ListView.builder(
+                      padding: const EdgeInsets.all(24),
+                      itemCount: 8,
+                      itemBuilder: (_, _) => const Padding(
+                        padding: EdgeInsets.only(bottom: 12),
+                        child: MentorXSkeleton(height: 70, borderRadius: 24),
+                      ),
+                    )
+                  : state.loadingState == LoadingState.error
+                  ? AppErrorView(
+                      title: t.leaderboardError,
+                      message: state.errorMessage ?? t.title,
+                      onRetry: onRefresh,
+                    )
+                  : RefreshIndicator(
+                      onRefresh: () async => onRefresh(),
+                      color: context.brandPrimaryColor,
+                      child: _buildContent(context, t),
                     ),
-                  )
-                : state.loadingState == LoadingState.error
-                ? AppErrorView(
-                    title: t.leaderboardError,
-                    message: state.errorMessage ?? t.title,
-                    onRetry: onRefresh,
-                  )
-                : RefreshIndicator(
-                    onRefresh: () async => onRefresh(),
-                    color: context.brandPrimaryColor,
-                    child: _buildContent(context, t),
-                  ),
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
       bottomNavigationBar: state.myRank != null
           ? _MyRankBar(
@@ -84,6 +97,7 @@ final class LeaderboardPagePage extends StatelessWidget {
               style: context.titleH3Style.copyWith(
                 fontWeight: FontWeight.w900,
                 letterSpacing: -0.5,
+                color: Colors.white,
               ),
             ),
           ),
@@ -211,18 +225,27 @@ final class _FilterChip extends StatelessWidget {
         decoration: BoxDecoration(
           color: isSelected
               ? context.brandPrimaryColor
-              : context.backgroundSecondaryColor,
+              : Colors.white.withValues(alpha: 0.05),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: isSelected
                 ? context.brandPrimaryColor
-                : context.borderPrimaryColor.withValues(alpha: 0.1),
+                : Colors.white.withValues(alpha: 0.1),
           ),
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: context.brandPrimaryColor.withValues(alpha: 0.4),
+                    blurRadius: 10,
+                    spreadRadius: 1,
+                  ),
+                ]
+              : [],
         ),
         child: Text(
           label,
           style: TextStyle(
-            color: isSelected ? Colors.white : context.textSecondaryColor,
+            color: isSelected ? Colors.white : Colors.white70,
             fontWeight: isSelected ? FontWeight.w900 : FontWeight.w700,
             fontSize: 13,
           ),
@@ -323,16 +346,21 @@ final class _PodiumSpot extends StatelessWidget {
           clipBehavior: Clip.none,
           children: [
             Container(
-              width: isWinner ? 80 : 64,
-              height: isWinner ? 80 : 64,
+              width: isWinner ? 84 : 68,
+              height: isWinner ? 84 : 68,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(color: color, width: 3),
                 boxShadow: [
                   BoxShadow(
-                    color: glowColor.withValues(alpha: 0.4),
-                    blurRadius: 15,
+                    color: glowColor.withValues(alpha: 0.6),
+                    blurRadius: 20,
                     spreadRadius: 2,
+                  ),
+                  BoxShadow(
+                    color: color.withValues(alpha: 0.3),
+                    blurRadius: 40,
+                    spreadRadius: 10,
                   ),
                 ],
               ),
@@ -345,14 +373,14 @@ final class _PodiumSpot extends StatelessWidget {
             ),
             if (isWinner)
               Positioned(
-                top: -25,
+                top: -30,
                 child: FadeInDown(
                   duration: const Duration(milliseconds: 1200),
                   delay: const Duration(milliseconds: 800),
                   child: const Icon(
                     Icons.workspace_premium_rounded,
                     color: Color(0xFFFFD700),
-                    size: 32,
+                    size: 36,
                   ),
                 ),
               ),
@@ -360,7 +388,7 @@ final class _PodiumSpot extends StatelessWidget {
               bottom: -10,
               child: Container(
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
+                  horizontal: 12,
                   vertical: 4,
                 ),
                 decoration: BoxDecoration(
@@ -368,7 +396,7 @@ final class _PodiumSpot extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.2),
+                      color: Colors.black.withValues(alpha: 0.3),
                       blurRadius: 4,
                       offset: const Offset(0, 2),
                     ),
@@ -379,7 +407,7 @@ final class _PodiumSpot extends StatelessWidget {
                   style: const TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.w900,
-                    fontSize: 10,
+                    fontSize: 12,
                   ),
                 ),
               ),
@@ -393,7 +421,7 @@ final class _PodiumSpot extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
           textAlign: TextAlign.center,
           style: TextStyle(
-            color: context.textPrimaryColor,
+            color: Colors.white,
             fontWeight: FontWeight.w900,
             fontSize: isWinner ? 14 : 12,
             letterSpacing: -0.2,
@@ -405,28 +433,39 @@ final class _PodiumSpot extends StatelessWidget {
           style: TextStyle(
             color: color,
             fontWeight: FontWeight.w900,
-            fontSize: isWinner ? 16 : 14,
+            fontSize: isWinner ? 18 : 16,
+            shadows: [
+              Shadow(
+                color: glowColor.withValues(alpha: 0.5),
+                blurRadius: 10,
+              ),
+            ],
           ),
         ),
         const Gap(12),
         Container(
-          width: isWinner ? 100 : 80,
+          width: isWinner ? 110 : 90,
           height: height,
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                color,
-                color.withValues(alpha: 0.4),
-                color.withValues(alpha: 0.1),
+                color.withValues(alpha: 0.6),
+                color.withValues(alpha: 0.2),
+                color.withValues(alpha: 0.05),
               ],
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
             ),
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+            border: Border(
+              top: BorderSide(color: color, width: 2),
+              left: BorderSide(color: color.withValues(alpha: 0.2), width: 1),
+              right: BorderSide(color: color.withValues(alpha: 0.2), width: 1),
+            ),
             boxShadow: [
               BoxShadow(
                 color: color.withValues(alpha: 0.2),
-                blurRadius: 10,
+                blurRadius: 15,
                 offset: const Offset(0, -4),
               ),
             ],
@@ -435,8 +474,8 @@ final class _PodiumSpot extends StatelessWidget {
             child: Text(
               '$rank',
               style: TextStyle(
-                color: Colors.black.withValues(alpha: 0.5),
-                fontSize: isWinner ? 40 : 32,
+                color: Colors.white.withValues(alpha: 0.3),
+                fontSize: isWinner ? 48 : 36,
                 fontWeight: FontWeight.w900,
               ),
             ),
@@ -454,16 +493,30 @@ final class _LeaderboardTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isTop3 = entry.rank <= 3;
+    final color = entry.rank == 1
+        ? const Color(0xFFFFD700)
+        : (entry.rank == 2
+              ? const Color(0xFFC0C0C0)
+              : (entry.rank == 3
+                    ? const Color(0xFFCD7F32)
+                    : context.brandSecondaryColor));
+
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: context.borderPrimaryColor.withValues(alpha: 0.05),
+          color: isTop3
+              ? color.withValues(alpha: 0.3)
+              : Colors.white.withValues(alpha: 0.05),
+          width: isTop3 ? 1.5 : 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
+            color: isTop3
+                ? color.withValues(alpha: 0.1)
+                : Colors.black.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -483,21 +536,28 @@ final class _LeaderboardTile extends StatelessWidget {
             ),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-              color: context.backgroundSecondaryColor.withValues(alpha: 0.8),
+              color: Colors.white.withValues(alpha: 0.03),
               child: Row(
                 children: [
                   Container(
                     width: 36,
                     height: 36,
                     decoration: BoxDecoration(
-                      color: context.backgroundTertiaryColor,
+                      color: isTop3
+                          ? color.withValues(alpha: 0.2)
+                          : Colors.white.withValues(alpha: 0.05),
                       borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: isTop3
+                            ? color.withValues(alpha: 0.3)
+                            : Colors.transparent,
+                      ),
                     ),
                     child: Center(
                       child: Text(
                         '#${entry.rank}',
                         style: TextStyle(
-                          color: context.textPrimaryColor,
+                          color: isTop3 ? color : Colors.white70,
                           fontWeight: FontWeight.w900,
                           fontSize: 14,
                           letterSpacing: -0.5,
@@ -518,8 +578,8 @@ final class _LeaderboardTile extends StatelessWidget {
                   Expanded(
                     child: Text(
                       entry.studentName,
-                      style: TextStyle(
-                        color: context.textPrimaryColor,
+                      style: const TextStyle(
+                        color: Colors.white,
                         fontWeight: FontWeight.w800,
                         fontSize: 14,
                         letterSpacing: -0.2,
@@ -529,10 +589,18 @@ final class _LeaderboardTile extends StatelessWidget {
                   Text(
                     '${entry.score.toStringAsFixed(1)}%',
                     style: TextStyle(
-                      color: context.brandPrimaryColor,
+                      color: isTop3 ? color : context.brandPrimaryColor,
                       fontWeight: FontWeight.w900,
                       fontSize: 16,
                       letterSpacing: -0.5,
+                      shadows: isTop3
+                          ? [
+                              Shadow(
+                                color: color.withValues(alpha: 0.5),
+                                blurRadius: 5,
+                              ),
+                            ]
+                          : [],
                     ),
                   ),
                 ],
@@ -564,16 +632,17 @@ final class _MyRankBar extends StatelessWidget {
         MediaQuery.paddingOf(context).bottom + 16,
       ),
       decoration: BoxDecoration(
-        color: context.backgroundSecondaryColor,
+        color: const Color(0xFF0F111A),
         borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
         border: Border(
           top: BorderSide(
-            color: context.borderPrimaryColor.withValues(alpha: 0.05),
+            color: context.brandPrimaryColor.withValues(alpha: 0.2),
+            width: 1.5,
           ),
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.2),
+            color: context.brandPrimaryColor.withValues(alpha: 0.15),
             blurRadius: 20,
             offset: const Offset(0, -5),
           ),
@@ -593,8 +662,8 @@ final class _MyRankBar extends StatelessWidget {
               borderRadius: BorderRadius.circular(14),
               boxShadow: [
                 BoxShadow(
-                  color: context.brandPrimaryColor.withValues(alpha: 0.3),
-                  blurRadius: 8,
+                  color: context.brandPrimaryColor.withValues(alpha: 0.4),
+                  blurRadius: 10,
                   offset: const Offset(0, 4),
                 ),
               ],
@@ -616,8 +685,8 @@ final class _MyRankBar extends StatelessWidget {
               children: [
                 Text(
                   t.yourStanding,
-                  style: TextStyle(
-                    color: context.textTertiaryColor,
+                  style: const TextStyle(
+                    color: Colors.white70,
                     fontSize: 11,
                     fontWeight: FontWeight.w800,
                     textBaseline: TextBaseline.alphabetic,
@@ -625,8 +694,8 @@ final class _MyRankBar extends StatelessWidget {
                 ),
                 Text(
                   t.you,
-                  style: TextStyle(
-                    color: context.textPrimaryColor,
+                  style: const TextStyle(
+                    color: Colors.white,
                     fontWeight: FontWeight.w900,
                     fontSize: 18,
                     letterSpacing: -0.5,
@@ -642,6 +711,12 @@ final class _MyRankBar extends StatelessWidget {
               fontWeight: FontWeight.w900,
               fontSize: 22,
               letterSpacing: -1,
+              shadows: [
+                Shadow(
+                  color: context.brandPrimaryColor.withValues(alpha: 0.5),
+                  blurRadius: 10,
+                ),
+              ],
             ),
           ),
         ],

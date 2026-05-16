@@ -14,122 +14,87 @@ final class EditProfilePageWrapper extends StatefulWidget {
   State<EditProfilePageWrapper> createState() => _EditProfilePageWrapperState();
 }
 
-class _AddRequest {
-  final String field;
-  final String oldValue;
-  final String newValue;
-  _AddRequest(this.field, this.oldValue, this.newValue);
-}
+
 
 class _EditProfilePageWrapperState extends State<EditProfilePageWrapper> {
   final _formKey = GlobalKey<FormState>();
-  late TextEditingController _nameController;
+  late TextEditingController _firstNameController;
+  late TextEditingController _secondNameController;
+  late TextEditingController _thirdNameController;
+  late TextEditingController _fourthNameController;
   late TextEditingController _phoneController;
   late TextEditingController _gradeController;
   late TextEditingController _centerController;
   late TextEditingController _schoolController;
-  late TextEditingController _reasonController;
+  late TextEditingController _governorateController;
+  late TextEditingController _areaController;
+  late TextEditingController _educationDepartmentController;
 
-  late AppSessionState _initialSession;
+  late StudentEntity? _user;
 
   @override
   void initState() {
     super.initState();
-    _initialSession = context.read<AppSessionCubit>().state;
-    // We cannot use context.isArabic in initState easily if it depends on inherited widget,
-    // but context.read might be fine if it's not listening. We will do it in build or didChangeDependencies.
+    _user = context.read<AppAuthenticationCubit>().state;
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final isAr = context.isArabic;
-    _nameController = TextEditingController(
-      text: isAr ? _initialSession.studentNameAr : _initialSession.studentName,
-    );
-    _phoneController = TextEditingController(text: _initialSession.phone);
-    _gradeController = TextEditingController(
-      text: isAr ? _initialSession.gradeAr : _initialSession.grade,
-    );
-    _centerController = TextEditingController(
-      text: isAr ? _initialSession.centerAr : _initialSession.center,
-    );
-    _schoolController = TextEditingController(
-      text: isAr ? _initialSession.schoolAr : _initialSession.school,
-    );
-    _reasonController = TextEditingController();
+    _firstNameController = TextEditingController(text: _user?.firstName);
+    _secondNameController = TextEditingController(text: _user?.secondName);
+    _thirdNameController = TextEditingController(text: _user?.thirdName);
+    _fourthNameController = TextEditingController(text: _user?.fourthName);
+    _phoneController = TextEditingController(text: _user?.phoneNumber);
+    _gradeController = TextEditingController(text: _user?.gradeName);
+    _centerController = TextEditingController(text: _user?.centerName);
+    _schoolController = TextEditingController(text: _user?.schoolName);
+    _governorateController = TextEditingController(text: _user?.governorate);
+    _areaController = TextEditingController(text: _user?.area);
+    _educationDepartmentController = TextEditingController(text: _user?.educationDepartment);
   }
 
   @override
   void dispose() {
-    _nameController.dispose();
+    _firstNameController.dispose();
+    _secondNameController.dispose();
+    _thirdNameController.dispose();
+    _fourthNameController.dispose();
     _phoneController.dispose();
     _gradeController.dispose();
     _centerController.dispose();
     _schoolController.dispose();
-    _reasonController.dispose();
+    _governorateController.dispose();
+    _areaController.dispose();
+    _educationDepartmentController.dispose();
     super.dispose();
   }
 
   void _onSubmit() {
     if (!_formKey.currentState!.validate()) return;
 
-    final isAr = context.isArabic;
-    final requests = <_AddRequest>[];
+    final updatedUser = _user?.copyWith(
+      firstName: _firstNameController.text,
+      secondName: MentorXNullableValue(_firstNameController.text.isNotEmpty ? _secondNameController.text : null),
+      thirdName: MentorXNullableValue(_firstNameController.text.isNotEmpty ? _thirdNameController.text : null),
+      fourthName: MentorXNullableValue(_firstNameController.text.isNotEmpty ? _fourthNameController.text : null),
+      gradeName: MentorXNullableValue(_gradeController.text),
+      centerName: MentorXNullableValue(_centerController.text),
+      schoolName: MentorXNullableValue(_schoolController.text),
+      governorate: MentorXNullableValue(_governorateController.text),
+      area: MentorXNullableValue(_areaController.text),
+      educationDepartment: MentorXNullableValue(_educationDepartmentController.text),
+    );
 
-    // Detect changes
-    final currentName = isAr
-        ? _initialSession.studentNameAr
-        : _initialSession.studentName;
-    if (_nameController.text != currentName) {
-      requests.add(_AddRequest('name', currentName, _nameController.text));
-    }
-
-    if (_phoneController.text != _initialSession.phone) {
-      requests.add(
-        _AddRequest('phone', _initialSession.phone, _phoneController.text),
-      );
-    }
-
-    final currentGrade = isAr ? _initialSession.gradeAr : _initialSession.grade;
-    if (_gradeController.text != currentGrade) {
-      requests.add(_AddRequest('grade', currentGrade, _gradeController.text));
-    }
-
-    final currentCenter = isAr
-        ? _initialSession.centerAr
-        : _initialSession.center;
-    if (_centerController.text != currentCenter) {
-      requests.add(
-        _AddRequest('center', currentCenter, _centerController.text),
-      );
-    }
-
-    final currentSchool = isAr
-        ? _initialSession.schoolAr
-        : _initialSession.school;
-    if (_schoolController.text != currentSchool) {
-      requests.add(
-        _AddRequest('school', currentSchool, _schoolController.text),
-      );
-    }
-
-    if (requests.isEmpty) {
+    if (updatedUser == _user) {
       MentorXUI.showToast(
         message: context.t.profile.noChangesDetected,
       );
       return;
     }
 
-    // Submit the first change
-    final first = requests.first;
     context.read<EditProfilePageBloc>().add(
-      EditProfilePageSubmitRequestEvent(
-        fieldName: first.field,
-        oldValue: first.oldValue,
-        newValue: first.newValue,
-        reason: _reasonController.text,
-      ),
+      EditProfilePageUpdateProfileEvent(updatedUser: updatedUser!),
     );
   }
 
@@ -161,12 +126,17 @@ class _EditProfilePageWrapperState extends State<EditProfilePageWrapper> {
 
           return EditProfilePage(
             formKey: _formKey,
-            nameController: _nameController,
+            firstNameController: _firstNameController,
+            secondNameController: _secondNameController,
+            thirdNameController: _thirdNameController,
+            fourthNameController: _fourthNameController,
             phoneController: _phoneController,
             gradeController: _gradeController,
             centerController: _centerController,
             schoolController: _schoolController,
-            reasonController: _reasonController,
+            governorateController: _governorateController,
+            areaController: _areaController,
+            educationDepartmentController: _educationDepartmentController,
             isSubmitting: isSubmitting,
             onSubmit: _onSubmit,
           );

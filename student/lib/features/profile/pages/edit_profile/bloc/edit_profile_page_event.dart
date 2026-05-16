@@ -27,3 +27,14 @@ final class EditProfilePageSubmitRequestEvent extends EditProfilePageEvent {
   @override
   List<Object?> get props => [fieldName, oldValue, newValue, reason];
 }
+
+final class EditProfilePageUpdateProfileEvent extends EditProfilePageEvent {
+  final StudentEntity updatedUser;
+
+  const EditProfilePageUpdateProfileEvent({
+    required this.updatedUser,
+  });
+
+  @override
+  List<Object?> get props => [updatedUser];
+}

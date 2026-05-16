@@ -740,7 +740,7 @@ class _BuildNavigation extends StatelessWidget {
                   const QuizTakingPagePreviousQuestion(),
                 ),
                 label: t.commonPrevious,
-                color: context.backgroundPrimaryColor,
+                variant: MentorXButtonVariant.outline,
               ),
             ),
             const Gap(12),

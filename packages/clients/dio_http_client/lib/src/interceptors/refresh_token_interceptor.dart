@@ -86,13 +86,15 @@ class RefreshTokenInterceptor extends Interceptor {
           // Retry the original request with the new token
           return handler.resolve(await _retry(err.requestOptions));
         } else {
-          // Refresh failed (e.g. refresh token expired)
+          // Refresh failed
           _isRefreshing = false;
           _refreshCompleter?.completeError(err);
           
-          // If the refresh failed with a 401/403 (handled in _refreshAccessToken),
-          // the session is dead. We should return an error that indicates this
-          // rather than the raw backend error from the original request.
+          _logger.warning('Token refresh failed, triggering session expiry');
+          if (_onSessionExpired != null) {
+            await _onSessionExpired();
+          }
+          
           return handler.next(err);
         }
       } catch (e, s) {
@@ -123,10 +125,7 @@ class RefreshTokenInterceptor extends Interceptor {
 
       // Validate refresh token expiry before attempting refresh
       if (!_isTokenValid(refreshToken)) {
-        _logger.warning('Refresh token is expired or invalid, notifying session expiry');
-        if (_onSessionExpired != null) {
-          await _onSessionExpired.call();
-        }
+        _logger.warning('Refresh token is expired or invalid');
         return null;
       }
 
@@ -179,9 +178,6 @@ class RefreshTokenInterceptor extends Interceptor {
         // that the refresh token is expired or has been revoked.
         if (statusCode == 401 || statusCode == 403) {
           _logger.warning('Refresh attempt returned $statusCode, session is definitely dead');
-          if (_onSessionExpired != null) {
-            await _onSessionExpired.call();
-          }
         }
       }
       _logger.error('Failed to refresh access token', e, s);

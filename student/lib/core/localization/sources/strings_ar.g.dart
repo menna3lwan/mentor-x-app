@@ -503,6 +503,13 @@ class _TranslationsProfileAr extends TranslationsProfileEn {
 	@override String get grade => 'السنة الدراسية';
 	@override String get center => 'المركز';
 	@override String get school => 'المدرسة';
+	@override String get firstName => 'الاسم الأول';
+	@override String get secondName => 'الاسم الثاني';
+	@override String get thirdName => 'الاسم الثالث';
+	@override String get fourthName => 'الاسم الرابع';
+	@override String get governorate => 'المحافظة';
+	@override String get area => 'المنطقة';
+	@override String get educationDepartment => 'الإدارة التعليمية';
 	@override String get digitalId => 'الهوية الرقمية';
 	@override String get editProfile => 'تعديل الملف الشخصي';
 	@override String get settingsTitle => 'الإعدادات';
@@ -1511,6 +1518,13 @@ extension on TranslationsAr {
 			'profile.grade' => 'السنة الدراسية',
 			'profile.center' => 'المركز',
 			'profile.school' => 'المدرسة',
+			'profile.firstName' => 'الاسم الأول',
+			'profile.secondName' => 'الاسم الثاني',
+			'profile.thirdName' => 'الاسم الثالث',
+			'profile.fourthName' => 'الاسم الرابع',
+			'profile.governorate' => 'المحافظة',
+			'profile.area' => 'المنطقة',
+			'profile.educationDepartment' => 'الإدارة التعليمية',
 			'profile.digitalId' => 'الهوية الرقمية',
 			'profile.editProfile' => 'تعديل الملف الشخصي',
 			'profile.settingsTitle' => 'الإعدادات',
@@ -1589,6 +1603,8 @@ extension on TranslationsAr {
 			'quizzes.rewards.xpPoints' => 'نقاط الخبرة',
 			'quizzes.rewards.quizCompleted' => 'الاختبارات',
 			'quizzes.rewards.badge' => 'الأوسمة',
+			_ => null,
+		} ?? switch (path) {
 			'quizzes.rewards.dailyStreak' => 'النشاط اليومي',
 			'quizzes.rewards.streakDaysMsg' => ({required Object days}) => 'لديك سلسلة نشاط لمدة ${days} أيام!',
 			'quizzes.rewards.earnedBadges' => 'الأوسمة',
@@ -1596,8 +1612,6 @@ extension on TranslationsAr {
 			'quizzes.rewards.days.sat' => 'سبت',
 			'quizzes.rewards.days.sun' => 'أحد',
 			'quizzes.rewards.days.mon' => 'اثنين',
-			_ => null,
-		} ?? switch (path) {
 			'quizzes.rewards.days.tue' => 'ثلاثاء',
 			'quizzes.rewards.days.wed' => 'أربعاء',
 			'quizzes.rewards.days.thu' => 'خميس',
