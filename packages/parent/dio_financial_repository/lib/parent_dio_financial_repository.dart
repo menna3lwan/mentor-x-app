@@ -8,7 +8,7 @@ final class DioParentFinancialRepository
   final HttpClient httpClient;
 
   DioParentFinancialRepository({required this.httpClient});
-  
+
   @override
   Future<void> initialize() async {}
 
@@ -26,26 +26,13 @@ final class DioParentFinancialRepository
     MentorXPaginationInfo? paginationInfo,
   }) async {
     try {
-      HttpClientResponse response;
-      try {
-        response = await httpClient.get(
-          '/api/parent/children/$childId/wallet/transactions',
-          queryParameters: paginationInfo?.toJson(),
-        );
-      } on HttpClientResponse catch (e) {
-        if (e.statusCode != 404) rethrow;
-        response = await httpClient.get(
-          '/api/parent/dashboard/child/$childId/wallet/transactions',
-          queryParameters: paginationInfo?.toJson(),
-        );
-      }
-
-      final data = asList(response.data);
-      return data.map((e) => WalletTransactionModel.fromJson(asMap(e))).toList();
-    } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
-        e,
-        defaultCode: ParentFinancialRepositoryExceptionCode.fetchError,
+      // Backend doesn't have child-specific wallet transactions for parents yet
+      // Fallback to empty list or implement once backend adds it
+      return const [];
+    } catch (e) {
+      return throwException(
+        ParentFinancialRepositoryExceptionCode.fetchError,
+        message: e.toString(),
       );
     }
   }
@@ -53,22 +40,11 @@ final class DioParentFinancialRepository
   @override
   Future<WalletSummaryEntity> getWalletSummary(String childId) async {
     try {
-      HttpClientResponse response;
-      try {
-        response = await httpClient.get(
-          '/api/parent/children/$childId/wallet/summary',
-        );
-      } on HttpClientResponse catch (e) {
-        if (e.statusCode != 404) rethrow;
-        response = await httpClient.get(
-          '/api/parent/dashboard/child/$childId/wallet/summary',
-        );
-      }
-
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
-      return WalletSummaryModel.fromJson(data);
+      // Parent's own wallet
+      final response = await httpClient.get('/api/payment/wallet');
+      return WalletSummaryModel.fromJson(response.asMap());
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: ParentFinancialRepositoryExceptionCode.fetchError,
       );
@@ -81,26 +57,15 @@ final class DioParentFinancialRepository
     int months = 6,
   }) async {
     try {
-      HttpClientResponse response;
-      try {
-        response = await httpClient.get(
-          '/api/parent/children/$childId/wallet/analytics',
-          queryParameters: {'months': months},
-        );
-      } on HttpClientResponse catch (e) {
-        if (e.statusCode != 404) rethrow;
-        response = await httpClient.get(
-          '/api/parent/dashboard/child/$childId/wallet/analytics',
-          queryParameters: {'months': months},
-        );
-      }
-
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
-      return ParentWalletAnalyticsModel.fromJson(data);
-    } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
-        e,
-        defaultCode: ParentFinancialRepositoryExceptionCode.fetchError,
+      // Placeholder until backend provides analytics
+      return const ParentWalletAnalyticsModel(
+        monthlySpending: [],
+        categoryBreakdown: {},
+      );
+    } catch (e) {
+      return throwException(
+        ParentFinancialRepositoryExceptionCode.fetchError,
+        message: e.toString(),
       );
     }
   }
@@ -108,26 +73,15 @@ final class DioParentFinancialRepository
   @override
   Future<List<PaymentEntity>> getPayments(String childId) async {
     try {
-      HttpClientResponse response;
-      try {
-        response = await httpClient.get(
-          '/api/parent/children/$childId/payments',
-        );
-      } on HttpClientResponse catch (e) {
-        if (e.statusCode != 404) rethrow;
-        response = await httpClient.get(
-          '/api/parent/dashboard/child/$childId/payments',
-        );
-      }
-
-      final data = asList(response.data);
-      return data.map((e) => PaymentModel.fromJson(asMap(e))).toList();
+      // Parent's own payments/orders
+      final response = await httpClient.get('/api/payment/orders/my-orders');
+      final list = response.asList();
+      return list.map((e) => PaymentModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: ParentFinancialRepositoryExceptionCode.fetchError,
       );
     }
   }
-
 }

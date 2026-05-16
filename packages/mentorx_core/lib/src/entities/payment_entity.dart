@@ -7,71 +7,102 @@ enum PaymentType { courseEnrollment, walletTopup }
 enum PaymentStatus { pending, success, failed, expired, processing }
 
 class PaymentEntity extends Equatable {
-  final String id;
+  final String? id;
+  final bool success;
+  final bool pending;
+  final String? message;
+  final String? orderNumber;
+  final String? transactionId;
   final double amount;
   final String currency;
   final PaymentMethod method;
-  final PaymentType paymentType;
-  final PaymentStatus status;
   final String? reference;
-  final DateTime? expiresAt;
-  final DateTime createdAt;
+  final double? amountPaid;
+  final int enrollmentsCreated;
+  final String? redirectUrl;
+  final double? originalAmount;
+  final double? finalAmount;
+  final double? discountAmount;
 
   const PaymentEntity({
-    required this.id,
-    required this.amount,
-    required this.method,
-    required this.paymentType,
-    required this.status,
-    required this.createdAt,
+    this.id,
+    this.success = false,
+    this.pending = false,
+    this.message,
+    this.orderNumber,
+    this.transactionId,
+    this.amount = 0.0,
     this.currency = 'EGP',
+    this.method = PaymentMethod.wallet,
     this.reference,
-    this.expiresAt,
+    this.amountPaid,
+    this.enrollmentsCreated = 0,
+    this.redirectUrl,
+    this.originalAmount,
+    this.finalAmount,
+    this.discountAmount,
   });
 
-  static final placeholder = PaymentEntity(
-    id: '',
-    amount: 0.0,
-    method: PaymentMethod.vodafoneCash,
-    paymentType: PaymentType.walletTopup,
-    status: PaymentStatus.pending,
-    createdAt: DateTime.fromMillisecondsSinceEpoch(0),
-  );
+  static const placeholder = PaymentEntity();
 
   @override
   List<Object?> get props => [
         id,
+        success,
+        pending,
+        message,
+        orderNumber,
+        transactionId,
         amount,
         currency,
         method,
-        paymentType,
-        status,
         reference,
-        expiresAt,
-        createdAt,
+        amountPaid,
+        enrollmentsCreated,
+        redirectUrl,
+        originalAmount,
+        finalAmount,
+        discountAmount,
       ];
 
   PaymentEntity copyWith({
-    String? id,
+    MentorXNullableValue<String?>? id,
+    bool? success,
+    bool? pending,
+    MentorXNullableValue<String?>? message,
+    MentorXNullableValue<String?>? orderNumber,
+    MentorXNullableValue<String?>? transactionId,
     double? amount,
     String? currency,
     PaymentMethod? method,
-    PaymentType? paymentType,
-    PaymentStatus? status,
-    String? reference,
-    DateTime? expiresAt,
-    DateTime? createdAt,
+    MentorXNullableValue<String?>? reference,
+    MentorXNullableValue<double?>? amountPaid,
+    int? enrollmentsCreated,
+    MentorXNullableValue<String?>? redirectUrl,
+    MentorXNullableValue<double?>? originalAmount,
+    MentorXNullableValue<double?>? finalAmount,
+    MentorXNullableValue<double?>? discountAmount,
   }) {
     return PaymentEntity(
-      id: id ?? this.id,
+      id: id != null ? id.value : this.id,
+      success: success ?? this.success,
+      pending: pending ?? this.pending,
+      message: message != null ? message.value : this.message,
+      orderNumber: orderNumber != null ? orderNumber.value : this.orderNumber,
+      transactionId:
+          transactionId != null ? transactionId.value : this.transactionId,
       amount: amount ?? this.amount,
       currency: currency ?? this.currency,
       method: method ?? this.method,
-      paymentType: paymentType ?? this.paymentType,
-      status: status ?? this.status,
-      reference: reference ?? this.reference,
-      expiresAt: expiresAt ?? this.expiresAt,
-      createdAt: createdAt ?? this.createdAt,
+      reference: reference != null ? reference.value : this.reference,
+      amountPaid: amountPaid != null ? amountPaid.value : this.amountPaid,
+      enrollmentsCreated: enrollmentsCreated ?? this.enrollmentsCreated,
+      redirectUrl: redirectUrl != null ? redirectUrl.value : this.redirectUrl,
+      originalAmount:
+          originalAmount != null ? originalAmount.value : this.originalAmount,
+      finalAmount: finalAmount != null ? finalAmount.value : this.finalAmount,
+      discountAmount:
+          discountAmount != null ? discountAmount.value : this.discountAmount,
     );
   }
 }

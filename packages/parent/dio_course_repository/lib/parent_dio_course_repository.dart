@@ -8,7 +8,7 @@ final class DioParentCourseRepository
   final HttpClient httpClient;
 
   DioParentCourseRepository({required this.httpClient});
-  
+
   @override
   Future<void> initialize() async {}
 
@@ -21,7 +21,10 @@ final class DioParentCourseRepository
   }
 
   @override
-  Future<List<CourseEntity>> getCourses(String childId, {String? status}) async {
+  Future<List<CourseEntity>> getCourses(
+    String childId, {
+    String? status,
+  }) async {
     try {
       HttpClientResponse response;
       try {
@@ -81,5 +84,4 @@ final class DioParentCourseRepository
       );
     }
   }
-
 }

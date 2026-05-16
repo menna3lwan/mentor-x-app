@@ -34,7 +34,7 @@ class MentorXErrorIndicator extends StatelessWidget {
             ),
             const Gap(20),
             Text(
-              message ?? t.ui.widgets.error.title,
+              message ?? t_ui.widgets.error.title,
               textAlign: TextAlign.center,
               style: context.bodyPrimaryStyle.copyWith(
                 fontWeight: FontWeight.w800,
@@ -44,7 +44,7 @@ class MentorXErrorIndicator extends StatelessWidget {
             if (onRetry != null) ...[
               const Gap(24),
               MentorXButton(
-                label: t.ui.widgets.error.retry,
+                label: t_ui.widgets.error.retry,
                 onPressed: onRetry,
                 width: 140,
                 size: MentorXButtonSize.small,

@@ -2,7 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
-import 'package:gap/gap.dart';
+import 'package:mentorx_student/core/core.dart';
 import 'steps/start_step.dart';
 import 'steps/otp_step.dart';
 import 'steps/personal_info_step.dart';
@@ -30,60 +30,101 @@ final class RegistrationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final t = context.t.student;
     final List<String> steps = [
-      t['welcome']?.toString() ?? 'Welcome',
-      t['otpVerifyTitle']?.toString() ?? 'Verify',
-      t['profile']?.toString() ?? 'Profile',
-      t['academicInfo']?.toString() ?? 'Academic',
-      t['locationDetails']?.toString() ?? 'Location',
-      t['securityAndIdentity']?.toString() ?? 'Security',
+      context.t.auth.welcome,
+      context.t.auth.otpVerifyTitle,
+      context.t.auth.registerTitle,
+      context.t.auth.gradeLabel,
+      context.t.auth.governorateLabel,
+      context.t.auth.passwordAndPhotosLabel,
     ];
 
-    return AuthScaffold(
+    return Scaffold(
       backgroundColor: context.backgroundPrimaryColor,
-      appBarLeading: IconButton(
-        onPressed: onBack,
-        icon: Icon(
-          Icons.arrow_back_ios_new_rounded,
-          color: context.textPrimaryColor,
-          size: 20,
-        ),
-      ),
-      title: Text(steps[currentStep]),
-      progressIndicator: FadeInDown(
-        duration: const Duration(milliseconds: 500),
-        delay: const Duration(milliseconds: 100),
-        child: _buildStepper(context, steps),
-      ),
-      body: Stack(
+      body: Column(
         children: [
-          const _BackgroundDecorations(),
-          Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 16,
-                  ),
-                  child: ZoomIn(
-                    key: ValueKey(currentStep),
-                    child: _buildCurrentStep(context),
-                  ),
-                ),
+          _buildHeader(context, steps[currentStep]),
+          _buildStepper(context, steps),
+          Expanded(
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              child: ZoomIn(
+                key: ValueKey(currentStep),
+                child: _buildCurrentStep(context),
               ),
-            ],
+            ),
           ),
         ],
       ),
-      footer: FadeInUp(
+      bottomNavigationBar: FadeInUp(
         duration: const Duration(milliseconds: 500),
         child: _buildBottomActions(context),
       ),
     );
   }
 
+  Widget _buildHeader(BuildContext context, String title) {
+    return ClipRRect(
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+        child: Container(
+          width: double.infinity,
+          padding: EdgeInsets.fromLTRB(
+            12,
+            MediaQuery.paddingOf(context).top + 8,
+            12,
+            16,
+          ),
+          decoration: BoxDecoration(
+            color: context.backgroundPrimaryColor.withValues(alpha: 0.8),
+            border: Border(
+              bottom: BorderSide(
+                color: context.borderPrimaryColor.withValues(alpha: 0.1),
+              ),
+            ),
+          ),
+          child: Row(
+            children: [
+              MentorXIconButton(
+                onPressed: onBack,
+                icon: Icons.arrow_back_ios_new_rounded,
+                variant: MentorXIconButtonVariant.outline,
+                size: MentorXIconButtonSize.small,
+              ),
+              const Gap(16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      context.t.auth.registrationLabel,
+                      style: context.bodySecondaryStyle.copyWith(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w900,
+                        color: context.brandPrimaryColor,
+                        letterSpacing: 2.0,
+                      ),
+                    ),
+                    const Gap(2),
+                    Text(
+                      title,
+                      style: context.titleH1Style.copyWith(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: -1.0,
+                        height: 1.1,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
   Widget _buildStepper(BuildContext context, List<String> steps) {
     return Container(
@@ -168,10 +209,10 @@ final class RegistrationPage extends StatelessWidget {
             ? const Icon(Icons.check_rounded, size: 20, color: Colors.white)
             : Text(
                 step.toString(),
-                style: TextStyle(
+                style: context.bodyPrimaryStyle.copyWith(
                   fontSize: isActive ? 16 : 14,
-                  color: isActive
-                      ? context.brandPrimaryColor
+                  color: isActive || isCompleted
+                      ? Colors.white
                       : context.textSecondaryColor,
                   fontWeight: FontWeight.w900,
                 ),
@@ -200,132 +241,76 @@ final class RegistrationPage extends StatelessWidget {
   }
 
   Widget _buildBottomActions(BuildContext context) {
-    final t = context.t.student;
-    return Container(
-      padding: EdgeInsets.fromLTRB(
-        24,
-        24,
-        24,
-        MediaQuery.paddingOf(context).bottom + 24,
-      ),
-      decoration: BoxDecoration(
-        color: context.backgroundSecondaryColor,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
-        border: Border(
-          top: BorderSide(
-            color: context.borderPrimaryColor.withValues(alpha: 0.05),
+    final t = context.t;
+    return ClipRRect(
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+        child: Container(
+          padding: EdgeInsets.fromLTRB(
+            24,
+            24,
+            24,
+            MediaQuery.paddingOf(context).bottom + 24,
           ),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 30,
-            offset: const Offset(0, -10),
+          decoration: BoxDecoration(
+            color: context.backgroundPrimaryColor.withValues(alpha: 0.8),
+            border: Border(
+              top: BorderSide(
+                color: context.borderPrimaryColor.withValues(alpha: 0.1),
+              ),
+            ),
           ),
-        ],
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          MentorXButton(
-            onPressed: isLoading
-                ? null
-                : (currentStep == 5 ? onSubmit : onNext),
-            label: currentStep == 5
-                ? (t['completeRegistration'] ?? 'Complete Registration')
-                : (currentStep == 0
-                      ? (t['commonNext'] ?? 'Verify & Continue')
-                      : (t['commonNext'] ?? 'Continue')),
-            loading: isLoading,
-          ),
-          if (currentStep == 0) ...[
-            const Gap(20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  t['alreadyHaveAccount'] ?? 'Already have an account?',
-                  style: TextStyle(
-                    color: context.textSecondaryColor,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                TextButton(
-                  onPressed: isLoading ? null : onLogin,
-                  style: TextButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                  ),
-                  child: Text(
-                    t['signIn'] ?? 'Sign In',
-                    style: TextStyle(
-                      color: context.brandPrimaryColor,
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: 0.5,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              MentorXButton(
+                onPressed: isLoading
+                    ? null
+                    : (currentStep == 5 ? onSubmit : onNext),
+                label: currentStep == 5
+                    ? t.auth.submitRegistration
+                    : t.auth.commonNext,
+                loading: isLoading,
+                size: MentorXButtonSize.large,
+              ),
+              if (currentStep == 0) ...[
+                const Gap(20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                    Text(
+                      context.t.auth.alreadyHaveAccount,
+                      style: context.bodySecondaryStyle.copyWith(
+                        color: context.textSecondaryColor,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
-                  ),
+                    TextButton(
+                      onPressed: isLoading ? null : onLogin,
+                      style: TextButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                      ),
+                      child: Text(
+                        context.t.auth.loginButton,
+                        style: context.bodySecondaryStyle.copyWith(
+                          color: context.brandPrimaryColor,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
-            ),
-          ],
-        ],
+            ],
+          ),
+        ),
       ),
     );
   }
 }
 
-class _BackgroundDecorations extends StatelessWidget {
-  const _BackgroundDecorations();
 
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Positioned(
-          top: -100,
-          right: -100,
-          child: _BlurredBlob(
-            color: context.brandPrimaryColor.withValues(alpha: 0.1),
-            size: 300,
-          ),
-        ),
-        Positioned(
-          bottom: 200,
-          left: -150,
-          child: _BlurredBlob(
-            color: context.brandSecondaryColor.withValues(alpha: 0.08),
-            size: 400,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _BlurredBlob extends StatelessWidget {
-  final Color color;
-  final double size;
-
-  const _BlurredBlob({required this.color, required this.size});
-
-  @override
-  Widget build(BuildContext context) {
-    return FadeIn(
-      duration: const Duration(seconds: 2),
-      child: Container(
-        width: size,
-        height: size,
-        decoration: BoxDecoration(
-          color: color,
-          shape: BoxShape.circle,
-        ),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 50, sigmaY: 50),
-          child: const SizedBox.expand(),
-        ),
-      ),
-    );
-  }
-}
 
 class _FadeInScale extends StatefulWidget {
   final Widget child;

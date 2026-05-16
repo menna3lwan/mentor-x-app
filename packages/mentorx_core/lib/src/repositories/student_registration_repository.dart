@@ -61,7 +61,9 @@ abstract interface class StudentRegistrationRepository {
 
   /// Lookups
   Future<List<GovernorateEntity>> getGovernorates();
-  Future<List<String>> getAreas(String governorateId);
+  Future<List<GovernorateEntity>> getGovernoratesWithAreas();
+  Future<List<AreaEntity>> getAreas(String governorateId);
+  Future<List<Map<String, dynamic>>> getCenters({String? governorate});
   Future<StudentApplicationInfoEntity> getApplicationInfo();
   Future<bool> checkPhone(String phone);
 }

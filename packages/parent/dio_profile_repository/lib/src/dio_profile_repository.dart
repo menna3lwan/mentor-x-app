@@ -18,8 +18,7 @@ final class DioProfileRepository
   Never throwException(
     ParentProfileRepositoryExceptionCode code, {
     String? message,
-  }) =>
-      throw ParentProfileRepositoryException(code: code, message: message);
+  }) => throw ParentProfileRepositoryException(code: code, message: message);
 
   @override
   Future<ParentEntity> getProfile() async {

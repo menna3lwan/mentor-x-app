@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../core/core.dart';
+import 'package:mentorx_student/core/core.dart';
 import 'bloc/forgot_password_bloc.dart';
 import 'forgot_password_page.dart';
 

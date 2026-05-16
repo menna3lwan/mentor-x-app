@@ -130,13 +130,14 @@ class MockStudentAnalyticsRepository implements StudentAnalyticsRepository {
   @override
   Future<List<QuizSpeedMetricEntity>> getQuizSpeedMetrics({String? courseId}) async {
     return [
-      const QuizSpeedMetricEntity(
+      QuizSpeedMetricEntity(
         quizId: 'q1',
         quizTitle: 'اختبار الحركة الموجية',
+        score: 95,
         timeSpentSeconds: 500,
         questionCount: 20,
-        secondsPerQuestion: 25,
-        averageSecondsPerQuestion: 45,
+        averageSecondsPerQuestion: 25,
+        submittedAt: DateTime.now(),
       ),
     ];
   }

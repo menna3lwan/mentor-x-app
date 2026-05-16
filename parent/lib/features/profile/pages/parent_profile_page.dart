@@ -2,9 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
-import 'package:gap/gap.dart';
 import 'package:animate_do/animate_do.dart';
-import 'package:mix/mix.dart';
 import 'package:analytics_service/analytics_service.dart';
 import '../bloc/profile_bloc.dart';
 

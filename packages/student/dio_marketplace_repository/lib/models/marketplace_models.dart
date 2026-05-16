@@ -14,11 +14,13 @@ final class MarketplaceCategoryModel extends MarketplaceCategoryEntity {
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'name': name,
-      };
+    'id': id,
+    'name': name,
+  };
 
-  factory MarketplaceCategoryModel.fromEntity(MarketplaceCategoryEntity entity) {
+  factory MarketplaceCategoryModel.fromEntity(
+    MarketplaceCategoryEntity entity,
+  ) {
     return MarketplaceCategoryModel(
       id: entity.id,
       name: entity.name,
@@ -45,36 +47,47 @@ final class MarketplaceItemModel extends MarketplaceItemEntity {
     return MarketplaceItemModel(
       id: ModelParser.asString(json['id']),
       title: ModelParser.asString(json['title']),
-      price: ModelParser.asDouble(json['price'] ?? json['unitPrice'] ?? json['unit_price']),
+      price: ModelParser.asDouble(
+        json['price'] ?? json['unitPrice'] ?? json['unit_price'],
+      ),
       description: ModelParser.asString(json['description']),
       oldPrice: ModelParser.asDouble(json['oldPrice'] ?? json['old_price']),
-      imageUrls: ModelParser.asList(json['imageUrls'] ?? json['image_urls'])
-          .map((e) => e.toString())
-          .toList(),
-      isActive: ModelParser.asBool(json['isActive'] ?? json['is_active'], fallback: true),
-      isFeatured: ModelParser.asBool(json['isFeatured'] ?? json['is_featured']),
-      stockQuantity: ModelParser.asInt(json['stockQuantity'] ?? json['stock_quantity']),
-      trackInventory: ModelParser.asBool(
-        json['trackInventory'] ?? json['track_inventory'] ?? json['inventoryTracking'],
+      imageUrls: ModelParser.asList(
+        json['imageUrls'] ?? json['image_urls'],
+      ).map((e) => e.toString()).toList(),
+      isActive: ModelParser.asBool(
+        json['isActive'] ?? json['is_active'],
         fallback: true,
       ),
-      categoryId: ModelParser.asString(json['categoryId'] ?? json['category_id']),
+      isFeatured: ModelParser.asBool(json['isFeatured'] ?? json['is_featured']),
+      stockQuantity: ModelParser.asInt(
+        json['stockQuantity'] ?? json['stock_quantity'],
+      ),
+      trackInventory: ModelParser.asBool(
+        json['trackInventory'] ??
+            json['track_inventory'] ??
+            json['inventoryTracking'],
+        fallback: true,
+      ),
+      categoryId: ModelParser.asString(
+        json['categoryId'] ?? json['category_id'],
+      ),
     );
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'title': title,
-        'price': price,
-        'description': description,
-        'old_price': oldPrice,
-        'image_urls': imageUrls,
-        'is_active': isActive,
-        'is_featured': isFeatured,
-        'stock_quantity': stockQuantity,
-        'track_inventory': trackInventory,
-        'category_id': categoryId,
-      };
+    'id': id,
+    'title': title,
+    'price': price,
+    'description': description,
+    'old_price': oldPrice,
+    'image_urls': imageUrls,
+    'is_active': isActive,
+    'is_featured': isFeatured,
+    'stock_quantity': stockQuantity,
+    'track_inventory': trackInventory,
+    'category_id': categoryId,
+  };
 
   factory MarketplaceItemModel.fromEntity(MarketplaceItemEntity entity) {
     return MarketplaceItemModel(
@@ -117,22 +130,40 @@ final class MarketplaceOrderModel extends MarketplaceOrderEntity {
   factory MarketplaceOrderModel.fromJson(Map<String, dynamic> json) {
     return MarketplaceOrderModel(
       id: ModelParser.asString(json['id']),
-      orderNumber: ModelParser.asString(json['orderNumber'] ?? json['order_number']),
+      orderNumber: ModelParser.asString(
+        json['orderNumber'] ?? json['order_number'],
+      ),
       studentId: ModelParser.asString(json['studentId'] ?? json['student_id']),
-      studentName: ModelParser.asString(json['studentName'] ?? json['student_name']),
-      totalAmount: ModelParser.asDouble(json['total'] ?? json['totalAmount'] ?? json['total_amount']),
+      studentName: ModelParser.asString(
+        json['studentName'] ?? json['student_name'],
+      ),
+      totalAmount: ModelParser.asDouble(
+        json['total'] ?? json['totalAmount'] ?? json['total_amount'],
+      ),
       subtotal: ModelParser.asDouble(json['subtotal']),
       discount: ModelParser.asDouble(json['discount']),
       tax: ModelParser.asDouble(json['tax']),
-      formattedTotal: ModelParser.asString(json['formattedTotal'] ?? json['formatted_total']),
-      paymentMethod: ModelParser.asString(json['paymentMethod'] ?? json['payment_method']),
+      formattedTotal: ModelParser.asString(
+        json['formattedTotal'] ?? json['formatted_total'],
+      ),
+      paymentMethod: ModelParser.asString(
+        json['paymentMethod'] ?? json['payment_method'],
+      ),
       status: _parseStatus(json['status']),
-      createdAt: ModelParser.asDateTime(json['createdAt'] ?? json['created_at']) ?? DateTime.now(),
+      createdAt:
+          ModelParser.asDateTime(json['createdAt'] ?? json['created_at']) ??
+          DateTime.now(),
       paidAt: ModelParser.asDateTime(json['paidAt'] ?? json['paid_at']),
       itemCount: ModelParser.asInt(json['itemCount'] ?? json['item_count']),
-      deliveryAddress: ModelParser.asString(json['deliveryAddress'] ?? json['delivery_address']),
-      deliveryPhone: ModelParser.asString(json['deliveryPhone'] ?? json['delivery_phone']),
-      deliveryNotes: ModelParser.asString(json['deliveryNotes'] ?? json['delivery_notes']),
+      deliveryAddress: ModelParser.asString(
+        json['deliveryAddress'] ?? json['delivery_address'],
+      ),
+      deliveryPhone: ModelParser.asString(
+        json['deliveryPhone'] ?? json['delivery_phone'],
+      ),
+      deliveryNotes: ModelParser.asString(
+        json['deliveryNotes'] ?? json['delivery_notes'],
+      ),
       items: ModelParser.asList(json['items'])
           .map((e) => MarketplaceOrderItemModel.fromJson(ModelParser.asMap(e)))
           .toList(),
@@ -140,15 +171,17 @@ final class MarketplaceOrderModel extends MarketplaceOrderEntity {
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'order_number': orderNumber,
-        'student_id': studentId,
-        'total': totalAmount,
-        'status': status.name,
-        'created_at': createdAt.toIso8601String(),
-        'paid_at': paidAt?.toIso8601String(),
-        'items': items?.map((e) => MarketplaceOrderItemModel.fromEntity(e).toJson()).toList(),
-      };
+    'id': id,
+    'order_number': orderNumber,
+    'student_id': studentId,
+    'total': totalAmount,
+    'status': status.name,
+    'created_at': createdAt.toIso8601String(),
+    'paid_at': paidAt?.toIso8601String(),
+    'items': items
+        ?.map((e) => MarketplaceOrderItemModel.fromEntity(e).toJson())
+        .toList(),
+  };
 
   factory MarketplaceOrderModel.fromEntity(MarketplaceOrderEntity entity) {
     return MarketplaceOrderModel(
@@ -198,27 +231,37 @@ final class MarketplaceOrderItemModel extends MarketplaceOrderItemEntity {
     return MarketplaceOrderItemModel(
       id: ModelParser.asString(json['id']),
       orderId: ModelParser.asString(json['orderId'] ?? json['order_id']),
-      productType: ModelParser.asString(json['productType'] ?? json['product_type']),
-      productId: ModelParser.asString(json['productId'] ?? json['product_id'] ?? json['itemId']),
-      productName: ModelParser.asString(json['productName'] ?? json['product_name'] ?? json['itemTitle']),
+      productType: ModelParser.asString(
+        json['productType'] ?? json['product_type'],
+      ),
+      productId: ModelParser.asString(
+        json['productId'] ?? json['product_id'] ?? json['itemId'],
+      ),
+      productName: ModelParser.asString(
+        json['productName'] ?? json['product_name'] ?? json['itemTitle'],
+      ),
       quantity: ModelParser.asInt(json['quantity']),
       unitPrice: ModelParser.asDouble(json['unitPrice'] ?? json['unit_price']),
-      subtotal: ModelParser.asDouble(json['subtotal'] ?? json['totalPrice'] ?? json['total_price']),
+      subtotal: ModelParser.asDouble(
+        json['subtotal'] ?? json['totalPrice'] ?? json['total_price'],
+      ),
     );
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'order_id': orderId,
-        'product_type': productType,
-        'product_id': productId,
-        'product_name': productName,
-        'quantity': quantity,
-        'unit_price': unitPrice,
-        'subtotal': subtotal,
-      };
+    'id': id,
+    'order_id': orderId,
+    'product_type': productType,
+    'product_id': productId,
+    'product_name': productName,
+    'quantity': quantity,
+    'unit_price': unitPrice,
+    'subtotal': subtotal,
+  };
 
-  factory MarketplaceOrderItemModel.fromEntity(MarketplaceOrderItemEntity entity) {
+  factory MarketplaceOrderItemModel.fromEntity(
+    MarketplaceOrderItemEntity entity,
+  ) {
     return MarketplaceOrderItemModel(
       id: entity.id,
       orderId: entity.orderId,

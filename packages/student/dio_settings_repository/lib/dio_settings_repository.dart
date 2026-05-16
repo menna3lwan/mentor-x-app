@@ -6,9 +6,10 @@ final class DioSettingsRepository
     extends HttpClientRepository<SettingsRepositoryExceptionCode>
     implements SettingsRepository {
   @override
-  Never throwException(SettingsRepositoryExceptionCode code,
-          {String? message}) =>
-      throw SettingsRepositoryException(code: code, message: message);
+  Never throwException(
+    SettingsRepositoryExceptionCode code, {
+    String? message,
+  }) => throw SettingsRepositoryException(code: code, message: message);
 
   final HttpClient httpClient;
 
@@ -21,13 +22,12 @@ final class DioSettingsRepository
   Future<UserSettingsEntity> getSettings() async {
     try {
       final response = await httpClient.get('/api/student/settings');
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
-      return UserSettingsModel.fromJson(data);
+      return UserSettingsModel.fromJson(response.asMap());
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
         defaultCode: SettingsRepositoryExceptionCode.failedToLoadSettings,
-       );
+      );
     }
   }
 
@@ -52,8 +52,7 @@ final class DioSettingsRepository
         data: body,
       );
 
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
-      return UserSettingsModel.fromJson(data);
+      return UserSettingsModel.fromJson(response.asMap());
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
@@ -61,5 +60,4 @@ final class DioSettingsRepository
       );
     }
   }
-
 }

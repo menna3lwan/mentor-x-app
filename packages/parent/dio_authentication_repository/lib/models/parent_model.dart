@@ -23,24 +23,47 @@ final class ParentModel extends ParentEntity {
     final String name = ModelParser.asString(user['name'] ?? user['fullName']);
     final nameParts = name.trim().split(' ');
     final String fallbackFirst = nameParts.isNotEmpty ? nameParts.first : '';
-    final String fallbackLast = nameParts.length > 1 ? nameParts.sublist(1).join(' ') : '';
+    final String fallbackLast = nameParts.length > 1
+        ? nameParts.sublist(1).join(' ')
+        : '';
 
     return ParentModel(
       id: ModelParser.asString(user['id'] ?? user['userId']),
-      firstName: ModelParser.asString(user['firstName'] ?? user['first_name'], fallback: fallbackFirst),
-      lastName: ModelParser.asString(user['lastName'] ?? user['last_name'], fallback: fallbackLast),
+      firstName: ModelParser.asString(
+        user['firstName'] ?? user['first_name'],
+        fallback: fallbackFirst,
+      ),
+      lastName: ModelParser.asString(
+        user['lastName'] ?? user['last_name'],
+        fallback: fallbackLast,
+      ),
       email: ModelParser.asString(user['email']),
-      phoneNumber: ModelParser.asString(user['phone'] ?? user['phoneNumber'] ?? user['phone_number']),
+      phoneNumber: ModelParser.asString(
+        user['phone'] ?? user['phoneNumber'] ?? user['phone_number'],
+      ),
       profileImageUrl: ModelParser.asString(
-        user['profileImageUrl'] ?? user['image_url'] ?? user['avatarUrl'] ?? user['profile_photo_url'],
+        user['profileImageUrl'] ??
+            user['image_url'] ??
+            user['avatarUrl'] ??
+            user['profile_photo_url'],
       ),
       status: _parseStatus(user['status']),
-      childrenCount: ModelParser.asInt(user['childrenCount'] ?? user['students'] is List ? (user['students'] as List).length : 0),
-      walletBalance: ModelParser.asDouble(user['walletBalance'] ?? user['balance']),
+      childrenCount: ModelParser.asInt(
+        user['childrenCount'] ?? user['students'] is List
+            ? (user['students'] as List).length
+            : 0,
+      ),
+      walletBalance: ModelParser.asDouble(
+        user['walletBalance'] ?? user['balance'],
+      ),
       totalPoints: ModelParser.asInt(user['totalPoints'] ?? user['points']),
       metadata: ModelParser.asMap(user['metadata']),
-      createdAt: ModelParser.asDateTime(user['createdAt'] ?? user['created_at']) ?? DateTime.now(),
-      updatedAt: ModelParser.asDateTime(user['updatedAt'] ?? user['updated_at']) ?? DateTime.now(),
+      createdAt:
+          ModelParser.asDateTime(user['createdAt'] ?? user['created_at']) ??
+          DateTime.now(),
+      updatedAt:
+          ModelParser.asDateTime(user['updatedAt'] ?? user['updated_at']) ??
+          DateTime.now(),
     );
   }
 
@@ -54,14 +77,14 @@ final class ParentModel extends ParentEntity {
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'firstName': firstName,
-        'lastName': lastName,
-        'email': email,
-        'phone': phoneNumber,
-        'profileImageUrl': profileImageUrl,
-        'status': status.name,
-      };
+    'id': id,
+    'firstName': firstName,
+    'lastName': lastName,
+    'email': email,
+    'phone': phoneNumber,
+    'profileImageUrl': profileImageUrl,
+    'status': status.name,
+  };
 
   factory ParentModel.fromEntity(ParentEntity entity) {
     return ParentModel(

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gap/gap.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
-import 'package:mentorx_core/mentorx_core.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:mentorx_student/core/core.dart';
 import '../bloc/student_registration_bloc.dart';
 
 final class AcademicInfoStep extends StatefulWidget {
@@ -39,7 +38,6 @@ final class _AcademicInfoStepState extends State<AcademicInfoStep> {
 
   @override
   Widget build(BuildContext context) {
-    final t = context.t.student;
     final bloc = context.read<StudentRegistrationBloc>();
     return Builder(
       builder: (context) {
@@ -53,82 +51,96 @@ final class _AcademicInfoStepState extends State<AcademicInfoStep> {
           (StudentRegistrationBloc bloc) => bloc.state.isOnline,
         );
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            FadeInDown(
-              duration: const Duration(milliseconds: 400),
-              child: Text(
-                t['academicInfoTitle'] ?? 'Academic Information',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w900,
-                  color: context.textPrimaryColor,
-                  letterSpacing: -1.0,
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              FadeInDown(
+                duration: const Duration(milliseconds: 400),
+                child: Text(
+                  context.t.auth.academicInfoTitle,
+                  style: context.titleH1Style.copyWith(
+                    fontSize: 28,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: -1.0,
+                  ),
                 ),
               ),
-            ),
-            const Gap(12),
-            FadeInDown(
-              duration: const Duration(milliseconds: 500),
-              child: Text(
-                t['academicInfoSubtitle'] ??
-                    'Tell us about your current grade and study preferences to personalize your experience.',
-                style: TextStyle(
-                  color: context.textSecondaryColor,
-                  fontSize: 15,
-                  height: 1.6,
-                  fontWeight: FontWeight.w600,
+              const Gap(12),
+              FadeInDown(
+                duration: const Duration(milliseconds: 500),
+                child: Text(
+                  context.t.auth.academicInfoDesc,
+                  style: context.bodySecondaryStyle.copyWith(
+                    fontSize: 15,
+                    height: 1.6,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
-            ),
-            const Gap(40),
-            FadeInUp(
-              duration: const Duration(milliseconds: 400),
-              child: _buildGradePicker(context, selectedGrade, grades, bloc),
-            ),
-            const Gap(24),
-            FadeInUp(
-              duration: const Duration(milliseconds: 500),
-              child: MentorXTextFormField(
-                label: t['schoolNameLabel'] ?? 'School Name',
-                icon: Icons.school_rounded,
-                controller: _schoolNameController,
-                onChanged: (value) =>
-                    bloc.add(StudentRegistrationSchoolNameChanged(value)),
-              ),
-            ),
-            const Gap(20),
-            FadeInUp(
-              duration: const Duration(milliseconds: 600),
-              child: MentorXTextFormField(
-                label: t['educationAdminLabel'] ?? 'Education Department',
-                icon: Icons.domain_rounded,
-                controller: _educationDepartmentController,
-                onChanged: (value) => bloc.add(
-                  StudentRegistrationEducationDepartmentChanged(value),
-                ),
-              ),
-            ),
-            const Gap(40),
-            FadeInUp(
-              duration: const Duration(milliseconds: 700),
-              child: _buildStudyTypeToggle(context, isOnline, bloc),
-            ),
-            if (!isOnline) ...[
-              const Gap(24),
+              const Gap(40),
               FadeInUp(
                 duration: const Duration(milliseconds: 400),
-                child: MentorXTextFormField(
-                  label: t['centerLabel'] ?? 'Center Name',
-                  icon: Icons.location_on_rounded,
-                  controller: _centerNameController,
-                  onChanged: (value) =>
-                      bloc.add(StudentRegistrationCenterNameChanged(value)),
+                child: MentorXGlassCard(
+                  style: Style(
+                    $box.padding.all(24),
+                    $box.borderRadius(32),
+                  ),
+                  child: Column(
+                    children: [
+                      _buildGradePicker(context, selectedGrade, grades, bloc),
+                      const Gap(24),
+                      MentorXTextFormField(
+                        label: context.t.auth.schoolNameLabel,
+                        icon: Icons.school_rounded,
+                        controller: _schoolNameController,
+                        onChanged: (value) =>
+                            bloc.add(StudentRegistrationSchoolNameChanged(value)),
+                      ),
+                      const Gap(20),
+                      MentorXTextFormField(
+                        label: context.t.auth.educationAdminLabel,
+                        icon: Icons.domain_rounded,
+                        controller: _educationDepartmentController,
+                        onChanged: (value) => bloc.add(
+                          StudentRegistrationEducationDepartmentChanged(value),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const Gap(32),
+              FadeInUp(
+                duration: const Duration(milliseconds: 700),
+                child: MentorXGlassCard(
+                  style: Style(
+                    $box.padding.all(24),
+                    $box.borderRadius(32),
+                  ),
+                  child: Column(
+                    children: [
+                      _buildStudyTypeToggle(context, isOnline, bloc),
+                      if (!isOnline) ...[
+                        const Gap(24),
+                        FadeInUp(
+                          duration: const Duration(milliseconds: 400),
+                          child: MentorXTextFormField(
+                            label: context.t.auth.centerNameLabel,
+                            icon: Icons.location_on_rounded,
+                            controller: _centerNameController,
+                            onChanged: (value) =>
+                                bloc.add(StudentRegistrationCenterNameChanged(value)),
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
                 ),
               ),
             ],
-          ],
+          ),
         );
       },
     );
@@ -140,7 +152,7 @@ final class _AcademicInfoStepState extends State<AcademicInfoStep> {
     List<GradeEntity> grades,
     StudentRegistrationBloc bloc,
   ) {
-    final t = context.t.student;
+    final t = context.t;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -153,8 +165,8 @@ final class _AcademicInfoStepState extends State<AcademicInfoStep> {
             ),
             const Gap(8),
             Text(
-              t['gradeLabel'] ?? 'Current Grade',
-              style: TextStyle(
+              t.auth.gradeLabel,
+              style: context.bodySecondaryStyle.copyWith(
                 fontWeight: FontWeight.w800,
                 color: context.textPrimaryColor,
                 fontSize: 14,
@@ -171,14 +183,14 @@ final class _AcademicInfoStepState extends State<AcademicInfoStep> {
             color: context.brandPrimaryColor,
             size: 24,
           ),
-          style: TextStyle(
+          style: context.bodyPrimaryStyle.copyWith(
             color: context.textPrimaryColor,
             fontWeight: FontWeight.w700,
             fontSize: 15,
           ),
           decoration: InputDecoration(
             filled: true,
-            fillColor: context.backgroundSecondaryColor,
+            fillColor: context.backgroundSecondaryColor.withValues(alpha: 0.5),
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 20,
               vertical: 18,
@@ -202,8 +214,8 @@ final class _AcademicInfoStepState extends State<AcademicInfoStep> {
             ),
           ),
           hint: Text(
-            t['gradeHint'] ?? 'Select your grade',
-            style: TextStyle(
+            t.auth.gradeHint,
+            style: context.bodySecondaryStyle.copyWith(
               color: context.textTertiaryColor,
               fontWeight: FontWeight.w600,
             ),
@@ -213,7 +225,7 @@ final class _AcademicInfoStepState extends State<AcademicInfoStep> {
               value: grade,
               child: Text(
                 grade.name,
-                style: TextStyle(
+                style: context.bodyPrimaryStyle.copyWith(
                   color: context.textPrimaryColor,
                   fontWeight: FontWeight.w700,
                 ),
@@ -232,7 +244,7 @@ final class _AcademicInfoStepState extends State<AcademicInfoStep> {
     bool isOnline,
     StudentRegistrationBloc bloc,
   ) {
-    final t = context.t.student;
+    final t = context.t;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -245,8 +257,8 @@ final class _AcademicInfoStepState extends State<AcademicInfoStep> {
             ),
             const Gap(8),
             Text(
-              t['studyTypeLabel'] ?? 'Study Preference',
-              style: TextStyle(
+              t.auth.studyTypeLabel,
+              style: context.bodySecondaryStyle.copyWith(
                 fontWeight: FontWeight.w800,
                 color: context.textPrimaryColor,
                 fontSize: 14,
@@ -258,7 +270,7 @@ final class _AcademicInfoStepState extends State<AcademicInfoStep> {
         Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: context.backgroundSecondaryColor,
+            color: context.backgroundSecondaryColor.withValues(alpha: 0.5),
             borderRadius: BorderRadius.circular(24),
             border: Border.all(
               color: context.borderPrimaryColor.withValues(alpha: 0.05),
@@ -269,7 +281,7 @@ final class _AcademicInfoStepState extends State<AcademicInfoStep> {
               Expanded(
                 child: _buildToggleOption(
                   context,
-                  t['studyTypeOnline'] ?? 'Online Study',
+                  t.auth.studyTypeOnline,
                   Icons.laptop_chromebook_rounded,
                   isOnline,
                   () => bloc.add(
@@ -281,7 +293,7 @@ final class _AcademicInfoStepState extends State<AcademicInfoStep> {
               Expanded(
                 child: _buildToggleOption(
                   context,
-                  t['studyTypeCenter'] ?? 'Center Study',
+                  t.auth.studyTypeCenter,
                   Icons.location_city_rounded,
                   !isOnline,
                   () => bloc.add(
@@ -333,7 +345,7 @@ final class _AcademicInfoStepState extends State<AcademicInfoStep> {
             const Gap(12),
             Text(
               label,
-              style: TextStyle(
+              style: context.bodySecondaryStyle.copyWith(
                 fontSize: 13,
                 fontWeight: FontWeight.w900,
                 letterSpacing: 0.2,

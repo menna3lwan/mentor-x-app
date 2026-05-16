@@ -32,6 +32,8 @@ abstract interface class WalletRepository {
     required double amount,
     required PaymentMethod method,
     required PaymentType paymentType,
+    String? orderId,
+    String? couponCode,
   });
 
   /// Poll payment status.
@@ -58,8 +60,7 @@ abstract interface class WalletRepository {
 
   /// Create a new payment order.
   Future<PaymentOrderEntity> createOrder({
-    required double amount,
-    required String description,
+    required List<({String type, String id})> items,
   });
 
   /// Deposit funds into wallet.
@@ -70,6 +71,13 @@ abstract interface class WalletRepository {
 
   /// Get valid coupons for the student.
   Future<List<CouponEntity>> getValidCoupons();
+
+  /// Preview coupon discount before applying.
+  Future<Map<String, dynamic>> previewCoupon({
+    required String code,
+    required double amount,
+    String? courseId,
+  });
 
   // Pro Features
   Future<void> transferFunds(String recipientPhone, double amount);

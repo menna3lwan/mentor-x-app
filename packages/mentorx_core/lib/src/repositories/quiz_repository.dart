@@ -26,10 +26,10 @@ abstract interface class QuizRepository {
   Future<List<QuizQuestionEntity>> getQuizQuestions(String quizId);
 
   /// Submit the quiz with all answers.
-  /// Deprecated: use submitQuizAttempt instead if the backend supports it.
   Future<QuizAttemptEntity> submitQuiz(
     String quizId, {
     required Map<String, String> answers,
+    String? attemptId,
   });
 
   /// Start a new quiz attempt. Returns the attempt and questions.

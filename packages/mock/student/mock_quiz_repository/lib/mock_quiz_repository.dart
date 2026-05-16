@@ -49,6 +49,7 @@ final class MockQuizRepository implements QuizRepository {
   Future<QuizAttemptEntity> submitQuiz(
     String quizId, {
     required Map<String, String> answers,
+    String? attemptId,
   }) async {
     await Future<void>.delayed(delay);
     return MockQuizGenerator.submitResult(quizId);

@@ -28,6 +28,9 @@ abstract interface class AssignmentRepository {
   /// Fetch the student's submission for an assignment.
   Future<AssignmentSubmissionEntity?> getSubmission(String assignmentId);
 
+  /// Fetch a specific assignment attempt by its ID.
+  Future<AssignmentSubmissionEntity> getAttemptById(String attemptId);
+
   /// Submit an assignment.
   Future<AssignmentSubmissionEntity> submitAssignment(
     String assignmentId, {

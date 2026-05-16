@@ -1,9 +1,9 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:gap/gap.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:mentorx_student/core/core.dart';
 
 final class ForgotPasswordPage extends StatelessWidget {
   final GlobalKey<FormState> formKey;
@@ -35,176 +35,178 @@ final class ForgotPasswordPage extends StatelessWidget {
       backgroundColor: context.backgroundPrimaryColor,
       body: Stack(
         children: [
-          const _BackgroundDecorations(),
-          Column(
-            children: [
-              _BuildHeader(onBack: onBack),
-              Expanded(
-                child: SafeArea(
-                  top: false,
-                  child: SingleChildScrollView(
-                    physics: const BouncingScrollPhysics(),
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 48),
-                    child: Center(
-                      child: ConstrainedBox(
-                        constraints: const BoxConstraints(maxWidth: 420),
-                        child: Form(
-                          key: formKey,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              FadeInDown(
-                                duration: const Duration(milliseconds: 600),
-                                child: const _HeroIcon(),
-                              ),
-                              const Gap(40),
-                              FadeInUp(
-                                duration: const Duration(milliseconds: 600),
-                                delay: const Duration(milliseconds: 100),
-                                child: Text(
-                                  'Forgot Password?',
-                                  style: TextStyle(
-                                    fontSize: 32,
-                                    fontWeight: FontWeight.w900,
-                                    color: context.textPrimaryColor,
-                                    letterSpacing: -1.0,
-                                  ),
-                                ),
-                              ),
-                              const Gap(16),
-                              FadeInUp(
-                                duration: const Duration(milliseconds: 600),
-                                delay: const Duration(milliseconds: 200),
-                                child: Text(
-                                  'No worries! Enter your phone number below and we will send you a code to reset your password.',
-                                  style: TextStyle(
-                                    color: context.textSecondaryColor,
-                                    fontSize: 15,
-                                    height: 1.6,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ),
-                              const Gap(48),
-                              if (errorMessage != null) ...[
-                                FadeIn(
-                                  child: StatusBadge(
-                                    message: errorMessage!,
-                                    status: StatusBadgeType.danger,
-                                  ),
-                                ),
-                                const Gap(32),
-                              ],
-                              FadeInUp(
-                                duration: const Duration(milliseconds: 600),
-                                delay: const Duration(milliseconds: 300),
-                                child: MentorXTextFormField(
-                                  label: 'Phone Number',
-                                  hintText: '01xxxxxxxxx',
-                                  prefixIcon: Icons.phone_android_rounded,
-                                  controller: phoneController,
-                                  keyboardType: TextInputType.phone,
-                                  inputFormatters: inputFormatters,
-                                  validator: phoneValidator,
-                                  onChanged: onPhoneChanged,
-                                ),
-                              ),
-                              const Gap(56),
-                              FadeInUp(
-                                duration: const Duration(milliseconds: 600),
-                                delay: const Duration(milliseconds: 400),
-                                child: MentorXButton(
-                                  onPressed: isLoading ? null : onSubmit,
-                                  label: 'Send Reset Code',
-                                  loading: isLoading,
-                                ),
-                              ),
-                              const Gap(24),
-                              FadeInUp(
-                                duration: const Duration(milliseconds: 600),
-                                delay: const Duration(milliseconds: 500),
-                                child: Center(
-                                  child: TextButton(
-                                    onPressed: onBack,
-                                    child: Text(
-                                      'Back to Login',
-                                      style: TextStyle(
-                                        color: context.textSecondaryColor,
-                                        fontWeight: FontWeight.w800,
-                                        fontSize: 15,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
+          SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            padding: EdgeInsets.fromLTRB(
+              24,
+              MediaQuery.paddingOf(context).top + 120,
+              24,
+              32,
+            ),
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 420),
+                child: Form(
+                  key: formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Center(
+                        child: FadeInDown(
+                          duration: const Duration(milliseconds: 600),
+                          child: const _HeroIcon(),
+                        ),
+                      ),
+                      const Gap(40),
+                      FadeInUp(
+                        duration: const Duration(milliseconds: 600),
+                        delay: const Duration(milliseconds: 100),
+                        child: Text(
+                          context.t.auth.forgotPasswordTitle,
+                          style: context.titleH1Style.copyWith(
+                            fontSize: 32,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: -1.0,
                           ),
                         ),
                       ),
-                    ),
+                      const Gap(16),
+                      FadeInUp(
+                        duration: const Duration(milliseconds: 600),
+                        delay: const Duration(milliseconds: 200),
+                        child: Text(
+                          context.t.auth.forgotPasswordDesc,
+                          style: context.bodySecondaryStyle.copyWith(
+                            height: 1.6,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                      const Gap(48),
+                      if (errorMessage != null) ...[
+                        FadeIn(
+                          child: StatusBadge(
+                            message: errorMessage!,
+                            status: StatusBadgeType.danger,
+                          ),
+                        ),
+                        const Gap(32),
+                      ],
+                      FadeInUp(
+                        duration: const Duration(milliseconds: 600),
+                        delay: const Duration(milliseconds: 300),
+                        child: MentorXTextFormField(
+                          label: context.t.auth.phoneLabel,
+                          hintText: '01xxxxxxxxx',
+                          prefixIcon: Icons.phone_android_rounded,
+                          controller: phoneController,
+                          keyboardType: TextInputType.phone,
+                          inputFormatters: inputFormatters,
+                          validator: phoneValidator,
+                          onChanged: onPhoneChanged,
+                        ),
+                      ),
+                      const Gap(56),
+                      FadeInUp(
+                        duration: const Duration(milliseconds: 600),
+                        delay: const Duration(milliseconds: 400),
+                        child: MentorXButton(
+                          onPressed: isLoading ? null : onSubmit,
+                          label: context.t.auth.sendResetCode,
+                          loading: isLoading,
+                          size: MentorXButtonSize.large,
+                        ),
+                      ),
+                      const Gap(24),
+                      FadeInUp(
+                        duration: const Duration(milliseconds: 600),
+                        delay: const Duration(milliseconds: 500),
+                        child: Center(
+                          child: TextButton(
+                            onPressed: onBack,
+                            child: Text(
+                              context.t.auth.backToLogin,
+                              style: context.bodySecondaryStyle.copyWith(
+                                color: context.textSecondaryColor,
+                                fontWeight: FontWeight.w800,
+                                fontSize: 15,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
-            ],
+            ),
+          ),
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: _buildHeader(context),
           ),
         ],
       ),
     );
   }
-}
 
-final class _BuildHeader extends StatelessWidget {
-  final VoidCallback onBack;
-
-  const _BuildHeader({required this.onBack});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.fromLTRB(
-        24,
-        MediaQuery.paddingOf(context).top + 16,
-        24,
-        24,
-      ),
-      decoration: BoxDecoration(
-        color: context.backgroundSecondaryColor.withValues(alpha: 0.45),
-        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(32)),
-        border: Border(
-          bottom: BorderSide(
-            color: context.borderPrimaryColor.withValues(alpha: 0.1),
+  Widget _buildHeader(BuildContext context) {
+    return ClipRRect(
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+        child: Container(
+          width: double.infinity,
+          padding: EdgeInsets.fromLTRB(
+            12,
+            MediaQuery.paddingOf(context).top + 8,
+            12,
+            16,
           ),
-        ),
-      ),
-      child: ClipRRect(
-        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(32)),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          decoration: BoxDecoration(
+            color: context.backgroundPrimaryColor.withValues(alpha: 0.8),
+            border: Border(
+              bottom: BorderSide(
+                color: context.borderPrimaryColor.withValues(alpha: 0.1),
+              ),
+            ),
+          ),
           child: Row(
             children: [
-              IconButton(
+              MentorXIconButton(
                 onPressed: onBack,
-                icon: Icon(
-                  Icons.arrow_back_ios_new_rounded,
-                  color: context.textPrimaryColor,
-                  size: 20,
-                ),
+                icon: Icons.arrow_back_ios_new_rounded,
+                variant: MentorXIconButtonVariant.outline,
+                size: MentorXIconButtonSize.small,
               ),
-              const Expanded(
-                child: Center(
-                  child: Text(
-                    'Forgot Password',
-                    style: TextStyle(
-                      color: Color(0xFF1D1B20), // Matches theme
-                      fontSize: 18,
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: -0.5,
+              const Gap(16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      context.t.auth.registrationLabel,
+                      style: context.bodySecondaryStyle.copyWith(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w900,
+                        color: context.brandPrimaryColor,
+                        letterSpacing: 2.0,
+                      ),
                     ),
-                  ),
+                    const Gap(2),
+                    Text(
+                      context.t.auth.forgotPasswordTitle,
+                      style: context.titleH1Style.copyWith(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: -1.0,
+                        height: 1.1,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              const Gap(48),
             ],
           ),
         ),
@@ -218,27 +220,19 @@ final class _HeroIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 100,
-      height: 100,
-      decoration: BoxDecoration(
-        color: context.brandPrimaryColor.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(32),
-        border: Border.all(color: context.brandPrimaryColor.withValues(alpha: 0.1)),
-        boxShadow: [
-          BoxShadow(
-            color: context.brandPrimaryColor.withValues(alpha: 0.1),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
-          ),
-        ],
+    return MentorXGlassCard(
+      style: Style(
+        $box.width(112),
+        $box.height(112),
+        $box.borderRadius(56),
+        $box.color(context.brandPrimaryColor.withValues(alpha: 0.1)),
       ),
       child: Center(
         child: ZoomIn(
           duration: const Duration(milliseconds: 600),
           child: Icon(
             Icons.lock_reset_rounded,
-            size: 48,
+            size: 56,
             color: context.brandPrimaryColor,
           ),
         ),
@@ -247,61 +241,4 @@ final class _HeroIcon extends StatelessWidget {
   }
 }
 
-class _BackgroundDecorations extends StatelessWidget {
-  const _BackgroundDecorations();
 
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Positioned(
-          top: -100,
-          right: -50,
-          child: _BlurredBlob(
-            color: context.brandPrimaryColor.withValues(alpha: 0.12),
-            size: 350,
-          ),
-        ),
-        Positioned(
-          top: 300,
-          left: -150,
-          child: _BlurredBlob(
-            color: context.brandSecondaryColor.withValues(alpha: 0.08),
-            size: 400,
-          ),
-        ),
-        Positioned(
-          bottom: -50,
-          right: -100,
-          child: _BlurredBlob(
-            color: context.brandPrimaryColor.withValues(alpha: 0.1),
-            size: 300,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _BlurredBlob extends StatelessWidget {
-  final Color color;
-  final double size;
-
-  const _BlurredBlob({required this.color, required this.size});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        color: color,
-        shape: BoxShape.circle,
-      ),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 70, sigmaY: 70),
-        child: const SizedBox.expand(),
-      ),
-    );
-  }
-}

@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:mentorx_student/core/core.dart';
-import 'package:mentorx_ui/localization/generated/strings.g.dart';
 
 part 'app_locale_state.dart';
 

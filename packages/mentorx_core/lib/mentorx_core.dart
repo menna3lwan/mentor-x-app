@@ -42,6 +42,8 @@ part 'src/entities/center_entity.dart';
 part 'src/entities/schedule_entity.dart';
 part 'src/entities/group_entity.dart';
 part 'src/entities/governorate_entity.dart';
+part 'src/entities/area_entity.dart';
+part 'src/entities/level_entity.dart';
 part 'src/entities/district_entity.dart';
 part 'src/entities/parent/parent_lookup_type.dart';
 part 'src/entities/parent_registration_entities.dart';

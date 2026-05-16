@@ -205,6 +205,14 @@ final class MockAuthenticationRepository
   }
 
   @override
+  Future<StudentEntity> loginWithConflictQr({
+    required String phoneNumber,
+    required String password,
+  }) async {
+    return loginWithPassword(phoneNumber: phoneNumber, password: password);
+  }
+
+  @override
   Future<StudentEntity> verifyOtp(String otp) async {
     await _delay;
 

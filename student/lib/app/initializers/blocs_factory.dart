@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../core/core.dart';
+import 'package:mentorx_student/core/core.dart';
 import 'package:error_tracking_service/error_tracking_service.dart';
 import '../../features/marketplace/cubit/marketplace_cart_cubit.dart';
 

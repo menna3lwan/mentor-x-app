@@ -1,0 +1,13 @@
+{
+    "blockedTitle": "الحساب محظور",
+    "blockedDescription": "تم حظر حسابك بسبب انتهاك شروط الخدمة الخاصة بنا.",
+    "blockedSupportInfo": "إذا كنت تعتقد أن هذا خطأ، يرجى الاتصال بالدعم.",
+    "pendingTitle": "الحساب قيد المراجعة",
+    "pendingDescription": "حسابك قيد المراجعة حاليًا.",
+    "pendingSupportInfo": "سنقوم بإخطارك بمجرد الموافقة على حسابك.",
+    "refreshStatus": "تحديث الحالة",
+    "rejectedTitle": "تم رفض الحساب",
+    "rejectedDescription": "تم رفض حسابك.",
+    "rejectedReason": "يرجى التحقق من معلوماتك والمحاولة مرة أخرى.",
+    "studentCodeLabel": "كود الطالب"
+}

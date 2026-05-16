@@ -40,7 +40,7 @@ class AttendanceRateCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      t.ui.widgets.attendance.rate,
+                      t_ui.widgets.attendance.rate,
                       style: context.bodySecondaryStyle.copyWith(
                         color: context.textSecondaryColor,
                         fontWeight: FontWeight.w700,

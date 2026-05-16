@@ -1,2 +1,2 @@
-export 'attendance_qr_page/attendance_qr_page.dart';
-export 'attendance_history_page/attendance_history_page.dart';
+export 'attendance_history/attendance_history.dart';
+export 'attendance_qr/attendance_qr.dart';

@@ -27,4 +27,5 @@ abstract interface class ParentAttendanceRepository {
     DateTime? to,
   });
   Future<List<GroupEntity>> getChildGroups(String childId);
+  Future<Map<String, dynamic>> getGroupBrief(String childId, String groupId);
 }

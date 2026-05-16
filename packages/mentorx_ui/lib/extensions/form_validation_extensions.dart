@@ -10,12 +10,12 @@ extension FormValidationExtensions on String? {
     String? customMinLegthError,
     String? customMaxLengthError,
   }) {
-    if (isRequired && (this == null || this!.isEmpty)) return t.forms.required;
+    if (isRequired && (this == null || this!.isEmpty)) return t_ui.forms.required;
     if (this!.isNotEmpty &&
         minimumLength != null &&
         !this!.satisfiesMinLength(minimumLength)) {
       return customMinLegthError ??
-          (isDigits ? t.forms.minDigitsLength : t.forms.minLength)(
+          (isDigits ? t_ui.forms.minDigitsLength : t_ui.forms.minLength)(
             length: minimumLength,
           );
     }
@@ -23,7 +23,7 @@ extension FormValidationExtensions on String? {
         maximumLength != null &&
         !this!.satisfiesMaxLength(maximumLength)) {
       return customMaxLengthError ??
-          (isDigits ? t.forms.maxDigitsLength : t.forms.maxLength)(
+          (isDigits ? t_ui.forms.maxDigitsLength : t_ui.forms.maxLength)(
             length: maximumLength,
           );
     }
@@ -35,7 +35,7 @@ extension FormValidationExtensions on String? {
     final isRequiredResult = validateField(isRequired: true);
     if (isRequiredResult != null) return isRequiredResult;
     if (!this!.isValidEmail) {
-      return t.forms.youMustEnterAValidEmail;
+      return t_ui.forms.youMustEnterAValidEmail;
     }
     return null;
   }
@@ -45,7 +45,7 @@ extension FormValidationExtensions on String? {
     int maxLength = 13,
     int minLength = 11,
   }) {
-    // final message = t.login.form.youMustEnterAValidPhoneNumber;
+    // final message = t_ui.login.form.youMustEnterAValidPhoneNumber;
     if (isRequired) {
       final isRequiredResult = validateField(
         minimumLength: minLength,

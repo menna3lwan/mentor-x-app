@@ -95,14 +95,27 @@ final class MockStudentRegistrationRepository
   }
 
   @override
-  Future<List<String>> getAreas(String governorateId) async {
+  Future<List<AreaEntity>> getAreas(String governorateId) async {
     await Future.delayed(delay);
     if (governorateId == '1' || governorateId == 'Cairo') {
-      return ['Maadi', 'Nasr City', 'Heliopolis', 'Zamalek'];
+      return const [
+        AreaEntity(id: 'a1', name: 'Maadi'),
+        AreaEntity(id: 'a2', name: 'Nasr City'),
+        AreaEntity(id: 'a3', name: 'Heliopolis'),
+        AreaEntity(id: 'a4', name: 'Zamalek'),
+      ];
     } else if (governorateId == '2' || governorateId == 'Giza') {
-      return ['6th of October', 'Dokki', 'Mohandessin', 'Sheikh Zayed'];
+      return const [
+        AreaEntity(id: 'a5', name: '6th of October'),
+        AreaEntity(id: 'a6', name: 'Dokki'),
+        AreaEntity(id: 'a7', name: 'Mohandessin'),
+        AreaEntity(id: 'a8', name: 'Sheikh Zayed'),
+      ];
     }
-    return ['Sidi Gaber', 'Stanley', 'Montaza', 'Smouha'];
+    return const [
+      AreaEntity(id: 'a9', name: 'Sidi Gaber'),
+      AreaEntity(id: 'a10', name: 'Stanley'),
+    ];
   }
 
   @override
@@ -138,5 +151,37 @@ final class MockStudentRegistrationRepository
     await Future.delayed(delay);
     // Simulate uniqueness (except for a specific testing number)
     return phone != '01000000000';
+  }
+
+  @override
+  Future<List<Map<String, dynamic>>> getCenters({String? governorate}) async {
+    await Future.delayed(delay);
+    return [
+      {'id': 'c1', 'name': 'Center 1'},
+      {'id': 'c2', 'name': 'Center 2'},
+    ];
+  }
+
+  @override
+  Future<List<GovernorateEntity>> getGovernoratesWithAreas() async {
+    await Future.delayed(delay);
+    return [
+      const GovernorateEntity(
+        id: '1',
+        name: 'Cairo',
+        areas: [
+          AreaEntity(id: 'a1', name: 'Maadi'),
+          AreaEntity(id: 'a2', name: 'Nasr City'),
+        ],
+      ),
+      const GovernorateEntity(
+        id: '2',
+        name: 'Giza',
+        areas: [
+          AreaEntity(id: 'a6', name: 'Dokki'),
+          AreaEntity(id: 'a7', name: 'Mohandessin'),
+        ],
+      ),
+    ];
   }
 }

@@ -27,4 +27,7 @@ abstract interface class GradeRepository {
     String? courseId,
     MentorXPaginationInfo? paginationInfo,
   });
+
+  /// Fetch all academic levels.
+  Future<List<GradeEntity>> getLevels();
 }

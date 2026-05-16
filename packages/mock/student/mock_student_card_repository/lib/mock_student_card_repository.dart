@@ -23,4 +23,10 @@ final class MockStudentCardRepository implements StudentCardRepository {
       school: 'International School of Cairo',
     );
   }
+
+  @override
+  Future<StudentCardEntity> validateQr(String qrToken) async {
+    await Future.delayed(delay);
+    return getMyCard();
+  }
 }

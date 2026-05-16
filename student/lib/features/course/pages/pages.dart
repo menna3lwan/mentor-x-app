@@ -1,6 +1,6 @@
-export 'my_courses_page/my_courses_page.dart';
-export 'my_grades_page/my_grades_page.dart';
-export 'course_catalog_page/course_catalog_page.dart';
-export 'course_detail_page/course_detail_page.dart';
-export 'video_player_page/video_player_page.dart';
-export 'pdf_viewer_page/pdf_viewer_page.dart';
+export 'course_catalog/course_catalog.dart';
+export 'course_detail/course_detail.dart';
+export 'my_courses/my_courses.dart';
+export 'my_grades/my_grades.dart';
+export 'pdf_viewer/pdf_viewer.dart';
+export 'video_player/video_player.dart';

@@ -36,7 +36,7 @@ class AppErrorView extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             Text(
-              title ?? t.ui.widgets.error.title,
+              title ?? t_ui.widgets.error.title,
               style: context.bodyPrimaryStyle.copyWith(
                 fontWeight: FontWeight.w900,
                 fontSize: 20,
@@ -57,7 +57,7 @@ class AppErrorView extends StatelessWidget {
             if (onRetry != null) ...[
               const SizedBox(height: 32),
               MentorXButton(
-                text: buttonText ?? t.ui.widgets.error.retry,
+                text: buttonText ?? t_ui.widgets.error.retry,
                 onPressed: onRetry,
                 style: Style($box.width(200)),
               ),

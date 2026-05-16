@@ -1,0 +1,13 @@
+{
+    "blockedTitle": "Account Blocked",
+    "blockedDescription": "Your account has been blocked due to a violation of our terms of service.",
+    "blockedSupportInfo": "If you believe this is a mistake, please contact support.",
+    "pendingTitle": "Account Pending",
+    "pendingDescription": "Your account is currently under review.",
+    "pendingSupportInfo": "We will notify you once your account is approved.",
+    "refreshStatus": "Refresh Status",
+    "rejectedTitle": "Account Rejected",
+    "rejectedDescription": "Your account has been rejected.",
+    "rejectedReason": "Please check your information and try again.",
+    "studentCodeLabel": "Student Code"
+}

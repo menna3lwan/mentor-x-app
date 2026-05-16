@@ -25,12 +25,13 @@ final class DioStudentCommunicationRepository
   Future<List<WhatsAppGroupEntity>> getWhatsAppGroups() async {
     try {
       final response = await httpClient.get('/api/student/whatsapp-groups');
-      final data = asList(asMap(response.data)['data'] ?? response.data);
-      return data.map((e) => WhatsAppGroupModel.fromJson(asMap(e))).toList();
+      final list = response.asList();
+      return list.map((e) => WhatsAppGroupModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
-        defaultCode: StudentCommunicationRepositoryExceptionCode.failedToLoadWhatsAppGroups,
+        defaultCode: StudentCommunicationRepositoryExceptionCode
+            .failedToLoadWhatsAppGroups,
       );
     }
   }

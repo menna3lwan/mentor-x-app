@@ -21,7 +21,10 @@ import 'package:screen_protector/screen_protector.dart';
 
 import 'localization/generated/strings.g.dart';
 
+export 'package:mix/mix.dart';
+export 'package:gap/gap.dart';
 export 'localization/generated/strings.g.dart';
+
 
 /// Extensions
 part 'extensions/widget_extensions.dart';
@@ -47,7 +50,9 @@ part 'widgets/empty_state.dart';
 part 'widgets/section_header.dart';
 part 'widgets/stat_card.dart';
 part 'widgets/gradient_card.dart';
+
 part 'widgets/mentorx_button.dart';
+part 'widgets/mentorx_glass_card.dart';
 part 'widgets/mentorx_text_form_field.dart';
 part 'widgets/mentorx_logo.dart';
 part 'widgets/mentorx_clickable_text.dart';

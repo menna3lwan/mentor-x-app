@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
-import 'package:gap/gap.dart';
+import 'package:mentorx_student/core/core.dart';
 
 final class ScoreCircle extends StatelessWidget {
   const ScoreCircle({
@@ -25,8 +25,7 @@ final class ScoreCircle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final t = context.t.student;
-    final isAr = context.isArabic;
+    final t = context.t;
     final percent = total > 0 ? score / total : 0.0;
     final percentage = (percent * 100).toInt();
 
@@ -36,14 +35,14 @@ final class ScoreCircle extends StatelessWidget {
     String statusText = '';
 
     if (percentage >= 85) {
-      statusText = t['excellent'] ?? 'Excellent';
+      statusText = t.core.excellent;
     } else if (percentage >= 60) {
-      statusText = t['veryGood'] ?? 'Very Good';
+      statusText = t.core.veryGood;
     } else {
-      statusText = t['fail'] ?? 'Needs Work';
+      statusText = t.core.fail;
     }
 
-    final ofLabel = isAr ? 'من $total' : 'of $total';
+    final ofLabel = t.core.of(count: total);
 
     return CircularPercentIndicator(
       radius: radius,

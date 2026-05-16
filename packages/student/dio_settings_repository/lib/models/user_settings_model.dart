@@ -14,12 +14,22 @@ final class UserSettingsModel extends UserSettingsEntity {
     return UserSettingsModel(
       language: ModelParser.asString(json['language'], fallback: 'en'),
       theme: ModelParser.asString(json['theme'], fallback: 'light'),
-      pushNotifications: ModelParser.asBool(json['pushNotifications'] ?? json['push_notifications'], fallback: true),
-      notificationPreferences: ModelParser.asMap(json['notificationPreferences'] ?? json['notification_preferences']).map(
-        (k, v) => MapEntry(k, ModelParser.asBool(v)),
+      pushNotifications: ModelParser.asBool(
+        json['pushNotifications'] ?? json['push_notifications'],
+        fallback: true,
       ),
-      videoQualityDefault: ModelParser.asString(json['videoQualityDefault'] ?? json['video_quality_default']),
-      playbackSpeedDefault: ModelParser.asDouble(json['playbackSpeedDefault'] ?? json['playback_speed_default']),
+      notificationPreferences:
+          ModelParser.asMap(
+            json['notificationPreferences'] ?? json['notification_preferences'],
+          ).map(
+            (k, v) => MapEntry(k, ModelParser.asBool(v)),
+          ),
+      videoQualityDefault: ModelParser.asString(
+        json['videoQualityDefault'] ?? json['video_quality_default'],
+      ),
+      playbackSpeedDefault: ModelParser.asDouble(
+        json['playbackSpeedDefault'] ?? json['playback_speed_default'],
+      ),
     );
   }
 }

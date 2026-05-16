@@ -2,11 +2,9 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:event_bus/event_bus.dart';
-import 'package:mentorx_core/mentorx_core.dart';
 import '../../../app/student_app.dart';
-import 'package:analytics_service/analytics_service.dart';
 import 'package:error_tracking_service/error_tracking_service.dart';
-import 'app_authentication_events.dart';
+import 'package:mentorx_student/core/core.dart';
 
 export 'app_authentication_events.dart';
 export 'app_authentication_listener.dart';

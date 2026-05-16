@@ -56,9 +56,11 @@ final class DioAssignmentRepository
       final response = await httpClient.get(
         '/api/assignment-questions/assignment/$assignmentId',
       );
-      final data = asList(asMap(response.data)['data'] ??
-          asMap(response.data)['content'] ??
-          response.data);
+      final data = asList(
+        asMap(response.data)['data'] ??
+            asMap(response.data)['content'] ??
+            response.data,
+      );
       return data.map((e) => QuizQuestionModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
@@ -71,21 +73,31 @@ final class DioAssignmentRepository
   @override
   Future<AssignmentSubmissionEntity?> getSubmission(String assignmentId) async {
     try {
-      HttpClientResponse response;
-      try {
-        response = await httpClient.get(
-          '/api/assignment-attempts/student/me/assignment/$assignmentId',
-        );
-      } on HttpClientResponse catch (e) {
-        if (e.statusCode != 404) rethrow;
-        response = await httpClient.get(
-          '/api/assignment-attempts/student/me/assignment/$assignmentId',
-        );
-      }
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final userId = httpClient.userId;
+      if (userId == null) return null;
+
+      final response = await httpClient.get(
+        '/api/assignment-attempts/student/$userId/assignment/$assignmentId',
+      );
+      final data = response.asMap();
       return AssignmentSubmissionModel.fromJson(data);
     } on HttpClientResponse catch (e) {
       if (e.statusCode == 404) return null;
+      return handleHttpClientErrorResponse(
+        e,
+        defaultCode: AssignmentRepositoryExceptionCode.failedToLoadSubmission,
+      );
+    }
+  }
+
+  @override
+  Future<AssignmentSubmissionEntity> getAttemptById(String attemptId) async {
+    try {
+      final response = await httpClient.get(
+        '/api/assignment-attempts/$attemptId',
+      );
+      return AssignmentSubmissionModel.fromJson(response.asMap());
+    } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
         defaultCode: AssignmentRepositoryExceptionCode.failedToLoadSubmission,
@@ -105,26 +117,18 @@ final class DioAssignmentRepository
         '/api/assignments/$assignmentId/submit',
         data: {
           'assignmentId': assignmentId,
-          'assignment_id': assignmentId,
           'answers': answers.entries
               .map(
                 (e) => {
                   'questionId': e.key,
-                  'question_id': e.key,
                   'selectedAnswer': e.value,
-                  'selected_answer': e.value,
                 },
               )
               .toList(),
-          'fileUrls': filePaths,
-          'file_urls': filePaths,
-          'contentText': contentText,
-          'notes': contentText,
-          'content_text': contentText,
         },
       );
 
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final data = response.asMap();
       return AssignmentSubmissionModel.fromJson(data);
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
@@ -154,9 +158,11 @@ final class DioAssignmentRepository
       final response = await httpClient.get(
         '/api/assignment-attempts/student/$studentId',
       );
-      final data = asList(asMap(response.data)['data'] ??
-          asMap(response.data)['content'] ??
-          response.data);
+      final data = asList(
+        asMap(response.data)['data'] ??
+            asMap(response.data)['content'] ??
+            response.data,
+      );
       return data
           .map((e) => AssignmentSubmissionModel.fromJson(asMap(e)))
           .toList();
@@ -176,9 +182,11 @@ final class DioAssignmentRepository
       final response = await httpClient.get(
         '/api/assignment-attempts/assignment/$assignmentId',
       );
-      final data = asList(asMap(response.data)['data'] ??
-          asMap(response.data)['content'] ??
-          response.data);
+      final data = asList(
+        asMap(response.data)['data'] ??
+            asMap(response.data)['content'] ??
+            response.data,
+      );
       return data
           .map((e) => AssignmentSubmissionModel.fromJson(asMap(e)))
           .toList();

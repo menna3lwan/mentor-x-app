@@ -28,4 +28,13 @@ final class MockGradeRepository implements GradeRepository {
     await Future<void>.delayed(delay);
     return MockGradeGenerator.assignmentGrades();
   }
+
+  @override
+  Future<List<GradeEntity>> getLevels() async {
+    await Future<void>.delayed(delay);
+    return const [
+      GradeEntity(id: 'l1', name: 'Level 1'),
+      GradeEntity(id: 'l2', name: 'Level 2'),
+    ];
+  }
 }

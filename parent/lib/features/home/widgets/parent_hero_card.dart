@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
-import 'package:gap/gap.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:parent/core/core.dart';
 
@@ -16,6 +15,11 @@ class ParentHeroCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final child = summary.children.firstWhere(
+      (c) => c.studentId == selectedChildId,
+      orElse: () => ParentChildSummaryEntity.placeholder,
+    );
+
     return FadeInUp(
       duration: const Duration(milliseconds: 800),
       child: Container(
@@ -63,9 +67,9 @@ class ParentHeroCard extends StatelessWidget {
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
                       ),
-                      child: const Text(
-                        'ACADEMIC STANDING',
-                        style: TextStyle(
+                      child: Text(
+                        child.grade.toUpperCase(),
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 10,
                           fontWeight: FontWeight.w900,
@@ -78,18 +82,18 @@ class ParentHeroCard extends StatelessWidget {
                 ),
                 const Gap(24),
                 Text(
-                  '${summary.overview.avgGrade.toStringAsFixed(1)}%',
+                  child.studentName.isEmpty ? 'Student Overview' : child.studentName,
                   style: const TextStyle(
                     color: Colors.white,
-                    fontSize: 48,
+                    fontSize: 32,
                     fontWeight: FontWeight.w900,
                     letterSpacing: -1.0,
-                    height: 1,
+                    height: 1.1,
                   ),
                 ),
                 const Gap(4),
                 Text(
-                  'Overall Performance Score',
+                  'Academic Standing',
                   style: TextStyle(
                     color: Colors.white.withValues(alpha: 0.8),
                     fontSize: 14,
@@ -108,31 +112,31 @@ class ParentHeroCard extends StatelessWidget {
                     children: [
                       _buildMiniStat(
                         context,
+                        'Courses',
+                        child.activeEnrollments.toString(),
+                        Icons.book_rounded,
+                      ),
+                      Container(
+                        width: 1,
+                        height: 30,
+                        color: Colors.white.withValues(alpha: 0.2),
+                      ),
+                      _buildMiniStat(
+                        context,
+                        'Lessons',
+                        child.completedLessons.toString(),
+                        Icons.check_circle_outline_rounded,
+                      ),
+                      Container(
+                        width: 1,
+                        height: 30,
+                        color: Colors.white.withValues(alpha: 0.2),
+                      ),
+                      _buildMiniStat(
+                        context,
                         'Attendance',
-                        '${(summary.overview.avgAttendanceRate * 100).toStringAsFixed(0)}%',
+                        child.totalAttendance.toString(),
                         Icons.calendar_today_rounded,
-                      ),
-                      Container(
-                        width: 1,
-                        height: 30,
-                        color: Colors.white.withValues(alpha: 0.2),
-                      ),
-                      _buildMiniStat(
-                        context,
-                        'Fees Due',
-                        summary.overview.unpaidInvoicesCount.toString(),
-                        Icons.account_balance_wallet_rounded,
-                      ),
-                      Container(
-                        width: 1,
-                        height: 30,
-                        color: Colors.white.withValues(alpha: 0.2),
-                      ),
-                      _buildMiniStat(
-                        context,
-                        'Points',
-                        summary.overview.totalPoints.toString(),
-                        Icons.stars_rounded,
                       ),
                     ],
                   ),

@@ -1,0 +1,12 @@
+{
+    "noAttendance": "لا توجد سجلات حضور بعد",
+    "attendanceHistory": "سجل الحضور",
+    "attendanceRate": "نسبة الحضور",
+    "present": "حاضر",
+    "absent": "غائب",
+    "session": "الحصة",
+    "attendanceHistoryDesc": "سيظهر سجل الحضور الخاص بك هنا",
+    "registerAttendance": "تسجيل الحضور",
+    "yourAttendanceCode": "رمز الحضور الخاص بك",
+    "showCodeInstruction": "اعرض هذا الرمز للمعلم لتسجيل حضورك."
+}

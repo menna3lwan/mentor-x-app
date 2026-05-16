@@ -1,4 +1,3 @@
-export 'profile_view_page/profile_view_page.dart';
-export 'edit_profile_page/edit_profile_page.dart';
-export 'change_password_page/change_password_page.dart';
-
+export 'change_password/change_password.dart';
+export 'edit_profile/edit_profile.dart';
+export 'profile_view/profile_view.dart';

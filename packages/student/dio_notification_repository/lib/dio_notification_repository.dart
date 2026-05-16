@@ -6,9 +6,10 @@ final class DioNotificationRepository
     extends HttpClientRepository<NotificationRepositoryExceptionCode>
     implements NotificationRepository {
   @override
-  Never throwException(NotificationRepositoryExceptionCode code,
-          {String? message}) =>
-      throw NotificationRepositoryException(code: code, message: message);
+  Never throwException(
+    NotificationRepositoryExceptionCode code, {
+    String? message,
+  }) => throw NotificationRepositoryException(code: code, message: message);
 
   final HttpClient httpClient;
 
@@ -31,13 +32,13 @@ final class DioNotificationRepository
         queryParameters: queryParams,
       );
 
-      final data = asMap(response.data)['data'] ?? response.data;
-      final list = asList(data is Map ? (data['content'] ?? data['notifications'] ?? data['items'] ?? data) : data);
+      final list = response.asList();
       return list.map((e) => NotificationModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
-        defaultCode: NotificationRepositoryExceptionCode.failedToLoadNotifications,
+        defaultCode:
+            NotificationRepositoryExceptionCode.failedToLoadNotifications,
       );
     }
   }
@@ -67,25 +68,11 @@ final class DioNotificationRepository
   }
 
   @override
-  Future<void> deleteNotification(String notificationId) async {
-    try {
-      await httpClient.delete('/api/notifications/$notificationId');
-    } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
-        e,
-        defaultCode: NotificationRepositoryExceptionCode.failedToDelete,
-      );
-    }
-  }
-
-  @override
   Future<int> getUnreadCount() async {
     try {
       final response = await httpClient.get('/api/notifications/unread-count');
-      final rawData = asMap(response.data)['data'] ?? response.data;
-      if (rawData is num) return rawData.toInt();
-      if (rawData is Map) return (rawData['count'] as num?)?.toInt() ?? 0;
-      return 0;
+      final data = response.asMap();
+      return ModelParser.asInt(data['unreadCount'] ?? data['count']);
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
@@ -102,7 +89,10 @@ final class DioNotificationRepository
         data: {'token': token},
       );
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(e, defaultCode: NotificationRepositoryExceptionCode.unknown);
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: NotificationRepositoryExceptionCode.unknown,
+      );
     }
   }
 }

@@ -17,11 +17,15 @@ final class MockParentHomeRepository implements ParentHomeRepository {
   Future<ParentChildDashboardSummaryEntity> getChildOverview(String studentId) async {
     await Future.delayed(const Duration(milliseconds: 500));
     return ParentChildDashboardSummaryEntity(
-      child: ParentChildEntity.placeholder.copyWith(id: studentId),
-      attendance: ParentHomeAttendanceSummary.placeholder,
-      academics: ParentHomeAcademicSummary.placeholder,
-      financial: ParentHomeFinancialSummary.placeholder,
-      recentActivity: MockParentDashboardGenerator.recentActivity(studentId),
+      studentId: studentId,
+      studentName: 'Student $studentId',
+      grade: 'Grade 10',
+      totalAttendance: 10,
+      centerAttendance: 8,
+      onlineAttendance: 2,
+      activeEnrollments: 3,
+      completedLessons: 12,
+      inProgressLessons: 5,
     );
   }
 

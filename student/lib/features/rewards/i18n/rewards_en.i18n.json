@@ -1,0 +1,13 @@
+{
+    "noRewards": "No rewards available",
+    "noRewardsDesc": "Check back later for new items.",
+    "rewardsTitle": "Rewards Catalog",
+    "pointsBalance": "Points Balance",
+    "points": "Points",
+    "redeemPointsDesc": "Redeem your points for exclusive rewards.",
+    "redeem": "Redeem",
+    "noHistory": "No points history yet",
+    "noHistoryDesc": "Earn points by completing tasks and participating in activities.",
+    "rewardsHistoryTitle": "Points History",
+    "balance": "Balance: ${balance}"
+}

@@ -1,59 +1,48 @@
 part of 'package:mentorx_core/mentorx_core.dart';
 
-enum SessionItemType { video, document, quiz, assignment, link, audio }
+enum SessionItemType { video, document, quiz, assignment, link, audio, youtube }
 
 class SessionItemEntity extends Equatable {
   final String id;
-  final String sessionId;
+  final String? sessionId;
+  final List<String> weekIds;
   final String title;
   final String? description;
   final SessionItemType itemType;
-  final String? contentUrl;
+  final String? fileUrl;
+  final String? embedUrl;
+  final String? youtubeVideoId;
   final String? fileName;
   final int? fileSize;
-  final String? externalVideoUrl;
-  final String? videoPlatform;
-  final String? videoThumbnailUrl;
-  final String? videoDuration;
   final bool isFree;
   final bool isPreview;
-  final bool required;
-  final bool skippable;
-  final bool downloadable;
   final int downloadCount;
   final int orderIndex;
   final int? durationSeconds;
-  final int? pageCount;
   final DateTime? createdAt;
 
   const SessionItemEntity({
     required this.id,
-    required this.sessionId,
+    this.sessionId,
+    this.weekIds = const [],
     required this.title,
     this.description,
     required this.itemType,
-    this.contentUrl,
+    this.fileUrl,
+    this.embedUrl,
+    this.youtubeVideoId,
     this.fileName,
     this.fileSize,
-    this.externalVideoUrl,
-    this.videoPlatform,
-    this.videoThumbnailUrl,
-    this.videoDuration,
     this.isFree = false,
     this.isPreview = false,
-    this.required = false,
-    this.skippable = true,
-    this.downloadable = false,
     this.downloadCount = 0,
     this.orderIndex = 0,
     this.durationSeconds,
-    this.pageCount,
     this.createdAt,
   });
 
   static const placeholder = SessionItemEntity(
     id: '',
-    sessionId: '',
     title: '',
     itemType: SessionItemType.video,
   );
@@ -62,75 +51,62 @@ class SessionItemEntity extends Equatable {
   List<Object?> get props => [
         id,
         sessionId,
+        weekIds,
         title,
         description,
         itemType,
-        contentUrl,
+        fileUrl,
+        embedUrl,
+        youtubeVideoId,
         fileName,
         fileSize,
-        externalVideoUrl,
-        videoPlatform,
-        videoThumbnailUrl,
-        videoDuration,
         isFree,
         isPreview,
-        required,
-        skippable,
-        downloadable,
         downloadCount,
         orderIndex,
         durationSeconds,
-        pageCount,
         createdAt,
       ];
 
   SessionItemEntity copyWith({
     String? id,
-    String? sessionId,
+    MentorXNullableValue<String?>? sessionId,
+    List<String>? weekIds,
     String? title,
-    String? description,
+    MentorXNullableValue<String?>? description,
     SessionItemType? itemType,
-    String? contentUrl,
-    String? fileName,
-    int? fileSize,
-    String? externalVideoUrl,
-    String? videoPlatform,
-    String? videoThumbnailUrl,
-    String? videoDuration,
+    MentorXNullableValue<String?>? fileUrl,
+    MentorXNullableValue<String?>? embedUrl,
+    MentorXNullableValue<String?>? youtubeVideoId,
+    MentorXNullableValue<String?>? fileName,
+    MentorXNullableValue<int?>? fileSize,
     bool? isFree,
     bool? isPreview,
-    bool? required,
-    bool? skippable,
-    bool? downloadable,
     int? downloadCount,
     int? orderIndex,
-    int? durationSeconds,
-    int? pageCount,
-    DateTime? createdAt,
+    MentorXNullableValue<int?>? durationSeconds,
+    MentorXNullableValue<DateTime?>? createdAt,
   }) {
     return SessionItemEntity(
       id: id ?? this.id,
-      sessionId: sessionId ?? this.sessionId,
+      sessionId: sessionId != null ? sessionId.value : this.sessionId,
+      weekIds: weekIds ?? this.weekIds,
       title: title ?? this.title,
-      description: description ?? this.description,
+      description: description != null ? description.value : this.description,
       itemType: itemType ?? this.itemType,
-      contentUrl: contentUrl ?? this.contentUrl,
-      fileName: fileName ?? this.fileName,
-      fileSize: fileSize ?? this.fileSize,
-      externalVideoUrl: externalVideoUrl ?? this.externalVideoUrl,
-      videoPlatform: videoPlatform ?? this.videoPlatform,
-      videoThumbnailUrl: videoThumbnailUrl ?? this.videoThumbnailUrl,
-      videoDuration: videoDuration ?? this.videoDuration,
+      fileUrl: fileUrl != null ? fileUrl.value : this.fileUrl,
+      embedUrl: embedUrl != null ? embedUrl.value : this.embedUrl,
+      youtubeVideoId:
+          youtubeVideoId != null ? youtubeVideoId.value : this.youtubeVideoId,
+      fileName: fileName != null ? fileName.value : this.fileName,
+      fileSize: fileSize != null ? fileSize.value : this.fileSize,
       isFree: isFree ?? this.isFree,
       isPreview: isPreview ?? this.isPreview,
-      required: required ?? this.required,
-      skippable: skippable ?? this.skippable,
-      downloadable: downloadable ?? this.downloadable,
       downloadCount: downloadCount ?? this.downloadCount,
       orderIndex: orderIndex ?? this.orderIndex,
-      durationSeconds: durationSeconds ?? this.durationSeconds,
-      pageCount: pageCount ?? this.pageCount,
-      createdAt: createdAt ?? this.createdAt,
+      durationSeconds:
+          durationSeconds != null ? durationSeconds.value : this.durationSeconds,
+      createdAt: createdAt != null ? createdAt.value : this.createdAt,
     );
   }
 }

@@ -1,10 +1,10 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:mentorx_student/core/core.dart';
 import '../bloc/student_registration_bloc.dart';
 
 final class SecurityStep extends StatefulWidget {
@@ -38,7 +38,6 @@ final class _SecurityStepState extends State<SecurityStep> {
 
   @override
   Widget build(BuildContext context) {
-    final t = context.t.student;
     final bloc = context.read<StudentRegistrationBloc>();
     return Builder(
       builder: (context) {
@@ -52,99 +51,102 @@ final class _SecurityStepState extends State<SecurityStep> {
           (StudentRegistrationBloc bloc) => bloc.state.idCardPhotoPath,
         );
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            FadeInDown(
-              duration: const Duration(milliseconds: 400),
-              child: Text(
-                t['securityTitle'] ?? 'Security & Identity',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w900,
-                  color: context.textPrimaryColor,
-                  letterSpacing: -1.0,
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              FadeInDown(
+                duration: const Duration(milliseconds: 400),
+                child: Text(
+                  context.t.auth.securityIdentityTitle,
+                  style: context.titleH1Style.copyWith(
+                    fontSize: 28,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: -1.0,
+                  ),
                 ),
               ),
-            ),
-            const Gap(12),
-            FadeInDown(
-              duration: const Duration(milliseconds: 500),
-              child: Text(
-                t['securitySubtitle'] ??
-                    'Protect your account with a strong password and verify your identity with your National ID.',
-                style: TextStyle(
-                  color: context.textSecondaryColor,
-                  fontSize: 15,
-                  height: 1.6,
-                  fontWeight: FontWeight.w600,
+              const Gap(12),
+              FadeInDown(
+                duration: const Duration(milliseconds: 500),
+                child: Text(
+                  context.t.auth.securityIdentityDesc,
+                  style: context.bodySecondaryStyle.copyWith(
+                    fontSize: 15,
+                    height: 1.6,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
-            ),
-            const Gap(40),
-            FadeInUp(
-              duration: const Duration(milliseconds: 400),
-              child: MentorXTextFormField(
-                key: const Key('registration_password'),
-                label: t['passwordLabel'] ?? 'Password',
-                icon: Icons.lock_outline_rounded,
-                controller: _passwordController,
-                isPassword: true,
-                onChanged: (value) =>
-                    bloc.add(StudentRegistrationPasswordChanged(value)),
+              const Gap(40),
+              FadeInUp(
+                duration: const Duration(milliseconds: 400),
+                child: MentorXGlassCard(
+                  style: Style(
+                    $box.padding.all(24),
+                    $box.borderRadius(32),
+                  ),
+                  child: Column(
+                    children: [
+                      MentorXTextFormField(
+                        key: const Key('registration_password'),
+                        label: context.t.auth.login.password,
+                        icon: Icons.lock_outline_rounded,
+                        controller: _passwordController,
+                        isPassword: true,
+                        onChanged: (value) =>
+                            bloc.add(StudentRegistrationPasswordChanged(value)),
+                      ),
+                      const Gap(16),
+                      _buildPasswordStrength(context, password),
+                      const Gap(24),
+                      MentorXTextFormField(
+                        key: const Key('registration_confirm_password'),
+                        label: context.t.auth.confirmPasswordLabel,
+                        icon: Icons.lock_reset_rounded,
+                        controller: _confirmPasswordController,
+                        isPassword: true,
+                        errorText:
+                            password != confirmPassword && confirmPassword.isNotEmpty
+                                ? context.t.auth.passwordMismatch
+                                : null,
+                        onChanged: (value) =>
+                            bloc.add(StudentRegistrationConfirmPasswordChanged(value)),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-            ),
-            const Gap(16),
-            FadeInUp(
-              duration: const Duration(milliseconds: 500),
-              child: _buildPasswordStrength(context, password),
-            ),
-            const Gap(24),
-            FadeInUp(
-              duration: const Duration(milliseconds: 600),
-              child: MentorXTextFormField(
-                key: const Key('registration_confirm_password'),
-                label: t['confirmPasswordLabel'] ?? 'Confirm Password',
-                icon: Icons.lock_reset_rounded,
-                controller: _confirmPasswordController,
-                isPassword: true,
-                errorText:
-                    password != confirmPassword && confirmPassword.isNotEmpty
-                        ? (t['passwordMismatch'] ?? 'Passwords do not match')
-                        : null,
-                onChanged: (value) =>
-                    bloc.add(StudentRegistrationConfirmPasswordChanged(value)),
+              const Gap(32),
+              FadeInUp(
+                duration: const Duration(milliseconds: 700),
+                child: _buildIdCardUpload(context, idCardPhotoPath, bloc),
               ),
-            ),
-            const Gap(48),
-            FadeInUp(
-              duration: const Duration(milliseconds: 700),
-              child: _buildIdCardUpload(context, idCardPhotoPath, bloc),
-            ),
-          ],
+            ],
+          ),
         );
       },
     );
   }
 
   Widget _buildPasswordStrength(BuildContext context, String password) {
-    final t = context.t.student;
     final score = _passwordStrengthScore(password);
 
     final String label;
     final Color color;
     switch (score) {
       case <= 0.25:
-        label = t['passwordWeak'] ?? 'Weak';
+        label = context.t.auth.passwordWeak;
         color = context.statusDangerColor;
       case <= 0.50:
-        label = t['passwordFair'] ?? 'Fair';
+        label = context.t.auth.passwordFair;
         color = context.statusWarningColor;
       case <= 0.75:
-        label = t['passwordGood'] ?? 'Good';
+        label = context.t.auth.passwordGood;
         color = Colors.orangeAccent;
       default:
-        label = t['passwordStrong'] ?? 'Strong';
+        label = context.t.auth.passwordStrong;
         color = context.statusSuccessColor;
     }
 
@@ -160,14 +162,14 @@ final class _SecurityStepState extends State<SecurityStep> {
                   value: score == 0 ? 0.05 : score,
                   minHeight: 8,
                   color: color,
-                  backgroundColor: context.backgroundSecondaryColor,
+                  backgroundColor: context.backgroundSecondaryColor.withValues(alpha: 0.5),
                 ),
               ),
             ),
             const Gap(16),
             Text(
               label,
-              style: TextStyle(
+              style: context.bodySecondaryStyle.copyWith(
                 color: color,
                 fontWeight: FontWeight.w900,
                 fontSize: 12,
@@ -195,7 +197,7 @@ final class _SecurityStepState extends State<SecurityStep> {
     String? idCardPhotoPath,
     StudentRegistrationBloc bloc,
   ) {
-    final t = context.t.student;
+    final t = context.t;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -208,8 +210,8 @@ final class _SecurityStepState extends State<SecurityStep> {
             ),
             const Gap(8),
             Text(
-              t['nationalIdPhotoLabel'] ?? 'National ID Card Photo',
-              style: TextStyle(
+              t.auth.nationalIdPhotoLabel,
+              style: context.bodySecondaryStyle.copyWith(
                 fontWeight: FontWeight.w800,
                 color: context.textPrimaryColor,
                 fontSize: 14,
@@ -218,28 +220,19 @@ final class _SecurityStepState extends State<SecurityStep> {
           ],
         ),
         const Gap(16),
-        Material(
-          color: Colors.transparent,
+        MentorXGlassCard(
+          style: Style(
+            $box.borderRadius(32),
+            $box.padding.all(0),
+            $box.clipBehavior.antiAlias(),
+          ),
           child: InkWell(
             onTap: () => _pickIdCardPhoto(bloc),
-            borderRadius: BorderRadius.circular(24),
             child: Container(
               height: 200,
               width: double.infinity,
               decoration: BoxDecoration(
-                color: context.backgroundSecondaryColor,
-                borderRadius: BorderRadius.circular(24),
-                border: Border.all(
-                  color: context.brandPrimaryColor.withValues(alpha: 0.1),
-                  width: 2,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.1),
-                    blurRadius: 20,
-                    offset: const Offset(0, 10),
-                  ),
-                ],
+                color: context.backgroundSecondaryColor.withValues(alpha: 0.5),
               ),
               child: idCardPhotoPath == null
                   ? Column(
@@ -261,8 +254,8 @@ final class _SecurityStepState extends State<SecurityStep> {
                         ),
                         const Gap(20),
                         Text(
-                          t['uploadIdFront'] ?? 'Upload Front Side of ID Card',
-                          style: TextStyle(
+                          t.auth.uploadIdFront,
+                          style: context.bodySecondaryStyle.copyWith(
                             color: context.textSecondaryColor,
                             fontWeight: FontWeight.w800,
                             fontSize: 14,
@@ -273,16 +266,12 @@ final class _SecurityStepState extends State<SecurityStep> {
                   : Stack(
                       fit: StackFit.expand,
                       children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(22),
-                          child: Image.file(
-                            File(idCardPhotoPath),
-                            fit: BoxFit.cover,
-                          ),
+                        Image.file(
+                          File(idCardPhotoPath),
+                          fit: BoxFit.cover,
                         ),
                         Container(
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(22),
                             gradient: LinearGradient(
                               colors: [
                                 Colors.transparent,

@@ -16,8 +16,7 @@ final class DioParentAnalyticsRepository
   Never throwException(
     ParentAnalyticsRepositoryExceptionCode code, {
     String? message,
-  }) =>
-      throw ParentAnalyticsRepositoryException(code: code, message: message);
+  }) => throw ParentAnalyticsRepositoryException(code: code, message: message);
 
   @override
   Future<List<PerformanceSnapshotEntity>> getChildGradeComparison(
@@ -68,7 +67,9 @@ final class DioParentAnalyticsRepository
   }
 
   @override
-  Future<List<ActivityHeatmapEntity>> getChildActiveHours(String childId) async {
+  Future<List<ActivityHeatmapEntity>> getChildActiveHours(
+    String childId,
+  ) async {
     try {
       final response = await httpClient.get(
         '/api/analytics/parent/child/$childId/active-hours',
@@ -135,13 +136,12 @@ final class DioParentAnalyticsRepository
 
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       final list = asList(data is Map ? data['content'] : data);
-      return list
-          .map((e) => QuizSpeedMetricModel.fromJson(asMap(e)))
-          .toList();
+      return list.map((e) => QuizSpeedMetricModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
-        defaultCode: ParentAnalyticsRepositoryExceptionCode.failedToLoadQuizSpeed,
+        defaultCode:
+            ParentAnalyticsRepositoryExceptionCode.failedToLoadQuizSpeed,
       );
     }
   }

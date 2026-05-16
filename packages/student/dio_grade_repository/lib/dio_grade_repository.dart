@@ -22,18 +22,20 @@ final class DioGradeRepository
     MentorXPaginationInfo? paginationInfo,
   }) async {
     try {
+      final userId = httpClient.userId;
+      if (userId == null) return const [];
+
       final queryParams = {
         if (courseId != null) 'course_id': courseId,
         if (paginationInfo != null) ...paginationInfo.toJson(),
       };
 
       final response = await httpClient.get(
-        '/api/quiz-attempts/student/me',
+        '/api/quiz-attempts/student/$userId',
         queryParameters: queryParams,
       );
 
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
-      final list = asList(data is Map ? data['content'] : data);
+      final list = response.asList();
 
       return list.map((e) => QuizAttemptModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
@@ -50,20 +52,24 @@ final class DioGradeRepository
     MentorXPaginationInfo? paginationInfo,
   }) async {
     try {
+      final userId = httpClient.userId;
+      if (userId == null) return const [];
+
       final queryParams = {
         if (courseId != null) 'course_id': courseId,
         if (paginationInfo != null) ...paginationInfo.toJson(),
       };
 
       final response = await httpClient.get(
-        '/api/assignment-attempts/student/me',
+        '/api/assignment-attempts/student/$userId',
         queryParameters: queryParams,
       );
 
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
-      final list = asList(data is Map ? data['content'] : data);
+      final list = response.asList();
 
-      return list.map((e) => AssignmentSubmissionModel.fromJson(asMap(e))).toList();
+      return list
+          .map((e) => AssignmentSubmissionModel.fromJson(asMap(e)))
+          .toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
@@ -72,4 +78,23 @@ final class DioGradeRepository
     }
   }
 
+  @override
+  Future<List<GradeEntity>> getLevels() async {
+    try {
+      final response = await httpClient.get('/api/levels');
+      final list = response.asList();
+      return list.map((e) {
+        final map = asMap(e);
+        return GradeEntity(
+          id: asString(map['id']),
+          name: asString(map['name']),
+        );
+      }).toList();
+    } on HttpClientResponse catch (e) {
+      return handleHttpClientErrorResponse(
+        e,
+        defaultCode: GradeRepositoryExceptionCode.failedToLoadGrades,
+      );
+    }
+  }
 }

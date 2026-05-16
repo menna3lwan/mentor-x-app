@@ -20,8 +20,12 @@ final class ProfileEditRequestModel extends ProfileEditRequestEntity {
       newValue: ModelParser.asString(json['newValue'] ?? json['new_value']),
       reason: ModelParser.asString(json['reason']),
       status: _parseEditStatus(json['status']),
-      reviewNotes: ModelParser.asString(json['reviewNotes'] ?? json['review_notes']),
-      createdAt: ModelParser.asDateTime(json['createdAt'] ?? json['created_at']) ?? DateTime.now(),
+      reviewNotes: ModelParser.asString(
+        json['reviewNotes'] ?? json['review_notes'],
+      ),
+      createdAt:
+          ModelParser.asDateTime(json['createdAt'] ?? json['created_at']) ??
+          DateTime.now(),
     );
   }
 
@@ -77,21 +81,37 @@ final class StudentProfileModel extends StudentEntity {
     final data = ModelParser.extractData(json);
 
     // 1. Resolve ID (userId or id or studentCode)
-    final id = ModelParser.asString(data['id'] ?? data['userId'] ?? data['user_id'] ?? data['studentCode']);
+    final id = ModelParser.asString(
+      data['id'] ?? data['userId'] ?? data['user_id'] ?? data['studentCode'],
+    );
 
     // 2. Resolve Names (Handle 4-part names and fullName split)
-    final String first = ModelParser.asString(data['firstName'] ?? data['first_name']);
-    final String second = ModelParser.asString(data['secondName'] ?? data['second_name']);
-    final String third = ModelParser.asString(data['thirdName'] ?? data['third_name']);
-    final String fourth = ModelParser.asString(data['fourthName'] ?? data['fourth_name']);
+    final String first = ModelParser.asString(
+      data['firstName'] ?? data['first_name'],
+    );
+    final String second = ModelParser.asString(
+      data['secondName'] ?? data['second_name'],
+    );
+    final String third = ModelParser.asString(
+      data['thirdName'] ?? data['third_name'],
+    );
+    final String fourth = ModelParser.asString(
+      data['fourthName'] ?? data['fourth_name'],
+    );
 
-    final String fullName = ModelParser.asString(data['fullName'] ?? data['full_name'] ?? data['name']);
+    final String fullName = ModelParser.asString(
+      data['fullName'] ?? data['full_name'] ?? data['name'],
+    );
     final nameParts = fullName.trim().split(' ');
-    
-    final String resolvedFirst = first.isNotEmpty ? first : (nameParts.isNotEmpty ? nameParts.first : '');
-    final String resolvedLast = fourth.isNotEmpty 
-        ? fourth 
-        : (data['lastName'] ?? data['last_name'] ?? (nameParts.length > 1 ? nameParts.sublist(1).join(' ') : ''));
+
+    final String resolvedFirst = first.isNotEmpty
+        ? first
+        : (nameParts.isNotEmpty ? nameParts.first : '');
+    final String resolvedLast = fourth.isNotEmpty
+        ? fourth
+        : (data['lastName'] ??
+              data['last_name'] ??
+              (nameParts.length > 1 ? nameParts.sublist(1).join(' ') : ''));
 
     return StudentProfileModel(
       id: id,
@@ -101,7 +121,9 @@ final class StudentProfileModel extends StudentEntity {
       fourthName: fourth,
       lastName: resolvedLast,
       email: ModelParser.asString(data['email']),
-      phoneNumber: ModelParser.asString(data['phone'] ?? data['phoneNumber'] ?? data['phone_number']),
+      phoneNumber: ModelParser.asString(
+        data['phone'] ?? data['phoneNumber'] ?? data['phone_number'],
+      ),
       profileImageUrl: ModelParser.asString(
         data['profileImageUrl'] ??
             data['image_url'] ??
@@ -109,32 +131,62 @@ final class StudentProfileModel extends StudentEntity {
             data['avatarUrl'],
       ),
       gender: _parseGender(data['gender']),
-      status: _parseStudentStatus(data['status'] ?? data['accountStatus'] ?? data['account_status']),
+      status: _parseStudentStatus(
+        data['status'] ?? data['accountStatus'] ?? data['account_status'],
+      ),
       gradeId: ModelParser.asString(data['gradeId'] ?? data['grade_id']),
-      gradeName: ModelParser.asString(data['grade'] ?? data['gradeName'] ?? data['grade_name']),
-      studentCode: ModelParser.asString(data['studentCode'] ?? data['student_code']),
+      gradeName: ModelParser.asString(
+        data['grade'] ?? data['gradeName'] ?? data['grade_name'],
+      ),
+      studentCode: ModelParser.asString(
+        data['studentCode'] ?? data['student_code'],
+      ),
       studyType: ModelParser.asString(data['studyType'] ?? data['study_type']),
-      walletBalance: ModelParser.asDouble(data['walletBalance'] ?? data['wallet_balance'] ?? data['balance']),
-      totalPoints: ModelParser.asInt(data['totalPoints'] ?? data['total_points'] ?? data['points']),
-      schoolName: ModelParser.asString(data['schoolName'] ?? data['school_name']),
+      walletBalance: ModelParser.asDouble(
+        data['walletBalance'] ?? data['wallet_balance'] ?? data['balance'],
+      ),
+      totalPoints: ModelParser.asInt(
+        data['totalPoints'] ?? data['total_points'] ?? data['points'],
+      ),
+      schoolName: ModelParser.asString(
+        data['schoolName'] ?? data['school_name'],
+      ),
       centerId: ModelParser.asString(data['centerId'] ?? data['center_id']),
-      centerName: ModelParser.asString(data['centerName'] ?? data['center_name']),
-      parentName: ModelParser.asString(data['parentName'] ?? data['parent_name']),
-      parentPhone: ModelParser.asString(data['parentPhone'] ?? data['parent_phone']),
-      academicLevel: ModelParser.asString(data['academicLevel'] ?? data['academic_level']),
-      dateOfBirth: ModelParser.asDateTime(data['dateOfBirth'] ?? data['date_of_birth']),
+      centerName: ModelParser.asString(
+        data['centerName'] ?? data['center_name'],
+      ),
+      parentName: ModelParser.asString(
+        data['parentName'] ?? data['parent_name'],
+      ),
+      parentPhone: ModelParser.asString(
+        data['parentPhone'] ?? data['parent_phone'],
+      ),
+      academicLevel: ModelParser.asString(
+        data['academicLevel'] ?? data['academic_level'],
+      ),
+      dateOfBirth: ModelParser.asDateTime(
+        data['dateOfBirth'] ?? data['date_of_birth'],
+      ),
       address: ModelParser.asString(data['address']),
       city: ModelParser.asString(data['city']),
       area: ModelParser.asString(data['area'] ?? data['district']),
       governorate: ModelParser.asString(data['governorate']),
-      isOnline: ModelParser.asBool(data['online'] ?? data['isOnline'] ?? data['is_online']),
-      enrolledCourseIds: ModelParser.asList(data['enrolledCourseIds'] ?? data['enrolled_course_ids'])
-          .map((e) => e.toString())
-          .toList(),
-      educationDepartment: ModelParser.asString(data['educationDepartment'] ?? data['education_department']),
+      isOnline: ModelParser.asBool(
+        data['online'] ?? data['isOnline'] ?? data['is_online'],
+      ),
+      enrolledCourseIds: ModelParser.asList(
+        data['enrolledCourseIds'] ?? data['enrolled_course_ids'],
+      ).map((e) => e.toString()).toList(),
+      educationDepartment: ModelParser.asString(
+        data['educationDepartment'] ?? data['education_department'],
+      ),
       metadata: ModelParser.asMap(data['metadata']),
-      createdAt: ModelParser.asDateTime(data['createdAt'] ?? data['created_at']) ?? DateTime.now(),
-      updatedAt: ModelParser.asDateTime(data['updatedAt'] ?? data['updated_at']) ?? DateTime.now(),
+      createdAt:
+          ModelParser.asDateTime(data['createdAt'] ?? data['created_at']) ??
+          DateTime.now(),
+      updatedAt:
+          ModelParser.asDateTime(data['updatedAt'] ?? data['updated_at']) ??
+          DateTime.now(),
     );
   }
 

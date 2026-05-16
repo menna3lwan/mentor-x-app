@@ -1,3 +1,3 @@
-export 'status_blocked_page/status_blocked_page.dart';
-export 'status_pending_page/status_pending_page.dart';
-export 'status_rejected_page/status_rejected_page.dart';
+export 'status_blocked/status_blocked.dart';
+export 'status_pending/status_pending.dart';
+export 'status_rejected/status_rejected.dart';

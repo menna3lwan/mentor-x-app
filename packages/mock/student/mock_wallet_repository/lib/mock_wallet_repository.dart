@@ -29,7 +29,9 @@ final class MockWalletRepository implements WalletRepository {
   @override
   Future<PaymentEntity> initiatePayment({
     required double amount,
+    String? couponCode,
     required PaymentMethod method,
+    String? orderId,
     required PaymentType paymentType,
   }) async {
     await Future<void>.delayed(delay);
@@ -47,10 +49,9 @@ final class MockWalletRepository implements WalletRepository {
       id: paymentId,
       amount: 500.0,
       method: PaymentMethod.vodafoneCash,
-      paymentType: PaymentType.walletTopup,
-      status: PaymentStatus.success,
       reference: 'REF-MOCK-12345',
-      createdAt: DateTime.now().subtract(const Duration(minutes: 5)),
+      pending: false,
+      success: true,
     );
   }
 
@@ -126,17 +127,21 @@ final class MockWalletRepository implements WalletRepository {
       PaymentOrderEntity(
         id: '1',
         orderNumber: 'ORD-123',
-        amount: 500.0,
+        studentId: 's1',
+        studentName: 'Kamal Ayman',
+        subtotal: 500.0,
+        total: 500.0,
         status: PaymentOrderStatus.completed,
-        description: 'Wallet Topup',
         createdAt: DateTime.now().subtract(const Duration(days: 1)),
       ),
       PaymentOrderEntity(
         id: '2',
         orderNumber: 'ORD-124',
-        amount: 250.0,
+        studentId: 's1',
+        studentName: 'Kamal Ayman',
+        subtotal: 250.0,
+        total: 250.0,
         status: PaymentOrderStatus.pending,
-        description: 'Course Purchase',
         createdAt: DateTime.now().subtract(const Duration(hours: 2)),
       ),
     ];
@@ -148,25 +153,28 @@ final class MockWalletRepository implements WalletRepository {
     return PaymentOrderEntity(
       id: '1',
       orderNumber: orderNumber,
-      amount: 500.0,
+      studentId: 's1',
+      studentName: 'Kamal Ayman',
+      subtotal: 500.0,
+      total: 500.0,
       status: PaymentOrderStatus.completed,
-      description: 'Wallet Topup',
       createdAt: DateTime.now().subtract(const Duration(days: 1)),
     );
   }
 
   @override
   Future<PaymentOrderEntity> createOrder({
-    required double amount,
-    required String description,
+    required List<({String id, String type})> items,
   }) async {
     await Future<void>.delayed(delay);
     return PaymentOrderEntity(
       id: 'new-id',
       orderNumber: 'ORD-NEW',
-      amount: amount,
+      studentId: 's1',
+      studentName: 'Kamal Ayman',
+      subtotal: 100.0,
+      total: 100.0,
       status: PaymentOrderStatus.pending,
-      description: description,
       createdAt: DateTime.now(),
     );
   }
@@ -181,11 +189,24 @@ final class MockWalletRepository implements WalletRepository {
       id: 'pay-id',
       amount: amount,
       method: method,
-      paymentType: PaymentType.walletTopup,
-      status: PaymentStatus.pending,
       reference: 'REF-NEW',
-      createdAt: DateTime.now(),
+      pending: true,
     );
+  }
+
+  @override
+  Future<Map<String, dynamic>> previewCoupon({
+    required String code,
+    required double amount,
+    String? courseId,
+  }) async {
+    await Future<void>.delayed(delay);
+    return {
+      'originalTotal': amount,
+      'discountAmount': 10.0,
+      'finalTotal': amount - 10.0,
+      'message': 'Coupon applied successfully!',
+    };
   }
 
   @override

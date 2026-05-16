@@ -109,21 +109,23 @@ final class MockAnalyticsGenerator {
 
   static List<QuizSpeedMetricEntity> quizSpeedMetrics() {
     return [
-      const QuizSpeedMetricEntity(
+      QuizSpeedMetricEntity(
         quizId: 'q1',
         quizTitle: 'اختبار الحركة الموجية',
         timeSpentSeconds: 600,
         questionCount: 20,
-        secondsPerQuestion: 30,
         averageSecondsPerQuestion: 45,
+        score: 18,
+        submittedAt: DateTime.now().subtract(const Duration(days: 2)),
       ),
-      const QuizSpeedMetricEntity(
+      QuizSpeedMetricEntity(
         quizId: 'q2',
         quizTitle: 'اختبار الصوت',
         timeSpentSeconds: 450,
         questionCount: 15,
-        secondsPerQuestion: 30,
         averageSecondsPerQuestion: 40,
+        score: 14,
+        submittedAt: DateTime.now().subtract(const Duration(days: 1)),
       ),
     ];
   }

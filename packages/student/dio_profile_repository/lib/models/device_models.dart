@@ -14,13 +14,20 @@ final class DeviceModel extends DeviceEntity {
   factory DeviceModel.fromJson(Map<String, dynamic> json) {
     return DeviceModel(
       id: ModelParser.asString(json['id']),
-      deviceName: ModelParser.asString(json['deviceName'] ?? json['device_name']),
-      deviceModel: ModelParser.asString(json['deviceModel'] ?? json['device_model']),
+      deviceName: ModelParser.asString(
+        json['deviceName'] ?? json['device_name'],
+      ),
+      deviceModel: ModelParser.asString(
+        json['deviceModel'] ?? json['device_model'],
+      ),
       isActive: ModelParser.asBool(json['isActive'] ?? json['is_active']),
-      lastUsedAt: ModelParser.asDateTime(json['lastUsedAt'] ?? json['last_used_at']) ?? DateTime.now(),
+      lastUsedAt:
+          ModelParser.asDateTime(json['lastUsedAt'] ?? json['last_used_at']) ??
+          DateTime.now(),
       osVersion: ModelParser.asString(json['osVersion'] ?? json['os_version']),
-      appVersion: ModelParser.asString(json['appVersion'] ?? json['app_version']),
+      appVersion: ModelParser.asString(
+        json['appVersion'] ?? json['app_version'],
+      ),
     );
   }
 }
-

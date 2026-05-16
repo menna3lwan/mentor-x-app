@@ -108,3 +108,5 @@ scratch
 google-services.json
 GoogleService-Info.plist
 firebase_options.dart
+
+mentor-x-backend

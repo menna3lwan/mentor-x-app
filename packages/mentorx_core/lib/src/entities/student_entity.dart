@@ -43,6 +43,11 @@ base class StudentEntity extends Equatable {
   final bool? hasActiveSession;
   final int? devicesCount;
   final int? loginCount;
+  final int? logoutCount;
+  final String? rejectionReason;
+  final String? mapAddress;
+  final double? latitude;
+  final double? longitude;
   final DateTime? lastLoginAt;
   final List<String>? enrolledCourseIds;
   final Map<String, dynamic>? metadata;
@@ -88,6 +93,11 @@ base class StudentEntity extends Equatable {
     this.hasActiveSession,
     this.devicesCount,
     this.loginCount,
+    this.logoutCount,
+    this.rejectionReason,
+    this.mapAddress,
+    this.latitude,
+    this.longitude,
     this.lastLoginAt,
     this.enrolledCourseIds,
     this.metadata,
@@ -155,6 +165,11 @@ base class StudentEntity extends Equatable {
         hasActiveSession,
         devicesCount,
         loginCount,
+        logoutCount,
+        rejectionReason,
+        mapAddress,
+        latitude,
+        longitude,
         lastLoginAt,
         enrolledCourseIds,
         metadata,
@@ -199,6 +214,11 @@ base class StudentEntity extends Equatable {
     MentorXNullableValue<bool?>? hasActiveSession,
     MentorXNullableValue<int?>? devicesCount,
     MentorXNullableValue<int?>? loginCount,
+    MentorXNullableValue<int?>? logoutCount,
+    MentorXNullableValue<String?>? rejectionReason,
+    MentorXNullableValue<String?>? mapAddress,
+    MentorXNullableValue<double?>? latitude,
+    MentorXNullableValue<double?>? longitude,
     MentorXNullableValue<DateTime?>? lastLoginAt,
     MentorXNullableValue<List<String>?>? enrolledCourseIds,
     MentorXNullableValue<Map<String, dynamic>?>? metadata,
@@ -242,6 +262,11 @@ base class StudentEntity extends Equatable {
       hasActiveSession: hasActiveSession != null ? hasActiveSession.value : this.hasActiveSession,
       devicesCount: devicesCount != null ? devicesCount.value : this.devicesCount,
       loginCount: loginCount != null ? loginCount.value : this.loginCount,
+      logoutCount: logoutCount != null ? logoutCount.value : this.logoutCount,
+      rejectionReason: rejectionReason != null ? rejectionReason.value : this.rejectionReason,
+      mapAddress: mapAddress != null ? mapAddress.value : this.mapAddress,
+      latitude: latitude != null ? latitude.value : this.latitude,
+      longitude: longitude != null ? longitude.value : this.longitude,
       lastLoginAt: lastLoginAt != null ? lastLoginAt.value : this.lastLoginAt,
       enrolledCourseIds: enrolledCourseIds != null ? enrolledCourseIds.value : this.enrolledCourseIds,
       metadata: metadata != null ? metadata.value : this.metadata,

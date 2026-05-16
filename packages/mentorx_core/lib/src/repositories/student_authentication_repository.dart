@@ -97,6 +97,10 @@ abstract interface class StudentAuthenticationRepository {
     required String phoneNumber,
     required String password,
   });
+  Future<StudentEntity> loginWithConflictQr({
+    required String phoneNumber,
+    required String password,
+  });
   Future<StudentEntity> verifyOtp(String otp);
   Future<void> logout();
   Future<void> refreshToken();

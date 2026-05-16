@@ -1,8 +1,10 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:pinput/pinput.dart';
 import 'package:animate_do/animate_do.dart';
-import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
+import 'package:mentorx_student/core/core.dart';
 
 final class OtpPage extends StatelessWidget {
   final String phoneNumber;
@@ -43,13 +45,13 @@ final class OtpPage extends StatelessWidget {
     final defaultPinTheme = PinTheme(
       width: 56,
       height: 64,
-      textStyle: TextStyle(
+      textStyle: context.titleH2Style.copyWith(
         fontSize: 24,
         color: context.textPrimaryColor,
         fontWeight: FontWeight.w900,
       ),
       decoration: BoxDecoration(
-        color: context.backgroundSecondaryColor,
+        color: context.backgroundSecondaryColor.withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: context.borderPrimaryColor.withValues(alpha: 0.1),
@@ -73,252 +75,289 @@ final class OtpPage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: context.backgroundPrimaryColor,
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(70),
-        child: FadeInDown(
-          duration: const Duration(milliseconds: 500),
-          child: Container(
-            decoration: BoxDecoration(
-              color: context.backgroundSecondaryColor,
-              borderRadius: const BorderRadius.vertical(
-                bottom: Radius.circular(24),
-              ),
-              border: Border(
-                bottom: BorderSide(
-                  color: context.borderPrimaryColor.withValues(alpha: 0.05),
-                ),
-              ),
-            ),
-            child: MentorXAppBar(
-              backgroundColor: Colors.transparent,
-              leading: MentorXBackButton(onPressed: onEditPhone),
-              titleText: 'OTP Verification',
-            ),
-          ),
-        ),
-      ),
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
+      body: Stack(
+        children: [
+          SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 420),
-              child: FadeInUp(
-                duration: const Duration(milliseconds: 600),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ZoomIn(
-                      duration: const Duration(milliseconds: 600),
-                      child: Container(
-                        width: 100,
-                        height: 100,
-                        decoration: BoxDecoration(
-                          color: context.brandPrimaryColor.withValues(
-                            alpha: 0.1,
+            padding: EdgeInsets.fromLTRB(
+              24,
+              MediaQuery.paddingOf(context).top + 120,
+              24,
+              32,
+            ),
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 420),
+                child: FadeInUp(
+                  duration: const Duration(milliseconds: 600),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ZoomIn(
+                        duration: const Duration(milliseconds: 600),
+                        child: MentorXGlassCard(
+                          style: Style(
+                            $box.width(112),
+                            $box.height(112),
+                            $box.borderRadius(56),
+                            $box.color(context.brandPrimaryColor.withValues(alpha: 0.1)),
                           ),
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: context.brandPrimaryColor.withValues(
-                              alpha: 0.1,
+                          child: Center(
+                            child: Icon(
+                              Icons.mark_chat_read_rounded,
+                              color: context.brandPrimaryColor,
+                              size: 56,
                             ),
                           ),
                         ),
-                        alignment: Alignment.center,
-                        child: Icon(
-                          Icons.mark_chat_read_rounded,
-                          color: context.brandPrimaryColor,
-                          size: 48,
+                      ),
+                      const Gap(40),
+                      Text(
+                        context.t.auth.otpVerifyTitle,
+                        style: context.titleH1Style.copyWith(
+                          fontSize: 32,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: -1.0,
                         ),
                       ),
-                    ),
-                    const Gap(32),
-                    Text(
-                      'Verify Your Number',
-                      style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.w900,
-                        color: context.textPrimaryColor,
-                        letterSpacing: -1.0,
-                      ),
-                    ),
-                    const Gap(16),
-                    RichText(
-                      textAlign: TextAlign.center,
-                      text: TextSpan(
-                        style: TextStyle(
-                          color: context.textSecondaryColor,
-                          fontSize: 15,
-                          height: 1.6,
-                          fontWeight: FontWeight.w600,
-                        ),
-                        children: [
-                          const TextSpan(text: "We've sent a code to "),
-                          TextSpan(
-                            text: phoneNumber,
-                            style: TextStyle(
-                              color: context.textPrimaryColor,
-                              fontWeight: FontWeight.w900,
-                            ),
+                      const Gap(16),
+                      RichText(
+                        textAlign: TextAlign.center,
+                        text: TextSpan(
+                          style: context.bodySecondaryStyle.copyWith(
+                            color: context.textSecondaryColor,
+                            fontSize: 15,
+                            height: 1.6,
+                            fontWeight: FontWeight.w600,
                           ),
-                        ],
+                          children: [
+                            TextSpan(text: context.t.auth.otpSentPrefix),
+                            TextSpan(
+                              text: phoneNumber,
+                              style: TextStyle(
+                                color: context.textPrimaryColor,
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    const Gap(48),
-                    Directionality(
-                      textDirection: TextDirection.ltr,
-                      child: Pinput(
-                        length: otpLength,
-                        autofocus: true,
-                        defaultPinTheme: defaultPinTheme,
-                        focusedPinTheme: focusedPinTheme,
-                        separatorBuilder: (index) => const Gap(12),
-                        onChanged: onOtpChanged,
-                        onCompleted: (_) => onSubmit(),
-                      ),
-                    ),
-                    const Gap(32),
-                    if (errorMessage != null) ...[
-                      FadeIn(
-                        child: StatusBadge(
-                          message: errorMessage!,
-                          status: StatusBadgeType.danger,
+                      const Gap(48),
+                      Directionality(
+                        textDirection: TextDirection.ltr,
+                        child: Pinput(
+                          length: otpLength,
+                          autofocus: true,
+                          defaultPinTheme: defaultPinTheme,
+                          focusedPinTheme: focusedPinTheme,
+                          separatorBuilder: (index) => const Gap(12),
+                          onChanged: onOtpChanged,
+                          onCompleted: (_) => onSubmit(),
                         ),
                       ),
                       const Gap(32),
-                    ],
-                    AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 400),
-                      child: canResend
-                          ? Column(
-                              key: const ValueKey('resend'),
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      "Didn't receive code? ",
-                                      style: TextStyle(
-                                        color: context.textSecondaryColor,
-                                        fontWeight: FontWeight.w700,
+                      if (errorMessage != null) ...[
+                        FadeIn(
+                          child: StatusBadge(
+                            message: errorMessage!,
+                            status: StatusBadgeType.danger,
+                          ),
+                        ),
+                        const Gap(32),
+                      ],
+                      AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 400),
+                        child: canResend
+                            ? Column(
+                                key: const ValueKey('resend'),
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        context.t.auth.didNotReceiveCode,
+                                        style: context.bodySecondaryStyle.copyWith(
+                                          color: context.textSecondaryColor,
+                                          fontWeight: FontWeight.w700,
+                                        ),
                                       ),
-                                    ),
-                                    TextButton(
-                                      onPressed: isResending ? null : onResend,
-                                      child: isResending
-                                          ? SizedBox(
-                                              width: 16,
-                                              height: 16,
-                                              child: CircularProgressIndicator(
-                                                strokeWidth: 2.5,
-                                                valueColor: AlwaysStoppedAnimation<Color>(
-                                                  context.brandPrimaryColor,
+                                      TextButton(
+                                        onPressed: isResending ? null : onResend,
+                                        child: isResending
+                                            ? SizedBox(
+                                                width: 16,
+                                                height: 16,
+                                                child: CircularProgressIndicator(
+                                                  strokeWidth: 2.5,
+                                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                                    context.brandPrimaryColor,
+                                                  ),
+                                                ),
+                                              )
+                                            : Text(
+                                                context.t.auth.resendCode,
+                                                style: context.bodySecondaryStyle.copyWith(
+                                                  fontWeight: FontWeight.w900,
+                                                  color: context.brandPrimaryColor,
                                                 ),
                                               ),
-                                            )
-                                          : Text(
-                                              'Resend',
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.w900,
-                                                color:
-                                                    context.brandPrimaryColor,
+                                      ),
+                                    ],
+                                  ),
+                                  const Gap(8),
+                                  TextButton.icon(
+                                    onPressed: isResendingWhatsapp
+                                        ? null
+                                        : onResendViaWhatsapp,
+                                    icon: isResendingWhatsapp
+                                        ? SizedBox(
+                                            width: 16,
+                                            height: 16,
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2.5,
+                                              valueColor: AlwaysStoppedAnimation<Color>(
+                                                Colors.green,
                                               ),
                                             ),
-                                    ),
-                                  ],
-                                ),
-                                const Gap(8),
-                                TextButton.icon(
-                                  onPressed: isResendingWhatsapp
-                                      ? null
-                                      : onResendViaWhatsapp,
-                                  icon: isResendingWhatsapp
-                                      ? SizedBox(
-                                          width: 16,
-                                          height: 16,
-                                          child: CircularProgressIndicator(
-                                            strokeWidth: 2.5,
-                                            valueColor: AlwaysStoppedAnimation<Color>(
-                                              Colors.green,
-                                            ),
+                                          )
+                                        : const Icon(
+                                            Icons.chat_rounded,
+                                            size: 18,
+                                            color: Colors.green,
                                           ),
-                                        )
-                                      : const Icon(
-                                          Icons.chat_rounded,
-                                          size: 18,
-                                          color: Colors.green,
-                                        ),
-                                  label: const Text(
-                                    'Resend via WhatsApp',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w900,
-                                      color: Colors.green,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            )
-                          : Container(
-                              key: const ValueKey('countdown'),
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 16,
-                                horizontal: 24,
-                              ),
-                              decoration: BoxDecoration(
-                                color: context.backgroundSecondaryColor,
-                                borderRadius: BorderRadius.circular(20),
-                                border: Border.all(
-                                  color: context.borderPrimaryColor.withValues(
-                                    alpha: 0.05,
-                                  ),
-                                ),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(
-                                    Icons.timer_outlined,
-                                    size: 18,
-                                    color: context.textTertiaryColor,
-                                  ),
-                                  const Gap(12),
-                                  Text(
-                                    'Resend code in $formattedCountdown',
-                                    style: TextStyle(
-                                      color: context.textSecondaryColor,
-                                      fontWeight: FontWeight.w800,
-                                      fontSize: 14,
+                                    label: Text(
+                                      context.t.auth.resendWhatsapp,
+                                      style: context.bodySecondaryStyle.copyWith(
+                                        fontWeight: FontWeight.w900,
+                                        color: Colors.green,
+                                      ),
                                     ),
                                   ),
                                 ],
+                              )
+                            : MentorXGlassCard(
+                                key: const ValueKey('countdown'),
+                                style: Style(
+                                  $box.padding.vertical(16),
+                                  $box.padding.horizontal(24),
+                                  $box.borderRadius(20),
+                                  $box.color(context.backgroundSecondaryColor.withValues(alpha: 0.5)),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      Icons.timer_outlined,
+                                      size: 18,
+                                      color: context.textTertiaryColor,
+                                    ),
+                                    const Gap(12),
+                                    Text(
+                                      '${context.t.auth.resendIn} $formattedCountdown',
+                                      style: context.bodySecondaryStyle.copyWith(
+                                        color: context.textSecondaryColor,
+                                        fontWeight: FontWeight.w800,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
+                      ),
+                      const Gap(56),
+                      MentorXButton(
+                        onPressed: isLoading ? null : onSubmit,
+                        label: context.t.auth.verifyOtp,
+                        loading: isLoading,
+                        size: MentorXButtonSize.large,
+                      ),
+                      if (showEditPhone) ...[
+                        const Gap(24),
+                        TextButton.icon(
+                          onPressed: onEditPhone,
+                          icon: const Icon(Icons.edit_rounded, size: 18),
+                          label: Text(context.t.auth.editNumber),
+                          style: TextButton.styleFrom(
+                            foregroundColor: context.textTertiaryColor,
+                            textStyle: context.bodySecondaryStyle.copyWith(
+                              fontWeight: FontWeight.w800,
                             ),
-                    ),
-                    const Gap(56),
-                    MentorXButton(
-                      onPressed: isLoading ? null : onSubmit,
-                      label: 'Verify & Confirm',
-                      loading: isLoading,
-                    ),
-                    if (showEditPhone) ...[
-                      const Gap(24),
-                      TextButton.icon(
-                        onPressed: onEditPhone,
-                        icon: const Icon(Icons.edit_rounded, size: 18),
-                        label: const Text('Edit Phone Number'),
-                        style: TextButton.styleFrom(
-                          foregroundColor: context.textTertiaryColor,
-                          textStyle: const TextStyle(
-                            fontWeight: FontWeight.w800,
                           ),
                         ),
-                      ),
+                      ],
                     ],
-                  ],
+                  ),
                 ),
               ),
             ),
+          ),
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: _buildHeader(context),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeader(BuildContext context) {
+    return ClipRRect(
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+        child: Container(
+          width: double.infinity,
+          padding: EdgeInsets.fromLTRB(
+            12,
+            MediaQuery.paddingOf(context).top + 8,
+            12,
+            16,
+          ),
+          decoration: BoxDecoration(
+            color: context.backgroundPrimaryColor.withValues(alpha: 0.8),
+            border: Border(
+              bottom: BorderSide(
+                color: context.borderPrimaryColor.withValues(alpha: 0.1),
+              ),
+            ),
+          ),
+          child: Row(
+            children: [
+              MentorXIconButton(
+                onPressed: () => context.pop(),
+                icon: Icons.arrow_back_ios_new_rounded,
+                variant: MentorXIconButtonVariant.outline,
+                size: MentorXIconButtonSize.small,
+              ),
+              const Gap(16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      context.t.auth.registrationLabel,
+                      style: context.bodySecondaryStyle.copyWith(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w900,
+                        color: context.brandPrimaryColor,
+                        letterSpacing: 2.0,
+                      ),
+                    ),
+                    const Gap(2),
+                    Text(
+                      context.t.auth.otpVerifyTitle,
+                      style: context.titleH1Style.copyWith(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: -1.0,
+                        height: 1.1,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ),

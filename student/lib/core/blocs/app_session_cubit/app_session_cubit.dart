@@ -2,10 +2,9 @@ import 'dart:async';
 
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mentorx_core/mentorx_core.dart';
+import 'package:mentorx_student/core/core.dart';
 
 import '../../../app/student_app.dart';
-import '../app_authentication_cubit/app_authentication_events.dart';
 
 part 'app_session_state.dart';
 

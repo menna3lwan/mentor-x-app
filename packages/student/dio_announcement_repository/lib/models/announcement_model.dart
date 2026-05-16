@@ -22,34 +22,44 @@ final class AnnouncementModel extends AnnouncementEntity {
       id: ModelParser.asString(json['id']),
       title: ModelParser.asString(json['title']),
       content: ModelParser.asString(json['content'] ?? json['body']),
-      createdAt: ModelParser.asDateTime(json['created_at'] ?? json['createdAt']) ?? DateTime.now(),
+      createdAt:
+          ModelParser.asDateTime(json['created_at'] ?? json['createdAt']) ??
+          DateTime.now(),
       imageUrl: ModelParser.asString(json['image_url'] ?? json['imageUrl']),
-      actionUrl: ModelParser.asString(json['action_url'] ?? json['actionUrl'] ?? json['url']),
-      actionText: ModelParser.asString(json['action_text'] ?? json['actionText']),
+      actionUrl: ModelParser.asString(
+        json['action_url'] ?? json['actionUrl'] ?? json['url'],
+      ),
+      actionText: ModelParser.asString(
+        json['action_text'] ?? json['actionText'],
+      ),
       isFeatured: ModelParser.asBool(json['is_featured'] ?? json['isFeatured']),
-      isPinned: ModelParser.asBool(json['is_pinned'] ?? json['isPinned'] ?? json['pinned']),
+      isPinned: ModelParser.asBool(
+        json['is_pinned'] ?? json['isPinned'] ?? json['pinned'],
+      ),
       priority: ModelParser.asString(json['priority'], fallback: 'normal'),
       expireAt: ModelParser.asDateTime(json['expire_at'] ?? json['expireAt']),
-      tenantName: ModelParser.asString(json['tenant_name'] ?? json['tenantName']),
+      tenantName: ModelParser.asString(
+        json['tenant_name'] ?? json['tenantName'],
+      ),
       preview: ModelParser.asString(json['preview'] ?? json['summary']),
     );
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'title': title,
-        'content': content,
-        'created_at': createdAt.toIso8601String(),
-        'image_url': imageUrl,
-        'action_url': actionUrl,
-        'action_text': actionText,
-        'is_featured': isFeatured,
-        'is_pinned': isPinned,
-        'priority': priority,
-        'expire_at': expireAt?.toIso8601String(),
-        'tenant_name': tenantName,
-        'preview': preview,
-      };
+    'id': id,
+    'title': title,
+    'content': content,
+    'created_at': createdAt.toIso8601String(),
+    'image_url': imageUrl,
+    'action_url': actionUrl,
+    'action_text': actionText,
+    'is_featured': isFeatured,
+    'is_pinned': isPinned,
+    'priority': priority,
+    'expire_at': expireAt?.toIso8601String(),
+    'tenant_name': tenantName,
+    'preview': preview,
+  };
 
   factory AnnouncementModel.fromEntity(AnnouncementEntity entity) {
     return AnnouncementModel(

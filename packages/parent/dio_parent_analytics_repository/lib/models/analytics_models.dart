@@ -11,9 +11,15 @@ final class PerformanceSnapshotModel extends PerformanceSnapshotEntity {
   factory PerformanceSnapshotModel.fromJson(Map<String, dynamic> json) {
     return PerformanceSnapshotModel(
       label: ModelParser.asString(json['label'] ?? json['title']),
-      studentScore: ModelParser.asDouble(json['studentScore'] ?? json['myAvgPercentage']),
-      averageScore: ModelParser.asDouble(json['averageScore'] ?? json['classAvgPercentage']),
-      date: ModelParser.asDateTime(json['date'] ?? json['timestamp']) ?? DateTime.now(),
+      studentScore: ModelParser.asDouble(
+        json['studentScore'] ?? json['myAvgPercentage'],
+      ),
+      averageScore: ModelParser.asDouble(
+        json['averageScore'] ?? json['classAvgPercentage'],
+      ),
+      date:
+          ModelParser.asDateTime(json['date'] ?? json['timestamp']) ??
+          DateTime.now(),
     );
   }
 }
@@ -51,7 +57,9 @@ final class AchievementModel extends AchievementEntity {
       description: ModelParser.asString(json['description']),
       iconUrl: ModelParser.asString(json['icon'] ?? json['iconUrl']),
       isUnlocked: ModelParser.asBool(json['unlocked'] ?? json['isUnlocked']),
-      unlockedAt: ModelParser.asDateTime(json['unlockedAt'] ?? json['unlocked_at']),
+      unlockedAt: ModelParser.asDateTime(
+        json['unlockedAt'] ?? json['unlocked_at'],
+      ),
     );
   }
 }
@@ -65,9 +73,15 @@ final class StreakModel extends StreakEntity {
 
   factory StreakModel.fromJson(Map<String, dynamic> json) {
     return StreakModel(
-      currentStreak: ModelParser.asInt(json['currentStreakDays'] ?? json['currentStreak']),
-      longestStreak: ModelParser.asInt(json['longestStreakDays'] ?? json['longestStreak']),
-      lastActivityAt: ModelParser.asDateTime(json['lastActivityDate'] ?? json['lastActivityAt']),
+      currentStreak: ModelParser.asInt(
+        json['currentStreakDays'] ?? json['currentStreak'],
+      ),
+      longestStreak: ModelParser.asInt(
+        json['longestStreakDays'] ?? json['longestStreak'],
+      ),
+      lastActivityAt: ModelParser.asDateTime(
+        json['lastActivityDate'] ?? json['lastActivityAt'],
+      ),
     );
   }
 }
@@ -76,23 +90,31 @@ final class QuizSpeedMetricModel extends QuizSpeedMetricEntity {
   const QuizSpeedMetricModel({
     required super.quizId,
     required super.quizTitle,
+    required super.score,
     required super.timeSpentSeconds,
     required super.questionCount,
-    required super.secondsPerQuestion,
     required super.averageSecondsPerQuestion,
+    required super.submittedAt,
   });
 
   factory QuizSpeedMetricModel.fromJson(Map<String, dynamic> json) {
-    final int duration = ModelParser.asInt(json['durationSeconds'] ?? json['timeSpentSeconds']);
+    final int duration = ModelParser.asInt(
+      json['durationSeconds'] ?? json['timeSpentSeconds'],
+    );
     final int qCount = ModelParser.asInt(json['questionCount']);
-    
+
     return QuizSpeedMetricModel(
       quizId: ModelParser.asString(json['quizId'] ?? json['id']),
       quizTitle: ModelParser.asString(json['quizTitle'] ?? json['title']),
+      score: ModelParser.asInt(json['score']),
       timeSpentSeconds: duration,
       questionCount: qCount,
-      secondsPerQuestion: ModelParser.asDouble(json['secondsPerQuestion'] ?? (qCount > 0 ? duration / qCount : 0)),
-      averageSecondsPerQuestion: ModelParser.asDouble(json['averageSecondsPerQuestion']),
+      averageSecondsPerQuestion: ModelParser.asDouble(
+        json['averageSecondsPerQuestion'],
+      ),
+      submittedAt: ModelParser.asDateTime(
+        json['submittedAt'] ?? json['submitted_at'],
+      ) ?? DateTime.now(),
     );
   }
 }

@@ -60,4 +60,14 @@ final class MockParentAttendanceRepository implements ParentAttendanceRepository
       GroupEntity(id: 'g-parent-2', name: 'Math Group $childId'),
     ];
   }
+
+  @override
+  Future<Map<String, dynamic>> getGroupBrief(String childId, String groupId) async {
+    await Future.delayed(delay);
+    return {
+      'groupId': groupId,
+      'groupName': 'Test Group',
+      'schedule': 'Mon, Wed 5:00 PM',
+    };
+  }
 }

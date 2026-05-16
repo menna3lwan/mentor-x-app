@@ -1,0 +1,19 @@
+{
+    "aiTutorHistory": "AI Tutor History",
+    "newChat": "New Chat",
+    "unableToLoadConversations": "Unable to load conversations.",
+    "noConversationsYet": "No conversations yet",
+    "noConversationsDesc": "Start a conversation with your AI tutor to get help with your studies.",
+    "messagesCount": "${count} messages",
+    "rename": "Rename",
+    "delete": "Delete",
+    "studySession": "Study Session",
+    "renameChat": "Rename Chat",
+    "enterNewTitle": "Enter new title",
+    "cancel": "Cancel",
+    "save": "Save",
+    "aiAssistant": "AI Assistant",
+    "commonLoading": "Processing...",
+    "aiSubtitle": "Always here to help",
+    "typeQuestion": "Ask me anything..."
+}

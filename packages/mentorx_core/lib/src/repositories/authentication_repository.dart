@@ -55,6 +55,8 @@ abstract interface class AuthenticationRepository<T> {
     String? appVersion,
   });
   Future<void> logout();
+  Future<void> forceLogoutAll();
+  Future<T> getMe();
   Future<T?> getCachedUser();
   Future<void> sendOtp(String phone);
   Future<Duration?> resendOtp(String phone);

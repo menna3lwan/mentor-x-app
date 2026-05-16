@@ -16,4 +16,7 @@ abstract interface class StudentCardRepository {
 
   /// Retrieves the current student's digital card.
   Future<StudentCardEntity> getMyCard();
+
+  /// Validates a student card via QR token.
+  Future<StudentCardEntity> validateQr(String qrToken);
 }

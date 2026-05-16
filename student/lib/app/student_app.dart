@@ -4,12 +4,12 @@ import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:mentorx_ui/mentorx_ui.dart';
+import 'package:mentorx_ui/mentorx_ui.dart' hide LocaleSettings, TranslationProvider;
 import 'package:go_router/go_router.dart';
 
 import 'app.dart';
 import 'student_requirements.dart';
-import '../core/core.dart';
+import 'package:mentorx_student/core/core.dart';
 
 final EventBus appEventBus = EventBus();
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();

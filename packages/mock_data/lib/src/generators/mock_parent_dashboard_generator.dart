@@ -5,23 +5,22 @@ final class MockParentDashboardGenerator {
 
   static ParentHomeSummaryEntity homeSummary() {
     return ParentHomeSummaryEntity(
-      overview: const ParentHomeOverviewEntity(
-        unpaidInvoicesCount: 2,
-        avgAttendanceRate: 0.92,
-        avgGrade: 88.5,
-        totalPoints: 1250,
-      ),
-      upcomingSessions: const [],
-      recentGrades: const [],
-      latestAnnouncement: announcements().first,
-      childrenSummaries: [
+      parentId: 'parent1',
+      parentName: 'Kamal Ayman',
+      childrenCount: 1,
+      totalUnreadNotifications: 2,
+      children: [
         ParentChildSummaryEntity(
-          childId: 'child1',
-          name: 'Ahmed Kamal',
+          studentId: 'child1',
+          studentName: 'Ahmed Kamal',
+          studentCode: 'S12345',
           grade: 'Primary 5',
-          attendanceRate: 0.95,
-          averageGrade: 92.0,
+          studyType: 'National',
           profileImageUrl: 'https://picsum.photos/200/200?child=1',
+          activeEnrollments: 5,
+          completedLessons: 45,
+          totalAttendance: 19,
+          unreadNotifications: 1,
         ),
       ],
     );
@@ -29,30 +28,22 @@ final class MockParentDashboardGenerator {
 
   static ParentChildDashboardSummaryEntity childDashboardSummary(String childId) {
     return ParentChildDashboardSummaryEntity(
-      child: ParentChildEntity(
-        id: childId,
-        name: 'Ahmed Kamal',
-        centerName: 'Zayed Branch',
-        profileImageUrl: 'https://picsum.photos/200/200?child=1',
-      ),
-      attendance: const ParentHomeAttendanceSummary(
-        attendanceRate: 0.95,
-        totalDays: 20,
-        attendedDays: 19,
-        absentDays: 1,
-      ),
-      academics: const ParentHomeAcademicSummary(
-        averageGrade: 92.0,
-        gradeTrend: 0.05,
-        enrolledCoursesCount: 5,
-        activeAssignmentsCount: 3,
-      ),
-      financial: const ParentHomeFinancialSummary(
-        walletBalance: 450.0,
-        spentThisMonth: 120.0,
-        currency: 'EGP',
-      ),
-      recentActivity: const [],
+      studentId: childId,
+      studentName: 'Ahmed Kamal',
+      studentCode: 'S12345',
+      grade: 'Primary 5',
+      governorate: 'Cairo',
+      schoolName: 'Future International School',
+      studyType: 'National',
+      centerName: 'Zayed Branch',
+      profileImageUrl: 'https://picsum.photos/200/200?child=1',
+      totalAttendance: 20,
+      centerAttendance: 15,
+      onlineAttendance: 5,
+      activeEnrollments: 5,
+      completedLessons: 45,
+      inProgressLessons: 10,
+      lockedLessons: 5,
     );
   }
 

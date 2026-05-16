@@ -39,9 +39,11 @@ final class CourseModel extends CourseEntity {
 
   factory CourseModel.fromJson(Map<String, dynamic> json) {
     final data = ModelParser.extractData(json);
-    
+
     // API sends categoryIds as List<int> — convert to List<String>
-    final rawCategoryIds = ModelParser.asList(data['categoryIds'] ?? data['category_ids']);
+    final rawCategoryIds = ModelParser.asList(
+      data['categoryIds'] ?? data['category_ids'],
+    );
     final categoryIds = rawCategoryIds.map((e) => e.toString()).toList();
 
     return CourseModel(
@@ -50,7 +52,10 @@ final class CourseModel extends CourseEntity {
       description: _nullableString(data['description']),
       subtitle: _nullableString(data['subtitle']),
       imageUrl: _nullableString(
-        data['imageUrl'] ?? data['image_url'] ?? data['thumbnailUrl'] ?? data['thumbnail_url'],
+        data['imageUrl'] ??
+            data['image_url'] ??
+            data['thumbnailUrl'] ??
+            data['thumbnail_url'],
       ),
       price: ModelParser.asDouble(data['price']),
       oldPrice: _nullableDouble(data['oldPrice'] ?? data['old_price']),
@@ -59,24 +64,40 @@ final class CourseModel extends CourseEntity {
         data['active'] ?? data['isActive'] ?? data['is_active'],
         fallback: true,
       ),
-      orderNumber: ModelParser.asInt(data['orderNumber'] ?? data['order_number']),
+      orderNumber: ModelParser.asInt(
+        data['orderNumber'] ?? data['order_number'],
+      ),
       type: _parseCourseType(data['type']),
-      orderingMode: _parseOrderingMode(data['orderingMode'] ?? data['ordering_mode']),
+      orderingMode: _parseOrderingMode(
+        data['orderingMode'] ?? data['ordering_mode'],
+      ),
       durationDays: _nullableInt(data['durationDays'] ?? data['duration_days']),
-      pointsReward: ModelParser.asInt(data['pointsReward'] ?? data['points_reward']),
+      pointsReward: ModelParser.asInt(
+        data['pointsReward'] ?? data['points_reward'],
+      ),
       gradeId: _nullableString(data['gradeId'] ?? data['grade_id']),
       categoryId: categoryIds.isNotEmpty ? categoryIds.first : null,
       categoryIds: categoryIds,
-      totalSessions: ModelParser.asInt(data['totalSessions'] ?? data['total_sessions']),
-      totalVideos: ModelParser.asInt(data['totalVideos'] ?? data['total_videos']),
+      totalSessions: ModelParser.asInt(
+        data['totalSessions'] ?? data['total_sessions'],
+      ),
+      totalVideos: ModelParser.asInt(
+        data['totalVideos'] ?? data['total_videos'],
+      ),
       totalDurationMinutes: ModelParser.asInt(
         data['totalDurationMinutes'] ?? data['total_duration_minutes'],
       ),
-      enrolledCount: ModelParser.asInt(data['enrolledCount'] ?? data['enrolled_count']),
+      enrolledCount: ModelParser.asInt(
+        data['enrolledCount'] ?? data['enrolled_count'],
+      ),
       featured: ModelParser.asBool(data['featured']),
       pinned: ModelParser.asBool(data['pinned']),
-      createdAt: ModelParser.asDateTime(data['createdAt'] ?? data['created_at']),
-      updatedAt: ModelParser.asDateTime(data['updatedAt'] ?? data['updated_at']),
+      createdAt: ModelParser.asDateTime(
+        data['createdAt'] ?? data['created_at'],
+      ),
+      updatedAt: ModelParser.asDateTime(
+        data['updatedAt'] ?? data['updated_at'],
+      ),
     );
   }
 
@@ -122,10 +143,12 @@ final class CourseSummaryModel extends CourseSummaryEntity {
             data['imageUrl'] ??
             data['image_url'],
       ),
-      enrolledCount:
-          ModelParser.asInt(data['enrolledCount'] ?? data['enrolled_count']),
-      progressPercent:
-          _nullableDouble(data['progressPercent'] ?? data['progress_percent']),
+      enrolledCount: ModelParser.asInt(
+        data['enrolledCount'] ?? data['enrolled_count'],
+      ),
+      progressPercent: _nullableDouble(
+        data['progressPercent'] ?? data['progress_percent'],
+      ),
       price: _nullableDouble(data['price']),
     );
   }
@@ -154,8 +177,12 @@ final class CategoryModel extends CategoryEntity {
       levelId: _nullableString(data['levelId'] ?? data['level_id']),
       price: _nullableDouble(data['price']),
       active: ModelParser.asBool(data['active'], fallback: true),
-      createdAt: ModelParser.asDateTime(data['createdAt'] ?? data['created_at']),
-      updatedAt: ModelParser.asDateTime(data['updatedAt'] ?? data['updated_at']),
+      createdAt: ModelParser.asDateTime(
+        data['createdAt'] ?? data['created_at'],
+      ),
+      updatedAt: ModelParser.asDateTime(
+        data['updatedAt'] ?? data['updated_at'],
+      ),
     );
   }
 }
@@ -201,10 +228,14 @@ final class EnrollmentModel extends EnrollmentEntity {
       id: ModelParser.asString(data['id']),
       studentId: _nullableString(data['studentId'] ?? data['student_id']),
       studentName: _nullableString(data['studentName'] ?? data['student_name']),
-      studentPhone: _nullableString(data['studentPhone'] ?? data['student_phone']),
+      studentPhone: _nullableString(
+        data['studentPhone'] ?? data['student_phone'],
+      ),
       courseId: ModelParser.asString(data['courseId'] ?? data['course_id']),
       courseTitle: _nullableString(data['courseTitle'] ?? data['course_title']),
-      courseDescription: _nullableString(data['courseDescription'] ?? data['course_description']),
+      courseDescription: _nullableString(
+        data['courseDescription'] ?? data['course_description'],
+      ),
       courseThumbnailUrl: _nullableString(
         data['courseThumbnailUrl'] ??
             data['course_thumbnail_url'] ??
@@ -212,7 +243,8 @@ final class EnrollmentModel extends EnrollmentEntity {
             data['image_url'],
       ),
       enrolledAt:
-          ModelParser.asDateTime(data['enrolledAt'] ?? data['enrolled_at']) ?? DateTime.now(),
+          ModelParser.asDateTime(data['enrolledAt'] ?? data['enrolled_at']) ??
+          DateTime.now(),
       progressPercent: ModelParser.asDouble(
         data['progressPercent'] ?? data['progress_percent'] ?? data['progress'],
       ),
@@ -220,22 +252,38 @@ final class EnrollmentModel extends EnrollmentEntity {
         data['completedSessions'] ?? data['completed_sessions'],
       ),
       completedLessons: ModelParser.asInt(
-        data['completedLessonsCount'] ?? data['completedLessons'] ?? data['completed_lessons'],
+        data['completedLessonsCount'] ??
+            data['completedLessons'] ??
+            data['completed_lessons'],
       ),
       totalLessons: ModelParser.asInt(
-        data['totalLessonsCount'] ?? data['totalLessons'] ?? data['total_lessons'],
+        data['totalLessonsCount'] ??
+            data['totalLessons'] ??
+            data['total_lessons'],
       ),
-      expiresAt: ModelParser.asDateTime(data['expiresAt'] ?? data['expires_at']),
-      completedAt: ModelParser.asDateTime(data['completedAt'] ?? data['completed_at']),
-      lastAccessedAt: ModelParser.asDateTime(data['lastAccessedAt'] ?? data['last_accessed_at']),
+      expiresAt: ModelParser.asDateTime(
+        data['expiresAt'] ?? data['expires_at'],
+      ),
+      completedAt: ModelParser.asDateTime(
+        data['completedAt'] ?? data['completed_at'],
+      ),
+      lastAccessedAt: ModelParser.asDateTime(
+        data['lastAccessedAt'] ?? data['last_accessed_at'],
+      ),
       lastItemId: _nullableString(data['lastItemId'] ?? data['last_item_id']),
       enrolledBy: _parseEnrolledBy(data['enrolledBy'] ?? data['enrolled_by']),
-      certificateUrl: _nullableString(data['certificateUrl'] ?? data['certificate_url']),
+      certificateUrl: _nullableString(
+        data['certificateUrl'] ?? data['certificate_url'],
+      ),
       totalWatchTimeSeconds: ModelParser.asInt(
         data['totalWatchTimeSeconds'] ?? data['total_watch_time_seconds'],
       ),
-      quizzesTaken: ModelParser.asInt(data['quizzesTaken'] ?? data['quizzes_taken']),
-      quizzesPassed: ModelParser.asInt(data['quizzesPassed'] ?? data['quizzes_passed']),
+      quizzesTaken: ModelParser.asInt(
+        data['quizzesTaken'] ?? data['quizzes_taken'],
+      ),
+      quizzesPassed: ModelParser.asInt(
+        data['quizzesPassed'] ?? data['quizzes_passed'],
+      ),
       averageQuizScore: ModelParser.asDouble(
         data['averageQuizScore'] ?? data['average_quiz_score'],
       ),
@@ -245,8 +293,12 @@ final class EnrollmentModel extends EnrollmentEntity {
       averageAssignmentScore: ModelParser.asDouble(
         data['averageAssignmentScore'] ?? data['average_assignment_score'],
       ),
-      remainingDays: ModelParser.asInt(data['remainingDays'] ?? data['remaining_days']),
-      accessCount: ModelParser.asInt(data['accessCount'] ?? data['access_count']),
+      remainingDays: ModelParser.asInt(
+        data['remainingDays'] ?? data['remaining_days'],
+      ),
+      accessCount: ModelParser.asInt(
+        data['accessCount'] ?? data['access_count'],
+      ),
       notes: _nullableString(data['notes']),
       isValidAccess: ModelParser.asBool(
         data['isValidAccess'] ?? data['is_valid_access'],
@@ -267,6 +319,23 @@ final class EnrollmentModel extends EnrollmentEntity {
       if (type.name == str) return type;
     }
     return EnrolledBy.self;
+  }
+}
+
+final class LevelModel extends LevelEntity {
+  const LevelModel({
+    required super.id,
+    required super.name,
+    super.orderNumber,
+  });
+
+  factory LevelModel.fromJson(Map<String, dynamic> json) {
+    final data = ModelParser.extractData(json);
+    return LevelModel(
+      id: ModelParser.asString(data['id']),
+      name: ModelParser.asString(data['name']),
+      orderNumber: ModelParser.asInt(data['orderNumber']),
+    );
   }
 }
 

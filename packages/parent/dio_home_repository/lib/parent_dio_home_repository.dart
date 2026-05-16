@@ -4,10 +4,9 @@ import 'models/home_models.dart';
 export 'models/announcement_model.dart';
 export 'models/home_models.dart';
 
-
-final class DioParentHomeRepository extends HttpClientRepository<ParentHomeRepositoryExceptionCode>
+final class DioParentHomeRepository
+    extends HttpClientRepository<ParentHomeRepositoryExceptionCode>
     implements ParentHomeRepository {
-
   DioParentHomeRepository({
     required HttpClient httpClient,
     required CacheRepository cacheRepository,
@@ -27,24 +26,14 @@ final class DioParentHomeRepository extends HttpClientRepository<ParentHomeRepos
   @override
   Future<ParentHomeSummaryEntity> getSummary(String studentId) async {
     try {
-      HttpClientResponse response;
-      try {
-        response = await _httpClient.get(
-          '/api/parent/dashboard/summary',
-          queryParameters: {'student_id': studentId},
-        );
-      } on HttpClientResponse catch (e) {
-        if (e.statusCode != 404) rethrow;
-        response = await _httpClient.get(
-          '/api/parent/dashboard/summary',
-          queryParameters: {'student_id': studentId},
-        );
-      }
-      
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final response = await _httpClient.get(
+        '/api/parent/dashboard/summary',
+      );
+
+      final data = response.asMap();
       return ParentHomeSummaryModel.fromJson(data);
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: ParentHomeRepositoryExceptionCode.fetchError,
       );
@@ -52,24 +41,18 @@ final class DioParentHomeRepository extends HttpClientRepository<ParentHomeRepos
   }
 
   @override
-  Future<ParentChildDashboardSummaryEntity> getChildOverview(String studentId) async {
+  Future<ParentChildDashboardSummaryEntity> getChildOverview(
+    String studentId,
+  ) async {
     try {
-      HttpClientResponse response;
-      try {
-        response = await _httpClient.get(
-          '/api/parent/dashboard/child/$studentId/overview',
-        );
-      } on HttpClientResponse catch (e) {
-        if (e.statusCode != 404) rethrow;
-        response = await _httpClient.get(
-          '/api/parent/dashboard/child/$studentId/overview',
-        );
-      }
-      
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final response = await _httpClient.get(
+        '/api/parent/dashboard/child/$studentId/overview',
+      );
+
+      final data = response.asMap();
       return ParentChildDashboardSummaryModel.fromJson(data);
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: ParentHomeRepositoryExceptionCode.fetchError,
       );
@@ -83,35 +66,23 @@ final class DioParentHomeRepository extends HttpClientRepository<ParentHomeRepos
     int page = 1,
   }) async {
     try {
-      HttpClientResponse response;
-      try {
-        response = await _httpClient.get(
-          '/api/parent/dashboard/recent-activity',
-          queryParameters: {
-            'student_id': studentId,
-            'limit': limit,
-            'page': page,
-          },
-        );
-      } on HttpClientResponse catch (e) {
-        if (e.statusCode != 404) rethrow;
-        response = await _httpClient.get(
-          '/api/parent/dashboard/recent-activity',
-          queryParameters: {
-            'student_id': studentId,
-            'limit': limit,
-            'page': page,
-          },
-        );
-      }
-      
-      final data = asMap(response.data)['data'] ?? asList(response.data);
-      final list = asList(data is Map ? data['content'] : data);
+      final queryParams = {
+        'student_id': studentId,
+        'size': limit,
+        'page': page - 1,
+      };
+
+      final response = await _httpClient.get(
+        '/api/parent/dashboard/child/$studentId/attendance', // Using attendance as activity for now
+        queryParameters: queryParams,
+      );
+
+      final list = response.asList();
       return list
           .map((json) => ParentRecentActivityModel.fromJson(asMap(json)))
           .toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: ParentHomeRepositoryExceptionCode.fetchError,
       );
@@ -124,38 +95,24 @@ final class DioParentHomeRepository extends HttpClientRepository<ParentHomeRepos
     int limit = 3,
   }) async {
     try {
-      HttpClientResponse response;
-      try {
-        response = await _httpClient.get(
-          '/api/announcements/active',
-          queryParameters: {
-            'student_id': studentId,
-            'limit': limit,
-          },
-        );
-      } on HttpClientResponse catch (e) {
-        if (e.statusCode != 404) rethrow;
-        response = await _httpClient.get(
-          '/api/parent/dashboard/announcements',
-          queryParameters: {
-            'student_id': studentId,
-            'limit': limit,
-          },
-        );
-      }
-      
-      final data = asMap(response.data)['data'] ?? asList(response.data);
-      final list = asList(data is Map ? data['content'] : data);
+      final queryParams = {
+        'student_id': studentId,
+        'size': limit,
+      };
+      final response = await _httpClient.get(
+        '/api/announcements/active',
+        queryParameters: queryParams,
+      );
+
+      final list = response.asList();
       return list
           .map((json) => AnnouncementModel.fromJson(asMap(json)))
           .toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: ParentHomeRepositoryExceptionCode.fetchError,
       );
     }
   }
-
-
 }

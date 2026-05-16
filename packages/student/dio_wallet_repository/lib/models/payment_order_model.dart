@@ -4,26 +4,49 @@ final class PaymentOrderModel extends PaymentOrderEntity {
   const PaymentOrderModel({
     required super.id,
     required super.orderNumber,
-    required super.amount,
-    super.currency,
+    required super.studentId,
+    required super.studentName,
+    required super.subtotal,
+    required super.total,
+    super.discount = 0.0,
+    super.tax = 0.0,
+    super.formattedTotal,
+    super.currency = 'EGP',
     required super.status,
-    super.description,
     super.paymentMethod,
+    super.items = const [],
     required super.createdAt,
-    super.updatedAt,
+    super.paidAt,
   });
 
   factory PaymentOrderModel.fromJson(Map<String, dynamic> json) {
     return PaymentOrderModel(
       id: ModelParser.asString(json['id']),
-      orderNumber: ModelParser.asString(json['orderNumber'] ?? json['order_number']),
-      amount: ModelParser.asDouble(json['amount']),
+      orderNumber: ModelParser.asString(
+        json['orderNumber'] ?? json['order_number'],
+      ),
+      studentId: ModelParser.asString(json['studentId'] ?? json['student_id']),
+      studentName: ModelParser.asString(
+        json['studentName'] ?? json['student_name'],
+      ),
+      subtotal: ModelParser.asDouble(json['subtotal']),
+      discount: ModelParser.asDouble(json['discount']),
+      tax: ModelParser.asDouble(json['tax']),
+      total: ModelParser.asDouble(json['total']),
+      formattedTotal: ModelParser.asString(json['formattedTotal']),
       currency: ModelParser.asString(json['currency'], fallback: 'EGP'),
       status: _parseStatus(ModelParser.asString(json['status'])),
-      description: ModelParser.asString(json['description'], fallback: ''), // Entity allows null, but ModelParser.asString defaults to ''
-      paymentMethod: ModelParser.asString(json['paymentMethod'] ?? json['payment_method'], fallback: ''),
-      createdAt: ModelParser.asDateTime(json['createdAt'] ?? json['created_at']) ?? DateTime.now(),
-      updatedAt: ModelParser.asDateTime(json['updatedAt'] ?? json['updated_at']),
+      paymentMethod: ModelParser.asString(
+        json['paymentMethod'] ?? json['payment_method'],
+        fallback: '',
+      ),
+      items: ModelParser.asList(json['items'])
+          .map((e) => PaymentOrderItemModel.fromJson(ModelParser.asMap(e)))
+          .toList(),
+      createdAt:
+          ModelParser.asDateTime(json['createdAt'] ?? json['created_at']) ??
+          DateTime.now(),
+      paidAt: ModelParser.asDateTime(json['paidAt'] ?? json['paid_at']),
     );
   }
 
@@ -33,6 +56,7 @@ final class PaymentOrderModel extends PaymentOrderEntity {
         return PaymentOrderStatus.pending;
       case 'completed':
       case 'success':
+      case 'paid':
         return PaymentOrderStatus.completed;
       case 'failed':
         return PaymentOrderStatus.failed;
@@ -40,20 +64,51 @@ final class PaymentOrderModel extends PaymentOrderEntity {
         return PaymentOrderStatus.cancelled;
       case 'refunded':
         return PaymentOrderStatus.refunded;
+      case 'processing':
+        return PaymentOrderStatus.processing;
+      case 'awaiting_approval':
+        return PaymentOrderStatus.awaitingApproval;
       default:
         return PaymentOrderStatus.pending;
     }
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'orderNumber': orderNumber,
-        'amount': amount,
-        'currency': currency,
-        'status': status.name,
-        'description': description,
-        'paymentMethod': paymentMethod,
-        'createdAt': createdAt.toIso8601String(),
-        'updatedAt': updatedAt?.toIso8601String(),
-      };
+    'id': id,
+    'orderNumber': orderNumber,
+    'studentId': studentId,
+    'studentName': studentName,
+    'subtotal': subtotal,
+    'discount': discount,
+    'tax': tax,
+    'total': total,
+    'formattedTotal': formattedTotal,
+    'currency': currency,
+    'status': status.name,
+    'paymentMethod': paymentMethod,
+    'createdAt': createdAt.toIso8601String(),
+    'paidAt': paidAt?.toIso8601String(),
+  };
+}
+
+final class PaymentOrderItemModel extends PaymentOrderItemEntity {
+  const PaymentOrderItemModel({
+    required super.productId,
+    required super.productType,
+    required super.productName,
+    required super.unitPrice,
+  });
+
+  factory PaymentOrderItemModel.fromJson(Map<String, dynamic> json) {
+    return PaymentOrderItemModel(
+      productId: ModelParser.asString(json['productId'] ?? json['product_id']),
+      productType: ModelParser.asString(
+        json['productType'] ?? json['product_type'],
+      ),
+      productName: ModelParser.asString(
+        json['productName'] ?? json['product_name'],
+      ),
+      unitPrice: ModelParser.asDouble(json['unitPrice'] ?? json['unit_price']),
+    );
+  }
 }

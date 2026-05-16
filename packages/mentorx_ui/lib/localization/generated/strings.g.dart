@@ -4,9 +4,9 @@
 /// To regenerate, run: `dart run slang`
 ///
 /// Locales: 2
-/// Strings: 1911 (955 per locale)
+/// Strings: 108 (54 per locale)
 ///
-/// Built on 2026-05-14 at 12:41 UTC
+/// Built on 2026-05-16 at 13:53 UTC
 
 // coverage:ignore-file
 // ignore_for_file: type=lint, unused_import
@@ -93,13 +93,13 @@ enum AppLocale with BaseAppLocale<AppLocale, Translations> {
 /// Method A: Simple
 ///
 /// No rebuild after locale change.
-/// Translation happens during initialization of the widget (call of t).
+/// Translation happens during initialization of the widget (call of t_ui).
 /// Configurable via 'translate_var'.
 ///
 /// Usage:
-/// String a = t.someKey.anotherKey;
-/// String b = t['someKey.anotherKey']; // Only for edge cases!
-Translations get t => LocaleSettings.instance.currentTranslations;
+/// String a = t_ui.someKey.anotherKey;
+/// String b = t_ui['someKey.anotherKey']; // Only for edge cases!
+Translations get t_ui => LocaleSettings.instance.currentTranslations;
 
 /// Method B: Advanced
 ///
@@ -113,9 +113,9 @@ Translations get t => LocaleSettings.instance.currentTranslations;
 /// );
 ///
 /// Step 2:
-/// final t = Translations.of(context); // Get t variable.
-/// String a = t.someKey.anotherKey; // Use t variable.
-/// String b = t['someKey.anotherKey']; // Only for edge cases!
+/// final t_ui = Translations.of(context); // Get t_ui variable.
+/// String a = t_ui.someKey.anotherKey; // Use t_ui variable.
+/// String b = t_ui['someKey.anotherKey']; // Only for edge cases!
 class TranslationProvider extends BaseTranslationProvider<AppLocale, Translations> {
 	TranslationProvider({required super.child}) : super(settings: LocaleSettings.instance);
 
@@ -126,9 +126,9 @@ class TranslationProvider extends BaseTranslationProvider<AppLocale, Translation
 /// Configurable via 'translate_var'.
 ///
 /// Usage (e.g. in a widget's build method):
-/// context.t.someKey.anotherKey
+/// context.t_ui.someKey.anotherKey
 extension BuildContextTranslationsExtension on BuildContext {
-	Translations get t => TranslationProvider.of(this).translations;
+	Translations get t_ui => TranslationProvider.of(this).translations;
 }
 
 /// Manages all translation instances and the current locale

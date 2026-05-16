@@ -1,0 +1,11 @@
+{
+    "title": "Student Card",
+    "platformName": "MentorX Platform",
+    "codeLabel": "Student Code",
+    "scanForAttendance": "Scan for attendance",
+    "secureDigitalId": "Secure Digital ID",
+    "gradeLabel": "Grade",
+    "digitalId": "Digital ID",
+    "errorLoading": "Error loading card",
+    "refreshStatus": "Refresh Status"
+}

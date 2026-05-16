@@ -21,25 +21,10 @@ final class DioWalletRepository
   Future<void> initialize() async {}
 
   @override
-  Future<List<CouponEntity>> getValidCoupons() async {
-    try {
-      final response = await httpClient.get('/api/coupons/valid');
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
-      final list = asList(data is Map ? data['content'] : data);
-      return list.map((e) => CouponModel.fromJson(asMap(e))).toList();
-    } on HttpClientResponse catch (e) {
-      return handleHttpClientErrorResponse(
-        e,
-        defaultCode: WalletRepositoryExceptionCode.unknown,
-      );
-    }
-  }
-
-  @override
   Future<WalletSummaryEntity> getSummary() async {
     try {
-      final response = await httpClient.get('/api/payment/wallet/balance');
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final response = await httpClient.get('/api/payment/wallet');
+      final data = response.asMap();
       return WalletSummaryModel.fromJson(data);
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
@@ -65,10 +50,8 @@ final class DioWalletRepository
         queryParameters: queryParams,
       );
 
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
-      final list = asList(data is Map ? data['content'] : data);
-
-      return list
+      final data = response.asList();
+      return data
           .map((e) => WalletTransactionModel.fromJson(asMap(e)))
           .toList();
     } on HttpClientResponse catch (e) {
@@ -84,23 +67,20 @@ final class DioWalletRepository
     required double amount,
     required PaymentMethod method,
     required PaymentType paymentType,
+    String? orderId,
+    String? couponCode,
   }) async {
     try {
       final response = await httpClient.post(
         '/api/payment/process',
         data: {
-          'amount': amount,
+          'orderId': orderId,
           'paymentMethod': method.name.toUpperCase(),
-          'type': paymentType.name.toUpperCase(),
-        },
-        headers: {
-          'X-Idempotency-Key':
-              'pay_${DateTime.now().millisecondsSinceEpoch}_$amount',
+          'amount': amount,
+          if (couponCode != null) 'couponCode': couponCode,
         },
       );
-
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
-      return PaymentModel.fromJson(data);
+      return PaymentModel.fromJson(response.asMap());
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
@@ -113,10 +93,9 @@ final class DioWalletRepository
   Future<PaymentEntity> getPaymentStatus(String paymentId) async {
     try {
       final response = await httpClient.get(
-        '/api/payment/$paymentId/status',
+        '/api/payment/orders/$paymentId',
       );
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
-      return PaymentModel.fromJson(data);
+      return PaymentModel.fromJson(response.asMap());
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
@@ -132,7 +111,7 @@ final class DioWalletRepository
         '/api/v1/access-codes/redeem',
         data: {'code': code},
       );
-      return asMap(response.data)['data'] ?? asMap(response.data);
+      return response.asMap();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
@@ -153,8 +132,7 @@ final class DioWalletRepository
         },
       );
 
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
-      final list = asList(data is Map ? data['content'] : data);
+      final list = response.asList();
 
       return list.map((e) => asMap(e)).toList();
     } on HttpClientResponse catch (e) {
@@ -162,6 +140,44 @@ final class DioWalletRepository
         e,
         defaultCode:
             WalletRepositoryExceptionCode.failedToLoadRedemptionHistory,
+      );
+    }
+  }
+
+  @override
+  Future<List<CouponEntity>> getValidCoupons() async {
+    try {
+      final response = await httpClient.get('/api/coupons/valid');
+      final list = response.asList();
+      return list.map((e) => CouponModel.fromJson(asMap(e))).toList();
+    } on HttpClientResponse catch (e) {
+      return handleHttpClientErrorResponse(
+        e,
+        defaultCode: WalletRepositoryExceptionCode.unknown,
+      );
+    }
+  }
+
+  @override
+  Future<Map<String, dynamic>> previewCoupon({
+    required String code,
+    required double amount,
+    String? courseId,
+  }) async {
+    try {
+      final response = await httpClient.post(
+        '/api/coupons/preview',
+        data: {
+          'code': code,
+          'amount': amount,
+          if (courseId != null) 'courseId': courseId,
+        },
+      );
+      return response.asMap();
+    } on HttpClientResponse catch (e) {
+      return handleHttpClientErrorResponse(
+        e,
+        defaultCode: WalletRepositoryExceptionCode.unknown,
       );
     }
   }
@@ -239,7 +255,7 @@ final class DioWalletRepository
   Future<List<Map<String, dynamic>>> getPaymentMethods() async {
     try {
       final response = await httpClient.get('/api/payment/methods');
-      final data = asList(asMap(response.data)['data'] ?? response.data);
+      final data = response.asList();
       return data.map((e) => asMap(e)).toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
@@ -260,8 +276,7 @@ final class DioWalletRepository
           if (paginationInfo != null) ...paginationInfo.toJson(),
         },
       );
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
-      final list = asList(data is Map ? data['content'] : data);
+      final list = response.asList();
 
       return list.map((e) => PaymentOrderModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
@@ -276,8 +291,7 @@ final class DioWalletRepository
   Future<PaymentOrderEntity> getOrderDetail(String orderNumber) async {
     try {
       final response = await httpClient.get('/api/payment/orders/$orderNumber');
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
-      return PaymentOrderModel.fromJson(data);
+      return PaymentOrderModel.fromJson(response.asMap());
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
@@ -288,19 +302,23 @@ final class DioWalletRepository
 
   @override
   Future<PaymentOrderEntity> createOrder({
-    required double amount,
-    required String description,
+    required List<({String type, String id})> items,
   }) async {
     try {
       final response = await httpClient.post(
         '/api/payment/orders',
         data: {
-          'amount': amount,
-          'description': description,
+          'items': items
+              .map(
+                (e) => {
+                  'productType': e.type.toUpperCase(),
+                  'productId': e.id,
+                },
+              )
+              .toList(),
         },
       );
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
-      return PaymentOrderModel.fromJson(data);
+      return PaymentOrderModel.fromJson(response.asMap());
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
@@ -320,20 +338,12 @@ final class DioWalletRepository
         'paymentMethod': method.name.toUpperCase(),
       };
 
-      HttpClientResponse response;
-      try {
-        response = await httpClient.post(
-          '/api/payment/wallet/deposit',
-          data: payload,
-        );
-      } on HttpClientResponse catch (e) {
-        if (e.statusCode != 404) rethrow;
-        response = await httpClient.post(
-          '/api/wallet/top-up',
-          data: payload,
-        );
-      }
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final response = await httpClient.post(
+        '/api/payment/wallet/deposit',
+        data: payload,
+      );
+
+      final data = response.asMap();
       return PaymentModel.fromJson(data);
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(

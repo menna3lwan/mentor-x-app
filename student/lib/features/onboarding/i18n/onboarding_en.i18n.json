@@ -1,0 +1,18 @@
+{
+    "somethingWentWrong": "Something went wrong.",
+    "retry": "Retry",
+    "steps": {
+        "learn": {
+            "title": "Learn Anytime, Anywhere",
+            "description": "Access your courses and materials on the go. Learn at your own pace."
+        },
+        "trackProgress": {
+            "title": "Track Your Progress",
+            "description": "Keep track of your grades, attendance, and performance in one place."
+        },
+        "quizzes": {
+            "title": "Interactive Quizzes",
+            "description": "Test your knowledge with interactive quizzes and get instant feedback."
+        }
+    }
+}

@@ -50,7 +50,7 @@ final class MockQuizGenerator {
       QuizQuestionEntity(
         id: 'qq1',
         type: QuizQuestionType.multipleChoice,
-        text: 'What is the value of x in 2x + 5 = 15?',
+        description: 'What is the value of x in 2x + 5 = 15?',
         options: ['x = 3', 'x = 5', 'x = 7', 'x = 10'],
         mark: 10,
         order: 0,
@@ -58,7 +58,7 @@ final class MockQuizGenerator {
       QuizQuestionEntity(
         id: 'qq2',
         type: QuizQuestionType.trueFalse,
-        text: 'Is the equation x² = -1 solvable in real numbers?',
+        description: 'Is the equation x² = -1 solvable in real numbers?',
         options: ['True', 'False'],
         mark: 5,
         order: 1,
@@ -66,14 +66,14 @@ final class MockQuizGenerator {
       QuizQuestionEntity(
         id: 'qq3',
         type: QuizQuestionType.shortAnswer,
-        text: 'The quadratic formula is x = (-b ± √(b²-4ac)) / ___',
+        description: 'The quadratic formula is x = (-b ± √(b²-4ac)) / ___',
         mark: 10,
         order: 2,
       ),
       QuizQuestionEntity(
         id: 'qq4',
         type: QuizQuestionType.multipleChoice,
-        text: 'Which of the following are prime numbers?',
+        description: 'Which of the following are prime numbers?',
         options: ['2', '4', '7', '9', '11'],
         mark: 15,
         order: 3,
@@ -81,7 +81,7 @@ final class MockQuizGenerator {
       QuizQuestionEntity(
         id: 'qq5',
         type: QuizQuestionType.essay,
-        text:
+        description:
             'Explain the difference between a linear and quadratic equation.',
         mark: 10,
         order: 4,

@@ -32,12 +32,11 @@ final class DioLeaderboardRepository
         queryParameters: queryParams,
       );
 
-      final dataMap = ModelParser.extractData(response.data);
-      final entriesList = ModelParser.asList(dataMap);
-      
+      final data = response.asMap();
+      final entriesList = asList(data['entries']);
+
       return entriesList.map((e) {
-        final map = ModelParser.asMap(e);
-        return LeaderboardEntryModel.fromJson(map) as LeaderboardEntryEntity;
+        return LeaderboardEntryModel.fromJson(asMap(e));
       }).toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
@@ -62,12 +61,11 @@ final class DioLeaderboardRepository
         queryParameters: queryParams,
       );
 
-      final dataMap = ModelParser.extractData(response.data);
-      final entriesList = ModelParser.asList(dataMap);
+      final data = response.asMap();
+      final entriesList = asList(data['entries']);
 
       return entriesList.map((e) {
-        final map = ModelParser.asMap(e);
-        return LeaderboardEntryModel.fromJson(map) as LeaderboardEntryEntity;
+        return LeaderboardEntryModel.fromJson(asMap(e));
       }).toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
@@ -92,12 +90,11 @@ final class DioLeaderboardRepository
         queryParameters: queryParams,
       );
 
-      final dataMap = ModelParser.extractData(response.data);
-      final entriesList = ModelParser.asList(dataMap);
+      final data = response.asMap();
+      final entriesList = asList(data['entries']);
 
       return entriesList.map((e) {
-        final map = ModelParser.asMap(e);
-        return LeaderboardEntryModel.fromJson(map) as LeaderboardEntryEntity;
+        return LeaderboardEntryModel.fromJson(asMap(e));
       }).toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
@@ -113,8 +110,21 @@ final class DioLeaderboardRepository
       final response = await httpClient.get(
         '/api/leaderboard/quiz/$quizId/my-rank',
       );
-      final data = ModelParser.extractData(response.data);
-      return LeaderboardEntryModel.fromJson(data) as LeaderboardEntryEntity;
+
+      // Backend returns GlobalResponse<Integer>
+      final data = response.data;
+      final int rank = data is num
+          ? data.toInt()
+          : (int.tryParse(data.toString()) ?? 0);
+
+      return LeaderboardEntryModel(
+        rank: rank,
+        studentId: '', // Unknown
+        studentName: '', // Unknown
+        points: 0,
+        score: 0,
+        isCurrentUser: true,
+      );
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,

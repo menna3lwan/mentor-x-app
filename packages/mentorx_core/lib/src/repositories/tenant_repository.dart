@@ -25,4 +25,7 @@ abstract interface class TenantRepository {
 
   /// Fetch districts by governorate.
   Future<List<({String id, String name})>> getDistricts(String governorateId);
+
+  /// Fetch centers.
+  Future<List<Map<String, dynamic>>> getCenters({String? governorate});
 }

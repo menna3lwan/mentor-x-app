@@ -12,7 +12,19 @@ final class MockProfileRepository implements StudentProfileRepository {
   Future<void> initialize() async {}
 
   @override
-  Future<void> updateLocation({required String area, required String city, required String governorate}) async {
+  Future<void> updateLocation({
+    required String area,
+    required String city,
+    required String governorate,
+    double? latitude,
+    double? longitude,
+    String? mapAddress,
+  }) async {
+    await Future<void>.delayed(delay);
+  }
+
+  @override
+  Future<void> updateProfileImage(String imagePath) async {
     await Future<void>.delayed(delay);
   }
 

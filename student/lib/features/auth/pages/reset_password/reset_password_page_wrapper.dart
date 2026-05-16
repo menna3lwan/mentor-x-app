@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
-import '../../../../core/core.dart';
+import 'package:mentorx_student/core/core.dart';
 import 'bloc/reset_password_bloc.dart';
 import 'reset_password_page.dart';
 
@@ -48,7 +48,7 @@ final class _ResetPasswordPageWrapperState
           >(
             listener: (context, event) {
               if (event is ResetPasswordSuccessPresentationEvent) {
-                context.showSuccessSnackBar('Password reset successfully!');
+                context.showSuccessSnackBar(context.t.auth.passwordResetSuccess);
                 const LoginPageRoute().go(context);
               }
             },

@@ -6,8 +6,10 @@ final class DioRewardsRepository
     extends HttpClientRepository<RewardsRepositoryExceptionCode>
     implements RewardsRepository {
   @override
-  Never throwException(RewardsRepositoryExceptionCode code, {String? message}) =>
-      throw RewardsRepositoryException(code: code, message: message);
+  Never throwException(
+    RewardsRepositoryExceptionCode code, {
+    String? message,
+  }) => throw RewardsRepositoryException(code: code, message: message);
 
   final HttpClient httpClient;
 
@@ -30,14 +32,10 @@ final class DioRewardsRepository
         queryParameters: queryParams,
       );
 
-      final responseData = asMap(response.data);
-      final list = asList(
-        responseData['data'] ??
-            responseData['content'] ??
-            responseData['items'] ??
-            response.data,
-      );
-      return list.map((e) => PointsTransactionModel.fromJson(asMap(e))).toList();
+      final list = response.asList();
+      return list
+          .map((e) => PointsTransactionModel.fromJson(asMap(e)))
+          .toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
@@ -60,13 +58,7 @@ final class DioRewardsRepository
         queryParameters: queryParams,
       );
 
-      final responseData = asMap(response.data);
-      final list = asList(
-        responseData['data'] ??
-            responseData['content'] ??
-            responseData['items'] ??
-            response.data,
-      );
+      final list = response.asList();
       return list.map((e) => RewardItemModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
@@ -90,13 +82,7 @@ final class DioRewardsRepository
         queryParameters: queryParams,
       );
 
-      final responseData = asMap(response.data);
-      final list = asList(
-        responseData['data'] ??
-            responseData['content'] ??
-            responseData['items'] ??
-            response.data,
-      );
+      final list = response.asList();
       return list.map((e) => RewardClaimModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
@@ -115,8 +101,7 @@ final class DioRewardsRepository
         data: payload,
       );
 
-      final data = asMap(asMap(response.data)['data'] ?? response.data);
-      return RewardClaimModel.fromJson(data);
+      return RewardClaimModel.fromJson(response.asMap());
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
@@ -124,5 +109,4 @@ final class DioRewardsRepository
       );
     }
   }
-
 }

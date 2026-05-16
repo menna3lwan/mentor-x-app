@@ -56,7 +56,7 @@ class AnnouncementCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  isPinned ? t.ui.widgets.announcement.pinned : t.ui.widgets.announcement.update,
+                  isPinned ? t_ui.widgets.announcement.pinned : t_ui.widgets.announcement.update,
                   style: TextStyle(
                     color: statusColor,
                     fontSize: 10,

@@ -35,7 +35,13 @@ abstract interface class StudentProfileRepository implements ProfileRepository {
     required String governorate,
     required String city,
     required String area,
+    double? latitude,
+    double? longitude,
+    String? mapAddress,
   });
+
+  /// Update the student's profile image.
+  Future<void> updateProfileImage(String imagePath);
 
   // Pro Features
   @override

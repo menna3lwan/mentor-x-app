@@ -25,16 +25,22 @@ final class AssignmentModel extends AssignmentEntity {
       description: ModelParser.asString(json['description']),
       deadline: ModelParser.asDateTime(json['deadline'] ?? json['due_date']),
       totalMarks: ModelParser.asInt(json['totalMarks'] ?? json['total_marks']),
-      questionsCount: ModelParser.asInt(json['questionsCount'] ?? json['questions_count']),
-      questions: ModelParser.asList(json['questions'])
-          .map((e) => QuizQuestionModel.fromJson(ModelParser.asMap(e)))
-          .toList(),
+      questionsCount: ModelParser.asInt(
+        json['questionsCount'] ?? json['questions_count'],
+      ),
+      questions: ModelParser.asList(
+        json['questions'],
+      ).map((e) => QuizQuestionModel.fromJson(ModelParser.asMap(e))).toList(),
       active: ModelParser.asBool(json['active'], fallback: true),
       deleted: ModelParser.asBool(json['deleted']),
       weekId: ModelParser.asString(json['weekId'] ?? json['week_id']),
       courseId: ModelParser.asString(json['courseId'] ?? json['course_id']),
-      createdAt: ModelParser.asDateTime(json['createdAt'] ?? json['created_at']),
-      updatedAt: ModelParser.asDateTime(json['updatedAt'] ?? json['updated_at']),
+      createdAt: ModelParser.asDateTime(
+        json['createdAt'] ?? json['created_at'],
+      ),
+      updatedAt: ModelParser.asDateTime(
+        json['updatedAt'] ?? json['updated_at'],
+      ),
     );
   }
 }
@@ -60,33 +66,37 @@ final class AssignmentSubmissionModel extends AssignmentSubmissionEntity {
 
   factory AssignmentSubmissionModel.fromJson(Map<String, dynamic> json) {
     return AssignmentSubmissionModel(
-      id: ModelParser.asString(json['id']),
-      assignmentId: ModelParser.asString(json['assignmentId'] ?? json['assignment_id']),
-      assignmentTitle: ModelParser.asString(json['assignmentTitle'] ?? json['assignment_title']),
-      courseName: ModelParser.asString(json['courseName'] ?? json['course_name']),
-      status: _parseStatus(json['status']),
-      submittedAt: ModelParser.asDateTime(json['submittedAt'] ?? json['submitted_at']) ?? DateTime.now(),
+      id: ModelParser.asString(json['attemptId'] ?? json['id']),
+      assignmentId: ModelParser.asString(
+        json['assignmentId'] ?? json['assignment_id'],
+      ),
+      assignmentTitle: ModelParser.asString(
+        json['assignmentTitle'] ?? json['assignment_title'],
+      ),
+      courseName: ModelParser.asString(
+        json['courseName'] ?? json['course_name'],
+      ),
+      status: ModelParser.asBool(json['submitted'])
+          ? SubmissionStatus.submitted
+          : SubmissionStatus.pending,
+      submittedAt:
+          ModelParser.asDateTime(json['submittedAt'] ?? json['submitted_at']) ??
+          DateTime.now(),
       answers: ModelParser.asMap(json['answers']).map(
         (k, v) => MapEntry(k, v.toString()),
       ),
-      fileUrls: ModelParser.asList(json['fileUrls'] ?? json['file_urls'])
-          .map((e) => e.toString())
-          .toList(),
-      contentText: ModelParser.asString(json['contentText'] ?? json['content_text']),
+      fileUrls: ModelParser.asList(
+        json['fileUrls'] ?? json['file_urls'],
+      ).map((e) => e.toString()).toList(),
+      contentText: ModelParser.asString(
+        json['contentText'] ?? json['content_text'],
+      ),
       notes: ModelParser.asString(json['notes']),
       score: ModelParser.asInt(json['score'] ?? json['marks_attained']),
       totalMarks: ModelParser.asInt(json['totalMarks'] ?? json['total_marks']),
       feedback: ModelParser.asString(json['feedback']),
       isLate: ModelParser.asBool(json['isLate'] ?? json['is_late']),
       gradedAt: ModelParser.asDateTime(json['gradedAt'] ?? json['graded_at']),
-    );
-  }
-
-  static SubmissionStatus _parseStatus(dynamic value) {
-    final str = ModelParser.asString(value).toLowerCase();
-    return SubmissionStatus.values.firstWhere(
-      (e) => e.name == str,
-      orElse: () => SubmissionStatus.submitted,
     );
   }
 }

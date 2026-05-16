@@ -80,7 +80,7 @@ class MentorXSectionViewAllButton extends StatelessWidget {
         $on.hover($box.color(context.brandPrimaryColor.withValues(alpha: 0.12))),
       ),
       child: Text(
-        text ?? t.ui.widgets.common.viewAll,
+        text ?? t_ui.common.viewAll,
         style: context.smallTextStyle.copyWith(
           color: context.brandPrimaryColor,
           fontWeight: FontWeight.w900,

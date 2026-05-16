@@ -119,11 +119,9 @@ final class DioStudentRegistrationRepository
         'parentPhone': parentPhone,
         'phone': phone,
         'password': password,
-        'device_name': await deviceInfoService.getDeviceName(),
-        'device_hash': await deviceInfoService.getDeviceHash(),
-        'app_version': await deviceInfoService.getAppVersion(),
         if (schoolName != null) 'schoolName': schoolName,
-        if (educationDepartment != null) 'educationDepartment': educationDepartment,
+        if (educationDepartment != null)
+          'educationDepartment': educationDepartment,
         if (centerName != null) 'centerName': centerName,
       };
 
@@ -143,13 +141,18 @@ final class DioStudentRegistrationRepository
         files: files,
       );
 
-      final data = asMap(response.data);
-      final responseData = asMap(data['data'] ?? data);
-      
+      final data = response.asMap();
+
       return StudentRegistrationResponseEntity(
-        studentCode: stringOrNull(responseData['studentCode'] ?? responseData['student_code']),
-        token: stringOrNull(responseData['token']),
-        status: stringOrNull(responseData['status']) ?? 'pending',
+        studentCode: stringOrNull(data['studentCode'] ?? data['student_code']),
+        token: stringOrNull(data['token']),
+        status: stringOrNull(data['status']) ?? 'PENDING',
+        phone: stringOrNull(data['phone']),
+        message: stringOrNull(data['message']),
+        redirectTo: stringOrNull(data['redirectTo'] ?? data['redirect_to']),
+        supportWhatsApp: stringOrNull(
+          data['supportWhatsApp'] ?? data['support_whatsapp'],
+        ),
       );
     } on HttpClientResponse catch (e) {
       handleHttpClientErrorResponse(
@@ -162,20 +165,10 @@ final class DioStudentRegistrationRepository
   @override
   Future<List<GovernorateEntity>> getGovernorates() async {
     try {
-      HttpClientResponse response;
-      try {
-        response = await httpClient.get(
-          '/api/student/register/governorates',
-        );
-      } on HttpClientResponse catch (e) {
-        if (e.statusCode != 404) rethrow;
-        response = await httpClient.get(
-          '/api/public/governorates',
-        );
-      }
-      final data = asList(asMap(response.data)['data'] ??
-          asMap(response.data)['content'] ??
-          response.data);
+      final response = await httpClient.get(
+        '/api/public/governorates',
+      );
+      final data = response.asList();
       return data
           .map((item) => GovernorateModel.fromJson(asMap(item)))
           .toList();
@@ -188,27 +181,53 @@ final class DioStudentRegistrationRepository
   }
 
   @override
-  Future<List<String>> getAreas(String governorateId) async {
+  Future<List<GovernorateEntity>> getGovernoratesWithAreas() async {
     try {
-      HttpClientResponse response;
-      try {
-        response = await httpClient.get(
-          '/api/student/register/areas/$governorateId',
-        );
-      } on HttpClientResponse catch (e) {
-        if (e.statusCode != 404) rethrow;
-        response = await httpClient.get(
-          '/api/public/areas/governorate/$governorateId',
-        );
-      }
-      final data = asList(asMap(response.data)['data'] ??
-          asMap(response.data)['content'] ??
-          response.data);
-      return data.map((item) => item.toString()).toList();
+      final response = await httpClient.get(
+        '/api/public/governorates/with-areas',
+      );
+      final data = response.asList();
+      return data
+          .map((item) => GovernorateModel.fromJson(asMap(item)))
+          .toList();
+    } on HttpClientResponse catch (e) {
+      return handleHttpClientErrorResponse(
+        e,
+        defaultCode: _ExceptionCode.failedToLoadGovernorates,
+      );
+    }
+  }
+
+  @override
+  Future<List<AreaEntity>> getAreas(String governorateId) async {
+    try {
+      // Backend GeoController: GET /api/public/governorates/{id}/areas
+      final response = await httpClient.get(
+        '/api/public/governorates/$governorateId/areas',
+      );
+      final data = response.asList();
+      return data.map((item) => AreaModel.fromJson(asMap(item))).toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
         defaultCode: _ExceptionCode.failedToLoadAreas,
+      );
+    }
+  }
+
+  @override
+  Future<List<Map<String, dynamic>>> getCenters({String? governorate}) async {
+    try {
+      final String path = governorate != null
+          ? '/api/centers/governorate/$governorate'
+          : '/api/centers';
+      final response = await httpClient.get(path);
+      final data = response.asList();
+      return data.map((e) => asMap(e)).toList();
+    } on HttpClientResponse catch (e) {
+      return handleHttpClientErrorResponse(
+        e,
+        defaultCode: _ExceptionCode.unknown,
       );
     }
   }
@@ -219,7 +238,8 @@ final class DioStudentRegistrationRepository
       final response = await httpClient.get(
         '/api/student/register/application-info',
       );
-      return StudentApplicationInfoModel.fromJson(asMap(response.data));
+      final data = response.asMap();
+      return StudentApplicationInfoModel.fromJson(data);
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
@@ -234,12 +254,12 @@ final class DioStudentRegistrationRepository
       final response = await httpClient.get(
         '/api/student/register/check-phone/$phone',
       );
-      final data = asMap(response.data);
-      final isAvailable = boolOrNull(data['available']) ?? 
-                         !(boolOrNull(data['exists']) ?? false);
-      return isAvailable;
+      final data = response.asMap();
+      return boolOrNull(data['exists']) ?? false;
     } on HttpClientResponse catch (e) {
-      if (e.statusCode == 409) return false;
+      if (e.statusCode == 409) {
+        return true; // Status code conflict means it exists
+      }
       return handleHttpClientErrorResponse(
         e,
         defaultCode: _ExceptionCode.unknown,

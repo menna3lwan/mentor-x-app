@@ -64,13 +64,13 @@ void main() {
 
         expect(result.length, 1);
         expect(result[0].title, 'Week 1');
-        expect(result[0].items.length, 1);
-        expect(result[0].items[0].title, 'Material 1');
+        expect(result[0].materials.length, 1);
+        expect(result[0].materials[0].title, 'Material 1');
       });
     });
 
     group('getSessionItems', () {
-      test('returns flattened items for session', () async {
+      test('returns flattened materials for session', () async {
         final mockWeeks = [
           {'id': 'w1', 'title': 'Week 1', 'session_ids': [1]}
         ];

@@ -1,1 +1,1 @@
-export 'notifications_page/notifications_page.dart';
+export 'notifications/notifications.dart';

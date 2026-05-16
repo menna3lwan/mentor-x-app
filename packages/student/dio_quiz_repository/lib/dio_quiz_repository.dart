@@ -20,7 +20,10 @@ final class DioQuizRepository
   Future<List<QuizEntity>> getQuizzes() async {
     try {
       final response = await httpClient.get('/api/quizzes');
-      return response.asList().map((e) => QuizModel.fromJson(asMap(e))).toList();
+      return response
+          .asList()
+          .map((e) => QuizModel.fromJson(asMap(e)))
+          .toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
@@ -46,7 +49,10 @@ final class DioQuizRepository
   Future<List<QuizQuestionEntity>> getQuizQuestions(String quizId) async {
     try {
       final response = await httpClient.get('/api/questions/quiz/$quizId');
-      return response.asList().map((e) => QuizQuestionModel.fromJson(asMap(e))).toList();
+      return response
+          .asList()
+          .map((e) => QuizQuestionModel.fromJson(asMap(e)))
+          .toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
@@ -59,6 +65,7 @@ final class DioQuizRepository
   Future<QuizAttemptEntity> submitQuiz(
     String quizId, {
     required Map<String, String> answers,
+    String? attemptId,
   }) async {
     try {
       final response = await httpClient.post(
@@ -75,7 +82,6 @@ final class DioQuizRepository
               .toList(),
         },
       );
-
       return QuizAttemptModel.fromJson(response.asMap());
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
@@ -93,10 +99,16 @@ final class DioQuizRepository
       final response = await httpClient.post('/api/quizzes/$quizId/start');
       final data = response.asMap();
 
-      final attempt = QuizAttemptModel.fromJson(asMap(data['attempt']));
-      final questions = asList(data['questions'])
-          .map((e) => QuizQuestionModel.fromJson(asMap(e)))
-          .toList();
+      final attempt = QuizAttemptModel.fromJson(data);
+
+      List<QuizQuestionEntity> questions = [];
+      if (data['questions'] != null) {
+        questions = asList(
+          data['questions'],
+        ).map((e) => QuizQuestionModel.fromJson(asMap(e))).toList();
+      } else {
+        questions = await getQuizQuestions(quizId);
+      }
 
       return (attempt, questions);
     } on HttpClientResponse catch (e) {
@@ -123,8 +135,10 @@ final class DioQuizRepository
         data: {
           'questionId': questionId,
           'question_id': questionId,
-          'selectedOptions': selectedOptions ?? (textAnswer != null ? [textAnswer] : []),
-          'selected_options': selectedOptions ?? (textAnswer != null ? [textAnswer] : []),
+          'selectedOptions':
+              selectedOptions ?? (textAnswer != null ? [textAnswer] : []),
+          'selected_options':
+              selectedOptions ?? (textAnswer != null ? [textAnswer] : []),
           'textAnswer': textAnswer,
           'text_answer': textAnswer,
           'time_spent_seconds': 0, // Default to 0, can be extended later
@@ -161,7 +175,7 @@ final class DioQuizRepository
   @override
   Future<QuizAttemptEntity> getResults(String attemptId) async {
     try {
-      final response = await httpClient.get('/api/quiz-attempts/$attemptId/results');
+      final response = await httpClient.get('/api/quiz-attempts/$attemptId');
       return QuizAttemptModel.fromJson(response.asMap());
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
@@ -188,7 +202,10 @@ final class DioQuizRepository
   Future<List<QuizEntity>> getQuizzesByWeek(String weekId) async {
     try {
       final response = await httpClient.get('/api/quizzes/week/$weekId');
-      return response.asList().map((e) => QuizModel.fromJson(asMap(e))).toList();
+      return response
+          .asList()
+          .map((e) => QuizModel.fromJson(asMap(e)))
+          .toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
@@ -224,8 +241,13 @@ final class DioQuizRepository
   @override
   Future<List<QuizAttemptEntity>> getStudentAttempts(String studentId) async {
     try {
-      final response = await httpClient.get('/api/quiz-attempts/student/$studentId');
-      return response.asList().map((e) => QuizAttemptModel.fromJson(asMap(e))).toList();
+      final response = await httpClient.get(
+        '/api/quiz-attempts/student/$studentId',
+      );
+      return response
+          .asList()
+          .map((e) => QuizAttemptModel.fromJson(asMap(e)))
+          .toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
@@ -237,7 +259,9 @@ final class DioQuizRepository
   @override
   Future<Map<String, dynamic>> getStudentQuizStatus(String studentId) async {
     try {
-      final response = await httpClient.get('/api/quiz-attempts/student/$studentId/status');
+      final response = await httpClient.get(
+        '/api/quiz-attempts/student/$studentId/status',
+      );
       return response.asMap();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
@@ -253,11 +277,14 @@ final class DioQuizRepository
     String quizId,
   ) async {
     try {
-      final response = await httpClient.get('/api/quiz-attempts/student/$studentId/quiz/$quizId');
+      final userId = httpClient.userId ?? studentId;
+      final response = await httpClient.get(
+        '/api/quiz-attempts/student/$userId/quiz/$quizId',
+      );
       return QuizAttemptModel.fromJson(response.asMap());
     } on HttpClientResponse catch (e) {
       if (e.statusCode == 404) return null;
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: QuizRepositoryExceptionCode.unknown,
       );
@@ -268,7 +295,10 @@ final class DioQuizRepository
   Future<List<QuizAttemptEntity>> getAttemptsForQuiz(String quizId) async {
     try {
       final response = await httpClient.get('/api/quiz-attempts/quiz/$quizId');
-      return response.asList().map((e) => QuizAttemptModel.fromJson(asMap(e))).toList();
+      return response
+          .asList()
+          .map((e) => QuizAttemptModel.fromJson(asMap(e)))
+          .toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
@@ -280,7 +310,9 @@ final class DioQuizRepository
   @override
   Future<Map<String, dynamic>> getQuizStatistics(String quizId) async {
     try {
-      final response = await httpClient.get('/api/quiz-attempts/quiz/$quizId/statistics');
+      final response = await httpClient.get(
+        '/api/quiz-attempts/quiz/$quizId/statistics',
+      );
       return response.asMap();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(

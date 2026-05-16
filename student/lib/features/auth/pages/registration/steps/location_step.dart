@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gap/gap.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
-import 'package:mentorx_core/mentorx_core.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:mentorx_student/core/core.dart';
 import '../bloc/student_registration_bloc.dart';
 
 final class LocationStep extends StatelessWidget {
@@ -11,7 +10,6 @@ final class LocationStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final t = context.t.student;
     final bloc = context.read<StudentRegistrationBloc>();
     return Builder(
       builder: (context) {
@@ -28,51 +26,58 @@ final class LocationStep extends StatelessWidget {
           (StudentRegistrationBloc bloc) => bloc.state.areas,
         );
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            FadeInDown(
-              duration: const Duration(milliseconds: 400),
-              child: Text(
-                t['locationLabel'] ?? 'Location Details',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w900,
-                  color: context.textPrimaryColor,
-                  letterSpacing: -1.0,
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              FadeInDown(
+                duration: const Duration(milliseconds: 400),
+                child: Text(
+                  context.t.auth.locationDetailsTitle,
+                  style: context.titleH1Style.copyWith(
+                    fontSize: 28,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: -1.0,
+                  ),
                 ),
               ),
-            ),
-            const Gap(12),
-            FadeInDown(
-              duration: const Duration(milliseconds: 500),
-              child: Text(
-                t['locationSubtitle'] ??
-                    'Help us know where you are from to suggest the nearest centers.',
-                style: TextStyle(
-                  color: context.textSecondaryColor,
-                  fontSize: 15,
-                  height: 1.6,
-                  fontWeight: FontWeight.w600,
+              const Gap(12),
+              FadeInDown(
+                duration: const Duration(milliseconds: 500),
+                child: Text(
+                  context.t.auth.locationDetailsDesc,
+                  style: context.bodySecondaryStyle.copyWith(
+                    fontSize: 15,
+                    height: 1.6,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
-            ),
-            const Gap(40),
-            FadeInUp(
-              duration: const Duration(milliseconds: 400),
-              child: _buildGovernoratePicker(
-                context,
-                selectedGovernorate,
-                governorates,
-                bloc,
+              const Gap(40),
+              FadeInUp(
+                duration: const Duration(milliseconds: 400),
+                child: MentorXGlassCard(
+                  style: Style(
+                    $box.padding.all(24),
+                    $box.borderRadius(32),
+                  ),
+                  child: Column(
+                    children: [
+                      _buildGovernoratePicker(
+                        context,
+                        selectedGovernorate,
+                        governorates,
+                        bloc,
+                      ),
+                      const Gap(32),
+                      _buildAreaPicker(context, selectedArea, areas, bloc),
+                    ],
+                  ),
+                ),
               ),
-            ),
-            const Gap(32),
-            FadeInUp(
-              duration: const Duration(milliseconds: 500),
-              child: _buildAreaPicker(context, selectedArea, areas, bloc),
-            ),
-          ],
+            ],
+          ),
         );
       },
     );
@@ -84,7 +89,7 @@ final class LocationStep extends StatelessWidget {
     List<GovernorateEntity> governorates,
     StudentRegistrationBloc bloc,
   ) {
-    final t = context.t.student;
+    final t = context.t;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -93,8 +98,8 @@ final class LocationStep extends StatelessWidget {
             Icon(Icons.map_rounded, color: context.brandPrimaryColor, size: 18),
             const Gap(8),
             Text(
-              t['governorateLabel'] ?? 'Governorate',
-              style: TextStyle(
+              t.auth.governorateLabel,
+              style: context.bodySecondaryStyle.copyWith(
                 fontWeight: FontWeight.w800,
                 color: context.textPrimaryColor,
                 fontSize: 14,
@@ -111,14 +116,14 @@ final class LocationStep extends StatelessWidget {
             color: context.brandPrimaryColor,
             size: 24,
           ),
-          style: TextStyle(
+          style: context.bodyPrimaryStyle.copyWith(
             color: context.textPrimaryColor,
             fontWeight: FontWeight.w700,
             fontSize: 15,
           ),
           decoration: InputDecoration(
             filled: true,
-            fillColor: context.backgroundSecondaryColor,
+            fillColor: context.backgroundSecondaryColor.withValues(alpha: 0.5),
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 20,
               vertical: 18,
@@ -142,8 +147,8 @@ final class LocationStep extends StatelessWidget {
             ),
           ),
           hint: Text(
-            t['governorateHint'] ?? 'Select Governorate',
-            style: TextStyle(
+            t.auth.governorateHint,
+            style: context.bodySecondaryStyle.copyWith(
               color: context.textTertiaryColor,
               fontWeight: FontWeight.w600,
             ),
@@ -153,7 +158,7 @@ final class LocationStep extends StatelessWidget {
               value: gov,
               child: Text(
                 gov.name,
-                style: TextStyle(
+                style: context.bodyPrimaryStyle.copyWith(
                   color: context.textPrimaryColor,
                   fontWeight: FontWeight.w700,
                 ),
@@ -170,10 +175,10 @@ final class LocationStep extends StatelessWidget {
   Widget _buildAreaPicker(
     BuildContext context,
     String? selectedArea,
-    List<String> areas,
+    List<AreaEntity> areas,
     StudentRegistrationBloc bloc,
   ) {
-    final t = context.t.student;
+    final t = context.t;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -186,8 +191,8 @@ final class LocationStep extends StatelessWidget {
             ),
             const Gap(8),
             Text(
-              t['regionLabel'] ?? 'Area',
-              style: TextStyle(
+              t.auth.regionLabel,
+              style: context.bodySecondaryStyle.copyWith(
                 fontWeight: FontWeight.w800,
                 color: context.textPrimaryColor,
                 fontSize: 14,
@@ -204,14 +209,14 @@ final class LocationStep extends StatelessWidget {
             color: context.brandPrimaryColor,
             size: 24,
           ),
-          style: TextStyle(
+          style: context.bodyPrimaryStyle.copyWith(
             color: context.textPrimaryColor,
             fontWeight: FontWeight.w700,
             fontSize: 15,
           ),
           decoration: InputDecoration(
             filled: true,
-            fillColor: context.backgroundSecondaryColor,
+            fillColor: context.backgroundSecondaryColor.withValues(alpha: 0.5),
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 20,
               vertical: 18,
@@ -235,18 +240,18 @@ final class LocationStep extends StatelessWidget {
             ),
           ),
           hint: Text(
-            t['regionHint'] ?? 'Select Area',
-            style: TextStyle(
+            t.auth.regionHint,
+            style: context.bodySecondaryStyle.copyWith(
               color: context.textTertiaryColor,
               fontWeight: FontWeight.w600,
             ),
           ),
           items: areas.map((area) {
             return DropdownMenuItem(
-              value: area,
+              value: area.name,
               child: Text(
-                area,
-                style: TextStyle(
+                area.name,
+                style: context.bodyPrimaryStyle.copyWith(
                   color: context.textPrimaryColor,
                   fontWeight: FontWeight.w700,
                 ),

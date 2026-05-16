@@ -5,6 +5,7 @@ class StudentAnalyticsSummaryEntity extends Equatable {
   final int totalStudents;
   final double studentAverage;
   final double classAverage;
+  final int totalAttempts;
   final List<PerformanceSnapshotEntity> performanceTimeline;
   final List<ActivityHeatmapEntity> activityHeatmap;
   final List<AchievementEntity> achievements;
@@ -16,6 +17,7 @@ class StudentAnalyticsSummaryEntity extends Equatable {
     required this.totalStudents,
     required this.studentAverage,
     required this.classAverage,
+    this.totalAttempts = 0,
     this.performanceTimeline = const [],
     this.activityHeatmap = const [],
     this.achievements = const [],
@@ -29,6 +31,7 @@ class StudentAnalyticsSummaryEntity extends Equatable {
         totalStudents,
         studentAverage,
         classAverage,
+        totalAttempts,
         performanceTimeline,
         activityHeatmap,
         achievements,
@@ -94,41 +97,57 @@ class StreakEntity extends Equatable {
   final int currentStreak;
   final int longestStreak;
   final DateTime? lastActivityAt;
+  final int totalActiveDays;
+  final int loginCount;
 
   const StreakEntity({
     required this.currentStreak,
     required this.longestStreak,
     this.lastActivityAt,
+    this.totalActiveDays = 0,
+    this.loginCount = 0,
   });
 
   @override
-  List<Object?> get props => [currentStreak, longestStreak, lastActivityAt];
+  List<Object?> get props => [
+        currentStreak,
+        longestStreak,
+        lastActivityAt,
+        totalActiveDays,
+        loginCount,
+      ];
 }
 
 class QuizSpeedMetricEntity extends Equatable {
   final String quizId;
   final String quizTitle;
+  final int score;
   final int timeSpentSeconds;
   final int questionCount;
-  final double secondsPerQuestion;
   final double averageSecondsPerQuestion;
+  final DateTime submittedAt;
 
   const QuizSpeedMetricEntity({
     required this.quizId,
     required this.quizTitle,
+    required this.score,
     required this.timeSpentSeconds,
     required this.questionCount,
-    required this.secondsPerQuestion,
     required this.averageSecondsPerQuestion,
+    required this.submittedAt,
   });
+
+  double get secondsPerQuestion =>
+      questionCount > 0 ? timeSpentSeconds / questionCount : 0;
 
   @override
   List<Object?> get props => [
         quizId,
         quizTitle,
+        score,
         timeSpentSeconds,
         questionCount,
-        secondsPerQuestion,
         averageSecondsPerQuestion,
+        submittedAt,
       ];
 }

@@ -4,10 +4,9 @@ import 'dart:ui';
 import 'package:dio_authentication_repository/dio_authentication_repository.dart';
 import 'package:dio_home_repository/dio_home_repository.dart';
 import 'package:dio_http_client/dio_http_client.dart';
-import 'package:mentorx_ui/mentorx_ui.dart';
+import 'package:mentorx_student/core/core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage_cache_repository/flutter_secure_storage_cache_repository.dart';
-import 'package:mentorx_core/mentorx_core.dart';
 
 import 'package:dio_course_repository/dio_course_repository.dart';
 import 'package:dio_attendance_repository/dio_attendance_repository.dart';
@@ -28,9 +27,7 @@ import 'package:dio_student_analytics_repository/dio_student_analytics_repositor
 import 'package:dio_student_communication_repository/dio_student_communication_repository.dart';
 import 'package:dio_student_card_repository/dio_student_card_repository.dart';
 import 'package:device_info_service/device_info_service.dart';
-import 'package:analytics_service/analytics_service.dart';
 import 'package:error_tracking_service/error_tracking_service.dart';
-import '../../core/blocs/app_authentication_cubit/app_authentication_cubit.dart';
 import '../student_app.dart';
 
 import 'package:mock_authentication_repository/mock_authentication_repository.dart';
@@ -54,7 +51,6 @@ import 'package:mock_leaderboard_repository/mock_leaderboard_repository.dart';
 import 'package:mock_student_analytics_repository/mock_student_analytics_repository.dart';
 import 'package:mock_student_card_repository/mock_student_card_repository.dart';
 
-import '../../core/utils/env.dart';
 
 final class AppRepositories {
   final CacheRepository cacheRepository;

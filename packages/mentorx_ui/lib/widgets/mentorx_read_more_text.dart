@@ -44,7 +44,7 @@ class _MentorXReadMoreTextState extends State<MentorXReadMoreText> {
             duration: const Duration(milliseconds: 200),
             padding: const EdgeInsets.symmetric(vertical: 4),
             child: Text(
-              _isExpanded ? t.ui.widgets.common.readLess : t.ui.widgets.common.readMore,
+              _isExpanded ? t_ui.common.readLess : t_ui.common.readMore,
               style: context.smallTextStyle.copyWith(
                 color: context.brandPrimaryColor,
                 fontWeight: FontWeight.w900,

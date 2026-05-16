@@ -2,64 +2,63 @@ part of 'package:mentorx_core/mentorx_core.dart';
 
 enum QuizQuestionType { multipleChoice, trueFalse, shortAnswer, essay, fillInTheBlank }
 
-
 class QuizQuestionEntity extends Equatable {
   final String id;
-  final String text;
+  final String description;
   final String? imageUrl;
-  final QuizQuestionType type;
-  final List<String> options;
   final int mark;
+  final List<String> options;
   final int? optionsCount;
+  final QuizQuestionType type;
   final int order;
 
   const QuizQuestionEntity({
     required this.id,
-    required this.text,
-    required this.type,
+    required this.description,
     this.imageUrl,
-    this.options = const [],
     this.mark = 0,
+    this.options = const [],
     this.optionsCount,
+    this.type = QuizQuestionType.multipleChoice,
     this.order = 0,
   });
 
   static const placeholder = QuizQuestionEntity(
     id: '',
-    text: '',
-    type: QuizQuestionType.multipleChoice,
+    description: '',
   );
 
   @override
   List<Object?> get props => [
         id,
-        text,
-        type,
+        description,
         imageUrl,
-        options,
         mark,
+        options,
         optionsCount,
+        type,
         order,
       ];
 
   QuizQuestionEntity copyWith({
     String? id,
-    String? text,
-    QuizQuestionType? type,
-    String? imageUrl,
-    List<String>? options,
+    String? description,
+    MentorXNullableValue<String?>? imageUrl,
     int? mark,
-    int? optionsCount,
+    List<String>? options,
+    MentorXNullableValue<int?>? optionsCount,
+    QuizQuestionType? type,
     int? order,
   }) {
     return QuizQuestionEntity(
       id: id ?? this.id,
-      text: text ?? this.text,
-      type: type ?? this.type,
-      imageUrl: imageUrl ?? this.imageUrl,
-      options: options ?? this.options,
+      description: description ?? this.description,
+      imageUrl: imageUrl != null ? imageUrl.value : this.imageUrl,
       mark: mark ?? this.mark,
-      optionsCount: optionsCount ?? this.optionsCount,
+      options: options ?? this.options,
+      optionsCount:
+          optionsCount != null ? optionsCount.value : this.optionsCount,
+      type: type ?? this.type,
       order: order ?? this.order,
     );
   }

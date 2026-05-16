@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pinput/pinput.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
-import 'package:gap/gap.dart';
+import 'package:mentorx_student/core/core.dart';
 import '../bloc/student_registration_bloc.dart';
 
 final class OtpStep extends StatelessWidget {
@@ -11,19 +11,18 @@ final class OtpStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final t = context.t.student;
     final bloc = context.read<StudentRegistrationBloc>();
 
     final defaultPinTheme = PinTheme(
       width: 52,
       height: 64,
-      textStyle: TextStyle(
+      textStyle: context.titleH2Style.copyWith(
         fontSize: 24,
         color: context.textPrimaryColor,
         fontWeight: FontWeight.w900,
       ),
       decoration: BoxDecoration(
-        color: context.backgroundSecondaryColor,
+        color: context.backgroundSecondaryColor.withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: context.borderPrimaryColor.withValues(alpha: 0.1),
@@ -51,112 +50,114 @@ final class OtpStep extends StatelessWidget {
           (StudentRegistrationBloc bloc) => bloc.state.phone,
         );
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            FadeInDown(
-              duration: const Duration(milliseconds: 600),
-              child: Container(
-                padding: const EdgeInsets.all(28),
-                decoration: BoxDecoration(
-                  color: context.brandPrimaryColor.withValues(alpha: 0.1),
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: context.brandPrimaryColor.withValues(alpha: 0.1),
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              FadeInDown(
+                duration: const Duration(milliseconds: 600),
+                child: MentorXGlassCard(
+                  style: Style(
+                    $box.width(120),
+                    $box.height(120),
+                    $box.borderRadius(60),
+                    $box.color(context.brandPrimaryColor.withValues(alpha: 0.1)),
                   ),
-                ),
-                child: Icon(
-                  Icons.mark_chat_read_rounded,
-                  size: 64,
-                  color: context.brandPrimaryColor,
-                ),
-              ),
-            ),
-            const Gap(32),
-            FadeInDown(
-              duration: const Duration(milliseconds: 500),
-              delay: const Duration(milliseconds: 200),
-              child: Text(
-                t['otpVerifyTitle'] ?? 'Verification Code',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w900,
-                  color: context.textPrimaryColor,
-                  letterSpacing: -0.5,
-                ),
-              ),
-            ),
-            const Gap(12),
-            FadeInDown(
-              duration: const Duration(milliseconds: 500),
-              delay: const Duration(milliseconds: 300),
-              child: RichText(
-                textAlign: TextAlign.center,
-                text: TextSpan(
-                  style: TextStyle(
-                    color: context.textSecondaryColor,
-                    fontSize: 15,
-                    height: 1.6,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  children: [
-                    TextSpan(
-                      text:
-                          '${t['otpSentWhatsapp'] ?? "We've sent a 6-digit code to"}\n',
+                  child: Center(
+                    child: Icon(
+                      Icons.mark_chat_read_rounded,
+                      size: 64,
+                      color: context.brandPrimaryColor,
                     ),
-                    TextSpan(
-                      text: phone,
-                      style: TextStyle(
-                        color: context.textPrimaryColor,
-                        fontWeight: FontWeight.w900,
+                  ),
+                ),
+              ),
+              const Gap(32),
+              FadeInDown(
+                duration: const Duration(milliseconds: 500),
+                delay: const Duration(milliseconds: 200),
+                child: Text(
+                  context.t.auth.otpVerifyTitle,
+                  style: context.titleH1Style.copyWith(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: -0.5,
+                  ),
+                ),
+              ),
+              const Gap(12),
+              FadeInDown(
+                duration: const Duration(milliseconds: 500),
+                delay: const Duration(milliseconds: 300),
+                child: RichText(
+                  textAlign: TextAlign.center,
+                  text: TextSpan(
+                    style: context.bodySecondaryStyle.copyWith(
+                      color: context.textSecondaryColor,
+                      fontSize: 15,
+                      height: 1.6,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    children: [
+                      TextSpan(
+                        text:
+                            '${context.t.auth.otpSentWhatsapp}\n',
+                      ),
+                      TextSpan(
+                        text: phone,
+                        style: TextStyle(
+                          color: context.textPrimaryColor,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const Gap(48),
+              FadeInUp(
+                duration: const Duration(milliseconds: 600),
+                delay: const Duration(milliseconds: 400),
+                child: Pinput(
+                  length: 6,
+                  defaultPinTheme: defaultPinTheme,
+                  focusedPinTheme: focusedPinTheme,
+                  separatorBuilder: (index) => const Gap(8),
+                  onChanged: (v) => bloc.add(StudentRegistrationOtpChanged(v)),
+                ),
+              ),
+              const Gap(40),
+              FadeInUp(
+                duration: const Duration(milliseconds: 600),
+                delay: const Duration(milliseconds: 500),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                        "${context.t.auth.didNotReceiveCode} ",
+                      style: context.bodySecondaryStyle.copyWith(
+                        color: context.textSecondaryColor,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () =>
+                          bloc.add(const StudentRegistrationResendOtpRequested()),
+                      child: Text(
+                        context.t.auth.resendCode,
+                        style: context.bodySecondaryStyle.copyWith(
+                          color: context.brandPrimaryColor,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: 0.5,
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
-            ),
-            const Gap(48),
-            FadeInUp(
-              duration: const Duration(milliseconds: 600),
-              delay: const Duration(milliseconds: 400),
-              child: Pinput(
-                length: 6,
-                defaultPinTheme: defaultPinTheme,
-                focusedPinTheme: focusedPinTheme,
-                separatorBuilder: (index) => const Gap(8),
-                onChanged: (v) => bloc.add(StudentRegistrationOtpChanged(v)),
-              ),
-            ),
-            const Gap(40),
-            FadeInUp(
-              duration: const Duration(milliseconds: 600),
-              delay: const Duration(milliseconds: 500),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    '${t['didNotReceiveCode'] ?? "Didn't receive a code?"} ',
-                    style: TextStyle(
-                      color: context.textSecondaryColor,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () =>
-                        bloc.add(const StudentRegistrationResendOtpRequested()),
-                    child: Text(
-                      t['resendCode'] ?? 'Resend',
-                      style: TextStyle(
-                        color: context.brandPrimaryColor,
-                        fontWeight: FontWeight.w900,
-                        letterSpacing: 0.5,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
+            ],
+          ),
         );
       },
     );

@@ -1,0 +1,74 @@
+{
+    "lessonProgress": "${completed}/${total} Lessons",
+    "myAcademy": "MY ACADEMY",
+    "courseDetail": "Course Details",
+    "myCourses": "My Courses",
+    "tabs": {
+        "inProgress": "In Progress",
+        "completed": "Completed",
+        "expired": "Expired",
+        "description": "Description",
+        "sessions": "Sessions"
+    },
+    "empty": {
+        "noEnrolledCourses": "No Enrolled Courses",
+        "noEnrolledCoursesDescription": "You haven't enrolled in any courses yet.",
+        "browseCatalog": "Browse Catalog"
+    },
+    "detail": {
+        "enrollSuccess": "Enrolled successfully!",
+        "enrollFailed": "Failed to enroll.",
+        "yourPerformance": "Your Performance",
+        "daysLeft": "days left",
+        "items": "Items",
+        "sessionFree": "Free",
+        "aboutCourse": "About this Course",
+        "videos": "Videos",
+        "minutes": "Minutes",
+        "students": "Students",
+        "sessions": "Sessions",
+        "free": "Free",
+        "yourProgress": "Your Progress",
+        "completePercent": "${percent}% Complete",
+        "continueStudying": "Continue Studying",
+        "courseCompleted": "Course Completed",
+        "courseExpired": "Course Expired",
+        "enrollNow": "Enroll Now",
+        "pointsReward": "Points Reward",
+        "durationShort": "${mins}m ${secs}s"
+    },
+    "errors": {
+        "failedToLoadSessions": "Failed to load course sessions",
+        "tryRefreshing": "Try refreshing the page"
+    },
+    "player": {
+        "completed": "Completed",
+        "duration": "Duration",
+        "status": "Status",
+        "watching": "Watching"
+    },
+    "lessonsCompleted": "Lessons Completed",
+    "timeSpent": "Time Spent",
+    "quizzesTaken": "Quizzes Taken",
+    "catalog": {
+        "allCategories": "All Categories",
+        "allLevels": "All Levels",
+        "coursesFound": "${count} courses found",
+        "noCourses": "No courses found",
+        "noCoursesDescription": "Try adjusting your filters or search terms",
+        "searchHint": "Search for courses...",
+        "sortBy": "Sort By",
+        "sortNewest": "Newest",
+        "sortPriceAsc": "Price: Low to High",
+        "sortPriceDesc": "Price: High to Low",
+        "sortPopular": "Most Popular"
+    },
+    "myGrades": {
+        "title": "My Grades",
+        "noGrades": "No grades available yet.",
+        "completeAssessmentsDesc": "Complete quizzes and assignments to see your grades.",
+        "overallAverage": "Overall Performance",
+        "allCourses": "All Courses"
+    },
+    "markAsDone": "Mark as Done"
+}

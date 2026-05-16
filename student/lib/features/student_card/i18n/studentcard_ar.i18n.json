@@ -1,0 +1,11 @@
+{
+    "title": "بطاقة الطالب",
+    "platformName": "منصة MentorX",
+    "codeLabel": "كود الطالب",
+    "scanForAttendance": "امسح الكود لتسجيل الحضور",
+    "secureDigitalId": "هوية رقمية آمنة",
+    "gradeLabel": "الصف الدراسي",
+    "digitalId": "الهوية الرقمية",
+    "errorLoading": "خطأ في تحميل البطاقة",
+    "refreshStatus": "تحديث الحالة"
+}

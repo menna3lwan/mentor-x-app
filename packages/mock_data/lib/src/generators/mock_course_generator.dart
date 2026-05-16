@@ -281,8 +281,6 @@ final class MockCourseGenerator {
             title: 'Expressions Cheat Sheet',
             itemType: SessionItemType.document,
             orderIndex: 2,
-            downloadable: true,
-            pageCount: 8,
             fileSize: 2400,
           ),
           SessionItemEntity(
@@ -342,7 +340,6 @@ final class MockCourseGenerator {
             title: 'The Quadratic Formula',
             itemType: SessionItemType.document,
             orderIndex: 2,
-            pageCount: 5,
             fileSize: 1800,
           ),
           SessionItemEntity(
@@ -358,7 +355,7 @@ final class MockCourseGenerator {
             title: 'Extra Resources',
             itemType: SessionItemType.link,
             orderIndex: 4,
-            contentUrl: 'https://example.com/quadratic-resources',
+            fileUrl: 'https://example.com/quadratic-resources',
           ),
         ];
       default:
@@ -377,7 +374,6 @@ final class MockCourseGenerator {
             title: 'Lesson Notes',
             itemType: SessionItemType.document,
             orderIndex: 1,
-            pageCount: 6,
             fileSize: 1500,
           ),
           SessionItemEntity(
@@ -419,12 +415,10 @@ final class MockCourseGenerator {
     return [
       WeekEntity(
         id: 'w1',
-        sessionId: sessionId,
         title: 'Week 1',
       ),
       WeekEntity(
         id: 'w2',
-        sessionId: sessionId,
         title: 'Week 2',
       ),
     ];

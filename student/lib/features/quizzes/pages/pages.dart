@@ -1,7 +1,7 @@
-export 'quiz_answers_review_page/quiz_answers_review_page.dart';
-export 'quiz_intro_page/quiz_intro_page.dart';
-export 'quiz_list_page/quiz_list_page.dart';
-export 'quiz_result_page/quiz_result_page.dart';
-export 'quiz_review_page/quiz_review_page.dart';
-export 'quiz_rewards_page/quiz_rewards_page.dart';
-export 'quiz_taking_page/quiz_taking_page.dart';
+export 'quiz_answers_review/quiz_answers_review.dart';
+export 'quiz_intro/quiz_intro.dart';
+export 'quiz_list/quiz_list.dart';
+export 'quiz_result/quiz_result.dart';
+export 'quiz_review/quiz_review.dart';
+export 'quiz_rewards/quiz_rewards.dart';
+export 'quiz_taking/quiz_taking.dart';

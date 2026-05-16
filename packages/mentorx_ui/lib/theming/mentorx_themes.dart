@@ -94,7 +94,8 @@ final class MentorXThemes {
         colorTokens.backgroundTertiary: backgroundTertiary,
         colorTokens.backgroundPrimaryTransparent: backgroundPrimaryTransparent,
         colorTokens.backgroundElevatedSurface: backgroundElevatedSurface,
-        colorTokens.backgroundElevatedSurfaceShadow: backgroundElevatedSurfaceShadow,
+        colorTokens.backgroundElevatedSurfaceShadow:
+            backgroundElevatedSurfaceShadow,
         colorTokens.statusDanger: statusDanger,
         colorTokens.statusSuccess: statusSuccess,
         colorTokens.statusWarning: statusWarning,
@@ -103,48 +104,72 @@ final class MentorXThemes {
       },
       textStyles: {
         styleTokens.titleH1: GoogleFonts.cairo(
-          fontSize: 26,
+          fontSize: 28,
+          fontWeight: FontWeight.w900,
+          color: textPrimary,
+          letterSpacing: -1.0,
+        ),
+        styleTokens.titleH2: GoogleFonts.cairo(
+          fontSize: 22,
           fontWeight: FontWeight.w800,
           color: textPrimary,
           letterSpacing: -0.5,
         ),
-        styleTokens.titleH2: GoogleFonts.cairo(
-          fontSize: 22,
-          fontWeight: FontWeight.w700,
-          color: textPrimary,
-          letterSpacing: -0.3,
-        ),
         styleTokens.sectionTitle: GoogleFonts.cairo(
           fontSize: 18,
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.w700,
           color: textPrimary,
         ),
         styleTokens.bodyPrimary: GoogleFonts.cairo(
           fontSize: 16,
-          fontWeight: FontWeight.w500,
+          fontWeight: FontWeight.w600,
           color: textPrimary,
         ),
         styleTokens.bodySecondary: GoogleFonts.cairo(
           fontSize: 14,
-          fontWeight: FontWeight.w500,
+          fontWeight: FontWeight.w600,
           color: textSecondary,
         ),
         styleTokens.smallText: GoogleFonts.cairo(
           fontSize: 12,
-          fontWeight: FontWeight.w500,
+          fontWeight: FontWeight.w600,
           color: textSecondary,
         ),
       },
-
       radii: {
-        radiusTokens.thin: const Radius.circular(4),
-        radiusTokens.extraSmall: const Radius.circular(8),
-        radiusTokens.small: const Radius.circular(12),
-        radiusTokens.medium: const Radius.circular(20),
-        radiusTokens.large: const Radius.circular(32),
+        radiusTokens.thin: const Radius.circular(6),
+        radiusTokens.extraSmall: const Radius.circular(12),
+        radiusTokens.small: const Radius.circular(16),
+        radiusTokens.medium: const Radius.circular(24),
+        radiusTokens.large: const Radius.circular(40),
       },
     );
   }
+
+  // ── Shadow Constants ──────────────────────────────────────────────────
+  static List<BoxShadow> softShadow(Color shadowColor) => [
+        BoxShadow(
+          color: shadowColor.withValues(alpha: 0.05),
+          blurRadius: 10,
+          offset: const Offset(0, 4),
+        ),
+      ];
+
+  static List<BoxShadow> mediumShadow(Color shadowColor) => [
+        BoxShadow(
+          color: shadowColor.withValues(alpha: 0.1),
+          blurRadius: 20,
+          offset: const Offset(0, 8),
+        ),
+      ];
+
+  static List<BoxShadow> hardShadow(Color shadowColor) => [
+        BoxShadow(
+          color: shadowColor.withValues(alpha: 0.15),
+          blurRadius: 30,
+          offset: const Offset(0, 12),
+        ),
+      ];
 
   /// This is used incase we need to use any existing material design components
   /// and this makes sure that the material components colors match our app theme

@@ -33,7 +33,7 @@ final class StudentRegistrationState extends Equatable {
   // Step 4: Location
   final List<GovernorateEntity> governorates;
   final GovernorateEntity? selectedGovernorate;
-  final List<String> areas;
+  final List<AreaEntity> areas;
   final String? selectedArea;
 
   // Step 5: Security
@@ -128,7 +128,7 @@ final class StudentRegistrationState extends Equatable {
     String? educationDepartment,
     List<GovernorateEntity>? governorates,
     MentorXNullableValue<GovernorateEntity?>? selectedGovernorate,
-    List<String>? areas,
+    List<AreaEntity>? areas,
     MentorXNullableValue<String?>? selectedArea,
     String? password,
     String? confirmPassword,

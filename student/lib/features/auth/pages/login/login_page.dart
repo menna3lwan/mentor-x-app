@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
-import 'package:gap/gap.dart';
+import 'package:mentorx_student/core/core.dart';
 
 final class LoginPage extends StatelessWidget {
   final GlobalKey<FormState> formKey;
@@ -67,25 +67,12 @@ final class LoginPage extends StatelessWidget {
                     tenantName: tenantName,
                   ),
                 ),
-                const Gap(48),
+                const Gap(40),
                 FadeInUp(
                   duration: const Duration(milliseconds: 600),
-                  child: Container(
-                    padding: const EdgeInsets.all(32),
-                    decoration: BoxDecoration(
-                      color: context.backgroundSecondaryColor,
-                      borderRadius: BorderRadius.circular(32),
-                      border: Border.all(
-                        color:
-                            context.borderPrimaryColor.withValues(alpha: 0.05),
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.2),
-                          blurRadius: 30,
-                          offset: const Offset(0, 15),
-                        ),
-                      ],
+                  child: MentorXGlassCard(
+                    style: Style(
+                      $box.padding.all(32),
                     ),
                     child: Form(
                       key: formKey,
@@ -94,27 +81,23 @@ final class LoginPage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Welcome Back',
-                            style: TextStyle(
-                              fontSize: 28,
+                            context.t.auth.welcomeBack,
+                            style: context.titleH1Style.copyWith(
+                              fontSize: 32,
                               fontWeight: FontWeight.w900,
-                              color: context.textPrimaryColor,
-                              letterSpacing: -1.0,
+                              letterSpacing: -1.5,
                             ),
                           ),
-                          const Gap(12),
+                          const Gap(8),
                           Text(
-                            'Sign in to continue your learning journey',
-                            style: TextStyle(
-                              color: context.textSecondaryColor,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              height: 1.5,
+                            context.t.auth.signInToContinue,
+                            style: context.bodySecondaryStyle.copyWith(
+                              fontWeight: FontWeight.w700,
                             ),
                           ),
                           const Gap(40),
                           MentorXTextFormField(
-                            label: 'Phone Number',
+                            label: context.t.auth.phoneLabel,
                             hint: '01xxxxxxxxx',
                             icon: Icons.phone_android_rounded,
                             controller: phoneController,
@@ -125,8 +108,8 @@ final class LoginPage extends StatelessWidget {
                           ),
                           const Gap(24),
                           MentorXTextFormField(
-                            label: 'Password',
-                            hint: 'Enter your password',
+                            label: context.t.auth.login.password,
+                            hint: context.t.auth.passwordHint,
                             icon: Icons.lock_outline_rounded,
                             controller: passwordController,
                             isPassword: true,
@@ -145,10 +128,10 @@ final class LoginPage extends StatelessWidget {
                                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                               ),
                               child: Text(
-                                'Forgot password?',
+                                context.t.auth.forgotPassword,
                                 style: TextStyle(
                                   color: context.brandPrimaryColor,
-                                  fontWeight: FontWeight.w800,
+                                  fontWeight: FontWeight.w900,
                                   fontSize: 13,
                                 ),
                               ),
@@ -164,8 +147,9 @@ final class LoginPage extends StatelessWidget {
                           const Gap(40),
                           MentorXButton(
                             onPressed: isLoading ? null : onSubmit,
-                            label: 'Sign In',
+                            label: context.t.auth.signIn,
                             loading: isLoading,
+                            size: MentorXButtonSize.large,
                             analyticsName: 'login_submit',
                           ),
                         ],
@@ -173,50 +157,42 @@ final class LoginPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                const Gap(40),
+                const Gap(32),
                 if (showBiometricLogin) ...[
                   FadeInUp(
                     duration: const Duration(milliseconds: 500),
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        onTap: isLoading ? null : onBiometricLogin,
-                        borderRadius: BorderRadius.circular(20),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 16,
-                            horizontal: 24,
+                    child: PressableBox(
+                      onPress: isLoading ? null : onBiometricLogin,
+                      style: Style(
+                        $box.padding.vertical(16),
+                        $box.padding.horizontal(32),
+                        $box.borderRadius.all(20),
+                        $box.border.all.color(context.brandPrimaryColor.withValues(alpha: 0.1)),
+                        $box.border.all.width(1.5),
+                        $box.color(context.backgroundSecondaryColor.withValues(alpha: 0.5)),
+                        $on.hover(
+                          $box.color(context.brandPrimaryColor.withValues(alpha: 0.05)),
+                          $box.border.all.color(context.brandPrimaryColor),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.fingerprint_rounded,
+                            color: context.brandPrimaryColor,
+                            size: 26,
                           ),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(
-                              color: context.brandPrimaryColor.withValues(
-                                alpha: 0.2,
-                              ),
-                              width: 2,
+                          const Gap(12),
+                          Text(
+                            context.t.auth.loginWithBiometrics,
+                            style: context.bodyPrimaryStyle.copyWith(
+                              color: context.brandPrimaryColor,
+                              fontWeight: FontWeight.w900,
                             ),
                           ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons.fingerprint_rounded,
-                                color: context.brandPrimaryColor,
-                                size: 24,
-                              ),
-                              const Gap(12),
-                              Text(
-                                'Login with biometrics',
-                                style: TextStyle(
-                                  color: context.brandPrimaryColor,
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 15,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                        ],
                       ),
                     ),
                   ),
@@ -228,17 +204,16 @@ final class LoginPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Don't have an account? ",
-                        style: TextStyle(
-                          color: context.textSecondaryColor,
+                        "${context.t.auth.dontHaveAccount} ",
+                        style: context.bodySecondaryStyle.copyWith(
                           fontWeight: FontWeight.w700,
                         ),
                       ),
                       TextButton(
                         onPressed: onRegister,
                         child: Text(
-                          'Register Now',
-                          style: TextStyle(
+                          context.t.auth.registerNow,
+                          style: context.bodySecondaryStyle.copyWith(
                             color: context.brandPrimaryColor,
                             fontWeight: FontWeight.w900,
                           ),
@@ -269,38 +244,42 @@ final class _TenantHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Container(
-          width: 110,
-          height: 110,
-          decoration: BoxDecoration(
-            color: context.backgroundSecondaryColor,
-            borderRadius: BorderRadius.circular(36),
-            border: Border.all(
-              color: context.brandPrimaryColor.withValues(alpha: 0.1),
+        Box(
+          style: Style(
+            $box.width(120),
+            $box.height(120),
+            $box.padding.all(3),
+            $box.borderRadius.all(36),
+            $box.gradient.linear(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                context.brandPrimaryColor,
+                context.brandSecondaryColor.withValues(alpha: 0.3),
+              ],
             ),
-            boxShadow: [
-              BoxShadow(
-                color: context.brandPrimaryColor.withValues(alpha: 0.1),
-                blurRadius: 25,
-                offset: const Offset(0, 12),
-              ),
-            ],
+            $box.shadows(context.mediumShadow),
           ),
-          clipBehavior: Clip.antiAlias,
-          child: AppDynamicImage(
-            logoUrl ?? '',
-            fit: BoxFit.cover,
-            borderRadius: BorderRadius.circular(36),
+          child: Box(
+            style: Style(
+              $box.color(context.backgroundSecondaryColor),
+              $box.borderRadius.all(34),
+              $box.clipBehavior.antiAlias(),
+            ),
+            child: AppDynamicImage(
+              logoUrl ?? '',
+              fit: BoxFit.cover,
+              borderRadius: BorderRadius.circular(34),
+            ),
           ),
         ),
         if (tenantName != null && tenantName!.trim().isNotEmpty) ...[
-          const Gap(20),
+          const Gap(24),
           Text(
             tenantName!,
-            style: TextStyle(
-              fontSize: 22,
+            style: context.titleH2Style.copyWith(
+              fontSize: 24,
               fontWeight: FontWeight.w900,
-              color: context.textPrimaryColor,
               letterSpacing: -0.5,
             ),
             textAlign: TextAlign.center,

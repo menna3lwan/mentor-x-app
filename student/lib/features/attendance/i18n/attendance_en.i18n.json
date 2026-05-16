@@ -1,0 +1,12 @@
+{
+    "noAttendance": "No attendance records yet",
+    "attendanceHistory": "Attendance History",
+    "attendanceRate": "Attendance Rate",
+    "present": "Present",
+    "absent": "Absent",
+    "session": "Session",
+    "attendanceHistoryDesc": "Your attendance history will appear here",
+    "registerAttendance": "Register Attendance",
+    "yourAttendanceCode": "Your Attendance Code",
+    "showCodeInstruction": "Show this code to the instructor to register your attendance."
+}

@@ -1,0 +1,32 @@
+{
+    "dashboard": {
+        "greetingMorning": "صباح الخير",
+        "greetingEvening": "مساء الخير",
+        "greetingWithName": "${greeting}، ${name} 👋",
+        "updatedAt": "تم التحديث ${time: DateFormat('HH:mm')}",
+        "continueLearning": "استكمل التعلم",
+        "featuredCourses": "الدورات المميزة",
+        "announcements": "الإعلانات",
+        "quickActions": "إجراءات سريعة",
+        "walletBalance": "رصيد المحفظة",
+        "points": "${count: int} نقطة",
+        "startLearningJourney": "ابدأ رحلتك التعليمية! تصفح الدورات المتاحة.",
+        "continueProgress": "استكمل ${progress: num}%",
+        "free": "مجاني",
+        "loadingCourse": "جاري تحميل الدورة",
+        "loadingFeaturedCourse": "جاري تحميل الدورة المميزة",
+        "loadingAnnouncement": "جاري تحميل الإعلان",
+        "loadingAnnouncementDetails": "جاري تحميل تفاصيل الإعلان",
+        "unableToLoadTapRetry": "تعذر التحميل. اضغط لإعادة المحاولة.",
+        "myCourses": "دوراتي",
+        "attendance": "الحضور",
+        "grades": "الدرجات",
+        "aiAssistant": "مساعد AI",
+        "assignments": "الواجبات",
+        "rewards": "المكافآت",
+        "marketplace": "المتجر",
+        "analytics": "تحليلات الأداء",
+        "courseCatalog": "كتالوج الدورات",
+        "leaderboard": "لوحة المتصدرين"
+    }
+}

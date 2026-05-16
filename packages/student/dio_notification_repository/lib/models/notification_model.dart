@@ -22,14 +22,22 @@ final class NotificationModel extends NotificationEntity {
       title: ModelParser.asString(json['title']),
       message: ModelParser.asString(json['message'] ?? json['body']),
       type: _parseType(json['type']),
-      createdAt: ModelParser.asDateTime(json['created_at'] ?? json['createdAt']) ?? DateTime.now(),
-      isRead: ModelParser.asBool(json['is_read'] ?? json['read'] ?? json['isRead']),
+      createdAt:
+          ModelParser.asDateTime(json['created_at'] ?? json['createdAt']) ??
+          DateTime.now(),
+      isRead: ModelParser.asBool(
+        json['is_read'] ?? json['read'] ?? json['isRead'],
+      ),
       readAt: ModelParser.asDateTime(json['read_at'] ?? json['readAt']),
-      deepLink: ModelParser.asString(json['deepLink'] ?? json['action_url'] ?? json['url'] ?? json['link']),
+      deepLink: ModelParser.asString(
+        json['deepLink'] ?? json['action_url'] ?? json['url'] ?? json['link'],
+      ),
       imageUrl: ModelParser.asString(json['image_url'] ?? json['imageUrl']),
       data: ModelParser.asMap(json['action_data'] ?? json['data']),
       studentId: ModelParser.asString(json['student_id'] ?? json['studentId']),
-      studentName: ModelParser.asString(json['student_name'] ?? json['studentName']),
+      studentName: ModelParser.asString(
+        json['student_name'] ?? json['studentName'],
+      ),
     );
   }
 

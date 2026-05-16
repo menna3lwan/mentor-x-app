@@ -1,9 +1,9 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:gap/gap.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:mentorx_student/core/core.dart';
 
 final class ResetPasswordPage extends StatelessWidget {
   final GlobalKey<FormState> formKey;
@@ -41,213 +41,214 @@ final class ResetPasswordPage extends StatelessWidget {
       backgroundColor: context.backgroundPrimaryColor,
       body: Stack(
         children: [
-          const _BackgroundDecorations(),
-          Column(
-            children: [
-              _BuildHeader(onBack: onBack),
-              Expanded(
-                child: SafeArea(
-                  top: false,
-                  child: SingleChildScrollView(
-                    physics: const BouncingScrollPhysics(),
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-                    child: Center(
-                      child: ConstrainedBox(
-                        constraints: const BoxConstraints(maxWidth: 420),
-                        child: Form(
-                          key: formKey,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+          SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            padding: EdgeInsets.fromLTRB(
+              24,
+              MediaQuery.paddingOf(context).top + 100,
+              24,
+              32,
+            ),
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 420),
+                child: Form(
+                  key: formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      FadeInUp(
+                        duration: const Duration(milliseconds: 600),
+                        child: Text(
+                          context.t.auth.resetTitle,
+                          style: context.titleH1Style.copyWith(
+                            fontSize: 32,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: -1.0,
+                          ),
+                        ),
+                      ),
+                      const Gap(16),
+                      FadeInUp(
+                        duration: const Duration(milliseconds: 600),
+                        delay: const Duration(milliseconds: 100),
+                        child: RichText(
+                          text: TextSpan(
+                            style: context.bodySecondaryStyle.copyWith(
+                              fontSize: 15,
+                              height: 1.6,
+                              fontWeight: FontWeight.w600,
+                            ),
                             children: [
-                              FadeInUp(
-                                duration: const Duration(milliseconds: 600),
-                                child: Text(
-                                  'Set New Password',
-                                  style: TextStyle(
-                                    fontSize: 32,
-                                    fontWeight: FontWeight.w900,
-                                    color: context.textPrimaryColor,
-                                    letterSpacing: -1.0,
-                                  ),
+                              TextSpan(text: context.t.auth.resetOtpSentPrefix),
+                              TextSpan(
+                                text: phoneNumber,
+                                style: TextStyle(
+                                  color: context.brandPrimaryColor,
+                                  fontWeight: FontWeight.w900,
                                 ),
                               ),
-                              const Gap(16),
-                              FadeInUp(
-                                duration: const Duration(milliseconds: 600),
-                                delay: const Duration(milliseconds: 100),
-                                child: RichText(
-                                  text: TextSpan(
-                                    style: TextStyle(
-                                      color: context.textSecondaryColor,
-                                      fontSize: 15,
-                                      height: 1.6,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                    children: [
-                                      const TextSpan(text: 'We sent a 6-digit code to '),
-                                      TextSpan(
-                                        text: phoneNumber,
-                                        style: TextStyle(
-                                          color: context.brandPrimaryColor,
-                                          fontWeight: FontWeight.w900,
-                                        ),
-                                      ),
-                                      const TextSpan(
-                                        text: '. Please enter it below to reset your password.',
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                              TextSpan(
+                                text: context.t.auth.resetOtpSentSuffix,
                               ),
-                              const Gap(48),
-                              if (errorMessage != null) ...[
-                                FadeIn(
-                                  child: StatusBadge(
-                                    message: errorMessage!,
-                                    status: StatusBadgeType.danger,
-                                  ),
-                                ),
-                                const Gap(32),
-                              ],
-                              FadeInUp(
-                                duration: const Duration(milliseconds: 600),
-                                delay: const Duration(milliseconds: 200),
-                                child: MentorXTextFormField(
-                                  label: 'OTP Code',
-                                  hintText: '6-digit code',
-                                  prefixIcon: Icons.pin_rounded,
-                                  controller: otpController,
-                                  keyboardType: TextInputType.number,
-                                  onChanged: onOtpChanged,
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.digitsOnly,
-                                    LengthLimitingTextInputFormatter(6),
-                                  ],
-                                  validator: (value) {
-                                    if (value == null || value.length != 6) {
-                                      return 'Enter the 6-digit code';
-                                    }
-                                    return null;
-                                  },
-                                ),
-                              ),
-                              const Gap(24),
-                              FadeInUp(
-                                duration: const Duration(milliseconds: 600),
-                                delay: const Duration(milliseconds: 300),
-                                child: MentorXTextFormField(
-                                  label: 'New Password',
-                                  hintText: 'Minimum 8 characters',
-                                  prefixIcon: Icons.lock_outline_rounded,
-                                  controller: passwordController,
-                                  isPassword: true,
-                                  onChanged: onPasswordChanged,
-                                  validator: (value) {
-                                    if (value == null || value.length < 8) {
-                                      return 'Password must be at least 8 characters';
-                                    }
-                                    return null;
-                                  },
-                                ),
-                              ),
-                              const Gap(24),
-                              FadeInUp(
-                                duration: const Duration(milliseconds: 600),
-                                delay: const Duration(milliseconds: 400),
-                                child: MentorXTextFormField(
-                                  label: 'Confirm New Password',
-                                  hintText: 'Re-enter your password',
-                                  prefixIcon: Icons.lock_reset_rounded,
-                                  controller: confirmPasswordController,
-                                  isPassword: true,
-                                  onChanged: onConfirmPasswordChanged,
-                                  validator: (value) {
-                                    if (value != passwordController.text) {
-                                      return 'Passwords do not match';
-                                    }
-                                    return null;
-                                  },
-                                ),
-                              ),
-                              const Gap(56),
-                              FadeInUp(
-                                duration: const Duration(milliseconds: 600),
-                                delay: const Duration(milliseconds: 500),
-                                child: MentorXButton(
-                                  onPressed: isLoading ? null : onSubmit,
-                                  label: 'Reset Password',
-                                  loading: isLoading,
-                                ),
-                              ),
-                              const Gap(48),
                             ],
                           ),
                         ),
                       ),
-                    ),
+                      const Gap(40),
+                      if (errorMessage != null) ...[
+                        FadeIn(
+                          child: StatusBadge(
+                            message: errorMessage!,
+                            status: StatusBadgeType.danger,
+                          ),
+                        ),
+                        const Gap(32),
+                      ],
+                      FadeInUp(
+                        duration: const Duration(milliseconds: 600),
+                        delay: const Duration(milliseconds: 200),
+                        child: _PremiumField(
+                          label: context.t.auth.resetOtpLabel,
+                          hintText: context.t.auth.resetOtpHint,
+                          controller: otpController,
+                          keyboardType: TextInputType.number,
+                          onChanged: onOtpChanged,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                            LengthLimitingTextInputFormatter(6),
+                          ],
+                          validator: (value) {
+                            if (value == null || value.length != 6) {
+                              return context.t.auth.resetOtpError;
+                            }
+                            return null;
+                          },
+                          enabled: !isLoading,
+                        ),
+                      ),
+                      const Gap(24),
+                      FadeInUp(
+                        duration: const Duration(milliseconds: 600),
+                        delay: const Duration(milliseconds: 300),
+                        child: _PremiumField(
+                          label: context.t.auth.newPasswordLabel,
+                          hintText: context.t.auth.newPasswordHint,
+                          controller: passwordController,
+                          isPassword: true,
+                          onChanged: onPasswordChanged,
+                          validator: (value) {
+                            if (value == null || value.length < 8) {
+                              return context.t.auth.passwordRules;
+                            }
+                            return null;
+                          },
+                          enabled: !isLoading,
+                        ),
+                      ),
+                      const Gap(24),
+                      FadeInUp(
+                        duration: const Duration(milliseconds: 600),
+                        delay: const Duration(milliseconds: 400),
+                        child: _PremiumField(
+                          label: context.t.auth.confirmPasswordLabel,
+                          hintText: context.t.auth.confirmPasswordHint,
+                          controller: confirmPasswordController,
+                          isPassword: true,
+                          onChanged: onConfirmPasswordChanged,
+                          validator: (value) {
+                            if (value != passwordController.text) {
+                              return context.t.auth.passwordMismatch;
+                            }
+                            return null;
+                          },
+                          enabled: !isLoading,
+                        ),
+                      ),
+                      const Gap(56),
+                      FadeInUp(
+                        duration: const Duration(milliseconds: 600),
+                        delay: const Duration(milliseconds: 500),
+                        child: MentorXButton(
+                          onPressed: isLoading ? null : onSubmit,
+                          label: context.t.auth.resetTitle,
+                          loading: isLoading,
+                          size: MentorXButtonSize.large,
+                        ),
+                      ),
+                      const Gap(48),
+                    ],
                   ),
                 ),
               ),
-            ],
+            ),
+          ),
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: _buildHeader(context),
           ),
         ],
       ),
     );
   }
-}
 
-final class _BuildHeader extends StatelessWidget {
-  final VoidCallback onBack;
-
-  const _BuildHeader({required this.onBack});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.fromLTRB(
-        24,
-        MediaQuery.paddingOf(context).top + 16,
-        24,
-        24,
-      ),
-      decoration: BoxDecoration(
-        color: context.backgroundSecondaryColor.withValues(alpha: 0.45),
-        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(32)),
-        border: Border(
-          bottom: BorderSide(
-            color: context.borderPrimaryColor.withValues(alpha: 0.1),
+  Widget _buildHeader(BuildContext context) {
+    return ClipRRect(
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+        child: Container(
+          width: double.infinity,
+          padding: EdgeInsets.fromLTRB(
+            12,
+            MediaQuery.paddingOf(context).top + 8,
+            12,
+            16,
           ),
-        ),
-      ),
-      child: ClipRRect(
-        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(32)),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          decoration: BoxDecoration(
+            color: context.backgroundPrimaryColor.withValues(alpha: 0.8),
+            border: Border(
+              bottom: BorderSide(
+                color: context.borderPrimaryColor.withValues(alpha: 0.1),
+              ),
+            ),
+          ),
           child: Row(
             children: [
-              IconButton(
+              MentorXIconButton(
                 onPressed: onBack,
-                icon: Icon(
-                  Icons.arrow_back_ios_new_rounded,
-                  color: context.textPrimaryColor,
-                  size: 20,
-                ),
+                icon: Icons.arrow_back_ios_new_rounded,
+                variant: MentorXIconButtonVariant.outline,
+                size: MentorXIconButtonSize.small,
               ),
-              const Expanded(
-                child: Center(
-                  child: Text(
-                    'Reset Password',
-                    style: TextStyle(
-                      color: Color(0xFF1D1B20), // Matches theme
-                      fontSize: 18,
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: -0.5,
+              const Gap(16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      context.t.auth.registrationLabel,
+                      style: context.bodySecondaryStyle.copyWith(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w900,
+                        color: context.brandPrimaryColor,
+                        letterSpacing: 2.0,
+                      ),
                     ),
-                  ),
+                    const Gap(2),
+                    Text(
+                      context.t.auth.resetTitle,
+                      style: context.titleH1Style.copyWith(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: -1.0,
+                        height: 1.1,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              const Gap(48),
             ],
           ),
         ),
@@ -256,61 +257,103 @@ final class _BuildHeader extends StatelessWidget {
   }
 }
 
-class _BackgroundDecorations extends StatelessWidget {
-  const _BackgroundDecorations();
+final class _PremiumField extends StatefulWidget {
+  const _PremiumField({
+    required this.label,
+    required this.hintText,
+    required this.controller,
+    this.isPassword = false,
+    this.validator,
+    this.enabled = true,
+    this.onChanged,
+    this.keyboardType,
+    this.inputFormatters,
+  });
+
+  final String label;
+  final String hintText;
+  final TextEditingController controller;
+  final bool isPassword;
+  final String? Function(String?)? validator;
+  final bool enabled;
+  final ValueChanged<String>? onChanged;
+  final TextInputType? keyboardType;
+  final List<TextInputFormatter>? inputFormatters;
+
+  @override
+  State<_PremiumField> createState() => _PremiumFieldState();
+}
+
+class _PremiumFieldState extends State<_PremiumField> {
+  late bool _obscure;
+
+  @override
+  void initState() {
+    super.initState();
+    _obscure = widget.isPassword;
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Positioned(
-          top: -100,
-          right: -50,
-          child: _BlurredBlob(
-            color: context.brandPrimaryColor.withValues(alpha: 0.12),
-            size: 350,
+        Padding(
+          padding: const EdgeInsets.only(left: 4, bottom: 8),
+          child: Text(
+            widget.label,
+            style: context.bodySecondaryStyle.copyWith(
+              fontSize: 13,
+              fontWeight: FontWeight.w900,
+              color: context.textSecondaryColor,
+            ),
           ),
         ),
-        Positioned(
-          top: 300,
-          left: -150,
-          child: _BlurredBlob(
-            color: context.brandSecondaryColor.withValues(alpha: 0.08),
-            size: 400,
+        MentorXGlassCard(
+          style: Style(
+            $box.borderRadius(20),
+            $box.color(context.backgroundSecondaryColor.withValues(alpha: 0.5)),
           ),
-        ),
-        Positioned(
-          bottom: -50,
-          right: -100,
-          child: _BlurredBlob(
-            color: context.brandPrimaryColor.withValues(alpha: 0.1),
-            size: 300,
+          child: TextFormField(
+            controller: widget.controller,
+            obscureText: _obscure,
+            validator: widget.validator,
+            enabled: widget.enabled,
+            onChanged: widget.onChanged,
+            keyboardType: widget.keyboardType,
+            inputFormatters: widget.inputFormatters,
+            style: context.bodyPrimaryStyle.copyWith(
+              fontSize: 15,
+              fontWeight: FontWeight.w800,
+            ),
+            decoration: InputDecoration(
+              hintText: widget.hintText,
+              hintStyle: context.bodySecondaryStyle.copyWith(
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+                color: context.textTertiaryColor,
+              ),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 20,
+                vertical: 18,
+              ),
+              border: InputBorder.none,
+              suffixIcon: widget.isPassword
+                  ? IconButton(
+                      icon: Icon(
+                        _obscure
+                            ? Icons.visibility_off_rounded
+                            : Icons.visibility_rounded,
+                        size: 20,
+                        color: context.textTertiaryColor,
+                      ),
+                      onPressed: () => setState(() => _obscure = !_obscure),
+                    )
+                  : null,
+            ),
           ),
         ),
       ],
-    );
-  }
-}
-
-class _BlurredBlob extends StatelessWidget {
-  final Color color;
-  final double size;
-
-  const _BlurredBlob({required this.color, required this.size});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        color: color,
-        shape: BoxShape.circle,
-      ),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 70, sigmaY: 70),
-        child: const SizedBox.expand(),
-      ),
     );
   }
 }

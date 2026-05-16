@@ -40,6 +40,11 @@ final class StudentModel extends StudentEntity {
     super.hasActiveSession,
     super.devicesCount,
     super.loginCount,
+    super.logoutCount,
+    super.rejectionReason,
+    super.mapAddress,
+    super.latitude,
+    super.longitude,
     super.lastLoginAt,
     super.enrolledCourseIds,
     super.metadata,
@@ -96,24 +101,42 @@ final class StudentModel extends StudentEntity {
     final user = ModelParser.extractData(json);
 
     // 1. Resolve ID (userId or id or studentCode)
-    final id = ModelParser.asString(user['id'] ?? user['userId'] ?? user['user_id'] ?? user['studentCode']);
+    final id = ModelParser.asString(
+      user['id'] ?? user['userId'] ?? user['user_id'] ?? user['studentCode'],
+    );
 
     // 2. Resolve Names (Handle 4-part names and fullName split)
-    final String first = ModelParser.asString(user['firstName'] ?? user['first_name']);
-    final String second = ModelParser.asString(user['secondName'] ?? user['second_name']);
-    final String third = ModelParser.asString(user['thirdName'] ?? user['third_name']);
-    final String fourth = ModelParser.asString(user['fourthName'] ?? user['fourth_name']);
+    final String first = ModelParser.asString(
+      user['firstName'] ?? user['first_name'],
+    );
+    final String second = ModelParser.asString(
+      user['secondName'] ?? user['second_name'],
+    );
+    final String third = ModelParser.asString(
+      user['thirdName'] ?? user['third_name'],
+    );
+    final String fourth = ModelParser.asString(
+      user['fourthName'] ?? user['fourth_name'],
+    );
 
-    final String fullName = ModelParser.asString(user['fullName'] ?? user['full_name'] ?? user['name']);
+    final String fullName = ModelParser.asString(
+      user['fullName'] ?? user['full_name'] ?? user['name'],
+    );
     final nameParts = fullName.trim().split(' ');
-    
-    final String resolvedFirst = first.isNotEmpty ? first : (nameParts.isNotEmpty ? nameParts.first : '');
-    final String resolvedLast = fourth.isNotEmpty 
-        ? fourth 
-        : (user['lastName'] ?? user['last_name'] ?? (nameParts.length > 1 ? nameParts.sublist(1).join(' ') : ''));
+
+    final String resolvedFirst = first.isNotEmpty
+        ? first
+        : (nameParts.isNotEmpty ? nameParts.first : '');
+    final String resolvedLast = fourth.isNotEmpty
+        ? fourth
+        : (user['lastName'] ??
+              user['last_name'] ??
+              (nameParts.length > 1 ? nameParts.sublist(1).join(' ') : ''));
 
     // 3. Resolve Status
-    final status = _parseStatus(user['status'] ?? user['accountStatus'] ?? user['account_status']);
+    final status = _parseStatus(
+      user['status'] ?? user['accountStatus'] ?? user['account_status'],
+    );
 
     return StudentModel(
       id: id,
@@ -123,7 +146,9 @@ final class StudentModel extends StudentEntity {
       fourthName: fourth,
       lastName: resolvedLast.toString(),
       email: ModelParser.asString(user['email']),
-      phoneNumber: ModelParser.asString(user['phone'] ?? user['phoneNumber'] ?? user['phone_number']),
+      phoneNumber: ModelParser.asString(
+        user['phone'] ?? user['phoneNumber'] ?? user['phone_number'],
+      ),
       profileImageUrl: ModelParser.asString(
         user['profileImageUrl'] ??
             user['profileImage'] ??
@@ -131,40 +156,92 @@ final class StudentModel extends StudentEntity {
             user['profile_photo_url'] ??
             user['profile_image_url'],
       ),
-      identityDocumentUrl: ModelParser.asString(user['identityDocumentUrl'] ?? user['identity_document_url']),
+      identityDocumentUrl: ModelParser.asString(
+        user['identityDocumentUrl'] ?? user['identity_document_url'],
+      ),
       gender: _parseGender(user['gender']),
       status: status,
       gradeId: ModelParser.asString(user['gradeId'] ?? user['grade_id']),
-      gradeName: ModelParser.asString(user['gradeName'] ?? user['grade_name'] ?? user['grade']),
-      studentCode: ModelParser.asString(user['studentCode'] ?? user['student_code']),
+      gradeName: ModelParser.asString(
+        user['gradeName'] ?? user['grade_name'] ?? user['grade'],
+      ),
+      studentCode: ModelParser.asString(
+        user['studentCode'] ?? user['student_code'],
+      ),
       studyType: ModelParser.asString(user['studyType'] ?? user['study_type']),
-      studyLocation: ModelParser.asString(user['studyLocation'] ?? user['study_location']),
-      walletBalance: ModelParser.asDouble(user['walletBalance'] ?? user['wallet_balance'] ?? user['balance']),
-      totalPoints: ModelParser.asInt(user['totalPoints'] ?? user['total_points'] ?? user['points']),
-      schoolName: ModelParser.asString(user['schoolName'] ?? user['school_name']),
-      educationDepartment: ModelParser.asString(user['educationDepartment'] ?? user['education_department']),
+      studyLocation: ModelParser.asString(
+        user['studyLocation'] ?? user['study_location'],
+      ),
+      walletBalance: ModelParser.asDouble(
+        user['walletBalance'] ?? user['wallet_balance'] ?? user['balance'],
+      ),
+      totalPoints: ModelParser.asInt(
+        user['totalPoints'] ?? user['total_points'] ?? user['points'],
+      ),
+      schoolName: ModelParser.asString(
+        user['schoolName'] ?? user['school_name'],
+      ),
+      educationDepartment: ModelParser.asString(
+        user['educationDepartment'] ?? user['education_department'],
+      ),
       centerId: ModelParser.asString(user['centerId'] ?? user['center_id']),
-      centerName: ModelParser.asString(user['centerName'] ?? user['center_name'] ?? user['center']),
-      parentName: ModelParser.asString(user['parentName'] ?? user['parent_name']),
-      parentPhone: ModelParser.asString(user['parentPhone'] ?? user['parent_phone']),
-      academicLevel: ModelParser.asString(user['academicLevel'] ?? user['academic_level']),
-      dateOfBirth: ModelParser.asDateTime(user['dateOfBirth'] ?? user['date_of_birth']),
+      centerName: ModelParser.asString(
+        user['centerName'] ?? user['center_name'] ?? user['center'],
+      ),
+      parentName: ModelParser.asString(
+        user['parentName'] ?? user['parent_name'],
+      ),
+      parentPhone: ModelParser.asString(
+        user['parentPhone'] ?? user['parent_phone'],
+      ),
+      academicLevel: ModelParser.asString(
+        user['academicLevel'] ?? user['academic_level'],
+      ),
+      dateOfBirth: ModelParser.asDateTime(
+        user['dateOfBirth'] ?? user['date_of_birth'],
+      ),
       address: ModelParser.asString(user['address']),
       city: ModelParser.asString(user['city']),
       area: ModelParser.asString(user['area'] ?? user['district']),
       governorate: ModelParser.asString(user['governorate']),
-      isOnline: ModelParser.asBool(user['online'] ?? user['isOnline'] ?? user['is_online']),
-      enabled: ModelParser.asBool(user['enabled'] ?? user['active'], fallback: true),
-      hasActiveSession: ModelParser.asBool(user['hasActiveSession'] ?? user['hasSession']),
-      devicesCount: ModelParser.asInt(user['devicesCount'] ?? user['devices_count']),
+      isOnline: ModelParser.asBool(
+        user['online'] ?? user['isOnline'] ?? user['is_online'],
+      ),
+      enabled: ModelParser.asBool(
+        user['enabled'] ?? user['active'],
+        fallback: true,
+      ),
+      hasActiveSession: ModelParser.asBool(
+        user['hasActiveSession'] ?? user['hasSession'],
+      ),
+      devicesCount: ModelParser.asInt(
+        user['devicesCount'] ?? user['devices_count'],
+      ),
       loginCount: ModelParser.asInt(user['loginCount'] ?? user['login_count']),
-      lastLoginAt: ModelParser.asDateTime(user['lastLoginAt'] ?? user['last_login_at']),
-      enrolledCourseIds: ModelParser.asList(user['enrolledCourseIds'] ?? user['enrolled_course_ids'])
-          .map((e) => e.toString())
-          .toList(),
+      logoutCount: ModelParser.asInt(
+        user['logoutCount'] ?? user['logout_count'],
+      ),
+      rejectionReason: ModelParser.asString(
+        user['rejectionReason'] ?? user['rejection_reason'],
+      ),
+      mapAddress: ModelParser.asString(
+        user['mapAddress'] ?? user['map_address'],
+      ),
+      latitude: ModelParser.asDouble(user['latitude']),
+      longitude: ModelParser.asDouble(user['longitude']),
+      lastLoginAt: ModelParser.asDateTime(
+        user['lastLoginAt'] ?? user['last_login_at'],
+      ),
+      enrolledCourseIds: ModelParser.asList(
+        user['enrolledCourseIds'] ?? user['enrolled_course_ids'],
+      ).map((e) => e.toString()).toList(),
       metadata: ModelParser.asMap(user['metadata']),
-      createdAt: ModelParser.asDateTime(user['createdAt'] ?? user['created_at']) ?? DateTime.now(),
-      updatedAt: ModelParser.asDateTime(user['updatedAt'] ?? user['updated_at']) ?? DateTime.now(),
+      createdAt:
+          ModelParser.asDateTime(user['createdAt'] ?? user['created_at']) ??
+          DateTime.now(),
+      updatedAt:
+          ModelParser.asDateTime(user['updatedAt'] ?? user['updated_at']) ??
+          DateTime.now(),
     );
   }
 
@@ -179,8 +256,13 @@ final class StudentModel extends StudentEntity {
   static StudentStatus _parseStatus(dynamic value) {
     final str = ModelParser.asString(value).toLowerCase();
     // Map backend variations to status
-    if (str == 'approved' || str == 'accepted' || str == 'active') return StudentStatus.active;
-    if (str == 'blocked' || str == 'banned' || str == 'suspended') return StudentStatus.suspended;
+    if (str == 'approved' || str == 'accepted' || str == 'active') {
+      return StudentStatus.active;
+    }
+    if (str == 'blocked' || str == 'banned' || str == 'suspended') {
+      return StudentStatus.suspended;
+    }
+    if (str == 'rejected') return StudentStatus.rejected;
     return StudentStatus.values.firstWhere(
       (e) => e.name == str,
       orElse: () => StudentStatus.pending,
@@ -225,6 +307,11 @@ final class StudentModel extends StudentEntity {
       'hasActiveSession': hasActiveSession,
       'devicesCount': devicesCount,
       'loginCount': loginCount,
+      'logoutCount': logoutCount,
+      'rejectionReason': rejectionReason,
+      'mapAddress': mapAddress,
+      'latitude': latitude,
+      'longitude': longitude,
       'lastLoginAt': lastLoginAt?.toIso8601String(),
       'enrolledCourseIds': enrolledCourseIds,
       'metadata': metadata,

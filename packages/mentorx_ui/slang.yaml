@@ -3,3 +3,4 @@ input_file_pattern: .json
 input_directory: lib/localization/sources
 paramCase: camel
 base_locale: en
+translate_var: t_ui

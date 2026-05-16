@@ -1,0 +1,62 @@
+import 'package:bloc_presentation/bloc_presentation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mentorx_ui/mentorx_ui.dart';
+
+import 'bloc/whatsapp_groups_page_bloc.dart';
+import 'whatsapp_groups_page.dart';
+
+final class WhatsappGroupsPageWrapper extends StatefulWidget {
+  const WhatsappGroupsPageWrapper({super.key});
+
+  @override
+  State<WhatsappGroupsPageWrapper> createState() =>
+      _WhatsappGroupsPageWrapperState();
+}
+
+final class _WhatsappGroupsPageWrapperState
+    extends State<WhatsappGroupsPageWrapper> {
+  @override
+  Widget build(BuildContext context) {
+    return BlocPresentationListener<
+      WhatsappGroupsPageBloc,
+      WhatsappGroupsPagePresentationEvent
+    >(
+      listener: (context, event) {
+        switch (event) {
+          case WhatsappGroupsPageJoinSuccessPresentationEvent(:final message):
+            MentorXUI.showToast(message: message);
+        }
+      },
+      child: Builder(
+        builder: (context) {
+          final isLoading = context.select(
+            (WhatsappGroupsPageBloc bloc) => bloc.state.isLoading,
+          );
+          final groups = context.select(
+            (WhatsappGroupsPageBloc bloc) => bloc.state.groups,
+          );
+          final joinedGroupId = context.select(
+            (WhatsappGroupsPageBloc bloc) => bloc.state.joinedGroupId,
+          );
+
+          return WhatsappGroupsPagePage(
+            isLoading: isLoading,
+            groups: groups,
+            joinedGroupId: joinedGroupId,
+            onRefresh: () {
+              context.read<WhatsappGroupsPageBloc>().add(
+                const WhatsappGroupsPageRefreshed(),
+              );
+            },
+            onJoinGroup: (groupId) {
+              context.read<WhatsappGroupsPageBloc>().add(
+                WhatsappGroupsPageJoinRequested(groupId: groupId),
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+}

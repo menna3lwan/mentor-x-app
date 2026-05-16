@@ -22,7 +22,21 @@ final class DioStudentCardRepository
   Future<StudentCardEntity> getMyCard() async {
     try {
       final response = await httpClient.get('/api/cards/my');
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final data = response.asMap();
+      return StudentCardModel.fromJson(data);
+    } on HttpClientResponse catch (e) {
+      return handleHttpClientErrorResponse(
+        e,
+        defaultCode: StudentCardRepositoryExceptionCode.failedToLoadCard,
+      );
+    }
+  }
+
+  @override
+  Future<StudentCardEntity> validateQr(String qrToken) async {
+    try {
+      final response = await httpClient.get('/api/cards/validate/$qrToken');
+      final data = response.asMap();
       return StudentCardModel.fromJson(data);
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(

@@ -30,8 +30,7 @@ final class DioAiRepository
         queryParameters: queryParams,
       );
 
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
-      final list = asList(data is Map ? data['content'] : data);
+      final list = response.asList();
 
       return list.map((e) => AIConversationModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
@@ -52,8 +51,7 @@ final class DioAiRepository
         data: payload,
       );
 
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
-      return AIConversationModel.fromJson(data);
+      return AIConversationModel.fromJson(response.asMap());
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
@@ -105,8 +103,7 @@ final class DioAiRepository
         queryParameters: queryParams,
       );
 
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
-      final list = asList(data is Map ? data['content'] : data);
+      final list = response.asList();
 
       return list.map((e) => AIMessageModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
@@ -130,8 +127,7 @@ final class DioAiRepository
         data: payload,
       );
 
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
-      return AIMessageModel.fromJson(data);
+      return AIMessageModel.fromJson(response.asMap());
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
@@ -166,9 +162,12 @@ final class DioAiRepository
   Future<Map<String, dynamic>> getStats() async {
     try {
       final response = await httpClient.get('/api/ai/stats');
-      return asMap(response.data);
+      return response.asMap();
     } on HttpClientResponse catch (e) {
-      return handleHttpClientErrorResponse(e, defaultCode: AIRepositoryExceptionCode.unknown);
+      return handleHttpClientErrorResponse(
+        e,
+        defaultCode: AIRepositoryExceptionCode.unknown,
+      );
     }
   }
 
@@ -177,7 +176,10 @@ final class DioAiRepository
     try {
       await httpClient.post('/api/ai/clear-history');
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(e, defaultCode: AIRepositoryExceptionCode.unknown);
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: AIRepositoryExceptionCode.unknown,
+      );
     }
   }
 }

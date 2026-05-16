@@ -1,7 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
-import 'package:mentorx_ui/mentorx_ui.dart';
-import '../../../../../core/core.dart';
+import 'package:mentorx_student/core/core.dart';
 
 part 'student_registration_event.dart';
 part 'student_registration_state.dart';
@@ -412,66 +411,59 @@ final class StudentRegistrationBloc
     switch (step) {
       case 0:
         if (state.firstName.trim().length < 2) {
-          return t.student['firstNameRequired'] ?? 'First name is required.';
+          return t.profile.requiredField;
         }
         if (!_isValidEgyptPhone(state.phone)) {
-          return t.student['invalidPhone'] ??
-              'Please enter a valid phone number.';
+          return t.auth.login.phoneValidationError;
         }
         if (!state.isPhoneUnique) {
-          return t.student['phoneAlreadyRegistered'] ??
-              'This phone number is already registered.';
+          return t.auth.phoneAlreadyRegistered;
         }
         if (!_isValidEgyptPhone(state.parentPhone)) {
-          return t.student['invalidParentPhone'] ??
-              'Please enter a valid parent phone number.';
+          return t.auth.login.phoneValidationError;
         }
         if (state.parentPhone == state.phone) {
-          return t.student['parentPhoneDifferent'] ??
-              'Parent phone number must be different from student phone.';
+          return 'Parent phone number must be different from student phone.';
         }
         break;
       case 1:
         if (state.otp.length < 6) {
-          return t.student['invalidOtp'] ?? 'Please enter a valid 6-digit OTP.';
+          return t.auth.resetOtpError;
         }
         break;
       case 2:
         if (state.secondName.trim().isEmpty) {
-          return t.student['secondNameRequired'] ?? 'Second name is required.';
+          return t.profile.requiredField;
         }
         if (state.thirdName.trim().isEmpty) {
-          return t.student['thirdNameRequired'] ?? 'Third name is required.';
+          return t.profile.requiredField;
         }
         if (state.fourthName.trim().isEmpty) {
-          return t.student['fourthNameRequired'] ?? 'Fourth name is required.';
+          return t.profile.requiredField;
         }
         break;
       case 3:
         if (state.selectedGrade == null) {
-          return t.student['gradeRequired'] ?? 'Please select your grade.';
+          return t.profile.requiredField;
         }
         if (!state.isOnline && (state.centerName?.isEmpty ?? true)) {
-          return t.student['centerNameRequired'] ??
-              'Please enter the center name.';
+          return t.profile.requiredField;
         }
         break;
       case 4:
         if (state.selectedGovernorate == null) {
-          return t.student['governorateRequired'] ??
-              'Please select your governorate.';
+          return t.profile.requiredField;
         }
         if (state.selectedArea == null) {
-          return t.student['areaRequired'] ?? 'Please select your area.';
+          return t.profile.requiredField;
         }
         break;
       case 5:
         if (state.password != state.confirmPassword) {
-          return t.student['passwordMismatch'] ?? 'Passwords do not match.';
+          return t.auth.passwordMismatch;
         }
         if (state.password.length < 6) {
-          return t.student['passwordLength'] ??
-              'Password must be at least 6 characters.';
+          return t.auth.passwordRules;
         }
         break;
     }

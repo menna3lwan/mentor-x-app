@@ -322,7 +322,12 @@ void main() {
       build: () {
         when(
           () => repo.getAreas('1'),
-        ).thenAnswer((_) async => ['Maadi', 'Nasr City']);
+        ).thenAnswer(
+          (_) async => [
+            const AreaEntity(id: '1', name: 'Maadi'),
+            const AreaEntity(id: '2', name: 'Nasr City'),
+          ],
+        );
         return buildBloc();
       },
       act: (bloc) => bloc.add(
@@ -338,8 +343,8 @@ void main() {
             .having((s) => s.selectedArea, 'area', isNull),
         // Second: areas loaded
         isA<StudentRegistrationState>().having((s) => s.areas, 'areas', [
-          'Maadi',
-          'Nasr City',
+          const AreaEntity(id: '1', name: 'Maadi'),
+          const AreaEntity(id: '2', name: 'Nasr City'),
         ]),
       ],
     );

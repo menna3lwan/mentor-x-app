@@ -14,6 +14,8 @@ dependencies:
 
   dio_http_client:
     path: ../../clients/dio_http_client
+  dio_course_repository:
+    path: ../../student/dio_course_repository
   device_info_service:
     path: ../../services/device_info_service
 

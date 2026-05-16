@@ -32,6 +32,18 @@ abstract interface class AttendanceRepository {
   /// Check in via QR code scan.
   Future<AttendanceRecordEntity> checkIn(String qrData);
 
+  /// Scan a center QR code to record attendance.
+  Future<AttendanceRecordEntity> scanCenterQr({
+    required String qrToken,
+    required String weekId,
+  });
+
+  /// Fetch attendance for a specific lesson/week.
+  Future<AttendanceRecordEntity?> getLessonAttendance(String weekId);
+
   /// Fetch student's attendance groups.
   Future<List<GroupEntity>> getMyGroups();
+
+  /// Fetch detailed brief for a specific group.
+  Future<Map<String, dynamic>> getGroupBrief(String groupId);
 }

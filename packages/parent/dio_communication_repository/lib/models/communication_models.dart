@@ -10,7 +10,7 @@ final class NotificationModel extends NotificationEntity {
     super.isRead,
     super.deepLink,
     super.data,
-    // Note: Parent app specific fields like studentId/studentName can be put in 'data' 
+    // Note: Parent app specific fields like studentId/studentName can be put in 'data'
     // or we can add them to the core entity if they are universally useful.
   });
 
@@ -20,10 +20,14 @@ final class NotificationModel extends NotificationEntity {
       title: json['title'] ?? '',
       message: json['message'] ?? json['body'] ?? '',
       type: _parseType(json['type']),
-      createdAt: DateTime.tryParse(json['created_at'] ?? json['createdAt'] ?? '') ?? DateTime.now(),
+      createdAt:
+          DateTime.tryParse(json['created_at'] ?? json['createdAt'] ?? '') ??
+          DateTime.now(),
       isRead: json['is_read'] ?? json['read'] ?? false,
       deepLink: json['deepLink'] ?? json['action_url'] ?? json['url'],
-      data: json['action_data'] as Map<String, dynamic>? ?? (json['data'] as Map<String, dynamic>?),
+      data:
+          json['action_data'] as Map<String, dynamic>? ??
+          (json['data'] as Map<String, dynamic>?),
     );
   }
 
@@ -53,11 +57,17 @@ final class AnnouncementModel extends AnnouncementEntity {
       id: json['id']?.toString() ?? '',
       title: json['title'] ?? '',
       content: json['content'] ?? json['preview'] ?? json['body'] ?? '',
-      createdAt: DateTime.tryParse(json['created_at'] ?? json['createdAt'] ?? '') ?? DateTime.now(),
+      createdAt:
+          DateTime.tryParse(json['created_at'] ?? json['createdAt'] ?? '') ??
+          DateTime.now(),
       imageUrl: json['image_url'] ?? json['imageUrl'],
       actionUrl: json['action_url'] ?? json['actionUrl'] ?? json['url'],
       actionText: json['action_text'] ?? json['actionText'],
-      isFeatured: json['is_featured'] ?? json['isFeatured'] ?? json['is_pinned'] ?? false,
+      isFeatured:
+          json['is_featured'] ??
+          json['isFeatured'] ??
+          json['is_pinned'] ??
+          false,
     );
   }
 }

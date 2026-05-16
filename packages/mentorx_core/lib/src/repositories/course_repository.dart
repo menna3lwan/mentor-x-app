@@ -44,6 +44,12 @@ abstract interface class CourseRepository {
   /// Fetch course categories for a given grade.
   Future<List<CategoryEntity>> getCategories({String? gradeId});
 
+  /// Fetch course categories for a given level.
+  Future<List<CategoryEntity>> getCategoriesByLevel(String levelId);
+
+  /// Fetch all course levels.
+  Future<List<LevelEntity>> getLevels();
+
   /// Fetch full course detail by ID.
   Future<CourseEntity> getCourseDetail(String courseId);
 
@@ -76,6 +82,23 @@ abstract interface class CourseRepository {
     required int completedLessons,
     required int totalLessons,
   });
+
+  /// Record a visit to a course.
+  Future<void> recordCourseAccess(String enrollmentId);
+
+  // Lesson Gate & Progress
+  /// Fetch the status of a specific lesson for the current student.
+  Future<Map<String, dynamic>> getLessonStatus(String weekId);
+
+  /// Mark a lesson as completed, optionally providing a quiz score.
+  Future<void> completeLesson(
+    String weekId, {
+    double? quizScore,
+    double? passingScore,
+  });
+
+  /// Fetch student progress for all lessons in a session.
+  Future<List<Map<String, dynamic>>> getSessionProgress(String sessionId);
 
   // Pro Features
   Future<void> updateCourse(String courseId, Map<String, dynamic> data);

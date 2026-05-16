@@ -4,9 +4,7 @@ extension MentorXThemeExtension on BuildContext {
   MixThemeData get theme => MixTheme.of(this);
 
   StyledTokens<ColorToken, dynamic> get colors => theme.colors;
-
   StyledTokens<TextStyleToken, TextStyle> get textStyles => theme.textStyles;
-
   StyledTokens<RadiusToken, Radius> get radii => theme.radii;
 
   // ── Brand Colors ──────────────────────────────────────────────────────
@@ -73,6 +71,9 @@ extension MentorXThemeExtension on BuildContext {
   TextStyle get sectionTitleStyle =>
       textStyles[$mentorxToken.textStyle.sectionTitle]!;
 
+  /// H3: 18px, Medium, Primary Blue (Alias for sectionTitleStyle)
+  TextStyle get titleH3Style => sectionTitleStyle;
+
   /// Body Primary: 16px, Regular, Primary Blue
   TextStyle get bodyPrimaryStyle =>
       textStyles[$mentorxToken.textStyle.bodyPrimary]!;
@@ -95,4 +96,14 @@ extension MentorXThemeExtension on BuildContext {
       BorderRadius.circular(radii[$mentorxToken.radius.medium]!.x);
   BorderRadius get largeRadius =>
       BorderRadius.circular(radii[$mentorxToken.radius.large]!.x);
+
+  // ── Shadow Getters ───────────────────────────────────────────────────
+
+  List<BoxShadow> get softShadow =>
+      MentorXThemes.softShadow(backgroundElevatedSurfaceShadowColor);
+  List<BoxShadow> get mediumShadow =>
+      MentorXThemes.mediumShadow(backgroundElevatedSurfaceShadowColor);
+  List<BoxShadow> get hardShadow =>
+      MentorXThemes.hardShadow(backgroundElevatedSurfaceShadowColor);
 }
+

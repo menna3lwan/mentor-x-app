@@ -1,0 +1,74 @@
+{
+    "lessonProgress": "${completed}/${total} درساً",
+    "myAcademy": "أكاديميتي",
+    "courseDetail": "تفاصيل الدورة",
+    "myCourses": "دوراتي",
+    "tabs": {
+        "inProgress": "قيد التنفيذ",
+        "completed": "مكتملة",
+        "expired": "منتهية",
+        "description": "الوصف",
+        "sessions": "الحصص"
+    },
+    "empty": {
+        "noEnrolledCourses": "لا توجد دورات مسجلة",
+        "noEnrolledCoursesDescription": "لم تقم بالتسجيل في أي دورات بعد.",
+        "browseCatalog": "تصفح الكتالوج"
+    },
+    "detail": {
+        "enrollSuccess": "تم التسجيل بنجاح!",
+        "enrollFailed": "فشل التسجيل.",
+        "yourPerformance": "أداؤك",
+        "daysLeft": "أيام متبقية",
+        "items": "عناصر",
+        "sessionFree": "مجاني",
+        "aboutCourse": "عن هذه الدورة",
+        "videos": "فيديو",
+        "minutes": "دقيقة",
+        "students": "طالب",
+        "sessions": "الحصص",
+        "free": "مجاني",
+        "yourProgress": "تقدمك",
+        "completePercent": "${percent}% مكتمل",
+        "continueStudying": "استكمل الدراسة",
+        "courseCompleted": "الدورة مكتملة",
+        "courseExpired": "انتهت صلاحية الدورة",
+        "enrollNow": "سجل الآن",
+        "pointsReward": "جائزة نقاط",
+        "durationShort": "${mins}د ${secs}ث"
+    },
+    "errors": {
+        "failedToLoadSessions": "فشل في تحميل حصص الدورة",
+        "tryRefreshing": "حاول تحديث الصفحة"
+    },
+    "player": {
+        "completed": "مكتمل",
+        "duration": "المدة",
+        "status": "الحالة",
+        "watching": "جاري المشاهدة"
+    },
+    "lessonsCompleted": "الدروس المكتملة",
+    "timeSpent": "الوقت المستغرق",
+    "quizzesTaken": "الاختبارات المجتازة",
+    "catalog": {
+        "allCategories": "كل التصنيفات",
+        "allLevels": "كل المستويات",
+        "coursesFound": "تم العثور على ${count} دورة",
+        "noCourses": "لم يتم العثور على دورات",
+        "noCoursesDescription": "حاول تغيير الفلاتر أو كلمات البحث",
+        "searchHint": "ابحث عن الدورات...",
+        "sortBy": "ترتيب حسب",
+        "sortNewest": "الأحدث",
+        "sortPriceAsc": "السعر: من الأقل للأعلى",
+        "sortPriceDesc": "السعر: من الأعلى للأقل",
+        "sortPopular": "الأكثر شيوعاً"
+    },
+    "myGrades": {
+        "title": "درجاتي",
+        "noGrades": "لا توجد درجات متاحة بعد.",
+        "completeAssessmentsDesc": "أكمل الاختبارات والمهام لعرض درجاتك.",
+        "overallAverage": "الأداء العام",
+        "allCourses": "كل الدورات"
+    },
+    "markAsDone": "تحديد كمكتمل"
+}

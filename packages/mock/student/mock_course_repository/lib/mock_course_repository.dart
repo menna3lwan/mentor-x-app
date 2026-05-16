@@ -68,6 +68,21 @@ final class MockCourseRepository implements CourseRepository {
   }
 
   @override
+  Future<List<CategoryEntity>> getCategoriesByLevel(String levelId) async {
+    await Future<void>.delayed(delay ~/ 2);
+    return MockCourseGenerator.categories();
+  }
+
+  @override
+  Future<List<LevelEntity>> getLevels() async {
+    await Future<void>.delayed(delay ~/ 2);
+    return const [
+      LevelEntity(id: 'l1', name: 'Level 1'),
+      LevelEntity(id: 'l2', name: 'Level 2'),
+    ];
+  }
+
+  @override
   Future<CourseEntity> getCourseDetail(String courseId) async {
     await Future<void>.delayed(delay);
     return MockCourseGenerator.courseDetail(courseId);
@@ -80,6 +95,12 @@ final class MockCourseRepository implements CourseRepository {
   }
 
   @override
+  Future<List<WeekEntity>> getSessionWeeks(String sessionId) async {
+    await Future<void>.delayed(delay ~/ 2);
+    return MockCourseGenerator.sessionWeeks(sessionId);
+  }
+
+  @override
   Future<List<SessionItemEntity>> getSessionItems(String sessionId) async {
     await Future<void>.delayed(delay ~/ 2);
     return MockCourseGenerator.sessionItems(sessionId);
@@ -88,8 +109,6 @@ final class MockCourseRepository implements CourseRepository {
   @override
   Future<EnrollmentEntity?> getCourseProgress(String courseId) async {
     await Future<void>.delayed(delay ~/ 2);
-    // Return null for non-enrolled courses, progress for enrolled
-    // Enrolled courses usually start with 'e' (ep, ec, ee) or 'c' in some mock sections
     if (courseId.startsWith('e') || courseId.startsWith('c')) {
       return MockCourseGenerator.courseProgress(courseId);
     }
@@ -123,6 +142,35 @@ final class MockCourseRepository implements CourseRepository {
     required int totalLessons,
   }) async {
     await Future<void>.delayed(delay ~/ 2);
+  }
+
+  @override
+  Future<void> recordCourseAccess(String enrollmentId) async {
+    await Future<void>.delayed(delay ~/ 2);
+  }
+
+  @override
+  Future<Map<String, dynamic>> getLessonStatus(String weekId) async {
+    await Future<void>.delayed(delay ~/ 2);
+    return {'completed': true, 'score': 90.0};
+  }
+
+  @override
+  Future<void> completeLesson(
+    String weekId, {
+    double? quizScore,
+    double? passingScore,
+  }) async {
+    await Future<void>.delayed(delay ~/ 2);
+  }
+
+  @override
+  Future<List<Map<String, dynamic>>> getSessionProgress(String sessionId) async {
+    await Future<void>.delayed(delay ~/ 2);
+    return [
+      {'weekId': 'w1', 'completed': true},
+      {'weekId': 'w2', 'completed': false},
+    ];
   }
 
   @override
@@ -192,11 +240,5 @@ final class MockCourseRepository implements CourseRepository {
   @override
   Future<void> cancelAllStudentEnrollments(String studentId) async {
     await Future<void>.delayed(delay);
-  }
-
-  @override
-  Future<List<WeekEntity>> getSessionWeeks(String sessionId) async {
-    await Future<void>.delayed(delay ~/ 2);
-    return MockCourseGenerator.sessionWeeks(sessionId);
   }
 }

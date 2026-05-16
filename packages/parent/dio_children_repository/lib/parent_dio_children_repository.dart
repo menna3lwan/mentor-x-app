@@ -2,11 +2,9 @@ import 'package:mentorx_core/mentorx_core.dart';
 import 'models/children_models.dart';
 export 'models/children_models.dart';
 
-
-final class DioParentChildrenRepository extends HttpClientRepository<AuthenticationExceptionCode>
+final class DioParentChildrenRepository
+    extends HttpClientRepository<AuthenticationExceptionCode>
     implements ParentChildrenRepository {
-
-
   DioParentChildrenRepository({
     required HttpClient httpClient,
     required CacheRepository cacheRepository,
@@ -26,23 +24,15 @@ final class DioParentChildrenRepository extends HttpClientRepository<Authenticat
   @override
   Future<List<ParentChildEntity>> getChildren() async {
     try {
-      HttpClientResponse response;
-      try {
-        response = await _httpClient.get('/api/parent/children');
-      } on HttpClientResponse catch (e) {
-        if (e.statusCode != 404) rethrow;
-        response = await _httpClient.get('/api/parent/children');
-      }
-      
-      final data = asMap(response.data)['data'] ?? asList(response.data);
-      final list = asList(data);
+      final response = await _httpClient.get('/api/parent/children');
+      final list = response.asList();
       return list
           .map((json) => ParentChildModel.fromJson(asMap(json)))
           .toList();
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
-        defaultCode: AuthenticationExceptionCode.registrationFailed,
+        defaultCode: AuthenticationExceptionCode.unknown,
       );
     }
   }
@@ -52,22 +42,18 @@ final class DioParentChildrenRepository extends HttpClientRepository<Authenticat
     required String query,
   }) async {
     try {
-      HttpClientResponse response;
-      try {
-        response = await _httpClient.post('/api/parent/find-student', data: {
+      final response = await _httpClient.post(
+        '/api/parent/find-student',
+        data: {
+          'lookupType': query.contains('01') ? 'PHONE' : 'STUDENT_CODE',
           'value': query,
-        });
-      } on HttpClientResponse catch (e) {
-        if (e.statusCode != 404) rethrow;
-        response = await _httpClient.post('/api/parent/find-student', data: {
-          'value': query,
-        });
-      }
+        },
+      );
 
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final data = response.asMap();
       return ParentStudentLookupModel.fromJson(data);
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: AuthenticationExceptionCode.studentNotFound,
       );
@@ -80,24 +66,18 @@ final class DioParentChildrenRepository extends HttpClientRepository<Authenticat
     required String relationship,
   }) async {
     try {
-      HttpClientResponse response;
-      try {
-        response = await _httpClient.post('/api/parent/link-child', data: {
-          'student_id': studentId,
+      final response = await _httpClient.post(
+        '/api/parent/link-child',
+        data: {
+          'studentId': studentId,
           'relationship': relationship,
-        });
-      } on HttpClientResponse catch (e) {
-        if (e.statusCode != 404) rethrow;
-        response = await _httpClient.post('/api/parent/link-child', data: {
-          'student_id': studentId,
-          'relationship': relationship,
-        });
-      }
+        },
+      );
 
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      final data = response.asMap();
       return ParentChildModel.fromJson(data);
     } on HttpClientResponse catch (e) {
-      handleHttpClientErrorResponse(
+      return handleHttpClientErrorResponse(
         e,
         defaultCode: AuthenticationExceptionCode.registrationFailed,
       );
@@ -107,12 +87,7 @@ final class DioParentChildrenRepository extends HttpClientRepository<Authenticat
   @override
   Future<void> unlinkChild(String childId) async {
     try {
-      try {
-        await _httpClient.delete('/api/parent/children/$childId');
-      } on HttpClientResponse catch (e) {
-        if (e.statusCode != 404) rethrow;
-        await _httpClient.delete('/api/parent/children/$childId');
-      }
+      await _httpClient.delete('/api/parent/children/$childId');
     } on HttpClientResponse catch (e) {
       handleHttpClientErrorResponse(
         e,
@@ -120,5 +95,4 @@ final class DioParentChildrenRepository extends HttpClientRepository<Authenticat
       );
     }
   }
-
 }

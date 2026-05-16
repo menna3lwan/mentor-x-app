@@ -29,10 +29,6 @@ final class MockNotificationRepository implements NotificationRepository {
     await Future<void>.delayed(delay ~/ 2);
   }
 
-  @override
-  Future<void> deleteNotification(String notificationId) async {
-    await Future<void>.delayed(delay ~/ 2);
-  }
 
   @override
   Future<int> getUnreadCount() async {

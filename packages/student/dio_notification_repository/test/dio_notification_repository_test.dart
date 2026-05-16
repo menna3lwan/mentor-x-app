@@ -97,17 +97,6 @@ void main() {
       });
     });
 
-    group('deleteNotification', () {
-      test('calls delete and completes', () async {
-        when(() => httpClient.delete('/api/notifications/n1')).thenAnswer((_) async => const HttpClientResponse(
-          data: {},
-          statusCode: 200,
-        ));
-
-        await repository.deleteNotification('n1');
-        verify(() => httpClient.delete('/api/notifications/n1')).called(1);
-      });
-    });
 
     group('getUnreadCount', () {
       test('returns unread count on success (as number)', () async {

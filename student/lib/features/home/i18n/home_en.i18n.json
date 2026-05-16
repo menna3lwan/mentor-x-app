@@ -1,0 +1,32 @@
+{
+    "dashboard": {
+        "greetingMorning": "Good morning",
+        "greetingEvening": "Good evening",
+        "greetingWithName": "${greeting}, ${name} 👋",
+        "updatedAt": "Updated ${time: DateFormat('HH:mm')}",
+        "continueLearning": "Continue Learning",
+        "featuredCourses": "Featured Courses",
+        "announcements": "Announcements",
+        "quickActions": "Quick Actions",
+        "walletBalance": "Wallet Balance",
+        "points": "${count: int} points",
+        "startLearningJourney": "Start your learning journey! Browse available courses.",
+        "continueProgress": "Continue ${progress: num}%",
+        "free": "Free",
+        "loadingCourse": "Loading course",
+        "loadingFeaturedCourse": "Loading featured course",
+        "loadingAnnouncement": "Loading announcement",
+        "loadingAnnouncementDetails": "Loading announcement details",
+        "unableToLoadTapRetry": "Unable to load. Tap to retry.",
+        "myCourses": "My Courses",
+        "attendance": "Attendance",
+        "grades": "Grades",
+        "aiAssistant": "AI Assistant",
+        "assignments": "Assignments",
+        "rewards": "Rewards",
+        "marketplace": "Marketplace",
+        "analytics": "Performance Analytics",
+        "courseCatalog": "Course Catalog",
+        "leaderboard": "Leaderboard"
+    }
+}

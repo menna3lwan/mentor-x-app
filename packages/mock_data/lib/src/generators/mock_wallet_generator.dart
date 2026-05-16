@@ -67,11 +67,8 @@ final class MockWalletGenerator {
       id: 'pay_${DateTime.now().millisecondsSinceEpoch}',
       amount: amount,
       method: method,
-      paymentType: paymentType,
-      status: PaymentStatus.pending,
       reference: 'REF${DateTime.now().millisecondsSinceEpoch}',
-      expiresAt: DateTime.now().add(const Duration(minutes: 30)),
-      createdAt: DateTime.now(),
+      pending: true,
     );
   }
 }

@@ -1,3 +1,5 @@
+
+
 final class AppGlobalEvent {
   const AppGlobalEvent();
 }

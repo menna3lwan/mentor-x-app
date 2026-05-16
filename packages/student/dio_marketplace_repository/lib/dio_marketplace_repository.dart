@@ -22,8 +22,7 @@ final class DioMarketplaceRepository
   Future<List<MarketplaceCategoryEntity>> getCategories() async {
     try {
       final response = await httpClient.get('/api/marketplace/categories');
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
-      final list = asList(data is Map ? data['content'] : data);
+      final list = response.asList();
       return list
           .map((e) => MarketplaceCategoryModel.fromJson(asMap(e)))
           .toList();
@@ -53,8 +52,7 @@ final class DioMarketplaceRepository
         queryParameters: queryParams,
       );
 
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
-      final list = asList(data is Map ? data['content'] : data);
+      final list = response.asList();
       return list.map((e) => MarketplaceItemModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
@@ -68,8 +66,7 @@ final class DioMarketplaceRepository
   Future<MarketplaceItemEntity> getItemById(String itemId) async {
     try {
       final response = await httpClient.get('/api/marketplace/items/$itemId');
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
-      return MarketplaceItemModel.fromJson(data);
+      return MarketplaceItemModel.fromJson(response.asMap());
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
@@ -100,8 +97,7 @@ final class DioMarketplaceRepository
         data: payload,
       );
 
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
-      return MarketplaceOrderModel.fromJson(data);
+      return MarketplaceOrderModel.fromJson(response.asMap());
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
@@ -124,8 +120,7 @@ final class DioMarketplaceRepository
         queryParameters: queryParams,
       );
 
-      final data = asMap(response.data)['data'] ?? asMap(response.data);
-      final list = asList(data is Map ? data['content'] : data);
+      final list = response.asList();
       return list.map((e) => MarketplaceOrderModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(

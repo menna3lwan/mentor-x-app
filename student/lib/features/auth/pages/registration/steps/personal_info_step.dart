@@ -1,10 +1,10 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:mentorx_student/core/core.dart';
 import '../bloc/student_registration_bloc.dart';
 
 final class PersonalInfoStep extends StatefulWidget {
@@ -39,7 +39,6 @@ final class _PersonalInfoStepState extends State<PersonalInfoStep> {
 
   @override
   Widget build(BuildContext context) {
-    final t = context.t.student;
     final bloc = context.read<StudentRegistrationBloc>();
     return Builder(
       builder: (context) {
@@ -47,77 +46,81 @@ final class _PersonalInfoStepState extends State<PersonalInfoStep> {
           (StudentRegistrationBloc bloc) => bloc.state.profilePhotoPath,
         );
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            FadeInDown(
-              duration: const Duration(milliseconds: 400),
-              child: Text(
-                t['completeProfileTitle'] ?? 'Complete Your Profile',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w900,
-                  color: context.textPrimaryColor,
-                  letterSpacing: -1.0,
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              FadeInDown(
+                duration: const Duration(milliseconds: 400),
+                child: Text(
+                  context.t.auth.registerTitle,
+                  style: context.titleH1Style.copyWith(
+                    fontSize: 28,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: -1.0,
+                  ),
                 ),
               ),
-            ),
-            const Gap(12),
-            FadeInDown(
-              duration: const Duration(milliseconds: 500),
-              child: Text(
-                t['completeProfileSubtitle'] ??
-                    'Please provide your full name as it appears in your official documents.',
-                style: TextStyle(
-                  color: context.textSecondaryColor,
-                  fontSize: 15,
-                  height: 1.6,
-                  fontWeight: FontWeight.w600,
+              const Gap(12),
+              FadeInDown(
+                duration: const Duration(milliseconds: 500),
+                child: Text(
+                  context.t.auth.personalInfoDesc,
+                  style: context.bodySecondaryStyle.copyWith(
+                    fontSize: 15,
+                    height: 1.6,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
-            ),
-            const Gap(40),
-            ZoomIn(
-              duration: const Duration(milliseconds: 500),
-              child: _buildPhotoPicker(context, profilePhotoPath, bloc),
-            ),
-            const Gap(48),
-            FadeInUp(
-              duration: const Duration(milliseconds: 400),
-              child: MentorXTextFormField(
-                key: const Key('registration_second_name'),
-                label: t['secondNameLabel'] ?? "Father's Name",
-                icon: Icons.person_outline_rounded,
-                controller: _secondNameController,
-                onChanged: (value) =>
-                    bloc.add(StudentRegistrationSecondNameChanged(value)),
+              const Gap(40),
+              ZoomIn(
+                duration: const Duration(milliseconds: 500),
+                child: _buildPhotoPicker(context, profilePhotoPath, bloc),
               ),
-            ),
-            const Gap(20),
-            FadeInUp(
-              duration: const Duration(milliseconds: 500),
-              child: MentorXTextFormField(
-                key: const Key('registration_third_name'),
-                label: t['thirdNameLabel'] ?? "Grandfather's Name",
-                icon: Icons.person_outline_rounded,
-                controller: _thirdNameController,
-                onChanged: (value) =>
-                    bloc.add(StudentRegistrationThirdNameChanged(value)),
+              const Gap(48),
+              FadeInUp(
+                duration: const Duration(milliseconds: 400),
+                child: MentorXGlassCard(
+                  style: Style(
+                    $box.padding.all(24),
+                    $box.borderRadius(32),
+                  ),
+                  child: Column(
+                    children: [
+                      MentorXTextFormField(
+                        key: const Key('registration_second_name'),
+                        label: context.t.auth.secondNameLabel,
+                        icon: Icons.person_outline_rounded,
+                        controller: _secondNameController,
+                        onChanged: (value) =>
+                            bloc.add(StudentRegistrationSecondNameChanged(value)),
+                      ),
+                      const Gap(20),
+                      MentorXTextFormField(
+                        key: const Key('registration_third_name'),
+                        label: context.t.auth.thirdNameLabel,
+                        icon: Icons.person_outline_rounded,
+                        controller: _thirdNameController,
+                        onChanged: (value) =>
+                            bloc.add(StudentRegistrationThirdNameChanged(value)),
+                      ),
+                      const Gap(20),
+                      MentorXTextFormField(
+                        key: const Key('registration_fourth_name'),
+                        label: context.t.auth.fourthNameLabel,
+                        icon: Icons.people_outline_rounded,
+                        controller: _fourthNameController,
+                        onChanged: (value) =>
+                            bloc.add(StudentRegistrationFourthNameChanged(value)),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-            ),
-            const Gap(20),
-            FadeInUp(
-              duration: const Duration(milliseconds: 600),
-              child: MentorXTextFormField(
-                key: const Key('registration_fourth_name'),
-                label: t['fourthNameLabel'] ?? 'Family Name (Last Name)',
-                icon: Icons.people_outline_rounded,
-                controller: _fourthNameController,
-                onChanged: (value) =>
-                    bloc.add(StudentRegistrationFourthNameChanged(value)),
-              ),
-            ),
-          ],
+            ],
+          ),
         );
       },
     );
@@ -131,37 +134,32 @@ final class _PersonalInfoStepState extends State<PersonalInfoStep> {
     return Center(
       child: Stack(
         children: [
-          Container(
-            width: 120,
-            height: 120,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: context.backgroundSecondaryColor,
-              border: Border.all(
-                color: context.brandPrimaryColor.withValues(alpha: 0.2),
-                width: 4,
+          MentorXGlassCard(
+            style: Style(
+              $box.width(120),
+              $box.height(120),
+              $box.borderRadius(60),
+              $box.padding.all(4),
+              $box.color(context.backgroundSecondaryColor.withValues(alpha: 0.5)),
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                image: profilePhotoPath != null
+                    ? DecorationImage(
+                        image: FileImage(File(profilePhotoPath)),
+                        fit: BoxFit.cover,
+                      )
+                    : null,
               ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.2),
-                  blurRadius: 25,
-                  offset: const Offset(0, 12),
-                ),
-              ],
-              image: profilePhotoPath != null
-                  ? DecorationImage(
-                      image: FileImage(File(profilePhotoPath)),
-                      fit: BoxFit.cover,
+              child: profilePhotoPath == null
+                  ? Icon(
+                      Icons.person_add_rounded,
+                      size: 48,
+                      color: context.brandPrimaryColor.withValues(alpha: 0.5),
                     )
                   : null,
             ),
-            child: profilePhotoPath == null
-                ? Icon(
-                    Icons.person_add_rounded,
-                    size: 48,
-                    color: context.brandPrimaryColor.withValues(alpha: 0.5),
-                  )
-                : null,
           ),
           Positioned(
             bottom: 4,
@@ -202,7 +200,7 @@ final class _PersonalInfoStepState extends State<PersonalInfoStep> {
     BuildContext context,
     StudentRegistrationBloc bloc,
   ) async {
-    final t = context.t.student;
+    final t = context.t;
     final source = await showModalBottomSheet<ImageSource>(
       context: context,
       backgroundColor: Colors.transparent,
@@ -229,11 +227,10 @@ final class _PersonalInfoStepState extends State<PersonalInfoStep> {
               ),
               const Gap(32),
               Text(
-                t['personalPhotoLabel'] ?? 'Profile Photo',
-                style: TextStyle(
+                t.auth.personalPhotoLabel,
+                style: context.titleH2Style.copyWith(
                   fontSize: 20,
                   fontWeight: FontWeight.w900,
-                  color: context.textPrimaryColor,
                   letterSpacing: -0.5,
                 ),
               ),
@@ -243,12 +240,12 @@ final class _PersonalInfoStepState extends State<PersonalInfoStep> {
                 children: [
                   _PhotoSourceOption(
                     icon: Icons.photo_library_outlined,
-                    label: t['gallery'] ?? 'Gallery',
+                    label: t.auth.gallery,
                     onTap: () => Navigator.of(context).pop(ImageSource.gallery),
                   ),
                   _PhotoSourceOption(
                     icon: Icons.camera_alt_outlined,
-                    label: t['camera'] ?? 'Camera',
+                    label: t.auth.camera,
                     onTap: () => Navigator.of(context).pop(ImageSource.camera),
                   ),
                 ],
@@ -291,24 +288,20 @@ final class _PhotoSourceOption extends StatelessWidget {
       onTap: onTap,
       child: Column(
         children: [
-          Container(
-            padding: const EdgeInsets.all(24),
-            decoration: BoxDecoration(
-              color: context.brandPrimaryColor.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(24),
-              border: Border.all(
-                color: context.brandPrimaryColor.withValues(alpha: 0.1),
-              ),
+          MentorXGlassCard(
+            style: Style(
+              $box.padding.all(24),
+              $box.borderRadius(24),
+              $box.color(context.brandPrimaryColor.withValues(alpha: 0.1)),
             ),
             child: Icon(icon, color: context.brandPrimaryColor, size: 36),
           ),
           const Gap(16),
           Text(
             label,
-            style: TextStyle(
+            style: context.bodyPrimaryStyle.copyWith(
               fontSize: 15,
               fontWeight: FontWeight.w800,
-              color: context.textPrimaryColor,
             ),
           ),
         ],

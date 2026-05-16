@@ -28,9 +28,6 @@ abstract interface class NotificationRepository {
   /// Mark all notifications as read.
   Future<void> markAllAsRead();
 
-  /// Delete a notification.
-  Future<void> deleteNotification(String notificationId);
-
   /// Get unread notifications count.
   Future<int> getUnreadCount();
 

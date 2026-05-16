@@ -1,0 +1,13 @@
+{
+    "noRewards": "لا توجد مكافآت متاحة",
+    "noRewardsDesc": "تحقق مرة أخرى لاحقًا لرؤية العناصر الجديدة.",
+    "rewardsTitle": "كتالوج المكافآت",
+    "pointsBalance": "رصيد النقاط",
+    "points": "نقاط",
+    "redeemPointsDesc": "استبدل نقاطك بمكافآت حصرية.",
+    "redeem": "استبدال",
+    "noHistory": "لا توجد سجلات نقاط بعد",
+    "noHistoryDesc": "اكسب النقاط عن طريق إكمال المهام والمشاركة في الأنشطة.",
+    "rewardsHistoryTitle": "سجل النقاط",
+    "balance": "الرصيد: ${balance}"
+}

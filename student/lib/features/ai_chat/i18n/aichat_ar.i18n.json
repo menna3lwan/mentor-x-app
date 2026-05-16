@@ -1,0 +1,19 @@
+{
+    "aiTutorHistory": "سجل المعلم الذكي",
+    "newChat": "دردشة جديدة",
+    "unableToLoadConversations": "غير قادر على تحميل المحادثات.",
+    "noConversationsYet": "لا توجد محادثات بعد",
+    "noConversationsDesc": "ابدأ محادثة مع معلمك الذكي للحصول على مساعدة في دراستك.",
+    "messagesCount": "${count} رسائل",
+    "rename": "إعادة تسمية",
+    "delete": "حذف",
+    "studySession": "جلسة دراسية",
+    "renameChat": "إعادة تسمية الدردشة",
+    "enterNewTitle": "أدخل العنوان الجديد",
+    "cancel": "إلغاء",
+    "save": "حفظ",
+    "aiAssistant": "المساعد الذكي",
+    "commonLoading": "جاري المعالجة...",
+    "aiSubtitle": "هنا دائمًا للمساعدة",
+    "typeQuestion": "اسألني أي شيء..."
+}

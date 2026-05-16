@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:parent/core/core.dart';
 
-import 'package:gap/gap.dart';
 import 'bloc/parent_registration_bloc.dart';
 import 'parent_registration_page.dart';
 

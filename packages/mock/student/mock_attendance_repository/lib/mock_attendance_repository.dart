@@ -38,11 +38,33 @@ final class MockAttendanceRepository implements AttendanceRepository {
   }
 
   @override
+  Future<AttendanceRecordEntity> scanCenterQr({
+    required String qrToken,
+    required String weekId,
+  }) async {
+    await Future<void>.delayed(delay);
+    return MockAttendanceGenerator.checkInResult(qrToken);
+  }
+
+  @override
+  Future<AttendanceRecordEntity?> getLessonAttendance(String weekId) async {
+    await Future<void>.delayed(delay);
+    final records = MockAttendanceGenerator.records();
+    return records.firstOrNull;
+  }
+
+  @override
   Future<List<GroupEntity>> getMyGroups() async {
     await Future<void>.delayed(delay);
     return const [
       GroupEntity(id: 'g-1', name: 'Physics Group A'),
       GroupEntity(id: 'g-2', name: 'Math Group B'),
     ];
+  }
+
+  @override
+  Future<Map<String, dynamic>> getGroupBrief(String groupId) async {
+    await Future<void>.delayed(delay);
+    return {'id': 'g-1', 'name': 'Physics Group A'};
   }
 }

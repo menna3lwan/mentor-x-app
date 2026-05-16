@@ -47,7 +47,7 @@ void main() {
         final result = await repository.getQuiz('q1');
         expect(result.id, 'q1');
         expect(result.questions.length, 1);
-        expect(result.questions[0].text, 'Question 1');
+        expect(result.questions[0].description, 'Question 1');
       });
     });
 
