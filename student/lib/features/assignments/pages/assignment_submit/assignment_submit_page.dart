@@ -91,106 +91,98 @@ final class _AssignmentSubmitPageState extends State<AssignmentSubmitPage> {
             canPop: false,
             child: Scaffold(
               backgroundColor: context.backgroundPrimaryColor,
-              body: Stack(
+              body: Column(
                 children: [
-                  const _BackgroundDecorations(),
-                  Column(
-                    children: [
-                      _BuildHeader(
-                        title: state.assignment!.title,
-                        progress: progress,
-                        current: totalQuestions > 0
-                            ? currentQuestionIndex + 1
-                            : 1,
-                        total: totalQuestions > 0 ? totalQuestions : 1,
-                      ),
-                      Expanded(
-                        child: SingleChildScrollView(
-                          physics: const BouncingScrollPhysics(),
-                          padding: const EdgeInsets.fromLTRB(24, 32, 24, 120),
-                          child: totalQuestions > 0
-                              ? FadeInRight(
-                                  key: ValueKey(
-                                    'question_$currentQuestionIndex',
+                  _BuildHeader(
+                    title: state.assignment!.title,
+                    progress: progress,
+                    current: totalQuestions > 0 ? currentQuestionIndex + 1 : 1,
+                    total: totalQuestions > 0 ? totalQuestions : 1,
+                  ),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      padding: const EdgeInsets.fromLTRB(24, 32, 24, 120),
+                      child: totalQuestions > 0
+                          ? FadeInRight(
+                              key: ValueKey(
+                                'question_$currentQuestionIndex',
+                              ),
+                              duration: const Duration(milliseconds: 400),
+                              child: _QuestionCard(
+                                q: q!,
+                                current: (state.currentQuestionIndex + 1),
+                                total: state.questions.length,
+                                selectedAnswer: state.answers[q.id],
+                              ),
+                            )
+                          : Column(
+                              children: [
+                                FadeInUp(
+                                  duration: const Duration(
+                                    milliseconds: 600,
                                   ),
-                                  duration: const Duration(milliseconds: 400),
-                                  child: _QuestionCard(
-                                    q: q!,
-                                    current: (state.currentQuestionIndex + 1),
-                                    total: state.questions.length,
-                                    selectedAnswer: state.answers[q.id],
+                                  child: _EssayCard(
+                                    initialValue: state.contentText ?? '',
+                                    onChanged: (val) => context
+                                        .read<AssignmentSubmitPageBloc>()
+                                        .add(
+                                          AssignmentSubmitPageContentChanged(
+                                            val,
+                                          ),
+                                        ),
                                   ),
-                                )
-                              : Column(
-                                  children: [
-                                    FadeInUp(
-                                      duration: const Duration(
-                                        milliseconds: 600,
-                                      ),
-                                      child: _EssayCard(
-                                        initialValue: state.contentText ?? '',
-                                        onChanged: (val) => context
-                                            .read<AssignmentSubmitPageBloc>()
-                                            .add(
-                                              AssignmentSubmitPageContentChanged(
-                                                val,
-                                              ),
-                                            ),
-                                      ),
-                                    ),
-                                    const Gap(32),
-                                    FadeInUp(
-                                      duration: const Duration(
-                                        milliseconds: 600,
-                                      ),
-                                      delay: const Duration(milliseconds: 200),
-                                      child: _FileUploadCard(
-                                        filePaths: state.filePaths,
-                                        onAdd: () async {
-                                          final result = await FilePicker
-                                              .platform
-                                              .pickFiles(allowMultiple: true);
-                                          if (!context.mounted) return;
-                                          if (result != null &&
-                                              result.files.isNotEmpty) {
-                                            for (final file in result.files) {
-                                              if (file.path != null) {
-                                                context
-                                                    .read<
-                                                      AssignmentSubmitPageBloc
-                                                    >()
-                                                    .add(
-                                                      AssignmentSubmitPageFileAdded(
-                                                        file.path!,
-                                                      ),
-                                                    );
-                                              }
-                                            }
-                                          }
-                                        },
-                                        onRemove: (path) => context
-                                            .read<AssignmentSubmitPageBloc>()
-                                            .add(
-                                              AssignmentSubmitPageFileRemoved(
-                                                path,
-                                              ),
-                                            ),
-                                      ),
-                                    ),
-                                  ],
                                 ),
-                        ),
-                      ),
-                      _BuildNavigation(
-                        isFirst: totalQuestions > 0
-                            ? currentQuestionIndex == 0
-                            : true,
-                        isLast: totalQuestions > 0
-                            ? currentQuestionIndex == totalQuestions - 1
-                            : true,
-                        isSubmitting: state.isSubmitting,
-                      ),
-                    ],
+                                const Gap(32),
+                                FadeInUp(
+                                  duration: const Duration(
+                                    milliseconds: 600,
+                                  ),
+                                  delay: const Duration(milliseconds: 200),
+                                  child: _FileUploadCard(
+                                    filePaths: state.filePaths,
+                                    onAdd: () async {
+                                      final result = await FilePicker.platform
+                                          .pickFiles(allowMultiple: true);
+                                      if (!context.mounted) return;
+                                      if (result != null &&
+                                          result.files.isNotEmpty) {
+                                        for (final file in result.files) {
+                                          if (file.path != null) {
+                                            context
+                                                .read<
+                                                  AssignmentSubmitPageBloc
+                                                >()
+                                                .add(
+                                                  AssignmentSubmitPageFileAdded(
+                                                    file.path!,
+                                                  ),
+                                                );
+                                          }
+                                        }
+                                      }
+                                    },
+                                    onRemove: (path) => context
+                                        .read<AssignmentSubmitPageBloc>()
+                                        .add(
+                                          AssignmentSubmitPageFileRemoved(
+                                            path,
+                                          ),
+                                        ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                    ),
+                  ),
+                  _BuildNavigation(
+                    isFirst: totalQuestions > 0
+                        ? currentQuestionIndex == 0
+                        : true,
+                    isLast: totalQuestions > 0
+                        ? currentQuestionIndex == totalQuestions - 1
+                        : true,
+                    isSubmitting: state.isSubmitting,
                   ),
                 ],
               ),
@@ -892,68 +884,6 @@ final class _OptionTile extends StatelessWidget {
               ),
             ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class _BackgroundDecorations extends StatelessWidget {
-  const _BackgroundDecorations();
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Positioned(
-          top: -150,
-          right: -100,
-          child: _BlurredBlob(
-            color: context.brandPrimaryColor.withValues(alpha: 0.12),
-            size: 450,
-          ),
-        ),
-        Positioned(
-          top: 300,
-          left: -150,
-          child: _BlurredBlob(
-            color: context.brandSecondaryColor.withValues(alpha: 0.08),
-            size: 400,
-          ),
-        ),
-        Positioned(
-          bottom: -100,
-          right: -50,
-          child: _BlurredBlob(
-            color: context.brandPrimaryColor.withValues(alpha: 0.1),
-            size: 350,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _BlurredBlob extends StatelessWidget {
-  final Color color;
-  final double size;
-
-  const _BlurredBlob({required this.color, required this.size});
-
-  @override
-  Widget build(BuildContext context) {
-    return FadeIn(
-      duration: const Duration(seconds: 2),
-      child: Container(
-        width: size,
-        height: size,
-        decoration: BoxDecoration(
-          color: color,
-          shape: BoxShape.circle,
-        ),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 90, sigmaY: 90),
-          child: const SizedBox.expand(),
         ),
       ),
     );

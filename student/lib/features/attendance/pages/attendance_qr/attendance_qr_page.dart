@@ -19,130 +19,125 @@ final class AttendanceQrPagePage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: context.backgroundPrimaryColor,
-      body: Stack(
+      body: Column(
         children: [
-          const _BackgroundDecorations(),
-          Column(
-            children: [
-              _BuildHeader(t: t),
-              Expanded(
-                child: Center(
-                  child: SingleChildScrollView(
-                    physics: const BouncingScrollPhysics(),
-                    padding: const EdgeInsets.all(24),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        FadeInDown(
-                          duration: const Duration(milliseconds: 600),
-                          child: _InfoCard(
-                            t: t,
-                            code: code,
-                          ),
-                        ),
-                        const Gap(32),
-                        ZoomIn(
-                          duration: const Duration(milliseconds: 600),
-                          delay: const Duration(milliseconds: 200),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: context.backgroundSecondaryColor
-                                  .withValues(alpha: 0.45),
-                              borderRadius: BorderRadius.circular(40),
-                              border: Border.all(
-                                color: context.borderPrimaryColor.withValues(
-                                  alpha: 0.1,
-                                ),
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withValues(alpha: 0.05),
-                                  blurRadius: 30,
-                                  offset: const Offset(0, 15),
-                                ),
-                                BoxShadow(
-                                  color: context.brandPrimaryColor.withValues(
-                                    alpha: 0.05,
-                                  ),
-                                  blurRadius: 40,
-                                  spreadRadius: -10,
-                                ),
-                              ],
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(40),
-                              child: BackdropFilter(
-                                filter: ImageFilter.blur(
-                                  sigmaX: 10,
-                                  sigmaY: 10,
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(32),
-                                  child: Column(
-                                    children: [
-                                      QrImageView(
-                                        data: code,
-                                        version: QrVersions.auto,
-                                        size: 240,
-                                        gapless: false,
-                                        eyeStyle: QrEyeStyle(
-                                          eyeShape: QrEyeShape.square,
-                                          color: context.brandPrimaryColor,
-                                        ),
-                                        dataModuleStyle: QrDataModuleStyle(
-                                          dataModuleShape:
-                                              QrDataModuleShape.square,
-                                          color: context.brandPrimaryColor
-                                              .withValues(alpha: 0.9),
-                                        ),
-                                      ),
-                                      const Gap(24),
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 24,
-                                          vertical: 12,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: context.backgroundPrimaryColor
-                                              .withValues(alpha: 0.4),
-                                          borderRadius: BorderRadius.circular(
-                                            16,
-                                          ),
-                                          border: Border.all(
-                                            color: context.borderPrimaryColor
-                                                .withValues(alpha: 0.1),
-                                          ),
-                                        ),
-                                        child: Text(
-                                          code,
-                                          style: TextStyle(
-                                            fontSize: 22,
-                                            fontWeight: FontWeight.w900,
-                                            color: context.brandPrimaryColor,
-                                            letterSpacing: 3,
-                                          ),
-                                          textDirection: TextDirection.ltr,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        const Gap(40),
-                        FadeInUp(
-                          duration: const Duration(milliseconds: 600),
-                          delay: const Duration(milliseconds: 400),
-                          child: _InstructionCard(t: t),
-                        ),
-                      ],
+          _BuildHeader(t: t),
+          Expanded(
+            child: Center(
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    FadeInDown(
+                      duration: const Duration(milliseconds: 600),
+                      child: _InfoCard(
+                        t: t,
+                        code: code,
+                      ),
                     ),
-                  ),
+                    const Gap(32),
+                    ZoomIn(
+                      duration: const Duration(milliseconds: 600),
+                      delay: const Duration(milliseconds: 200),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: context.backgroundSecondaryColor.withValues(
+                            alpha: 0.45,
+                          ),
+                          borderRadius: BorderRadius.circular(40),
+                          border: Border.all(
+                            color: context.borderPrimaryColor.withValues(
+                              alpha: 0.1,
+                            ),
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.05),
+                              blurRadius: 30,
+                              offset: const Offset(0, 15),
+                            ),
+                            BoxShadow(
+                              color: context.brandPrimaryColor.withValues(
+                                alpha: 0.05,
+                              ),
+                              blurRadius: 40,
+                              spreadRadius: -10,
+                            ),
+                          ],
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(40),
+                          child: BackdropFilter(
+                            filter: ImageFilter.blur(
+                              sigmaX: 10,
+                              sigmaY: 10,
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(32),
+                              child: Column(
+                                children: [
+                                  QrImageView(
+                                    data: code,
+                                    version: QrVersions.auto,
+                                    size: 240,
+                                    gapless: false,
+                                    eyeStyle: QrEyeStyle(
+                                      eyeShape: QrEyeShape.square,
+                                      color: context.brandPrimaryColor,
+                                    ),
+                                    dataModuleStyle: QrDataModuleStyle(
+                                      dataModuleShape: QrDataModuleShape.square,
+                                      color: context.brandPrimaryColor
+                                          .withValues(alpha: 0.9),
+                                    ),
+                                  ),
+                                  const Gap(24),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 24,
+                                      vertical: 12,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: context.backgroundPrimaryColor
+                                          .withValues(alpha: 0.4),
+                                      borderRadius: BorderRadius.circular(
+                                        16,
+                                      ),
+                                      border: Border.all(
+                                        color: context.borderPrimaryColor
+                                            .withValues(alpha: 0.1),
+                                      ),
+                                    ),
+                                    child: Text(
+                                      code,
+                                      style: TextStyle(
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.w900,
+                                        color: context.brandPrimaryColor,
+                                        letterSpacing: 3,
+                                      ),
+                                      textDirection: TextDirection.ltr,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const Gap(40),
+                    FadeInUp(
+                      duration: const Duration(milliseconds: 600),
+                      delay: const Duration(milliseconds: 400),
+                      child: _InstructionCard(t: t),
+                    ),
+                  ],
                 ),
               ),
-            ],
+            ),
           ),
         ],
       ),
@@ -281,65 +276,6 @@ final class _InstructionCard extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class _BackgroundDecorations extends StatelessWidget {
-  const _BackgroundDecorations();
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Positioned(
-          top: -100,
-          right: -50,
-          child: _BlurredBlob(
-            color: context.brandPrimaryColor.withValues(alpha: 0.12),
-            size: 350,
-          ),
-        ),
-        Positioned(
-          top: 300,
-          left: -150,
-          child: _BlurredBlob(
-            color: context.brandSecondaryColor.withValues(alpha: 0.08),
-            size: 400,
-          ),
-        ),
-        Positioned(
-          bottom: -50,
-          right: -100,
-          child: _BlurredBlob(
-            color: context.brandPrimaryColor.withValues(alpha: 0.1),
-            size: 300,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _BlurredBlob extends StatelessWidget {
-  final Color color;
-  final double size;
-
-  const _BlurredBlob({required this.color, required this.size});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        color: color,
-        shape: BoxShape.circle,
-      ),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 70, sigmaY: 70),
-        child: const SizedBox.expand(),
-      ),
     );
   }
 }

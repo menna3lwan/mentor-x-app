@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
@@ -47,12 +46,7 @@ final class CourseCatalogPagePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: context.backgroundPrimaryColor,
-      body: Stack(
-        children: [
-          const _BackgroundDecorations(),
-          Positioned.fill(child: _buildContent(context)),
-        ],
-      ),
+      body: _buildContent(context),
     );
   }
 
@@ -228,57 +222,6 @@ final class CourseCatalogPagePage extends StatelessWidget {
             ),
           );
         },
-      ),
-    );
-  }
-}
-
-class _BackgroundDecorations extends StatelessWidget {
-  const _BackgroundDecorations();
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Positioned(
-          top: -120,
-          right: -80,
-          child: _BlurredBlob(
-            color: context.brandPrimaryColor.withValues(alpha: 0.12),
-            size: 400,
-          ),
-        ),
-        Positioned(
-          bottom: -100,
-          left: -120,
-          child: _BlurredBlob(
-            color: context.brandSecondaryColor.withValues(alpha: 0.1),
-            size: 350,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _BlurredBlob extends StatelessWidget {
-  final Color color;
-  final double size;
-
-  const _BlurredBlob({required this.color, required this.size});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        color: color,
-        shape: BoxShape.circle,
-      ),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 90, sigmaY: 90),
-        child: const SizedBox.expand(),
       ),
     );
   }

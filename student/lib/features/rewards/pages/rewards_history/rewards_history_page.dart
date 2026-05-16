@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
@@ -16,63 +15,58 @@ final class RewardsHistoryPage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: context.backgroundPrimaryColor,
-      body: Stack(
+      body: Column(
         children: [
-          const _BackgroundDecorations(),
-          Column(
-            children: [
-              _BuildHeader(t: t),
-              Expanded(
-                child: Builder(
-                  builder: (context) {
-                    final isLoading = context.select(
-                      (RewardsHistoryPageBloc bloc) =>
-                          bloc.state.historySection.isLoading,
-                    );
+          _BuildHeader(t: t),
+          Expanded(
+            child: Builder(
+              builder: (context) {
+                final isLoading = context.select(
+                  (RewardsHistoryPageBloc bloc) =>
+                      bloc.state.historySection.isLoading,
+                );
 
-                    if (isLoading) {
-                      return ListView.separated(
-                        padding: const EdgeInsets.fromLTRB(20, 24, 20, 100),
-                        itemCount: 6,
-                        separatorBuilder: (_, _) => const Gap(16),
-                        itemBuilder: (_, _) => const MentorXSkeleton(
-                          height: 100,
-                          borderRadius: 28,
-                        ),
-                      );
-                    }
+                if (isLoading) {
+                  return ListView.separated(
+                    padding: const EdgeInsets.fromLTRB(20, 24, 20, 100),
+                    itemCount: 6,
+                    separatorBuilder: (_, _) => const Gap(16),
+                    itemBuilder: (_, _) => const MentorXSkeleton(
+                      height: 100,
+                      borderRadius: 28,
+                    ),
+                  );
+                }
 
-                    final transactions = context.select(
-                      (RewardsHistoryPageBloc bloc) =>
-                          bloc.state.historySection.data ?? [],
-                    );
+                final transactions = context.select(
+                  (RewardsHistoryPageBloc bloc) =>
+                      bloc.state.historySection.data ?? [],
+                );
 
-                    if (transactions.isEmpty) {
-                      return AppEmptyView(
-                        title: t.noHistory,
-                        message: t.noHistoryDesc,
-                        icon: Icons.history_rounded,
-                      );
-                    }
+                if (transactions.isEmpty) {
+                  return AppEmptyView(
+                    title: t.noHistory,
+                    message: t.noHistoryDesc,
+                    icon: Icons.history_rounded,
+                  );
+                }
 
-                    return ListView.separated(
-                      physics: const BouncingScrollPhysics(),
-                      padding: const EdgeInsets.fromLTRB(20, 24, 20, 100),
-                      itemCount: transactions.length,
-                      separatorBuilder: (_, _) => const Gap(16),
-                      itemBuilder: (context, index) {
-                        final tx = transactions[index];
-                        return FadeInUp(
-                          duration: const Duration(milliseconds: 500),
-                          delay: Duration(milliseconds: 50 * index),
-                          child: _PointsTransactionTile(tx: tx, t: t),
-                        );
-                      },
+                return ListView.separated(
+                  physics: const BouncingScrollPhysics(),
+                  padding: const EdgeInsets.fromLTRB(20, 24, 20, 100),
+                  itemCount: transactions.length,
+                  separatorBuilder: (_, _) => const Gap(16),
+                  itemBuilder: (context, index) {
+                    final tx = transactions[index];
+                    return FadeInUp(
+                      duration: const Duration(milliseconds: 500),
+                      delay: Duration(milliseconds: 50 * index),
+                      child: _PointsTransactionTile(tx: tx, t: t),
                     );
                   },
-                ),
-              ),
-            ],
+                );
+              },
+            ),
           ),
         ],
       ),
@@ -106,57 +100,54 @@ final class _BuildHeader extends StatelessWidget {
       ),
       child: ClipRRect(
         borderRadius: const BorderRadius.vertical(bottom: Radius.circular(32)),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-          child: Row(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: context.backgroundSecondaryColor.withValues(
-                    alpha: 0.6,
-                  ),
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: context.borderPrimaryColor.withValues(alpha: 0.1),
-                  ),
+        child: Row(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: context.backgroundSecondaryColor.withValues(
+                  alpha: 0.6,
                 ),
-                child: MentorXIconButton(
-                  onPressed: () => Navigator.pop(context),
-                  icon: Icons.arrow_back_ios_new_rounded,
-                  color: context.textPrimaryColor,
-                  size: MentorXIconButtonSize.small,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: context.borderPrimaryColor.withValues(alpha: 0.1),
                 ),
               ),
-              const Gap(16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'LOGS',
-                      style: TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w900,
-                        color: context.brandPrimaryColor,
-                        letterSpacing: 2.0,
-                      ),
-                    ),
-                    const Gap(2),
-                    Text(
-                      t.rewardsHistoryTitle,
-                      style: TextStyle(
-                        color: context.textPrimaryColor,
-                        fontSize: 22,
-                        fontWeight: FontWeight.w900,
-                        letterSpacing: -1.0,
-                        height: 1.1,
-                      ),
-                    ),
-                  ],
-                ),
+              child: MentorXIconButton(
+                onPressed: () => Navigator.pop(context),
+                icon: Icons.arrow_back_ios_new_rounded,
+                color: context.textPrimaryColor,
+                size: MentorXIconButtonSize.small,
               ),
-            ],
-          ),
+            ),
+            const Gap(16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'LOGS',
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w900,
+                      color: context.brandPrimaryColor,
+                      letterSpacing: 2.0,
+                    ),
+                  ),
+                  const Gap(2),
+                  Text(
+                    t.rewardsHistoryTitle,
+                    style: TextStyle(
+                      color: context.textPrimaryColor,
+                      fontSize: 22,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: -1.0,
+                      height: 1.1,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -269,57 +260,6 @@ final class _PointsTransactionTile extends StatelessWidget {
             ],
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _BackgroundDecorations extends StatelessWidget {
-  const _BackgroundDecorations();
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Positioned(
-          top: -100,
-          right: -50,
-          child: _BlurredBlob(
-            color: context.brandPrimaryColor.withValues(alpha: 0.1),
-            size: 350,
-          ),
-        ),
-        Positioned(
-          bottom: -50,
-          left: -100,
-          child: _BlurredBlob(
-            color: context.brandSecondaryColor.withValues(alpha: 0.08),
-            size: 300,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _BlurredBlob extends StatelessWidget {
-  final Color color;
-  final double size;
-
-  const _BlurredBlob({required this.color, required this.size});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        color: color,
-        shape: BoxShape.circle,
-      ),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 80, sigmaY: 80),
-        child: const SizedBox.expand(),
       ),
     );
   }

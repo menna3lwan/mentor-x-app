@@ -63,7 +63,9 @@ final class QuizListPage extends StatelessWidget {
                       child: _QuizItemCard(
                         quiz: quiz,
                         onTap: () {
-                          QuizIntroPageRoute(quizId: quiz.id).push(context);
+                          QuizIntroPageRoute(
+                            quizId: quiz.id,
+                          ).push(context);
                         },
                       ),
                     );

@@ -23,7 +23,7 @@ final class StudentCardHeader extends StatelessWidget {
         ),
       ),
       title: Text(
-        t.studentCard.title,
+        t.studentcard.title,
         style: context.titleH3Style.copyWith(
           fontWeight: FontWeight.w900,
           letterSpacing: -0.5,

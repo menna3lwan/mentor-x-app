@@ -15,6 +15,7 @@ class AuthScaffold extends StatelessWidget {
     this.backgroundColor,
     this.padding = const EdgeInsets.symmetric(horizontal: 24),
     this.resizeToAvoidBottomInset = true,
+    this.extendBodyBehindAppBar = false,
   });
 
   final Widget? appBarLeading;
@@ -29,36 +30,42 @@ class AuthScaffold extends StatelessWidget {
   final Color? backgroundColor;
   final EdgeInsetsGeometry padding;
   final bool resizeToAvoidBottomInset;
+  final bool extendBodyBehindAppBar;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: backgroundColor ?? context.backgroundPrimaryColor,
       resizeToAvoidBottomInset: resizeToAvoidBottomInset,
+      extendBodyBehindAppBar: extendBodyBehindAppBar,
       appBar: appBarLeading != null
           ? AppBar(
               backgroundColor: Colors.transparent,
               elevation: 0,
+              scrolledUnderElevation: 0,
               leading: appBarLeading,
             )
           : null,
       body: SafeArea(
+        top: !extendBodyBehindAppBar,
+        bottom: true,
         child: Padding(
           padding: padding,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (appBarLeading == null) const SizedBox(height: 20),
+              if (appBarLeading == null && !extendBodyBehindAppBar) const SizedBox(height: 20),
               if (header != null) ...[
                 header!,
                 const SizedBox(height: 24),
               ],
               if (title != null) ...[
                 DefaultTextStyle(
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: context.brandPrimaryColor,
+                  style: context.titleH1Style.copyWith(
+                    fontSize: 28,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: -1.0,
+                    color: context.textPrimaryColor,
                   ),
                   child: title!,
                 ),
@@ -66,13 +73,14 @@ class AuthScaffold extends StatelessWidget {
               ],
               if (subtitle != null) ...[
                 DefaultTextStyle(
-                  style: TextStyle(
-                    fontSize: 14,
+                  style: context.bodySecondaryStyle.copyWith(
+                    fontSize: 15,
                     color: context.textSecondaryColor,
+                    fontWeight: FontWeight.w600,
                   ),
                   child: subtitle!,
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 24),
               ],
               if (progressIndicator != null) ...[
                 progressIndicator!,

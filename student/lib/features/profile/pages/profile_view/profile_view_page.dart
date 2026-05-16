@@ -28,13 +28,7 @@ final class ProfileViewPage extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
               child: Column(
                 children: [
-                  FadeInUp(
-                    duration: const Duration(milliseconds: 600),
-                    child: _QuickStats(
-                      session: session,
-                    ),
-                  ),
-                  const Gap(28),
+
                   FadeInUp(
                     duration: const Duration(milliseconds: 600),
                     delay: const Duration(milliseconds: 100),
@@ -215,126 +209,7 @@ final class _ProfileHeader extends StatelessWidget {
   }
 }
 
-final class _QuickStats extends StatelessWidget {
-  const _QuickStats({
-    required this.session,
-  });
-  final AppSessionState session;
 
-  @override
-  Widget build(BuildContext context) {
-    final t = context.t.profile;
-
-    return MentorXGlassCard(
-      style: Style(
-        $box.padding.all(28),
-        $box.borderRadius(32),
-      ),
-      child: SizedBox(
-        height: 110,
-        child: Row(
-          children: [
-            Expanded(
-              child: _StatItem(
-                label: t.wallet,
-                value: session.walletBalance.toStringAsFixed(0),
-                unit: context.t.core.currency,
-                icon: Icons.account_balance_wallet_rounded,
-                color: context.brandPrimaryColor,
-              ),
-            ),
-            VerticalDivider(
-              color: context.borderPrimaryColor.withValues(alpha: 0.1),
-              thickness: 1.5,
-              indent: 10,
-              endIndent: 10,
-            ),
-            Expanded(
-              child: _StatItem(
-                label: t.attendance,
-                value: session.attendancePercent.toStringAsFixed(0),
-                unit: '%',
-                icon: Icons.how_to_reg_rounded,
-                color: context.brandSecondaryColor,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-final class _StatItem extends StatelessWidget {
-  final String label;
-  final String value;
-  final String unit;
-  final IconData icon;
-  final Color color;
-
-  const _StatItem({
-    required this.label,
-    required this.value,
-    required this.unit,
-    required this.icon,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                color.withValues(alpha: 0.2),
-                color.withValues(alpha: 0.05),
-              ],
-            ),
-            shape: BoxShape.circle,
-          ),
-          child: Icon(icon, color: color, size: 22),
-        ),
-        const Gap(14),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.baseline,
-          textBaseline: TextBaseline.alphabetic,
-          children: [
-            Text(
-              value,
-              style: context.titleH2Style.copyWith(
-                fontWeight: FontWeight.w900,
-                letterSpacing: -0.8,
-              ),
-            ),
-            const Gap(4),
-            Text(
-              unit,
-              style: context.bodySecondaryStyle.copyWith(
-                fontWeight: FontWeight.w800,
-                color: context.textTertiaryColor,
-                fontSize: 12,
-              ),
-            ),
-          ],
-        ),
-        const Gap(6),
-        Text(
-          label.toUpperCase(),
-          style: context.bodySecondaryStyle.copyWith(
-            fontSize: 10,
-            fontWeight: FontWeight.w900,
-            color: context.textSecondaryColor,
-            letterSpacing: 1.0,
-          ),
-        ),
-      ],
-    );
-  }
-}
 
 final class _PersonalDetails extends StatelessWidget {
   const _PersonalDetails({

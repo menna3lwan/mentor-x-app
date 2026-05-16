@@ -36,7 +36,14 @@ final class WalletMainPage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: context.backgroundPrimaryColor,
-      body: _buildBody(context, t, balance, points, transactions, isLoading),
+      body: _buildBody(
+        context,
+        t,
+        balance,
+        points,
+        transactions,
+        isLoading,
+      ),
     );
   }
 

@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
@@ -27,54 +26,47 @@ final class MyGradesPagePage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: context.backgroundPrimaryColor,
-      body: Stack(
-        children: [
-          const _BackgroundDecorations(),
-          Positioned.fill(
-            child: RefreshIndicator(
-              color: context.brandPrimaryColor,
-              onRefresh: () async => onRefresh(),
-              child: state.isLoading
-                  ? Column(
-                      children: [
-                        Gap(MediaQuery.paddingOf(context).top + 20),
-                        _buildHeader(context, t),
-                        const Padding(
-                          padding: EdgeInsets.all(20),
-                          child: MentorXSkeleton(height: 140, borderRadius: 24),
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 20),
-                          child: MentorXSkeleton(height: 56, borderRadius: 16),
-                        ),
-                        Expanded(
-                          child: ListView.separated(
-                            padding: const EdgeInsets.all(20),
-                            itemCount: 3,
-                            separatorBuilder: (_, _) => const Gap(16),
-                            itemBuilder: (_, _) => const MentorXSkeleton(
-                              height: 180,
-                              borderRadius: 24,
-                            ),
-                          ),
-                        ),
-                      ],
-                    )
-                  : state.loadingState.isError
-                  ? AppErrorView(
-                      message: state.errorMessage ?? 'Unable to load grades.',
-                      onRetry: onRefresh,
-                    )
-                  : Column(
-                      children: [
-                        Gap(MediaQuery.paddingOf(context).top + 20),
-                        _buildHeader(context, t),
-                        Expanded(child: _buildLoaded(context, t)),
-                      ],
+      body: RefreshIndicator(
+        color: context.brandPrimaryColor,
+        onRefresh: () async => onRefresh(),
+        child: state.isLoading
+            ? Column(
+                children: [
+                  Gap(MediaQuery.paddingOf(context).top + 20),
+                  _buildHeader(context, t),
+                  const Padding(
+                    padding: EdgeInsets.all(20),
+                    child: MentorXSkeleton(height: 140, borderRadius: 24),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    child: MentorXSkeleton(height: 56, borderRadius: 16),
+                  ),
+                  Expanded(
+                    child: ListView.separated(
+                      padding: const EdgeInsets.all(20),
+                      itemCount: 3,
+                      separatorBuilder: (_, _) => const Gap(16),
+                      itemBuilder: (_, _) => const MentorXSkeleton(
+                        height: 180,
+                        borderRadius: 24,
+                      ),
                     ),
-            ),
-          ),
-        ],
+                  ),
+                ],
+              )
+            : state.loadingState.isError
+            ? AppErrorView(
+                message: state.errorMessage ?? 'Unable to load grades.',
+                onRetry: onRefresh,
+              )
+            : Column(
+                children: [
+                  Gap(MediaQuery.paddingOf(context).top + 20),
+                  _buildHeader(context, t),
+                  Expanded(child: _buildLoaded(context, t)),
+                ],
+              ),
       ),
     );
   }
@@ -541,56 +533,5 @@ final class _AssessmentTile extends StatelessWidget {
     if (percentage >= 70) return context.brandPrimaryColor;
     if (percentage >= 50) return Colors.orange;
     return context.statusDangerColor;
-  }
-}
-
-class _BackgroundDecorations extends StatelessWidget {
-  const _BackgroundDecorations();
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Positioned(
-          top: -100,
-          right: -50,
-          child: _BlurredBlob(
-            color: context.brandPrimaryColor.withValues(alpha: 0.1),
-            size: 350,
-          ),
-        ),
-        Positioned(
-          bottom: -50,
-          left: -100,
-          child: _BlurredBlob(
-            color: context.brandSecondaryColor.withValues(alpha: 0.08),
-            size: 300,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _BlurredBlob extends StatelessWidget {
-  final Color color;
-  final double size;
-
-  const _BlurredBlob({required this.color, required this.size});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        color: color,
-        shape: BoxShape.circle,
-      ),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 70, sigmaY: 70),
-        child: const SizedBox.expand(),
-      ),
-    );
   }
 }

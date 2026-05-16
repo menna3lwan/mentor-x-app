@@ -270,12 +270,12 @@ final class PaymentModel extends PaymentEntity {
       message: _nullableString(data['message']),
       orderNumber: _nullableString(data['orderNumber'] ?? data['order_number']),
       transactionId: _nullableString(
-        data['transactionId'] ?? data['transaction_id'],
+        data['transactionId'] ?? data['transaction_id'] ?? data['transactionNumber'] ?? data['transaction_number'],
       ),
       amount: ModelParser.asDouble(data['amount'] ?? data['total'] ?? 0.0),
       currency: ModelParser.asString(data['currency'], fallback: 'EGP'),
       method: _parseMethod(data['paymentMethod'] ?? data['method']),
-      reference: _nullableString(data['reference'] ?? data['referenceNumber']),
+      reference: _nullableString(data['reference'] ?? data['referenceNumber'] ?? data['referenceId'] ?? data['reference_id']),
       amountPaid: _nullableDouble(data['amountPaid'] ?? data['amount_paid']),
       enrollmentsCreated: ModelParser.asInt(
         data['enrollmentsCreated'] ?? data['enrollments_created'],

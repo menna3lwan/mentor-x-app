@@ -245,15 +245,37 @@ final class DioCourseRepository
   @override
   Future<EnrollmentEntity> enrollInCourse(String courseId) async {
     try {
-      // NOTE: Enrollments are typically handled via PaymentService in the backend
-      // But if there's a direct enrollment endpoint for free courses or manual:
-      final response = await httpClient.post(
-        '/api/student/enrollments',
-        data: {'course_id': courseId},
+      // 1. Create Order
+      final orderResponse = await httpClient.post(
+        '/api/payment/orders',
+        data: {
+          'items': [
+            {'productType': 'COURSE', 'productId': courseId}
+          ]
+        },
+      );
+      final orderData = orderResponse.asMap();
+      final orderId = orderData['id'];
+
+      // 2. Process Payment (Default to WALLET)
+      await httpClient.post(
+        '/api/payment/process',
+        data: {
+          'orderId': orderId,
+          'paymentMethod': 'WALLET',
+        },
       );
 
-      final data = response.asMap();
-      return EnrollmentModel.fromJson(data);
+      // 3. Fetch Enrollment Progress (which will now be active)
+      final enrollment = await getCourseProgress(courseId);
+      if (enrollment != null) {
+        return enrollment;
+      }
+
+      throw CourseRepositoryException(
+        code: CourseRepositoryExceptionCode.failedToEnroll,
+        message: 'Failed to retrieve enrollment after payment.',
+      );
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,

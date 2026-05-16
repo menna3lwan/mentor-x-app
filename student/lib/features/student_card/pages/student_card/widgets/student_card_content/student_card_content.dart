@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:mentorx_student/core/core.dart';
+import 'dart:ui' as ui;
 
 final class StudentCardContent extends StatelessWidget {
   final StudentCardEntity card;
@@ -75,7 +76,7 @@ final class _DigitalIdCard extends StatelessWidget {
                       end: Alignment.bottomRight,
                       colors: [
                         context.brandPrimaryColor,
-                        context.brandPrimaryColor.withValues(alpha: 0.9),
+                        context.brandPrimaryColor.withValues(alpha: 0.85),
                         context.brandSecondaryColor,
                       ],
                     ),
@@ -83,15 +84,21 @@ final class _DigitalIdCard extends StatelessWidget {
                 ),
               ),
               Positioned(
-                top: -60,
-                right: -60,
+                top: -80,
+                right: -40,
                 child: Opacity(
-                  opacity: 0.1,
+                  opacity: 0.08,
                   child: Icon(
-                    Icons.school_rounded,
-                    size: 240,
+                    Icons.fingerprint_rounded,
+                    size: 280,
                     color: Colors.white,
                   ),
+                ),
+              ),
+              Positioned.fill(
+                child: BackdropFilter(
+                  filter: ui.ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                  child: const SizedBox.shrink(),
                 ),
               ),
               Padding(
@@ -106,11 +113,12 @@ final class _DigitalIdCard extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              context.t.studentcard.digitalId,
+                              context.t.studentcard.digitalId.toUpperCase(),
                               style: context.smallTextStyle.copyWith(
                                 color: Colors.white.withValues(alpha: 0.7),
                                 fontWeight: FontWeight.w900,
                                 letterSpacing: 2,
+                                fontSize: 10,
                               ),
                             ),
                             const Gap(4),
@@ -119,24 +127,24 @@ final class _DigitalIdCard extends StatelessWidget {
                               style: context.titleH3Style.copyWith(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w900,
+                                letterSpacing: -0.5,
                               ),
                             ),
                           ],
                         ),
                         Container(
-                          width: 44,
-                          height: 44,
+                          padding: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.2),
+                            color: Colors.white.withValues(alpha: 0.15),
                             shape: BoxShape.circle,
                             border: Border.all(
                               color: Colors.white.withValues(alpha: 0.2),
                             ),
                           ),
                           child: const Icon(
-                            Icons.wifi_tethering_rounded,
+                            Icons.nfc_rounded,
                             color: Colors.white,
-                            size: 22,
+                            size: 24,
                           ),
                         ),
                       ],
@@ -151,19 +159,21 @@ final class _DigitalIdCard extends StatelessWidget {
                             children: [
                               Text(
                                 card.studentName,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                                 style: context.titleH2Style.copyWith(
                                   color: Colors.white,
-                                  fontSize: 24,
+                                  fontSize: 22,
                                   fontWeight: FontWeight.w900,
                                   letterSpacing: -0.5,
                                 ),
                               ),
-                              const Gap(10),
+                              const Gap(8),
                               _CardInfoRow(
                                 label: context.t.studentcard.codeLabel,
                                 value: card.studentCode,
                               ),
-                              const Gap(4),
+                              const Gap(2),
                               if (card.grade != null)
                                 _CardInfoRow(
                                   label: context.t.studentcard.gradeLabel,
@@ -173,18 +183,26 @@ final class _DigitalIdCard extends StatelessWidget {
                           ),
                         ),
                         Container(
-                          width: 70,
-                          height: 90,
+                          width: 64,
+                          height: 84,
                           decoration: BoxDecoration(
                             color: Colors.white.withValues(alpha: 0.15),
                             borderRadius: BorderRadius.circular(16),
                             border: Border.all(
                               color: Colors.white.withValues(alpha: 0.3),
+                              width: 1.5,
                             ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.1),
+                                blurRadius: 10,
+                                offset: const Offset(0, 5),
+                              ),
+                            ],
                           ),
                           child: card.profileImageUrl != null
                               ? ClipRRect(
-                                  borderRadius: BorderRadius.circular(15),
+                                  borderRadius: BorderRadius.circular(14),
                                   child: AppDynamicImage(
                                     card.profileImageUrl!,
                                     fit: BoxFit.cover,
@@ -193,7 +211,7 @@ final class _DigitalIdCard extends StatelessWidget {
                               : const Icon(
                                   Icons.person_rounded,
                                   color: Colors.white,
-                                  size: 40,
+                                  size: 36,
                                 ),
                         ),
                       ],
@@ -222,17 +240,18 @@ final class _CardInfoRow extends StatelessWidget {
         Text(
           '$label: ',
           style: context.smallTextStyle.copyWith(
-            color: Colors.white.withValues(alpha: 0.6),
+            color: Colors.white.withValues(alpha: 0.7),
             fontSize: 10,
-            fontWeight: FontWeight.w800,
+            fontWeight: FontWeight.w700,
           ),
         ),
         Text(
           value,
           style: context.smallTextStyle.copyWith(
             color: Colors.white,
-            fontSize: 12,
+            fontSize: 11,
             fontWeight: FontWeight.w900,
+            letterSpacing: 0.5,
           ),
         ),
       ],
@@ -250,19 +269,31 @@ final class _QrSection extends StatelessWidget {
     return Column(
       children: [
         Text(
-          context.t.studentcard.scanForAttendance,
+          context.t.studentcard.scanForAttendance.toUpperCase(),
           style: context.smallTextStyle.copyWith(
             fontWeight: FontWeight.w900,
             color: context.textTertiaryColor,
-            letterSpacing: 1.5,
+            letterSpacing: 2,
+            fontSize: 11,
           ),
         ),
         const Gap(24),
-        MentorXGlassCard(
-          borderRadius: BorderRadius.circular(44),
-          opacity: 0.45,
-          style: Style(
-            $box.padding.all(28),
+        Container(
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(40),
+            boxShadow: [
+              BoxShadow(
+                color: context.brandPrimaryColor.withValues(alpha: 0.08),
+                blurRadius: 30,
+                offset: const Offset(0, 15),
+              ),
+            ],
+            border: Border.all(
+              color: context.brandPrimaryColor.withValues(alpha: 0.1),
+              width: 1.5,
+            ),
           ),
           child: QrImageView(
             data: qrToken,
@@ -274,7 +305,7 @@ final class _QrSection extends StatelessWidget {
             ),
             dataModuleStyle: QrDataModuleStyle(
               dataModuleShape: QrDataModuleShape.square,
-              color: context.brandPrimaryColor.withValues(alpha: 0.8),
+              color: context.textPrimaryColor,
             ),
           ),
         ),
@@ -292,7 +323,7 @@ final class _SecurityInfo extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       decoration: BoxDecoration(
         color: context.statusSuccessColor.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(100),
         border: Border.all(
           color: context.statusSuccessColor.withValues(alpha: 0.2),
         ),
@@ -303,14 +334,15 @@ final class _SecurityInfo extends StatelessWidget {
           Icon(
             Icons.verified_user_rounded,
             color: context.statusSuccessColor,
-            size: 18,
+            size: 16,
           ),
-          const Gap(10),
+          const Gap(8),
           Text(
             context.t.studentcard.secureDigitalId,
             style: context.smallTextStyle.copyWith(
-              fontWeight: FontWeight.w900,
+              fontWeight: FontWeight.w800,
               color: context.statusSuccessColor,
+              fontSize: 12,
             ),
           ),
         ],

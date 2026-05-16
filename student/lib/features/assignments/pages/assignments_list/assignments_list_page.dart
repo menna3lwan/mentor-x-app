@@ -24,18 +24,13 @@ final class AssignmentsListPagePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: context.backgroundPrimaryColor,
-      body: Stack(
+      body: Column(
         children: [
-          const _BackgroundDecorations(),
-          Column(
-            children: [
-              _BuildHeader(
-                title: context.t.assignments.featureTitle,
-              ),
-              Expanded(
-                child: _buildBody(context),
-              ),
-            ],
+          _BuildHeader(
+            title: context.t.assignments.featureTitle,
+          ),
+          Expanded(
+            child: _buildBody(context),
           ),
         ],
       ),
@@ -285,68 +280,6 @@ final class _AssignmentCard extends StatelessWidget {
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class _BackgroundDecorations extends StatelessWidget {
-  const _BackgroundDecorations();
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Positioned(
-          top: -150,
-          right: -100,
-          child: _BlurredBlob(
-            color: context.brandPrimaryColor.withValues(alpha: 0.12),
-            size: 450,
-          ),
-        ),
-        Positioned(
-          top: 300,
-          left: -150,
-          child: _BlurredBlob(
-            color: context.brandSecondaryColor.withValues(alpha: 0.08),
-            size: 400,
-          ),
-        ),
-        Positioned(
-          bottom: -100,
-          right: -50,
-          child: _BlurredBlob(
-            color: context.brandPrimaryColor.withValues(alpha: 0.1),
-            size: 350,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _BlurredBlob extends StatelessWidget {
-  final Color color;
-  final double size;
-
-  const _BlurredBlob({required this.color, required this.size});
-
-  @override
-  Widget build(BuildContext context) {
-    return FadeIn(
-      duration: const Duration(seconds: 2),
-      child: Container(
-        width: size,
-        height: size,
-        decoration: BoxDecoration(
-          color: color,
-          shape: BoxShape.circle,
-        ),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 90, sigmaY: 90),
-          child: const SizedBox.expand(),
         ),
       ),
     );

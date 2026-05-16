@@ -91,7 +91,7 @@ class MentorXButton extends StatelessWidget {
       $box.width(width ?? double.infinity),
       $box.borderRadius(16),
       $box.alignment.center(),
-      $text.style.ref($mentorxToken.textStyle.bodyPrimary),
+      // $text.style.ref($mentorxToken.textStyle.bodyPrimary),
       $text.style.letterSpacing(-0.2),
       $on.disabled(
         $box.color(context.backgroundSecondaryColor.withValues(alpha: 0.5)),
@@ -143,7 +143,25 @@ class MentorXButton extends StatelessWidget {
                   ),
                   const Gap(10),
                 ],
-                TextSpecWidget(_displayText),
+                Text(
+                  _displayText,
+                  style: TextStyle(
+                    color: variant == MentorXButtonVariant.filled
+                        ? Colors.white
+                        : (color ?? context.brandPrimaryColor),
+                    fontSize: size == MentorXButtonSize.small
+                        ? 13
+                        : size == MentorXButtonSize.medium
+                            ? 15
+                            : 17,
+                    fontWeight: size == MentorXButtonSize.small
+                        ? FontWeight.w700
+                        : size == MentorXButtonSize.medium
+                            ? FontWeight.w800
+                            : FontWeight.w900,
+                    letterSpacing: -0.2,
+                  ),
+                ),
               ],
             ),
     );

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:mentorx_student/core/core.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'bloc/purchase_confirm_page_bloc.dart';
 
 final class PurchaseConfirmPage extends StatelessWidget {
@@ -162,10 +163,28 @@ final class PurchaseConfirmPage extends StatelessWidget {
                       duration: const Duration(milliseconds: 500),
                       delay: const Duration(milliseconds: 200),
                       child: MentorXButton(
-                        onPressed: () => PaymentSuccessPageRoute(
-                          amount: payment.amount.toString(),
-                        ).go(context),
-                        label: t.confirmPayment,
+                        onPressed: () async {
+                          if (payment.redirectUrl != null &&
+                              payment.redirectUrl!.isNotEmpty) {
+                            final url = Uri.parse(payment.redirectUrl!);
+                            if (await canLaunchUrl(url)) {
+                              await launchUrl(url,
+                                  mode: LaunchMode.externalApplication);
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text('Could not launch URL')),
+                              );
+                            }
+                          } else {
+                            PaymentSuccessPageRoute(
+                              amount: payment.amount.toString(),
+                            ).go(context);
+                          }
+                        },
+                        label: payment.redirectUrl != null
+                            ? 'انتقل للدفع'
+                            : t.confirmPayment,
                       ),
                     ),
                   ],
