@@ -66,12 +66,18 @@ final class DioCourseRepository
           if (search != null) 'search': search,
           if (sort != null) 'sort': sort,
           if (order != null) 'order': order,
-          if (paginationInfo != null) ...paginationInfo.toJson(),
+          if (paginationInfo != null) ...{
+            if (paginationInfo.page != null) 'page': paginationInfo.page,
+            if (paginationInfo.limit != null) 'size': paginationInfo.limit,
+            if (paginationInfo.cursor != null) 'cursor': paginationInfo.cursor,
+          },
         },
       );
 
-      return response
-          .asList()
+      final data = response.asMap();
+      final content = asList(data['content'] ?? []);
+      
+      return content
           .map(asMap)
           .map(CourseSummaryModel.fromJson)
           .toList();
@@ -185,10 +191,10 @@ final class DioCourseRepository
       final weekWithItemsFutures = weeks.map((week) async {
         try {
           final res = await httpClient.get('/api/materials/lesson/${week.id}');
-          final items = res
-              .asList()
-              .map(asMap)
-              .map(SessionItemModel.fromJson)
+          final data = res.asMap();
+          final content = ModelParser.asList(data['content'] ?? []);
+          final items = content
+              .map((e) => SessionItemModel.fromJson(ModelParser.asMap(e)))
               .cast<SessionItemEntity>()
               .toList();
           return week.copyWith(materials: items);
@@ -308,8 +314,8 @@ final class DioCourseRepository
       final response = await httpClient.get('/api/materials/$itemId');
       final data = response.asMap();
 
-      // LessonMaterialResponse uses fileUrl for downloadable content
-      return stringOrEmpty(data['fileUrl'] ?? data['embedUrl']);
+      // LessonMaterialResponse: Frontend always uses embedUrl for display
+      return stringOrEmpty(data['embedUrl'] ?? data['fileUrl']);
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,

@@ -30,6 +30,7 @@ final class PdfViewerPagePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('PDF contentUrl: $contentUrl');
     return Scaffold(
       backgroundColor: context.backgroundPrimaryColor,
       body: Column(
@@ -47,20 +48,11 @@ final class PdfViewerPagePage extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
       child: Row(
         children: [
-          Container(
-            decoration: BoxDecoration(
-              color: context.backgroundSecondaryColor.withValues(alpha: 0.45),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: context.borderPrimaryColor.withValues(alpha: 0.1),
-              ),
-            ),
-            child: MentorXIconButton(
-              onPressed: () => Navigator.of(context).pop(),
-              icon: Icons.arrow_back_ios_new_rounded,
-              color: context.textPrimaryColor,
-              size: MentorXIconButtonSize.small,
-            ),
+          MentorXIconButton(
+            onPressed: () => Navigator.of(context).pop(),
+            icon: Icons.arrow_back_ios_new_rounded,
+            variant: MentorXIconButtonVariant.outline,
+            size: MentorXIconButtonSize.small,
           ),
           const Gap(20),
           Expanded(
@@ -121,9 +113,14 @@ final class PdfViewerPagePage extends StatelessWidget {
     }
 
     if (isLoading) {
-      return const Center(
+      return const Padding(
+        padding: EdgeInsets.all(20),
         child: MentorXShimmer(
-          child: MentorXSkeleton(height: 200, width: 200, borderRadius: 100),
+          child: MentorXSkeleton(
+            height: double.infinity,
+            width: double.infinity,
+            borderRadius: 16,
+          ),
         ),
       );
     }
@@ -137,18 +134,12 @@ final class PdfViewerPagePage extends StatelessWidget {
       );
     }
 
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: FadeInUp(
-        duration: const Duration(milliseconds: 600),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(24),
-          child: MentorXSecuredMediaWrapper(
-            watermarkText: watermarkText,
-            child: SfPdfViewer.network(
-              contentUrl!,
-            ),
-          ),
+    return FadeInUp(
+      duration: const Duration(milliseconds: 600),
+      child: MentorXSecuredMediaWrapper(
+        watermarkText: watermarkText,
+        child: SfPdfViewer.network(
+          contentUrl!,
         ),
       ),
     );

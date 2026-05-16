@@ -28,7 +28,7 @@ void main() {
       name: 'assignment_submit',
       route: const AssignmentSubmitPageRoute(assignmentId: 'dummy-id'),
     ),
-    (name: 'assignment_result', route: const AssignmentResultPageRoute()),
+    (name: 'assignment_result', route: const AssignmentResultPageRoute(assignmentId: 'dummy-id')),
   ];
 
   for (final entry in routes) {

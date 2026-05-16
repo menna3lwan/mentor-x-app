@@ -79,7 +79,7 @@ final class DioAssignmentRepository
       final response = await httpClient.get(
         '/api/assignment-attempts/student/$userId/assignment/$assignmentId',
       );
-      final data = response.asMap();
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
       return AssignmentSubmissionModel.fromJson(data);
     } on HttpClientResponse catch (e) {
       if (e.statusCode == 404) return null;
@@ -96,7 +96,8 @@ final class DioAssignmentRepository
       final response = await httpClient.get(
         '/api/assignment-attempts/$attemptId',
       );
-      return AssignmentSubmissionModel.fromJson(response.asMap());
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      return AssignmentSubmissionModel.fromJson(data);
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
@@ -116,19 +117,19 @@ final class DioAssignmentRepository
       final response = await httpClient.post(
         '/api/assignments/$assignmentId/submit',
         data: {
-          'assignmentId': assignmentId,
           'answers': answers.entries
               .map(
                 (e) => {
                   'questionId': e.key,
-                  'selectedAnswer': e.value,
+                  'answer': e.value,
                 },
               )
               .toList(),
+          if (contentText != null) 'contentText': contentText,
         },
       );
 
-      final data = response.asMap();
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
       return AssignmentSubmissionModel.fromJson(data);
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(

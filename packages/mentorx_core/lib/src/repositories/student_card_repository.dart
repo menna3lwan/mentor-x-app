@@ -4,6 +4,7 @@ enum StudentCardRepositoryExceptionCode {
   unknown,
   failedToLoadCard,
   failedToIssueCard,
+  cardNotFound,
 }
 
 final class StudentCardRepositoryException

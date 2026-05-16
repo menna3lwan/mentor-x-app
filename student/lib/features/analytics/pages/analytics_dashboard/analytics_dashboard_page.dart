@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:mentorx_student/core/core.dart';
@@ -201,6 +202,13 @@ final class AnalyticsDashboardPagePage extends StatelessWidget {
           filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
           child: Row(
             children: [
+              const Gap(8),
+              MentorXIconButton(
+                onPressed: () => context.pop(),
+                icon: Icons.arrow_back_ios_new_rounded,
+                variant: MentorXIconButtonVariant.ghost,
+                size: MentorXIconButtonSize.small,
+              ),
               const Gap(8),
               Expanded(
                 child: Column(

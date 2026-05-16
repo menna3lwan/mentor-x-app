@@ -10,6 +10,7 @@ final class PdfViewerPageRoute extends GoRouteData with $PdfViewerPageRoute {
   final String? enrollmentId;
   final int completedLessons;
   final int totalLessons;
+  final String? contentUrl;
 
   const PdfViewerPageRoute({
     required this.itemId,
@@ -17,6 +18,7 @@ final class PdfViewerPageRoute extends GoRouteData with $PdfViewerPageRoute {
     this.enrollmentId,
     this.completedLessons = 0,
     this.totalLessons = 0,
+    this.contentUrl,
   });
 
   @override
@@ -30,6 +32,7 @@ final class PdfViewerPageRoute extends GoRouteData with $PdfViewerPageRoute {
         enrollmentId: enrollmentId,
         completedLessons: completedLessons,
         totalLessons: totalLessons,
+        contentUrl: contentUrl,
       )..add(const PdfViewerPageInitialized()),
       child: const PdfViewerPageWrapper(),
     );

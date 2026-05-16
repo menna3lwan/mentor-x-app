@@ -143,23 +143,26 @@ class MentorXButton extends StatelessWidget {
                   ),
                   const Gap(10),
                 ],
-                Text(
-                  _displayText,
-                  style: TextStyle(
-                    color: variant == MentorXButtonVariant.filled
-                        ? Colors.white
-                        : (color ?? context.brandPrimaryColor),
-                    fontSize: size == MentorXButtonSize.small
-                        ? 13
-                        : size == MentorXButtonSize.medium
-                            ? 15
-                            : 17,
-                    fontWeight: size == MentorXButtonSize.small
-                        ? FontWeight.w700
-                        : size == MentorXButtonSize.medium
-                            ? FontWeight.w800
-                            : FontWeight.w900,
-                    letterSpacing: -0.2,
+                Flexible(
+                  child: Text(
+                    _displayText,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: variant == MentorXButtonVariant.filled
+                          ? Colors.white
+                          : (color ?? context.brandPrimaryColor),
+                      fontSize: size == MentorXButtonSize.small
+                          ? 13
+                          : size == MentorXButtonSize.medium
+                              ? 15
+                              : 17,
+                      fontWeight: size == MentorXButtonSize.small
+                          ? FontWeight.w700
+                          : size == MentorXButtonSize.medium
+                              ? FontWeight.w800
+                              : FontWeight.w900,
+                      letterSpacing: -0.2,
+                    ),
                   ),
                 ),
               ],

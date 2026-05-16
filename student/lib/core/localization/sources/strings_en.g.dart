@@ -401,6 +401,24 @@ class TranslationsAssignmentsEn {
 
 	/// en: 'Back'
 	String get commonBack => 'Back';
+
+	/// en: 'View Results'
+	String get viewResult => 'View Results';
+
+	/// en: 'Graded'
+	String get graded => 'Graded';
+
+	/// en: 'Excellent'
+	String get excellent => 'Excellent';
+
+	/// en: 'Good'
+	String get good => 'Good';
+
+	/// en: 'Passed'
+	String get passed => 'Passed';
+
+	/// en: 'Failed'
+	String get failed => 'Failed';
 }
 
 // Path: attendance
@@ -1559,6 +1577,9 @@ class TranslationsStudentcardEn {
 
 	/// en: 'Refresh Status'
 	String get refreshStatus => 'Refresh Status';
+
+	/// en: 'We couldn't load your student card. Please try again.'
+	String get errorLoadingMessage => 'We couldn\'t load your student card. Please try again.';
 }
 
 // Path: wallet
@@ -2417,6 +2438,12 @@ extension on Translations {
 			'assignments.result' => 'Assignment Result',
 			'assignments.veryGood' => 'Very Good',
 			'assignments.commonBack' => 'Back',
+			'assignments.viewResult' => 'View Results',
+			'assignments.graded' => 'Graded',
+			'assignments.excellent' => 'Excellent',
+			'assignments.good' => 'Good',
+			'assignments.passed' => 'Passed',
+			'assignments.failed' => 'Failed',
 			'attendance.noAttendance' => 'No attendance records yet',
 			'attendance.attendanceHistory' => 'Attendance History',
 			'attendance.attendanceRate' => 'Attendance Rate',
@@ -2821,14 +2848,14 @@ extension on Translations {
 			'quizzes.rewards.days.sat' => 'SAT',
 			'quizzes.rewards.days.sun' => 'SUN',
 			'quizzes.rewards.days.mon' => 'MON',
+			_ => null,
+		} ?? switch (path) {
 			'quizzes.rewards.days.tue' => 'TUE',
 			'quizzes.rewards.days.wed' => 'WED',
 			'quizzes.rewards.days.thu' => 'THU',
 			'quizzes.rewards.days.fri' => 'FRI',
 			'quizzes.rewards.badges.lightningSpeed' => 'Lightning Speed',
 			'quizzes.rewards.badges.perfectScore' => 'Perfect Score',
-			_ => null,
-		} ?? switch (path) {
 			'quizzes.rewards.badges.fiveDayStreak' => '5 Day Streak',
 			'quizzes.rewards.badges.tenQuizzes' => '10 Quizzes',
 			'quizzes.rewards.badges.physicsLion' => 'Physics Lion',
@@ -2899,6 +2926,7 @@ extension on Translations {
 			'studentcard.digitalId' => 'Digital ID',
 			'studentcard.errorLoading' => 'Error loading card',
 			'studentcard.refreshStatus' => 'Refresh Status',
+			'studentcard.errorLoadingMessage' => 'We couldn\'t load your student card. Please try again.',
 			'wallet.addBalance' => 'Add Balance',
 			'wallet.redeemCode' => 'Redeem Code',
 			'wallet.myOrders' => 'Orders',

@@ -319,26 +319,30 @@ final class _DescriptionTab extends StatelessWidget {
               spacing: 12,
               runSpacing: 12,
               children: [
-                _InfoChip(
-                  icon: Icons.play_circle_filled_rounded,
-                  label:
-                      '${course.totalVideos} ${context.t.course.detail.videos}',
-                ),
-                _InfoChip(
-                  icon: Icons.timer_rounded,
-                  label:
-                      '${course.totalDurationMinutes} ${context.t.course.detail.minutes}',
-                ),
-                _InfoChip(
-                  icon: Icons.people_rounded,
-                  label:
-                      '${course.enrolledCount} ${context.t.course.detail.students}',
-                ),
-                _InfoChip(
-                  icon: Icons.auto_stories_rounded,
-                  label:
-                      '${course.totalSessions} ${context.t.course.detail.sessions}',
-                ),
+                if (course.totalVideos > 0)
+                  _InfoChip(
+                    icon: Icons.play_circle_filled_rounded,
+                    label:
+                        '${course.totalVideos} ${context.t.course.detail.videos}',
+                  ),
+                if (course.totalDurationMinutes > 0)
+                  _InfoChip(
+                    icon: Icons.timer_rounded,
+                    label:
+                        '${course.totalDurationMinutes} ${context.t.course.detail.minutes}',
+                  ),
+                if (course.enrolledCount > 0)
+                  _InfoChip(
+                    icon: Icons.people_rounded,
+                    label:
+                        '${course.enrolledCount} ${context.t.course.detail.students}',
+                  ),
+                if (course.totalSessions > 0)
+                  _InfoChip(
+                    icon: Icons.auto_stories_rounded,
+                    label:
+                        '${course.totalSessions} ${context.t.course.detail.sessions}',
+                  ),
                 if (course.pointsReward > 0)
                   _InfoChip(
                     icon: Icons.auto_awesome_rounded,
@@ -525,7 +529,7 @@ final class _EnrollmentBar extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        if (course.isFree)
+                        if (course.isFree || course.price == 0)
                           Text(
                             context.t.course.detail.free,
                             style: context.titleH1Style.copyWith(

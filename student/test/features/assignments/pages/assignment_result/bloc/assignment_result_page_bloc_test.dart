@@ -33,8 +33,10 @@ void main() {
   group('AssignmentResultPageBloc', () {
     blocTest<AssignmentResultPageBloc, AssignmentResultPageState>(
       'emits [loading, loaded] when load event is added',
-      build: () => AssignmentResultPageBloc(assignmentRepository: assignmentRepository,
+      build: () => AssignmentResultPageBloc(
+        assignmentRepository: assignmentRepository,
         analyticsService: analyticsService,
+        assignmentId: 'dummy-id',
       ),
       act: (bloc) => bloc.add(const AssignmentResultPageLoadEvent()),
       expect: () => [
@@ -53,11 +55,13 @@ void main() {
 
     blocTest<AssignmentResultPageBloc, AssignmentResultPageState>(
       'initial state has LoadingState.initial',
-      build: () => AssignmentResultPageBloc(assignmentRepository: assignmentRepository,
+      build: () => AssignmentResultPageBloc(
+        assignmentRepository: assignmentRepository,
         analyticsService: analyticsService,
+        assignmentId: 'dummy-id',
       ),
       verify: (bloc) {
-        expect(bloc.state, AssignmentResultPageState.initial);
+        expect(bloc.state, const AssignmentResultPageState(assignmentId: 'dummy-id'));
         expect(bloc.state.loadingState, LoadingState.initial);
       },
     );

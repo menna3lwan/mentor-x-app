@@ -41,7 +41,7 @@ final class _MyGradesPageWrapperState extends State<MyGradesPageWrapper> {
               QuizResultPageRoute(attemptId: attemptId).push(context);
             },
             onAssignmentTap: (assignmentId) {
-              const AssignmentResultPageRoute().push(context);
+              AssignmentResultPageRoute(assignmentId: assignmentId).push(context);
             },
           );
         },

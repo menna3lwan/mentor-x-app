@@ -313,6 +313,7 @@ mixin $PdfViewerPageRoute on GoRouteData {
               int.parse,
             ) ??
             0,
+        contentUrl: state.uri.queryParameters['content-url'],
       );
 
   PdfViewerPageRoute get _self => this as PdfViewerPageRoute;
@@ -327,6 +328,7 @@ mixin $PdfViewerPageRoute on GoRouteData {
         'completed-lessons': _self.completedLessons.toString(),
       if (_self.totalLessons != 0)
         'total-lessons': _self.totalLessons.toString(),
+      if (_self.contentUrl != null) 'content-url': _self.contentUrl,
     },
   );
 
@@ -430,17 +432,23 @@ mixin $MyGradesPageRoute on GoRouteData {
 }
 
 RouteBase get $assignmentResultPageRoute => GoRouteData.$route(
-  path: '/assignment-result',
+  path: '/assignment-result/:assignmentId',
   name: 'assignmentResult',
   factory: $AssignmentResultPageRoute._fromState,
 );
 
 mixin $AssignmentResultPageRoute on GoRouteData {
   static AssignmentResultPageRoute _fromState(GoRouterState state) =>
-      const AssignmentResultPageRoute();
+      AssignmentResultPageRoute(
+        assignmentId: state.pathParameters['assignmentId']!,
+      );
+
+  AssignmentResultPageRoute get _self => this as AssignmentResultPageRoute;
 
   @override
-  String get location => GoRouteData.$location('/assignment-result');
+  String get location => GoRouteData.$location(
+    '/assignment-result/${Uri.encodeComponent(_self.assignmentId)}',
+  );
 
   @override
   void go(BuildContext context) => context.go(location);
@@ -844,6 +852,10 @@ RouteBase get $shellPageRoute => StatefulShellRouteData.$route(
           factory: $HomePageRoute._fromState,
           routes: [
             GoRouteData.$route(
+              path: 'announcements',
+              factory: $AnnouncementsPageRoute._fromState,
+            ),
+            GoRouteData.$route(
               path: 'analytics',
               factory: $AnalyticsDashboardPageRoute._fromState,
               routes: [
@@ -906,6 +918,27 @@ mixin $HomePageRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $AnnouncementsPageRoute on GoRouteData {
+  static AnnouncementsPageRoute _fromState(GoRouterState state) =>
+      const AnnouncementsPageRoute();
+
+  @override
+  String get location => GoRouteData.$location('/announcements');
 
   @override
   void go(BuildContext context) => context.go(location);

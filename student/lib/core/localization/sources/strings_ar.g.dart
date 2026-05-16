@@ -196,6 +196,12 @@ class _TranslationsAssignmentsAr extends TranslationsAssignmentsEn {
 	@override String get result => 'نتيجة الواجب';
 	@override String get veryGood => 'جيد جداً';
 	@override String get commonBack => 'رجوع';
+	@override String get viewResult => 'عرض النتائج';
+	@override String get graded => 'تم التقييم';
+	@override String get excellent => 'ممتاز';
+	@override String get good => 'جيد';
+	@override String get passed => 'ناجح';
+	@override String get failed => 'راسب';
 }
 
 // Path: attendance
@@ -677,6 +683,7 @@ class _TranslationsStudentcardAr extends TranslationsStudentcardEn {
 	@override String get digitalId => 'الهوية الرقمية';
 	@override String get errorLoading => 'خطأ في تحميل البطاقة';
 	@override String get refreshStatus => 'تحديث الحالة';
+	@override String get errorLoadingMessage => 'لم نتمكن من تحميل بطاقة الطالب الخاصة بك. يرجى المحاولة مرة أخرى.';
 }
 
 // Path: wallet
@@ -1179,6 +1186,12 @@ extension on TranslationsAr {
 			'assignments.result' => 'نتيجة الواجب',
 			'assignments.veryGood' => 'جيد جداً',
 			'assignments.commonBack' => 'رجوع',
+			'assignments.viewResult' => 'عرض النتائج',
+			'assignments.graded' => 'تم التقييم',
+			'assignments.excellent' => 'ممتاز',
+			'assignments.good' => 'جيد',
+			'assignments.passed' => 'ناجح',
+			'assignments.failed' => 'راسب',
 			'attendance.noAttendance' => 'لا توجد سجلات حضور بعد',
 			'attendance.attendanceHistory' => 'سجل الحضور',
 			'attendance.attendanceRate' => 'نسبة الحضور',
@@ -1583,14 +1596,14 @@ extension on TranslationsAr {
 			'quizzes.rewards.days.sat' => 'سبت',
 			'quizzes.rewards.days.sun' => 'أحد',
 			'quizzes.rewards.days.mon' => 'اثنين',
+			_ => null,
+		} ?? switch (path) {
 			'quizzes.rewards.days.tue' => 'ثلاثاء',
 			'quizzes.rewards.days.wed' => 'أربعاء',
 			'quizzes.rewards.days.thu' => 'خميس',
 			'quizzes.rewards.days.fri' => 'جمعة',
 			'quizzes.rewards.badges.lightningSpeed' => 'سرعة البرق',
 			'quizzes.rewards.badges.perfectScore' => 'الدرجة الكاملة',
-			_ => null,
-		} ?? switch (path) {
 			'quizzes.rewards.badges.fiveDayStreak' => '5 أيام متتالية',
 			'quizzes.rewards.badges.tenQuizzes' => '10 اختبارات',
 			'quizzes.rewards.badges.physicsLion' => 'أسد الفيزياء',
@@ -1661,6 +1674,7 @@ extension on TranslationsAr {
 			'studentcard.digitalId' => 'الهوية الرقمية',
 			'studentcard.errorLoading' => 'خطأ في تحميل البطاقة',
 			'studentcard.refreshStatus' => 'تحديث الحالة',
+			'studentcard.errorLoadingMessage' => 'لم نتمكن من تحميل بطاقة الطالب الخاصة بك. يرجى المحاولة مرة أخرى.',
 			'wallet.addBalance' => 'إضافة رصيد',
 			'wallet.redeemCode' => 'شحن كود',
 			'wallet.myOrders' => 'طلباتي',

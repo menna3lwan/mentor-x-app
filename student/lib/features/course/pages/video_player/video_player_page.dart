@@ -1,7 +1,5 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
-import 'package:animate_do/animate_do.dart';
 import 'package:video_player/video_player.dart';
 import 'package:chewie/chewie.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
@@ -159,7 +157,6 @@ class _VideoPlayerPagePageState extends State<VideoPlayerPagePage> {
 
   @override
   Widget build(BuildContext context) {
-    final t = context.t;
 
     Widget buildContent(Widget playerWidget) {
       if (widget.errorMessage != null) {

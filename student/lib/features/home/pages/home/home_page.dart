@@ -142,12 +142,9 @@ final class HomePagePage extends StatelessWidget {
                   const RewardsCatalogPageRoute().push(context);
                   return;
                 case 6:
-                  const MarketplaceGridPageRoute().push(context);
-                  return;
-                case 7:
                   const AnalyticsDashboardPageRoute().push(context);
                   return;
-                case 8:
+                case 7:
                   const LeaderboardPageRoute().push(context);
                   return;
                 default:
@@ -211,7 +208,7 @@ final class HomePagePage extends StatelessWidget {
               children: [
                 SectionHeader(
                   title: context.t.home.dashboard.announcements,
-                  onSeeAll: () {},
+                  onSeeAll: () => const AnnouncementsPageRoute().push(context),
                 ),
                 const Gap(16),
                 const AnnouncementsSectionWrapper(),

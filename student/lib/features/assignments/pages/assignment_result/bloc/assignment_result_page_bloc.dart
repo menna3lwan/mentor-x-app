@@ -24,7 +24,8 @@ final class AssignmentResultPageBloc
   AssignmentResultPageBloc({
     required this.assignmentRepository,
     required this.analyticsService,
-  }) : super(AssignmentResultPageState.initial) {
+    required String assignmentId,
+  }) : super(AssignmentResultPageState(assignmentId: assignmentId)) {
     on<AssignmentResultPageLoadEvent>(_onLoad);
   }
 
@@ -36,7 +37,29 @@ final class AssignmentResultPageBloc
     Emitter<AssignmentResultPageState> emit,
   ) async {
     emit(state.copyWith(loadingState: LoadingState.loading));
-    analyticsService.logEvent(name: AnalyticsEvents.assignmentResultViewed);
-    emit(state.copyWith(loadingState: LoadingState.loaded));
+    try {
+      final submission = await assignmentRepository.getSubmission(
+        state.assignmentId,
+      );
+      emit(
+        state.copyWith(
+          loadingState: LoadingState.loaded,
+          submission: submission,
+        ),
+      );
+      analyticsService.logEvent(
+        name: AnalyticsEvents.assignmentResultViewed,
+        parameters: {
+          AnalyticsParams.assignmentId: state.assignmentId,
+        },
+      );
+    } catch (e) {
+      emit(
+        state.copyWith(
+          loadingState: LoadingState.error,
+          errorMessage: e.toString(),
+        ),
+      );
+    }
   }
 }

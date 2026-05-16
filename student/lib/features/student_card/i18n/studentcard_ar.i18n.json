@@ -7,5 +7,6 @@
     "gradeLabel": "الصف الدراسي",
     "digitalId": "الهوية الرقمية",
     "errorLoading": "خطأ في تحميل البطاقة",
-    "refreshStatus": "تحديث الحالة"
+    "refreshStatus": "تحديث الحالة",
+    "errorLoadingMessage": "لم نتمكن من تحميل بطاقة الطالب الخاصة بك. يرجى المحاولة مرة أخرى."
 }

@@ -41,5 +41,11 @@
     "next": "Next",
     "result": "Assignment Result",
     "veryGood": "Very Good",
-    "commonBack": "Back"
+    "commonBack": "Back",
+    "viewResult": "View Results",
+    "graded": "Graded",
+    "excellent": "Excellent",
+    "good": "Good",
+    "passed": "Passed",
+    "failed": "Failed"
 }

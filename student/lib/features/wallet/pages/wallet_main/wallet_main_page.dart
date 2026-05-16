@@ -251,13 +251,15 @@ final class WalletMainPage extends StatelessWidget {
           filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
           child: Row(
             children: [
-              MentorXIconButton(
-                onPressed: () => Navigator.of(context).pop(),
-                icon: Icons.arrow_back_ios_new_rounded,
-                variant: MentorXIconButtonVariant.outline,
-                size: MentorXIconButtonSize.small,
-              ),
-              const Gap(16),
+              if (Navigator.of(context).canPop()) ...[
+                MentorXIconButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  icon: Icons.arrow_back_ios_new_rounded,
+                  variant: MentorXIconButtonVariant.outline,
+                  size: MentorXIconButtonSize.small,
+                ),
+                const Gap(16),
+              ],
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

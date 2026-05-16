@@ -219,20 +219,26 @@ final class AssignmentDetailPage extends StatelessWidget {
                                 ],
                               ),
                               const Gap(24),
-                              MentorXGlassCard(
-                                borderRadius: BorderRadius.circular(32),
-                                opacity: 0.08,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(28),
-                                  child: Text(
-                                    (assignment.instructions ?? '').isNotEmpty
-                                        ? assignment.instructions!
-                                        : t.instructions,
-                                    style: context.bodyPrimaryStyle.copyWith(
-                                      color: context.textSecondaryColor,
-                                      height: 1.8,
-                                      fontWeight: FontWeight.w600,
-                                    ),
+                              Container(
+                                width: double.infinity,
+                                padding: const EdgeInsets.all(28),
+                                decoration: BoxDecoration(
+                                  color: context.backgroundSecondaryColor
+                                      .withValues(alpha: 0.5),
+                                  borderRadius: BorderRadius.circular(32),
+                                  border: Border.all(
+                                    color: context.borderPrimaryColor
+                                        .withValues(alpha: 0.1),
+                                  ),
+                                ),
+                                child: Text(
+                                  (assignment.instructions ?? '').isNotEmpty
+                                      ? assignment.instructions!
+                                      : t.instructions,
+                                  style: context.bodyPrimaryStyle.copyWith(
+                                    color: context.textSecondaryColor,
+                                    height: 1.8,
+                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
                               ),
@@ -244,67 +250,75 @@ final class AssignmentDetailPage extends StatelessWidget {
                           FadeInUp(
                             duration: const Duration(milliseconds: 600),
                             delay: const Duration(milliseconds: 300),
-                            child: MentorXGlassCard(
-                              borderRadius: BorderRadius.circular(28),
-                              opacity: 0.12,
-                              child: Padding(
-                                padding: const EdgeInsets.all(20),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      padding: const EdgeInsets.all(12),
-                                      decoration: BoxDecoration(
-                                        gradient: LinearGradient(
-                                          colors: [
-                                            context.brandPrimaryColor
-                                                .withValues(alpha: 0.2),
-                                            context.brandPrimaryColor
-                                                .withValues(alpha: 0.05),
-                                          ],
-                                        ),
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: Icon(
-                                        Icons.picture_as_pdf_rounded,
-                                        color: context.brandPrimaryColor,
-                                        size: 28,
-                                      ),
-                                    ),
-                                    const Gap(16),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            t.file,
-                                            style: context.bodyPrimaryStyle
-                                                .copyWith(
-                                                  fontWeight: FontWeight.w900,
-                                                ),
+                            child: Container(
+                              padding: const EdgeInsets.all(20),
+                              decoration: BoxDecoration(
+                                color: context.backgroundSecondaryColor
+                                    .withValues(alpha: 0.5),
+                                borderRadius: BorderRadius.circular(28),
+                                border: Border.all(
+                                  color: context.borderPrimaryColor.withValues(
+                                    alpha: 0.1,
+                                  ),
+                                ),
+                              ),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(12),
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          context.brandPrimaryColor.withValues(
+                                            alpha: 0.2,
                                           ),
-                                          const Gap(4),
-                                          Text(
-                                            assignment.fileName ??
-                                                'attachment.pdf',
-                                            style: context.smallTextStyle
-                                                .copyWith(
-                                                  color:
-                                                      context.textTertiaryColor,
-                                                  fontWeight: FontWeight.w700,
-                                                ),
+                                          context.brandPrimaryColor.withValues(
+                                            alpha: 0.05,
                                           ),
                                         ],
                                       ),
+                                      shape: BoxShape.circle,
                                     ),
-                                    MentorXIconButton(
-                                      onPressed: () {},
-                                      icon: Icons.download_rounded,
-                                      variant: MentorXIconButtonVariant.outline,
-                                      size: MentorXIconButtonSize.medium,
+                                    child: Icon(
+                                      Icons.picture_as_pdf_rounded,
+                                      color: context.brandPrimaryColor,
+                                      size: 28,
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                  const Gap(16),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          t.file,
+                                          style: context.bodyPrimaryStyle
+                                              .copyWith(
+                                                fontWeight: FontWeight.w900,
+                                              ),
+                                        ),
+                                        const Gap(4),
+                                        Text(
+                                          assignment.fileName ??
+                                              'attachment.pdf',
+                                          style: context.smallTextStyle
+                                              .copyWith(
+                                                color:
+                                                    context.textTertiaryColor,
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  MentorXIconButton(
+                                    onPressed: () {},
+                                    icon: Icons.download_rounded,
+                                    variant: MentorXIconButtonVariant.outline,
+                                    size: MentorXIconButtonSize.medium,
+                                  ),
+                                ],
                               ),
                             ),
                           ),
@@ -314,9 +328,27 @@ final class AssignmentDetailPage extends StatelessWidget {
                           duration: const Duration(milliseconds: 600),
                           delay: const Duration(milliseconds: 400),
                           child: isSubmitted
-                              ? StatusBadge(
-                                  message: t.alreadySubmitted,
-                                  status: StatusBadgeType.success,
+                              ? Column(
+                                  children: [
+                                    StatusBadge(
+                                      message:
+                                          submission.status ==
+                                              SubmissionStatus.graded
+                                          ? t.graded
+                                          : t.alreadySubmitted,
+                                      status: StatusBadgeType.success,
+                                    ),
+                                    const Gap(24),
+                                    if (submission.status ==
+                                        SubmissionStatus.graded)
+                                      MentorXButton(
+                                        onPressed: () => context.push(
+                                          '/assignment-result/${assignment.id}',
+                                        ),
+                                        label: t.viewResult,
+                                        variant: MentorXButtonVariant.outline,
+                                      ),
+                                  ],
                                 )
                               : MentorXButton(
                                   onPressed: () => context.push(
@@ -344,38 +376,55 @@ final class _BuildHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MentorXGlassCard(
-      borderRadius: const BorderRadius.vertical(bottom: Radius.circular(32)),
-      opacity: 0.12,
-      child: Padding(
-        padding: EdgeInsets.fromLTRB(
-          16,
-          MediaQuery.paddingOf(context).top + 12,
-          16,
-          20,
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.fromLTRB(
+        12,
+        MediaQuery.paddingOf(context).top + 8,
+        12,
+        16,
+      ),
+      decoration: BoxDecoration(
+        color: context.backgroundPrimaryColor.withValues(alpha: 0.8),
+        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(32)),
+        border: Border(
+          bottom: BorderSide(
+            color: context.borderPrimaryColor.withValues(alpha: 0.1),
+          ),
         ),
-        child: Row(
-          children: [
-            MentorXIconButton(
+      ),
+      child: Row(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: context.backgroundSecondaryColor.withValues(
+                alpha: 0.6,
+              ),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: context.borderPrimaryColor.withValues(alpha: 0.1),
+              ),
+            ),
+            child: MentorXIconButton(
               onPressed: () => Navigator.pop(context),
               icon: Icons.arrow_back_ios_new_rounded,
-              variant: MentorXIconButtonVariant.outline,
+              color: context.textPrimaryColor,
               size: MentorXIconButtonSize.small,
             ),
-            Expanded(
-              child: Center(
-                child: Text(
-                  context.t.assignments.detail,
-                  style: context.titleH3Style.copyWith(
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: -0.5,
-                  ),
+          ),
+          Expanded(
+            child: Center(
+              child: Text(
+                context.t.assignments.detail,
+                style: context.titleH3Style.copyWith(
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: -0.5,
                 ),
               ),
             ),
-            const Gap(48),
-          ],
-        ),
+          ),
+          const Gap(48),
+        ],
       ),
     );
   }
@@ -395,55 +444,58 @@ final class _DetailChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: MentorXGlassCard(
-        borderRadius: BorderRadius.circular(24),
-        opacity: 0.08,
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      color.withValues(alpha: 0.2),
-                      color.withValues(alpha: 0.05),
-                    ],
-                  ),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(icon, size: 20, color: color),
-              ),
-              const Gap(12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      label,
-                      style: context.smallTextStyle.copyWith(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w900,
-                        color: context.textTertiaryColor,
-                        letterSpacing: 0.5,
-                      ),
-                    ),
-                    const Gap(2),
-                    Text(
-                      value,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: context.bodyPrimaryStyle.copyWith(
-                        fontWeight: FontWeight.w900,
-                        fontSize: 13,
-                      ),
-                    ),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: context.backgroundSecondaryColor.withValues(alpha: 0.5),
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(
+            color: context.borderPrimaryColor.withValues(alpha: 0.1),
+          ),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    color.withValues(alpha: 0.2),
+                    color.withValues(alpha: 0.05),
                   ],
                 ),
+                borderRadius: BorderRadius.circular(12),
               ),
-            ],
-          ),
+              child: Icon(icon, size: 20, color: color),
+            ),
+            const Gap(12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    label,
+                    style: context.smallTextStyle.copyWith(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w900,
+                      color: context.textTertiaryColor,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                  const Gap(2),
+                  Text(
+                    value,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: context.bodyPrimaryStyle.copyWith(
+                      fontWeight: FontWeight.w900,
+                      fontSize: 13,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );

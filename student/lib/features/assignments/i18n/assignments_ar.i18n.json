@@ -41,5 +41,11 @@
     "next": "التالي",
     "result": "نتيجة الواجب",
     "veryGood": "جيد جداً",
-    "commonBack": "رجوع"
+    "commonBack": "رجوع",
+    "viewResult": "عرض النتائج",
+    "graded": "تم التقييم",
+    "excellent": "ممتاز",
+    "good": "جيد",
+    "passed": "ناجح",
+    "failed": "راسب"
 }

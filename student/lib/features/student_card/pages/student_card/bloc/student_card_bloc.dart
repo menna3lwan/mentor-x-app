@@ -49,16 +49,20 @@ final class StudentCardBloc extends Bloc<StudentCardEvent, StudentCardState>
       _analyticsService.logEvent(name: AnalyticsEvents.studentCardViewed);
     } catch (e, s) {
       _logger.error('Failed to load student card: ', e, s);
-      emit(state.copyWith(loadingState: LoadingState.error));
-      emitPresentation(
-        StudentCardFailurePresentationEvent(
-          exception: e is StudentCardRepositoryException
-              ? e
-              : StudentCardRepositoryException(
-                  code: StudentCardRepositoryExceptionCode.unknown,
-                  message: e.toString(),
-                ),
+      final exception = e is StudentCardRepositoryException
+          ? e
+          : StudentCardRepositoryException(
+              code: StudentCardRepositoryExceptionCode.unknown,
+              message: e.toString(),
+            );
+      emit(
+        state.copyWith(
+          loadingState: LoadingState.error,
+          exception: exception,
         ),
+      );
+      emitPresentation(
+        StudentCardFailurePresentationEvent(exception: exception),
       );
     }
   }

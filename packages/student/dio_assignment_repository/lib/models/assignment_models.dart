@@ -76,9 +76,10 @@ final class AssignmentSubmissionModel extends AssignmentSubmissionEntity {
       courseName: ModelParser.asString(
         json['courseName'] ?? json['course_name'],
       ),
-      status: ModelParser.asBool(json['submitted'])
-          ? SubmissionStatus.submitted
-          : SubmissionStatus.pending,
+      status: _parseStatus(
+        json['status'] ??
+            (ModelParser.asBool(json['submitted']) ? 'submitted' : 'pending'),
+      ),
       submittedAt:
           ModelParser.asDateTime(json['submittedAt'] ?? json['submitted_at']) ??
           DateTime.now(),
@@ -98,5 +99,15 @@ final class AssignmentSubmissionModel extends AssignmentSubmissionEntity {
       isLate: ModelParser.asBool(json['isLate'] ?? json['is_late']),
       gradedAt: ModelParser.asDateTime(json['gradedAt'] ?? json['graded_at']),
     );
+  }
+
+  static SubmissionStatus _parseStatus(String? status) {
+    return switch (status?.toLowerCase()) {
+      'submitted' => SubmissionStatus.submitted,
+      'graded' => SubmissionStatus.graded,
+      'late' => SubmissionStatus.late,
+      'rejected' => SubmissionStatus.rejected,
+      _ => SubmissionStatus.pending,
+    };
   }
 }

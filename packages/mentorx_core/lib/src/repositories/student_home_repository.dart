@@ -29,7 +29,7 @@ abstract interface class StudentHomeRepository {
 
   Future<List<CourseSummaryEntity>> getFeaturedCourses({String? gradeId});
 
-  Future<List<AnnouncementEntity>> getRecentAnnouncements();
+  Future<List<AnnouncementEntity>> getRecentAnnouncements({int? size});
 
   Future<void> trackBannerClick(String bannerId);
 

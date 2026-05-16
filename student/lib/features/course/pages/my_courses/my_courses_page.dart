@@ -64,13 +64,15 @@ final class MyCoursesPagePage extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
       child: Row(
         children: [
-          MentorXIconButton(
-            onPressed: () => Navigator.of(context).pop(),
-            icon: Icons.arrow_back_ios_new_rounded,
-            variant: MentorXIconButtonVariant.outline,
-            size: MentorXIconButtonSize.small,
-          ),
-          const Gap(20),
+          if (Navigator.of(context).canPop()) ...[
+            MentorXIconButton(
+              onPressed: () => Navigator.of(context).pop(),
+              icon: Icons.arrow_back_ios_new_rounded,
+              variant: MentorXIconButtonVariant.outline,
+              size: MentorXIconButtonSize.small,
+            ),
+            const Gap(20),
+          ],
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

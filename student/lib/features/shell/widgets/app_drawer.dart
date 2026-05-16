@@ -175,14 +175,6 @@ final class AppDrawer extends StatelessWidget {
                     },
                   ),
                   _DrawerItem(
-                    icon: Icons.store_rounded,
-                    label: t.marketplace.store,
-                    onTap: () {
-                      Navigator.pop(context);
-                      context.push('/marketplace');
-                    },
-                  ),
-                  _DrawerItem(
                     icon: Icons.smart_toy_rounded,
                     label: t.aichat.aiAssistant,
                     onTap: () {

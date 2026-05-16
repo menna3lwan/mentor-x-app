@@ -7,5 +7,6 @@
     "gradeLabel": "Grade",
     "digitalId": "Digital ID",
     "errorLoading": "Error loading card",
-    "refreshStatus": "Refresh Status"
+    "refreshStatus": "Refresh Status",
+    "errorLoadingMessage": "We couldn't load your student card. Please try again."
 }

@@ -132,9 +132,9 @@ final class DioStudentHomeRepository
   }
 
   @override
-  Future<List<AnnouncementEntity>> getRecentAnnouncements() async {
+  Future<List<AnnouncementEntity>> getRecentAnnouncements({int? size}) async {
     try {
-      final queryParams = {'size': 3};
+      final queryParams = {'size': size ?? 3};
       final response = await httpClient.get(
         '/api/announcements/active',
         queryParameters: queryParams,

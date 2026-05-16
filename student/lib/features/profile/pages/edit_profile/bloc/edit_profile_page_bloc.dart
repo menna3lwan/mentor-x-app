@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
+import 'package:mentorx_student/app/student_app.dart';
 import 'package:mentorx_student/core/core.dart';
 
 part 'edit_profile_page_event.dart';
@@ -75,6 +76,15 @@ final class EditProfilePageBloc
         newValue: event.newValue,
         reason: event.reason,
       );
+      
+      // Refetch profile and update state using event bus
+      try {
+        final updatedProfile = await profileRepository.getProfile();
+        appEventBus.fire(AppAuthenticationUpdateEvent(user: updatedProfile));
+      } catch (e) {
+        print('Failed to refetch profile: $e');
+      }
+
       emit(state.copyWith(loadingState: LoadingState.loaded));
       analyticsService.logEvent(
         name: AnalyticsEvents.profileEditRequested,

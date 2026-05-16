@@ -119,6 +119,7 @@ final class _CourseDetailPageWrapperState
           enrollmentId: enrollment?.id,
           completedLessons: enrollment?.completedLessons ?? 0,
           totalLessons: enrollment?.totalLessons ?? 0,
+          contentUrl: item.embedUrl ?? item.fileUrl,
         ).push(context);
       case SessionItemType.link:
         if (item.fileUrl != null) {

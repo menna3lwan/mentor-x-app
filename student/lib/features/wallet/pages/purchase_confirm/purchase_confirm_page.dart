@@ -171,6 +171,7 @@ final class PurchaseConfirmPage extends StatelessWidget {
                               await launchUrl(url,
                                   mode: LaunchMode.externalApplication);
                             } else {
+                              if (!context.mounted) return;
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                     content: Text('Could not launch URL')),

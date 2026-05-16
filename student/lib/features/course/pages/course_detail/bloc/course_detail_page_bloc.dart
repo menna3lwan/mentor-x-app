@@ -124,10 +124,10 @@ final class CourseDetailPageBloc
         sessionsStatus: DetailSectionStatus.loading,
       ),
     );
+    await _loadEnrollment(emit);
     await Future.wait([
       _loadCourseDetail(emit),
       _loadSessions(emit),
-      _loadEnrollment(emit),
     ]);
   }
 
@@ -172,9 +172,11 @@ final class CourseDetailPageBloc
       final weekFutures = <String, Future<List<WeekEntity>>>{};
       final itemFutures = <String, Future<List<SessionItemEntity>>>{};
 
-      for (final session in sessions) {
-        weekFutures[session.id] = _courseRepository.getSessionWeeks(session.id);
-        itemFutures[session.id] = _courseRepository.getSessionItems(session.id);
+      if (state.enrollment != null) {
+        for (final session in sessions) {
+          weekFutures[session.id] = _courseRepository.getSessionWeeks(session.id);
+          itemFutures[session.id] = _courseRepository.getSessionItems(session.id);
+        }
       }
 
       final weeksMap = <String, List<WeekEntity>>{};
@@ -182,13 +184,15 @@ final class CourseDetailPageBloc
 
       for (final session in sessions) {
         try {
-          weeksMap[session.id] = await weekFutures[session.id]!;
+          final future = weekFutures[session.id];
+          weeksMap[session.id] = future != null ? await future : [];
         } catch (_) {
           weeksMap[session.id] = [];
         }
 
         try {
-          itemsMap[session.id] = await itemFutures[session.id]!;
+          final future = itemFutures[session.id];
+          itemsMap[session.id] = future != null ? await future : [];
         } catch (_) {
           itemsMap[session.id] = [];
         }

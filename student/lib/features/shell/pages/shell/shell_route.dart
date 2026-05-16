@@ -19,6 +19,9 @@ final class ProfileShellBranchData extends StatefulShellBranchData {}
           path: '/',
           name: 'home',
           routes: [
+            TypedGoRoute<AnnouncementsPageRoute>(
+              path: 'announcements',
+            ),
             TypedGoRoute<AnalyticsDashboardPageRoute>(
               path: 'analytics',
               routes: [

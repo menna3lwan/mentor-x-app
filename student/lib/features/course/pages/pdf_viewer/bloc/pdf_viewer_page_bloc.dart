@@ -35,6 +35,7 @@ final class PdfViewerPageBloc
     String? enrollmentId,
     int completedLessons = 0,
     int totalLessons = 0,
+    String? contentUrl,
   }) : _courseRepository = courseRepository,
        _analyticsService = analyticsService,
        super(
@@ -44,6 +45,7 @@ final class PdfViewerPageBloc
            enrollmentId: enrollmentId,
            completedLessons: completedLessons,
            totalLessons: totalLessons,
+           contentUrl: contentUrl,
          ),
        ) {
     on<PdfViewerPageInitialized>(_onInitialized);
@@ -61,9 +63,16 @@ final class PdfViewerPageBloc
         AnalyticsParams.name: state.title,
       },
     );
+    
+    if (state.contentUrl != null && state.contentUrl!.isNotEmpty) {
+      emit(state.copyWith(loadingState: LoadingState.loaded));
+      return;
+    }
+
     emit(state.copyWith(loadingState: LoadingState.loading));
     try {
       final url = await _courseRepository.getContentUrl(state.itemId);
+      print('PdfViewerPageBloc: Fetched URL: "$url"');
       emit(
         state.copyWith(
           loadingState: LoadingState.loaded,

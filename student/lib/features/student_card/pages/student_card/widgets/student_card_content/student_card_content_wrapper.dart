@@ -4,6 +4,7 @@ import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:mentorx_student/core/core.dart';
 import '../../bloc/student_card_bloc.dart';
 import 'student_card_content.dart';
+import 'student_card_not_created_view.dart';
 
 final class StudentCardContentWrapper extends StatelessWidget {
   const StudentCardContentWrapper({super.key});
@@ -24,19 +25,26 @@ final class StudentCardContentWrapper extends StatelessWidget {
     }
 
     if (loadingState.isError) {
-      return Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(t.errorLoading),
-            MentorXButton(
-              onPressed: () => context.read<StudentCardBloc>().add(
-                const StudentCardLoadEvent(),
-              ),
-              label: context.t.core.retry,
-            ),
-          ],
+      final exception = context.select<StudentCardBloc, StudentCardRepositoryException?>(
+        (bloc) => bloc.state.exception,
+      );
+      
+      if (exception?.code == StudentCardRepositoryExceptionCode.cardNotFound) {
+        return StudentCardNotCreatedView(
+          onRefresh: () => context.read<StudentCardBloc>().add(
+            const StudentCardLoadEvent(),
+          ),
+        );
+      }
+
+      return AppEmptyView(
+        title: t.errorLoading,
+        message: t.errorLoadingMessage,
+        icon: Icons.credit_card_off_rounded,
+        onAction: () => context.read<StudentCardBloc>().add(
+          const StudentCardLoadEvent(),
         ),
+        actionLabel: context.t.core.retry,
       );
     }
 

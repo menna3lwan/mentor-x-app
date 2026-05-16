@@ -17,6 +17,7 @@ part '../../features/settings/pages/about/about_route.dart';
 part '../../features/settings/pages/whatsapp_groups/whatsapp_groups_route.dart';
 part '../../features/settings/pages/settings_list/settings_list_route.dart';
 part '../../features/home/pages/home/home_route.dart';
+part '../../features/home/pages/announcements/announcements_route.dart';
 part '../../features/course/pages/my_courses/my_courses_route.dart';
 part '../../features/course/pages/video_player/video_player_route.dart';
 part '../../features/course/pages/pdf_viewer/pdf_viewer_route.dart';

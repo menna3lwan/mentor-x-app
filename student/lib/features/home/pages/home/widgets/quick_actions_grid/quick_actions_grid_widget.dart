@@ -33,11 +33,6 @@ final class QuickActionsGridWidget extends StatelessWidget {
       (context.t.home.dashboard.assignments, Icons.task_rounded, Colors.teal),
       (context.t.home.dashboard.rewards, Icons.redeem_rounded, Colors.pink),
       (
-        context.t.home.dashboard.marketplace,
-        Icons.shopping_bag_rounded,
-        Colors.indigo,
-      ),
-      (
         context.t.home.dashboard.analytics,
         Icons.insights_rounded,
         context.brandPrimaryColor,

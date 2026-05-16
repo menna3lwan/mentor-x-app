@@ -142,32 +142,40 @@ final class CourseInfoHeader extends StatelessWidget {
                   physics: const BouncingScrollPhysics(),
                   child: Row(
                     children: [
-                      _StatChip(
-                        icon: Icons.people_alt_rounded,
-                        label:
-                            '${course.enrolledCount} ${context.t.course.detail.students}',
-                      ),
-                      const Gap(12),
-                      _StatChip(
-                        icon: Icons.play_circle_filled_rounded,
-                        label:
-                            '${course.totalVideos} ${context.t.course.detail.videos}',
-                      ),
-                      const Gap(12),
-                      _StatChip(
-                        icon: Icons.access_time_filled_rounded,
-                        label: _formatDuration(course.totalDurationMinutes),
-                      ),
-                      if (enrollment != null &&
-                          enrollment!.remainingDays > 0) ...[
-                        const Gap(12),
-                        _StatChip(
-                          icon: Icons.event_available_rounded,
-                          label:
-                              '${enrollment!.remainingDays} ${context.t.course.detail.daysLeft}',
-                          isHighlight: true,
-                        ),
-                      ],
+                      ...() {
+                        final items = [
+                          if (course.enrolledCount > 0)
+                            _StatChip(
+                              icon: Icons.people_alt_rounded,
+                              label:
+                                  '${course.enrolledCount} ${context.t.course.detail.students}',
+                            ),
+                          if (course.totalVideos > 0)
+                            _StatChip(
+                              icon: Icons.play_circle_filled_rounded,
+                              label:
+                                  '${course.totalVideos} ${context.t.course.detail.videos}',
+                            ),
+                          if (course.totalDurationMinutes > 0)
+                            _StatChip(
+                              icon: Icons.access_time_filled_rounded,
+                              label: _formatDuration(course.totalDurationMinutes),
+                            ),
+                          if (enrollment != null &&
+                              enrollment!.remainingDays > 0)
+                            _StatChip(
+                              icon: Icons.event_available_rounded,
+                              label:
+                                  '${enrollment!.remainingDays} ${context.t.course.detail.daysLeft}',
+                              isHighlight: true,
+                            ),
+                        ];
+                        if (items.isEmpty) return <Widget>[];
+                        return items
+                            .expand((w) => [w, const Gap(12)])
+                            .toList()
+                          ..removeLast();
+                      }(),
                     ],
                   ),
                 ),

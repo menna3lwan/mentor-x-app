@@ -44,9 +44,13 @@ final class MockHomeRepository implements StudentHomeRepository {
   }
 
   @override
-  Future<List<AnnouncementEntity>> getRecentAnnouncements() async {
+  Future<List<AnnouncementEntity>> getRecentAnnouncements({int? size}) async {
     await Future<void>.delayed(delay);
-    return MockHomeDashboardGenerator.announcements();
+    final announcements = MockHomeDashboardGenerator.announcements();
+    if (size != null && size < announcements.length) {
+      return announcements.sublist(0, size);
+    }
+    return announcements;
   }
 
   @override

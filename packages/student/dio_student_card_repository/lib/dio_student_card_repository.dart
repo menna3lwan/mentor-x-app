@@ -27,6 +27,12 @@ final class DioStudentCardRepository
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
+        codeFromStatusCode: (statusCode) {
+          if (statusCode == 404) {
+            return StudentCardRepositoryExceptionCode.cardNotFound;
+          }
+          return StudentCardRepositoryExceptionCode.failedToLoadCard;
+        },
         defaultCode: StudentCardRepositoryExceptionCode.failedToLoadCard,
       );
     }

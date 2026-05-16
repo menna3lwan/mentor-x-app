@@ -82,7 +82,8 @@ final class DioQuizRepository
               .toList(),
         },
       );
-      return QuizAttemptModel.fromJson(response.asMap());
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      return QuizAttemptModel.fromJson(data);
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
@@ -97,7 +98,7 @@ final class DioQuizRepository
   ) async {
     try {
       final response = await httpClient.post('/api/quizzes/$quizId/start');
-      final data = response.asMap();
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
 
       final attempt = QuizAttemptModel.fromJson(data);
 

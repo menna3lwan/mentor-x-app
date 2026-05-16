@@ -35,7 +35,7 @@ final class DioLeaderboardRepository
       final data = response.asMap();
       final entriesList = asList(data['entries']);
 
-      return entriesList.map((e) {
+      return entriesList.map<LeaderboardEntryEntity>((e) {
         return LeaderboardEntryModel.fromJson(asMap(e));
       }).toList();
     } on HttpClientResponse catch (e) {
@@ -64,7 +64,7 @@ final class DioLeaderboardRepository
       final data = response.asMap();
       final entriesList = asList(data['entries']);
 
-      return entriesList.map((e) {
+      return entriesList.map<LeaderboardEntryEntity>((e) {
         return LeaderboardEntryModel.fromJson(asMap(e));
       }).toList();
     } on HttpClientResponse catch (e) {
@@ -93,7 +93,7 @@ final class DioLeaderboardRepository
       final data = response.asMap();
       final entriesList = asList(data['entries']);
 
-      return entriesList.map((e) {
+      return entriesList.map<LeaderboardEntryEntity>((e) {
         return LeaderboardEntryModel.fromJson(asMap(e));
       }).toList();
     } on HttpClientResponse catch (e) {
