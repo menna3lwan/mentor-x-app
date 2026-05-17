@@ -1291,6 +1291,66 @@ class TranslationsParentEn {
 
 	late final TranslationsParentCommunicationEn communication =
 			TranslationsParentCommunicationEn._(_root);
+
+	late final TranslationsParentProfileEn profile =
+			TranslationsParentProfileEn._(_root);
+
+	late final TranslationsParentAuthEn auth =
+			TranslationsParentAuthEn._(_root);
+}
+
+// Path: parent.auth
+class TranslationsParentAuthEn {
+	TranslationsParentAuthEn._(this._root);
+	final Translations _root; // ignore: unused_field
+
+	String get otpTitle => 'Verify Your Number';
+	String otpSubtitle({required Object phone}) =>
+			'Enter the 6-digit code sent to\n${phone}';
+	String get otpFieldLabel => 'Verification Code';
+	String get otpFieldHint => '000000';
+	String get verifyAndContinue => 'Verify & Continue';
+	String get resending => 'Resending…';
+	String get resendCode => 'Resend Code';
+	String resendInSeconds({required Object seconds}) =>
+			'Resend in ${seconds}s';
+	String get verificationFailed => 'Verification failed';
+}
+
+// Path: parent.profile
+class TranslationsParentProfileEn {
+	TranslationsParentProfileEn._(this._root);
+	final Translations _root; // ignore: unused_field
+
+	String get verifiedAccount => 'Verified Account';
+	String get fullNameLabel => 'Full Name';
+	String get phoneNumberLabel => 'Phone Number';
+	String get emailLabel => 'Email Address';
+	String get notificationsEnabled => 'Enabled';
+	String get notificationsDisabled => 'Disabled';
+	String get securityValue => 'Password & Biometrics';
+	String get signOutConfirmTitle => 'Sign Out?';
+	String get signOutConfirmMessage =>
+			'You will be signed out and returned to the login screen.';
+	String get signOutAction => 'Sign Out';
+	String get signOutCancel => 'Cancel';
+	String get fallbackName => 'Parent User';
+	String get settingsTitle => 'Settings';
+	String get appConfigurationSection => 'App Configuration';
+	String get preferencesSection => 'Preferences';
+	String get supportSection => 'Support';
+	String get pushNotifications => 'Push Notifications';
+	String get themeMode => 'Theme Mode';
+	String get themeSystem => 'System';
+	String get themeLight => 'Light';
+	String get themeDark => 'Dark';
+	String get appLanguage => 'App Language';
+	String get languageEnglish => 'English';
+	String get languageArabic => 'العربية';
+	String get helpCenter => 'Help Center';
+	String get helpCenterValue => 'FAQs & Support';
+	String get aboutTitle => 'About MentorX';
+	String aboutVersion({required Object version}) => 'Version ${version}';
 }
 
 // Path: parent.communication

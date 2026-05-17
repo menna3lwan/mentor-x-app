@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:gap/gap.dart';
+import 'package:mentorx_core/mentorx_core.dart';
+import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:mix/mix.dart';
-import '../bloc/profile_bloc.dart';
 
+import '../../../core/blocs/app_authentication_cubit/app_authentication_cubit.dart';
+import '../../../core/routing/app_routes.dart';
+import '../widgets/widgets.dart';
+
+/// Read-only profile surface for the currently authenticated parent. Pulls
+/// user data straight from [AppAuthenticationCubit] — no separate fetch
+/// needed because the cubit is already the source of truth.
 class ParentProfilePage extends StatelessWidget {
   const ParentProfilePage({super.key});
 
@@ -12,252 +19,149 @@ class ParentProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = Translations.of(context).parent;
 
-    return BlocProvider(
-      create: (context) => ProfileBloc()..add(ProfileStarted()),
-      child: BlocBuilder<ProfileBloc, ProfileState>(
-        builder: (context, state) {
-          return AppDashboardScaffold(
-            title: t.myProfile,
-            body: const ParentProfileView(),
+    return AppDashboardScaffold(
+      title: t.myProfile,
+      body: BlocBuilder<AppAuthenticationCubit, AppAuthenticationState>(
+        buildWhen: (a, b) => a.user != b.user,
+        builder: (context, authState) {
+          final profile = authState.user;
+
+          if (profile == null) {
+            return const Center(child: ProfileHeaderSkeleton());
+          }
+
+          return ListView(
+            physics: const BouncingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics(),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            children: [
+              ProfileHeaderWidget(
+                name: profile.fullName.isEmpty
+                    ? t.profile.fallbackName
+                    : profile.fullName,
+                verifiedLabel: t.profile.verifiedAccount,
+                isVerified: profile.status == ParentStatus.active,
+                onChangeAvatarPressed: () {},
+              ),
+              const Gap(40),
+              ProfileSection(
+                title: t.accountInfo,
+                children: [
+                  ProfileTileWidget(
+                    icon: Icons.person_rounded,
+                    label: t.profile.fullNameLabel,
+                    value: profile.fullName.isEmpty ? '—' : profile.fullName,
+                  ),
+                  ProfileTileWidget(
+                    icon: Icons.phone_android_rounded,
+                    label: t.profile.phoneNumberLabel,
+                    value: profile.phoneNumber.isEmpty
+                        ? '—'
+                        : profile.phoneNumber,
+                  ),
+                  ProfileTileWidget(
+                    icon: Icons.email_rounded,
+                    label: t.profile.emailLabel,
+                    value: (profile.email == null || profile.email!.isEmpty)
+                        ? '—'
+                        : profile.email!,
+                  ),
+                ],
+              ),
+              const Gap(32),
+              ProfileSection(
+                title: t.appSettings,
+                children: [
+                  ProfileTileWidget(
+                    icon: Icons.notifications_rounded,
+                    label: t.notifications,
+                    value: t.profile.notificationsEnabled,
+                    onTap: () => const SettingsRoute().go(context),
+                  ),
+                  ProfileTileWidget(
+                    icon: Icons.security_rounded,
+                    label: t.security,
+                    value: t.profile.securityValue,
+                    onTap: () {},
+                  ),
+                ],
+              ),
+              const Gap(48),
+              _SignOutButton(
+                label: t.profile.signOutAction,
+                onPressed: () => _confirmSignOut(context, t),
+              ),
+              const Gap(40),
+            ],
           );
         },
       ),
     );
   }
-}
 
-class ParentProfileView extends StatelessWidget {
-  const ParentProfileView({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final t = Translations.of(context).parent;
-
-    return BlocBuilder<ProfileBloc, ProfileState>(
-      builder: (context, state) {
-        if (state.status == ProfileStatus.loading) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        if (state.status == ProfileStatus.failure) {
-          return AppErrorView(
-            message: state.errorMessage ?? t.unableToLoad,
-            onRetry: () => context.read<ProfileBloc>().add(ProfileStarted()),
-          );
-        }
-
-        final profile = state.profileData;
-        
-        return ListView(
-          physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-          children: [
-            // Avatar and Name
-            Center(
-              child: Column(
-                children: [
-                  Stack(
-                    alignment: Alignment.bottomRight,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(color: context.brandPrimaryColor.withValues(alpha: 0.1), width: 4),
-                        ),
-                        child: CircleAvatar(
-                          radius: 50,
-                          backgroundColor: context.backgroundSecondaryColor,
-                          child: Icon(Icons.person_rounded, size: 60, color: context.brandPrimaryColor),
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: context.brandPrimaryColor,
-                          shape: BoxShape.circle,
-                          border: Border.all(color: context.backgroundPrimaryColor, width: 3),
-                        ),
-                        child: const Icon(Icons.camera_alt_rounded, size: 16, color: Colors.white),
-                      ),
-                    ],
-                  ),
-                  const Gap(16),
-                  Text(
-                    profile?.fullName ?? 'Parent User',
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w900,
-                      color: context.textPrimaryColor,
-                    ),
-                  ),
-                  const Gap(4),
-                  StatusBadge(
-                    label: 'Verified Account',
-                    color: context.statusSuccessColor,
-                    isSmall: true,
-                  ),
-                ],
+  Future<void> _confirmSignOut(
+    BuildContext context,
+    TranslationsParentEn t,
+  ) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+          ),
+          backgroundColor: dialogContext.backgroundSecondaryColor,
+          title: Text(t.profile.signOutConfirmTitle),
+          content: Text(t.profile.signOutConfirmMessage),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(false),
+              child: Text(t.profile.signOutCancel),
+            ),
+            TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: dialogContext.statusDangerColor,
               ),
+              onPressed: () => Navigator.of(dialogContext).pop(true),
+              child: Text(t.profile.signOutAction),
             ),
-            const Gap(40),
-
-            _ProfileSection(
-              title: t.accountInfo,
-              children: [
-                _ProfileTile(
-                  icon: Icons.person_rounded,
-                  label: 'Full Name',
-                  value: profile?.fullName ?? '-',
-                ),
-                _ProfileTile(
-                  icon: Icons.phone_android_rounded,
-                  label: 'Phone Number',
-                  value: profile?.phoneNumber ?? '-',
-                ),
-                _ProfileTile(
-                  icon: Icons.email_rounded,
-                  label: 'Email Address',
-                  value: profile?.email ?? '-',
-                ),
-              ],
-            ),
-            const Gap(32),
-            _ProfileSection(
-              title: t.appSettings,
-              children: [
-                _ProfileTile(
-                  icon: Icons.notifications_rounded,
-                  label: t.notifications,
-                  value: 'Enabled',
-                  onTap: () {},
-                ),
-                _ProfileTile(
-                  icon: Icons.security_rounded,
-                  label: t.security,
-                  value: 'Password & Biometrics',
-                  onTap: () {},
-                ),
-              ],
-            ),
-            const Gap(48),
-            MentorXButton(
-              onPressed: () {
-                // Logout logic
-              },
-              label: t.signOut,
-              style: Style(
-                $box.color(context.statusDangerColor.withValues(alpha: 0.1)),
-                $text.color(context.statusDangerColor),
-              ),
-            ),
-            const Gap(40),
           ],
         );
       },
     );
+
+    if (confirmed != true || !context.mounted) return;
+
+    try {
+      await context
+          .read<AuthenticationRepository<ParentEntity>>()
+          .logout();
+    } catch (_) {
+      // Even if the network call fails, drop the local session.
+    }
+    if (!context.mounted) return;
+    context.read<AppAuthenticationCubit>().logout();
+    if (!context.mounted) return;
+    const LoginPageRoute().go(context);
   }
 }
 
-// Removed _BuildHeader in favor of AppDashboardScaffold
-
-class _ProfileSection extends StatelessWidget {
-  final String title;
-  final List<Widget> children;
-
-  const _ProfileSection({required this.title, required this.children});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 8, bottom: 12),
-          child: Text(
-            title.toUpperCase(),
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w900,
-              color: context.textTertiaryColor,
-              letterSpacing: 1.2,
-            ),
-          ),
-        ),
-        Container(
-          decoration: BoxDecoration(
-            color: context.backgroundSecondaryColor,
-            borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: context.textTertiaryColor.withValues(alpha: 0.1)),
-          ),
-          child: Column(
-            children: children,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _ProfileTile extends StatelessWidget {
-  final IconData icon;
+class _SignOutButton extends StatelessWidget {
   final String label;
-  final String value;
-  final VoidCallback? onTap;
+  final VoidCallback onPressed;
 
-  const _ProfileTile({
-    required this.icon,
-    required this.label,
-    required this.value,
-    this.onTap,
-  });
+  const _SignOutButton({required this.label, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(24),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: context.brandPrimaryColor.withValues(alpha: 0.08),
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Icon(icon, color: context.brandPrimaryColor, size: 22),
-            ),
-            const Gap(16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    label,
-                    style: TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w800,
-                      color: context.textTertiaryColor,
-                    ),
-                  ),
-                  const Gap(4),
-                  Text(
-                    value,
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w800,
-                      color: context.textPrimaryColor,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            if (onTap != null)
-              Icon(Icons.arrow_forward_ios_rounded, color: context.textTertiaryColor, size: 14),
-          ],
-        ),
+    return MentorXButton(
+      onPressed: onPressed,
+      label: label,
+      icon: Icons.logout_rounded,
+      style: Style(
+        $box.color(context.statusDangerColor.withValues(alpha: 0.1)),
+        $text.style.color(context.statusDangerColor),
       ),
     );
   }

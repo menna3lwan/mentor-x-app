@@ -257,7 +257,7 @@ final class _StepBody extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: context.backgroundSecondaryColor,
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
@@ -391,7 +391,7 @@ class _RelationshipDropdown extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.backgroundSecondaryColor,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: context.borderPrimaryColor.withValues(alpha: 0.5)),
         boxShadow: [
@@ -499,7 +499,7 @@ class _StudentPreviewCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.backgroundSecondaryColor,
         borderRadius: BorderRadius.circular(28),
         boxShadow: [
           BoxShadow(

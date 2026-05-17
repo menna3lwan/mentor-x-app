@@ -43,7 +43,7 @@ final class OtpPage extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.all(24),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: context.backgroundSecondaryColor,
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(

@@ -1,37 +1,31 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:bloc/bloc.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 
 part 'profile_event.dart';
 part 'profile_state.dart';
 
-class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
-  ProfileBloc() : super(const ProfileState()) {
+/// Lightweight bloc kept as a placeholder for future profile-mutation flows
+/// (e.g. edit profile, change avatar). The parent profile page itself reads
+/// the authenticated user directly from `AppAuthenticationCubit`, so this
+/// bloc is currently a no-op except for compatibility with any
+/// import-site that referenced the old API.
+final class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
+  ProfileBloc() : super(ProfileState.initial()) {
     on<ProfileStarted>(_onStarted);
     on<ProfileSettingsUpdated>(_onSettingsUpdated);
   }
 
-  Future<void> _onStarted(ProfileStarted event, Emitter<ProfileState> emit) async {
-    emit(state.copyWith(status: ProfileStatus.loading));
-    try {
-      // Mocking parent profile data for now
-      // In a real app, this would come from an AuthenticationRepository or ProfileRepository
-      final mockParent = ParentEntity(
-        id: 'parent_1',
-        firstName: 'Parent',
-        lastName: 'User',
-        email: 'parent@user.com',
-        phoneNumber: '+1234567890',
-        status: ParentStatus.active,
-        createdAt: DateTime(2023),
-        updatedAt: DateTime(2023),
-      );
-      emit(state.copyWith(status: ProfileStatus.success, profileData: mockParent));
-    } catch (e) {
-      emit(state.copyWith(status: ProfileStatus.failure, errorMessage: e.toString()));
-    }
+  Future<void> _onStarted(
+    ProfileStarted event,
+    Emitter<ProfileState> emit,
+  ) async {
+    // Intentionally no-op: profile data is owned by AppAuthenticationCubit.
   }
 
-  Future<void> _onSettingsUpdated(ProfileSettingsUpdated event, Emitter<ProfileState> emit) async {
-    // Handle settings update
+  Future<void> _onSettingsUpdated(
+    ProfileSettingsUpdated event,
+    Emitter<ProfileState> emit,
+  ) async {
+    // Reserved for future settings persistence work.
   }
 }

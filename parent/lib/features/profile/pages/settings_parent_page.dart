@@ -1,247 +1,196 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:gap/gap.dart';
-import '../bloc/profile_bloc.dart';
+import 'package:mentorx_ui/mentorx_ui.dart';
 
-class SettingsParentPage extends StatelessWidget {
+import '../../../core/blocs/app_locale_cubit/app_locale_cubit.dart';
+import '../widgets/widgets.dart';
+
+/// Configurable app preferences for the parent — push notifications,
+/// theme mode, language, help links. Language is wired through the existing
+/// [AppLocaleCubit].
+class SettingsParentPage extends StatefulWidget {
   const SettingsParentPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ProfileBloc()..add(ProfileStarted()),
-      child: BlocBuilder<ProfileBloc, ProfileState>(
-        builder: (context, state) {
-          return AppDashboardScaffold(
-            title: 'Settings',
-            body: const SettingsParentView(),
-          );
-        },
-      ),
-    );
-  }
+  State<SettingsParentPage> createState() => _SettingsParentPageState();
 }
 
-class SettingsParentView extends StatelessWidget {
-  const SettingsParentView({super.key});
+class _SettingsParentPageState extends State<SettingsParentPage> {
+  bool _pushNotifications = true;
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ProfileBloc, ProfileState>(
-      builder: (context, state) {
-        if (state.status == ProfileStatus.loading) {
-          return const Center(child: CircularProgressIndicator());
-        }
+    final t = Translations.of(context).parent;
 
-        return ListView(
-          physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-          children: [
-            _SettingsSection(
-              title: 'App Configuration',
-              children: [
-                _SettingsToggleTile(
-                  icon: Icons.notifications_active_rounded,
-                  label: 'Push Notifications',
-                  value: state.settingsData['notificationsEnabled'] as bool? ?? true,
-                  onChanged: (val) {
-                    // context.read<ProfileBloc>().add(ProfileSettingsUpdated({'notificationsEnabled': val}));
-                  },
-                ),
-              ],
-            ),
-            const Gap(24),
-            _SettingsSection(
-              title: 'Preferences',
-              children: [
-                _SettingsNavigationTile(
-                  icon: Icons.palette_rounded,
-                  label: 'Theme Mode',
-                  value: state.settingsData['themeMode'].toString().toUpperCase(),
-                  onTap: () {},
-                ),
-                _SettingsNavigationTile(
-                  icon: Icons.language_rounded,
-                  label: 'App Language',
-                  value: state.settingsData['languageCode'].toString().toUpperCase(),
-                  onTap: () {},
-                ),
-              ],
-            ),
-            const Gap(24),
-            _SettingsSection(
-              title: 'Support',
-              children: [
-                _SettingsNavigationTile(
-                  icon: Icons.help_outline_rounded,
-                  label: 'Help Center',
-                  value: 'FAQs & Support',
-                  onTap: () {},
-                ),
-                _SettingsNavigationTile(
-                  icon: Icons.info_outline_rounded,
-                  label: 'About MentorX',
-                  value: 'Version 1.0.0',
-                  onTap: () {},
-                ),
-              ],
-            ),
-          ],
-        );
-      },
-    );
-  }
-}
-
-// Removed _BuildHeader in favor of AppDashboardScaffold
-
-class _SettingsSection extends StatelessWidget {
-  final String title;
-  final List<Widget> children;
-
-  const _SettingsSection({required this.title, required this.children});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 8, bottom: 12),
-          child: Text(
-            title.toUpperCase(),
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w900,
-              color: context.textTertiaryColor,
-              letterSpacing: 1.0,
-            ),
-          ),
+    return AppDashboardScaffold(
+      title: t.profile.settingsTitle,
+      body: ListView(
+        physics: const BouncingScrollPhysics(
+          parent: AlwaysScrollableScrollPhysics(),
         ),
-        Container(
-          decoration: BoxDecoration(
-            color: context.backgroundSecondaryColor,
-            borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: context.textTertiaryColor.withValues(alpha: 0.1)),
-          ),
-          child: Column(
-            children: children,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _SettingsToggleTile extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final bool value;
-  final ValueChanged<bool> onChanged;
-
-  const _SettingsToggleTile({
-    required this.icon,
-    required this.label,
-    required this.value,
-    required this.onChanged,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-      child: Row(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: context.brandPrimaryColor.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Icon(icon, color: context.brandPrimaryColor, size: 22),
-          ),
-          const Gap(16),
-          Expanded(
-            child: Text(
-              label,
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w800,
-                color: context.textPrimaryColor,
+          ProfileSection(
+            title: t.profile.appConfigurationSection,
+            children: [
+              ProfileToggleTileWidget(
+                icon: Icons.notifications_active_rounded,
+                label: t.profile.pushNotifications,
+                value: _pushNotifications,
+                onChanged: (val) =>
+                    setState(() => _pushNotifications = val),
               ),
-            ),
+            ],
           ),
-          Switch.adaptive(
-            value: value,
-            onChanged: onChanged,
-            activeColor: context.brandPrimaryColor,
+          const Gap(24),
+          BlocBuilder<AppLocaleCubit, AppLocaleState>(
+            buildWhen: (a, b) => a.languageCode != b.languageCode,
+            builder: (context, localeState) {
+              final isArabic = localeState.languageCode == 'ar';
+              return ProfileSection(
+                title: t.profile.preferencesSection,
+                children: [
+                  ProfileTileWidget(
+                    icon: Icons.palette_rounded,
+                    label: t.profile.themeMode,
+                    value: t.profile.themeSystem,
+                    onTap: () {},
+                  ),
+                  ProfileTileWidget(
+                    icon: Icons.language_rounded,
+                    label: t.profile.appLanguage,
+                    value: isArabic
+                        ? t.profile.languageArabic
+                        : t.profile.languageEnglish,
+                    onTap: () => _openLanguagePicker(context, t, isArabic),
+                  ),
+                ],
+              );
+            },
           ),
+          const Gap(24),
+          ProfileSection(
+            title: t.profile.supportSection,
+            children: [
+              ProfileTileWidget(
+                icon: Icons.help_outline_rounded,
+                label: t.profile.helpCenter,
+                value: t.profile.helpCenterValue,
+                onTap: () {},
+              ),
+              ProfileTileWidget(
+                icon: Icons.info_outline_rounded,
+                label: t.profile.aboutTitle,
+                value: t.profile.aboutVersion(version: '1.0.0'),
+                onTap: () {},
+              ),
+            ],
+          ),
+          const Gap(40),
         ],
       ),
     );
   }
+
+  Future<void> _openLanguagePicker(
+    BuildContext context,
+    TranslationsParentEn t,
+    bool isArabic,
+  ) async {
+    final cubit = context.read<AppLocaleCubit>();
+    final selected = await showModalBottomSheet<String>(
+      context: context,
+      backgroundColor: context.backgroundSecondaryColor,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (ctx) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: ctx.textTertiaryColor.withValues(alpha: 0.3),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+                const Gap(16),
+                _LanguageOption(
+                  label: t.profile.languageEnglish,
+                  code: 'en',
+                  isSelected: !isArabic,
+                  onTap: () => Navigator.of(ctx).pop('en'),
+                ),
+                _LanguageOption(
+                  label: t.profile.languageArabic,
+                  code: 'ar',
+                  isSelected: isArabic,
+                  onTap: () => Navigator.of(ctx).pop('ar'),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+
+    if (selected != null && selected != cubit.state.languageCode) {
+      await cubit.setLocale(selected);
+    }
+  }
 }
 
-class _SettingsNavigationTile extends StatelessWidget {
-  final IconData icon;
+class _LanguageOption extends StatelessWidget {
   final String label;
-  final String value;
+  final String code;
+  final bool isSelected;
   final VoidCallback onTap;
 
-  const _SettingsNavigationTile({
-    required this.icon,
+  const _LanguageOption({
     required this.label,
-    required this.value,
+    required this.code,
+    required this.isSelected,
     required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return ListTile(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(24),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: context.brandPrimaryColor.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Icon(icon, color: context.brandPrimaryColor, size: 22),
-            ),
-            const Gap(16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    label,
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w800,
-                      color: context.textPrimaryColor,
-                    ),
-                  ),
-                  const Gap(2),
-                  Text(
-                    value,
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: context.textTertiaryColor,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Icon(Icons.arrow_forward_ios_rounded, color: context.textTertiaryColor, size: 14),
-          ],
+      leading: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: context.brandPrimaryColor.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Text(
+          code.toUpperCase(),
+          style: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w900,
+            color: context.brandPrimaryColor,
+          ),
         ),
       ),
+      title: Text(
+        label,
+        style: TextStyle(
+          fontWeight: FontWeight.w800,
+          color: context.textPrimaryColor,
+        ),
+      ),
+      trailing: isSelected
+          ? Icon(
+              Icons.check_circle_rounded,
+              color: context.brandPrimaryColor,
+            )
+          : null,
     );
   }
 }

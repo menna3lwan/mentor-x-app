@@ -1,37 +1,12 @@
 part of 'profile_bloc.dart';
 
-enum ProfileStatus { initial, loading, success, failure }
+/// Minimal state — kept for backward compatibility. The active profile is
+/// owned by `AppAuthenticationCubit`, not this bloc.
+final class ProfileState extends Equatable {
+  const ProfileState._();
 
-class ProfileState extends Equatable {
-  final ProfileStatus status;
-  final ParentEntity? profileData;
-  final String? errorMessage;
-
-  const ProfileState({
-    this.status = ProfileStatus.initial,
-    this.profileData,
-    this.errorMessage,
-  });
-
-  ProfileState copyWith({
-    ProfileStatus? status,
-    ParentEntity? profileData,
-    String? errorMessage,
-  }) {
-    return ProfileState(
-      status: status ?? this.status,
-      profileData: profileData ?? this.profileData,
-      errorMessage: errorMessage ?? this.errorMessage,
-    );
-  }
+  factory ProfileState.initial() = ProfileState._;
 
   @override
-  List<Object?> get props => [status, profileData, errorMessage];
-
-  // Helper for settings data
-  Map<String, dynamic> get settingsData => {
-    'notificationsEnabled': true,
-    'themeMode': 'system',
-    'languageCode': 'en',
-  };
+  List<Object?> get props => const [];
 }

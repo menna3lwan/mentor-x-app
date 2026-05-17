@@ -1,6 +1,29 @@
 import 'package:mentorx_core/mentorx_core.dart';
 import 'announcement_model.dart';
 
+/// Safely reads a nested map property without triggering dynamic-call lints.
+/// Returns `null` if `parent` is not a map, or if the key is missing/null.
+String? _nestedString(dynamic parent, String key) {
+  if (parent is Map) {
+    final v = parent[key];
+    if (v == null) return null;
+    final s = v.toString();
+    return s.isEmpty ? null : s;
+  }
+  return null;
+}
+
+/// Returns the first non-null, non-empty string from [candidates], or `null`.
+String? _firstNonEmptyString(List<Object?> candidates) {
+  for (final c in candidates) {
+    if (c == null) continue;
+    final s = c.toString();
+    if (s.isEmpty) continue;
+    return s;
+  }
+  return null;
+}
+
 final class ParentHomeSummaryModel extends ParentHomeSummaryEntity {
   const ParentHomeSummaryModel({
     required super.overview,
@@ -11,25 +34,33 @@ final class ParentHomeSummaryModel extends ParentHomeSummaryEntity {
   });
 
   factory ParentHomeSummaryModel.fromJson(Map<String, dynamic> json) {
+    final overviewRaw = json['overview'];
+    final latestAnnouncementRaw =
+        json['latestAnnouncement'] ?? json['latest_announcement'];
+
     return ParentHomeSummaryModel(
-      overview: (json['overview'] != null)
-          ? ParentHomeOverviewModel.fromJson(ModelParser.asMap(json['overview']))
+      overview: overviewRaw != null
+          ? ParentHomeOverviewModel.fromJson(ModelParser.asMap(overviewRaw))
           : const ParentHomeOverviewEntity(
               unpaidInvoicesCount: 0,
               avgAttendanceRate: 0,
               avgGrade: 0,
               totalPoints: 0,
             ),
-      upcomingSessions: ModelParser.asList(json['upcomingSessions'] ?? json['upcoming_sessions'])
-          .map((e) => ParentUpcomingSessionModel.fromJson(ModelParser.asMap(e)))
-          .toList(),
-      recentGrades: ModelParser.asList(json['recentGrades'] ?? json['recent_grades'])
-          .map((e) => ParentRecentGradeModel.fromJson(ModelParser.asMap(e)))
-          .toList(),
-      latestAnnouncement: (json['latestAnnouncement'] != null || json['latest_announcement'] != null)
-          ? AnnouncementModel.fromJson(ModelParser.asMap(json['latestAnnouncement'] ?? json['latest_announcement']))
+      upcomingSessions:
+          ModelParser.asList(json['upcomingSessions'] ?? json['upcoming_sessions'])
+              .map((e) => ParentUpcomingSessionModel.fromJson(ModelParser.asMap(e)))
+              .toList(),
+      recentGrades:
+          ModelParser.asList(json['recentGrades'] ?? json['recent_grades'])
+              .map((e) => ParentRecentGradeModel.fromJson(ModelParser.asMap(e)))
+              .toList(),
+      latestAnnouncement: latestAnnouncementRaw != null
+          ? AnnouncementModel.fromJson(ModelParser.asMap(latestAnnouncementRaw))
           : null,
-      childrenSummaries: ModelParser.asList(json['childrenSummaries'] ?? json['children_summaries'])
+      childrenSummaries: ModelParser.asList(
+        json['childrenSummaries'] ?? json['children_summaries'],
+      )
           .map((e) => ParentChildSummaryModel.fromJson(ModelParser.asMap(e)))
           .toList(),
     );
@@ -46,10 +77,16 @@ final class ParentHomeOverviewModel extends ParentHomeOverviewEntity {
 
   factory ParentHomeOverviewModel.fromJson(Map<String, dynamic> json) {
     return ParentHomeOverviewModel(
-      unpaidInvoicesCount: ModelParser.asInt(json['unpaid_invoices_count'] ?? json['unpaidInvoicesCount']),
-      avgAttendanceRate: ModelParser.asDouble(json['avg_attendance_rate'] ?? json['avgAttendanceRate']),
+      unpaidInvoicesCount: ModelParser.asInt(
+        json['unpaid_invoices_count'] ?? json['unpaidInvoicesCount'],
+      ),
+      avgAttendanceRate: ModelParser.asDouble(
+        json['avg_attendance_rate'] ?? json['avgAttendanceRate'],
+      ),
       avgGrade: ModelParser.asDouble(json['avg_grade'] ?? json['avgGrade']),
-      totalPoints: ModelParser.asInt(json['total_points'] ?? json['totalPoints']),
+      totalPoints: ModelParser.asInt(
+        json['total_points'] ?? json['totalPoints'],
+      ),
     );
   }
 }
@@ -70,7 +107,9 @@ final class ParentRecentActivityModel extends ParentRecentActivityEntity {
       type: ModelParser.asString(json['type'], fallback: 'system'),
       title: ModelParser.asString(json['title']),
       description: ModelParser.asString(json['description']),
-      timestamp: ModelParser.asDateTime(json['timestamp'] ?? json['created_at']) ?? DateTime.now(),
+      timestamp:
+          ModelParser.asDateTime(json['timestamp'] ?? json['created_at']) ??
+              DateTime.now(),
       metadata: ModelParser.asMap(json['metadata']),
     );
   }
@@ -88,15 +127,33 @@ final class ParentChildSummaryModel extends ParentChildSummaryEntity {
   });
 
   factory ParentChildSummaryModel.fromJson(Map<String, dynamic> json) {
+    final lastActivityRaw = json['last_activity'] ?? json['lastActivity'];
     return ParentChildSummaryModel(
-      childId: ModelParser.asString(json['childId'] ?? json['child_id'] ?? json['student_id'] ?? json['id']),
+      childId: ModelParser.asString(
+        json['childId'] ??
+            json['child_id'] ??
+            json['student_id'] ??
+            json['id'],
+      ),
       name: ModelParser.asString(json['name']),
-      profileImageUrl: ModelParser.asString(json['profileImageUrl'] ?? json['profile_image_url'] ?? json['avatarUrl']),
-      grade: ModelParser.asString(json['grade'] ?? json['gradeName'] ?? json['grade_name']),
-      attendanceRate: ModelParser.asDouble(json['attendanceRate'] ?? json['attendance_rate']),
-      averageGrade: ModelParser.asDouble(json['averageGrade'] ?? json['average_grade'] ?? json['avg_grade']),
-      lastActivity: (json['last_activity'] != null || json['lastActivity'] != null)
-          ? ParentRecentActivityModel.fromJson(ModelParser.asMap(json['last_activity'] ?? json['lastActivity']))
+      profileImageUrl: _firstNonEmptyString([
+        json['profileImageUrl'],
+        json['profile_image_url'],
+        json['avatarUrl'],
+      ]),
+      grade: ModelParser.asString(
+        json['grade'] ?? json['gradeName'] ?? json['grade_name'],
+      ),
+      attendanceRate: ModelParser.asDouble(
+        json['attendanceRate'] ?? json['attendance_rate'],
+      ),
+      averageGrade: ModelParser.asDouble(
+        json['averageGrade'] ?? json['average_grade'] ?? json['avg_grade'],
+      ),
+      lastActivity: lastActivityRaw != null
+          ? ParentRecentActivityModel.fromJson(
+              ModelParser.asMap(lastActivityRaw),
+            )
           : null,
     );
   }
@@ -133,21 +190,28 @@ final class ParentUpcomingSessionModel extends ParentUpcomingSessionEntity {
       json['duration_minutes'] ?? json['durationMinutes'],
     );
 
+    final courseRaw = json['course'];
+    final teacherRaw = json['teacher'];
+
     return ParentUpcomingSessionModel(
       id: ModelParser.asString(json['id']),
       title: ModelParser.asString(json['title'] ?? json['name']),
       courseName: ModelParser.asString(
-        json['course_name'] ?? json['courseName'] ?? json['course']?['name'],
+        json['course_name'] ??
+            json['courseName'] ??
+            _nestedString(courseRaw, 'name'),
       ),
-      teacherName: ModelParser.asString(
-        json['teacher_name'] ?? json['teacherName'] ?? json['teacher']?['name'],
-      ),
+      teacherName: _firstNonEmptyString([
+        json['teacher_name'],
+        json['teacherName'],
+        _nestedString(teacherRaw, 'name'),
+      ]),
       scheduledAt: scheduled,
       duration: durationMinutes > 0 ? Duration(minutes: durationMinutes) : null,
       status: _parseStatus(
         ModelParser.asString(json['status'], fallback: 'scheduled'),
       ),
-      location: ModelParser.asString(json['location'] ?? json['venue']),
+      location: _firstNonEmptyString([json['location'], json['venue']]),
     );
   }
 
@@ -195,7 +259,12 @@ final class ParentRecentGradeModel extends ParentRecentGradeEntity {
     final percentageRaw = ModelParser.asDouble(json['percentage']);
     final percentage = percentageRaw > 0
         ? percentageRaw
-        : (total > 0 ? (score / total) * 100 : 0);
+        : (total > 0 ? (score / total) * 100 : 0.0);
+
+    final hasPassedFlag =
+        json['passed'] != null || json['is_passed'] != null;
+
+    final courseRaw = json['course'];
 
     return ParentRecentGradeModel(
       id: ModelParser.asString(json['id']),
@@ -207,14 +276,16 @@ final class ParentRecentGradeModel extends ParentRecentGradeEntity {
       ),
       title: ModelParser.asString(json['title'] ?? json['name']),
       courseName: ModelParser.asString(
-        json['course_name'] ?? json['courseName'] ?? json['course']?['name'],
+        json['course_name'] ??
+            json['courseName'] ??
+            _nestedString(courseRaw, 'name'),
       ),
       score: score,
       totalMarks: total > 0 ? total : 100,
       percentage: percentage,
-      passed: json['passed'] == null && json['is_passed'] == null
-          ? null
-          : ModelParser.asBool(json['passed'] ?? json['is_passed']),
+      passed: hasPassedFlag
+          ? ModelParser.asBool(json['passed'] ?? json['is_passed'])
+          : null,
       gradedAt: ModelParser.asDateTime(
             json['graded_at'] ??
                 json['gradedAt'] ??
@@ -242,5 +313,3 @@ final class ParentRecentGradeModel extends ParentRecentGradeEntity {
     }
   }
 }
-
-

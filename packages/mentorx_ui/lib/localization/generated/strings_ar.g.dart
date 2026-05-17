@@ -1028,6 +1028,67 @@ class _TranslationsParentAr implements TranslationsParentEn {
 
 	@override late final _TranslationsParentCommunicationAr communication =
 			_TranslationsParentCommunicationAr._(_root);
+
+	@override late final _TranslationsParentProfileAr profile =
+			_TranslationsParentProfileAr._(_root);
+
+	@override late final _TranslationsParentAuthAr auth =
+			_TranslationsParentAuthAr._(_root);
+}
+
+// Path: parent.auth
+class _TranslationsParentAuthAr implements TranslationsParentAuthEn {
+	_TranslationsParentAuthAr._(this._root);
+	final TranslationsAr _root; // ignore: unused_field
+
+	@override String get otpTitle => 'تأكيد رقم الهاتف';
+	@override String otpSubtitle({required Object phone}) =>
+			'أدخل الكود المكوّن من 6 أرقام المُرسل إلى\n${phone}';
+	@override String get otpFieldLabel => 'كود التحقق';
+	@override String get otpFieldHint => '000000';
+	@override String get verifyAndContinue => 'تأكيد ومتابعة';
+	@override String get resending => 'جاري إعادة الإرسال…';
+	@override String get resendCode => 'إعادة إرسال الكود';
+	@override String resendInSeconds({required Object seconds}) =>
+			'إعادة الإرسال خلال ${seconds} ثانية';
+	@override String get verificationFailed => 'فشل التحقق';
+}
+
+// Path: parent.profile
+class _TranslationsParentProfileAr implements TranslationsParentProfileEn {
+	_TranslationsParentProfileAr._(this._root);
+	final TranslationsAr _root; // ignore: unused_field
+
+	@override String get verifiedAccount => 'حساب موثّق';
+	@override String get fullNameLabel => 'الاسم بالكامل';
+	@override String get phoneNumberLabel => 'رقم الهاتف';
+	@override String get emailLabel => 'البريد الإلكتروني';
+	@override String get notificationsEnabled => 'مفعّلة';
+	@override String get notificationsDisabled => 'متوقّفة';
+	@override String get securityValue => 'كلمة المرور والمصادقة الحيوية';
+	@override String get signOutConfirmTitle => 'تسجيل الخروج؟';
+	@override String get signOutConfirmMessage =>
+			'سيتم تسجيل خروجك وإعادتك إلى شاشة تسجيل الدخول.';
+	@override String get signOutAction => 'تسجيل الخروج';
+	@override String get signOutCancel => 'إلغاء';
+	@override String get fallbackName => 'ولي أمر';
+	@override String get settingsTitle => 'الإعدادات';
+	@override String get appConfigurationSection => 'إعدادات التطبيق';
+	@override String get preferencesSection => 'التفضيلات';
+	@override String get supportSection => 'الدعم';
+	@override String get pushNotifications => 'إشعارات الدفع';
+	@override String get themeMode => 'وضع الواجهة';
+	@override String get themeSystem => 'النظام';
+	@override String get themeLight => 'فاتح';
+	@override String get themeDark => 'داكن';
+	@override String get appLanguage => 'لغة التطبيق';
+	@override String get languageEnglish => 'English';
+	@override String get languageArabic => 'العربية';
+	@override String get helpCenter => 'مركز المساعدة';
+	@override String get helpCenterValue => 'الأسئلة الشائعة والدعم';
+	@override String get aboutTitle => 'عن MentorX';
+	@override String aboutVersion({required Object version}) =>
+			'الإصدار ${version}';
 }
 
 // Path: parent.communication

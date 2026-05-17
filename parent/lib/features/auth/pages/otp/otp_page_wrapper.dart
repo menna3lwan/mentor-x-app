@@ -1,9 +1,9 @@
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:parent/core/core.dart';
-import 'package:go_router/go_router.dart';
 
 import 'bloc/otp_bloc.dart';
 import 'otp_page.dart';
@@ -27,19 +27,22 @@ class _OtpPageWrapperState extends State<OtpPageWrapper> {
 
   @override
   Widget build(BuildContext context) {
+    final t = Translations.of(context).parent;
+
     return BlocProvider(
       create: (context) => OtpBloc(
-        authenticationRepository: context.read<AuthenticationRepository<ParentEntity>>(),
+        authenticationRepository:
+            context.read<AuthenticationRepository<ParentEntity>>(),
       ),
       child: BlocPresentationListener<OtpBloc, OtpPresentationEvent>(
         listener: (context, event) {
           switch (event) {
             case OtpSuccessPresentationEvent():
-              // On success, we need to check if the user has linked children
               _handleSuccessNavigation(context);
             case OtpFailurePresentationEvent(:final exception):
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(exception.message ?? 'Verification failed')),
+              MentorXUI.showToast(
+                message: exception.message ?? t.auth.verificationFailed,
+                isError: true,
               );
           }
         },
@@ -51,10 +54,14 @@ class _OtpPageWrapperState extends State<OtpPageWrapper> {
             return OtpPage(
               backButton: IconButton(
                 onPressed: () => context.pop(),
-                icon: Icon(Icons.arrow_back_ios_new_rounded, color: context.textPrimaryColor, size: 20),
+                icon: Icon(
+                  Icons.arrow_back_ios_new_rounded,
+                  color: context.textPrimaryColor,
+                  size: 20,
+                ),
               ),
               title: Text(
-                'Verify Your Number',
+                t.auth.otpTitle,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 28,
@@ -64,7 +71,7 @@ class _OtpPageWrapperState extends State<OtpPageWrapper> {
                 ),
               ),
               subtitle: Text(
-                'Enter the 6-digit code sent to\n${widget.phoneNumber}',
+                t.auth.otpSubtitle(phone: widget.phoneNumber),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 15,
@@ -75,8 +82,8 @@ class _OtpPageWrapperState extends State<OtpPageWrapper> {
               ),
               otpFields: MentorXTextFormField(
                 controller: _otpController,
-                label: 'Verification Code',
-                hintText: '000000',
+                label: t.auth.otpFieldLabel,
+                hintText: t.auth.otpFieldHint,
                 keyboardType: TextInputType.number,
                 maxLength: 6,
                 icon: Icons.lock_clock_rounded,
@@ -90,8 +97,9 @@ class _OtpPageWrapperState extends State<OtpPageWrapper> {
                 },
               ),
               verifyButton: MentorXButton(
-                label: 'Verify & Continue',
-                onPressed: state.loadingState.isLoading || _otpController.text.length < 6
+                label: t.auth.verifyAndContinue,
+                onPressed: state.loadingState.isLoading ||
+                        _otpController.text.length < 6
                     ? null
                     : () {
                         bloc.add(OtpSubmittedEvent(
@@ -103,16 +111,22 @@ class _OtpPageWrapperState extends State<OtpPageWrapper> {
               ),
               resendButton: TextButton(
                 onPressed: state.canResend && !state.isResending
-                    ? () => bloc.add(OtpResendRequested(phone: widget.phoneNumber))
+                    ? () => bloc.add(
+                          OtpResendRequested(phone: widget.phoneNumber),
+                        )
                     : null,
                 child: Text(
                   state.isResending
-                      ? 'Resending...'
+                      ? t.auth.resending
                       : state.canResend
-                          ? 'Resend Code'
-                          : 'Resend in ${state.resendCountdown}s',
+                          ? t.auth.resendCode
+                          : t.auth.resendInSeconds(
+                              seconds: state.resendCountdown,
+                            ),
                   style: TextStyle(
-                    color: state.canResend ? context.brandPrimaryColor : context.textTertiaryColor,
+                    color: state.canResend
+                        ? context.brandPrimaryColor
+                        : context.textTertiaryColor,
                     fontWeight: FontWeight.w800,
                     fontSize: 14,
                   ),
@@ -135,7 +149,7 @@ class _OtpPageWrapperState extends State<OtpPageWrapper> {
       } else {
         const HomePageRoute().go(context);
       }
-    } catch (e) {
+    } catch (_) {
       if (context.mounted) {
         const HomePageRoute().go(context);
       }

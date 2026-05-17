@@ -146,7 +146,7 @@ class _BuildHeader extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: context.backgroundSecondaryColor,
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(

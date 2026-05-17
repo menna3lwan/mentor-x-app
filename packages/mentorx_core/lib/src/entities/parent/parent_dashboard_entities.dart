@@ -7,7 +7,7 @@ enum ParentSessionStatus { scheduled, live, completed, missed, cancelled }
 /// (or recently happened to) a linked child. Intentionally a flatter shape
 /// than the student-facing [SessionEntity] — parents only need the at-a-glance
 /// fields.
-final class ParentUpcomingSessionEntity extends Equatable {
+class ParentUpcomingSessionEntity extends Equatable {
   final String id;
   final String title;
   final String courseName;
@@ -77,7 +77,7 @@ enum ParentGradeKind { quiz, assignment, exam, project, other }
 /// A lightweight, parent-context grade entry. The parent UI needs the score
 /// and pass/fail signal, not the full attempt/submission graph used inside the
 /// student app.
-final class ParentRecentGradeEntity extends Equatable {
+class ParentRecentGradeEntity extends Equatable {
   final String id;
   final ParentGradeKind kind;
   final String title;
