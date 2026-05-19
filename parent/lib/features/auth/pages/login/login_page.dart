@@ -39,13 +39,15 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final t = Translations.of(context).parent;
+
     return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) {
         if (state.loadingState == LoginLoadingState.success) {
           const HomePageRoute().go(context);
         } else if (state.loadingState == LoginLoadingState.failure) {
           MentorXUI.showToast(
-            message: state.exception?.message ?? 'Login failed. Please try again.',
+            message: state.exception?.message ?? t.auth.loginFailed,
             isError: true,
           );
         }
@@ -133,7 +135,7 @@ class _LoginPageState extends State<LoginPage> {
                           child: Column(
                             children: [
                               Text(
-                                'MentorX Parent',
+                                t.auth.appName,
                                 style: TextStyle(
                                   fontSize: 32,
                                   fontWeight: FontWeight.w900,
@@ -143,7 +145,7 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                               const Gap(10),
                               Text(
-                                'Monitor your child\'s academic journey with confidence',
+                                t.auth.loginTagline,
                                 style: TextStyle(
                                   fontSize: 15,
                                   color: context.textSecondaryColor,
@@ -165,13 +167,13 @@ class _LoginPageState extends State<LoginPage> {
                                 duration: const Duration(milliseconds: 500),
                                 delay: const Duration(milliseconds: 300),
                                 child: MentorXTextFormField(
-                                  label: 'Phone Number',
+                                  label: t.auth.phoneNumberLabel,
                                   controller: _phoneController,
                                   keyboardType: TextInputType.phone,
                                   icon: Icons.phone_android_rounded,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return 'Please enter your phone number';
+                                      return t.auth.phoneRequired;
                                     }
                                     return null;
                                   },
@@ -182,14 +184,14 @@ class _LoginPageState extends State<LoginPage> {
                                 duration: const Duration(milliseconds: 500),
                                 delay: const Duration(milliseconds: 400),
                                 child: MentorXTextFormField(
-                                  label: 'Password',
+                                  label: t.auth.passwordLabel,
                                   controller: _passwordController,
                                   isPassword: true,
                                   icon: Icons.lock_rounded,
                                   onFieldSubmitted: (_) => _onLoginSubmitted(),
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return 'Please enter your password';
+                                      return t.auth.passwordRequired;
                                     }
                                     return null;
                                   },
@@ -206,7 +208,7 @@ class _LoginPageState extends State<LoginPage> {
                                       const ForgetPasswordPageRoute().go(context);
                                     },
                                     child: Text(
-                                      'Forgot Password?',
+                                      t.auth.forgotPassword,
                                       style: TextStyle(
                                         color: context.brandPrimaryColor,
                                         fontWeight: FontWeight.w800,
@@ -225,7 +227,7 @@ class _LoginPageState extends State<LoginPage> {
                                     return MentorXButton(
                                       onPressed: _onLoginSubmitted,
                                       loading: state.loadingState == LoginLoadingState.loading,
-                                      label: 'Sign In to Dashboard',
+                                      label: t.auth.signInToDashboard,
                                     );
                                   },
                                 ),
@@ -238,7 +240,7 @@ class _LoginPageState extends State<LoginPage> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      "New to MentorX?",
+                                      t.auth.newToMentorX,
                                       style: TextStyle(
                                         color: context.textSecondaryColor,
                                         fontSize: 14,
@@ -250,7 +252,7 @@ class _LoginPageState extends State<LoginPage> {
                                         const ParentRegistrationPageRoute().go(context);
                                       },
                                       child: Text(
-                                        'Create Account',
+                                        t.auth.createAccount,
                                         style: TextStyle(
                                           color: context.brandPrimaryColor,
                                           fontWeight: FontWeight.w900,

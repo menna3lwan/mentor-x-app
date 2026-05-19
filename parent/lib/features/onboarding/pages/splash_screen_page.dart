@@ -69,7 +69,7 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
             ),
             const SizedBox(height: 8),
             Text(
-              'PARENT PORTAL',
+              Translations.of(context).parent.onboarding.parentPortalTag,
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w700,

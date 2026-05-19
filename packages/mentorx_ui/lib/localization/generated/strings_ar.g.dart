@@ -1034,6 +1034,29 @@ class _TranslationsParentAr implements TranslationsParentEn {
 
 	@override late final _TranslationsParentAuthAr auth =
 			_TranslationsParentAuthAr._(_root);
+
+	@override late final _TranslationsParentOnboardingAr onboarding =
+			_TranslationsParentOnboardingAr._(_root);
+}
+
+// Path: parent.onboarding
+class _TranslationsParentOnboardingAr
+		implements TranslationsParentOnboardingEn {
+	_TranslationsParentOnboardingAr._(this._root);
+	final TranslationsAr _root; // ignore: unused_field
+
+	@override String get parentPortalTag => 'بوابة ولي الأمر';
+	@override String get slide1Title => 'تابع التقدم';
+	@override String get slide1Description =>
+			'تابع درجات ابنك وحضوره وإنجازاته الأكاديمية لحظة بلحظة.';
+	@override String get slide2Title => 'ابقَ على تواصل';
+	@override String get slide2Description =>
+			'تواصل مباشر مع المعلمين وإدارة المدرسة لتجربة تعليمية أفضل.';
+	@override String get slide3Title => 'مدفوعات آمنة';
+	@override String get slide3Description =>
+			'أدر المصاريف المدرسية ورصيد محفظة ابنك بأمان وسهولة.';
+	@override String get skip => 'تخطّي';
+	@override String get getStarted => 'ابدأ الآن';
 }
 
 // Path: parent.auth
@@ -1052,6 +1075,66 @@ class _TranslationsParentAuthAr implements TranslationsParentAuthEn {
 	@override String resendInSeconds({required Object seconds}) =>
 			'إعادة الإرسال خلال ${seconds} ثانية';
 	@override String get verificationFailed => 'فشل التحقق';
+
+	@override String get appName => 'MentorX لولي الأمر';
+	@override String get loginTagline => 'تابع رحلة ابنك الأكاديمية بثقة كاملة';
+	@override String get phoneNumberLabel => 'رقم الهاتف';
+	@override String get phoneNumberHint => 'أدخل رقم هاتفك';
+	@override String get phoneRequired => 'من فضلك أدخل رقم الهاتف';
+	@override String get passwordLabel => 'كلمة المرور';
+	@override String get passwordRequired => 'من فضلك أدخل كلمة المرور';
+	@override String get forgotPassword => 'نسيت كلمة المرور؟';
+	@override String get signInToDashboard => 'تسجيل الدخول';
+	@override String get newToMentorX => 'جديد في MentorX؟';
+	@override String get createAccount => 'إنشاء حساب';
+	@override String get loginFailed => 'فشل تسجيل الدخول. حاول مرة أخرى.';
+	@override String get passwordRecoveryHeading => 'استرجاع كلمة المرور';
+	@override String get forgotPasswordTitle => 'نسيت كلمة المرور؟';
+	@override String get forgotPasswordSubtitle =>
+			'لا تقلق! أدخل رقم هاتفك المسجّل وسنرسل لك كود تحقق لإعادة تعيين حسابك بأمان.';
+	@override String get sendVerificationCode => 'إرسال كود التحقق';
+	@override String get backToLogin => 'الرجوع لتسجيل الدخول';
+	@override String get sendCodeFailed => 'تعذّر إرسال الكود';
+	@override String get resetPasswordTitle => 'إعادة تعيين كلمة المرور';
+	@override String resetPasswordSubtitle({required Object phone}) =>
+			'أدخل الكود المكوّن من 6 أرقام المُرسل إلى\n${phone}';
+	@override String get otpCodeLabel => 'كود التحقق';
+	@override String get newPasswordLabel => 'كلمة المرور الجديدة';
+	@override String get confirmPasswordLabel => 'تأكيد كلمة المرور';
+	@override String get passwordPlaceholder => '••••••••';
+	@override String get updatePasswordNow => 'تحديث كلمة المرور';
+	@override String get validationCheckInputs =>
+			'من فضلك تحقّق من البيانات المدخلة وحاول مرة أخرى';
+	@override String get passwordResetSuccess => 'تم إعادة تعيين كلمة المرور بنجاح';
+
+	@override String get regStep1Title => 'ربط ابنك';
+	@override String get regStep2Title => 'البيانات الشخصية';
+	@override String get regStep3Title => 'الأمان';
+	@override String get regDefaultTitle => 'التسجيل';
+	@override String get regFindStudent => 'ابحث عن الطالب';
+	@override String get regConfirmChild => 'أكّد الابن';
+	@override String get regContinue => 'متابعة';
+	@override String get regCreateAccount => 'إنشاء حساب';
+	@override String get regPleaseWait => 'جاري المعالجة…';
+	@override String get regAlreadyHaveAccount => 'لديك حساب بالفعل؟ تسجيل الدخول';
+	@override String get regLookupPhoneTab => 'الهاتف';
+	@override String get regLookupCodeTab => 'كود الطالب';
+	@override String get regChildPhoneLabel => 'هاتف الابن';
+	@override String get regChildPhoneHint => 'أدخل رقم الهاتف المسجّل';
+	@override String get regStudentCodeLabel => 'كود الطالب';
+	@override String get regStudentCodeHint => 'أدخل الكود المميّز';
+	@override String get regFirstNameLabel => 'الاسم الأول';
+	@override String get regFirstNameHint => 'مثال: أحمد';
+	@override String get regLastNameLabel => 'الاسم الأخير';
+	@override String get regLastNameHint => 'مثال: محمد';
+	@override String get regYourPhoneHint => 'رقم هاتفك';
+	@override String get regEmailLabel => 'البريد الإلكتروني';
+	@override String get regEmailHint => 'اختياري';
+	@override String get regSecurityHint =>
+			'اضبط كلمة مرور قوية لحماية الوصول إلى حسابك.';
+	@override String get regRelationshipLabel => 'صلة القرابة بالابن';
+	@override String get regChildConfirmed => 'تم تأكيد الابن بنجاح';
+	@override String get regConfirmIsYourChild => 'أكّد إذا كان هذا هو ابنك';
 }
 
 // Path: parent.profile

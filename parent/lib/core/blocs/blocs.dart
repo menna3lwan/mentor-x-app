@@ -1,3 +1,4 @@
 export 'app_authentication_cubit/app_authentication_cubit.dart';
 export 'app_authentication_cubit/app_authentication_listener.dart';
+export 'app_brightness_cubit/app_brightness_cubit.dart';
 export 'app_locale_cubit/app_locale_cubit.dart';

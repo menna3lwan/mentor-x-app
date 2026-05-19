@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 
+import '../../../core/blocs/app_brightness_cubit/app_brightness_cubit.dart';
 import '../../../core/blocs/app_locale_cubit/app_locale_cubit.dart';
 import '../widgets/widgets.dart';
 
@@ -51,11 +52,20 @@ class _SettingsParentPageState extends State<SettingsParentPage> {
               return ProfileSection(
                 title: t.profile.preferencesSection,
                 children: [
-                  ProfileTileWidget(
-                    icon: Icons.palette_rounded,
-                    label: t.profile.themeMode,
-                    value: t.profile.themeSystem,
-                    onTap: () {},
+                  BlocBuilder<AppBrightnessCubit, AppBrightnessState>(
+                    buildWhen: (a, b) => a.preference != b.preference,
+                    builder: (context, brightnessState) {
+                      return ProfileTileWidget(
+                        icon: Icons.palette_rounded,
+                        label: t.profile.themeMode,
+                        value: _themeLabel(t, brightnessState.preference),
+                        onTap: () => _openThemePicker(
+                          context,
+                          t,
+                          brightnessState.preference,
+                        ),
+                      );
+                    },
                   ),
                   ProfileTileWidget(
                     icon: Icons.language_rounded,
@@ -91,6 +101,75 @@ class _SettingsParentPageState extends State<SettingsParentPage> {
         ],
       ),
     );
+  }
+
+  String _themeLabel(TranslationsParentEn t, AppThemePreference pref) {
+    return switch (pref) {
+      AppThemePreference.system => t.profile.themeSystem,
+      AppThemePreference.light => t.profile.themeLight,
+      AppThemePreference.dark => t.profile.themeDark,
+    };
+  }
+
+  Future<void> _openThemePicker(
+    BuildContext context,
+    TranslationsParentEn t,
+    AppThemePreference current,
+  ) async {
+    final cubit = context.read<AppBrightnessCubit>();
+    final selected = await showModalBottomSheet<AppThemePreference>(
+      context: context,
+      backgroundColor: context.backgroundSecondaryColor,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (ctx) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: ctx.textTertiaryColor.withValues(alpha: 0.3),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+                const Gap(16),
+                _ThemeOption(
+                  label: t.profile.themeSystem,
+                  icon: Icons.brightness_auto_rounded,
+                  isSelected: current == AppThemePreference.system,
+                  onTap: () =>
+                      Navigator.of(ctx).pop(AppThemePreference.system),
+                ),
+                _ThemeOption(
+                  label: t.profile.themeLight,
+                  icon: Icons.light_mode_rounded,
+                  isSelected: current == AppThemePreference.light,
+                  onTap: () =>
+                      Navigator.of(ctx).pop(AppThemePreference.light),
+                ),
+                _ThemeOption(
+                  label: t.profile.themeDark,
+                  icon: Icons.dark_mode_rounded,
+                  isSelected: current == AppThemePreference.dark,
+                  onTap: () =>
+                      Navigator.of(ctx).pop(AppThemePreference.dark),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+
+    if (selected != null && selected != current) {
+      await cubit.setPreference(selected);
+    }
   }
 
   Future<void> _openLanguagePicker(
@@ -143,6 +222,48 @@ class _SettingsParentPageState extends State<SettingsParentPage> {
     if (selected != null && selected != cubit.state.languageCode) {
       await cubit.setLocale(selected);
     }
+  }
+}
+
+class _ThemeOption extends StatelessWidget {
+  final String label;
+  final IconData icon;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  const _ThemeOption({
+    required this.label,
+    required this.icon,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      onTap: onTap,
+      leading: Container(
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: context.brandPrimaryColor.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Icon(icon, color: context.brandPrimaryColor, size: 20),
+      ),
+      title: Text(
+        label,
+        style: TextStyle(
+          fontWeight: FontWeight.w800,
+          color: context.textPrimaryColor,
+        ),
+      ),
+      trailing: isSelected
+          ? Icon(
+              Icons.check_circle_rounded,
+              color: context.brandPrimaryColor,
+            )
+          : null,
+    );
   }
 }
 

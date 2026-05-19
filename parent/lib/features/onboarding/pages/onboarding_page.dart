@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
+
 import '../../../core/routing/app_routes.dart';
+
+/// Brand colors used to give each onboarding slide its own visual identity.
+/// Kept as named constants (instead of inline hex) so they're easy to swap if
+/// branding evolves.
+const _kSlideIndigo = Color(0xFF6366F1);
+const _kSlideGreen = Color(0xFF10B981);
+const _kSlideAmber = Color(0xFFF59E0B);
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});
@@ -13,34 +21,47 @@ class _OnboardingPageState extends State<OnboardingPage> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
-  final List<_OnboardingData> _slides = [
-    _OnboardingData(
-      title: 'Monitor Progress',
-      description: 'Keep track of your child\'s grades, attendance, and academic achievements in real-time.',
-      icon: Icons.analytics_rounded,
-      color: const Color(0xFF6366F1),
-    ),
-    _OnboardingData(
-      title: 'Stay Connected',
-      description: 'Direct communication with teachers and school administration for a better learning experience.',
-      icon: Icons.chat_bubble_rounded,
-      color: const Color(0xFF10B981),
-    ),
-    _OnboardingData(
-      title: 'Secure Payments',
-      description: 'Manage school fees and your child\'s wallet balance safely and conveniently.',
-      icon: Icons.account_balance_wallet_rounded,
-      color: const Color(0xFFF59E0B),
-    ),
-  ];
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  List<_OnboardingSlide> _slides(BuildContext context) {
+    final t = Translations.of(context).parent.onboarding;
+    return [
+      _OnboardingSlide(
+        title: t.slide1Title,
+        description: t.slide1Description,
+        icon: Icons.analytics_rounded,
+        color: _kSlideIndigo,
+      ),
+      _OnboardingSlide(
+        title: t.slide2Title,
+        description: t.slide2Description,
+        icon: Icons.chat_bubble_rounded,
+        color: _kSlideGreen,
+      ),
+      _OnboardingSlide(
+        title: t.slide3Title,
+        description: t.slide3Description,
+        icon: Icons.account_balance_wallet_rounded,
+        color: _kSlideAmber,
+      ),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
+    final t = Translations.of(context).parent;
+    final slides = _slides(context);
+    final activeSlide = slides[_currentPage];
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: context.backgroundPrimaryColor,
       body: Stack(
         children: [
-          // Background Gradient blobs
+          // Background tinted blob that follows the active slide color.
           Positioned(
             top: -100,
             right: -100,
@@ -50,22 +71,23 @@ class _OnboardingPageState extends State<OnboardingPage> {
               height: 400,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: _slides[_currentPage].color.withValues(alpha: 0.05),
+                color: activeSlide.color.withValues(alpha: 0.05),
               ),
             ),
           ),
-          
+
           Column(
             children: [
               Expanded(
                 child: PageView.builder(
                   controller: _pageController,
-                  onPageChanged: (index) => setState(() => _currentPage = index),
-                  itemCount: _slides.length,
+                  onPageChanged: (index) =>
+                      setState(() => _currentPage = index),
+                  itemCount: slides.length,
                   itemBuilder: (context, index) {
-                    final slide = _slides[index];
+                    final slide = slides[index];
                     return Padding(
-                      padding: const EdgeInsets.all(40.0),
+                      padding: const EdgeInsets.all(40),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -80,24 +102,24 @@ class _OnboardingPageState extends State<OnboardingPage> {
                           const SizedBox(height: 60),
                           Text(
                             slide.title,
+                            textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 32,
                               fontWeight: FontWeight.w900,
                               color: context.textPrimaryColor,
                               letterSpacing: -1,
                             ),
-                            textAlign: TextAlign.center,
                           ),
                           const SizedBox(height: 16),
                           Text(
                             slide.description,
+                            textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 16,
                               color: context.textSecondaryColor,
                               height: 1.6,
                               fontWeight: FontWeight.w500,
                             ),
-                            textAlign: TextAlign.center,
                           ),
                         ],
                       ),
@@ -105,70 +127,58 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   },
                 ),
               ),
-              
-              // Bottom Section
+
+              // Indicator + CTA section
               Padding(
-                padding: const EdgeInsets.all(40.0),
+                padding: const EdgeInsets.all(40),
                 child: Column(
                   children: [
-                    // Indicator
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: List.generate(_slides.length, (index) {
+                      children: List.generate(slides.length, (index) {
+                        final isActive = index == _currentPage;
                         return AnimatedContainer(
                           duration: const Duration(milliseconds: 300),
-                          width: index == _currentPage ? 24 : 8,
+                          width: isActive ? 24 : 8,
                           height: 8,
                           margin: const EdgeInsets.symmetric(horizontal: 4),
                           decoration: BoxDecoration(
-                            color: index == _currentPage 
-                                ? _slides[_currentPage].color 
-                                : context.textTertiaryColor.withValues(alpha: 0.2),
+                            color: isActive
+                                ? activeSlide.color
+                                : context.textTertiaryColor.withValues(
+                                    alpha: 0.2,
+                                  ),
                             borderRadius: BorderRadius.circular(4),
                           ),
                         );
                       }),
                     ),
                     const SizedBox(height: 40),
-                    
-                    if (_currentPage == _slides.length - 1)
+                    if (_currentPage == slides.length - 1)
                       MentorXButton(
                         onPressed: () => const LoginPageRoute().go(context),
-                        text: 'Get Started',
+                        label: t.onboarding.getStarted,
                       )
                     else
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           TextButton(
-                            onPressed: () => _pageController.jumpToPage(_slides.length - 1),
+                            onPressed: () =>
+                                _pageController.jumpToPage(slides.length - 1),
                             child: Text(
-                              'Skip',
+                              t.onboarding.skip,
                               style: TextStyle(
                                 color: context.textTertiaryColor,
                                 fontWeight: FontWeight.w700,
                               ),
                             ),
                           ),
-                          GestureDetector(
+                          _NextButton(
+                            color: activeSlide.color,
                             onTap: () => _pageController.nextPage(
                               duration: const Duration(milliseconds: 300),
                               curve: Curves.easeInOut,
-                            ),
-                            child: Container(
-                              padding: const EdgeInsets.all(16),
-                              decoration: BoxDecoration(
-                                color: _slides[_currentPage].color,
-                                shape: BoxShape.circle,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: _slides[_currentPage].color.withValues(alpha: 0.3),
-                                    blurRadius: 15,
-                                    offset: const Offset(0, 5),
-                                  ),
-                                ],
-                              ),
-                              child: const Icon(Icons.arrow_forward_ios_rounded, color: Colors.white, size: 20),
                             ),
                           ),
                         ],
@@ -184,13 +194,46 @@ class _OnboardingPageState extends State<OnboardingPage> {
   }
 }
 
-class _OnboardingData {
+class _NextButton extends StatelessWidget {
+  final Color color;
+  final VoidCallback onTap;
+
+  const _NextButton({required this.color, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: color,
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: color.withValues(alpha: 0.3),
+              blurRadius: 15,
+              offset: const Offset(0, 5),
+            ),
+          ],
+        ),
+        child: const Icon(
+          Icons.arrow_forward_ios_rounded,
+          color: Colors.white,
+          size: 20,
+        ),
+      ),
+    );
+  }
+}
+
+class _OnboardingSlide {
   final String title;
   final String description;
   final IconData icon;
   final Color color;
 
-  _OnboardingData({
+  const _OnboardingSlide({
     required this.title,
     required this.description,
     required this.icon,

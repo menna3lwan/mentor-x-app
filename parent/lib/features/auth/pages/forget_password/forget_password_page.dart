@@ -126,7 +126,7 @@ class _BuildHeader extends StatelessWidget {
                 child: FadeInDown(
                   duration: const Duration(milliseconds: 500),
                   child: Text(
-                    'Password Recovery',
+                    Translations.of(context).parent.auth.passwordRecoveryHeading,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 18,

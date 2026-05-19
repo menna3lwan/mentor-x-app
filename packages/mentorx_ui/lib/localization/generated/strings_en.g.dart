@@ -1297,6 +1297,28 @@ class TranslationsParentEn {
 
 	late final TranslationsParentAuthEn auth =
 			TranslationsParentAuthEn._(_root);
+
+	late final TranslationsParentOnboardingEn onboarding =
+			TranslationsParentOnboardingEn._(_root);
+}
+
+// Path: parent.onboarding
+class TranslationsParentOnboardingEn {
+	TranslationsParentOnboardingEn._(this._root);
+	final Translations _root; // ignore: unused_field
+
+	String get parentPortalTag => 'PARENT PORTAL';
+	String get slide1Title => 'Monitor Progress';
+	String get slide1Description =>
+			"Keep track of your child's grades, attendance, and academic achievements in real-time.";
+	String get slide2Title => 'Stay Connected';
+	String get slide2Description =>
+			'Direct communication with teachers and school administration for a better learning experience.';
+	String get slide3Title => 'Secure Payments';
+	String get slide3Description =>
+			"Manage school fees and your child's wallet balance safely and conveniently.";
+	String get skip => 'Skip';
+	String get getStarted => 'Get Started';
 }
 
 // Path: parent.auth
@@ -1315,6 +1337,67 @@ class TranslationsParentAuthEn {
 	String resendInSeconds({required Object seconds}) =>
 			'Resend in ${seconds}s';
 	String get verificationFailed => 'Verification failed';
+
+	String get appName => 'MentorX Parent';
+	String get loginTagline =>
+			"Monitor your child's academic journey with confidence";
+	String get phoneNumberLabel => 'Phone Number';
+	String get phoneNumberHint => 'Enter your phone number';
+	String get phoneRequired => 'Please enter your phone number';
+	String get passwordLabel => 'Password';
+	String get passwordRequired => 'Please enter your password';
+	String get forgotPassword => 'Forgot Password?';
+	String get signInToDashboard => 'Sign In to Dashboard';
+	String get newToMentorX => 'New to MentorX?';
+	String get createAccount => 'Create Account';
+	String get loginFailed => 'Login failed. Please try again.';
+	String get passwordRecoveryHeading => 'Password Recovery';
+	String get forgotPasswordTitle => 'Forgot Password?';
+	String get forgotPasswordSubtitle =>
+			"Don't worry! Enter your registered phone number and we'll send you a verification code to reset your account safely.";
+	String get sendVerificationCode => 'Send Verification Code';
+	String get backToLogin => 'Back to Login';
+	String get sendCodeFailed => 'Failed to send code';
+	String get resetPasswordTitle => 'Reset Your Password';
+	String resetPasswordSubtitle({required Object phone}) =>
+			'Enter the 6-digit code sent to\n${phone}';
+	String get otpCodeLabel => 'OTP Code';
+	String get newPasswordLabel => 'New Password';
+	String get confirmPasswordLabel => 'Confirm New Password';
+	String get passwordPlaceholder => '••••••••';
+	String get updatePasswordNow => 'Update Password Now';
+	String get validationCheckInputs =>
+			'Please check your inputs and try again';
+	String get passwordResetSuccess => 'Password reset successfully';
+
+	String get regStep1Title => 'Link Your Child';
+	String get regStep2Title => 'Personal Info';
+	String get regStep3Title => 'Security';
+	String get regDefaultTitle => 'Register';
+	String get regFindStudent => 'Find Student';
+	String get regConfirmChild => 'Confirm Child';
+	String get regContinue => 'Continue';
+	String get regCreateAccount => 'Create Account';
+	String get regPleaseWait => 'Please wait…';
+	String get regAlreadyHaveAccount => 'Already have an account? Login';
+	String get regLookupPhoneTab => 'Phone';
+	String get regLookupCodeTab => 'Student Code';
+	String get regChildPhoneLabel => 'Child Phone';
+	String get regChildPhoneHint => 'Enter registered phone';
+	String get regStudentCodeLabel => 'Student Code';
+	String get regStudentCodeHint => 'Enter unique code';
+	String get regFirstNameLabel => 'First Name';
+	String get regFirstNameHint => 'e.g. John';
+	String get regLastNameLabel => 'Last Name';
+	String get regLastNameHint => 'e.g. Doe';
+	String get regYourPhoneHint => 'Your phone number';
+	String get regEmailLabel => 'Email';
+	String get regEmailHint => 'Optional email';
+	String get regSecurityHint =>
+			'Set a secure password to protect your account access.';
+	String get regRelationshipLabel => 'Relationship to Child';
+	String get regChildConfirmed => 'Child confirmed successfully';
+	String get regConfirmIsYourChild => 'Confirm if this is your child';
 }
 
 // Path: parent.profile

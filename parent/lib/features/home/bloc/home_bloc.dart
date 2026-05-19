@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 
@@ -16,10 +17,22 @@ final class HomeFailurePresentationEvent extends HomePresentationEvent {
   const HomeFailurePresentationEvent({required this.message});
 }
 
+/// Raised when the current session has expired or the user is not
+/// authenticated. The wrapper listens to this and redirects to login.
+final class HomeUnauthorizedPresentationEvent extends HomePresentationEvent {
+  const HomeUnauthorizedPresentationEvent();
+}
+
 /// Drives the parent dashboard. Loads the children list, picks an active
 /// child, and loads each dashboard section (summary, recent activity,
 /// announcements) independently so a partial backend failure doesn't blank
 /// out the whole screen.
+///
+/// Concurrency contract:
+/// - [HomeChildSwitched] uses `restartable`: a new tap supersedes any
+///   in-flight dashboard load, so out-of-order responses can't poison state.
+/// - [HomeRefreshRequested] uses `droppable`: repeated pulls while a refresh
+///   is in flight are ignored.
 final class HomeBloc extends Bloc<HomeEvent, HomeState>
     with BlocPresentationMixin<HomeState, HomePresentationEvent> {
   final ParentChildrenRepository _childrenRepository;
@@ -37,8 +50,8 @@ final class HomeBloc extends Bloc<HomeEvent, HomeState>
         _cacheRepository = cacheRepository,
         super(HomeState.initial()) {
     on<HomeStarted>(_onStarted);
-    on<HomeChildSwitched>(_onChildSwitched);
-    on<HomeRefreshRequested>(_onRefreshRequested);
+    on<HomeChildSwitched>(_onChildSwitched, transformer: restartable());
+    on<HomeRefreshRequested>(_onRefreshRequested, transformer: droppable());
     on<HomeRetrySectionRequested>(_onRetrySection);
   }
 
@@ -64,7 +77,7 @@ final class HomeBloc extends Bloc<HomeEvent, HomeState>
       announcementsSection: state.announcementsSection.toLoading(),
     ));
 
-    await _cacheRepository.put(_selectedChildCacheKey, event.child.id);
+    await _safeCachePut(_selectedChildCacheKey, event.child.id);
     await _loadDashboard(emit: emit, childId: event.child.id);
   }
 
@@ -72,13 +85,19 @@ final class HomeBloc extends Bloc<HomeEvent, HomeState>
     HomeRefreshRequested event,
     Emitter<HomeState> emit,
   ) async {
+    if (state.isRefreshing) return; // belt-and-suspenders alongside droppable
     emit(state.copyWith(isRefreshing: true));
-    await _loadChildren(emit, keepSelection: true);
-    final childId = state.selectedChild?.id;
-    if (childId != null) {
-      await _loadDashboard(emit: emit, childId: childId);
+    try {
+      await _loadChildren(emit, keepSelection: true);
+      final childId = state.selectedChild?.id;
+      if (childId != null) {
+        await _loadDashboard(emit: emit, childId: childId);
+      }
+    } finally {
+      if (!emit.isDone) {
+        emit(state.copyWith(isRefreshing: false));
+      }
     }
-    emit(state.copyWith(isRefreshing: false));
   }
 
   Future<void> _onRetrySection(
@@ -117,16 +136,22 @@ final class HomeBloc extends Bloc<HomeEvent, HomeState>
     emit(state.copyWith(childrenSection: state.childrenSection.toLoading()));
     try {
       final children = await _childrenRepository.getChildren();
+      if (emit.isDone) return;
       emit(state.copyWith(
         childrenSection: HomeAsyncSection.loaded(children),
       ));
 
       if (children.isEmpty) {
-        emit(state.copyWith(selectedChild: null));
+        // Reset selection if the previously-selected child has been unlinked
+        // (e.g. the user removed them from another device).
+        if (state.selectedChild != null) {
+          emit(state.copyWith(selectedChild: null));
+          await _safeCachePut(_selectedChildCacheKey, '');
+        }
         return;
       }
 
-      final cachedId = await _cacheRepository.get(_selectedChildCacheKey);
+      final cachedId = await _readSelectedChildCache();
       final preserved = keepSelection ? state.selectedChild?.id : null;
       final targetId = preserved ?? cachedId;
 
@@ -136,19 +161,22 @@ final class HomeBloc extends Bloc<HomeEvent, HomeState>
       );
 
       if (state.selectedChild?.id != selected.id) {
-        emit(state.copyWith(selectedChild: selected));
-        await _cacheRepository.put(_selectedChildCacheKey, selected.id);
+        if (!emit.isDone) emit(state.copyWith(selectedChild: selected));
+        await _safeCachePut(_selectedChildCacheKey, selected.id);
       }
 
-      // First-time load: pull dashboard for the selected child.
+      // First-time load: pull dashboard for the selected child. Refresh
+      // handles its own dashboard reload to avoid double-fetching.
       if (!keepSelection) {
         await _loadDashboard(emit: emit, childId: selected.id);
       }
     } catch (e) {
+      if (emit.isDone) return;
       emit(state.copyWith(
-        childrenSection: HomeAsyncSection.failure(e.toString()),
+        childrenSection: HomeAsyncSection.failure(_describe(e)),
       ));
-      emitPresentation(HomeFailurePresentationEvent(message: e.toString()));
+      _maybeEmitUnauthorized(e);
+      emitPresentation(HomeFailurePresentationEvent(message: _describe(e)));
     }
   }
 
@@ -162,57 +190,114 @@ final class HomeBloc extends Bloc<HomeEvent, HomeState>
       announcementsSection: state.announcementsSection.toLoading(),
     ));
 
-    await Future.wait([
+    final results = await Future.wait([
       _loadSummary(emit, childId),
       _loadActivity(emit, childId),
       _loadAnnouncements(emit, childId),
     ]);
 
-    emit(state.copyWith(lastUpdatedAt: DateTime.now()));
+    // Only stamp lastUpdatedAt if at least one section succeeded — preserves
+    // the previous "last good" timestamp on a fully-failed refresh.
+    final anySuccess = results.any((ok) => ok);
+    if (anySuccess && !emit.isDone) {
+      emit(state.copyWith(lastUpdatedAt: DateTime.now()));
+    }
   }
 
-  Future<void> _loadSummary(Emitter<HomeState> emit, String childId) async {
+  Future<bool> _loadSummary(Emitter<HomeState> emit, String childId) async {
     try {
       final summary = await _homeRepository.getSummary(childId);
+      if (emit.isDone) return false;
       emit(state.copyWith(
         summarySection: HomeAsyncSection.loaded(summary),
       ));
+      return true;
     } catch (e) {
+      if (emit.isDone) return false;
       emit(state.copyWith(
-        summarySection: HomeAsyncSection.failure(e.toString()),
+        summarySection: HomeAsyncSection.failure(_describe(e)),
       ));
-      emitPresentation(HomeFailurePresentationEvent(message: e.toString()));
+      _maybeEmitUnauthorized(e);
+      emitPresentation(HomeFailurePresentationEvent(message: _describe(e)));
+      return false;
     }
   }
 
-  Future<void> _loadActivity(Emitter<HomeState> emit, String childId) async {
+  Future<bool> _loadActivity(Emitter<HomeState> emit, String childId) async {
     try {
       final activity = await _homeRepository.getRecentActivity(childId);
+      if (emit.isDone) return false;
       emit(state.copyWith(
         activitySection: HomeAsyncSection.loaded(activity),
       ));
+      return true;
     } catch (e) {
+      if (emit.isDone) return false;
       emit(state.copyWith(
-        activitySection: HomeAsyncSection.failure(e.toString()),
+        activitySection: HomeAsyncSection.failure(_describe(e)),
       ));
-      emitPresentation(HomeFailurePresentationEvent(message: e.toString()));
+      _maybeEmitUnauthorized(e);
+      // Activity is non-critical; don't toast for it.
+      return false;
     }
   }
 
-  Future<void> _loadAnnouncements(
+  Future<bool> _loadAnnouncements(
     Emitter<HomeState> emit,
     String childId,
   ) async {
     try {
       final announcements = await _homeRepository.getAnnouncements(childId);
+      if (emit.isDone) return false;
       emit(state.copyWith(
         announcementsSection: HomeAsyncSection.loaded(announcements),
       ));
+      return true;
     } catch (e) {
+      if (emit.isDone) return false;
       emit(state.copyWith(
-        announcementsSection: HomeAsyncSection.failure(e.toString()),
+        announcementsSection: HomeAsyncSection.failure(_describe(e)),
       ));
-      emitPresentation(HomeFailurePresentationEvent(message: e.toString()));
+      _maybeEmitUnauthorized(e);
+      // Announcements are non-critical.
+      return false;
+    }
+  }
+
+  // ───────────────────────────────────────────────────────────────────────
+  // Helpers
+  // ───────────────────────────────────────────────────────────────────────
+
+  Future<void> _safeCachePut(String key, String value) async {
+    try {
+      await _cacheRepository.put(key, value);
+    } catch (_) {
+      // Cache failures shouldn't crash the bloc — log only.
+    }
+  }
+
+  Future<String?> _readSelectedChildCache() async {
+    try {
+      return await _cacheRepository.get(_selectedChildCacheKey);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  /// Extracts a user-friendly message from common exception shapes.
+  String _describe(Object error) {
+    if (error is HttpClientResponse) {
+      return error.statusMessage ?? 'Request failed (${error.statusCode})';
+    }
+    return error.toString();
+  }
+
+  /// Fires a presentation event if the error looks like an auth failure so
+  /// the UI layer can redirect to login.
+  void _maybeEmitUnauthorized(Object error) {
+    if (error is HttpClientResponse &&
+        (error.statusCode == 401 || error.statusCode == 403)) {
+      emitPresentation(const HomeUnauthorizedPresentationEvent());
     }
   }
 }

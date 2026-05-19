@@ -63,7 +63,7 @@ class ParentHeroCardWidget extends StatelessWidget {
               Expanded(
                 child: StatCard(
                   label: avgGradeLabel,
-                  value: '${overview.avgGrade.toStringAsFixed(1)}%',
+                  value: _formatPercent(overview.avgGrade),
                   icon: Icons.grade_rounded,
                   iconColor: context.brandPrimaryColor,
                 ),
@@ -72,8 +72,8 @@ class ParentHeroCardWidget extends StatelessWidget {
               Expanded(
                 child: StatCard(
                   label: attendanceLabel,
-                  value:
-                      '${(overview.avgAttendanceRate * 100).toStringAsFixed(0)}%',
+                  value: _formatPercent(overview.avgAttendanceRate * 100,
+                      decimals: 0),
                   icon: Icons.calendar_today_rounded,
                   iconColor: context.brandSecondaryColor,
                 ),
@@ -82,7 +82,9 @@ class ParentHeroCardWidget extends StatelessWidget {
               Expanded(
                 child: StatCard(
                   label: unpaidFeesLabel,
-                  value: overview.unpaidInvoicesCount.toString(),
+                  value: overview.unpaidInvoicesCount
+                      .clamp(0, 9999)
+                      .toString(),
                   icon: Icons.account_balance_wallet_rounded,
                   iconColor: context.statusWarningColor,
                 ),

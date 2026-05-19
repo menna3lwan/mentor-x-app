@@ -119,6 +119,7 @@ class __ParentRegistrationPageContentState
       },
       child: Builder(
         builder: (context) {
+          final t = Translations.of(context).parent;
           final state = context.watch<ParentRegistrationBloc>().state;
           final bloc = context.read<ParentRegistrationBloc>();
 
@@ -141,7 +142,7 @@ class __ParentRegistrationPageContentState
               },
               icon: Icon(Icons.arrow_back_ios_new_rounded, color: context.textPrimaryColor, size: 20),
             ),
-            title: _titleForStep(state.currentStep),
+            title: _titleForStep(state.currentStep, t),
             currentStep: state.currentStep,
             body: _StepBody(
               state: state,
@@ -178,13 +179,13 @@ class __ParentRegistrationPageContentState
                       bloc.add(const ParentRegistrationSubmitted());
                     },
               label: state.loadingState.isLoading
-                  ? 'Please wait...'
-                  : _primaryButtonLabel(state),
+                  ? t.auth.regPleaseWait
+                  : _primaryButtonLabel(state, t),
             ),
             secondaryButton: TextButton(
               onPressed: () => const LoginPageRoute().go(context),
               child: Text(
-                'Already have an account? Login',
+                t.auth.regAlreadyHaveAccount,
                 style: TextStyle(
                   color: context.brandPrimaryColor,
                   fontWeight: FontWeight.w800,
@@ -207,20 +208,31 @@ class __ParentRegistrationPageContentState
     );
   }
 
-  String _titleForStep(int step) {
+  String _titleForStep(int step, TranslationsParentEn t) {
     switch (step) {
-      case 0: return 'Link Your Child';
-      case 1: return 'Personal Info';
-      case 2: return 'Security';
-      default: return 'Register';
+      case 0:
+        return t.auth.regStep1Title;
+      case 1:
+        return t.auth.regStep2Title;
+      case 2:
+        return t.auth.regStep3Title;
+      default:
+        return t.auth.regDefaultTitle;
     }
   }
 
-  String _primaryButtonLabel(ParentRegistrationState state) {
-    if (state.currentStep == 0 && state.foundStudent == null) return 'Find Student';
-    if (state.currentStep == 0 && !state.isStudentConfirmed) return 'Confirm Child';
-    if (state.currentStep < 2) return 'Continue';
-    return 'Create Account';
+  String _primaryButtonLabel(
+    ParentRegistrationState state,
+    TranslationsParentEn t,
+  ) {
+    if (state.currentStep == 0 && state.foundStudent == null) {
+      return t.auth.regFindStudent;
+    }
+    if (state.currentStep == 0 && !state.isStudentConfirmed) {
+      return t.auth.regConfirmChild;
+    }
+    if (state.currentStep < 2) return t.auth.regContinue;
+    return t.auth.regCreateAccount;
   }
 }
 
@@ -247,6 +259,7 @@ final class _StepBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = Translations.of(context).parent;
     final bloc = context.read<ParentRegistrationBloc>();
 
     switch (state.currentStep) {
@@ -271,7 +284,7 @@ final class _StepBody extends StatelessWidget {
                 children: [
                   Expanded(
                     child: _TabButton(
-                      label: 'Phone',
+                      label: t.auth.regLookupPhoneTab,
                       icon: Icons.phone_rounded,
                       isActive: state.lookupType == ParentLookupType.phone,
                       onTap: () => bloc.add(const ParentRegistrationLookupTypeChanged(lookupType: ParentLookupType.phone)),
@@ -279,7 +292,7 @@ final class _StepBody extends StatelessWidget {
                   ),
                   Expanded(
                     child: _TabButton(
-                      label: 'Student Code',
+                      label: t.auth.regLookupCodeTab,
                       icon: Icons.badge_rounded,
                       isActive: state.lookupType == ParentLookupType.studentCode,
                       onTap: () => bloc.add(const ParentRegistrationLookupTypeChanged(lookupType: ParentLookupType.studentCode)),
@@ -290,8 +303,12 @@ final class _StepBody extends StatelessWidget {
             ),
             const Gap(32),
             MentorXTextFormField(
-              label: state.lookupType == ParentLookupType.phone ? 'Child Phone' : 'Student Code',
-              hintText: state.lookupType == ParentLookupType.phone ? 'Enter registered phone' : 'Enter unique code',
+              label: state.lookupType == ParentLookupType.phone
+                  ? t.auth.regChildPhoneLabel
+                  : t.auth.regStudentCodeLabel,
+              hintText: state.lookupType == ParentLookupType.phone
+                  ? t.auth.regChildPhoneHint
+                  : t.auth.regStudentCodeHint,
               icon: state.lookupType == ParentLookupType.phone ? Icons.phone_android_rounded : Icons.numbers_rounded,
               controller: lookupController,
               keyboardType: state.lookupType == ParentLookupType.phone ? TextInputType.phone : TextInputType.text,
@@ -310,32 +327,32 @@ final class _StepBody extends StatelessWidget {
         return Column(
           children: [
             MentorXTextFormField(
-              label: 'First Name', 
-              hintText: 'e.g. John', 
-              icon: Icons.person_rounded, 
+              label: t.auth.regFirstNameLabel,
+              hintText: t.auth.regFirstNameHint,
+              icon: Icons.person_rounded,
               controller: firstNameController,
             ),
             const Gap(20),
             MentorXTextFormField(
-              label: 'Last Name', 
-              hintText: 'e.g. Doe', 
-              icon: Icons.person_rounded, 
+              label: t.auth.regLastNameLabel,
+              hintText: t.auth.regLastNameHint,
+              icon: Icons.person_rounded,
               controller: lastNameController,
             ),
             const Gap(20),
             MentorXTextFormField(
-              label: 'Phone Number', 
-              hintText: 'Your phone number', 
-              icon: Icons.phone_android_rounded, 
-              controller: phoneController, 
+              label: t.auth.phoneNumberLabel,
+              hintText: t.auth.regYourPhoneHint,
+              icon: Icons.phone_android_rounded,
+              controller: phoneController,
               keyboardType: TextInputType.phone,
             ),
             const Gap(20),
             MentorXTextFormField(
-              label: 'Email', 
-              hintText: 'Optional email', 
-              icon: Icons.email_rounded, 
-              controller: emailController, 
+              label: t.auth.regEmailLabel,
+              hintText: t.auth.regEmailHint,
+              icon: Icons.email_rounded,
+              controller: emailController,
               keyboardType: TextInputType.emailAddress,
             ),
             const Gap(20),
@@ -347,7 +364,7 @@ final class _StepBody extends StatelessWidget {
         return Column(
           children: [
             Text(
-              'Set a secure password to protect your account access.',
+              t.auth.regSecurityHint,
               style: TextStyle(
                 fontSize: 14,
                 color: context.textSecondaryColor,
@@ -357,18 +374,18 @@ final class _StepBody extends StatelessWidget {
             ),
             const Gap(32),
             MentorXTextFormField(
-              label: 'Password', 
-              hintText: '••••••••', 
-              icon: Icons.lock_rounded, 
-              isPassword: true, 
+              label: t.auth.passwordLabel,
+              hintText: t.auth.passwordPlaceholder,
+              icon: Icons.lock_rounded,
+              isPassword: true,
               controller: passwordController,
             ),
             const Gap(20),
             MentorXTextFormField(
-              label: 'Confirm Password', 
-              hintText: '••••••••', 
-              icon: Icons.lock_reset_rounded, 
-              isPassword: true, 
+              label: t.auth.confirmPasswordLabel,
+              hintText: t.auth.passwordPlaceholder,
+              icon: Icons.lock_reset_rounded,
+              isPassword: true,
               controller: confirmPasswordController,
             ),
           ],
@@ -388,12 +405,16 @@ class _RelationshipDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = Translations.of(context).parent;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       decoration: BoxDecoration(
         color: context.backgroundSecondaryColor,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: context.borderPrimaryColor.withValues(alpha: 0.5)),
+        border: Border.all(
+          color: context.borderPrimaryColor.withValues(alpha: 0.5),
+        ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.02),
@@ -411,23 +432,41 @@ class _RelationshipDropdown extends StatelessWidget {
             fontWeight: FontWeight.w600,
           ),
           decoration: InputDecoration(
-            labelText: 'Relationship to Child',
+            labelText: t.auth.regRelationshipLabel,
             labelStyle: TextStyle(
               color: context.textTertiaryColor,
               fontSize: 14,
               fontWeight: FontWeight.w500,
             ),
             border: InputBorder.none,
-            prefixIcon: Icon(Icons.people_alt_rounded, color: context.brandPrimaryColor, size: 20),
+            prefixIcon: Icon(
+              Icons.people_alt_rounded,
+              color: context.brandPrimaryColor,
+              size: 20,
+            ),
           ),
-          items: const [
-            DropdownMenuItem(value: 'father', child: Text('Father')),
-            DropdownMenuItem(value: 'mother', child: Text('Mother')),
-            DropdownMenuItem(value: 'guardian', child: Text('Guardian')),
-            DropdownMenuItem(value: 'other', child: Text('Other')),
+          items: [
+            DropdownMenuItem(
+              value: 'father',
+              child: Text(t.children.relationship.father),
+            ),
+            DropdownMenuItem(
+              value: 'mother',
+              child: Text(t.children.relationship.mother),
+            ),
+            DropdownMenuItem(
+              value: 'guardian',
+              child: Text(t.children.relationship.guardian),
+            ),
+            DropdownMenuItem(
+              value: 'other',
+              child: Text(t.children.relationship.other),
+            ),
           ],
           onChanged: (value) {
-            if (value != null) bloc.add(ParentRegistrationRelationshipChanged(value: value));
+            if (value != null) {
+              bloc.add(ParentRegistrationRelationshipChanged(value: value));
+            }
           },
         ),
       ),
@@ -575,9 +614,16 @@ class _StudentPreviewCard extends StatelessWidget {
                 const Gap(12),
                 Expanded(
                   child: Text(
-                    isConfirmed ? 'Child confirmed successfully' : 'Confirm if this is your child',
+                    isConfirmed
+                        ? Translations.of(context).parent.auth.regChildConfirmed
+                        : Translations.of(context)
+                            .parent
+                            .auth
+                            .regConfirmIsYourChild,
                     style: TextStyle(
-                      color: isConfirmed ? context.statusSuccessColor : context.statusWarningColor,
+                      color: isConfirmed
+                          ? context.statusSuccessColor
+                          : context.statusWarningColor,
                       fontWeight: FontWeight.w800,
                       fontSize: 13,
                     ),

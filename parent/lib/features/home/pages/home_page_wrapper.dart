@@ -44,6 +44,10 @@ class _HomePageView extends StatelessWidget {
         switch (event) {
           case HomeFailurePresentationEvent(:final message):
             MentorXUI.showToast(message: message);
+          case HomeUnauthorizedPresentationEvent():
+            // Drop the local session and bounce to login.
+            context.read<AppAuthenticationCubit>().logout();
+            const LoginPageRoute().go(context);
         }
       },
       child: AppRefreshListener(

@@ -60,6 +60,7 @@ dependencies:
   bloc: ^9.2.0
   flutter_bloc: ^9.1.1
   bloc_presentation: ^1.1.2
+  bloc_concurrency: ^0.3.0
   event_bus: ^2.0.1
 
   # Routing

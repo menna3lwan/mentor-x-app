@@ -53,9 +53,7 @@ class ChildSwitcherWidget extends StatelessWidget {
             duration: const Duration(milliseconds: 600),
             delay: Duration(milliseconds: 80 * index),
             child: _ChildAvatarItem(
-              name: child.name.isEmpty
-                  ? '—'
-                  : child.name.split(' ').first,
+              name: _firstName(child.name),
               imageUrl: child.profileImageUrl,
               isSelected: isSelected,
               onTap: () => onChildSelected(child),
@@ -64,6 +62,16 @@ class ChildSwitcherWidget extends StatelessWidget {
         },
       ),
     );
+  }
+
+  /// Picks the first whitespace-separated token, trims it, and falls back
+  /// to an em-dash if the name is missing/blank. Defensive against API
+  /// payloads that send empty strings or whitespace-only values.
+  static String _firstName(String raw) {
+    final trimmed = raw.trim();
+    if (trimmed.isEmpty) return '—';
+    final first = trimmed.split(RegExp(r'\s+')).first;
+    return first.isEmpty ? '—' : first;
   }
 }
 
@@ -156,7 +164,15 @@ class _ChildAvatarItem extends StatelessWidget {
                     : context.textTertiaryColor,
                 letterSpacing: isSelected ? -0.2 : 0,
               ),
-              child: Text(name),
+              child: SizedBox(
+                width: 72,
+                child: Text(
+                  name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                ),
+              ),
             ),
             if (isSelected)
               FadeInDown(
@@ -212,13 +228,19 @@ class _AddChildButton extends StatelessWidget {
             ),
           ),
           const Gap(12),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w700,
-              color: context.textTertiaryColor,
-              letterSpacing: -0.2,
+          SizedBox(
+            width: 72,
+            child: Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+                color: context.textTertiaryColor,
+                letterSpacing: -0.2,
+              ),
             ),
           ),
           const Gap(12),
