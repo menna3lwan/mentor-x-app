@@ -45,7 +45,7 @@ class _ForgetPasswordPageWrapperState extends State<ForgetPasswordPageWrapper> {
             _openResetPasswordBottomSheet(phone);
           case ForgetPasswordFailurePresentationEvent(:final exception):
             MentorXUI.showToast(
-              message: exception.message ?? t.auth.sendCodeFailed,
+              message: _failureMessage(exception, t),
               isError: true,
             );
         }
@@ -105,6 +105,24 @@ class _ForgetPasswordPageWrapperState extends State<ForgetPasswordPageWrapper> {
         },
       ),
     );
+  }
+
+  /// Maps backend exception codes to localized user-facing copy so the toast
+  /// always says something meaningful regardless of upstream wording.
+  String _failureMessage(
+    MentorXException exception,
+    TranslationsParentEn t,
+  ) {
+    if (exception is AuthenticationException) {
+      return switch (exception.code) {
+        AuthenticationExceptionCode.networkError => t.unableToLoad,
+        AuthenticationExceptionCode.failedToSendOtp ||
+        AuthenticationExceptionCode.failedToRequestPasswordReset =>
+          t.auth.sendCodeFailed,
+        _ => exception.message ?? t.auth.sendCodeFailed,
+      };
+    }
+    return exception.message ?? t.auth.sendCodeFailed;
   }
 
   Future<void> _openResetPasswordBottomSheet(String phone) async {

@@ -1,8 +1,8 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
-import 'package:mentorx_core/mentorx_core.dart';
 import 'package:device_info_service/device_info_service.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mentorx_core/mentorx_core.dart';
 
 part 'login_event.dart';
 part 'login_state.dart';
@@ -40,7 +40,8 @@ final class LoginBloc extends Bloc<LoginEvent, LoginState>
   }) : _authenticationRepository = authenticationRepository,
        _deviceInfoService = deviceInfoService,
        super(LoginState.initial) {
-    on<LoginSubmittedEvent>(_onLoginSubmitted);
+    // Drop rapid duplicate submits — only one login request runs at a time.
+    on<LoginSubmittedEvent>(_onLoginSubmitted, transformer: droppable());
   }
 
   Future<void> _onLoginSubmitted(

@@ -1,5 +1,6 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 
 part 'forget_password_event.dart';
@@ -32,7 +33,10 @@ final class ForgetPasswordBloc
     required AuthenticationRepository authenticationRepository,
   }) : _authenticationRepository = authenticationRepository,
        super(ForgetPasswordState.initial) {
-    on<ForgetPasswordSubmittedEvent>(_onForgetPasswordSubmitted);
+    on<ForgetPasswordSubmittedEvent>(
+      _onForgetPasswordSubmitted,
+      transformer: droppable(),
+    );
   }
 
   final AuthenticationRepository _authenticationRepository;
@@ -56,6 +60,21 @@ final class ForgetPasswordBloc
         ),
       );
       emitPresentation(ForgetPasswordFailurePresentationEvent(exception: e));
+    } catch (e) {
+      // Network failure, parser bugs, anything else — surface as a generic
+      // failure instead of letting the bloc crash silently.
+      const exception = AuthenticationException(
+        code: AuthenticationExceptionCode.unknown,
+      );
+      emit(
+        state.copyWith(
+          loadingState: ForgetPasswordLoadingState.failure,
+          exception: exception,
+        ),
+      );
+      emitPresentation(
+        const ForgetPasswordFailurePresentationEvent(exception: exception),
+      );
     }
   }
 }

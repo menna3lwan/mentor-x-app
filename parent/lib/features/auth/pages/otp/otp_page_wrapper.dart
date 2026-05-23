@@ -1,10 +1,12 @@
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:parent/core/core.dart';
 
+import '../../../../core/blocs/app_authentication_cubit/app_authentication_cubit.dart';
 import 'bloc/otp_bloc.dart';
 import 'otp_page.dart';
 
@@ -37,11 +39,21 @@ class _OtpPageWrapperState extends State<OtpPageWrapper> {
       child: BlocPresentationListener<OtpBloc, OtpPresentationEvent>(
         listener: (context, event) {
           switch (event) {
-            case OtpSuccessPresentationEvent():
+            case OtpSuccessPresentationEvent(:final user):
+              // Persist the authenticated user before navigating so the rest
+              // of the app sees the new session.
+              context.read<AppAuthenticationCubit>().login(user);
               _handleSuccessNavigation(context);
             case OtpFailurePresentationEvent(:final exception):
+              // Clear the bad code on invalid-OTP so the user can retry
+              // without re-tapping the field.
+              if (exception is AuthenticationException &&
+                  exception.code ==
+                      AuthenticationExceptionCode.invalidOtp) {
+                _otpController.clear();
+              }
               MentorXUI.showToast(
-                message: exception.message ?? t.auth.verificationFailed,
+                message: _errorMessage(exception, t),
                 isError: true,
               );
           }
@@ -85,10 +97,18 @@ class _OtpPageWrapperState extends State<OtpPageWrapper> {
                 label: t.auth.otpFieldLabel,
                 hintText: t.auth.otpFieldHint,
                 keyboardType: TextInputType.number,
+                textInputAction: TextInputAction.done,
                 maxLength: 6,
                 icon: Icons.lock_clock_rounded,
+                autofillHints: const [AutofillHints.oneTimeCode],
+                // Digit-only + safe clipboard paste.
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                  LengthLimitingTextInputFormatter(6),
+                ],
                 onChanged: (value) {
-                  if (value.length == 6) {
+                  if (value.length == 6 &&
+                      !state.loadingState.isLoading) {
                     bloc.add(OtpSubmittedEvent(
                       phone: widget.phoneNumber,
                       code: value,
@@ -137,6 +157,24 @@ class _OtpPageWrapperState extends State<OtpPageWrapper> {
         ),
       ),
     );
+  }
+
+  /// Maps an [AuthenticationException] code to a localized user-facing
+  /// message. Falls back to a generic "verification failed" copy.
+  String _errorMessage(
+    MentorXException exception,
+    TranslationsParentEn t,
+  ) {
+    if (exception is AuthenticationException) {
+      return switch (exception.code) {
+        AuthenticationExceptionCode.invalidOtp => t.auth.verificationFailed,
+        AuthenticationExceptionCode.networkError => t.unableToLoad,
+        AuthenticationExceptionCode.failedToResendOtp =>
+          t.auth.sendCodeFailed,
+        _ => exception.message ?? t.auth.verificationFailed,
+      };
+    }
+    return exception.message ?? t.auth.verificationFailed;
   }
 
   Future<void> _handleSuccessNavigation(BuildContext context) async {

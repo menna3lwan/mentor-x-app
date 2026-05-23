@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
@@ -6,6 +7,7 @@ import 'package:gap/gap.dart';
 import 'package:parent/core/core.dart';
 import 'bloc/login_bloc.dart';
 import '../../../../core/routing/app_routes.dart';
+import '../../utils/auth_validators.dart';
 
 final class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -40,19 +42,14 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final t = Translations.of(context).parent;
+    // Responsive sizing: scale down the hero title on small phones so it
+    // doesn't dominate the viewport (iPhone SE 320px etc).
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    final titleSize = screenWidth < 360 ? 26.0 : 32.0;
 
-    return BlocListener<LoginBloc, LoginState>(
-      listener: (context, state) {
-        if (state.loadingState == LoginLoadingState.success) {
-          const HomePageRoute().go(context);
-        } else if (state.loadingState == LoginLoadingState.failure) {
-          MentorXUI.showToast(
-            message: state.exception?.message ?? t.auth.loginFailed,
-            isError: true,
-          );
-        }
-      },
-      child: Scaffold(
+    // Navigation + toast on success/failure/OTP-required are handled by the
+    // wrapper via `BlocPresentationListener`. This page is purely visual.
+    return Scaffold(
         backgroundColor: context.backgroundPrimaryColor,
         body: Stack(
           children: [
@@ -136,8 +133,9 @@ class _LoginPageState extends State<LoginPage> {
                             children: [
                               Text(
                                 t.auth.appName,
+                                textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  fontSize: 32,
+                                  fontSize: titleSize,
                                   fontWeight: FontWeight.w900,
                                   color: context.textPrimaryColor,
                                   letterSpacing: -1.0,
@@ -159,24 +157,30 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         const Gap(56),
                         
-                        Form(
-                          key: _formKey,
-                          child: Column(
-                            children: [
-                              FadeInUp(
-                                duration: const Duration(milliseconds: 500),
-                                delay: const Duration(milliseconds: 300),
-                                child: MentorXTextFormField(
-                                  label: t.auth.phoneNumberLabel,
-                                  controller: _phoneController,
-                                  keyboardType: TextInputType.phone,
+                        AutofillGroup(
+                          child: Form(
+                            key: _formKey,
+                            child: Column(
+                              children: [
+                                FadeInUp(
+                                  duration: const Duration(milliseconds: 500),
+                                  delay: const Duration(milliseconds: 300),
+                                  child: MentorXTextFormField(
+                                    label: t.auth.phoneNumberLabel,
+                                    controller: _phoneController,
+                                    keyboardType: TextInputType.phone,
                                   icon: Icons.phone_android_rounded,
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return t.auth.phoneRequired;
-                                    }
-                                    return null;
-                                  },
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.allow(
+                                      RegExp(r'[\d\+\-\s()]'),
+                                    ),
+                                  ],
+                                  autofillHints: const [
+                                    AutofillHints.telephoneNumber,
+                                  ],
+                                  textInputAction: TextInputAction.next,
+                                  validator: (value) =>
+                                      AuthValidators.phone(value, t),
                                 ),
                               ),
                               const Gap(20),
@@ -188,13 +192,13 @@ class _LoginPageState extends State<LoginPage> {
                                   controller: _passwordController,
                                   isPassword: true,
                                   icon: Icons.lock_rounded,
+                                  autofillHints: const [
+                                    AutofillHints.password,
+                                  ],
+                                  textInputAction: TextInputAction.done,
                                   onFieldSubmitted: (_) => _onLoginSubmitted(),
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return t.auth.passwordRequired;
-                                    }
-                                    return null;
-                                  },
+                                  validator: (value) =>
+                                      AuthValidators.password(value, t),
                                 ),
                               ),
                               const Gap(8),
@@ -266,6 +270,7 @@ class _LoginPageState extends State<LoginPage> {
                               const Gap(40),
                             ],
                           ),
+                        ),
                         ),
                       ],
                     ),

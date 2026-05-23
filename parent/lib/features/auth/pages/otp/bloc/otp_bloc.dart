@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_core/mentorx_core.dart';
@@ -39,8 +40,8 @@ final class OtpBloc extends Bloc<OtpEvent, OtpState>
            loadingState: OtpLoadingState.initial,
          ),
        ) {
-    on<OtpSubmittedEvent>(_onOtpSubmitted);
-    on<OtpResendRequested>(_onResendRequested);
+    on<OtpSubmittedEvent>(_onOtpSubmitted, transformer: droppable());
+    on<OtpResendRequested>(_onResendRequested, transformer: droppable());
     on<OtpCountdownTicked>(_onCountdownTicked);
 
     _startCountdown();

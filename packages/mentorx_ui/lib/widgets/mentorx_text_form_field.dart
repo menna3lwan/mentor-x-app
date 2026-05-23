@@ -20,6 +20,9 @@ final class MentorXTextFormField extends StatefulWidget {
   final VoidCallback? onObscureTextToggled;
   final bool enabled;
   final bool readOnly;
+  final Iterable<String>? autofillHints;
+  final TextInputAction? textInputAction;
+  final FocusNode? focusNode;
 
   const MentorXTextFormField({
     super.key,
@@ -42,6 +45,9 @@ final class MentorXTextFormField extends StatefulWidget {
     this.onObscureTextToggled,
     this.enabled = true,
     this.readOnly = false,
+    this.autofillHints,
+    this.textInputAction,
+    this.focusNode,
   });
 
   @override
@@ -63,7 +69,10 @@ class _MentorXTextFormFieldState extends State<MentorXTextFormField> {
 
     return TextFormField(
       controller: widget.controller,
+      focusNode: widget.focusNode,
       keyboardType: widget.keyboardType,
+      textInputAction: widget.textInputAction,
+      autofillHints: widget.autofillHints,
       validator: widget.validator,
       inputFormatters: widget.inputFormatters,
       onChanged: widget.onChanged,
