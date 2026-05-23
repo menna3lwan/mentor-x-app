@@ -27,13 +27,23 @@ class ParentQuickActionsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // 4 columns on phones, 5 on small tablets, 6+ on bigger tablets so the
+    // grid keeps the same visual rhythm regardless of screen width.
+    final width = MediaQuery.sizeOf(context).width;
+    final crossAxisCount = switch (width) {
+      < 360 => 4,
+      < 600 => 4,
+      < 900 => 5,
+      _ => 6,
+    };
+
     return GridView.builder(
       itemCount: actions.length,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 4,
-        childAspectRatio: 0.75,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: crossAxisCount,
+        childAspectRatio: 0.78,
         mainAxisSpacing: 20,
         crossAxisSpacing: 12,
       ),

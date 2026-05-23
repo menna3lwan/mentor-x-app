@@ -95,6 +95,14 @@ class ParentHeroCardWidget extends StatelessWidget {
       ),
     );
   }
+
+  /// Clamps a percent value to [0, 100] and formats it. Defensive against
+  /// upstream APIs that occasionally return >100 or NaN.
+  static String _formatPercent(double raw, {int decimals = 1}) {
+    if (raw.isNaN || raw.isInfinite) return '0%';
+    final clamped = raw.clamp(0.0, 100.0);
+    return '${clamped.toStringAsFixed(decimals)}%';
+  }
 }
 
 /// Skeleton placeholder shown while the summary section is loading.

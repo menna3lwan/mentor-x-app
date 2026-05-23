@@ -24,6 +24,16 @@ final class HomePagePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Horizontal padding shrinks slightly on narrow screens and grows on
+    // tablets/foldables so the content always feels balanced.
+    final width = MediaQuery.sizeOf(context).width;
+    final horizontalPadding = switch (width) {
+      < 360 => 16.0,
+      < 600 => 20.0,
+      < 900 => 32.0,
+      _ => 48.0,
+    };
+
     return AppDashboardScaffold(
       title: title,
       actions: actions,
@@ -35,8 +45,18 @@ final class HomePagePage extends StatelessWidget {
             physics: const BouncingScrollPhysics(
               parent: AlwaysScrollableScrollPhysics(),
             ),
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-            child: content,
+            padding: EdgeInsets.symmetric(
+              horizontal: horizontalPadding,
+              vertical: 16,
+            ),
+            // On tablets the content max width is capped so it doesn't
+            // sprawl across an ultra-wide layout.
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 720),
+                child: content,
+              ),
+            ),
           ),
         ],
       ),
@@ -183,7 +203,7 @@ class _SectionHeader extends StatelessWidget {
         if (onSeeAll != null)
           TextButton(
             onPressed: onSeeAll,
-            child: const Text('See all'),
+            child: Text(Translations.of(context).parent.viewAll),
           ),
       ],
     );

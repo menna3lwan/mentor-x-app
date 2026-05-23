@@ -9,9 +9,14 @@ import 'package:intl/intl.dart';
 class ParentActivityFeedWidget extends StatelessWidget {
   final List<ParentRecentActivityEntity> activities;
 
+  /// Called when a row is tapped. Receives the activity so the caller can
+  /// route to the right destination (attendance/grades/financial/etc).
+  final ValueChanged<ParentRecentActivityEntity>? onActivityTap;
+
   const ParentActivityFeedWidget({
     super.key,
     required this.activities,
+    this.onActivityTap,
   });
 
   @override
@@ -31,7 +36,9 @@ class ParentActivityFeedWidget extends StatelessWidget {
             description: activity.description,
             date: date,
             icon: iconData.icon,
-            onTap: () {},
+            onTap: onActivityTap == null
+                ? null
+                : () => onActivityTap!(activity),
           ),
         );
       }).toList(),

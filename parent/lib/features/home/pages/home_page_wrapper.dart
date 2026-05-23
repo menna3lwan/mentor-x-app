@@ -232,11 +232,17 @@ class _HeroHeading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Slight downscale on narrow phones (e.g. iPhone SE 320px width) so the
+    // heading doesn't dominate the viewport.
+    final width = MediaQuery.sizeOf(context).width;
+    final fontSize = width < 360 ? 22.0 : 26.0;
     return Text(
       label,
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
       style: TextStyle(
         color: context.textPrimaryColor,
-        fontSize: 26,
+        fontSize: fontSize,
         fontWeight: FontWeight.w900,
         letterSpacing: -1.0,
       ),
@@ -275,7 +281,7 @@ class _SectionBlock extends StatelessWidget {
             if (onSeeAll != null)
               TextButton(
                 onPressed: onSeeAll,
-                child: const Text('See all'),
+                child: Text(Translations.of(context).parent.viewAll),
               ),
           ],
         ),
