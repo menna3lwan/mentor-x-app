@@ -1398,6 +1398,31 @@ class TranslationsParentAuthEn {
 	String get regRelationshipLabel => 'Relationship to Child';
 	String get regChildConfirmed => 'Child confirmed successfully';
 	String get regConfirmIsYourChild => 'Confirm if this is your child';
+
+	String get regErrorLookupEmpty =>
+			'Please enter a child phone number or student code.';
+	String get regErrorStudentNotFound =>
+			'No student found with this identifier.';
+	String get regErrorFindFailed =>
+			'Failed to find student. Please try again.';
+	String get regErrorFindChildFirst => 'Please find your child first.';
+	String get regErrorConfirmChild => 'Please confirm that this is your child.';
+	String get regErrorFirstNameShort =>
+			'First name must be at least 2 characters.';
+	String get regErrorLastNameShort =>
+			'Last name must be at least 2 characters.';
+	String get regErrorInvalidPhone =>
+			'Please enter a valid Egyptian phone number.';
+	String get regErrorInvalidEmail => 'Please enter a valid email address.';
+	String get regErrorRelationshipRequired =>
+			'Please select relationship with the child.';
+	String get regErrorPasswordWeak =>
+			'Password must be at least 6 characters.';
+	String get regErrorPasswordMismatch => 'Passwords do not match.';
+	String get regErrorRegistrationFailed =>
+			'Registration failed. Please try again.';
+	String get regErrorPhoneAlreadyExists =>
+			'An account with this phone number already exists.';
 }
 
 // Path: parent.profile
@@ -1620,6 +1645,16 @@ class TranslationsParentChildrenEn {
 
 	late final TranslationsParentChildrenRelationshipEn relationship =
 			TranslationsParentChildrenRelationshipEn._(_root);
+
+	String get errorAlreadyLinked =>
+			'This child is already linked to your account.';
+	String get errorStudentNotFound =>
+			'No student matched that admission number or phone.';
+	String get errorNetwork =>
+			'Network problem. Please check your connection and try again.';
+	String get errorGeneric => 'Something went wrong. Please try again.';
+	String get lookupEmpty =>
+			'Type the admission number or phone number first.';
 }
 
 // Path: parent.children.relationship
@@ -1632,6 +1667,7 @@ class TranslationsParentChildrenRelationshipEn {
 	String get guardian => 'Guardian';
 	String get other => 'Other';
 }
+
 
 // Path: assignments
 class TranslationsAssignmentsEn {

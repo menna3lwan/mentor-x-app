@@ -1128,7 +1128,21 @@
             "regSecurityHint": "Set a secure password to protect your account access.",
             "regRelationshipLabel": "Relationship to Child",
             "regChildConfirmed": "Child confirmed successfully",
-            "regConfirmIsYourChild": "Confirm if this is your child"
+            "regConfirmIsYourChild": "Confirm if this is your child",
+            "regErrorLookupEmpty": "Please enter a child phone number or student code.",
+            "regErrorStudentNotFound": "No student found with this identifier.",
+            "regErrorFindFailed": "Failed to find student. Please try again.",
+            "regErrorFindChildFirst": "Please find your child first.",
+            "regErrorConfirmChild": "Please confirm that this is your child.",
+            "regErrorFirstNameShort": "First name must be at least 2 characters.",
+            "regErrorLastNameShort": "Last name must be at least 2 characters.",
+            "regErrorInvalidPhone": "Please enter a valid Egyptian phone number.",
+            "regErrorInvalidEmail": "Please enter a valid email address.",
+            "regErrorRelationshipRequired": "Please select relationship with the child.",
+            "regErrorPasswordWeak": "Password must be at least 6 characters.",
+            "regErrorPasswordMismatch": "Passwords do not match.",
+            "regErrorRegistrationFailed": "Registration failed. Please try again.",
+            "regErrorPhoneAlreadyExists": "An account with this phone number already exists."
         },
         "profile": {
             "verifiedAccount": "Verified Account",
@@ -1264,7 +1278,12 @@
                 "mother": "Mother",
                 "guardian": "Guardian",
                 "other": "Other"
-            }
+            },
+            "errorAlreadyLinked": "This child is already linked to your account.",
+            "errorStudentNotFound": "No student matched that admission number or phone.",
+            "errorNetwork": "Network problem. Please check your connection and try again.",
+            "errorGeneric": "Something went wrong. Please try again.",
+            "lookupEmpty": "Type the admission number or phone number first."
         }
     },
     "assignments": {

@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 
@@ -22,7 +23,27 @@ final class ChildUnlinkSucceededPresentationEvent
 
 final class ChildrenFailurePresentationEvent extends ChildrenPresentationEvent {
   final String message;
-  const ChildrenFailurePresentationEvent({required this.message});
+  final ChildrenFailureKind kind;
+  const ChildrenFailurePresentationEvent({
+    required this.message,
+    this.kind = ChildrenFailureKind.unknown,
+  });
+}
+
+/// Classifies failures so the UI can show contextual copy (e.g. "already
+/// linked" vs "network down") without parsing strings.
+enum ChildrenFailureKind {
+  unknown,
+  studentNotFound,
+  alreadyLinked,
+  network,
+  unauthorized,
+}
+
+/// Fired when the user is no longer authenticated. Wrapper redirects to login.
+final class ChildrenUnauthorizedPresentationEvent
+    extends ChildrenPresentationEvent {
+  const ChildrenUnauthorizedPresentationEvent();
 }
 
 /// Drives the parent children-management surface. Maintains three independent
@@ -37,11 +58,19 @@ final class ChildrenBloc extends Bloc<ChildrenEvent, ChildrenState>
       : _childrenRepository = childrenRepository,
         super(ChildrenState.initial()) {
     on<ChildrenStarted>(_onStarted);
-    on<ChildrenRefreshRequested>(_onRefreshRequested);
-    on<ChildrenLookupRequested>(_onLookupRequested);
+    on<ChildrenRefreshRequested>(
+      _onRefreshRequested,
+      transformer: droppable(),
+    );
+    // Lookup is restartable so the latest keystroke wins.
+    on<ChildrenLookupRequested>(
+      _onLookupRequested,
+      transformer: restartable(),
+    );
     on<ChildrenLookupCleared>(_onLookupCleared);
-    on<ChildLinkConfirmed>(_onLinkConfirmed);
-    on<ChildUnlinkRequested>(_onUnlinkRequested);
+    // Mutations are droppable so a double-tap can't double-fire.
+    on<ChildLinkConfirmed>(_onLinkConfirmed, transformer: droppable());
+    on<ChildUnlinkRequested>(_onUnlinkRequested, transformer: droppable());
   }
 
   Future<void> _onStarted(
@@ -95,10 +124,14 @@ final class ChildrenBloc extends Bloc<ChildrenEvent, ChildrenState>
       ));
     } catch (e) {
       emit(state.copyWith(
-        lookupSection: ChildrenAsyncSection.failure(e.toString()),
+        lookupSection: ChildrenAsyncSection.failure(_describe(e)),
       ));
+      _maybeEmitUnauthorized(e);
       emitPresentation(
-        ChildrenFailurePresentationEvent(message: e.toString()),
+        ChildrenFailurePresentationEvent(
+          message: _describe(e),
+          kind: _classifyFailure(e),
+        ),
       );
     }
   }
@@ -116,6 +149,19 @@ final class ChildrenBloc extends Bloc<ChildrenEvent, ChildrenState>
     ChildLinkConfirmed event,
     Emitter<ChildrenState> emit,
   ) async {
+    // Guard: don't re-link a child that's already in the list.
+    if (state.children.any((c) => c.id == event.studentId)) {
+      _failLink(
+        emit,
+        const AuthenticationException(
+          code: AuthenticationExceptionCode.unknown,
+          message: 'already linked',
+        ),
+        ChildrenFailureKind.alreadyLinked,
+      );
+      return;
+    }
+
     emit(state.copyWith(linkSection: state.linkSection.toLoading()));
     try {
       final child = await _childrenRepository.linkChild(
@@ -131,44 +177,114 @@ final class ChildrenBloc extends Bloc<ChildrenEvent, ChildrenState>
       await _loadChildren(emit);
       emitPresentation(const ChildLinkSucceededPresentationEvent());
     } catch (e) {
-      emit(state.copyWith(
-        linkSection: ChildrenAsyncSection.failure(e.toString()),
-      ));
-      emitPresentation(
-        ChildrenFailurePresentationEvent(message: e.toString()),
-      );
+      _failLink(emit, e, _classifyFailure(e));
     }
+  }
+
+  void _failLink(
+    Emitter<ChildrenState> emit,
+    Object error,
+    ChildrenFailureKind kind,
+  ) {
+    final message = _describe(error);
+    emit(state.copyWith(
+      linkSection: ChildrenAsyncSection.failure(message),
+    ));
+    _maybeEmitUnauthorized(error);
+    emitPresentation(
+      ChildrenFailurePresentationEvent(message: message, kind: kind),
+    );
   }
 
   Future<void> _onUnlinkRequested(
     ChildUnlinkRequested event,
     Emitter<ChildrenState> emit,
   ) async {
+    // Snapshot the original list before mutating so we can roll back on a
+    // failed API call.
+    final original = List<ParentChildEntity>.from(state.children);
+    final optimisticList = original
+        .where((c) => c.id != event.childId)
+        .toList(growable: false);
+
     emit(state.copyWith(
       unlinkingChildId: event.childId,
       unlinkSection: state.unlinkSection.toLoading(),
+      // Optimistic UI: remove now, restore if the network call fails.
+      childrenSection: ChildrenAsyncSection.loaded(optimisticList),
     ));
+
     try {
       await _childrenRepository.unlinkChild(event.childId);
-
-      // Optimistically remove from the cached list.
-      final updated = state.children
-          .where((c) => c.id != event.childId)
-          .toList(growable: false);
       emit(state.copyWith(
         unlinkingChildId: null,
         unlinkSection: const ChildrenAsyncSection.loaded(null),
-        childrenSection: ChildrenAsyncSection.loaded(updated),
       ));
       emitPresentation(const ChildUnlinkSucceededPresentationEvent());
     } catch (e) {
+      // Rollback the optimistic remove.
       emit(state.copyWith(
         unlinkingChildId: null,
-        unlinkSection: ChildrenAsyncSection.failure(e.toString()),
+        unlinkSection: ChildrenAsyncSection.failure(_describe(e)),
+        childrenSection: ChildrenAsyncSection.loaded(original),
       ));
+      _maybeEmitUnauthorized(e);
       emitPresentation(
-        ChildrenFailurePresentationEvent(message: e.toString()),
+        ChildrenFailurePresentationEvent(
+          message: _describe(e),
+          kind: _classifyFailure(e),
+        ),
       );
+    }
+  }
+
+  // ───────────────────────────────────────────────────────────────────────
+  // Helpers
+  // ───────────────────────────────────────────────────────────────────────
+
+  String _describe(Object error) {
+    if (error is MentorXException) {
+      return error.message ?? error.toString();
+    }
+    if (error is HttpClientResponse) {
+      return error.statusMessage ?? 'Request failed (${error.statusCode})';
+    }
+    return error.toString();
+  }
+
+  ChildrenFailureKind _classifyFailure(Object error) {
+    if (error is AuthenticationException) {
+      return switch (error.code) {
+        AuthenticationExceptionCode.studentNotFound =>
+          ChildrenFailureKind.studentNotFound,
+        AuthenticationExceptionCode.phoneAlreadyExists =>
+          ChildrenFailureKind.alreadyLinked,
+        AuthenticationExceptionCode.networkError =>
+          ChildrenFailureKind.network,
+        AuthenticationExceptionCode.sessionExpired =>
+          ChildrenFailureKind.unauthorized,
+        _ => ChildrenFailureKind.unknown,
+      };
+    }
+    if (error is HttpClientResponse) {
+      return switch (error.statusCode) {
+        401 || 403 => ChildrenFailureKind.unauthorized,
+        404 => ChildrenFailureKind.studentNotFound,
+        409 => ChildrenFailureKind.alreadyLinked,
+        _ => ChildrenFailureKind.unknown,
+      };
+    }
+    return ChildrenFailureKind.unknown;
+  }
+
+  void _maybeEmitUnauthorized(Object error) {
+    if (error is HttpClientResponse &&
+        (error.statusCode == 401 || error.statusCode == 403)) {
+      emitPresentation(const ChildrenUnauthorizedPresentationEvent());
+    }
+    if (error is AuthenticationException &&
+        error.code == AuthenticationExceptionCode.sessionExpired) {
+      emitPresentation(const ChildrenUnauthorizedPresentationEvent());
     }
   }
 }

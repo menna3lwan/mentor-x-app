@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 
@@ -9,10 +10,27 @@ sealed class AttendancePresentationEvent {
   const AttendancePresentationEvent();
 }
 
+/// Classifies failures so the UI can show contextual copy.
+enum AttendanceFailureKind {
+  unknown,
+  network,
+  notFound,
+  unauthorized,
+}
+
 final class AttendanceFailurePresentationEvent
     extends AttendancePresentationEvent {
-  final String message;
-  const AttendanceFailurePresentationEvent({required this.message});
+  final AttendanceFailureKind kind;
+  final String? rawMessage;
+  const AttendanceFailurePresentationEvent({
+    required this.kind,
+    this.rawMessage,
+  });
+}
+
+final class AttendanceUnauthorizedPresentationEvent
+    extends AttendancePresentationEvent {
+  const AttendanceUnauthorizedPresentationEvent();
 }
 
 /// Drives the parent attendance-monitor screen.
@@ -25,7 +43,10 @@ final class AttendanceBloc extends Bloc<AttendanceEvent, AttendanceState>
       : _repository = repository,
         super(AttendanceState.initial()) {
     on<AttendanceStarted>(_onStarted);
-    on<AttendanceRefreshRequested>(_onRefreshRequested);
+    on<AttendanceRefreshRequested>(
+      _onRefreshRequested,
+      transformer: droppable(),
+    );
     on<AttendanceRetrySectionRequested>(_onRetrySection);
   }
 
@@ -46,9 +67,15 @@ final class AttendanceBloc extends Bloc<AttendanceEvent, AttendanceState>
     AttendanceRefreshRequested event,
     Emitter<AttendanceState> emit,
   ) async {
+    if (state.isRefreshing) return;
     emit(state.copyWith(isRefreshing: true, childId: event.childId));
-    await _loadAll(emit, event.childId);
-    emit(state.copyWith(isRefreshing: false));
+    try {
+      await _loadAll(emit, event.childId);
+    } finally {
+      if (!emit.isDone) {
+        emit(state.copyWith(isRefreshing: false));
+      }
+    }
   }
 
   Future<void> _onRetrySection(
@@ -90,16 +117,16 @@ final class AttendanceBloc extends Bloc<AttendanceEvent, AttendanceState>
   ) async {
     try {
       final records = await _repository.getAttendance(childId);
+      if (emit.isDone) return;
       emit(state.copyWith(
         recordsSection: AttendanceAsyncSection.loaded(records),
       ));
     } catch (e) {
+      if (emit.isDone) return;
       emit(state.copyWith(
-        recordsSection: AttendanceAsyncSection.failure(e.toString()),
+        recordsSection: AttendanceAsyncSection.failure(_describe(e)),
       ));
-      emitPresentation(
-        AttendanceFailurePresentationEvent(message: e.toString()),
-      );
+      _emitFailure(e);
     }
   }
 
@@ -109,16 +136,59 @@ final class AttendanceBloc extends Bloc<AttendanceEvent, AttendanceState>
   ) async {
     try {
       final summary = await _repository.getAttendanceSummary(childId);
+      if (emit.isDone) return;
       emit(state.copyWith(
         summarySection: AttendanceAsyncSection.loaded(summary),
       ));
     } catch (e) {
+      if (emit.isDone) return;
       emit(state.copyWith(
-        summarySection: AttendanceAsyncSection.failure(e.toString()),
+        summarySection: AttendanceAsyncSection.failure(_describe(e)),
       ));
-      emitPresentation(
-        AttendanceFailurePresentationEvent(message: e.toString()),
-      );
+      // Summary failure is non-critical — don't toast.
+      _maybeEmitUnauthorized(e);
+    }
+  }
+
+  // ───────────────────────────────────────────────────────────────────────
+  // Helpers
+  // ───────────────────────────────────────────────────────────────────────
+
+  void _emitFailure(Object error) {
+    _maybeEmitUnauthorized(error);
+    emitPresentation(
+      AttendanceFailurePresentationEvent(
+        kind: _classifyFailure(error),
+        rawMessage: _describe(error),
+      ),
+    );
+  }
+
+  String _describe(Object error) {
+    if (error is MentorXException) {
+      return error.message ?? error.toString();
+    }
+    if (error is HttpClientResponse) {
+      return error.statusMessage ?? 'Request failed (${error.statusCode})';
+    }
+    return error.toString();
+  }
+
+  AttendanceFailureKind _classifyFailure(Object error) {
+    if (error is HttpClientResponse) {
+      return switch (error.statusCode) {
+        401 || 403 => AttendanceFailureKind.unauthorized,
+        404 => AttendanceFailureKind.notFound,
+        _ => AttendanceFailureKind.unknown,
+      };
+    }
+    return AttendanceFailureKind.unknown;
+  }
+
+  void _maybeEmitUnauthorized(Object error) {
+    if (error is HttpClientResponse &&
+        (error.statusCode == 401 || error.statusCode == 403)) {
+      emitPresentation(const AttendanceUnauthorizedPresentationEvent());
     }
   }
 }

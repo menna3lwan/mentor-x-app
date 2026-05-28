@@ -93,7 +93,7 @@ class AssessmentRecordCardWidget extends StatelessWidget {
                 ),
                 const Gap(8),
                 StatusBadge(
-                  label: '${attempt.percentage.toInt()}%',
+                  label: _formatPercent(attempt.percentage),
                   color: statusColor,
                   isSmall: true,
                 ),
@@ -103,6 +103,13 @@ class AssessmentRecordCardWidget extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  /// Clamps the percentage to [0, 100] and rounds. Defensive against APIs
+  /// that occasionally send NaN/infinity or values outside the normal range.
+  static String _formatPercent(double raw) {
+    if (raw.isNaN || raw.isInfinite) return '0%';
+    return '${raw.clamp(0.0, 100.0).toInt()}%';
   }
 }
 

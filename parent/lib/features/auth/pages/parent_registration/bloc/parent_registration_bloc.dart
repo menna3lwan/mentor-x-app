@@ -1,10 +1,34 @@
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../../core/core.dart';
 import 'package:device_info_service/device_info_service.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../../../core/core.dart';
 
 part 'parent_registration_event.dart';
 part 'parent_registration_state.dart';
+
+/// Identifies why registration failed so the UI can show a localized,
+/// contextual message instead of forwarding raw strings.
+enum ParentRegistrationFailureKind {
+  unknown,
+  lookupEmpty,
+  studentNotFound,
+  findFailed,
+  findChildFirst,
+  confirmChild,
+  firstNameShort,
+  lastNameShort,
+  invalidPhone,
+  invalidEmail,
+  relationshipRequired,
+  passwordWeak,
+  passwordMismatch,
+  registrationFailed,
+  phoneAlreadyExists,
+  network,
+  unauthorized,
+}
 
 sealed class ParentRegistrationPresentationEvent {
   const ParentRegistrationPresentationEvent();
@@ -12,9 +36,13 @@ sealed class ParentRegistrationPresentationEvent {
 
 final class ParentRegistrationFailurePresentationEvent
     extends ParentRegistrationPresentationEvent {
-  final String message;
+  final ParentRegistrationFailureKind kind;
+  final String? rawMessage;
 
-  const ParentRegistrationFailurePresentationEvent({required this.message});
+  const ParentRegistrationFailurePresentationEvent({
+    required this.kind,
+    this.rawMessage,
+  });
 }
 
 final class ParentRegistrationSuccessPresentationEvent
@@ -44,7 +72,11 @@ final class ParentRegistrationBloc
     on<ParentRegistrationStepChanged>(_onStepChanged);
     on<ParentRegistrationLookupTypeChanged>(_onLookupTypeChanged);
     on<ParentRegistrationLookupValueChanged>(_onLookupValueChanged);
-    on<ParentRegistrationFindStudentSubmitted>(_onFindStudentSubmitted);
+    // Restartable: latest find-student request wins; older ones get dropped.
+    on<ParentRegistrationFindStudentSubmitted>(
+      _onFindStudentSubmitted,
+      transformer: restartable(),
+    );
     on<ParentRegistrationStudentConfirmed>(_onStudentConfirmed);
 
     on<ParentRegistrationFirstNameChanged>(
@@ -71,7 +103,11 @@ final class ParentRegistrationBloc
 
     on<ParentRegistrationNextStepRequested>(_onNextStepRequested);
     on<ParentRegistrationBackStepRequested>(_onBackStepRequested);
-    on<ParentRegistrationSubmitted>(_onSubmitted);
+    // Droppable: protect against double-tap on the final submit button.
+    on<ParentRegistrationSubmitted>(
+      _onSubmitted,
+      transformer: droppable(),
+    );
   }
 
   void _onStepChanged(
@@ -115,7 +151,7 @@ final class ParentRegistrationBloc
     if (state.lookupValue.trim().isEmpty) {
       emitPresentation(
         const ParentRegistrationFailurePresentationEvent(
-          message: 'Please enter a child phone number or student code.',
+          kind: ParentRegistrationFailureKind.lookupEmpty,
         ),
       );
       return;
@@ -143,7 +179,8 @@ final class ParentRegistrationBloc
       );
       emitPresentation(
         ParentRegistrationFailurePresentationEvent(
-          message: e.message ?? 'No student found with this identifier.',
+          kind: _classifyLookupError(e),
+          rawMessage: e.message,
         ),
       );
     } catch (e, s) {
@@ -153,7 +190,7 @@ final class ParentRegistrationBloc
       );
       emitPresentation(
         const ParentRegistrationFailurePresentationEvent(
-          message: 'Failed to find student. Please try again.',
+          kind: ParentRegistrationFailureKind.findFailed,
         ),
       );
     }
@@ -170,10 +207,10 @@ final class ParentRegistrationBloc
     ParentRegistrationNextStepRequested event,
     Emitter<ParentRegistrationState> emit,
   ) {
-    final validation = _validationMessageForStep(state.currentStep);
+    final validation = _validationKindForStep(state.currentStep);
     if (validation != null) {
       emitPresentation(
-        ParentRegistrationFailurePresentationEvent(message: validation),
+        ParentRegistrationFailurePresentationEvent(kind: validation),
       );
       return;
     }
@@ -197,10 +234,10 @@ final class ParentRegistrationBloc
     Emitter<ParentRegistrationState> emit,
   ) async {
     for (var step = 0; step <= 2; step++) {
-      final validation = _validationMessageForStep(step);
+      final validation = _validationKindForStep(step);
       if (validation != null) {
         emitPresentation(
-          ParentRegistrationFailurePresentationEvent(message: validation),
+          ParentRegistrationFailurePresentationEvent(kind: validation),
         );
         return;
       }
@@ -210,7 +247,7 @@ final class ParentRegistrationBloc
     if (foundStudent == null) {
       emitPresentation(
         const ParentRegistrationFailurePresentationEvent(
-          message: 'Please find and confirm your child first.',
+          kind: ParentRegistrationFailureKind.findChildFirst,
         ),
       );
       return;
@@ -248,7 +285,8 @@ final class ParentRegistrationBloc
       );
       emitPresentation(
         ParentRegistrationFailurePresentationEvent(
-          message: e.message ?? 'Registration failed. Please try again.',
+          kind: _classifyRegistrationError(e),
+          rawMessage: e.message,
         ),
       );
     } catch (e, s) {
@@ -258,51 +296,79 @@ final class ParentRegistrationBloc
       );
       emitPresentation(
         const ParentRegistrationFailurePresentationEvent(
-          message: 'Registration failed. Please try again.',
+          kind: ParentRegistrationFailureKind.registrationFailed,
         ),
       );
     }
   }
 
-  String? _validationMessageForStep(int step) {
+  /// Returns the first failure kind that prevents the user from advancing
+  /// past the given step, or `null` if the step is fully valid.
+  ParentRegistrationFailureKind? _validationKindForStep(int step) {
     switch (step) {
       case 0:
         if (state.foundStudent == null) {
-          return 'Please find your child first.';
+          return ParentRegistrationFailureKind.findChildFirst;
         }
         if (!state.isStudentConfirmed) {
-          return 'Please confirm that this is your child.';
+          return ParentRegistrationFailureKind.confirmChild;
         }
-        break;
       case 1:
         if (state.firstName.trim().length < 2) {
-          return 'First name must be at least 2 characters.';
+          return ParentRegistrationFailureKind.firstNameShort;
         }
         if (state.lastName.trim().length < 2) {
-          return 'Last name must be at least 2 characters.';
+          return ParentRegistrationFailureKind.lastNameShort;
         }
         if (!_isValidEgyptianPhone(state.phone)) {
-          return 'Please enter a valid Egyptian phone number.';
+          return ParentRegistrationFailureKind.invalidPhone;
         }
         if (state.email.trim().isNotEmpty &&
             Validator.validateEmail(state.email.trim()) != null) {
-          return Validator.validateEmail(state.email.trim());
+          return ParentRegistrationFailureKind.invalidEmail;
         }
         if (state.relationship.isEmpty) {
-          return 'Please select relationship with the child.';
+          return ParentRegistrationFailureKind.relationshipRequired;
         }
-        break;
       case 2:
         if (Validator.validatePassword(state.password) != null) {
-          return Validator.validatePassword(state.password);
+          return ParentRegistrationFailureKind.passwordWeak;
         }
         if (state.confirmPassword != state.password) {
-          return 'Passwords do not match.';
+          return ParentRegistrationFailureKind.passwordMismatch;
         }
-        break;
     }
-
     return null;
+  }
+
+  /// Maps a backend lookup exception to a typed UI failure.
+  ParentRegistrationFailureKind _classifyLookupError(
+    AuthenticationException e,
+  ) {
+    return switch (e.code) {
+      AuthenticationExceptionCode.studentNotFound =>
+        ParentRegistrationFailureKind.studentNotFound,
+      AuthenticationExceptionCode.networkError =>
+        ParentRegistrationFailureKind.network,
+      AuthenticationExceptionCode.sessionExpired =>
+        ParentRegistrationFailureKind.unauthorized,
+      _ => ParentRegistrationFailureKind.findFailed,
+    };
+  }
+
+  /// Maps a backend registration exception to a typed UI failure.
+  ParentRegistrationFailureKind _classifyRegistrationError(
+    AuthenticationException e,
+  ) {
+    return switch (e.code) {
+      AuthenticationExceptionCode.phoneAlreadyExists =>
+        ParentRegistrationFailureKind.phoneAlreadyExists,
+      AuthenticationExceptionCode.networkError =>
+        ParentRegistrationFailureKind.network,
+      AuthenticationExceptionCode.sessionExpired =>
+        ParentRegistrationFailureKind.unauthorized,
+      _ => ParentRegistrationFailureKind.registrationFailed,
+    };
   }
 
   bool _isValidEgyptianPhone(String value) {

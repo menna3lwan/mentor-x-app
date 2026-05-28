@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 
@@ -9,10 +10,28 @@ sealed class AssessmentsPresentationEvent {
   const AssessmentsPresentationEvent();
 }
 
+/// Classifies failures so the UI can show contextual copy.
+enum AssessmentsFailureKind {
+  unknown,
+  network,
+  notFound,
+  unauthorized,
+}
+
 final class AssessmentsFailurePresentationEvent
     extends AssessmentsPresentationEvent {
-  final String message;
-  const AssessmentsFailurePresentationEvent({required this.message});
+  final AssessmentsFailureKind kind;
+  final String? rawMessage;
+  const AssessmentsFailurePresentationEvent({
+    required this.kind,
+    this.rawMessage,
+  });
+}
+
+/// Fired on auth failures so the wrapper can redirect to login.
+final class AssessmentsUnauthorizedPresentationEvent
+    extends AssessmentsPresentationEvent {
+  const AssessmentsUnauthorizedPresentationEvent();
 }
 
 /// Drives the parent grade-monitor screen. Loads three independent sections
@@ -27,7 +46,11 @@ final class AssessmentsBloc extends Bloc<AssessmentsEvent, AssessmentsState>
       : _repository = repository,
         super(AssessmentsState.initial()) {
     on<AssessmentsStarted>(_onStarted);
-    on<AssessmentsRefreshRequested>(_onRefreshRequested);
+    // Drop rapid refresh taps — only one full reload at a time.
+    on<AssessmentsRefreshRequested>(
+      _onRefreshRequested,
+      transformer: droppable(),
+    );
     on<AssessmentsRetrySectionRequested>(_onRetrySection);
   }
 
@@ -48,9 +71,15 @@ final class AssessmentsBloc extends Bloc<AssessmentsEvent, AssessmentsState>
     AssessmentsRefreshRequested event,
     Emitter<AssessmentsState> emit,
   ) async {
+    if (state.isRefreshing) return;
     emit(state.copyWith(isRefreshing: true, childId: event.childId));
-    await _loadAll(emit, event.childId);
-    emit(state.copyWith(isRefreshing: false));
+    try {
+      await _loadAll(emit, event.childId);
+    } finally {
+      if (!emit.isDone) {
+        emit(state.copyWith(isRefreshing: false));
+      }
+    }
   }
 
   Future<void> _onRetrySection(
@@ -97,16 +126,16 @@ final class AssessmentsBloc extends Bloc<AssessmentsEvent, AssessmentsState>
   ) async {
     try {
       final list = await _repository.getAssessments(childId);
+      if (emit.isDone) return;
       emit(state.copyWith(
         assessmentsSection: AssessmentsAsyncSection.loaded(list),
       ));
     } catch (e) {
+      if (emit.isDone) return;
       emit(state.copyWith(
-        assessmentsSection: AssessmentsAsyncSection.failure(e.toString()),
+        assessmentsSection: AssessmentsAsyncSection.failure(_describe(e)),
       ));
-      emitPresentation(
-        AssessmentsFailurePresentationEvent(message: e.toString()),
-      );
+      _emitFailure(e);
     }
   }
 
@@ -116,16 +145,17 @@ final class AssessmentsBloc extends Bloc<AssessmentsEvent, AssessmentsState>
   ) async {
     try {
       final summary = await _repository.getGradeSummary(childId);
+      if (emit.isDone) return;
       emit(state.copyWith(
         summarySection: AssessmentsAsyncSection.loaded(summary),
       ));
     } catch (e) {
+      if (emit.isDone) return;
       emit(state.copyWith(
-        summarySection: AssessmentsAsyncSection.failure(e.toString()),
+        summarySection: AssessmentsAsyncSection.failure(_describe(e)),
       ));
-      emitPresentation(
-        AssessmentsFailurePresentationEvent(message: e.toString()),
-      );
+      // Summary failure is non-critical — don't toast.
+      _maybeEmitUnauthorized(e);
     }
   }
 
@@ -135,16 +165,59 @@ final class AssessmentsBloc extends Bloc<AssessmentsEvent, AssessmentsState>
   ) async {
     try {
       final trend = await _repository.getGradeTrend(childId);
+      if (emit.isDone) return;
       emit(state.copyWith(
         trendSection: AssessmentsAsyncSection.loaded(trend),
       ));
     } catch (e) {
+      if (emit.isDone) return;
       emit(state.copyWith(
-        trendSection: AssessmentsAsyncSection.failure(e.toString()),
+        trendSection: AssessmentsAsyncSection.failure(_describe(e)),
       ));
-      emitPresentation(
-        AssessmentsFailurePresentationEvent(message: e.toString()),
-      );
+      // Trend is non-critical — don't toast.
+      _maybeEmitUnauthorized(e);
+    }
+  }
+
+  // ───────────────────────────────────────────────────────────────────────
+  // Helpers
+  // ───────────────────────────────────────────────────────────────────────
+
+  void _emitFailure(Object error) {
+    _maybeEmitUnauthorized(error);
+    emitPresentation(
+      AssessmentsFailurePresentationEvent(
+        kind: _classifyFailure(error),
+        rawMessage: _describe(error),
+      ),
+    );
+  }
+
+  String _describe(Object error) {
+    if (error is MentorXException) {
+      return error.message ?? error.toString();
+    }
+    if (error is HttpClientResponse) {
+      return error.statusMessage ?? 'Request failed (${error.statusCode})';
+    }
+    return error.toString();
+  }
+
+  AssessmentsFailureKind _classifyFailure(Object error) {
+    if (error is HttpClientResponse) {
+      return switch (error.statusCode) {
+        401 || 403 => AssessmentsFailureKind.unauthorized,
+        404 => AssessmentsFailureKind.notFound,
+        _ => AssessmentsFailureKind.unknown,
+      };
+    }
+    return AssessmentsFailureKind.unknown;
+  }
+
+  void _maybeEmitUnauthorized(Object error) {
+    if (error is HttpClientResponse &&
+        (error.statusCode == 401 || error.statusCode == 403)) {
+      emitPresentation(const AssessmentsUnauthorizedPresentationEvent());
     }
   }
 }

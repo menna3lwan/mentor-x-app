@@ -1135,6 +1135,33 @@ class _TranslationsParentAuthAr implements TranslationsParentAuthEn {
 	@override String get regRelationshipLabel => 'صلة القرابة بالابن';
 	@override String get regChildConfirmed => 'تم تأكيد الابن بنجاح';
 	@override String get regConfirmIsYourChild => 'أكّد إذا كان هذا هو ابنك';
+
+	@override String get regErrorLookupEmpty =>
+			'من فضلك أدخل رقم هاتف الابن أو كود الطالب.';
+	@override String get regErrorStudentNotFound =>
+			'لم يتم العثور على طالب بهذا الرقم.';
+	@override String get regErrorFindFailed =>
+			'تعذّر البحث عن الطالب. حاول مرة أخرى.';
+	@override String get regErrorFindChildFirst => 'من فضلك ابحث عن ابنك أولًا.';
+	@override String get regErrorConfirmChild => 'من فضلك أكّد أن هذا هو ابنك.';
+	@override String get regErrorFirstNameShort =>
+			'الاسم الأول يجب أن يكون حرفين على الأقل.';
+	@override String get regErrorLastNameShort =>
+			'الاسم الأخير يجب أن يكون حرفين على الأقل.';
+	@override String get regErrorInvalidPhone =>
+			'من فضلك أدخل رقم هاتف مصري صحيح.';
+	@override String get regErrorInvalidEmail =>
+			'من فضلك أدخل بريدًا إلكترونيًا صحيحًا.';
+	@override String get regErrorRelationshipRequired =>
+			'من فضلك اختر صلة القرابة بالابن.';
+	@override String get regErrorPasswordWeak =>
+			'كلمة المرور يجب أن تكون 6 أحرف على الأقل.';
+	@override String get regErrorPasswordMismatch =>
+			'كلمتا المرور غير متطابقتين.';
+	@override String get regErrorRegistrationFailed =>
+			'فشل التسجيل. حاول مرة أخرى.';
+	@override String get regErrorPhoneAlreadyExists =>
+			'يوجد حساب مسجّل بهذا الرقم بالفعل.';
 }
 
 // Path: parent.profile
@@ -1361,6 +1388,15 @@ class _TranslationsParentChildrenAr implements TranslationsParentChildrenEn {
 
 	@override late final _TranslationsParentChildrenRelationshipAr relationship =
 			_TranslationsParentChildrenRelationshipAr._(_root);
+
+	@override String get errorAlreadyLinked =>
+			'هذا الابن مرتبط بالفعل بحسابك.';
+	@override String get errorStudentNotFound => 'لم نجد طالبًا بهذا الرقم.';
+	@override String get errorNetwork =>
+			'مشكلة في الشبكة. تحقّق من اتصالك وحاول مرة أخرى.';
+	@override String get errorGeneric => 'حدث خطأ ما. حاول مرة أخرى.';
+	@override String get lookupEmpty =>
+			'اكتب رقم القيد أو رقم الهاتف أولًا.';
 }
 
 // Path: parent.children.relationship

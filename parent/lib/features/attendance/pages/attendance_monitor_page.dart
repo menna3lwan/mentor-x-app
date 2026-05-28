@@ -6,6 +6,8 @@ import 'package:mentorx_core/mentorx_core.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 
+import '../../../core/blocs/app_authentication_cubit/app_authentication_cubit.dart';
+import '../../../core/routing/app_routes.dart';
 import '../bloc/attendance_bloc.dart';
 import '../widgets/widgets.dart';
 
@@ -37,8 +39,14 @@ class _AttendanceMonitorView extends StatelessWidget {
         AttendancePresentationEvent>(
       listener: (context, event) {
         switch (event) {
-          case AttendanceFailurePresentationEvent(:final message):
-            MentorXUI.showToast(message: message, isError: true);
+          case AttendanceFailurePresentationEvent(:final kind, :final rawMessage):
+            MentorXUI.showToast(
+              message: _messageFor(t, kind, rawMessage),
+              isError: true,
+            );
+          case AttendanceUnauthorizedPresentationEvent():
+            context.read<AppAuthenticationCubit>().logout();
+            const LoginPageRoute().go(context);
         }
       },
       child: AppDashboardScaffold(
@@ -76,5 +84,19 @@ class _AttendanceMonitorView extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  /// Maps a typed failure kind to localized copy.
+  String _messageFor(
+    TranslationsParentEn t,
+    AttendanceFailureKind kind,
+    String? rawMessage,
+  ) {
+    return switch (kind) {
+      AttendanceFailureKind.network => t.unableToLoad,
+      AttendanceFailureKind.notFound => t.attendanceTracking.noRecordsTitle,
+      AttendanceFailureKind.unauthorized => t.unableToLoad,
+      AttendanceFailureKind.unknown => rawMessage ?? t.unableToLoad,
+    };
   }
 }

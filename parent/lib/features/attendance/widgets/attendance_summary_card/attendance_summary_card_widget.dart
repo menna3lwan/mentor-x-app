@@ -24,32 +24,43 @@ class AttendanceSummaryCardWidget extends StatelessWidget {
     return FadeInDown(
       duration: const Duration(milliseconds: 600),
       child: AttendanceRateCard(
-        rate: summary.attendanceRate,
+        rate: _safeRate(summary.attendanceRate),
         stats: [
           AttendanceSummaryStat(
             label: presentLabel,
-            value: summary.present.toString(),
+            value: _safeCount(summary.present).toString(),
             color: context.statusSuccessColor,
           ),
           AttendanceSummaryStat(
             label: absentLabel,
-            value: summary.absent.toString(),
+            value: _safeCount(summary.absent).toString(),
             color: context.statusDangerColor,
           ),
           AttendanceSummaryStat(
             label: lateLabel,
-            value: summary.late.toString(),
+            value: _safeCount(summary.late).toString(),
             color: context.statusWarningColor,
           ),
           AttendanceSummaryStat(
             label: excusedLabel,
-            value: summary.excused.toString(),
+            value: _safeCount(summary.excused).toString(),
             color: context.brandPrimaryColor,
           ),
         ],
       ),
     );
   }
+
+  /// Clamps the attendance rate to [0.0, 1.0] (the card uses it as a 0–1
+  /// fraction). Defensive against NaN/infinity and out-of-range payloads.
+  static double _safeRate(double raw) {
+    if (raw.isNaN || raw.isInfinite) return 0;
+    return raw.clamp(0.0, 1.0);
+  }
+
+  /// Clamps an attendance count to a sensible range — prevents enormous
+  /// numbers (negative or > 9999) from spilling out of the StatCard.
+  static int _safeCount(int raw) => raw.clamp(0, 9999);
 }
 
 class AttendanceSummaryCardSkeleton extends StatelessWidget {

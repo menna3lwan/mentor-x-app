@@ -111,8 +111,18 @@ class __ParentRegistrationPageContentState
     >(
       listener: (context, event) {
         switch (event) {
-          case ParentRegistrationFailurePresentationEvent(:final message):
-            MentorXUI.showToast(message: message, isError: true);
+          case ParentRegistrationFailurePresentationEvent(
+                :final kind,
+                :final rawMessage,
+              ):
+            MentorXUI.showToast(
+              message: _messageFor(
+                Translations.of(context).parent,
+                kind,
+                rawMessage,
+              ),
+              isError: true,
+            );
           case ParentRegistrationSuccessPresentationEvent(:final phone):
             OtpPageRoute(phoneNumber: phone).go(context);
         }
@@ -206,6 +216,47 @@ class __ParentRegistrationPageContentState
       selection: TextSelection.collapsed(offset: value.length),
       composing: TextRange.empty,
     );
+  }
+
+  /// Maps a typed registration failure to localized copy.
+  String _messageFor(
+    TranslationsParentEn t,
+    ParentRegistrationFailureKind kind,
+    String? rawMessage,
+  ) {
+    return switch (kind) {
+      ParentRegistrationFailureKind.lookupEmpty =>
+        t.auth.regErrorLookupEmpty,
+      ParentRegistrationFailureKind.studentNotFound =>
+        t.auth.regErrorStudentNotFound,
+      ParentRegistrationFailureKind.findFailed => t.auth.regErrorFindFailed,
+      ParentRegistrationFailureKind.findChildFirst =>
+        t.auth.regErrorFindChildFirst,
+      ParentRegistrationFailureKind.confirmChild =>
+        t.auth.regErrorConfirmChild,
+      ParentRegistrationFailureKind.firstNameShort =>
+        t.auth.regErrorFirstNameShort,
+      ParentRegistrationFailureKind.lastNameShort =>
+        t.auth.regErrorLastNameShort,
+      ParentRegistrationFailureKind.invalidPhone =>
+        t.auth.regErrorInvalidPhone,
+      ParentRegistrationFailureKind.invalidEmail =>
+        t.auth.regErrorInvalidEmail,
+      ParentRegistrationFailureKind.relationshipRequired =>
+        t.auth.regErrorRelationshipRequired,
+      ParentRegistrationFailureKind.passwordWeak =>
+        t.auth.regErrorPasswordWeak,
+      ParentRegistrationFailureKind.passwordMismatch =>
+        t.auth.regErrorPasswordMismatch,
+      ParentRegistrationFailureKind.phoneAlreadyExists =>
+        t.auth.regErrorPhoneAlreadyExists,
+      ParentRegistrationFailureKind.network => t.unableToLoad,
+      ParentRegistrationFailureKind.registrationFailed =>
+        t.auth.regErrorRegistrationFailed,
+      ParentRegistrationFailureKind.unauthorized => t.auth.loginFailed,
+      ParentRegistrationFailureKind.unknown =>
+        rawMessage ?? t.auth.regErrorRegistrationFailed,
+    };
   }
 
   String _titleForStep(int step, TranslationsParentEn t) {

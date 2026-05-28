@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 
+import '../../../core/blocs/app_authentication_cubit/app_authentication_cubit.dart';
 import '../../../core/routing/app_routes.dart';
 import '../bloc/children_bloc.dart';
 import '../widgets/widgets.dart';
@@ -38,8 +39,15 @@ class _LinkedChildrenView extends StatelessWidget {
             MentorXUI.showToast(message: t.children.unlinkSuccess);
           case ChildLinkSucceededPresentationEvent():
             MentorXUI.showToast(message: t.children.linkSuccess);
-          case ChildrenFailurePresentationEvent(:final message):
-            MentorXUI.showToast(message: message, isError: true);
+          case ChildrenFailurePresentationEvent(:final kind, :final message):
+            MentorXUI.showToast(
+              message: _messageFor(kind, message, t),
+              isError: true,
+            );
+          case ChildrenUnauthorizedPresentationEvent():
+            // Session expired — drop local state and bounce to login.
+            context.read<AppAuthenticationCubit>().logout();
+            const LoginPageRoute().go(context);
         }
       },
       child: AppDashboardScaffold(
@@ -48,6 +56,23 @@ class _LinkedChildrenView extends StatelessWidget {
         floatingActionButton: _LinkChildFab(label: t.children.linkNewChild),
       ),
     );
+  }
+
+  /// Picks the right localized copy for the failure kind. Falls back to the
+  /// raw [rawMessage] from the bloc if we don't have a specific key for it.
+  String _messageFor(
+    ChildrenFailureKind kind,
+    String rawMessage,
+    TranslationsParentEn t,
+  ) {
+    return switch (kind) {
+      ChildrenFailureKind.alreadyLinked => t.children.errorAlreadyLinked,
+      ChildrenFailureKind.studentNotFound => t.children.errorStudentNotFound,
+      ChildrenFailureKind.network => t.children.errorNetwork,
+      ChildrenFailureKind.unauthorized => t.unableToLoad,
+      ChildrenFailureKind.unknown =>
+        rawMessage.isEmpty ? t.children.errorGeneric : rawMessage,
+    };
   }
 }
 

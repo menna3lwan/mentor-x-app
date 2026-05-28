@@ -29,22 +29,29 @@ class OverallPerformanceCardWidget extends StatelessWidget {
         stats: [
           AppHeroStatItem(
             label: averageLabel,
-            value: '${summary.overallAverage.toStringAsFixed(1)}%',
+            value: _formatPercent(summary.overallAverage),
             onTap: () {},
           ),
           AppHeroStatItem(
             label: gradedLabel,
-            value: summary.graded.toString(),
+            value: summary.graded.clamp(0, 9999).toString(),
             onTap: () {},
           ),
           AppHeroStatItem(
             label: pendingLabel,
-            value: summary.pending.toString(),
+            value: summary.pending.clamp(0, 9999).toString(),
             onTap: () {},
           ),
         ],
       ),
     );
+  }
+
+  /// Clamps the percentage to [0, 100]. Defensive against APIs that
+  /// occasionally send NaN/infinity or values outside the normal range.
+  static String _formatPercent(double raw) {
+    if (raw.isNaN || raw.isInfinite) return '0%';
+    return '${raw.clamp(0.0, 100.0).toStringAsFixed(1)}%';
   }
 }
 

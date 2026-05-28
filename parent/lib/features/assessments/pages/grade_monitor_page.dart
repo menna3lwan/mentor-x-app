@@ -6,6 +6,8 @@ import 'package:mentorx_core/mentorx_core.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 
+import '../../../core/blocs/app_authentication_cubit/app_authentication_cubit.dart';
+import '../../../core/routing/app_routes.dart';
 import '../bloc/assessments_bloc.dart';
 import '../widgets/widgets.dart';
 
@@ -37,8 +39,14 @@ class _GradeMonitorView extends StatelessWidget {
         AssessmentsPresentationEvent>(
       listener: (context, event) {
         switch (event) {
-          case AssessmentsFailurePresentationEvent(:final message):
-            MentorXUI.showToast(message: message, isError: true);
+          case AssessmentsFailurePresentationEvent(:final kind, :final rawMessage):
+            MentorXUI.showToast(
+              message: _messageFor(t, kind, rawMessage),
+              isError: true,
+            );
+          case AssessmentsUnauthorizedPresentationEvent():
+            context.read<AppAuthenticationCubit>().logout();
+            const LoginPageRoute().go(context);
         }
       },
       child: AppDashboardScaffold(
@@ -74,5 +82,21 @@ class _GradeMonitorView extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  /// Maps the typed failure kind to localized copy, with the raw bloc
+  /// message as a last-resort fallback.
+  String _messageFor(
+    TranslationsParentEn t,
+    AssessmentsFailureKind kind,
+    String? rawMessage,
+  ) {
+    return switch (kind) {
+      AssessmentsFailureKind.network => t.unableToLoad,
+      AssessmentsFailureKind.notFound => t.assessments.noAssessmentsTitle,
+      AssessmentsFailureKind.unauthorized => t.unableToLoad,
+      AssessmentsFailureKind.unknown =>
+        rawMessage ?? t.unableToLoad,
+    };
   }
 }

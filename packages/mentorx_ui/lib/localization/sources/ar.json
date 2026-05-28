@@ -1137,7 +1137,21 @@
             "regSecurityHint": "اضبط كلمة مرور قوية لحماية الوصول إلى حسابك.",
             "regRelationshipLabel": "صلة القرابة بالابن",
             "regChildConfirmed": "تم تأكيد الابن بنجاح",
-            "regConfirmIsYourChild": "أكّد إذا كان هذا هو ابنك"
+            "regConfirmIsYourChild": "أكّد إذا كان هذا هو ابنك",
+            "regErrorLookupEmpty": "من فضلك أدخل رقم هاتف الابن أو كود الطالب.",
+            "regErrorStudentNotFound": "لم يتم العثور على طالب بهذا الرقم.",
+            "regErrorFindFailed": "تعذّر البحث عن الطالب. حاول مرة أخرى.",
+            "regErrorFindChildFirst": "من فضلك ابحث عن ابنك أولًا.",
+            "regErrorConfirmChild": "من فضلك أكّد أن هذا هو ابنك.",
+            "regErrorFirstNameShort": "الاسم الأول يجب أن يكون حرفين على الأقل.",
+            "regErrorLastNameShort": "الاسم الأخير يجب أن يكون حرفين على الأقل.",
+            "regErrorInvalidPhone": "من فضلك أدخل رقم هاتف مصري صحيح.",
+            "regErrorInvalidEmail": "من فضلك أدخل بريدًا إلكترونيًا صحيحًا.",
+            "regErrorRelationshipRequired": "من فضلك اختر صلة القرابة بالابن.",
+            "regErrorPasswordWeak": "كلمة المرور يجب أن تكون 6 أحرف على الأقل.",
+            "regErrorPasswordMismatch": "كلمتا المرور غير متطابقتين.",
+            "regErrorRegistrationFailed": "فشل التسجيل. حاول مرة أخرى.",
+            "regErrorPhoneAlreadyExists": "يوجد حساب مسجّل بهذا الرقم بالفعل."
         },
         "profile": {
             "verifiedAccount": "حساب موثّق",
@@ -1273,7 +1287,12 @@
                 "mother": "أم",
                 "guardian": "وصي",
                 "other": "أخرى"
-            }
+            },
+            "errorAlreadyLinked": "هذا الابن مرتبط بالفعل بحسابك.",
+            "errorStudentNotFound": "لم نجد طالبًا بهذا الرقم.",
+            "errorNetwork": "مشكلة في الشبكة. تحقّق من اتصالك وحاول مرة أخرى.",
+            "errorGeneric": "حدث خطأ ما. حاول مرة أخرى.",
+            "lookupEmpty": "اكتب رقم القيد أو رقم الهاتف أولًا."
         }
     },
     "assignments": {

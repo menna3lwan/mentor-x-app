@@ -6,6 +6,8 @@ import 'package:go_router/go_router.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 
+import '../../../core/blocs/app_authentication_cubit/app_authentication_cubit.dart';
+import '../../../core/routing/app_routes.dart';
 import '../bloc/children_bloc.dart';
 import '../widgets/widgets.dart';
 
@@ -42,7 +44,13 @@ class _AddChildLinkViewState extends State<_AddChildLinkView> {
 
   void _onSearch() {
     final query = _queryController.text.trim();
-    if (query.isEmpty) return;
+    if (query.isEmpty) {
+      // Give the user feedback instead of silently doing nothing.
+      MentorXUI.showToast(
+        message: Translations.of(context).parent.children.lookupEmpty,
+      );
+      return;
+    }
     context.read<ChildrenBloc>().add(ChildrenLookupRequested(query));
   }
 
@@ -74,8 +82,14 @@ class _AddChildLinkViewState extends State<_AddChildLinkView> {
             if (context.mounted) context.pop();
           case ChildUnlinkSucceededPresentationEvent():
             break;
-          case ChildrenFailurePresentationEvent(:final message):
-            MentorXUI.showToast(message: message, isError: true);
+          case ChildrenFailurePresentationEvent(:final kind, :final message):
+            MentorXUI.showToast(
+              message: _failureMessage(kind, message, t),
+              isError: true,
+            );
+          case ChildrenUnauthorizedPresentationEvent():
+            context.read<AppAuthenticationCubit>().logout();
+            const LoginPageRoute().go(context);
         }
       },
       child: BlocBuilder<ChildrenBloc, ChildrenState>(
@@ -157,5 +171,22 @@ class _AddChildLinkViewState extends State<_AddChildLinkView> {
         },
       ),
     );
+  }
+
+  /// Maps the typed failure kind to localized copy, with the raw bloc
+  /// message as a last-resort fallback.
+  String _failureMessage(
+    ChildrenFailureKind kind,
+    String rawMessage,
+    TranslationsParentEn t,
+  ) {
+    return switch (kind) {
+      ChildrenFailureKind.alreadyLinked => t.children.errorAlreadyLinked,
+      ChildrenFailureKind.studentNotFound => t.children.errorStudentNotFound,
+      ChildrenFailureKind.network => t.children.errorNetwork,
+      ChildrenFailureKind.unauthorized => t.unableToLoad,
+      ChildrenFailureKind.unknown =>
+        rawMessage.isEmpty ? t.children.errorGeneric : rawMessage,
+    };
   }
 }
