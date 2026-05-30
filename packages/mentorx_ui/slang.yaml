@@ -1,5 +1,6 @@
-output_directory: lib/localization/generated
-input_file_pattern: .json
-input_directory: lib/localization/sources
-paramCase: camel
 base_locale: en
+input_directory: lib/localization/sources
+input_file_pattern: .i18n.json
+output_directory: lib/localization/generated
+output_file_name: strings.g.dart
+param_case: camel
