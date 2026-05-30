@@ -68,7 +68,7 @@ class _AnnouncementsArchiveView extends StatelessWidget {
                   vertical: 20,
                 ),
                 itemCount: 3,
-                itemBuilder: (_, __) => const AnnouncementArchiveCardSkeleton(),
+                itemBuilder: (_, _) => const AnnouncementArchiveCardSkeleton(),
               );
             }
 

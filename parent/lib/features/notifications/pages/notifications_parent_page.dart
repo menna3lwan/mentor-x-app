@@ -129,11 +129,11 @@ final class _NotificationsViewState extends State<_NotificationsView> {
               return ListView.separated(
                 physics: const AlwaysScrollableScrollPhysics(),
                 padding: const EdgeInsets.all(20),
-                itemBuilder: (_, __) => const MentorXSkeleton(
+                itemBuilder: (_, _) => const MentorXSkeleton(
                   height: 96,
                   borderRadius: 16,
                 ),
-                separatorBuilder: (_, __) => const Gap(12),
+                separatorBuilder: (_, _) => const Gap(12),
                 itemCount: 6,
               );
             }
@@ -168,7 +168,7 @@ final class _NotificationsViewState extends State<_NotificationsView> {
               padding: const EdgeInsets.fromLTRB(20, 20, 20, 32),
               itemCount:
                   state.notifications.length + (state.isLoadingMore ? 1 : 0),
-              separatorBuilder: (_, __) => const Gap(12),
+              separatorBuilder: (_, _) => const Gap(12),
               itemBuilder: (context, index) {
                 if (index == state.notifications.length) {
                   return const Padding(
@@ -245,7 +245,7 @@ final class _NotificationTile extends StatelessWidget {
               ),
               boxShadow: [
                 BoxShadow(
-                  color: context.elevatedSurfaceShadowColor,
+                  color: context.backgroundElevatedSurfaceShadowColor,
                   blurRadius: 18,
                   offset: const Offset(0, 8),
                 ),

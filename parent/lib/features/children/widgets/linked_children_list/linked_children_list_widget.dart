@@ -50,7 +50,7 @@ class LinkedChildrenListWidget extends StatelessWidget {
       return ListView.builder(
         padding: const EdgeInsets.all(20),
         itemCount: 4,
-        itemBuilder: (_, __) => const Padding(
+        itemBuilder: (_, _) => const Padding(
           padding: EdgeInsets.only(bottom: 12),
           child: MentorXSkeleton(height: 96, borderRadius: 24),
         ),

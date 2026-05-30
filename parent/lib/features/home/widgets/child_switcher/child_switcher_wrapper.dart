@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mentorx_core/mentorx_core.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 
 import '../../../../core/routing/app_routes.dart';
@@ -55,7 +54,7 @@ class _ChildSwitcherSkeleton extends StatelessWidget {
         physics: const NeverScrollableScrollPhysics(),
         padding: const EdgeInsets.symmetric(horizontal: 24),
         itemCount: 4,
-        itemBuilder: (_, __) {
+        itemBuilder: (_, _) {
           return Padding(
             padding: const EdgeInsets.only(right: 24),
             child: Column(

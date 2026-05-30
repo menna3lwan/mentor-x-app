@@ -2,13 +2,11 @@ import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-import 'package:mentorx_core/mentorx_core.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/core.dart';
-import '../../../core/routing/app_routes.dart';
 import '../bloc/home_bloc.dart';
 import '../widgets/widgets.dart';
 import 'home_page_page.dart' hide HomeSection;

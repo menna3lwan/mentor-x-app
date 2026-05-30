@@ -70,7 +70,7 @@ class _WhatsAppGroupsView extends StatelessWidget {
                   vertical: 20,
                 ),
                 itemCount: 4,
-                itemBuilder: (_, __) => const WhatsAppGroupCardSkeleton(),
+                itemBuilder: (_, _) => const WhatsAppGroupCardSkeleton(),
               );
             }
 

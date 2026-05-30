@@ -51,8 +51,8 @@ class ParentAnnouncementsSkeleton extends StatelessWidget {
         physics: const NeverScrollableScrollPhysics(),
         padding: const EdgeInsets.symmetric(horizontal: 4),
         itemCount: 3,
-        separatorBuilder: (_, __) => const SizedBox(width: 12),
-        itemBuilder: (_, __) {
+        separatorBuilder: (_, _) => const SizedBox(width: 12),
+        itemBuilder: (_, _) {
           return const MentorXSkeleton(
             width: 240,
             height: 120,

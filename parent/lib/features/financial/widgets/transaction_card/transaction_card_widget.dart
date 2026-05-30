@@ -117,8 +117,9 @@ class TransactionCardWidget extends StatelessWidget {
     String currency, {
     required bool isCredit,
   }) {
-    if (raw.isNaN || raw.isInfinite)
+    if (raw.isNaN || raw.isInfinite) {
       return '${isCredit ? '+' : '-'} $currency 0';
+    }
     final amount = raw.abs();
     final compact = amount >= 1000000
         ? '${(amount / 1000000).toStringAsFixed(1)}M'

@@ -232,7 +232,7 @@ class _ForgetPasswordPageWrapperState extends State<ForgetPasswordPageWrapper> {
 
                               setModalState(() => isSubmitting = true);
                               try {
-                                await this.context
+                                await context
                                     .read<AuthenticationRepository>()
                                     .resetPassword(
                                       phone: phone,

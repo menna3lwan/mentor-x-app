@@ -6,7 +6,6 @@ import 'package:go_router/go_router.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:parent/core/core.dart';
 
-import '../../../../core/blocs/app_authentication_cubit/app_authentication_cubit.dart';
 import 'bloc/otp_bloc.dart';
 import 'otp_page.dart';
 

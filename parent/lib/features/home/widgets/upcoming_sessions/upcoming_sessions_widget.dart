@@ -20,7 +20,7 @@ class UpcomingSessionsWidget extends StatelessWidget {
         physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.symmetric(horizontal: 4),
         itemCount: sessions.length,
-        separatorBuilder: (_, __) => const SizedBox(width: 12),
+        separatorBuilder: (_, _) => const SizedBox(width: 12),
         itemBuilder: (context, index) {
           return FadeInRight(
             duration: const Duration(milliseconds: 500),
@@ -179,8 +179,8 @@ class UpcomingSessionsSkeleton extends StatelessWidget {
         physics: const NeverScrollableScrollPhysics(),
         padding: const EdgeInsets.symmetric(horizontal: 4),
         itemCount: 3,
-        separatorBuilder: (_, __) => const SizedBox(width: 12),
-        itemBuilder: (_, __) => const MentorXSkeleton(
+        separatorBuilder: (_, _) => const SizedBox(width: 12),
+        itemBuilder: (_, _) => const MentorXSkeleton(
           width: 240,
           height: 160,
           borderRadius: 20,
