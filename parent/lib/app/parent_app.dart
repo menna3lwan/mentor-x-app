@@ -49,7 +49,7 @@ final class ParentApp extends StatelessWidget {
 
                     return MaterialApp.router(
                       key: appKey,
-                      title: 'MentorX Parent',
+                      title: Translations.of(context).parent.app.title,
                       debugShowCheckedModeBanner: false,
                       routerConfig: requirements.routerConfig,
                       locale: TranslationProvider.of(context).flutterLocale,

@@ -14,8 +14,10 @@ class CourseProgressDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = Translations.of(context).parent;
+
     return AppDashboardScaffold(
-      title: 'Course Progress',
+      title: t.courseDetail.pageTitle,
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(
@@ -28,17 +30,17 @@ class CourseProgressDetailPage extends StatelessWidget {
                 icon: Icons.auto_stories_rounded,
                 stats: [
                   AppHeroStatItem(
-                    label: 'Sessions',
+                    label: t.courseDetail.sessions,
                     value: course.totalSessions.toString(),
                     onTap: () {},
                   ),
                   AppHeroStatItem(
-                    label: 'Progress',
+                    label: t.courseDetail.progress,
                     value: '85%', // Placeholder for progress
                     onTap: () {},
                   ),
                   AppHeroStatItem(
-                    label: 'ID',
+                    label: t.courseDetail.id,
                     value: course.id.substring(0, 4),
                     onTap: () {},
                   ),
@@ -46,13 +48,13 @@ class CourseProgressDetailPage extends StatelessWidget {
               ),
             ),
             const Gap(32),
-            
+
             FadeInLeft(
               duration: const Duration(milliseconds: 500),
-              child: const AppSectionHeader(title: 'Course Breakdown'),
+              child: AppSectionHeader(title: t.courseDetail.courseBreakdown),
             ),
             const Gap(16),
-            
+
             FadeInUp(
               duration: const Duration(milliseconds: 500),
               child: Container(
@@ -64,17 +66,17 @@ class CourseProgressDetailPage extends StatelessWidget {
                 ),
                 child: Column(
                   children: [
-                    _DetailRow(label: 'Course ID', value: course.id),
+                    _DetailRow(label: t.courseDetail.courseId, value: course.id),
                     const Padding(
                       padding: EdgeInsets.symmetric(vertical: 16),
                       child: Divider(),
                     ),
-                    _DetailRow(label: 'Full Title', value: course.title),
+                    _DetailRow(label: t.courseDetail.fullTitle, value: course.title),
                     const Padding(
                       padding: EdgeInsets.symmetric(vertical: 16),
                       child: Divider(),
                     ),
-                    const _DetailRow(label: 'Status', value: 'Active'),
+                    _DetailRow(label: t.courseDetail.status, value: t.courseDetail.statusActive),
                   ],
                 ),
               ),

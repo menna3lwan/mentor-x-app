@@ -1284,6 +1284,44 @@
             "errorNetwork": "Network problem. Please check your connection and try again.",
             "errorGeneric": "Something went wrong. Please try again.",
             "lookupEmpty": "Type the admission number or phone number first."
+        },
+        "courseDetail": {
+            "pageTitle": "Course Progress",
+            "courseBreakdown": "Course Breakdown",
+            "courseId": "Course ID",
+            "fullTitle": "Full Title",
+            "status": "Status",
+            "statusActive": "Active",
+            "sessions": "Sessions",
+            "progress": "Progress",
+            "id": "ID"
+        },
+        "gradeDetail": {
+            "pageTitle": "Grade Details",
+            "quizDetail": "Quiz Detail",
+            "quizScore": "Quiz Score",
+            "assessmentInfo": "Assessment Info",
+            "score": "Score",
+            "percentage": "Percentage",
+            "result": "Result",
+            "pass": "Pass",
+            "fail": "Fail",
+            "questionBreakdown": "Question Breakdown",
+            "questionLabel": "Question ${number}",
+            "correctAnswer": "Correct Answer",
+            "incorrectAnswer": "Incorrect Answer",
+            "additionalDetails": "Additional Details",
+            "quizId": "Quiz ID",
+            "submittedAt": "Submitted At",
+            "passCriteria": "Pass Criteria",
+            "notFound": "Quiz attempt not found."
+        },
+        "splash": {
+            "appName": "MENTORX",
+            "tagline": "PARENT PORTAL"
+        },
+        "app": {
+            "title": "MentorX Parent"
         }
     },
     "assignments": {

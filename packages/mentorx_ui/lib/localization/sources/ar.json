@@ -1293,6 +1293,44 @@
             "errorNetwork": "مشكلة في الشبكة. تحقّق من اتصالك وحاول مرة أخرى.",
             "errorGeneric": "حدث خطأ ما. حاول مرة أخرى.",
             "lookupEmpty": "اكتب رقم القيد أو رقم الهاتف أولًا."
+        },
+        "courseDetail": {
+            "pageTitle": "تفاصيل الكورس",
+            "courseBreakdown": "تفاصيل المادة",
+            "courseId": "رقم الكورس",
+            "fullTitle": "العنوان الكامل",
+            "status": "الحالة",
+            "statusActive": "نشط",
+            "sessions": "الحصص",
+            "progress": "التقدم",
+            "id": "المعرّف"
+        },
+        "gradeDetail": {
+            "pageTitle": "تفاصيل الدرجة",
+            "quizDetail": "تفاصيل الاختبار",
+            "quizScore": "نتيجة الاختبار",
+            "assessmentInfo": "معلومات التقييم",
+            "score": "الدرجة",
+            "percentage": "النسبة",
+            "result": "النتيجة",
+            "pass": "ناجح",
+            "fail": "راسب",
+            "questionBreakdown": "تفصيل الأسئلة",
+            "questionLabel": "السؤال ${number}",
+            "correctAnswer": "إجابة صحيحة",
+            "incorrectAnswer": "إجابة خاطئة",
+            "additionalDetails": "تفاصيل إضافية",
+            "quizId": "رقم الاختبار",
+            "submittedAt": "تاريخ التسليم",
+            "passCriteria": "حد النجاح",
+            "notFound": "لم يتم العثور على محاولة الاختبار."
+        },
+        "splash": {
+            "appName": "MENTORX",
+            "tagline": "بوابة ولي الأمر"
+        },
+        "app": {
+            "title": "MentorX لولي الأمر"
         }
     },
     "assignments": {

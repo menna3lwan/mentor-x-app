@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:device_info_service/device_info_service.dart';
 import '../../../core/blocs/app_authentication_cubit/app_authentication_cubit.dart';
 import '../../../core/routing/app_routes.dart';
 
@@ -32,6 +33,8 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
 
   @override
   Widget build(BuildContext context) {
+    final t = Translations.of(context).parent;
+
     return Scaffold(
       body: Container(
         width: double.infinity,
@@ -58,9 +61,9 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
               child: const Icon(Icons.family_restroom_rounded, size: 80, color: Colors.white),
             ),
             const SizedBox(height: 32),
-            const Text(
-              'MENTORX',
-              style: TextStyle(
+            Text(
+              t.splash.appName,
+              style: const TextStyle(
                 fontSize: 32,
                 fontWeight: FontWeight.w900,
                 color: Colors.white,
@@ -69,7 +72,7 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
             ),
             const SizedBox(height: 8),
             Text(
-              Translations.of(context).parent.onboarding.parentPortalTag,
+              t.splash.tagline,
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w700,
@@ -85,6 +88,21 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
                 color: Colors.white.withValues(alpha: 0.5),
                 strokeWidth: 3,
               ),
+            ),
+            const SizedBox(height: 24),
+            FutureBuilder<String>(
+              future: context.read<DeviceInfoService>().getAppVersion(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) return const SizedBox.shrink();
+                return Text(
+                  'v${snapshot.data}',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.white.withValues(alpha: 0.4),
+                  ),
+                );
+              },
             ),
           ],
         ),

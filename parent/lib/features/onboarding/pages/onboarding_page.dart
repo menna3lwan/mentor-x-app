@@ -2,13 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 
 import '../../../core/routing/app_routes.dart';
-
-/// Brand colors used to give each onboarding slide its own visual identity.
-/// Kept as named constants (instead of inline hex) so they're easy to swap if
-/// branding evolves.
-const _kSlideIndigo = Color(0xFF6366F1);
-const _kSlideGreen = Color(0xFF10B981);
-const _kSlideAmber = Color(0xFFF59E0B);
+import '../../../core/theme/parent_colors.dart';
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});
@@ -34,19 +28,19 @@ class _OnboardingPageState extends State<OnboardingPage> {
         title: t.slide1Title,
         description: t.slide1Description,
         icon: Icons.analytics_rounded,
-        color: _kSlideIndigo,
+        color: ParentColors.slideIndigo,
       ),
       _OnboardingSlide(
         title: t.slide2Title,
         description: t.slide2Description,
         icon: Icons.chat_bubble_rounded,
-        color: _kSlideGreen,
+        color: ParentColors.slideGreen,
       ),
       _OnboardingSlide(
         title: t.slide3Title,
         description: t.slide3Description,
         icon: Icons.account_balance_wallet_rounded,
-        color: _kSlideAmber,
+        color: ParentColors.slideAmber,
       ),
     ];
   }

@@ -1,3 +1,4 @@
+import 'package:device_info_service/device_info_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -19,6 +20,18 @@ class SettingsParentPage extends StatefulWidget {
 
 class _SettingsParentPageState extends State<SettingsParentPage> {
   bool _pushNotifications = true;
+  String _appVersion = '0.0.1';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadVersion();
+  }
+
+  Future<void> _loadVersion() async {
+    final version = await context.read<DeviceInfoService>().getAppVersion();
+    if (mounted) setState(() => _appVersion = version);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +105,9 @@ class _SettingsParentPageState extends State<SettingsParentPage> {
               ProfileTileWidget(
                 icon: Icons.info_outline_rounded,
                 label: t.profile.aboutTitle,
-                value: t.profile.aboutVersion(version: '1.0.0'),
+                value: t.profile.aboutVersion(
+                  version: _appVersion.isEmpty ? '...' : _appVersion,
+                ),
                 onTap: () {},
               ),
             ],

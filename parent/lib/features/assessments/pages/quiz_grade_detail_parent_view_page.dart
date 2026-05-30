@@ -16,6 +16,8 @@ final class QuizGradeDetailParentViewPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = Translations.of(context).parent;
+
     return BlocBuilder<AssessmentsBloc, AssessmentsState>(
       builder: (context, state) {
         QuizAttemptEntity? attempt;
@@ -26,14 +28,14 @@ final class QuizGradeDetailParentViewPage extends StatelessWidget {
           }
         }
         if (attempt == null) {
-          return const AppDashboardScaffold(
-            title: 'Quiz Detail',
-            body: Center(child: Text('Quiz attempt not found.')),
+          return AppDashboardScaffold(
+            title: t.gradeDetail.quizDetail,
+            body: Center(child: Text(t.gradeDetail.notFound)),
           );
         }
 
         return AppDashboardScaffold(
-          title: 'Quiz Detail',
+          title: t.gradeDetail.quizDetail,
           body: SingleChildScrollView(
             padding: const EdgeInsets.all(24),
             child: Column(
@@ -42,39 +44,41 @@ final class QuizGradeDetailParentViewPage extends StatelessWidget {
                 FadeInDown(
                   duration: const Duration(milliseconds: 600),
                   child: AppHeroCard(
-                    title: 'QUIZ SCORE',
+                    title: t.gradeDetail.quizScore.toUpperCase(),
                     icon: Icons.quiz_rounded,
                     stats: [
                       AppHeroStatItem(
-                        label: 'Score',
+                        label: t.gradeDetail.score,
                         value: '${attempt.score}/${attempt.totalMarks}',
                         onTap: () {},
                       ),
                       AppHeroStatItem(
-                        label: 'Percentage',
+                        label: t.gradeDetail.percentage,
                         value: '${attempt.percentage.toInt()}%',
                         onTap: () {},
                       ),
                       AppHeroStatItem(
-                        label: 'Result',
-                        value: attempt.passed ? 'PASS' : 'FAIL',
+                        label: t.gradeDetail.result,
+                        value: attempt.passed
+                            ? t.gradeDetail.pass.toUpperCase()
+                            : t.gradeDetail.fail.toUpperCase(),
                         onTap: () {},
                       ),
                     ],
                   ),
                 ),
                 const Gap(32),
-                
+
                 FadeInLeft(
                   duration: const Duration(milliseconds: 500),
-                  child: const AppSectionHeader(title: 'Question Breakdown'),
+                  child: AppSectionHeader(title: t.gradeDetail.questionBreakdown),
                 ),
                 const Gap(16),
-                
+
                 ...List.generate(6, (index) {
                   final isCorrect = index.isEven;
                   final color = isCorrect ? context.statusSuccessColor : context.statusDangerColor;
-                  
+
                   return FadeInUp(
                     duration: const Duration(milliseconds: 500),
                     delay: Duration(milliseconds: 50 * index),
@@ -99,7 +103,7 @@ final class QuizGradeDetailParentViewPage extends StatelessWidget {
                           ),
                         ),
                         title: Text(
-                          'Question ${index + 1}',
+                          t.gradeDetail.questionLabel(number: '${index + 1}'),
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w700,
@@ -107,7 +111,7 @@ final class QuizGradeDetailParentViewPage extends StatelessWidget {
                           ),
                         ),
                         subtitle: Text(
-                          isCorrect ? 'Correct Answer' : 'Incorrect Answer',
+                          isCorrect ? t.gradeDetail.correctAnswer : t.gradeDetail.incorrectAnswer,
                           style: TextStyle(
                             fontSize: 12,
                             color: context.textSecondaryColor,
