@@ -3,13 +3,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:parent/features/auth/utils/auth_validators.dart';
 
-/// Pulls the real TranslationsParentEn instance via the Slang provider so
+/// Pulls the real TranslationsParentEn instance via Slang's sync build so
 /// tests share the same copy with the app.
 TranslationsParentEn _t() {
-  // Slang's TranslationProvider returns a `Translations` root which has the
-  // `parent` sub-tree. We access the EN variant directly for deterministic
-  // assertions.
-  return Translations.buildLocale(AppLocale.en).parent;
+  return AppLocale.en.buildSync().parent;
 }
 
 void main() {

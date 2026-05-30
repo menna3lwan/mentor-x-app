@@ -303,40 +303,53 @@ final class ParentRegistrationBloc
   }
 
   /// Returns the first failure kind that prevents the user from advancing
-  /// past the given step, or `null` if the step is fully valid.
+  /// past the given step, or `null` if the step is fully valid. Each step
+  /// is handled in its own helper so cases can't accidentally fall through.
   ParentRegistrationFailureKind? _validationKindForStep(int step) {
-    switch (step) {
-      case 0:
-        if (state.foundStudent == null) {
-          return ParentRegistrationFailureKind.findChildFirst;
-        }
-        if (!state.isStudentConfirmed) {
-          return ParentRegistrationFailureKind.confirmChild;
-        }
-      case 1:
-        if (state.firstName.trim().length < 2) {
-          return ParentRegistrationFailureKind.firstNameShort;
-        }
-        if (state.lastName.trim().length < 2) {
-          return ParentRegistrationFailureKind.lastNameShort;
-        }
-        if (!_isValidEgyptianPhone(state.phone)) {
-          return ParentRegistrationFailureKind.invalidPhone;
-        }
-        if (state.email.trim().isNotEmpty &&
-            Validator.validateEmail(state.email.trim()) != null) {
-          return ParentRegistrationFailureKind.invalidEmail;
-        }
-        if (state.relationship.isEmpty) {
-          return ParentRegistrationFailureKind.relationshipRequired;
-        }
-      case 2:
-        if (Validator.validatePassword(state.password) != null) {
-          return ParentRegistrationFailureKind.passwordWeak;
-        }
-        if (state.confirmPassword != state.password) {
-          return ParentRegistrationFailureKind.passwordMismatch;
-        }
+    return switch (step) {
+      0 => _validateStep0(),
+      1 => _validateStep1(),
+      2 => _validateStep2(),
+      _ => null,
+    };
+  }
+
+  ParentRegistrationFailureKind? _validateStep0() {
+    if (state.foundStudent == null) {
+      return ParentRegistrationFailureKind.findChildFirst;
+    }
+    if (!state.isStudentConfirmed) {
+      return ParentRegistrationFailureKind.confirmChild;
+    }
+    return null;
+  }
+
+  ParentRegistrationFailureKind? _validateStep1() {
+    if (state.firstName.trim().length < 2) {
+      return ParentRegistrationFailureKind.firstNameShort;
+    }
+    if (state.lastName.trim().length < 2) {
+      return ParentRegistrationFailureKind.lastNameShort;
+    }
+    if (!_isValidEgyptianPhone(state.phone)) {
+      return ParentRegistrationFailureKind.invalidPhone;
+    }
+    if (state.email.trim().isNotEmpty &&
+        Validator.validateEmail(state.email.trim()) != null) {
+      return ParentRegistrationFailureKind.invalidEmail;
+    }
+    if (state.relationship.isEmpty) {
+      return ParentRegistrationFailureKind.relationshipRequired;
+    }
+    return null;
+  }
+
+  ParentRegistrationFailureKind? _validateStep2() {
+    if (Validator.validatePassword(state.password) != null) {
+      return ParentRegistrationFailureKind.passwordWeak;
+    }
+    if (state.confirmPassword != state.password) {
+      return ParentRegistrationFailureKind.passwordMismatch;
     }
     return null;
   }

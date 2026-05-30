@@ -31,22 +31,37 @@ class WalletSummaryCardWidget extends StatelessWidget {
         stats: [
           AppHeroStatItem(
             label: balanceLabel,
-            value: '$currency ${summary.walletBalance.toStringAsFixed(0)}',
+            value: _formatMoney(summary.walletBalance, currency),
             onTap: () {},
           ),
           AppHeroStatItem(
             label: spentLabel,
-            value: '$currency ${summary.spentThisMonth.toStringAsFixed(0)}',
+            value: _formatMoney(summary.spentThisMonth, currency),
             onTap: () {},
           ),
           AppHeroStatItem(
             label: pointsLabel,
-            value: summary.points.toString(),
+            value: summary.points.clamp(0, 999999).toString(),
             onTap: () {},
           ),
         ],
       ),
     );
+  }
+
+  /// Compact money formatter. Handles NaN/infinity, clamps to a sensible
+  /// non-negative range, and condenses large amounts (1.2k / 3.4M) so they
+  /// stay inside the StatCard on small screens.
+  static String _formatMoney(double raw, String currency) {
+    if (raw.isNaN || raw.isInfinite) return '$currency 0';
+    final value = raw < 0 ? 0.0 : raw;
+    if (value >= 1000000) {
+      return '$currency ${(value / 1000000).toStringAsFixed(1)}M';
+    }
+    if (value >= 10000) {
+      return '$currency ${(value / 1000).toStringAsFixed(1)}k';
+    }
+    return '$currency ${value.toStringAsFixed(0)}';
   }
 }
 

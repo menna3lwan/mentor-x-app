@@ -12,6 +12,7 @@ void main() {
   const childId = 'child-1';
 
   const summary = AttendanceSummaryEntity(
+    totalSessions: 25,
     attendanceRate: 0.92,
     present: 23,
     absent: 1,

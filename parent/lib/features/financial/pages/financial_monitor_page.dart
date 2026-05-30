@@ -6,6 +6,8 @@ import 'package:mentorx_core/mentorx_core.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 
+import '../../../core/blocs/app_authentication_cubit/app_authentication_cubit.dart';
+import '../../../core/routing/app_routes.dart';
 import '../bloc/financial_bloc.dart';
 import '../widgets/widgets.dart';
 
@@ -36,8 +38,14 @@ class _FinancialMonitorView extends StatelessWidget {
     return BlocPresentationListener<FinancialBloc, FinancialPresentationEvent>(
       listener: (context, event) {
         switch (event) {
-          case FinancialFailurePresentationEvent(:final message):
-            MentorXUI.showToast(message: message, isError: true);
+          case FinancialFailurePresentationEvent(:final kind, :final rawMessage):
+            MentorXUI.showToast(
+              message: _messageFor(t, kind, rawMessage),
+              isError: true,
+            );
+          case FinancialUnauthorizedPresentationEvent():
+            context.read<AppAuthenticationCubit>().logout();
+            const LoginPageRoute().go(context);
         }
       },
       child: AppDashboardScaffold(
@@ -73,5 +81,20 @@ class _FinancialMonitorView extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  /// Maps the typed financial failure kind to localized copy.
+  String _messageFor(
+    TranslationsParentEn t,
+    FinancialFailureKind kind,
+    String? rawMessage,
+  ) {
+    return switch (kind) {
+      FinancialFailureKind.network => t.unableToLoad,
+      FinancialFailureKind.notFound => t.financial.noTransactionsTitle,
+      FinancialFailureKind.unauthorized => t.unableToLoad,
+      FinancialFailureKind.invalidChild => t.unableToLoad,
+      FinancialFailureKind.unknown => rawMessage ?? t.unableToLoad,
+    };
   }
 }
