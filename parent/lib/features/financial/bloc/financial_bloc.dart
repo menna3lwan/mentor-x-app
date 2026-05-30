@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
-import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 
 part 'financial_event.dart';
@@ -235,7 +235,7 @@ final class FinancialBloc extends Bloc<FinancialEvent, FinancialState>
       return error.message ?? error.toString();
     }
     if (error is HttpClientResponse) {
-      return error.statusMessage ?? 'Request failed (${error.statusCode})';
+      return 'Request failed (${error.statusCode})';
     }
     return error.toString();
   }

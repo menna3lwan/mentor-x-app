@@ -5,10 +5,11 @@ export 'models/communication_models.dart';
 final class DioParentCommunicationRepository
     extends HttpClientRepository<ParentCommunicationRepositoryExceptionCode>
     implements ParentCommunicationRepository {
-  final HttpClient httpClient;
+  final HttpClient _httpClient;
 
-  DioParentCommunicationRepository({required this.httpClient});
-  
+  DioParentCommunicationRepository({required HttpClient httpClient})
+      : _httpClient = httpClient;
+
   @override
   Future<void> initialize() async {}
 
@@ -16,24 +17,16 @@ final class DioParentCommunicationRepository
   Never throwException(
     ParentCommunicationRepositoryExceptionCode code, {
     String? message,
-  }) {
-    throw ParentCommunicationRepositoryException(code: code, message: message);
-  }
+  }) =>
+      throw ParentCommunicationRepositoryException(
+          code: code, message: message);
 
   @override
   Future<List<NotificationEntity>> getNotifications(String childId) async {
     try {
-      HttpClientResponse response;
-      try {
-        response = await httpClient.get(
-          '/api/parent/children/$childId/notifications',
-        );
-      } on HttpClientResponse catch (e) {
-        if (e.statusCode != 404) rethrow;
-        response = await httpClient.get(
-          '/api/parent/dashboard/child/$childId/notifications',
-        );
-      }
+      final response = await _httpClient.get(
+        '/api/parent/children/$childId/notifications',
+      );
 
       final data = asList(response.data);
       return data.map((e) => NotificationModel.fromJson(asMap(e))).toList();
@@ -48,20 +41,14 @@ final class DioParentCommunicationRepository
   @override
   Future<List<AnnouncementEntity>> getAnnouncements(String childId) async {
     try {
-      HttpClientResponse response;
-      try {
-        response = await httpClient.get(
-          '/api/parent/children/$childId/announcements',
-        );
-      } on HttpClientResponse catch (e) {
-        if (e.statusCode != 404) rethrow;
-        response = await httpClient.get(
-          '/api/parent/dashboard/child/$childId/announcements',
-        );
-      }
+      final response = await _httpClient.get(
+        '/api/parent/children/$childId/announcements',
+      );
 
       final data = asList(response.data);
-      return data.map((e) => AnnouncementModel.fromJson(asMap(e))).toList();
+      return data
+          .map((e) => AnnouncementModel.fromJson(asMap(e)))
+          .toList();
     } on HttpClientResponse catch (e) {
       handleHttpClientErrorResponse(
         e,
@@ -73,20 +60,14 @@ final class DioParentCommunicationRepository
   @override
   Future<List<WhatsAppGroupEntity>> getWhatsAppGroups(String childId) async {
     try {
-      HttpClientResponse response;
-      try {
-        response = await httpClient.get(
-          '/api/parent/children/$childId/whatsapp-groups',
-        );
-      } on HttpClientResponse catch (e) {
-        if (e.statusCode != 404) rethrow;
-        response = await httpClient.get(
-          '/api/parent/dashboard/child/$childId/whatsapp-groups',
-        );
-      }
+      final response = await _httpClient.get(
+        '/api/parent/children/$childId/whatsapp-groups',
+      );
 
       final data = asList(response.data);
-      return data.map((e) => WhatsAppGroupModel.fromJson(asMap(e))).toList();
+      return data
+          .map((e) => WhatsAppGroupModel.fromJson(asMap(e)))
+          .toList();
     } on HttpClientResponse catch (e) {
       handleHttpClientErrorResponse(
         e,
@@ -94,5 +75,4 @@ final class DioParentCommunicationRepository
       );
     }
   }
-
 }

@@ -198,7 +198,7 @@ final class AssessmentsBloc extends Bloc<AssessmentsEvent, AssessmentsState>
       return error.message ?? error.toString();
     }
     if (error is HttpClientResponse) {
-      return error.statusMessage ?? 'Request failed (${error.statusCode})';
+      return 'Request failed (${error.statusCode})';
     }
     return error.toString();
   }

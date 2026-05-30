@@ -63,9 +63,9 @@ class ParentProfilePage extends StatelessWidget {
                   ProfileTileWidget(
                     icon: Icons.email_rounded,
                     label: t.profile.emailLabel,
-                    value: (profile.email == null || profile.email!.isEmpty)
-                        ? '—'
-                        : profile.email!,
+                    value: (profile.email?.isNotEmpty == true)
+                        ? profile.email!
+                        : '—',
                   ),
                 ],
               ),

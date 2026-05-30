@@ -125,13 +125,7 @@ final class DioAuthenticationRepository
           'app_version': appVersion.trim(),
       };
 
-      HttpClientResponse response;
-      try {
-        response = await httpClient.post('/api/parent/register', data: payload);
-      } on HttpClientResponse catch (e) {
-        if (e.statusCode != 404) rethrow;
-        response = await httpClient.post('/api/parent/register', data: payload);
-      }
+      final response = await httpClient.post('/api/parent/register', data: payload);
 
       final data = _extractDataMap(response.data);
       final userId = stringOrNull(data['user_id'] ?? data['id']) ?? '';
@@ -188,13 +182,7 @@ final class DioAuthenticationRepository
         'value': value.trim(),
       };
 
-      HttpClientResponse response;
-      try {
-        response = await httpClient.post('/api/parent/find-student', data: payload);
-      } on HttpClientResponse catch (e) {
-        if (e.statusCode != 404) rethrow;
-        response = await httpClient.post('/api/parent/find-student', data: payload);
-      }
+      final response = await httpClient.post('/api/parent/find-student', data: payload);
 
       final data = _extractDataMap(response.data);
       final studentId = stringOrNull(data['student_id'] ?? data['id']);
@@ -277,12 +265,7 @@ final class DioAuthenticationRepository
   @override
   Future<void> requestPasswordReset(String phone) async {
     try {
-      try {
-        await httpClient.post('/api/auth/forgot-password', data: {'phone': phone});
-      } on HttpClientResponse catch (e) {
-        if (e.statusCode != 404) rethrow;
-        await httpClient.post('/api/auth/forgot-password', data: {'phone': phone});
-      }
+      await httpClient.post('/api/auth/forgot-password', data: {'phone': phone});
     } on HttpClientResponse catch (e) {
       handleHttpClientErrorResponse(
         e,
@@ -312,31 +295,13 @@ final class DioAuthenticationRepository
       await httpClient.post('/api/auth/reset-password', data: primaryPayload);
       await _clearLocalSession();
     } on HttpClientResponse catch (e) {
+      // If the primary payload shape was rejected, try the secondary shape.
       if (e.statusCode == 400 || e.statusCode == 422) {
         try {
           await httpClient.post('/api/auth/reset-password', data: secondaryPayload);
           await _clearLocalSession();
           return;
         } catch (_) {}
-      }
-
-      if (e.statusCode == 404) {
-        try {
-          await httpClient.post('/api/auth/reset-password', data: primaryPayload);
-          await _clearLocalSession();
-          return;
-        } on HttpClientResponse catch (_) {
-          try {
-            await httpClient.post('/api/auth/reset-password', data: secondaryPayload);
-            await _clearLocalSession();
-            return;
-          } on HttpClientResponse catch (fallbackE) {
-            handleHttpClientErrorResponse(
-              fallbackE,
-              defaultCode: _ExceptionCode.failedToResetPassword,
-            );
-          }
-        }
       }
 
       handleHttpClientErrorResponse(
@@ -368,15 +333,10 @@ final class DioAuthenticationRepository
         await httpClient.post('/api/parent/register/start', data: {'phone': phone});
       } on HttpClientResponse catch (e) {
         if (e.statusCode != 404) rethrow;
-        try {
-          await httpClient.post('/api/parent/register/start', data: {'phone': phone});
-        } on HttpClientResponse catch (e2) {
-          if (e2.statusCode != 404) rethrow;
-          await httpClient.post('/api/auth/resend-otp', data: {
-            'phone': phone,
-            'purpose': 'registration',
-          });
-        }
+        await httpClient.post('/api/auth/resend-otp', data: {
+          'phone': phone,
+          'purpose': 'registration',
+        });
       }
       AuthRateLimiter.recordSuccessfulAttempt(phone, 'send_otp');
     } on HttpClientResponse catch (e) {
@@ -406,12 +366,7 @@ final class DioAuthenticationRepository
         response = await httpClient.post('/api/auth/resend-otp', data: {'phone': phone});
       } on HttpClientResponse catch (e) {
         if (e.statusCode != 404) rethrow;
-        try {
-          response = await httpClient.post('/api/auth/resend-otp', data: {'phone': phone});
-        } on HttpClientResponse catch (e2) {
-          if (e2.statusCode != 404) rethrow;
-          response = await httpClient.post('/api/parent/register/resend-otp', data: {'phone': phone});
-        }
+        response = await httpClient.post('/api/parent/register/resend-otp', data: {'phone': phone});
       }
 
       AuthRateLimiter.recordSuccessfulAttempt(phone, 'resend_otp');

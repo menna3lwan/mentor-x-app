@@ -5,10 +5,11 @@ export 'models/attendance_models.dart';
 final class DioParentAttendanceRepository
     extends HttpClientRepository<ParentAttendanceRepositoryExceptionCode>
     implements ParentAttendanceRepository {
-  final HttpClient httpClient;
+  final HttpClient _httpClient;
 
-  DioParentAttendanceRepository({required this.httpClient});
-  
+  DioParentAttendanceRepository({required HttpClient httpClient})
+      : _httpClient = httpClient;
+
   @override
   Future<void> initialize() async {}
 
@@ -16,9 +17,8 @@ final class DioParentAttendanceRepository
   Never throwException(
     ParentAttendanceRepositoryExceptionCode code, {
     String? message,
-  }) {
-    throw ParentAttendanceRepositoryException(code: code, message: message);
-  }
+  }) =>
+      throw ParentAttendanceRepositoryException(code: code, message: message);
 
   @override
   Future<List<AttendanceRecordEntity>> getAttendance(
@@ -27,29 +27,19 @@ final class DioParentAttendanceRepository
     DateTime? to,
   }) async {
     try {
-      HttpClientResponse response;
-      try {
-        response = await httpClient.get(
-          '/api/parent/dashboard/child/$childId/attendance',
-          queryParameters: {
-            if (from != null) 'from': from.toIso8601String(),
-            if (to != null) 'to': to.toIso8601String(),
-          },
-        );
-      } on HttpClientResponse catch (e) {
-        if (e.statusCode != 404) rethrow;
-        response = await httpClient.get(
-          '/api/parent/children/$childId/attendance',
-          queryParameters: {
-            if (from != null) 'from': from.toIso8601String(),
-            if (to != null) 'to': to.toIso8601String(),
-          },
-        );
-      }
+      final response = await _httpClient.get(
+        '/api/parent/dashboard/child/$childId/attendance',
+        queryParameters: {
+          if (from != null) 'from': from.toIso8601String(),
+          if (to != null) 'to': to.toIso8601String(),
+        },
+      );
 
       final data = asMap(response.data)['data'] ?? asList(response.data);
       final list = asList(data is Map ? data['content'] : data);
-      return list.map((e) => AttendanceRecordModel.fromJson(asMap(e))).toList();
+      return list
+          .map((e) => AttendanceRecordModel.fromJson(asMap(e)))
+          .toList();
     } on HttpClientResponse catch (e) {
       handleHttpClientErrorResponse(
         e,
@@ -65,25 +55,13 @@ final class DioParentAttendanceRepository
     DateTime? to,
   }) async {
     try {
-      HttpClientResponse response;
-      try {
-        response = await httpClient.get(
-          '/api/parent/dashboard/child/$childId/overview',
-          queryParameters: {
-            if (from != null) 'from': from.toIso8601String(),
-            if (to != null) 'to': to.toIso8601String(),
-          },
-        );
-      } on HttpClientResponse catch (e) {
-        if (e.statusCode != 404) rethrow;
-        response = await httpClient.get(
-          '/api/parent/children/$childId/attendance/summary',
-          queryParameters: {
-            if (from != null) 'from': from.toIso8601String(),
-            if (to != null) 'to': to.toIso8601String(),
-          },
-        );
-      }
+      final response = await _httpClient.get(
+        '/api/parent/dashboard/child/$childId/overview',
+        queryParameters: {
+          if (from != null) 'from': from.toIso8601String(),
+          if (to != null) 'to': to.toIso8601String(),
+        },
+      );
 
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return AttendanceSummaryModel.fromJson(data);
@@ -94,5 +72,4 @@ final class DioParentAttendanceRepository
       );
     }
   }
-
 }

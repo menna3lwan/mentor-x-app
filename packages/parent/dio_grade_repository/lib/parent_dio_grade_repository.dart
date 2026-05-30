@@ -5,10 +5,11 @@ export 'models/grade_models.dart';
 final class DioParentGradeRepository
     extends HttpClientRepository<ParentGradeRepositoryExceptionCode>
     implements ParentGradeRepository {
-  final HttpClient httpClient;
+  final HttpClient _httpClient;
 
-  DioParentGradeRepository({required this.httpClient});
-  
+  DioParentGradeRepository({required HttpClient httpClient})
+      : _httpClient = httpClient;
+
   @override
   Future<void> initialize() async {}
 
@@ -16,24 +17,15 @@ final class DioParentGradeRepository
   Never throwException(
     ParentGradeRepositoryExceptionCode code, {
     String? message,
-  }) {
-    throw ParentGradeRepositoryException(code: code, message: message);
-  }
+  }) =>
+      throw ParentGradeRepositoryException(code: code, message: message);
 
   @override
   Future<ParentGradeSummaryEntity> getGradeSummary(String childId) async {
     try {
-      HttpClientResponse response;
-      try {
-        response = await httpClient.get(
-          '/api/parent/children/$childId/grades/summary',
-        );
-      } on HttpClientResponse catch (e) {
-        if (e.statusCode != 404) rethrow;
-        response = await httpClient.get(
-          '/api/parent/dashboard/child/$childId/overview',
-        );
-      }
+      final response = await _httpClient.get(
+        '/api/parent/children/$childId/grades/summary',
+      );
 
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return ParentGradeSummaryModel.fromJson(data);
@@ -51,19 +43,10 @@ final class DioParentGradeRepository
     int months = 6,
   }) async {
     try {
-      HttpClientResponse response;
-      try {
-        response = await httpClient.get(
-          '/api/parent/children/$childId/grades/trend',
-          queryParameters: {'months': months},
-        );
-      } on HttpClientResponse catch (e) {
-        if (e.statusCode != 404) rethrow;
-        response = await httpClient.get(
-          '/api/parent/dashboard/child/$childId/overview',
-          queryParameters: {'months': months},
-        );
-      }
+      final response = await _httpClient.get(
+        '/api/parent/children/$childId/grades/trend',
+        queryParameters: {'months': months},
+      );
 
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return ParentGradeTrendModel.fromJson(data);
@@ -82,25 +65,13 @@ final class DioParentGradeRepository
     String? courseId,
   }) async {
     try {
-      HttpClientResponse response;
-      try {
-        response = await httpClient.get(
-          '/api/parent/children/$childId/assessments',
-          queryParameters: {
-            if (type != null) 'type': type,
-            if (courseId != null) 'course_id': courseId,
-          },
-        );
-      } on HttpClientResponse catch (e) {
-        if (e.statusCode != 404) rethrow;
-        response = await httpClient.get(
-          '/api/parent/dashboard/child/$childId/progress/all',
-          queryParameters: {
-            if (type != null) 'type': type,
-            if (courseId != null) 'course_id': courseId,
-          },
-        );
-      }
+      final response = await _httpClient.get(
+        '/api/parent/children/$childId/assessments',
+        queryParameters: {
+          if (type != null) 'type': type,
+          if (courseId != null) 'course_id': courseId,
+        },
+      );
 
       final data = asList(response.data);
       return data.map((e) => QuizAttemptModel.fromJson(asMap(e))).toList();
@@ -111,5 +82,4 @@ final class DioParentGradeRepository
       );
     }
   }
-
 }

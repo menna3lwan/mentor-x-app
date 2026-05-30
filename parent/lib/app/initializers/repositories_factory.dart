@@ -164,11 +164,7 @@ final class RepositoriesFactory {
         repo = MockParentHomeRepository();
       case RepositoryMode.prod:
         final httpClient = await _initHttpClient();
-        final cacheRepository = await _initCacheRepository();
-        repo = DioParentHomeRepository(
-          httpClient: httpClient,
-          cacheRepository: cacheRepository,
-        );
+        repo = DioParentHomeRepository(httpClient: httpClient);
     }
     await repo.initialize();
     return repo;
@@ -181,11 +177,7 @@ final class RepositoriesFactory {
         repo = MockChildrenRepository(delay: Env.mockDelayDuration);
       case RepositoryMode.prod:
         final httpClient = await _initHttpClient();
-        final cacheRepository = await _initCacheRepository();
-        repo = DioParentChildrenRepository(
-          httpClient: httpClient,
-          cacheRepository: cacheRepository,
-        );
+        repo = DioParentChildrenRepository(httpClient: httpClient);
     }
     await repo.initialize();
     return repo;

@@ -5,7 +5,7 @@ final class ParentModel extends ParentEntity {
     required super.id,
     required super.firstName,
     required super.lastName,
-    required super.email,
+    super.email,
     required super.phoneNumber,
     required super.status,
     required super.createdAt,
@@ -33,7 +33,7 @@ final class ParentModel extends ParentEntity {
       lastName: user['lastName'] as String? ??
           user['last_name'] as String? ??
           fallbackLast,
-      email: user['email'] as String? ?? '',
+      email: (user['email'] as String?)?.isNotEmpty == true ? user['email'] as String : null,
       phoneNumber: (user['phone'] ?? user['phoneNumber'] ?? user['phone_number'])
               ?.toString() ??
           '',
@@ -87,7 +87,7 @@ final class ParentModel extends ParentEntity {
       id: entity.id,
       firstName: entity.firstName,
       lastName: entity.lastName,
-      email: entity.email,
+      email: entity.email?.isNotEmpty == true ? entity.email : null,
       phoneNumber: entity.phoneNumber,
       status: entity.status,
       createdAt: entity.createdAt,
