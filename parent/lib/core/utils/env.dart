@@ -67,6 +67,13 @@ final class Env {
     ),
   );
 
+  static final notificationRepositoryMode = RepositoryMode.fromString(
+    const String.fromEnvironment(
+      'NOTIFICATION_REPOSITORY_MODE',
+      defaultValue: 'mock',
+    ),
+  );
+
   static const Duration mockDelayDuration = Duration(milliseconds: 800);
 
   static const String defaultLanguageCode = 'ar';
@@ -79,5 +86,6 @@ final class Env {
       courseRepositoryMode == RepositoryMode.prod ||
       attendanceRepositoryMode == RepositoryMode.prod ||
       gradeRepositoryMode == RepositoryMode.prod ||
-      communicationRepositoryMode == RepositoryMode.prod;
+      communicationRepositoryMode == RepositoryMode.prod ||
+      notificationRepositoryMode == RepositoryMode.prod;
 }

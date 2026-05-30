@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 
 import '../../../core/routing/app_routes.dart';
-import '../../../core/theme/parent_colors.dart';
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});
@@ -28,19 +27,19 @@ class _OnboardingPageState extends State<OnboardingPage> {
         title: t.slide1Title,
         description: t.slide1Description,
         icon: Icons.analytics_rounded,
-        color: ParentColors.slideIndigo,
+        color: context.brandPrimaryColor,
       ),
       _OnboardingSlide(
         title: t.slide2Title,
         description: t.slide2Description,
         icon: Icons.chat_bubble_rounded,
-        color: ParentColors.slideGreen,
+        color: context.statusSuccessColor,
       ),
       _OnboardingSlide(
         title: t.slide3Title,
         description: t.slide3Description,
         icon: Icons.account_balance_wallet_rounded,
-        color: ParentColors.slideAmber,
+        color: context.brandSecondaryColor,
       ),
     ];
   }
@@ -211,9 +210,9 @@ class _NextButton extends StatelessWidget {
             ),
           ],
         ),
-        child: const Icon(
+        child: Icon(
           Icons.arrow_forward_ios_rounded,
-          color: Colors.white,
+          color: context.textForegroundColor,
           size: 20,
         ),
       ),

@@ -15,8 +15,8 @@ final class CommunicationFailurePresentationEvent
   const CommunicationFailurePresentationEvent({required this.message});
 }
 
-/// Drives the three communication surfaces: notifications, announcements
-/// archive, and WhatsApp group list. Each section loads independently so
+/// Drives the communication surfaces: announcements archive and WhatsApp group
+/// list. Each section loads independently so
 /// individual pages can avoid blocking on unrelated data.
 final class CommunicationBloc
     extends Bloc<CommunicationEvent, CommunicationState>
@@ -37,8 +37,8 @@ final class CommunicationBloc
     Emitter<CommunicationState> emit,
   ) async {
     if (state.childId == event.childId &&
-        (state.notificationsSection.isLoaded ||
-            state.notificationsSection.isLoading)) {
+        (state.announcementsSection.isLoaded ||
+            state.announcementsSection.isLoading)) {
       return;
     }
     emit(state.copyWith(childId: event.childId));
@@ -62,11 +62,6 @@ final class CommunicationBloc
     if (childId == null) return;
 
     switch (event.section) {
-      case CommunicationSection.notifications:
-        emit(state.copyWith(
-          notificationsSection: state.notificationsSection.toLoading(),
-        ));
-        await _loadNotifications(emit, childId);
       case CommunicationSection.announcements:
         emit(state.copyWith(
           announcementsSection: state.announcementsSection.toLoading(),
@@ -85,36 +80,14 @@ final class CommunicationBloc
     String childId,
   ) async {
     emit(state.copyWith(
-      notificationsSection: state.notificationsSection.toLoading(),
       announcementsSection: state.announcementsSection.toLoading(),
       whatsAppGroupsSection: state.whatsAppGroupsSection.toLoading(),
     ));
 
     await Future.wait([
-      _loadNotifications(emit, childId),
       _loadAnnouncements(emit, childId),
       _loadWhatsAppGroups(emit, childId),
     ]);
-  }
-
-  Future<void> _loadNotifications(
-    Emitter<CommunicationState> emit,
-    String childId,
-  ) async {
-    try {
-      final list = await _repository.getNotifications(childId);
-      emit(state.copyWith(
-        notificationsSection: CommunicationAsyncSection.loaded(list),
-      ));
-    } catch (e) {
-      emit(state.copyWith(
-        notificationsSection:
-            CommunicationAsyncSection.failure(e.toString()),
-      ));
-      emitPresentation(
-        CommunicationFailurePresentationEvent(message: e.toString()),
-      );
-    }
   }
 
   Future<void> _loadAnnouncements(

@@ -12,6 +12,7 @@ import 'package:parent_dio_course_repository/parent_dio_course_repository.dart';
 import 'package:parent_dio_financial_repository/parent_dio_financial_repository.dart';
 import 'package:parent_dio_grade_repository/parent_dio_grade_repository.dart';
 import 'package:parent_dio_communication_repository/parent_dio_communication_repository.dart';
+import 'package:parent_dio_notification_repository/parent_dio_notification_repository.dart';
 import 'package:device_info_service/device_info_service.dart';
 
 import 'package:parent_mock_authentication_repository/parent_mock_authentication_repository.dart';
@@ -22,6 +23,7 @@ import 'package:parent_mock_course_repository/parent_mock_course_repository.dart
 import 'package:parent_mock_attendance_repository/parent_mock_attendance_repository.dart';
 import 'package:parent_mock_grade_repository/parent_mock_grade_repository.dart';
 import 'package:parent_mock_communication_repository/parent_mock_communication_repository.dart';
+import 'package:mock_notification_repository/mock_notification_repository.dart';
 
 import '../../core/utils/env.dart';
 
@@ -35,6 +37,7 @@ final class AppRepositories {
   final ParentAttendanceRepository attendanceRepository;
   final ParentGradeRepository gradeRepository;
   final ParentCommunicationRepository communicationRepository;
+  final NotificationRepository notificationRepository;
 
   const AppRepositories._({
     required this.cacheRepository,
@@ -46,6 +49,7 @@ final class AppRepositories {
     required this.attendanceRepository,
     required this.gradeRepository,
     required this.communicationRepository,
+    required this.notificationRepository,
   });
 
   List<Object> toList() {
@@ -59,6 +63,7 @@ final class AppRepositories {
       attendanceRepository,
       gradeRepository,
       communicationRepository,
+      notificationRepository,
     ];
   }
 
@@ -82,6 +87,9 @@ final class AppRepositories {
       RepositoryProvider<ParentGradeRepository>(create: (_) => gradeRepository),
       RepositoryProvider<ParentCommunicationRepository>(
         create: (_) => communicationRepository,
+      ),
+      RepositoryProvider<NotificationRepository>(
+        create: (_) => notificationRepository,
       ),
     ];
   }
@@ -233,6 +241,19 @@ final class RepositoriesFactory {
     }
   }
 
+  static Future<NotificationRepository> _initNotificationRepository() async {
+    late final NotificationRepository repo;
+    switch (Env.notificationRepositoryMode) {
+      case RepositoryMode.mock:
+        repo = MockNotificationRepository(delay: Env.mockDelayDuration);
+      case RepositoryMode.prod:
+        final httpClient = await _initHttpClient();
+        repo = DioParentNotificationRepository(httpClient: httpClient);
+    }
+    await repo.initialize();
+    return repo;
+  }
+
   static String _defaultLanguageCode() {
     // In a real app, you'd use a locale setting package like student app does
     // For now, simpler implementation or fallback
@@ -265,6 +286,7 @@ final class RepositoriesFactory {
       attendanceRepository as ParentAttendanceRepository,
       gradeRepository as ParentGradeRepository,
       communicationRepository as ParentCommunicationRepository,
+      notificationRepository as NotificationRepository,
     ] = await Future.wait(
       [
         _initAuthenticationRepository(),
@@ -275,6 +297,7 @@ final class RepositoriesFactory {
         _initAttendanceRepository(),
         _initGradeRepository(),
         _initCommunicationRepository(),
+        _initNotificationRepository(),
       ],
     );
 
@@ -288,6 +311,7 @@ final class RepositoriesFactory {
       attendanceRepository: attendanceRepository,
       gradeRepository: gradeRepository,
       communicationRepository: communicationRepository,
+      notificationRepository: notificationRepository,
     );
 
     final localizedClients = <LocalizedClient>[];

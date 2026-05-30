@@ -69,6 +69,7 @@ workspace:
   - packages/parent/dio_attendance_repository
   - packages/parent/dio_grade_repository
   - packages/parent/dio_communication_repository
+  - packages/parent/dio_notification_repository
 
   # Common
   - packages/common/onboarding_repository

@@ -169,7 +169,7 @@ final class AttendanceBloc extends Bloc<AttendanceEvent, AttendanceState>
       return error.message ?? error.toString();
     }
     if (error is HttpClientResponse) {
-      return error.statusMessage ?? 'Request failed (${error.statusCode})';
+      return error.exception?.message ?? 'Request failed (${error.statusCode})';
     }
     return error.toString();
   }

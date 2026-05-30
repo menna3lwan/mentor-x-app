@@ -271,7 +271,6 @@ class _LoginPageState extends State<LoginPage> {
                             ],
                           ),
                         ),
-                        ),
                       ],
                     ),
                   ),
@@ -280,7 +279,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ],
         ),
-      ),
+      );
     );
   }
 }

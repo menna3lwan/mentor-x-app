@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 
-import '../core/blocs/app_brightness_cubit/app_brightness_cubit.dart';
+import '../core/core.dart';
 import 'parent_requirements.dart';
 
 final EventBus appEventBus = EventBus();
@@ -25,7 +25,14 @@ final class ParentApp extends StatelessWidget {
         ...requirements.repositories.toProviders(),
       ],
       child: MultiBlocProvider(
-        providers: requirements.blocs.toProviders(),
+        providers: [
+          ...requirements.blocs.toProviders(),
+          BlocProvider<NotificationsBadgeCubit>(
+            create: (context) => NotificationsBadgeCubit(
+              notificationRepository: context.read<NotificationRepository>(),
+            )..load(),
+          ),
+        ],
         child: MentorXTranslationProvider(
           // Re-build the theme provider tree when brightness changes so the
           // Mix theme (and any descendant tokens) flips between light/dark.
@@ -49,7 +56,9 @@ final class ParentApp extends StatelessWidget {
 
                     return MaterialApp.router(
                       key: appKey,
-                      title: Translations.of(context).parent.app.title,
+                      // Use a simple app title string to avoid relying on a
+                      // potentially missing generated translation getter.
+                      title: 'MentorX Parent',
                       debugShowCheckedModeBanner: false,
                       routerConfig: requirements.routerConfig,
                       locale: TranslationProvider.of(context).flutterLocale,

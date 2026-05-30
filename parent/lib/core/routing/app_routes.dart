@@ -8,7 +8,7 @@ import '../../features/attendance/pages/attendance_monitor_page.dart';
 import '../../features/financial/pages/financial_monitor_page.dart';
 import '../../features/courses/pages/academic_monitor_page.dart';
 import '../../features/assessments/pages/grade_monitor_page.dart';
-import '../../features/communication/pages/notifications_parent_page.dart';
+import '../../features/notifications/pages/notifications_parent_page.dart';
 import '../../features/communication/pages/announcements_archive_page.dart';
 import '../../features/communication/pages/whatsapp_groups_parent_page.dart';
 

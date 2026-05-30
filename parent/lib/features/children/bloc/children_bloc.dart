@@ -247,7 +247,7 @@ final class ChildrenBloc extends Bloc<ChildrenEvent, ChildrenState>
       return error.message ?? error.toString();
     }
     if (error is HttpClientResponse) {
-      return error.statusMessage ?? 'Request failed (${error.statusCode})';
+      return error.exception?.message ?? 'Request failed (${error.statusCode})';
     }
     return error.toString();
   }

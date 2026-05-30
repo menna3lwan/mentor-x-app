@@ -6,5 +6,6 @@ export 'communication/communication.dart';
 export 'courses/courses.dart';
 export 'financial/financial.dart';
 export 'home/home.dart';
+export 'notifications/notifications.dart';
 export 'onboarding/onboarding.dart';
 export 'profile/profile.dart';

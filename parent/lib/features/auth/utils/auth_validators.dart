@@ -27,7 +27,7 @@ class AuthValidators {
     if (!_egyptianPhone.hasMatch(normalized)) {
       // Reuses the existing "phone required" key as a soft message until
       // a dedicated "invalid phone" key is added — keeps copy consistent.
-      return t.login.phoneValidationError;
+      return t.auth.regErrorInvalidPhone;
     }
     return null;
   }

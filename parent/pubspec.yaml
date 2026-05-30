@@ -35,6 +35,8 @@ dependencies:
     path: ../packages/parent/dio_grade_repository
   parent_dio_communication_repository:
     path: ../packages/parent/dio_communication_repository
+  parent_dio_notification_repository:
+    path: ../packages/parent/dio_notification_repository
   parent_mock_authentication_repository:
     path: ../packages/mock/parent/mock_authentication_repository
   parent_mock_home_repository:
@@ -51,6 +53,8 @@ dependencies:
     path: ../packages/mock/parent/mock_grade_repository
   parent_mock_communication_repository:
     path: ../packages/mock/parent/mock_communication_repository
+  mock_notification_repository:
+    path: ../packages/mock/student/mock_notification_repository
   flutter_secure_storage_cache_repository:
     path: ../packages/common/flutter_secure_storage_cache_repository
   dio_http_client:

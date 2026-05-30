@@ -2,7 +2,7 @@ part of 'communication_bloc.dart';
 
 enum CommunicationSectionStatus { initial, loading, loaded, failure }
 
-enum CommunicationSection { notifications, announcements, whatsAppGroups }
+enum CommunicationSection { announcements, whatsAppGroups }
 
 final class CommunicationAsyncSection<T> extends Equatable {
   final CommunicationSectionStatus status;
@@ -44,8 +44,6 @@ final class CommunicationState extends Equatable {
   final String? childId;
   final bool isRefreshing;
 
-  final CommunicationAsyncSection<List<NotificationEntity>>
-      notificationsSection;
   final CommunicationAsyncSection<List<AnnouncementEntity>>
       announcementsSection;
   final CommunicationAsyncSection<List<WhatsAppGroupEntity>>
@@ -54,7 +52,6 @@ final class CommunicationState extends Equatable {
   const CommunicationState({
     required this.childId,
     required this.isRefreshing,
-    required this.notificationsSection,
     required this.announcementsSection,
     required this.whatsAppGroupsSection,
   });
@@ -63,14 +60,10 @@ final class CommunicationState extends Equatable {
     return const CommunicationState(
       childId: null,
       isRefreshing: false,
-      notificationsSection: CommunicationAsyncSection.initial(),
       announcementsSection: CommunicationAsyncSection.initial(),
       whatsAppGroupsSection: CommunicationAsyncSection.initial(),
     );
   }
-
-  List<NotificationEntity> get notifications =>
-      notificationsSection.data ?? const <NotificationEntity>[];
 
   List<AnnouncementEntity> get announcements =>
       announcementsSection.data ?? const <AnnouncementEntity>[];
@@ -81,7 +74,6 @@ final class CommunicationState extends Equatable {
   CommunicationState copyWith({
     String? childId,
     bool? isRefreshing,
-    CommunicationAsyncSection<List<NotificationEntity>>? notificationsSection,
     CommunicationAsyncSection<List<AnnouncementEntity>>? announcementsSection,
     CommunicationAsyncSection<List<WhatsAppGroupEntity>>?
         whatsAppGroupsSection,
@@ -89,8 +81,6 @@ final class CommunicationState extends Equatable {
     return CommunicationState(
       childId: childId ?? this.childId,
       isRefreshing: isRefreshing ?? this.isRefreshing,
-      notificationsSection:
-          notificationsSection ?? this.notificationsSection,
       announcementsSection:
           announcementsSection ?? this.announcementsSection,
       whatsAppGroupsSection:
@@ -100,10 +90,9 @@ final class CommunicationState extends Equatable {
 
   @override
   List<Object?> get props => [
-        childId,
-        isRefreshing,
-        notificationsSection,
-        announcementsSection,
-        whatsAppGroupsSection,
-      ];
+      childId,
+      isRefreshing,
+      announcementsSection,
+      whatsAppGroupsSection,
+    ];
 }

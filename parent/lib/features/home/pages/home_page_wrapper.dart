@@ -64,13 +64,11 @@ class _HomePageView extends StatelessWidget {
                   a.selectedChild?.id != b.selectedChild?.id,
               builder: (context, state) {
                 final childId = state.selectedChild?.id;
-                return IconButton(
+                return _NotificationActionButton(
                   tooltip: t.notifications,
                   onPressed: childId == null
                       ? null
-                      : () =>
-                          NotificationsRoute(childId: childId).go(context),
-                  icon: const Icon(Icons.notifications_none_rounded),
+                      : () => NotificationsRoute(childId: childId).go(context),
                 );
               },
             ),
@@ -79,6 +77,60 @@ class _HomePageView extends StatelessWidget {
           content: const _HomeContent(),
         ),
       ),
+    );
+  }
+}
+
+class _NotificationActionButton extends StatelessWidget {
+  final String tooltip;
+  final VoidCallback? onPressed;
+
+  const _NotificationActionButton({
+    required this.tooltip,
+    required this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<NotificationsBadgeCubit, NotificationsBadgeState>(
+      buildWhen: (previous, current) => previous.count != current.count,
+      builder: (context, state) {
+        return IconButton(
+          tooltip: tooltip,
+          onPressed: onPressed,
+          icon: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              const Icon(Icons.notifications_none_rounded),
+              if (state.count > 0)
+                Positioned(
+                  right: -6,
+                  top: -6,
+                  child: Container(
+                    constraints: const BoxConstraints(
+                      minWidth: 18,
+                      minHeight: 18,
+                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    decoration: BoxDecoration(
+                      color: context.statusDangerColor,
+                      borderRadius: BorderRadius.circular(9),
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      state.count > 99 ? '99+' : state.count.toString(),
+                      style: TextStyle(
+                        color: context.textForegroundColor,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

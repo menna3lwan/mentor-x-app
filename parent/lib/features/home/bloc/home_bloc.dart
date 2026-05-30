@@ -287,7 +287,7 @@ final class HomeBloc extends Bloc<HomeEvent, HomeState>
   /// Extracts a user-friendly message from common exception shapes.
   String _describe(Object error) {
     if (error is HttpClientResponse) {
-      return error.statusMessage ?? 'Request failed (${error.statusCode})';
+      return error.exception?.message ?? 'Request failed (${error.statusCode})';
     }
     return error.toString();
   }
