@@ -30,7 +30,11 @@ final class NotificationsMarkedAllReadPresentationEvent
 
 final class NotificationsBloc
     extends Bloc<NotificationsEvent, NotificationsState>
-    with BlocPresentationMixin<NotificationsState, NotificationsPresentationEvent> {
+    with
+        BlocPresentationMixin<
+          NotificationsState,
+          NotificationsPresentationEvent
+        > {
   static const int _pageSize = 20;
 
   final GetParentNotificationsUseCase _getNotifications;
@@ -43,11 +47,11 @@ final class NotificationsBloc
     required MarkParentNotificationAsReadUseCase markAsRead,
     required MarkAllParentNotificationsAsReadUseCase markAllAsRead,
     required GetParentUnreadNotificationsCountUseCase getUnreadCount,
-  })  : _getNotifications = getNotifications,
-        _markAsRead = markAsRead,
-        _markAllAsRead = markAllAsRead,
-        _getUnreadCount = getUnreadCount,
-        super(NotificationsState.initial()) {
+  }) : _getNotifications = getNotifications,
+       _markAsRead = markAsRead,
+       _markAllAsRead = markAllAsRead,
+       _getUnreadCount = getUnreadCount,
+       super(NotificationsState.initial()) {
     on<NotificationsStarted>(_onStarted);
     on<NotificationsRefreshRequested>(_onRefreshRequested);
     on<NotificationsLoadMoreRequested>(_onLoadMoreRequested);
@@ -90,12 +94,14 @@ final class NotificationsBloc
           limit: _pageSize,
         ).copyWithPage(nextPage),
       );
-      emit(state.copyWith(
-        notifications: [...state.notifications, ...more],
-        page: nextPage,
-        hasMore: more.length >= _pageSize,
-        isLoadingMore: false,
-      ));
+      emit(
+        state.copyWith(
+          notifications: [...state.notifications, ...more],
+          page: nextPage,
+          hasMore: more.length >= _pageSize,
+          isLoadingMore: false,
+        ),
+      );
     } catch (error) {
       final message = _describe(error);
       emit(state.copyWith(isLoadingMore: false, errorMessage: message));
@@ -114,14 +120,18 @@ final class NotificationsBloc
 
     try {
       await _markAsRead(event.notificationId);
-      final updated = state.notifications.map((notification) {
-        if (notification.id != event.notificationId) return notification;
-        return notification.copyWith(isRead: true, readAt: DateTime.now());
-      }).toList(growable: false);
-      emit(state.copyWith(
-        notifications: updated,
-        unreadCount: state.unreadCount > 0 ? state.unreadCount - 1 : 0,
-      ));
+      final updated = state.notifications
+          .map((notification) {
+            if (notification.id != event.notificationId) return notification;
+            return notification.copyWith(isRead: true, readAt: DateTime.now());
+          })
+          .toList(growable: false);
+      emit(
+        state.copyWith(
+          notifications: updated,
+          unreadCount: state.unreadCount > 0 ? state.unreadCount - 1 : 0,
+        ),
+      );
       emitPresentation(const NotificationMarkedReadPresentationEvent());
     } catch (error) {
       final message = _describe(error);
@@ -143,15 +153,19 @@ final class NotificationsBloc
       await _markAllAsRead();
       final now = DateTime.now();
       final updated = state.notifications
-          .map((notification) => notification.isRead
-              ? notification
-              : notification.copyWith(isRead: true, readAt: now))
+          .map(
+            (notification) => notification.isRead
+                ? notification
+                : notification.copyWith(isRead: true, readAt: now),
+          )
           .toList(growable: false);
-      emit(state.copyWith(
-        notifications: updated,
-        unreadCount: 0,
-        isMarkingAllRead: false,
-      ));
+      emit(
+        state.copyWith(
+          notifications: updated,
+          unreadCount: 0,
+          isMarkingAllRead: false,
+        ),
+      );
       emitPresentation(const NotificationsMarkedAllReadPresentationEvent());
     } catch (error) {
       final message = _describe(error);
@@ -164,11 +178,13 @@ final class NotificationsBloc
     Emitter<NotificationsState> emit, {
     bool preserveList = false,
   }) async {
-    emit(state.copyWith(
-      isLoading: true,
-      errorMessage: null,
-      notifications: preserveList ? state.notifications : const [],
-    ));
+    emit(
+      state.copyWith(
+        isLoading: true,
+        errorMessage: null,
+        notifications: preserveList ? state.notifications : const [],
+      ),
+    );
 
     try {
       final results = await Future.wait([
@@ -182,13 +198,15 @@ final class NotificationsBloc
       ]);
       final notifications = results[0] as List<NotificationEntity>;
       final unreadCount = results[1] as int;
-      emit(state.copyWith(
-        notifications: notifications,
-        unreadCount: unreadCount,
-        page: 1,
-        hasMore: notifications.length >= _pageSize,
-        isLoading: false,
-      ));
+      emit(
+        state.copyWith(
+          notifications: notifications,
+          unreadCount: unreadCount,
+          page: 1,
+          hasMore: notifications.length >= _pageSize,
+          isLoading: false,
+        ),
+      );
     } catch (error) {
       final message = _describe(error);
       emit(state.copyWith(isLoading: false, errorMessage: message));

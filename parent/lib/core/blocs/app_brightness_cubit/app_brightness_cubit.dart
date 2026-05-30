@@ -23,11 +23,13 @@ final class AppBrightnessCubit extends Cubit<AppBrightnessState> {
     required CacheRepository cacheRepository,
     required AppThemePreference initialPreference,
     required Brightness systemBrightness,
-  })  : _cacheRepository = cacheRepository,
-        super(AppBrightnessState(
-          preference: initialPreference,
-          systemBrightness: systemBrightness,
-        ));
+  }) : _cacheRepository = cacheRepository,
+       super(
+         AppBrightnessState(
+           preference: initialPreference,
+           systemBrightness: systemBrightness,
+         ),
+       );
 
   /// The brightness MaterialApp should render with.
   Brightness get effectiveBrightness => state.effectiveBrightness;

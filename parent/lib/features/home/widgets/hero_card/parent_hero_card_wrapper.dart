@@ -25,9 +25,9 @@ class ParentHeroCardWrapper extends StatelessWidget {
         if (section.isFailure && section.data == null) {
           return _HeroCardFailure(
             message: section.errorMessage ?? t.unableToLoad,
-            onRetry: () => context
-                .read<HomeBloc>()
-                .add(const HomeRetrySectionRequested(HomeSection.summary)),
+            onRetry: () => context.read<HomeBloc>().add(
+              const HomeRetrySectionRequested(HomeSection.summary),
+            ),
             retryLabel: t.retry,
           );
         }

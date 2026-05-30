@@ -80,10 +80,10 @@ class _ForgetPasswordPageWrapperState extends State<ForgetPasswordPageWrapper> {
                     : () {
                         if (_formKey.currentState?.validate() ?? false) {
                           context.read<ForgetPasswordBloc>().add(
-                                ForgetPasswordSubmittedEvent(
-                                  phoneNumber: _phoneController.text,
-                                ),
-                              );
+                            ForgetPasswordSubmittedEvent(
+                              phoneNumber: _phoneController.text,
+                            ),
+                          );
                         }
                       },
                 label: t.auth.sendVerificationCode,
@@ -145,8 +145,9 @@ class _ForgetPasswordPageWrapperState extends State<ForgetPasswordPageWrapper> {
               ),
               decoration: BoxDecoration(
                 color: sheetContext.backgroundPrimaryColor,
-                borderRadius:
-                    const BorderRadius.vertical(top: Radius.circular(32)),
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(32),
+                ),
               ),
               child: Padding(
                 padding: const EdgeInsets.all(32.0),
@@ -157,8 +158,9 @@ class _ForgetPasswordPageWrapperState extends State<ForgetPasswordPageWrapper> {
                       width: 48,
                       height: 5,
                       decoration: BoxDecoration(
-                        color: sheetContext.textTertiaryColor
-                            .withValues(alpha: 0.2),
+                        color: sheetContext.textTertiaryColor.withValues(
+                          alpha: 0.2,
+                        ),
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
@@ -230,8 +232,7 @@ class _ForgetPasswordPageWrapperState extends State<ForgetPasswordPageWrapper> {
 
                               setModalState(() => isSubmitting = true);
                               try {
-                                await this
-                                    .context
+                                await this.context
                                     .read<AuthenticationRepository>()
                                     .resetPassword(
                                       phone: phone,

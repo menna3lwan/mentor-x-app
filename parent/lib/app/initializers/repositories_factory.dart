@@ -1,4 +1,3 @@
-
 import 'package:dio_http_client/dio_http_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage_cache_repository/flutter_secure_storage_cache_repository.dart';
@@ -80,7 +79,9 @@ final class AppRepositories {
       RepositoryProvider<ParentFinancialRepository>(
         create: (_) => financialRepository,
       ),
-      RepositoryProvider<ParentCourseRepository>(create: (_) => courseRepository),
+      RepositoryProvider<ParentCourseRepository>(
+        create: (_) => courseRepository,
+      ),
       RepositoryProvider<ParentAttendanceRepository>(
         create: (_) => attendanceRepository,
       ),
@@ -137,8 +138,8 @@ final class RepositoriesFactory {
     // Use DeviceInfoService to get the hardware identifier as a fallback.
     final deviceInfoService = _initDeviceInfoService();
     final hardwareId = await deviceInfoService.getDeviceHash();
-    
-    // Only set the hardware ID as default if we don't already have a cached one 
+
+    // Only set the hardware ID as default if we don't already have a cached one
     // (e.g., a server-generated hash from a previous session).
     if (httpClient.deviceId == null || httpClient.deviceId!.isEmpty) {
       httpClient.setDefaultHeader(NetworkConstants.deviceIdHeader, hardwareId);
@@ -148,7 +149,8 @@ final class RepositoriesFactory {
     return httpClient;
   }
 
-  static Future<AuthenticationRepository<ParentEntity>> _initAuthenticationRepository() async {
+  static Future<AuthenticationRepository<ParentEntity>>
+  _initAuthenticationRepository() async {
     late final AuthenticationRepository<ParentEntity> repo;
     switch (Env.authenticationRepositoryMode) {
       case RepositoryMode.mock:
@@ -231,7 +233,8 @@ final class RepositoriesFactory {
     }
   }
 
-  static Future<ParentCommunicationRepository> _initCommunicationRepository() async {
+  static Future<ParentCommunicationRepository>
+  _initCommunicationRepository() async {
     switch (Env.communicationRepositoryMode) {
       case RepositoryMode.mock:
         return MockParentCommunicationRepository(delay: Env.mockDelayDuration);
@@ -261,8 +264,9 @@ final class RepositoriesFactory {
   }
 
   static Future<
-      ({AppRepositories repositories, List<LocalizedClient> localizedClients})>
-      initRepositories() async {
+    ({AppRepositories repositories, List<LocalizedClient> localizedClients})
+  >
+  initRepositories() async {
     if (Env.usesAnyProdRepository && !Env.hasMentorXBaseUrl) {
       throw StateError(
         'MENTORX_API_BASE_URL must be provided when any repository mode is PROD.',
@@ -275,7 +279,7 @@ final class RepositoriesFactory {
 
     initialLanguageCode =
         await cacheRepository.get(CacheKeys.languageCode) ??
-            _defaultLanguageCode();
+        _defaultLanguageCode();
 
     final [
       authenticationRepository as AuthenticationRepository<ParentEntity>,

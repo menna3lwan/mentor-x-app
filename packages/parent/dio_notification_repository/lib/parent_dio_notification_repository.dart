@@ -10,7 +10,7 @@ final class DioParentNotificationRepository
   final HttpClient _httpClient;
 
   const DioParentNotificationRepository({required HttpClient httpClient})
-      : _httpClient = httpClient;
+    : _httpClient = httpClient;
 
   @override
   Future<void> initialize() async {}
@@ -19,8 +19,7 @@ final class DioParentNotificationRepository
   Never throwException(
     NotificationRepositoryExceptionCode code, {
     String? message,
-  }) =>
-      throw NotificationRepositoryException(code: code, message: message);
+  }) => throw NotificationRepositoryException(code: code, message: message);
 
   @override
   Future<List<NotificationEntity>> getNotifications({
@@ -36,7 +35,9 @@ final class DioParentNotificationRepository
 
       final responseMap = asMap(response.data);
       final payload = responseMap['data'] ?? response.data;
-      final items = payload is Map ? asList(payload['content']) : asList(payload);
+      final items = payload is Map
+          ? asList(payload['content'])
+          : asList(payload);
 
       return items
           .map((item) => ParentNotificationModel.fromJson(asMap(item)))

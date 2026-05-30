@@ -24,10 +24,10 @@ class OverallPerformanceCardWrapper extends StatelessWidget {
           return AppErrorView(
             message: section.errorMessage ?? t.unableToLoad,
             onRetry: () => context.read<AssessmentsBloc>().add(
-                  const AssessmentsRetrySectionRequested(
-                    AssessmentsSection.summary,
-                  ),
-                ),
+              const AssessmentsRetrySectionRequested(
+                AssessmentsSection.summary,
+              ),
+            ),
           );
         }
 

@@ -27,18 +27,25 @@ final class ForgetPasswordPage extends StatelessWidget {
         children: [
           // Premium Header
           _BuildHeader(title: title),
-          
+
           Expanded(
             child: Container(
               decoration: BoxDecoration(
                 color: context.backgroundSecondaryColor.withValues(alpha: 0.5),
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(32),
+                ),
               ),
               child: ClipRRect(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(32),
+                ),
                 child: SingleChildScrollView(
                   physics: const BouncingScrollPhysics(),
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 32,
+                  ),
                   child: Column(
                     children: [
                       FadeInDown(
@@ -56,14 +63,14 @@ final class ForgetPasswordPage extends StatelessWidget {
                         ),
                       ),
                       const Gap(48),
-                      if (phoneField != null) 
+                      if (phoneField != null)
                         FadeInUp(
                           duration: const Duration(milliseconds: 500),
                           delay: const Duration(milliseconds: 300),
                           child: phoneField!,
                         ),
                       const Gap(40),
-                      if (sendCodeButton != null) 
+                      if (sendCodeButton != null)
                         FadeInUp(
                           duration: const Duration(milliseconds: 500),
                           delay: const Duration(milliseconds: 400),
@@ -75,7 +82,7 @@ final class ForgetPasswordPage extends StatelessWidget {
               ),
             ),
           ),
-          
+
           if (backToLoginButton != null)
             Container(
               padding: EdgeInsets.only(
@@ -120,13 +127,19 @@ class _BuildHeader extends StatelessWidget {
             children: [
               IconButton(
                 onPressed: () => Navigator.pop(context),
-                icon: Icon(Icons.arrow_back_ios_new_rounded, color: context.textPrimaryColor, size: 20),
+                icon: Icon(
+                  Icons.arrow_back_ios_new_rounded,
+                  color: context.textPrimaryColor,
+                  size: 20,
+                ),
               ),
               Expanded(
                 child: FadeInDown(
                   duration: const Duration(milliseconds: 500),
                   child: Text(
-                    Translations.of(context).parent.auth.passwordRecoveryHeading,
+                    Translations.of(
+                      context,
+                    ).parent.auth.passwordRecoveryHeading,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 18,
@@ -156,7 +169,11 @@ class _BuildHeader extends StatelessWidget {
                   ),
                 ],
               ),
-              child: Icon(Icons.lock_reset_rounded, color: context.brandPrimaryColor, size: 48),
+              child: Icon(
+                Icons.lock_reset_rounded,
+                color: context.brandPrimaryColor,
+                size: 48,
+              ),
             ),
           ),
           const Gap(24),

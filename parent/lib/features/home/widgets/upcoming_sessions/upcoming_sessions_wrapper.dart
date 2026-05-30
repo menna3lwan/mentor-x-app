@@ -23,9 +23,9 @@ class UpcomingSessionsWrapper extends StatelessWidget {
         if (section.isFailure && section.data == null) {
           return AppErrorView(
             message: section.errorMessage ?? t.unableToLoad,
-            onRetry: () => context
-                .read<HomeBloc>()
-                .add(const HomeRetrySectionRequested(HomeSection.summary)),
+            onRetry: () => context.read<HomeBloc>().add(
+              const HomeRetrySectionRequested(HomeSection.summary),
+            ),
           );
         }
 

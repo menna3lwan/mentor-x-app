@@ -35,11 +35,16 @@ class _AttendanceMonitorView extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = Translations.of(context).parent;
 
-    return BlocPresentationListener<AttendanceBloc,
-        AttendancePresentationEvent>(
+    return BlocPresentationListener<
+      AttendanceBloc,
+      AttendancePresentationEvent
+    >(
       listener: (context, event) {
         switch (event) {
-          case AttendanceFailurePresentationEvent(:final kind, :final rawMessage):
+          case AttendanceFailurePresentationEvent(
+            :final kind,
+            :final rawMessage,
+          ):
             MentorXUI.showToast(
               message: _messageFor(t, kind, rawMessage),
               isError: true,
@@ -51,15 +56,15 @@ class _AttendanceMonitorView extends StatelessWidget {
       },
       child: AppDashboardScaffold(
         title: t.attendanceTracking.pageTitle,
-        onRefresh: () async => context
-            .read<AttendanceBloc>()
-            .add(AttendanceRefreshRequested(childId)),
+        onRefresh: () async => context.read<AttendanceBloc>().add(
+          AttendanceRefreshRequested(childId),
+        ),
         actions: [
           IconButton(
             tooltip: t.retry,
-            onPressed: () => context
-                .read<AttendanceBloc>()
-                .add(AttendanceRefreshRequested(childId)),
+            onPressed: () => context.read<AttendanceBloc>().add(
+              AttendanceRefreshRequested(childId),
+            ),
             icon: const Icon(Icons.refresh_rounded),
           ),
         ],

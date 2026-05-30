@@ -23,7 +23,7 @@ final class ServicesFactory {
   static Future<AppServices> initServices() async {
     final deviceInfoService = DeviceInfoServiceImpl();
     // In a real app, you might call an initialize() method here if needed.
-    
+
     return AppServices._(
       deviceInfoService: deviceInfoService,
     );

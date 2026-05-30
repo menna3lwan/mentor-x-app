@@ -62,26 +62,37 @@ class CourseProgressDetailPage extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: context.backgroundSecondaryColor,
                   borderRadius: BorderRadius.circular(24),
-                  border: Border.all(color: context.textTertiaryColor.withValues(alpha: 0.1)),
+                  border: Border.all(
+                    color: context.textTertiaryColor.withValues(alpha: 0.1),
+                  ),
                 ),
                 child: Column(
                   children: [
-                    _DetailRow(label: t.courseDetail.courseId, value: course.id),
+                    _DetailRow(
+                      label: t.courseDetail.courseId,
+                      value: course.id,
+                    ),
                     const Padding(
                       padding: EdgeInsets.symmetric(vertical: 16),
                       child: Divider(),
                     ),
-                    _DetailRow(label: t.courseDetail.fullTitle, value: course.title),
+                    _DetailRow(
+                      label: t.courseDetail.fullTitle,
+                      value: course.title,
+                    ),
                     const Padding(
                       padding: EdgeInsets.symmetric(vertical: 16),
                       child: Divider(),
                     ),
-                    _DetailRow(label: t.courseDetail.status, value: t.courseDetail.statusActive),
+                    _DetailRow(
+                      label: t.courseDetail.status,
+                      value: t.courseDetail.statusActive,
+                    ),
                   ],
                 ),
               ),
             ),
-            
+
             const Gap(40),
           ],
         ),

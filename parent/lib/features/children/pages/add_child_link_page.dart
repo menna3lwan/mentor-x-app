@@ -56,11 +56,11 @@ class _AddChildLinkViewState extends State<_AddChildLinkView> {
 
   void _onConfirm(ParentStudentLookupEntity student) {
     context.read<ChildrenBloc>().add(
-          ChildLinkConfirmed(
-            studentId: student.studentId,
-            relationship: _relationship,
-          ),
-        );
+      ChildLinkConfirmed(
+        studentId: student.studentId,
+        relationship: _relationship,
+      ),
+    );
   }
 
   void _onQueryChanged(String _) {
@@ -132,8 +132,8 @@ class _AddChildLinkViewState extends State<_AddChildLinkView> {
                   const Gap(32),
                   if (state.lookupSection.isFailure)
                     AppErrorView(
-                      message: state.lookupSection.errorMessage ??
-                          t.unableToLoad,
+                      message:
+                          state.lookupSection.errorMessage ?? t.unableToLoad,
                       onRetry: _onSearch,
                     ),
                   if (state.lookedUpStudent != null) ...[
@@ -142,8 +142,7 @@ class _AddChildLinkViewState extends State<_AddChildLinkView> {
                       relationship: _relationship,
                       onRelationshipChanged: (value) =>
                           setState(() => _relationship = value),
-                      specifyRelationshipLabel:
-                          t.children.specifyRelationship,
+                      specifyRelationshipLabel: t.children.specifyRelationship,
                       gradeLabelPrefix: t.children.gradeLabel(
                         grade: state.lookedUpStudent!.gradeName,
                       ),

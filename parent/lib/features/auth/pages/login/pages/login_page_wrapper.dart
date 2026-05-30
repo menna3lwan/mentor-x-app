@@ -17,8 +17,8 @@ class LoginPageWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => LoginBloc(
-        authenticationRepository:
-            context.read<AuthenticationRepository<ParentEntity>>(),
+        authenticationRepository: context
+            .read<AuthenticationRepository<ParentEntity>>(),
         deviceInfoService: context.read<DeviceInfoService>(),
       ),
       child: const _LoginPageView(),

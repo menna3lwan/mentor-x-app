@@ -9,7 +9,6 @@ import 'package:gap/gap.dart';
 import 'bloc/parent_registration_bloc.dart';
 import 'parent_registration_page.dart';
 
-
 final class ParentRegistrationPageWrapper extends StatelessWidget {
   const ParentRegistrationPageWrapper({super.key});
 
@@ -17,7 +16,8 @@ final class ParentRegistrationPageWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => ParentRegistrationBloc(
-        authenticationRepository: context.read<AuthenticationRepository<ParentEntity>>(),
+        authenticationRepository: context
+            .read<AuthenticationRepository<ParentEntity>>(),
         deviceInfoService: context.read<DeviceInfoService>(),
       ),
       child: const _ParentRegistrationPageContent(),
@@ -86,7 +86,9 @@ class __ParentRegistrationPageContentState
     _confirmPasswordController.addListener(() {
       if (!mounted) return;
       context.read<ParentRegistrationBloc>().add(
-        ParentRegistrationConfirmPasswordChanged(value: _confirmPasswordController.text),
+        ParentRegistrationConfirmPasswordChanged(
+          value: _confirmPasswordController.text,
+        ),
       );
     });
   }
@@ -112,9 +114,9 @@ class __ParentRegistrationPageContentState
       listener: (context, event) {
         switch (event) {
           case ParentRegistrationFailurePresentationEvent(
-                :final kind,
-                :final rawMessage,
-              ):
+            :final kind,
+            :final rawMessage,
+          ):
             MentorXUI.showToast(
               message: _messageFor(
                 Translations.of(context).parent,
@@ -150,7 +152,11 @@ class __ParentRegistrationPageContentState
                 }
                 bloc.add(const ParentRegistrationBackStepRequested());
               },
-              icon: Icon(Icons.arrow_back_ios_new_rounded, color: context.textPrimaryColor, size: 20),
+              icon: Icon(
+                Icons.arrow_back_ios_new_rounded,
+                color: context.textPrimaryColor,
+                size: 20,
+              ),
             ),
             title: _titleForStep(state.currentStep, t),
             currentStep: state.currentStep,
@@ -170,7 +176,9 @@ class __ParentRegistrationPageContentState
                   : () {
                       if (state.currentStep == 0) {
                         if (state.foundStudent == null) {
-                          bloc.add(const ParentRegistrationFindStudentSubmitted());
+                          bloc.add(
+                            const ParentRegistrationFindStudentSubmitted(),
+                          );
                           return;
                         }
                         if (!state.isStudentConfirmed) {
@@ -225,27 +233,22 @@ class __ParentRegistrationPageContentState
     String? rawMessage,
   ) {
     return switch (kind) {
-      ParentRegistrationFailureKind.lookupEmpty =>
-        t.auth.regErrorLookupEmpty,
+      ParentRegistrationFailureKind.lookupEmpty => t.auth.regErrorLookupEmpty,
       ParentRegistrationFailureKind.studentNotFound =>
         t.auth.regErrorStudentNotFound,
       ParentRegistrationFailureKind.findFailed => t.auth.regErrorFindFailed,
       ParentRegistrationFailureKind.findChildFirst =>
         t.auth.regErrorFindChildFirst,
-      ParentRegistrationFailureKind.confirmChild =>
-        t.auth.regErrorConfirmChild,
+      ParentRegistrationFailureKind.confirmChild => t.auth.regErrorConfirmChild,
       ParentRegistrationFailureKind.firstNameShort =>
         t.auth.regErrorFirstNameShort,
       ParentRegistrationFailureKind.lastNameShort =>
         t.auth.regErrorLastNameShort,
-      ParentRegistrationFailureKind.invalidPhone =>
-        t.auth.regErrorInvalidPhone,
-      ParentRegistrationFailureKind.invalidEmail =>
-        t.auth.regErrorInvalidEmail,
+      ParentRegistrationFailureKind.invalidPhone => t.auth.regErrorInvalidPhone,
+      ParentRegistrationFailureKind.invalidEmail => t.auth.regErrorInvalidEmail,
       ParentRegistrationFailureKind.relationshipRequired =>
         t.auth.regErrorRelationshipRequired,
-      ParentRegistrationFailureKind.passwordWeak =>
-        t.auth.regErrorPasswordWeak,
+      ParentRegistrationFailureKind.passwordWeak => t.auth.regErrorPasswordWeak,
       ParentRegistrationFailureKind.passwordMismatch =>
         t.auth.regErrorPasswordMismatch,
       ParentRegistrationFailureKind.phoneAlreadyExists =>
@@ -338,15 +341,24 @@ final class _StepBody extends StatelessWidget {
                       label: t.auth.regLookupPhoneTab,
                       icon: Icons.phone_rounded,
                       isActive: state.lookupType == ParentLookupType.phone,
-                      onTap: () => bloc.add(const ParentRegistrationLookupTypeChanged(lookupType: ParentLookupType.phone)),
+                      onTap: () => bloc.add(
+                        const ParentRegistrationLookupTypeChanged(
+                          lookupType: ParentLookupType.phone,
+                        ),
+                      ),
                     ),
                   ),
                   Expanded(
                     child: _TabButton(
                       label: t.auth.regLookupCodeTab,
                       icon: Icons.badge_rounded,
-                      isActive: state.lookupType == ParentLookupType.studentCode,
-                      onTap: () => bloc.add(const ParentRegistrationLookupTypeChanged(lookupType: ParentLookupType.studentCode)),
+                      isActive:
+                          state.lookupType == ParentLookupType.studentCode,
+                      onTap: () => bloc.add(
+                        const ParentRegistrationLookupTypeChanged(
+                          lookupType: ParentLookupType.studentCode,
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -360,9 +372,13 @@ final class _StepBody extends StatelessWidget {
               hintText: state.lookupType == ParentLookupType.phone
                   ? t.auth.regChildPhoneHint
                   : t.auth.regStudentCodeHint,
-              icon: state.lookupType == ParentLookupType.phone ? Icons.phone_android_rounded : Icons.numbers_rounded,
+              icon: state.lookupType == ParentLookupType.phone
+                  ? Icons.phone_android_rounded
+                  : Icons.numbers_rounded,
               controller: lookupController,
-              keyboardType: state.lookupType == ParentLookupType.phone ? TextInputType.phone : TextInputType.text,
+              keyboardType: state.lookupType == ParentLookupType.phone
+                  ? TextInputType.phone
+                  : TextInputType.text,
             ),
             const Gap(24),
             if (state.foundStudent != null)
@@ -531,7 +547,12 @@ class _TabButton extends StatelessWidget {
   final bool isActive;
   final VoidCallback onTap;
 
-  const _TabButton({required this.label, required this.icon, required this.isActive, required this.onTap});
+  const _TabButton({
+    required this.label,
+    required this.icon,
+    required this.isActive,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -544,20 +565,22 @@ class _TabButton extends StatelessWidget {
         decoration: BoxDecoration(
           color: isActive ? context.brandPrimaryColor : Colors.transparent,
           borderRadius: BorderRadius.circular(16),
-          boxShadow: isActive ? [
-            BoxShadow(
-              color: context.brandPrimaryColor.withValues(alpha: 0.2),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
-            ),
-          ] : null,
+          boxShadow: isActive
+              ? [
+                  BoxShadow(
+                    color: context.brandPrimaryColor.withValues(alpha: 0.2),
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
+                  ),
+                ]
+              : null,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              icon, 
-              color: isActive ? Colors.white : context.textTertiaryColor, 
+              icon,
+              color: isActive ? Colors.white : context.textTertiaryColor,
               size: 18,
             ),
             const Gap(10),
@@ -610,7 +633,11 @@ class _StudentPreviewCard extends StatelessWidget {
                   color: context.brandPrimaryColor.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(Icons.person_rounded, color: context.brandPrimaryColor, size: 28),
+                child: Icon(
+                  Icons.person_rounded,
+                  color: context.brandPrimaryColor,
+                  size: 28,
+                ),
               ),
               const Gap(16),
               Expanded(
@@ -620,8 +647,8 @@ class _StudentPreviewCard extends StatelessWidget {
                     Text(
                       student.maskedName,
                       style: TextStyle(
-                        fontWeight: FontWeight.w900, 
-                        fontSize: 18, 
+                        fontWeight: FontWeight.w900,
+                        fontSize: 18,
                         color: context.textPrimaryColor,
                         letterSpacing: -0.5,
                       ),
@@ -630,7 +657,7 @@ class _StudentPreviewCard extends StatelessWidget {
                     Text(
                       '${student.gradeName} • ${student.centerName}',
                       style: TextStyle(
-                        fontSize: 13, 
+                        fontSize: 13,
                         color: context.textSecondaryColor,
                         fontWeight: FontWeight.w500,
                       ),
@@ -645,21 +672,25 @@ class _StudentPreviewCard extends StatelessWidget {
             duration: const Duration(milliseconds: 400),
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: BoxDecoration(
-              color: isConfirmed 
-                  ? context.statusSuccessColor.withValues(alpha: 0.1) 
+              color: isConfirmed
+                  ? context.statusSuccessColor.withValues(alpha: 0.1)
                   : context.statusWarningColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: isConfirmed 
-                    ? context.statusSuccessColor.withValues(alpha: 0.2) 
+                color: isConfirmed
+                    ? context.statusSuccessColor.withValues(alpha: 0.2)
                     : context.statusWarningColor.withValues(alpha: 0.2),
               ),
             ),
             child: Row(
               children: [
                 Icon(
-                  isConfirmed ? Icons.check_circle_rounded : Icons.info_outline_rounded,
-                  color: isConfirmed ? context.statusSuccessColor : context.statusWarningColor,
+                  isConfirmed
+                      ? Icons.check_circle_rounded
+                      : Icons.info_outline_rounded,
+                  color: isConfirmed
+                      ? context.statusSuccessColor
+                      : context.statusWarningColor,
                   size: 20,
                 ),
                 const Gap(12),
@@ -667,10 +698,9 @@ class _StudentPreviewCard extends StatelessWidget {
                   child: Text(
                     isConfirmed
                         ? Translations.of(context).parent.auth.regChildConfirmed
-                        : Translations.of(context)
-                            .parent
-                            .auth
-                            .regConfirmIsYourChild,
+                        : Translations.of(
+                            context,
+                          ).parent.auth.regConfirmIsYourChild,
                     style: TextStyle(
                       color: isConfirmed
                           ? context.statusSuccessColor
@@ -697,7 +727,8 @@ class FadeInScale extends StatefulWidget {
   State<FadeInScale> createState() => _FadeInScaleState();
 }
 
-class _FadeInScaleState extends State<FadeInScale> with SingleTickerProviderStateMixin {
+class _FadeInScaleState extends State<FadeInScale>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _fadeAnimation;
   late Animation<double> _scaleAnimation;

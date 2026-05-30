@@ -38,13 +38,12 @@ final class AssessmentsUnauthorizedPresentationEvent
 /// (assessment history, overall summary, monthly trend) so a partial failure
 /// doesn't blank the whole page.
 final class AssessmentsBloc extends Bloc<AssessmentsEvent, AssessmentsState>
-    with
-        BlocPresentationMixin<AssessmentsState, AssessmentsPresentationEvent> {
+    with BlocPresentationMixin<AssessmentsState, AssessmentsPresentationEvent> {
   final ParentGradeRepository _repository;
 
   AssessmentsBloc({required ParentGradeRepository repository})
-      : _repository = repository,
-        super(AssessmentsState.initial()) {
+    : _repository = repository,
+      super(AssessmentsState.initial()) {
     on<AssessmentsStarted>(_onStarted);
     // Drop rapid refresh taps — only one full reload at a time.
     on<AssessmentsRefreshRequested>(
@@ -91,14 +90,18 @@ final class AssessmentsBloc extends Bloc<AssessmentsEvent, AssessmentsState>
 
     switch (event.section) {
       case AssessmentsSection.history:
-        emit(state.copyWith(
-          assessmentsSection: state.assessmentsSection.toLoading(),
-        ));
+        emit(
+          state.copyWith(
+            assessmentsSection: state.assessmentsSection.toLoading(),
+          ),
+        );
         await _loadHistory(emit, childId);
       case AssessmentsSection.summary:
-        emit(state.copyWith(
-          summarySection: state.summarySection.toLoading(),
-        ));
+        emit(
+          state.copyWith(
+            summarySection: state.summarySection.toLoading(),
+          ),
+        );
         await _loadSummary(emit, childId);
       case AssessmentsSection.trend:
         emit(state.copyWith(trendSection: state.trendSection.toLoading()));
@@ -107,11 +110,13 @@ final class AssessmentsBloc extends Bloc<AssessmentsEvent, AssessmentsState>
   }
 
   Future<void> _loadAll(Emitter<AssessmentsState> emit, String childId) async {
-    emit(state.copyWith(
-      assessmentsSection: state.assessmentsSection.toLoading(),
-      summarySection: state.summarySection.toLoading(),
-      trendSection: state.trendSection.toLoading(),
-    ));
+    emit(
+      state.copyWith(
+        assessmentsSection: state.assessmentsSection.toLoading(),
+        summarySection: state.summarySection.toLoading(),
+        trendSection: state.trendSection.toLoading(),
+      ),
+    );
 
     await Future.wait([
       _loadHistory(emit, childId),
@@ -127,14 +132,18 @@ final class AssessmentsBloc extends Bloc<AssessmentsEvent, AssessmentsState>
     try {
       final list = await _repository.getAssessments(childId);
       if (emit.isDone) return;
-      emit(state.copyWith(
-        assessmentsSection: AssessmentsAsyncSection.loaded(list),
-      ));
+      emit(
+        state.copyWith(
+          assessmentsSection: AssessmentsAsyncSection.loaded(list),
+        ),
+      );
     } catch (e) {
       if (emit.isDone) return;
-      emit(state.copyWith(
-        assessmentsSection: AssessmentsAsyncSection.failure(_describe(e)),
-      ));
+      emit(
+        state.copyWith(
+          assessmentsSection: AssessmentsAsyncSection.failure(_describe(e)),
+        ),
+      );
       _emitFailure(e);
     }
   }
@@ -146,14 +155,18 @@ final class AssessmentsBloc extends Bloc<AssessmentsEvent, AssessmentsState>
     try {
       final summary = await _repository.getGradeSummary(childId);
       if (emit.isDone) return;
-      emit(state.copyWith(
-        summarySection: AssessmentsAsyncSection.loaded(summary),
-      ));
+      emit(
+        state.copyWith(
+          summarySection: AssessmentsAsyncSection.loaded(summary),
+        ),
+      );
     } catch (e) {
       if (emit.isDone) return;
-      emit(state.copyWith(
-        summarySection: AssessmentsAsyncSection.failure(_describe(e)),
-      ));
+      emit(
+        state.copyWith(
+          summarySection: AssessmentsAsyncSection.failure(_describe(e)),
+        ),
+      );
       // Summary failure is non-critical — don't toast.
       _maybeEmitUnauthorized(e);
     }
@@ -166,14 +179,18 @@ final class AssessmentsBloc extends Bloc<AssessmentsEvent, AssessmentsState>
     try {
       final trend = await _repository.getGradeTrend(childId);
       if (emit.isDone) return;
-      emit(state.copyWith(
-        trendSection: AssessmentsAsyncSection.loaded(trend),
-      ));
+      emit(
+        state.copyWith(
+          trendSection: AssessmentsAsyncSection.loaded(trend),
+        ),
+      );
     } catch (e) {
       if (emit.isDone) return;
-      emit(state.copyWith(
-        trendSection: AssessmentsAsyncSection.failure(_describe(e)),
-      ));
+      emit(
+        state.copyWith(
+          trendSection: AssessmentsAsyncSection.failure(_describe(e)),
+        ),
+      );
       // Trend is non-critical — don't toast.
       _maybeEmitUnauthorized(e);
     }

@@ -29,8 +29,8 @@ class ParentAnnouncementsWrapper extends StatelessWidget {
           return AppErrorView(
             message: section.errorMessage ?? t.unableToLoad,
             onRetry: () => context.read<HomeBloc>().add(
-                  const HomeRetrySectionRequested(HomeSection.announcements),
-                ),
+              const HomeRetrySectionRequested(HomeSection.announcements),
+            ),
           );
         }
 

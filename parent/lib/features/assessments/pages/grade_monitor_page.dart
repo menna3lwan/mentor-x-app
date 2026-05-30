@@ -35,11 +35,16 @@ class _GradeMonitorView extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = Translations.of(context).parent;
 
-    return BlocPresentationListener<AssessmentsBloc,
-        AssessmentsPresentationEvent>(
+    return BlocPresentationListener<
+      AssessmentsBloc,
+      AssessmentsPresentationEvent
+    >(
       listener: (context, event) {
         switch (event) {
-          case AssessmentsFailurePresentationEvent(:final kind, :final rawMessage):
+          case AssessmentsFailurePresentationEvent(
+            :final kind,
+            :final rawMessage,
+          ):
             MentorXUI.showToast(
               message: _messageFor(t, kind, rawMessage),
               isError: true,
@@ -51,15 +56,15 @@ class _GradeMonitorView extends StatelessWidget {
       },
       child: AppDashboardScaffold(
         title: t.assessments.pageTitle,
-        onRefresh: () async => context
-            .read<AssessmentsBloc>()
-            .add(AssessmentsRefreshRequested(childId)),
+        onRefresh: () async => context.read<AssessmentsBloc>().add(
+          AssessmentsRefreshRequested(childId),
+        ),
         actions: [
           IconButton(
             tooltip: t.retry,
-            onPressed: () => context
-                .read<AssessmentsBloc>()
-                .add(AssessmentsRefreshRequested(childId)),
+            onPressed: () => context.read<AssessmentsBloc>().add(
+              AssessmentsRefreshRequested(childId),
+            ),
             icon: const Icon(Icons.refresh_rounded),
           ),
         ],
@@ -95,8 +100,7 @@ class _GradeMonitorView extends StatelessWidget {
       AssessmentsFailureKind.network => t.unableToLoad,
       AssessmentsFailureKind.notFound => t.assessments.noAssessmentsTitle,
       AssessmentsFailureKind.unauthorized => t.unableToLoad,
-      AssessmentsFailureKind.unknown =>
-        rawMessage ?? t.unableToLoad,
+      AssessmentsFailureKind.unknown => rawMessage ?? t.unableToLoad,
     };
   }
 }

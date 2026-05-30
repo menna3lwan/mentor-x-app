@@ -39,8 +39,9 @@ final class BlocsFactory {
       cacheRepository: cacheRepository,
       localizedClients: localizedClients,
     );
-    final preference =
-        await AppBrightnessCubit.readCachedPreference(cacheRepository);
+    final preference = await AppBrightnessCubit.readCachedPreference(
+      cacheRepository,
+    );
     final brightnessCubit = AppBrightnessCubit(
       cacheRepository: cacheRepository,
       initialPreference: preference,

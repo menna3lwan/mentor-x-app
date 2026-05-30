@@ -27,7 +27,8 @@ part 'app_routes.g.dart';
 class SplashRoute extends GoRouteData with $SplashRoute {
   const SplashRoute();
   @override
-  Widget build(BuildContext context, GoRouterState state) => const SplashScreenPage();
+  Widget build(BuildContext context, GoRouterState state) =>
+      const SplashScreenPage();
 }
 
 @TypedGoRoute<OnboardingRoute>(path: '/onboarding')

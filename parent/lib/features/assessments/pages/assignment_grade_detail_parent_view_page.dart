@@ -62,17 +62,25 @@ class AssignmentGradeDetailParentViewPage extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: context.backgroundSecondaryColor,
                   borderRadius: BorderRadius.circular(24),
-                  border: Border.all(color: context.textTertiaryColor.withValues(alpha: 0.1)),
+                  border: Border.all(
+                    color: context.textTertiaryColor.withValues(alpha: 0.1),
+                  ),
                 ),
                 child: Column(
                   children: [
-                    _InfoRow(label: t.gradeDetail.quizId, value: attempt.quizId),
+                    _InfoRow(
+                      label: t.gradeDetail.quizId,
+                      value: attempt.quizId,
+                    ),
                     const Padding(
                       padding: EdgeInsets.symmetric(vertical: 16),
                       child: Divider(),
                     ),
                     if (attempt.submittedAt != null) ...[
-                      _InfoRow(label: t.gradeDetail.submittedAt, value: _formatDate(attempt.submittedAt!)),
+                      _InfoRow(
+                        label: t.gradeDetail.submittedAt,
+                        value: _formatDate(attempt.submittedAt!),
+                      ),
                       const Padding(
                         padding: EdgeInsets.symmetric(vertical: 16),
                         child: Divider(),
@@ -83,7 +91,7 @@ class AssignmentGradeDetailParentViewPage extends StatelessWidget {
                 ),
               ),
             ),
-            
+
             const Gap(40),
           ],
         ),

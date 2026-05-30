@@ -16,9 +16,9 @@ final class AppLocaleCubit extends Cubit<AppLocaleState> {
     required String initialLanguageCode,
     required CacheRepository cacheRepository,
     List<LocalizedClient> localizedClients = const [],
-  })  : _cacheRepository = cacheRepository,
-        _localizedClients = localizedClients,
-        super(AppLocaleState(languageCode: initialLanguageCode)) {
+  }) : _cacheRepository = cacheRepository,
+       _localizedClients = localizedClients,
+       super(AppLocaleState(languageCode: initialLanguageCode)) {
     // Initial sync
     LocaleSettings.setLocaleRaw(initialLanguageCode);
     for (final client in _localizedClients) {

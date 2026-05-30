@@ -35,13 +35,12 @@ final class AttendanceUnauthorizedPresentationEvent
 
 /// Drives the parent attendance-monitor screen.
 final class AttendanceBloc extends Bloc<AttendanceEvent, AttendanceState>
-    with
-        BlocPresentationMixin<AttendanceState, AttendancePresentationEvent> {
+    with BlocPresentationMixin<AttendanceState, AttendancePresentationEvent> {
   final ParentAttendanceRepository _repository;
 
   AttendanceBloc({required ParentAttendanceRepository repository})
-      : _repository = repository,
-        super(AttendanceState.initial()) {
+    : _repository = repository,
+      super(AttendanceState.initial()) {
     on<AttendanceStarted>(_onStarted);
     on<AttendanceRefreshRequested>(
       _onRefreshRequested,
@@ -55,8 +54,7 @@ final class AttendanceBloc extends Bloc<AttendanceEvent, AttendanceState>
     Emitter<AttendanceState> emit,
   ) async {
     if (state.childId == event.childId &&
-        (state.recordsSection.isLoaded ||
-            state.recordsSection.isLoading)) {
+        (state.recordsSection.isLoaded || state.recordsSection.isLoading)) {
       return;
     }
     emit(state.copyWith(childId: event.childId));
@@ -87,23 +85,29 @@ final class AttendanceBloc extends Bloc<AttendanceEvent, AttendanceState>
 
     switch (event.section) {
       case AttendanceSection.records:
-        emit(state.copyWith(
-          recordsSection: state.recordsSection.toLoading(),
-        ));
+        emit(
+          state.copyWith(
+            recordsSection: state.recordsSection.toLoading(),
+          ),
+        );
         await _loadRecords(emit, childId);
       case AttendanceSection.summary:
-        emit(state.copyWith(
-          summarySection: state.summarySection.toLoading(),
-        ));
+        emit(
+          state.copyWith(
+            summarySection: state.summarySection.toLoading(),
+          ),
+        );
         await _loadSummary(emit, childId);
     }
   }
 
   Future<void> _loadAll(Emitter<AttendanceState> emit, String childId) async {
-    emit(state.copyWith(
-      recordsSection: state.recordsSection.toLoading(),
-      summarySection: state.summarySection.toLoading(),
-    ));
+    emit(
+      state.copyWith(
+        recordsSection: state.recordsSection.toLoading(),
+        summarySection: state.summarySection.toLoading(),
+      ),
+    );
 
     await Future.wait([
       _loadRecords(emit, childId),
@@ -118,14 +122,18 @@ final class AttendanceBloc extends Bloc<AttendanceEvent, AttendanceState>
     try {
       final records = await _repository.getAttendance(childId);
       if (emit.isDone) return;
-      emit(state.copyWith(
-        recordsSection: AttendanceAsyncSection.loaded(records),
-      ));
+      emit(
+        state.copyWith(
+          recordsSection: AttendanceAsyncSection.loaded(records),
+        ),
+      );
     } catch (e) {
       if (emit.isDone) return;
-      emit(state.copyWith(
-        recordsSection: AttendanceAsyncSection.failure(_describe(e)),
-      ));
+      emit(
+        state.copyWith(
+          recordsSection: AttendanceAsyncSection.failure(_describe(e)),
+        ),
+      );
       _emitFailure(e);
     }
   }
@@ -137,14 +145,18 @@ final class AttendanceBloc extends Bloc<AttendanceEvent, AttendanceState>
     try {
       final summary = await _repository.getAttendanceSummary(childId);
       if (emit.isDone) return;
-      emit(state.copyWith(
-        summarySection: AttendanceAsyncSection.loaded(summary),
-      ));
+      emit(
+        state.copyWith(
+          summarySection: AttendanceAsyncSection.loaded(summary),
+        ),
+      );
     } catch (e) {
       if (emit.isDone) return;
-      emit(state.copyWith(
-        summarySection: AttendanceAsyncSection.failure(_describe(e)),
-      ));
+      emit(
+        state.copyWith(
+          summarySection: AttendanceAsyncSection.failure(_describe(e)),
+        ),
+      );
       // Summary failure is non-critical — don't toast.
       _maybeEmitUnauthorized(e);
     }

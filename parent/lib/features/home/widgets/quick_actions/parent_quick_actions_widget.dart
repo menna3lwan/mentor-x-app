@@ -63,12 +63,12 @@ class ParentQuickActionsWidget extends StatelessWidget {
                   width: 68,
                   height: 68,
                   decoration: BoxDecoration(
-                    color: context.backgroundSecondaryColor
-                        .withValues(alpha: 0.45),
+                    color: context.backgroundSecondaryColor.withValues(
+                      alpha: 0.45,
+                    ),
                     borderRadius: BorderRadius.circular(22),
                     border: Border.all(
-                      color: context.borderPrimaryColor
-                          .withValues(alpha: 0.1),
+                      color: context.borderPrimaryColor.withValues(alpha: 0.1),
                     ),
                     boxShadow: [
                       BoxShadow(
@@ -88,18 +88,21 @@ class ParentQuickActionsWidget extends StatelessWidget {
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
                               colors: [
-                                context.brandPrimaryColor
-                                    .withValues(alpha: 0.2),
-                                context.brandPrimaryColor
-                                    .withValues(alpha: 0.05),
+                                context.brandPrimaryColor.withValues(
+                                  alpha: 0.2,
+                                ),
+                                context.brandPrimaryColor.withValues(
+                                  alpha: 0.05,
+                                ),
                               ],
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
                             ),
                             shape: BoxShape.circle,
                             border: Border.all(
-                              color: context.brandPrimaryColor
-                                  .withValues(alpha: 0.1),
+                              color: context.brandPrimaryColor.withValues(
+                                alpha: 0.1,
+                              ),
                             ),
                           ),
                           child: Icon(

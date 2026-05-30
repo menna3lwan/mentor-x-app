@@ -16,17 +16,17 @@ final class AttendanceAsyncSection<T> extends Equatable {
   });
 
   const AttendanceAsyncSection.initial()
-      : this._(status: AttendanceSectionStatus.initial);
+    : this._(status: AttendanceSectionStatus.initial);
   const AttendanceAsyncSection.loading({T? data})
-      : this._(status: AttendanceSectionStatus.loading, data: data);
+    : this._(status: AttendanceSectionStatus.loading, data: data);
   const AttendanceAsyncSection.loaded(T data)
-      : this._(status: AttendanceSectionStatus.loaded, data: data);
+    : this._(status: AttendanceSectionStatus.loaded, data: data);
   const AttendanceAsyncSection.failure(String message, {T? data})
-      : this._(
-          status: AttendanceSectionStatus.failure,
-          data: data,
-          errorMessage: message,
-        );
+    : this._(
+        status: AttendanceSectionStatus.failure,
+        data: data,
+        errorMessage: message,
+      );
 
   bool get isInitial => status == AttendanceSectionStatus.initial;
   bool get isLoading => status == AttendanceSectionStatus.loading;
@@ -83,9 +83,9 @@ final class AttendanceState extends Equatable {
 
   @override
   List<Object?> get props => [
-        childId,
-        isRefreshing,
-        recordsSection,
-        summarySection,
-      ];
+    childId,
+    isRefreshing,
+    recordsSection,
+    summarySection,
+  ];
 }

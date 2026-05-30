@@ -71,13 +71,17 @@ final class QuizGradeDetailParentViewPage extends StatelessWidget {
 
                 FadeInLeft(
                   duration: const Duration(milliseconds: 500),
-                  child: AppSectionHeader(title: t.gradeDetail.questionBreakdown),
+                  child: AppSectionHeader(
+                    title: t.gradeDetail.questionBreakdown,
+                  ),
                 ),
                 const Gap(16),
 
                 ...List.generate(6, (index) {
                   final isCorrect = index.isEven;
-                  final color = isCorrect ? context.statusSuccessColor : context.statusDangerColor;
+                  final color = isCorrect
+                      ? context.statusSuccessColor
+                      : context.statusDangerColor;
 
                   return FadeInUp(
                     duration: const Duration(milliseconds: 500),
@@ -87,7 +91,11 @@ final class QuizGradeDetailParentViewPage extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: context.backgroundSecondaryColor,
                         borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: context.textTertiaryColor.withValues(alpha: 0.1)),
+                        border: Border.all(
+                          color: context.textTertiaryColor.withValues(
+                            alpha: 0.1,
+                          ),
+                        ),
                       ),
                       child: ListTile(
                         leading: Container(
@@ -97,7 +105,9 @@ final class QuizGradeDetailParentViewPage extends StatelessWidget {
                             shape: BoxShape.circle,
                           ),
                           child: Icon(
-                            isCorrect ? Icons.check_rounded : Icons.close_rounded,
+                            isCorrect
+                                ? Icons.check_rounded
+                                : Icons.close_rounded,
                             color: color,
                             size: 16,
                           ),
@@ -111,7 +121,9 @@ final class QuizGradeDetailParentViewPage extends StatelessWidget {
                           ),
                         ),
                         subtitle: Text(
-                          isCorrect ? t.gradeDetail.correctAnswer : t.gradeDetail.incorrectAnswer,
+                          isCorrect
+                              ? t.gradeDetail.correctAnswer
+                              : t.gradeDetail.incorrectAnswer,
                           style: TextStyle(
                             fontSize: 12,
                             color: context.textSecondaryColor,
@@ -128,7 +140,7 @@ final class QuizGradeDetailParentViewPage extends StatelessWidget {
                     ),
                   );
                 }),
-                
+
                 const Gap(40),
               ],
             ),

@@ -55,8 +55,8 @@ final class ChildrenBloc extends Bloc<ChildrenEvent, ChildrenState>
   final ParentChildrenRepository _childrenRepository;
 
   ChildrenBloc({required ParentChildrenRepository childrenRepository})
-      : _childrenRepository = childrenRepository,
-        super(ChildrenState.initial()) {
+    : _childrenRepository = childrenRepository,
+      super(ChildrenState.initial()) {
     on<ChildrenStarted>(_onStarted);
     on<ChildrenRefreshRequested>(
       _onRefreshRequested,
@@ -92,13 +92,17 @@ final class ChildrenBloc extends Bloc<ChildrenEvent, ChildrenState>
     emit(state.copyWith(childrenSection: state.childrenSection.toLoading()));
     try {
       final children = await _childrenRepository.getChildren();
-      emit(state.copyWith(
-        childrenSection: ChildrenAsyncSection.loaded(children),
-      ));
+      emit(
+        state.copyWith(
+          childrenSection: ChildrenAsyncSection.loaded(children),
+        ),
+      );
     } catch (e) {
-      emit(state.copyWith(
-        childrenSection: ChildrenAsyncSection.failure(e.toString()),
-      ));
+      emit(
+        state.copyWith(
+          childrenSection: ChildrenAsyncSection.failure(e.toString()),
+        ),
+      );
       emitPresentation(
         ChildrenFailurePresentationEvent(message: e.toString()),
       );
@@ -112,20 +116,26 @@ final class ChildrenBloc extends Bloc<ChildrenEvent, ChildrenState>
     final trimmed = event.query.trim();
     if (trimmed.isEmpty) return;
 
-    emit(state.copyWith(
-      lookupSection: state.lookupSection.toLoading(),
-    ));
+    emit(
+      state.copyWith(
+        lookupSection: state.lookupSection.toLoading(),
+      ),
+    );
     try {
       final student = await _childrenRepository.findStudentByChildQuery(
         query: trimmed,
       );
-      emit(state.copyWith(
-        lookupSection: ChildrenAsyncSection.loaded(student),
-      ));
+      emit(
+        state.copyWith(
+          lookupSection: ChildrenAsyncSection.loaded(student),
+        ),
+      );
     } catch (e) {
-      emit(state.copyWith(
-        lookupSection: ChildrenAsyncSection.failure(_describe(e)),
-      ));
+      emit(
+        state.copyWith(
+          lookupSection: ChildrenAsyncSection.failure(_describe(e)),
+        ),
+      );
       _maybeEmitUnauthorized(e);
       emitPresentation(
         ChildrenFailurePresentationEvent(
@@ -140,9 +150,11 @@ final class ChildrenBloc extends Bloc<ChildrenEvent, ChildrenState>
     ChildrenLookupCleared event,
     Emitter<ChildrenState> emit,
   ) {
-    emit(state.copyWith(
-      lookupSection: const ChildrenAsyncSection.initial(),
-    ));
+    emit(
+      state.copyWith(
+        lookupSection: const ChildrenAsyncSection.initial(),
+      ),
+    );
   }
 
   Future<void> _onLinkConfirmed(
@@ -168,10 +180,12 @@ final class ChildrenBloc extends Bloc<ChildrenEvent, ChildrenState>
         studentId: event.studentId,
         relationship: event.relationship,
       );
-      emit(state.copyWith(
-        linkSection: ChildrenAsyncSection.loaded(child),
-        lookupSection: const ChildrenAsyncSection.initial(),
-      ));
+      emit(
+        state.copyWith(
+          linkSection: ChildrenAsyncSection.loaded(child),
+          lookupSection: const ChildrenAsyncSection.initial(),
+        ),
+      );
       // Refresh the list in the background so the new child shows up next time
       // the management screen is opened.
       await _loadChildren(emit);
@@ -187,9 +201,11 @@ final class ChildrenBloc extends Bloc<ChildrenEvent, ChildrenState>
     ChildrenFailureKind kind,
   ) {
     final message = _describe(error);
-    emit(state.copyWith(
-      linkSection: ChildrenAsyncSection.failure(message),
-    ));
+    emit(
+      state.copyWith(
+        linkSection: ChildrenAsyncSection.failure(message),
+      ),
+    );
     _maybeEmitUnauthorized(error);
     emitPresentation(
       ChildrenFailurePresentationEvent(message: message, kind: kind),
@@ -207,27 +223,33 @@ final class ChildrenBloc extends Bloc<ChildrenEvent, ChildrenState>
         .where((c) => c.id != event.childId)
         .toList(growable: false);
 
-    emit(state.copyWith(
-      unlinkingChildId: event.childId,
-      unlinkSection: state.unlinkSection.toLoading(),
-      // Optimistic UI: remove now, restore if the network call fails.
-      childrenSection: ChildrenAsyncSection.loaded(optimisticList),
-    ));
+    emit(
+      state.copyWith(
+        unlinkingChildId: event.childId,
+        unlinkSection: state.unlinkSection.toLoading(),
+        // Optimistic UI: remove now, restore if the network call fails.
+        childrenSection: ChildrenAsyncSection.loaded(optimisticList),
+      ),
+    );
 
     try {
       await _childrenRepository.unlinkChild(event.childId);
-      emit(state.copyWith(
-        unlinkingChildId: null,
-        unlinkSection: const ChildrenAsyncSection.loaded(null),
-      ));
+      emit(
+        state.copyWith(
+          unlinkingChildId: null,
+          unlinkSection: const ChildrenAsyncSection.loaded(null),
+        ),
+      );
       emitPresentation(const ChildUnlinkSucceededPresentationEvent());
     } catch (e) {
       // Rollback the optimistic remove.
-      emit(state.copyWith(
-        unlinkingChildId: null,
-        unlinkSection: ChildrenAsyncSection.failure(_describe(e)),
-        childrenSection: ChildrenAsyncSection.loaded(original),
-      ));
+      emit(
+        state.copyWith(
+          unlinkingChildId: null,
+          unlinkSection: ChildrenAsyncSection.failure(_describe(e)),
+          childrenSection: ChildrenAsyncSection.loaded(original),
+        ),
+      );
       _maybeEmitUnauthorized(e);
       emitPresentation(
         ChildrenFailurePresentationEvent(
@@ -259,8 +281,7 @@ final class ChildrenBloc extends Bloc<ChildrenEvent, ChildrenState>
           ChildrenFailureKind.studentNotFound,
         AuthenticationExceptionCode.phoneAlreadyExists =>
           ChildrenFailureKind.alreadyLinked,
-        AuthenticationExceptionCode.networkError =>
-          ChildrenFailureKind.network,
+        AuthenticationExceptionCode.networkError => ChildrenFailureKind.network,
         AuthenticationExceptionCode.sessionExpired =>
           ChildrenFailureKind.unauthorized,
         _ => ChildrenFailureKind.unknown,

@@ -16,25 +16,24 @@ final class CoursesAsyncSection<T> extends Equatable {
   });
 
   const CoursesAsyncSection.initial()
-      : this._(status: CoursesSectionStatus.initial);
+    : this._(status: CoursesSectionStatus.initial);
   const CoursesAsyncSection.loading({T? data})
-      : this._(status: CoursesSectionStatus.loading, data: data);
+    : this._(status: CoursesSectionStatus.loading, data: data);
   const CoursesAsyncSection.loaded(T data)
-      : this._(status: CoursesSectionStatus.loaded, data: data);
+    : this._(status: CoursesSectionStatus.loaded, data: data);
   const CoursesAsyncSection.failure(String message, {T? data})
-      : this._(
-          status: CoursesSectionStatus.failure,
-          data: data,
-          errorMessage: message,
-        );
+    : this._(
+        status: CoursesSectionStatus.failure,
+        data: data,
+        errorMessage: message,
+      );
 
   bool get isInitial => status == CoursesSectionStatus.initial;
   bool get isLoading => status == CoursesSectionStatus.loading;
   bool get isLoaded => status == CoursesSectionStatus.loaded;
   bool get isFailure => status == CoursesSectionStatus.failure;
 
-  CoursesAsyncSection<T> toLoading() =>
-      CoursesAsyncSection.loading(data: data);
+  CoursesAsyncSection<T> toLoading() => CoursesAsyncSection.loading(data: data);
 
   @override
   List<Object?> get props => [status, data, errorMessage];
@@ -90,10 +89,10 @@ final class CoursesState extends Equatable {
 
   @override
   List<Object?> get props => [
-        childId,
-        isRefreshing,
-        coursesSection,
-        summarySection,
-        trendSection,
-      ];
+    childId,
+    isRefreshing,
+    coursesSection,
+    summarySection,
+    trendSection,
+  ];
 }

@@ -21,17 +21,17 @@ final class HomeAsyncSection<T> extends Equatable {
   const HomeAsyncSection.initial() : this._(status: HomeSectionStatus.initial);
 
   const HomeAsyncSection.loading({T? data})
-      : this._(status: HomeSectionStatus.loading, data: data);
+    : this._(status: HomeSectionStatus.loading, data: data);
 
   const HomeAsyncSection.loaded(T data)
-      : this._(status: HomeSectionStatus.loaded, data: data);
+    : this._(status: HomeSectionStatus.loaded, data: data);
 
   const HomeAsyncSection.failure(String message, {T? data})
-      : this._(
-          status: HomeSectionStatus.failure,
-          data: data,
-          errorMessage: message,
-        );
+    : this._(
+        status: HomeSectionStatus.failure,
+        data: data,
+        errorMessage: message,
+      );
 
   bool get isInitial => status == HomeSectionStatus.initial;
   bool get isLoading => status == HomeSectionStatus.loading;
@@ -117,12 +117,12 @@ final class HomeState extends Equatable {
 
   @override
   List<Object?> get props => [
-        selectedChild,
-        isRefreshing,
-        lastUpdatedAt,
-        childrenSection,
-        summarySection,
-        activitySection,
-        announcementsSection,
-      ];
+    selectedChild,
+    isRefreshing,
+    lastUpdatedAt,
+    childrenSection,
+    summarySection,
+    activitySection,
+    announcementsSection,
+  ];
 }

@@ -20,8 +20,9 @@ class TransactionCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isCredit = tx.isCredit;
-    final color =
-        isCredit ? context.statusSuccessColor : context.statusDangerColor;
+    final color = isCredit
+        ? context.statusSuccessColor
+        : context.statusDangerColor;
     final icon = isCredit
         ? Icons.add_circle_outline_rounded
         : Icons.remove_circle_outline_rounded;
@@ -116,13 +117,14 @@ class TransactionCardWidget extends StatelessWidget {
     String currency, {
     required bool isCredit,
   }) {
-    if (raw.isNaN || raw.isInfinite) return '${isCredit ? '+' : '-'} $currency 0';
+    if (raw.isNaN || raw.isInfinite)
+      return '${isCredit ? '+' : '-'} $currency 0';
     final amount = raw.abs();
     final compact = amount >= 1000000
         ? '${(amount / 1000000).toStringAsFixed(1)}M'
         : amount >= 10000
-            ? '${(amount / 1000).toStringAsFixed(1)}k'
-            : amount.toStringAsFixed(0);
+        ? '${(amount / 1000).toStringAsFixed(1)}k'
+        : amount.toStringAsFixed(0);
     return '${isCredit ? '+' : '-'} $currency $compact';
   }
 }

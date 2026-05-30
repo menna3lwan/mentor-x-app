@@ -32,8 +32,10 @@ class _AnnouncementsArchiveView extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = Translations.of(context).parent;
 
-    return BlocPresentationListener<CommunicationBloc,
-        CommunicationPresentationEvent>(
+    return BlocPresentationListener<
+      CommunicationBloc,
+      CommunicationPresentationEvent
+    >(
       listener: (context, event) {
         switch (event) {
           case CommunicationFailurePresentationEvent(:final message):
@@ -42,21 +44,20 @@ class _AnnouncementsArchiveView extends StatelessWidget {
       },
       child: AppDashboardScaffold(
         title: t.communication.announcementsTitle,
-        onRefresh: () async => context
-            .read<CommunicationBloc>()
-            .add(CommunicationRefreshRequested(childId)),
+        onRefresh: () async => context.read<CommunicationBloc>().add(
+          CommunicationRefreshRequested(childId),
+        ),
         actions: [
           IconButton(
             tooltip: t.retry,
-            onPressed: () => context
-                .read<CommunicationBloc>()
-                .add(CommunicationRefreshRequested(childId)),
+            onPressed: () => context.read<CommunicationBloc>().add(
+              CommunicationRefreshRequested(childId),
+            ),
             icon: const Icon(Icons.refresh_rounded),
           ),
         ],
         body: BlocBuilder<CommunicationBloc, CommunicationState>(
-          buildWhen: (a, b) =>
-              a.announcementsSection != b.announcementsSection,
+          buildWhen: (a, b) => a.announcementsSection != b.announcementsSection,
           builder: (context, state) {
             final section = state.announcementsSection;
 
@@ -67,20 +68,18 @@ class _AnnouncementsArchiveView extends StatelessWidget {
                   vertical: 20,
                 ),
                 itemCount: 3,
-                itemBuilder: (_, __) =>
-                    const AnnouncementArchiveCardSkeleton(),
+                itemBuilder: (_, __) => const AnnouncementArchiveCardSkeleton(),
               );
             }
 
             if (section.isFailure && state.announcements.isEmpty) {
               return AppErrorView(
                 message: section.errorMessage ?? t.unableToLoad,
-                onRetry: () =>
-                    context.read<CommunicationBloc>().add(
-                          const CommunicationRetrySectionRequested(
-                            CommunicationSection.announcements,
-                          ),
-                        ),
+                onRetry: () => context.read<CommunicationBloc>().add(
+                  const CommunicationRetrySectionRequested(
+                    CommunicationSection.announcements,
+                  ),
+                ),
               );
             }
 

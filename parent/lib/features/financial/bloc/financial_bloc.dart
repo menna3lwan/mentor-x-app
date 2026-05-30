@@ -41,8 +41,8 @@ final class FinancialBloc extends Bloc<FinancialEvent, FinancialState>
   final ParentFinancialRepository _repository;
 
   FinancialBloc({required ParentFinancialRepository repository})
-      : _repository = repository,
-        super(FinancialState.initial()) {
+    : _repository = repository,
+      super(FinancialState.initial()) {
     on<FinancialStarted>(_onStarted);
     on<FinancialRefreshRequested>(
       _onRefreshRequested,
@@ -57,9 +57,11 @@ final class FinancialBloc extends Bloc<FinancialEvent, FinancialState>
   ) async {
     final childId = event.childId;
     if (childId == null || childId.isEmpty) {
-      emit(state.copyWith(
-        transactionsSection: const FinancialAsyncSection.failure(''),
-      ));
+      emit(
+        state.copyWith(
+          transactionsSection: const FinancialAsyncSection.failure(''),
+        ),
+      );
       emitPresentation(
         const FinancialFailurePresentationEvent(
           kind: FinancialFailureKind.invalidChild,
@@ -102,33 +104,41 @@ final class FinancialBloc extends Bloc<FinancialEvent, FinancialState>
 
     switch (event.section) {
       case FinancialSection.transactions:
-        emit(state.copyWith(
-          transactionsSection: state.transactionsSection.toLoading(),
-        ));
+        emit(
+          state.copyWith(
+            transactionsSection: state.transactionsSection.toLoading(),
+          ),
+        );
         await _loadTransactions(emit, childId);
       case FinancialSection.summary:
         emit(state.copyWith(summarySection: state.summarySection.toLoading()));
         await _loadSummary(emit, childId);
       case FinancialSection.payments:
-        emit(state.copyWith(
-          paymentsSection: state.paymentsSection.toLoading(),
-        ));
+        emit(
+          state.copyWith(
+            paymentsSection: state.paymentsSection.toLoading(),
+          ),
+        );
         await _loadPayments(emit, childId);
       case FinancialSection.analytics:
-        emit(state.copyWith(
-          analyticsSection: state.analyticsSection.toLoading(),
-        ));
+        emit(
+          state.copyWith(
+            analyticsSection: state.analyticsSection.toLoading(),
+          ),
+        );
         await _loadAnalytics(emit, childId);
     }
   }
 
   Future<void> _loadAll(Emitter<FinancialState> emit, String childId) async {
-    emit(state.copyWith(
-      transactionsSection: state.transactionsSection.toLoading(),
-      summarySection: state.summarySection.toLoading(),
-      paymentsSection: state.paymentsSection.toLoading(),
-      analyticsSection: state.analyticsSection.toLoading(),
-    ));
+    emit(
+      state.copyWith(
+        transactionsSection: state.transactionsSection.toLoading(),
+        summarySection: state.summarySection.toLoading(),
+        paymentsSection: state.paymentsSection.toLoading(),
+        analyticsSection: state.analyticsSection.toLoading(),
+      ),
+    );
 
     await Future.wait([
       _loadTransactions(emit, childId),
@@ -145,14 +155,18 @@ final class FinancialBloc extends Bloc<FinancialEvent, FinancialState>
     try {
       final txs = await _repository.getTransactions(childId);
       if (emit.isDone) return;
-      emit(state.copyWith(
-        transactionsSection: FinancialAsyncSection.loaded(txs),
-      ));
+      emit(
+        state.copyWith(
+          transactionsSection: FinancialAsyncSection.loaded(txs),
+        ),
+      );
     } catch (e) {
       if (emit.isDone) return;
-      emit(state.copyWith(
-        transactionsSection: FinancialAsyncSection.failure(_describe(e)),
-      ));
+      emit(
+        state.copyWith(
+          transactionsSection: FinancialAsyncSection.failure(_describe(e)),
+        ),
+      );
       _emitFailure(e);
     }
   }
@@ -164,14 +178,18 @@ final class FinancialBloc extends Bloc<FinancialEvent, FinancialState>
     try {
       final summary = await _repository.getWalletSummary(childId);
       if (emit.isDone) return;
-      emit(state.copyWith(
-        summarySection: FinancialAsyncSection.loaded(summary),
-      ));
+      emit(
+        state.copyWith(
+          summarySection: FinancialAsyncSection.loaded(summary),
+        ),
+      );
     } catch (e) {
       if (emit.isDone) return;
-      emit(state.copyWith(
-        summarySection: FinancialAsyncSection.failure(_describe(e)),
-      ));
+      emit(
+        state.copyWith(
+          summarySection: FinancialAsyncSection.failure(_describe(e)),
+        ),
+      );
       _emitFailure(e);
     }
   }
@@ -183,14 +201,18 @@ final class FinancialBloc extends Bloc<FinancialEvent, FinancialState>
     try {
       final payments = await _repository.getPayments(childId);
       if (emit.isDone) return;
-      emit(state.copyWith(
-        paymentsSection: FinancialAsyncSection.loaded(payments),
-      ));
+      emit(
+        state.copyWith(
+          paymentsSection: FinancialAsyncSection.loaded(payments),
+        ),
+      );
     } catch (e) {
       if (emit.isDone) return;
-      emit(state.copyWith(
-        paymentsSection: FinancialAsyncSection.failure(_describe(e)),
-      ));
+      emit(
+        state.copyWith(
+          paymentsSection: FinancialAsyncSection.failure(_describe(e)),
+        ),
+      );
       // Payments are non-blocking; don't toast — but still trip auth.
       _maybeEmitUnauthorized(e);
     }
@@ -203,14 +225,18 @@ final class FinancialBloc extends Bloc<FinancialEvent, FinancialState>
     try {
       final analytics = await _repository.getWalletAnalytics(childId);
       if (emit.isDone) return;
-      emit(state.copyWith(
-        analyticsSection: FinancialAsyncSection.loaded(analytics),
-      ));
+      emit(
+        state.copyWith(
+          analyticsSection: FinancialAsyncSection.loaded(analytics),
+        ),
+      );
     } catch (e) {
       if (emit.isDone) return;
-      emit(state.copyWith(
-        analyticsSection: FinancialAsyncSection.failure(_describe(e)),
-      ));
+      emit(
+        state.copyWith(
+          analyticsSection: FinancialAsyncSection.failure(_describe(e)),
+        ),
+      );
       // Analytics are non-blocking; don't toast — but still trip auth.
       _maybeEmitUnauthorized(e);
     }

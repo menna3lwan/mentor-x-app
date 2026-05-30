@@ -5,10 +5,10 @@ import 'app/parent_requirements.dart';
 
 void main() async {
   final MentorXLogger logger = MentorXLogger('Main');
-  
+
   try {
     final requirements = await ParentRequirements.initialize();
-    
+
     runApp(
       ParentApp(requirements: requirements),
     );

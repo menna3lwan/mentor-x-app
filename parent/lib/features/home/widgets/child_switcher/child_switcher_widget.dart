@@ -116,8 +116,9 @@ class _ChildAvatarItem extends StatelessWidget {
                   boxShadow: isSelected
                       ? [
                           BoxShadow(
-                            color: context.brandPrimaryColor
-                                .withValues(alpha: 0.3),
+                            color: context.brandPrimaryColor.withValues(
+                              alpha: 0.3,
+                            ),
                             blurRadius: 20,
                             offset: const Offset(0, 10),
                           ),
@@ -137,8 +138,9 @@ class _ChildAvatarItem extends StatelessWidget {
                     backgroundColor: isSelected
                         ? context.brandPrimaryColor.withValues(alpha: 0.05)
                         : context.backgroundSecondaryColor,
-                    backgroundImage:
-                        imageUrl != null ? NetworkImage(imageUrl!) : null,
+                    backgroundImage: imageUrl != null
+                        ? NetworkImage(imageUrl!)
+                        : null,
                     child: imageUrl == null
                         ? Text(
                             name.isEmpty ? '?' : name[0].toUpperCase(),

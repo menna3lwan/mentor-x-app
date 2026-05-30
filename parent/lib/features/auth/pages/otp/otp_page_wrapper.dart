@@ -33,8 +33,8 @@ class _OtpPageWrapperState extends State<OtpPageWrapper> {
 
     return BlocProvider(
       create: (context) => OtpBloc(
-        authenticationRepository:
-            context.read<AuthenticationRepository<ParentEntity>>(),
+        authenticationRepository: context
+            .read<AuthenticationRepository<ParentEntity>>(),
       ),
       child: BlocPresentationListener<OtpBloc, OtpPresentationEvent>(
         listener: (context, event) {
@@ -48,8 +48,7 @@ class _OtpPageWrapperState extends State<OtpPageWrapper> {
               // Clear the bad code on invalid-OTP so the user can retry
               // without re-tapping the field.
               if (exception is AuthenticationException &&
-                  exception.code ==
-                      AuthenticationExceptionCode.invalidOtp) {
+                  exception.code == AuthenticationExceptionCode.invalidOtp) {
                 _otpController.clear();
               }
               MentorXUI.showToast(
@@ -107,42 +106,46 @@ class _OtpPageWrapperState extends State<OtpPageWrapper> {
                   LengthLimitingTextInputFormatter(6),
                 ],
                 onChanged: (value) {
-                  if (value.length == 6 &&
-                      !state.loadingState.isLoading) {
-                    bloc.add(OtpSubmittedEvent(
-                      phone: widget.phoneNumber,
-                      code: value,
-                    ));
+                  if (value.length == 6 && !state.loadingState.isLoading) {
+                    bloc.add(
+                      OtpSubmittedEvent(
+                        phone: widget.phoneNumber,
+                        code: value,
+                      ),
+                    );
                   }
                 },
               ),
               verifyButton: MentorXButton(
                 label: t.auth.verifyAndContinue,
-                onPressed: state.loadingState.isLoading ||
+                onPressed:
+                    state.loadingState.isLoading ||
                         _otpController.text.length < 6
                     ? null
                     : () {
-                        bloc.add(OtpSubmittedEvent(
-                          phone: widget.phoneNumber,
-                          code: _otpController.text,
-                        ));
+                        bloc.add(
+                          OtpSubmittedEvent(
+                            phone: widget.phoneNumber,
+                            code: _otpController.text,
+                          ),
+                        );
                       },
                 loading: state.loadingState.isLoading,
               ),
               resendButton: TextButton(
                 onPressed: state.canResend && !state.isResending
                     ? () => bloc.add(
-                          OtpResendRequested(phone: widget.phoneNumber),
-                        )
+                        OtpResendRequested(phone: widget.phoneNumber),
+                      )
                     : null,
                 child: Text(
                   state.isResending
                       ? t.auth.resending
                       : state.canResend
-                          ? t.auth.resendCode
-                          : t.auth.resendInSeconds(
-                              seconds: state.resendCountdown,
-                            ),
+                      ? t.auth.resendCode
+                      : t.auth.resendInSeconds(
+                          seconds: state.resendCountdown,
+                        ),
                   style: TextStyle(
                     color: state.canResend
                         ? context.brandPrimaryColor
@@ -169,8 +172,7 @@ class _OtpPageWrapperState extends State<OtpPageWrapper> {
       return switch (exception.code) {
         AuthenticationExceptionCode.invalidOtp => t.auth.verificationFailed,
         AuthenticationExceptionCode.networkError => t.unableToLoad,
-        AuthenticationExceptionCode.failedToResendOtp =>
-          t.auth.sendCodeFailed,
+        AuthenticationExceptionCode.failedToResendOtp => t.auth.sendCodeFailed,
         _ => exception.message ?? t.auth.verificationFailed,
       };
     }

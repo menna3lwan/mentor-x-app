@@ -27,7 +27,9 @@ class RecentGradesWidget extends StatelessWidget {
           duration: const Duration(milliseconds: 500),
           delay: Duration(milliseconds: 80 * index),
           child: Padding(
-            padding: EdgeInsets.only(bottom: index == grades.length - 1 ? 0 : 10),
+            padding: EdgeInsets.only(
+              bottom: index == grades.length - 1 ? 0 : 10,
+            ),
             child: _GradeTile(
               grade: grade,
               onTap: onGradeTap == null ? null : () => onGradeTap!(grade),

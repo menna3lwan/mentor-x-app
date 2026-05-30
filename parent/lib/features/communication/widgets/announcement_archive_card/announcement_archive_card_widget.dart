@@ -46,8 +46,7 @@ class AnnouncementArchiveCardWidget extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color: context.brandPrimaryColor
-                            .withValues(alpha: 0.1),
+                        color: context.brandPrimaryColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Icon(

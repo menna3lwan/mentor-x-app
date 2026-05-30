@@ -24,10 +24,10 @@ class AttendanceSummaryCardWrapper extends StatelessWidget {
           return AppErrorView(
             message: section.errorMessage ?? t.unableToLoad,
             onRetry: () => context.read<AttendanceBloc>().add(
-                  const AttendanceRetrySectionRequested(
-                    AttendanceSection.summary,
-                  ),
-                ),
+              const AttendanceRetrySectionRequested(
+                AttendanceSection.summary,
+              ),
+            ),
           );
         }
 

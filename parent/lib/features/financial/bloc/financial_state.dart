@@ -16,17 +16,17 @@ final class FinancialAsyncSection<T> extends Equatable {
   });
 
   const FinancialAsyncSection.initial()
-      : this._(status: FinancialSectionStatus.initial);
+    : this._(status: FinancialSectionStatus.initial);
   const FinancialAsyncSection.loading({T? data})
-      : this._(status: FinancialSectionStatus.loading, data: data);
+    : this._(status: FinancialSectionStatus.loading, data: data);
   const FinancialAsyncSection.loaded(T data)
-      : this._(status: FinancialSectionStatus.loaded, data: data);
+    : this._(status: FinancialSectionStatus.loaded, data: data);
   const FinancialAsyncSection.failure(String message, {T? data})
-      : this._(
-          status: FinancialSectionStatus.failure,
-          data: data,
-          errorMessage: message,
-        );
+    : this._(
+        status: FinancialSectionStatus.failure,
+        data: data,
+        errorMessage: message,
+      );
 
   bool get isInitial => status == FinancialSectionStatus.initial;
   bool get isLoading => status == FinancialSectionStatus.loading;
@@ -45,7 +45,7 @@ final class FinancialState extends Equatable {
   final bool isRefreshing;
 
   final FinancialAsyncSection<List<WalletTransactionEntity>>
-      transactionsSection;
+  transactionsSection;
   final FinancialAsyncSection<WalletSummaryEntity> summarySection;
   final FinancialAsyncSection<List<PaymentEntity>> paymentsSection;
   final FinancialAsyncSection<ParentWalletAnalyticsEntity> analyticsSection;
@@ -99,11 +99,11 @@ final class FinancialState extends Equatable {
 
   @override
   List<Object?> get props => [
-        childId,
-        isRefreshing,
-        transactionsSection,
-        summarySection,
-        paymentsSection,
-        analyticsSection,
-      ];
+    childId,
+    isRefreshing,
+    transactionsSection,
+    summarySection,
+    paymentsSection,
+    analyticsSection,
+  ];
 }

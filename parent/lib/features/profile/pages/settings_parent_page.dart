@@ -52,8 +52,7 @@ class _SettingsParentPageState extends State<SettingsParentPage> {
                 icon: Icons.notifications_active_rounded,
                 label: t.profile.pushNotifications,
                 value: _pushNotifications,
-                onChanged: (val) =>
-                    setState(() => _pushNotifications = val),
+                onChanged: (val) => setState(() => _pushNotifications = val),
               ),
             ],
           ),
@@ -158,22 +157,19 @@ class _SettingsParentPageState extends State<SettingsParentPage> {
                   label: t.profile.themeSystem,
                   icon: Icons.brightness_auto_rounded,
                   isSelected: current == AppThemePreference.system,
-                  onTap: () =>
-                      Navigator.of(ctx).pop(AppThemePreference.system),
+                  onTap: () => Navigator.of(ctx).pop(AppThemePreference.system),
                 ),
                 _ThemeOption(
                   label: t.profile.themeLight,
                   icon: Icons.light_mode_rounded,
                   isSelected: current == AppThemePreference.light,
-                  onTap: () =>
-                      Navigator.of(ctx).pop(AppThemePreference.light),
+                  onTap: () => Navigator.of(ctx).pop(AppThemePreference.light),
                 ),
                 _ThemeOption(
                   label: t.profile.themeDark,
                   icon: Icons.dark_mode_rounded,
                   isSelected: current == AppThemePreference.dark,
-                  onTap: () =>
-                      Navigator.of(ctx).pop(AppThemePreference.dark),
+                  onTap: () => Navigator.of(ctx).pop(AppThemePreference.dark),
                 ),
               ],
             ),

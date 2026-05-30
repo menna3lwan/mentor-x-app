@@ -61,7 +61,7 @@ final class OtpPage extends StatelessWidget {
                 ),
               ),
               const Gap(40),
-              if (title != null) 
+              if (title != null)
                 FadeInDown(
                   duration: const Duration(milliseconds: 500),
                   delay: const Duration(milliseconds: 200),

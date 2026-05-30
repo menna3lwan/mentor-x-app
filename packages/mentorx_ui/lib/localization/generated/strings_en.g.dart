@@ -1269,405 +1269,23 @@ class TranslationsParentEn {
 	/// en: 'Points Earned'
 	String get pointsEarned => 'Points Earned';
 
+	late final TranslationsParentSplashEn splash = TranslationsParentSplashEn._(_root);
+	late final TranslationsParentCourseDetailEn courseDetail = TranslationsParentCourseDetailEn._(_root);
+	late final TranslationsParentGradeDetailEn gradeDetail = TranslationsParentGradeDetailEn._(_root);
+	late final TranslationsParentNotificationCenterEn notificationCenter = TranslationsParentNotificationCenterEn._(_root);
 	late final TranslationsParentHomeEn home = TranslationsParentHomeEn._(_root);
-
-	late final TranslationsParentQuickActionsEn quickActions =
-			TranslationsParentQuickActionsEn._(_root);
-
-	late final TranslationsParentChildrenEn children =
-			TranslationsParentChildrenEn._(_root);
-
-	late final TranslationsParentAssessmentsEn assessments =
-			TranslationsParentAssessmentsEn._(_root);
-
-	late final TranslationsParentAttendanceTrackingEn attendanceTracking =
-			TranslationsParentAttendanceTrackingEn._(_root);
-
-	late final TranslationsParentFinancialEn financial =
-			TranslationsParentFinancialEn._(_root);
-
-	late final TranslationsParentAcademicEn academic =
-			TranslationsParentAcademicEn._(_root);
-
-	late final TranslationsParentCommunicationEn communication =
-			TranslationsParentCommunicationEn._(_root);
-
-	late final TranslationsParentProfileEn profile =
-			TranslationsParentProfileEn._(_root);
-
-	late final TranslationsParentAuthEn auth =
-			TranslationsParentAuthEn._(_root);
-
-	late final TranslationsParentOnboardingEn onboarding =
-			TranslationsParentOnboardingEn._(_root);
+	late final TranslationsParentQuickActionsEn quickActions = TranslationsParentQuickActionsEn._(_root);
+	late final TranslationsParentOnboardingEn onboarding = TranslationsParentOnboardingEn._(_root);
+	late final TranslationsParentAuthEn auth = TranslationsParentAuthEn._(_root);
+	late final TranslationsParentProfileEn profile = TranslationsParentProfileEn._(_root);
+	late final TranslationsParentCommunicationEn communication = TranslationsParentCommunicationEn._(_root);
+	late final TranslationsParentAcademicEn academic = TranslationsParentAcademicEn._(_root);
+	late final TranslationsParentFinancialEn financial = TranslationsParentFinancialEn._(_root);
+	late final TranslationsParentAttendanceTrackingEn attendanceTracking = TranslationsParentAttendanceTrackingEn._(_root);
+	late final TranslationsParentAssessmentsEn assessments = TranslationsParentAssessmentsEn._(_root);
+	late final TranslationsParentChildrenEn children = TranslationsParentChildrenEn._(_root);
+	late final TranslationsParentAppEn app = TranslationsParentAppEn._(_root);
 }
-
-// Path: parent.onboarding
-class TranslationsParentOnboardingEn {
-	TranslationsParentOnboardingEn._(this._root);
-	final Translations _root; // ignore: unused_field
-
-	String get parentPortalTag => 'PARENT PORTAL';
-	String get slide1Title => 'Monitor Progress';
-	String get slide1Description =>
-			"Keep track of your child's grades, attendance, and academic achievements in real-time.";
-	String get slide2Title => 'Stay Connected';
-	String get slide2Description =>
-			'Direct communication with teachers and school administration for a better learning experience.';
-	String get slide3Title => 'Secure Payments';
-	String get slide3Description =>
-			"Manage school fees and your child's wallet balance safely and conveniently.";
-	String get skip => 'Skip';
-	String get getStarted => 'Get Started';
-}
-
-// Path: parent.auth
-class TranslationsParentAuthEn {
-	TranslationsParentAuthEn._(this._root);
-	final Translations _root; // ignore: unused_field
-
-	String get otpTitle => 'Verify Your Number';
-	String otpSubtitle({required Object phone}) =>
-			'Enter the 6-digit code sent to\n${phone}';
-	String get otpFieldLabel => 'Verification Code';
-	String get otpFieldHint => '000000';
-	String get verifyAndContinue => 'Verify & Continue';
-	String get resending => 'Resending…';
-	String get resendCode => 'Resend Code';
-	String resendInSeconds({required Object seconds}) =>
-			'Resend in ${seconds}s';
-	String get verificationFailed => 'Verification failed';
-
-	String get appName => 'MentorX Parent';
-	String get loginTagline =>
-			"Monitor your child's academic journey with confidence";
-	String get phoneNumberLabel => 'Phone Number';
-	String get phoneNumberHint => 'Enter your phone number';
-	String get phoneRequired => 'Please enter your phone number';
-	String get passwordLabel => 'Password';
-	String get passwordRequired => 'Please enter your password';
-	String get forgotPassword => 'Forgot Password?';
-	String get signInToDashboard => 'Sign In to Dashboard';
-	String get newToMentorX => 'New to MentorX?';
-	String get createAccount => 'Create Account';
-	String get loginFailed => 'Login failed. Please try again.';
-	String get passwordRecoveryHeading => 'Password Recovery';
-	String get forgotPasswordTitle => 'Forgot Password?';
-	String get forgotPasswordSubtitle =>
-			"Don't worry! Enter your registered phone number and we'll send you a verification code to reset your account safely.";
-	String get sendVerificationCode => 'Send Verification Code';
-	String get backToLogin => 'Back to Login';
-	String get sendCodeFailed => 'Failed to send code';
-	String get resetPasswordTitle => 'Reset Your Password';
-	String resetPasswordSubtitle({required Object phone}) =>
-			'Enter the 6-digit code sent to\n${phone}';
-	String get otpCodeLabel => 'OTP Code';
-	String get newPasswordLabel => 'New Password';
-	String get confirmPasswordLabel => 'Confirm New Password';
-	String get passwordPlaceholder => '••••••••';
-	String get updatePasswordNow => 'Update Password Now';
-	String get validationCheckInputs =>
-			'Please check your inputs and try again';
-	String get passwordResetSuccess => 'Password reset successfully';
-
-	String get regStep1Title => 'Link Your Child';
-	String get regStep2Title => 'Personal Info';
-	String get regStep3Title => 'Security';
-	String get regDefaultTitle => 'Register';
-	String get regFindStudent => 'Find Student';
-	String get regConfirmChild => 'Confirm Child';
-	String get regContinue => 'Continue';
-	String get regCreateAccount => 'Create Account';
-	String get regPleaseWait => 'Please wait…';
-	String get regAlreadyHaveAccount => 'Already have an account? Login';
-	String get regLookupPhoneTab => 'Phone';
-	String get regLookupCodeTab => 'Student Code';
-	String get regChildPhoneLabel => 'Child Phone';
-	String get regChildPhoneHint => 'Enter registered phone';
-	String get regStudentCodeLabel => 'Student Code';
-	String get regStudentCodeHint => 'Enter unique code';
-	String get regFirstNameLabel => 'First Name';
-	String get regFirstNameHint => 'e.g. John';
-	String get regLastNameLabel => 'Last Name';
-	String get regLastNameHint => 'e.g. Doe';
-	String get regYourPhoneHint => 'Your phone number';
-	String get regEmailLabel => 'Email';
-	String get regEmailHint => 'Optional email';
-	String get regSecurityHint =>
-			'Set a secure password to protect your account access.';
-	String get regRelationshipLabel => 'Relationship to Child';
-	String get regChildConfirmed => 'Child confirmed successfully';
-	String get regConfirmIsYourChild => 'Confirm if this is your child';
-
-	String get regErrorLookupEmpty =>
-			'Please enter a child phone number or student code.';
-	String get regErrorStudentNotFound =>
-			'No student found with this identifier.';
-	String get regErrorFindFailed =>
-			'Failed to find student. Please try again.';
-	String get regErrorFindChildFirst => 'Please find your child first.';
-	String get regErrorConfirmChild => 'Please confirm that this is your child.';
-	String get regErrorFirstNameShort =>
-			'First name must be at least 2 characters.';
-	String get regErrorLastNameShort =>
-			'Last name must be at least 2 characters.';
-	String get regErrorInvalidPhone =>
-			'Please enter a valid Egyptian phone number.';
-	String get regErrorInvalidEmail => 'Please enter a valid email address.';
-	String get regErrorRelationshipRequired =>
-			'Please select relationship with the child.';
-	String get regErrorPasswordWeak =>
-			'Password must be at least 6 characters.';
-	String get regErrorPasswordMismatch => 'Passwords do not match.';
-	String get regErrorRegistrationFailed =>
-			'Registration failed. Please try again.';
-	String get regErrorPhoneAlreadyExists =>
-			'An account with this phone number already exists.';
-}
-
-// Path: parent.profile
-class TranslationsParentProfileEn {
-	TranslationsParentProfileEn._(this._root);
-	final Translations _root; // ignore: unused_field
-
-	String get verifiedAccount => 'Verified Account';
-	String get fullNameLabel => 'Full Name';
-	String get phoneNumberLabel => 'Phone Number';
-	String get emailLabel => 'Email Address';
-	String get notificationsEnabled => 'Enabled';
-	String get notificationsDisabled => 'Disabled';
-	String get securityValue => 'Password & Biometrics';
-	String get signOutConfirmTitle => 'Sign Out?';
-	String get signOutConfirmMessage =>
-			'You will be signed out and returned to the login screen.';
-	String get signOutAction => 'Sign Out';
-	String get signOutCancel => 'Cancel';
-	String get fallbackName => 'Parent User';
-	String get settingsTitle => 'Settings';
-	String get appConfigurationSection => 'App Configuration';
-	String get preferencesSection => 'Preferences';
-	String get supportSection => 'Support';
-	String get pushNotifications => 'Push Notifications';
-	String get themeMode => 'Theme Mode';
-	String get themeSystem => 'System';
-	String get themeLight => 'Light';
-	String get themeDark => 'Dark';
-	String get appLanguage => 'App Language';
-	String get languageEnglish => 'English';
-	String get languageArabic => 'العربية';
-	String get helpCenter => 'Help Center';
-	String get helpCenterValue => 'FAQs & Support';
-	String get aboutTitle => 'About MentorX';
-	String aboutVersion({required Object version}) => 'Version ${version}';
-}
-
-// Path: parent.communication
-class TranslationsParentCommunicationEn {
-	TranslationsParentCommunicationEn._(this._root);
-	final Translations _root; // ignore: unused_field
-
-	String get notificationsTitle => 'Notifications';
-	String get announcementsTitle => 'Announcements';
-	String get whatsAppTitle => 'WhatsApp Groups';
-	String get noNotificationsTitle => 'No Notifications';
-	String get noNotificationsHint =>
-			"You're all caught up — new updates will appear here.";
-	String get noAnnouncementsTitle => 'No Announcements';
-	String get noAnnouncementsHint =>
-			'Stay tuned! School announcements will appear here.';
-	String get noGroupsTitle => 'No Groups';
-	String get noGroupsHint =>
-			'No WhatsApp groups are available for this child yet.';
-	String get readMore => 'Read More';
-	String get joinGroup => 'Join';
-	String get groupSubtitle => 'Tap to join for the latest updates';
-}
-
-// Path: parent.academic
-class TranslationsParentAcademicEn {
-	TranslationsParentAcademicEn._(this._root);
-	final Translations _root; // ignore: unused_field
-
-	String get pageTitle => 'Academic Monitor';
-	String get overallAverageHeading => 'Overall Average';
-	String get averageLabel => 'Average';
-	String get gradedLabel => 'Graded';
-	String get pendingLabel => 'Pending';
-	String get noCoursesTitle => 'No Courses';
-	String get noCoursesHint => 'Academic data will appear here once available.';
-	String sessionsCount({required Object count}) => '${count} sessions';
-	String completedSessionsLabel({
-		required Object completed,
-		required Object total,
-	}) => '${completed} / ${total} sessions';
-	String get courseDetailsTitle => 'Course Progress';
-}
-
-// Path: parent.financial
-class TranslationsParentFinancialEn {
-	TranslationsParentFinancialEn._(this._root);
-	final Translations _root; // ignore: unused_field
-
-	String get balance => 'Balance';
-	String get spent => 'Spent';
-	String get points => 'Points';
-	String get noDataTitle => 'No Data';
-	String get noDataHint => 'Financial data will appear here once available.';
-	String get noTransactionsTitle => 'No Transactions';
-	String get noTransactionsHint =>
-			'No transaction history found for this child.';
-	String get credit => 'Credit';
-	String get debit => 'Debit';
-	String get deposit => 'Top Up';
-	String get withdrawal => 'Withdrawal';
-	String get payment => 'Payment';
-	String get refund => 'Refund';
-	String get reward => 'Reward';
-	String get statusPending => 'Pending';
-	String get statusSuccess => 'Success';
-	String get statusFailed => 'Failed';
-}
-
-// Path: parent.attendanceTracking
-class TranslationsParentAttendanceTrackingEn {
-	TranslationsParentAttendanceTrackingEn._(this._root);
-	final Translations _root; // ignore: unused_field
-
-	String get pageTitle => 'Attendance Monitor';
-	String get attendanceLog => 'Attendance Log';
-	String get present => 'Present';
-	String get absent => 'Absent';
-	String get late => 'Late';
-	String get excused => 'Excused';
-	String get noRecordsTitle => 'No Records';
-	String get noRecordsHint =>
-			'No attendance records found for this student.';
-	String get regularSession => 'Regular Session';
-	String get generalAcademic => 'General Academic';
-	String get onlineSession => 'Online';
-	String checkInTimeLabel({required Object time}) => 'Checked in at ${time}';
-}
-
-// Path: parent.assessments
-class TranslationsParentAssessmentsEn {
-	TranslationsParentAssessmentsEn._(this._root);
-	final Translations _root; // ignore: unused_field
-
-	String get pageTitle => 'Academic Performance';
-	String get overallPerformance => 'Overall Performance';
-	String get average => 'Average';
-	String get graded => 'Graded';
-	String get pending => 'Pending';
-	String get passed => 'Passed';
-	String get failed => 'Failed';
-	String get assessmentHistory => 'Assessment History';
-	String get noAssessmentsTitle => 'No Assessments';
-	String get noAssessmentsHint =>
-			'Academic evaluation data will appear here once submitted.';
-	String get passLabel => 'Passed';
-	String get failLabel => 'Failed';
-	String scoreLabel({required Object score, required Object total}) =>
-			'Score: ${score}/${total}';
-	String get quizPrefix => 'Quiz';
-	String get assignmentPrefix => 'Assignment';
-	String get examPrefix => 'Exam';
-	String get trendUp => 'Trending up';
-	String get trendDown => 'Trending down';
-	String get trendStable => 'Stable';
-}
-
-// Path: parent.home
-class TranslationsParentHomeEn {
-	TranslationsParentHomeEn._(this._root);
-	final Translations _root; // ignore: unused_field
-
-	String get parentAccount => 'Parent Account';
-	String get addChild => 'Add Child';
-	String get academicStanding => 'Academic Standing';
-	String get avgGrade => 'Avg Grade';
-	String get attendance => 'Attendance';
-	String get unpaidFees => 'Unpaid Fees';
-	String get noRecentActivity => 'No Recent Activity';
-	String get noRecentActivityHint =>
-			'Activities will appear here once your child starts their learning journey.';
-	String get noChildrenTitle => 'No Children Linked';
-	String get noChildrenHint =>
-			'Link your first child to start tracking their progress.';
-	String get linkChild => 'Link a Child';
-	String updatedAt({required Object time}) => 'Updated ${time}';
-	String get upcomingSessions => 'Upcoming Sessions';
-	String get noUpcomingSessions => 'No upcoming sessions';
-	String get recentGrades => 'Recent Grades';
-	String get noRecentGrades => 'No grades yet';
-	String get viewDetails => 'View details';
-}
-
-// Path: parent.quickActions
-class TranslationsParentQuickActionsEn {
-	TranslationsParentQuickActionsEn._(this._root);
-	final Translations _root; // ignore: unused_field
-
-	String get attendance => 'Attendance';
-	String get courses => 'Courses';
-	String get fees => 'Fees';
-	String get messages => 'Messages';
-	String get grades => 'Grades';
-	String get announcements => 'News';
-	String get schedule => 'Schedule';
-	String get support => 'Support';
-}
-
-// Path: parent.children
-class TranslationsParentChildrenEn {
-	TranslationsParentChildrenEn._(this._root);
-	final Translations _root; // ignore: unused_field
-
-	String get title => 'Linked Children';
-	String get linkNewChild => 'Link New Child';
-	String get linkChildTitle => 'Link Your Child';
-	String get linkChildHint =>
-			"Enter your child's admission number or registered phone number to link their account.";
-	String get searchLabel => 'Search Child';
-	String get searchHint => 'Admission Number / Phone';
-	String get confirmLink => 'Confirm & Link Child';
-	String get specifyRelationship => 'Specify Relationship';
-	String get linkSuccess => 'Child linked successfully';
-	String get unlinkConfirmTitle => 'Remove Child?';
-	String unlinkConfirmMessage({required Object name}) =>
-			'${name} will be unlinked from your account. You can re-link them at any time.';
-	String get unlink => 'Unlink';
-	String get unlinkSuccess => 'Child unlinked';
-	String studentIdLabel({required Object id}) => 'Student ID: ${id}';
-	String studentCodeLabel({required Object code}) => 'Code: ${code}';
-	String gradeLabel({required Object grade}) => 'Grade: ${grade}';
-	String centerLabel({required Object center}) => 'Center: ${center}';
-	String get cancel => 'Cancel';
-
-	late final TranslationsParentChildrenRelationshipEn relationship =
-			TranslationsParentChildrenRelationshipEn._(_root);
-
-	String get errorAlreadyLinked =>
-			'This child is already linked to your account.';
-	String get errorStudentNotFound =>
-			'No student matched that admission number or phone.';
-	String get errorNetwork =>
-			'Network problem. Please check your connection and try again.';
-	String get errorGeneric => 'Something went wrong. Please try again.';
-	String get lookupEmpty =>
-			'Type the admission number or phone number first.';
-}
-
-// Path: parent.children.relationship
-class TranslationsParentChildrenRelationshipEn {
-	TranslationsParentChildrenRelationshipEn._(this._root);
-	final Translations _root; // ignore: unused_field
-
-	String get father => 'Father';
-	String get mother => 'Mother';
-	String get guardian => 'Guardian';
-	String get other => 'Other';
-}
-
 
 // Path: assignments
 class TranslationsAssignmentsEn {
@@ -2293,6 +1911,983 @@ class TranslationsCourseErrorsEn {
 	String get failedToLoadSessions => 'Failed to load sessions';
 }
 
+// Path: parent.splash
+class TranslationsParentSplashEn {
+	TranslationsParentSplashEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'MENTORX'
+	String get appName => 'MENTORX';
+
+	/// en: 'PARENT PORTAL'
+	String get tagline => 'PARENT PORTAL';
+}
+
+// Path: parent.courseDetail
+class TranslationsParentCourseDetailEn {
+	TranslationsParentCourseDetailEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Course Progress'
+	String get pageTitle => 'Course Progress';
+
+	/// en: 'Course Breakdown'
+	String get courseBreakdown => 'Course Breakdown';
+
+	/// en: 'Course ID'
+	String get courseId => 'Course ID';
+
+	/// en: 'Full Title'
+	String get fullTitle => 'Full Title';
+
+	/// en: 'Status'
+	String get status => 'Status';
+
+	/// en: 'Active'
+	String get statusActive => 'Active';
+
+	/// en: 'Sessions'
+	String get sessions => 'Sessions';
+
+	/// en: 'Progress'
+	String get progress => 'Progress';
+
+	/// en: 'ID'
+	String get id => 'ID';
+}
+
+// Path: parent.gradeDetail
+class TranslationsParentGradeDetailEn {
+	TranslationsParentGradeDetailEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Grade Details'
+	String get pageTitle => 'Grade Details';
+
+	/// en: 'Quiz Detail'
+	String get quizDetail => 'Quiz Detail';
+
+	/// en: 'Quiz Score'
+	String get quizScore => 'Quiz Score';
+
+	/// en: 'Assessment Info'
+	String get assessmentInfo => 'Assessment Info';
+
+	/// en: 'Score'
+	String get score => 'Score';
+
+	/// en: 'Percentage'
+	String get percentage => 'Percentage';
+
+	/// en: 'Result'
+	String get result => 'Result';
+
+	/// en: 'Pass'
+	String get pass => 'Pass';
+
+	/// en: 'Fail'
+	String get fail => 'Fail';
+
+	/// en: 'Question Breakdown'
+	String get questionBreakdown => 'Question Breakdown';
+
+	/// en: 'Question ${number}'
+	String questionLabel({required Object number}) => 'Question ${number}';
+
+	/// en: 'Correct Answer'
+	String get correctAnswer => 'Correct Answer';
+
+	/// en: 'Incorrect Answer'
+	String get incorrectAnswer => 'Incorrect Answer';
+
+	/// en: 'Additional Details'
+	String get additionalDetails => 'Additional Details';
+
+	/// en: 'Quiz ID'
+	String get quizId => 'Quiz ID';
+
+	/// en: 'Submitted At'
+	String get submittedAt => 'Submitted At';
+
+	/// en: 'Pass Criteria'
+	String get passCriteria => 'Pass Criteria';
+
+	/// en: 'Quiz attempt not found.'
+	String get notFound => 'Quiz attempt not found.';
+}
+
+// Path: parent.notificationCenter
+class TranslationsParentNotificationCenterEn {
+	TranslationsParentNotificationCenterEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Notifications'
+	String get title => 'Notifications';
+
+	/// en: 'Mark all read'
+	String get markAllRead => 'Mark all read';
+
+	/// en: 'Mark as read'
+	String get markRead => 'Mark as read';
+
+	/// en: 'Unread'
+	String get unread => 'Unread';
+
+	/// en: 'Read'
+	String get read => 'Read';
+
+	/// en: 'Notification Details'
+	String get detailsTitle => 'Notification Details';
+
+	/// en: 'Received at'
+	String get receivedAt => 'Received at';
+
+	/// en: 'Student'
+	String get student => 'Student';
+
+	/// en: 'Open link'
+	String get openLink => 'Open link';
+
+	/// en: 'No Notifications'
+	String get noNotificationsTitle => 'No Notifications';
+
+	/// en: 'You're all caught up. New updates will appear here.'
+	String get noNotificationsHint => 'You\'re all caught up. New updates will appear here.';
+
+	/// en: 'Unable to load notifications'
+	String get loadFailed => 'Unable to load notifications';
+
+	/// en: 'Notification marked as read'
+	String get markReadSuccess => 'Notification marked as read';
+
+	/// en: 'All notifications marked as read'
+	String get markAllReadSuccess => 'All notifications marked as read';
+
+	/// en: 'Unable to load unread notifications count'
+	String get unreadCountFailed => 'Unable to load unread notifications count';
+}
+
+// Path: parent.home
+class TranslationsParentHomeEn {
+	TranslationsParentHomeEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Parent Account'
+	String get parentAccount => 'Parent Account';
+
+	/// en: 'Add Child'
+	String get addChild => 'Add Child';
+
+	/// en: 'Academic Standing'
+	String get academicStanding => 'Academic Standing';
+
+	/// en: 'Avg Grade'
+	String get avgGrade => 'Avg Grade';
+
+	/// en: 'Attendance'
+	String get attendance => 'Attendance';
+
+	/// en: 'Unpaid Fees'
+	String get unpaidFees => 'Unpaid Fees';
+
+	/// en: 'No Recent Activity'
+	String get noRecentActivity => 'No Recent Activity';
+
+	/// en: 'Activities will appear here once your child starts their learning journey.'
+	String get noRecentActivityHint => 'Activities will appear here once your child starts their learning journey.';
+
+	/// en: 'No Children Linked'
+	String get noChildrenTitle => 'No Children Linked';
+
+	/// en: 'Link your first child to start tracking their progress.'
+	String get noChildrenHint => 'Link your first child to start tracking their progress.';
+
+	/// en: 'Link a Child'
+	String get linkChild => 'Link a Child';
+
+	/// en: 'Updated ${time}'
+	String updatedAt({required Object time}) => 'Updated ${time}';
+
+	/// en: 'Upcoming Sessions'
+	String get upcomingSessions => 'Upcoming Sessions';
+
+	/// en: 'No upcoming sessions'
+	String get noUpcomingSessions => 'No upcoming sessions';
+
+	/// en: 'Recent Grades'
+	String get recentGrades => 'Recent Grades';
+
+	/// en: 'No grades yet'
+	String get noRecentGrades => 'No grades yet';
+
+	/// en: 'View details'
+	String get viewDetails => 'View details';
+}
+
+// Path: parent.quickActions
+class TranslationsParentQuickActionsEn {
+	TranslationsParentQuickActionsEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Attendance'
+	String get attendance => 'Attendance';
+
+	/// en: 'Courses'
+	String get courses => 'Courses';
+
+	/// en: 'Fees'
+	String get fees => 'Fees';
+
+	/// en: 'Messages'
+	String get messages => 'Messages';
+
+	/// en: 'Grades'
+	String get grades => 'Grades';
+
+	/// en: 'News'
+	String get announcements => 'News';
+
+	/// en: 'Schedule'
+	String get schedule => 'Schedule';
+
+	/// en: 'Support'
+	String get support => 'Support';
+}
+
+// Path: parent.onboarding
+class TranslationsParentOnboardingEn {
+	TranslationsParentOnboardingEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'PARENT PORTAL'
+	String get parentPortalTag => 'PARENT PORTAL';
+
+	/// en: 'Monitor Progress'
+	String get slide1Title => 'Monitor Progress';
+
+	/// en: 'Keep track of your child's grades, attendance, and academic achievements in real-time.'
+	String get slide1Description => 'Keep track of your child\'s grades, attendance, and academic achievements in real-time.';
+
+	/// en: 'Stay Connected'
+	String get slide2Title => 'Stay Connected';
+
+	/// en: 'Direct communication with teachers and school administration for a better learning experience.'
+	String get slide2Description => 'Direct communication with teachers and school administration for a better learning experience.';
+
+	/// en: 'Secure Payments'
+	String get slide3Title => 'Secure Payments';
+
+	/// en: 'Manage school fees and your child's wallet balance safely and conveniently.'
+	String get slide3Description => 'Manage school fees and your child\'s wallet balance safely and conveniently.';
+
+	/// en: 'Skip'
+	String get skip => 'Skip';
+
+	/// en: 'Get Started'
+	String get getStarted => 'Get Started';
+}
+
+// Path: parent.auth
+class TranslationsParentAuthEn {
+	TranslationsParentAuthEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Verify Your Number'
+	String get otpTitle => 'Verify Your Number';
+
+	/// en: 'Enter the 6-digit code sent to ${phone}'
+	String otpSubtitle({required Object phone}) => 'Enter the 6-digit code sent to\n${phone}';
+
+	/// en: 'Verification Code'
+	String get otpFieldLabel => 'Verification Code';
+
+	/// en: '000000'
+	String get otpFieldHint => '000000';
+
+	/// en: 'Verify & Continue'
+	String get verifyAndContinue => 'Verify & Continue';
+
+	/// en: 'Resending…'
+	String get resending => 'Resending…';
+
+	/// en: 'Resend Code'
+	String get resendCode => 'Resend Code';
+
+	/// en: 'Resend in ${seconds}s'
+	String resendInSeconds({required Object seconds}) => 'Resend in ${seconds}s';
+
+	/// en: 'Verification failed'
+	String get verificationFailed => 'Verification failed';
+
+	/// en: 'MentorX Parent'
+	String get appName => 'MentorX Parent';
+
+	/// en: 'Monitor your child's academic journey with confidence'
+	String get loginTagline => 'Monitor your child\'s academic journey with confidence';
+
+	/// en: 'Phone Number'
+	String get phoneNumberLabel => 'Phone Number';
+
+	/// en: 'Enter your phone number'
+	String get phoneNumberHint => 'Enter your phone number';
+
+	/// en: 'Please enter your phone number'
+	String get phoneRequired => 'Please enter your phone number';
+
+	/// en: 'Password'
+	String get passwordLabel => 'Password';
+
+	/// en: 'Please enter your password'
+	String get passwordRequired => 'Please enter your password';
+
+	/// en: 'Forgot Password?'
+	String get forgotPassword => 'Forgot Password?';
+
+	/// en: 'Sign In to Dashboard'
+	String get signInToDashboard => 'Sign In to Dashboard';
+
+	/// en: 'New to MentorX?'
+	String get newToMentorX => 'New to MentorX?';
+
+	/// en: 'Create Account'
+	String get createAccount => 'Create Account';
+
+	/// en: 'Login failed. Please try again.'
+	String get loginFailed => 'Login failed. Please try again.';
+
+	/// en: 'Password Recovery'
+	String get passwordRecoveryHeading => 'Password Recovery';
+
+	/// en: 'Forgot Password?'
+	String get forgotPasswordTitle => 'Forgot Password?';
+
+	/// en: 'Don't worry! Enter your registered phone number and we'll send you a verification code to reset your account safely.'
+	String get forgotPasswordSubtitle => 'Don\'t worry! Enter your registered phone number and we\'ll send you a verification code to reset your account safely.';
+
+	/// en: 'Send Verification Code'
+	String get sendVerificationCode => 'Send Verification Code';
+
+	/// en: 'Back to Login'
+	String get backToLogin => 'Back to Login';
+
+	/// en: 'Failed to send code'
+	String get sendCodeFailed => 'Failed to send code';
+
+	/// en: 'Reset Your Password'
+	String get resetPasswordTitle => 'Reset Your Password';
+
+	/// en: 'Enter the 6-digit code sent to ${phone}'
+	String resetPasswordSubtitle({required Object phone}) => 'Enter the 6-digit code sent to\n${phone}';
+
+	/// en: 'OTP Code'
+	String get otpCodeLabel => 'OTP Code';
+
+	/// en: 'New Password'
+	String get newPasswordLabel => 'New Password';
+
+	/// en: 'Confirm New Password'
+	String get confirmPasswordLabel => 'Confirm New Password';
+
+	/// en: '••••••••'
+	String get passwordPlaceholder => '••••••••';
+
+	/// en: 'Update Password Now'
+	String get updatePasswordNow => 'Update Password Now';
+
+	/// en: 'Please check your inputs and try again'
+	String get validationCheckInputs => 'Please check your inputs and try again';
+
+	/// en: 'Password reset successfully'
+	String get passwordResetSuccess => 'Password reset successfully';
+
+	/// en: 'Link Your Child'
+	String get regStep1Title => 'Link Your Child';
+
+	/// en: 'Personal Info'
+	String get regStep2Title => 'Personal Info';
+
+	/// en: 'Security'
+	String get regStep3Title => 'Security';
+
+	/// en: 'Register'
+	String get regDefaultTitle => 'Register';
+
+	/// en: 'Find Student'
+	String get regFindStudent => 'Find Student';
+
+	/// en: 'Confirm Child'
+	String get regConfirmChild => 'Confirm Child';
+
+	/// en: 'Continue'
+	String get regContinue => 'Continue';
+
+	/// en: 'Create Account'
+	String get regCreateAccount => 'Create Account';
+
+	/// en: 'Please wait…'
+	String get regPleaseWait => 'Please wait…';
+
+	/// en: 'Already have an account? Login'
+	String get regAlreadyHaveAccount => 'Already have an account? Login';
+
+	/// en: 'Phone'
+	String get regLookupPhoneTab => 'Phone';
+
+	/// en: 'Student Code'
+	String get regLookupCodeTab => 'Student Code';
+
+	/// en: 'Child Phone'
+	String get regChildPhoneLabel => 'Child Phone';
+
+	/// en: 'Enter registered phone'
+	String get regChildPhoneHint => 'Enter registered phone';
+
+	/// en: 'Student Code'
+	String get regStudentCodeLabel => 'Student Code';
+
+	/// en: 'Enter unique code'
+	String get regStudentCodeHint => 'Enter unique code';
+
+	/// en: 'First Name'
+	String get regFirstNameLabel => 'First Name';
+
+	/// en: 'e.g. John'
+	String get regFirstNameHint => 'e.g. John';
+
+	/// en: 'Last Name'
+	String get regLastNameLabel => 'Last Name';
+
+	/// en: 'e.g. Doe'
+	String get regLastNameHint => 'e.g. Doe';
+
+	/// en: 'Your phone number'
+	String get regYourPhoneHint => 'Your phone number';
+
+	/// en: 'Email'
+	String get regEmailLabel => 'Email';
+
+	/// en: 'Optional email'
+	String get regEmailHint => 'Optional email';
+
+	/// en: 'Set a secure password to protect your account access.'
+	String get regSecurityHint => 'Set a secure password to protect your account access.';
+
+	/// en: 'Relationship to Child'
+	String get regRelationshipLabel => 'Relationship to Child';
+
+	/// en: 'Child confirmed successfully'
+	String get regChildConfirmed => 'Child confirmed successfully';
+
+	/// en: 'Confirm if this is your child'
+	String get regConfirmIsYourChild => 'Confirm if this is your child';
+
+	/// en: 'Please enter a child phone number or student code.'
+	String get regErrorLookupEmpty => 'Please enter a child phone number or student code.';
+
+	/// en: 'No student found with this identifier.'
+	String get regErrorStudentNotFound => 'No student found with this identifier.';
+
+	/// en: 'Failed to find student. Please try again.'
+	String get regErrorFindFailed => 'Failed to find student. Please try again.';
+
+	/// en: 'Please find your child first.'
+	String get regErrorFindChildFirst => 'Please find your child first.';
+
+	/// en: 'Please confirm that this is your child.'
+	String get regErrorConfirmChild => 'Please confirm that this is your child.';
+
+	/// en: 'First name must be at least 2 characters.'
+	String get regErrorFirstNameShort => 'First name must be at least 2 characters.';
+
+	/// en: 'Last name must be at least 2 characters.'
+	String get regErrorLastNameShort => 'Last name must be at least 2 characters.';
+
+	/// en: 'Please enter a valid Egyptian phone number.'
+	String get regErrorInvalidPhone => 'Please enter a valid Egyptian phone number.';
+
+	/// en: 'Please enter a valid email address.'
+	String get regErrorInvalidEmail => 'Please enter a valid email address.';
+
+	/// en: 'Please select relationship with the child.'
+	String get regErrorRelationshipRequired => 'Please select relationship with the child.';
+
+	/// en: 'Password must be at least 6 characters.'
+	String get regErrorPasswordWeak => 'Password must be at least 6 characters.';
+
+	/// en: 'Passwords do not match.'
+	String get regErrorPasswordMismatch => 'Passwords do not match.';
+
+	/// en: 'Registration failed. Please try again.'
+	String get regErrorRegistrationFailed => 'Registration failed. Please try again.';
+
+	/// en: 'An account with this phone number already exists.'
+	String get regErrorPhoneAlreadyExists => 'An account with this phone number already exists.';
+}
+
+// Path: parent.profile
+class TranslationsParentProfileEn {
+	TranslationsParentProfileEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Verified Account'
+	String get verifiedAccount => 'Verified Account';
+
+	/// en: 'Full Name'
+	String get fullNameLabel => 'Full Name';
+
+	/// en: 'Phone Number'
+	String get phoneNumberLabel => 'Phone Number';
+
+	/// en: 'Email Address'
+	String get emailLabel => 'Email Address';
+
+	/// en: 'Enabled'
+	String get notificationsEnabled => 'Enabled';
+
+	/// en: 'Disabled'
+	String get notificationsDisabled => 'Disabled';
+
+	/// en: 'Password & Biometrics'
+	String get securityValue => 'Password & Biometrics';
+
+	/// en: 'Sign Out?'
+	String get signOutConfirmTitle => 'Sign Out?';
+
+	/// en: 'You will be signed out and returned to the login screen.'
+	String get signOutConfirmMessage => 'You will be signed out and returned to the login screen.';
+
+	/// en: 'Sign Out'
+	String get signOutAction => 'Sign Out';
+
+	/// en: 'Cancel'
+	String get signOutCancel => 'Cancel';
+
+	/// en: 'Parent User'
+	String get fallbackName => 'Parent User';
+
+	/// en: 'Settings'
+	String get settingsTitle => 'Settings';
+
+	/// en: 'App Configuration'
+	String get appConfigurationSection => 'App Configuration';
+
+	/// en: 'Preferences'
+	String get preferencesSection => 'Preferences';
+
+	/// en: 'Support'
+	String get supportSection => 'Support';
+
+	/// en: 'Push Notifications'
+	String get pushNotifications => 'Push Notifications';
+
+	/// en: 'Theme Mode'
+	String get themeMode => 'Theme Mode';
+
+	/// en: 'System'
+	String get themeSystem => 'System';
+
+	/// en: 'Light'
+	String get themeLight => 'Light';
+
+	/// en: 'Dark'
+	String get themeDark => 'Dark';
+
+	/// en: 'App Language'
+	String get appLanguage => 'App Language';
+
+	/// en: 'English'
+	String get languageEnglish => 'English';
+
+	/// en: 'العربية'
+	String get languageArabic => 'العربية';
+
+	/// en: 'Help Center'
+	String get helpCenter => 'Help Center';
+
+	/// en: 'FAQs & Support'
+	String get helpCenterValue => 'FAQs & Support';
+
+	/// en: 'About MentorX'
+	String get aboutTitle => 'About MentorX';
+
+	/// en: 'Version ${version}'
+	String aboutVersion({required Object version}) => 'Version ${version}';
+}
+
+// Path: parent.communication
+class TranslationsParentCommunicationEn {
+	TranslationsParentCommunicationEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Notifications'
+	String get notificationsTitle => 'Notifications';
+
+	/// en: 'Announcements'
+	String get announcementsTitle => 'Announcements';
+
+	/// en: 'WhatsApp Groups'
+	String get whatsAppTitle => 'WhatsApp Groups';
+
+	/// en: 'No Notifications'
+	String get noNotificationsTitle => 'No Notifications';
+
+	/// en: 'You're all caught up — new updates will appear here.'
+	String get noNotificationsHint => 'You\'re all caught up — new updates will appear here.';
+
+	/// en: 'No Announcements'
+	String get noAnnouncementsTitle => 'No Announcements';
+
+	/// en: 'Stay tuned! School announcements will appear here.'
+	String get noAnnouncementsHint => 'Stay tuned! School announcements will appear here.';
+
+	/// en: 'No Groups'
+	String get noGroupsTitle => 'No Groups';
+
+	/// en: 'No WhatsApp groups are available for this child yet.'
+	String get noGroupsHint => 'No WhatsApp groups are available for this child yet.';
+
+	/// en: 'Read More'
+	String get readMore => 'Read More';
+
+	/// en: 'Join'
+	String get joinGroup => 'Join';
+
+	/// en: 'Tap to join for the latest updates'
+	String get groupSubtitle => 'Tap to join for the latest updates';
+}
+
+// Path: parent.academic
+class TranslationsParentAcademicEn {
+	TranslationsParentAcademicEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Academic Monitor'
+	String get pageTitle => 'Academic Monitor';
+
+	/// en: 'Overall Average'
+	String get overallAverageHeading => 'Overall Average';
+
+	/// en: 'Average'
+	String get averageLabel => 'Average';
+
+	/// en: 'Graded'
+	String get gradedLabel => 'Graded';
+
+	/// en: 'Pending'
+	String get pendingLabel => 'Pending';
+
+	/// en: 'No Courses'
+	String get noCoursesTitle => 'No Courses';
+
+	/// en: 'Academic data will appear here once available.'
+	String get noCoursesHint => 'Academic data will appear here once available.';
+
+	/// en: '${count} sessions'
+	String sessionsCount({required Object count}) => '${count} sessions';
+
+	/// en: '${completed} / ${total} sessions'
+	String completedSessionsLabel({required Object completed, required Object total}) => '${completed} / ${total} sessions';
+
+	/// en: 'Course Progress'
+	String get courseDetailsTitle => 'Course Progress';
+}
+
+// Path: parent.financial
+class TranslationsParentFinancialEn {
+	TranslationsParentFinancialEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Balance'
+	String get balance => 'Balance';
+
+	/// en: 'Spent'
+	String get spent => 'Spent';
+
+	/// en: 'Points'
+	String get points => 'Points';
+
+	/// en: 'No Data'
+	String get noDataTitle => 'No Data';
+
+	/// en: 'Financial data will appear here once available.'
+	String get noDataHint => 'Financial data will appear here once available.';
+
+	/// en: 'No Transactions'
+	String get noTransactionsTitle => 'No Transactions';
+
+	/// en: 'No transaction history found for this child.'
+	String get noTransactionsHint => 'No transaction history found for this child.';
+
+	/// en: 'Credit'
+	String get credit => 'Credit';
+
+	/// en: 'Debit'
+	String get debit => 'Debit';
+
+	/// en: 'Top Up'
+	String get deposit => 'Top Up';
+
+	/// en: 'Withdrawal'
+	String get withdrawal => 'Withdrawal';
+
+	/// en: 'Payment'
+	String get payment => 'Payment';
+
+	/// en: 'Refund'
+	String get refund => 'Refund';
+
+	/// en: 'Reward'
+	String get reward => 'Reward';
+
+	/// en: 'Pending'
+	String get statusPending => 'Pending';
+
+	/// en: 'Success'
+	String get statusSuccess => 'Success';
+
+	/// en: 'Failed'
+	String get statusFailed => 'Failed';
+}
+
+// Path: parent.attendanceTracking
+class TranslationsParentAttendanceTrackingEn {
+	TranslationsParentAttendanceTrackingEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Attendance Monitor'
+	String get pageTitle => 'Attendance Monitor';
+
+	/// en: 'Attendance Log'
+	String get attendanceLog => 'Attendance Log';
+
+	/// en: 'Present'
+	String get present => 'Present';
+
+	/// en: 'Absent'
+	String get absent => 'Absent';
+
+	/// en: 'Late'
+	String get late => 'Late';
+
+	/// en: 'Excused'
+	String get excused => 'Excused';
+
+	/// en: 'No Records'
+	String get noRecordsTitle => 'No Records';
+
+	/// en: 'No attendance records found for this student.'
+	String get noRecordsHint => 'No attendance records found for this student.';
+
+	/// en: 'Regular Session'
+	String get regularSession => 'Regular Session';
+
+	/// en: 'General Academic'
+	String get generalAcademic => 'General Academic';
+
+	/// en: 'Online'
+	String get onlineSession => 'Online';
+
+	/// en: 'Checked in at ${time}'
+	String checkInTimeLabel({required Object time}) => 'Checked in at ${time}';
+}
+
+// Path: parent.assessments
+class TranslationsParentAssessmentsEn {
+	TranslationsParentAssessmentsEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Academic Performance'
+	String get pageTitle => 'Academic Performance';
+
+	/// en: 'Overall Performance'
+	String get overallPerformance => 'Overall Performance';
+
+	/// en: 'Average'
+	String get average => 'Average';
+
+	/// en: 'Graded'
+	String get graded => 'Graded';
+
+	/// en: 'Pending'
+	String get pending => 'Pending';
+
+	/// en: 'Passed'
+	String get passed => 'Passed';
+
+	/// en: 'Failed'
+	String get failed => 'Failed';
+
+	/// en: 'Assessment History'
+	String get assessmentHistory => 'Assessment History';
+
+	/// en: 'No Assessments'
+	String get noAssessmentsTitle => 'No Assessments';
+
+	/// en: 'Academic evaluation data will appear here once submitted.'
+	String get noAssessmentsHint => 'Academic evaluation data will appear here once submitted.';
+
+	/// en: 'Passed'
+	String get passLabel => 'Passed';
+
+	/// en: 'Failed'
+	String get failLabel => 'Failed';
+
+	/// en: 'Score: ${score}/${total}'
+	String scoreLabel({required Object score, required Object total}) => 'Score: ${score}/${total}';
+
+	/// en: 'Quiz'
+	String get quizPrefix => 'Quiz';
+
+	/// en: 'Assignment'
+	String get assignmentPrefix => 'Assignment';
+
+	/// en: 'Exam'
+	String get examPrefix => 'Exam';
+
+	/// en: 'Trending up'
+	String get trendUp => 'Trending up';
+
+	/// en: 'Trending down'
+	String get trendDown => 'Trending down';
+
+	/// en: 'Stable'
+	String get trendStable => 'Stable';
+}
+
+// Path: parent.children
+class TranslationsParentChildrenEn {
+	TranslationsParentChildrenEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Linked Children'
+	String get title => 'Linked Children';
+
+	/// en: 'Link New Child'
+	String get linkNewChild => 'Link New Child';
+
+	/// en: 'Link Your Child'
+	String get linkChildTitle => 'Link Your Child';
+
+	/// en: 'Enter your child's admission number or registered phone number to link their account.'
+	String get linkChildHint => 'Enter your child\'s admission number or registered phone number to link their account.';
+
+	/// en: 'Search Child'
+	String get searchLabel => 'Search Child';
+
+	/// en: 'Admission Number / Phone'
+	String get searchHint => 'Admission Number / Phone';
+
+	/// en: 'Confirm & Link Child'
+	String get confirmLink => 'Confirm & Link Child';
+
+	/// en: 'Specify Relationship'
+	String get specifyRelationship => 'Specify Relationship';
+
+	/// en: 'Child linked successfully'
+	String get linkSuccess => 'Child linked successfully';
+
+	/// en: 'Remove Child?'
+	String get unlinkConfirmTitle => 'Remove Child?';
+
+	/// en: '${name} will be unlinked from your account. You can re-link them at any time.'
+	String unlinkConfirmMessage({required Object name}) => '${name} will be unlinked from your account. You can re-link them at any time.';
+
+	/// en: 'Unlink'
+	String get unlink => 'Unlink';
+
+	/// en: 'Child unlinked'
+	String get unlinkSuccess => 'Child unlinked';
+
+	/// en: 'Student ID: ${id}'
+	String studentIdLabel({required Object id}) => 'Student ID: ${id}';
+
+	/// en: 'Code: ${code}'
+	String studentCodeLabel({required Object code}) => 'Code: ${code}';
+
+	/// en: 'Grade: ${grade}'
+	String gradeLabel({required Object grade}) => 'Grade: ${grade}';
+
+	/// en: 'Center: ${center}'
+	String centerLabel({required Object center}) => 'Center: ${center}';
+
+	/// en: 'Cancel'
+	String get cancel => 'Cancel';
+
+	late final TranslationsParentChildrenRelationshipEn relationship = TranslationsParentChildrenRelationshipEn._(_root);
+
+	/// en: 'This child is already linked to your account.'
+	String get errorAlreadyLinked => 'This child is already linked to your account.';
+
+	/// en: 'No student matched that admission number or phone.'
+	String get errorStudentNotFound => 'No student matched that admission number or phone.';
+
+	/// en: 'Network problem. Please check your connection and try again.'
+	String get errorNetwork => 'Network problem. Please check your connection and try again.';
+
+	/// en: 'Something went wrong. Please try again.'
+	String get errorGeneric => 'Something went wrong. Please try again.';
+
+	/// en: 'Type the admission number or phone number first.'
+	String get lookupEmpty => 'Type the admission number or phone number first.';
+}
+
+// Path: parent.app
+class TranslationsParentAppEn {
+	TranslationsParentAppEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'MentorX Parent'
+	String get title => 'MentorX Parent';
+}
+
 // Path: onboarding.steps.learn
 class TranslationsOnboardingStepsLearnEn {
 	TranslationsOnboardingStepsLearnEn._(this._root);
@@ -2369,6 +2964,27 @@ class TranslationsHomeDashboardActionsEn {
 
 	/// en: 'Performance Analytics'
 	String get analytics => 'Performance Analytics';
+}
+
+// Path: parent.children.relationship
+class TranslationsParentChildrenRelationshipEn {
+	TranslationsParentChildrenRelationshipEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Father'
+	String get father => 'Father';
+
+	/// en: 'Mother'
+	String get mother => 'Mother';
+
+	/// en: 'Guardian'
+	String get guardian => 'Guardian';
+
+	/// en: 'Other'
+	String get other => 'Other';
 }
 
 /// The flat map containing all translations for locale <en>.
@@ -3309,6 +3925,289 @@ extension on Translations {
 			'parent.spentThisMonth' => 'Spent This Month',
 			'parent.transactionHistory' => 'Transaction History',
 			'parent.pointsEarned' => 'Points Earned',
+			'parent.splash.appName' => 'MENTORX',
+			'parent.splash.tagline' => 'PARENT PORTAL',
+			'parent.courseDetail.pageTitle' => 'Course Progress',
+			'parent.courseDetail.courseBreakdown' => 'Course Breakdown',
+			'parent.courseDetail.courseId' => 'Course ID',
+			'parent.courseDetail.fullTitle' => 'Full Title',
+			'parent.courseDetail.status' => 'Status',
+			'parent.courseDetail.statusActive' => 'Active',
+			'parent.courseDetail.sessions' => 'Sessions',
+			'parent.courseDetail.progress' => 'Progress',
+			'parent.courseDetail.id' => 'ID',
+			'parent.gradeDetail.pageTitle' => 'Grade Details',
+			'parent.gradeDetail.quizDetail' => 'Quiz Detail',
+			'parent.gradeDetail.quizScore' => 'Quiz Score',
+			'parent.gradeDetail.assessmentInfo' => 'Assessment Info',
+			'parent.gradeDetail.score' => 'Score',
+			'parent.gradeDetail.percentage' => 'Percentage',
+			'parent.gradeDetail.result' => 'Result',
+			'parent.gradeDetail.pass' => 'Pass',
+			'parent.gradeDetail.fail' => 'Fail',
+			'parent.gradeDetail.questionBreakdown' => 'Question Breakdown',
+			'parent.gradeDetail.questionLabel' => ({required Object number}) => 'Question ${number}',
+			'parent.gradeDetail.correctAnswer' => 'Correct Answer',
+			'parent.gradeDetail.incorrectAnswer' => 'Incorrect Answer',
+			'parent.gradeDetail.additionalDetails' => 'Additional Details',
+			'parent.gradeDetail.quizId' => 'Quiz ID',
+			'parent.gradeDetail.submittedAt' => 'Submitted At',
+			'parent.gradeDetail.passCriteria' => 'Pass Criteria',
+			'parent.gradeDetail.notFound' => 'Quiz attempt not found.',
+			'parent.notificationCenter.title' => 'Notifications',
+			'parent.notificationCenter.markAllRead' => 'Mark all read',
+			'parent.notificationCenter.markRead' => 'Mark as read',
+			'parent.notificationCenter.unread' => 'Unread',
+			'parent.notificationCenter.read' => 'Read',
+			'parent.notificationCenter.detailsTitle' => 'Notification Details',
+			'parent.notificationCenter.receivedAt' => 'Received at',
+			'parent.notificationCenter.student' => 'Student',
+			'parent.notificationCenter.openLink' => 'Open link',
+			'parent.notificationCenter.noNotificationsTitle' => 'No Notifications',
+			'parent.notificationCenter.noNotificationsHint' => 'You\'re all caught up. New updates will appear here.',
+			'parent.notificationCenter.loadFailed' => 'Unable to load notifications',
+			'parent.notificationCenter.markReadSuccess' => 'Notification marked as read',
+			'parent.notificationCenter.markAllReadSuccess' => 'All notifications marked as read',
+			'parent.notificationCenter.unreadCountFailed' => 'Unable to load unread notifications count',
+			'parent.home.parentAccount' => 'Parent Account',
+			'parent.home.addChild' => 'Add Child',
+			'parent.home.academicStanding' => 'Academic Standing',
+			'parent.home.avgGrade' => 'Avg Grade',
+			'parent.home.attendance' => 'Attendance',
+			'parent.home.unpaidFees' => 'Unpaid Fees',
+			'parent.home.noRecentActivity' => 'No Recent Activity',
+			'parent.home.noRecentActivityHint' => 'Activities will appear here once your child starts their learning journey.',
+			'parent.home.noChildrenTitle' => 'No Children Linked',
+			'parent.home.noChildrenHint' => 'Link your first child to start tracking their progress.',
+			'parent.home.linkChild' => 'Link a Child',
+			'parent.home.updatedAt' => ({required Object time}) => 'Updated ${time}',
+			'parent.home.upcomingSessions' => 'Upcoming Sessions',
+			'parent.home.noUpcomingSessions' => 'No upcoming sessions',
+			'parent.home.recentGrades' => 'Recent Grades',
+			'parent.home.noRecentGrades' => 'No grades yet',
+			'parent.home.viewDetails' => 'View details',
+			'parent.quickActions.attendance' => 'Attendance',
+			'parent.quickActions.courses' => 'Courses',
+			'parent.quickActions.fees' => 'Fees',
+			'parent.quickActions.messages' => 'Messages',
+			'parent.quickActions.grades' => 'Grades',
+			'parent.quickActions.announcements' => 'News',
+			'parent.quickActions.schedule' => 'Schedule',
+			'parent.quickActions.support' => 'Support',
+			'parent.onboarding.parentPortalTag' => 'PARENT PORTAL',
+			'parent.onboarding.slide1Title' => 'Monitor Progress',
+			'parent.onboarding.slide1Description' => 'Keep track of your child\'s grades, attendance, and academic achievements in real-time.',
+			'parent.onboarding.slide2Title' => 'Stay Connected',
+			'parent.onboarding.slide2Description' => 'Direct communication with teachers and school administration for a better learning experience.',
+			'parent.onboarding.slide3Title' => 'Secure Payments',
+			'parent.onboarding.slide3Description' => 'Manage school fees and your child\'s wallet balance safely and conveniently.',
+			'parent.onboarding.skip' => 'Skip',
+			'parent.onboarding.getStarted' => 'Get Started',
+			'parent.auth.otpTitle' => 'Verify Your Number',
+			'parent.auth.otpSubtitle' => ({required Object phone}) => 'Enter the 6-digit code sent to\n${phone}',
+			'parent.auth.otpFieldLabel' => 'Verification Code',
+			'parent.auth.otpFieldHint' => '000000',
+			'parent.auth.verifyAndContinue' => 'Verify & Continue',
+			'parent.auth.resending' => 'Resending…',
+			'parent.auth.resendCode' => 'Resend Code',
+			'parent.auth.resendInSeconds' => ({required Object seconds}) => 'Resend in ${seconds}s',
+			'parent.auth.verificationFailed' => 'Verification failed',
+			'parent.auth.appName' => 'MentorX Parent',
+			'parent.auth.loginTagline' => 'Monitor your child\'s academic journey with confidence',
+			'parent.auth.phoneNumberLabel' => 'Phone Number',
+			'parent.auth.phoneNumberHint' => 'Enter your phone number',
+			'parent.auth.phoneRequired' => 'Please enter your phone number',
+			'parent.auth.passwordLabel' => 'Password',
+			'parent.auth.passwordRequired' => 'Please enter your password',
+			'parent.auth.forgotPassword' => 'Forgot Password?',
+			'parent.auth.signInToDashboard' => 'Sign In to Dashboard',
+			_ => null,
+		} ?? switch (path) {
+			'parent.auth.newToMentorX' => 'New to MentorX?',
+			'parent.auth.createAccount' => 'Create Account',
+			'parent.auth.loginFailed' => 'Login failed. Please try again.',
+			'parent.auth.passwordRecoveryHeading' => 'Password Recovery',
+			'parent.auth.forgotPasswordTitle' => 'Forgot Password?',
+			'parent.auth.forgotPasswordSubtitle' => 'Don\'t worry! Enter your registered phone number and we\'ll send you a verification code to reset your account safely.',
+			'parent.auth.sendVerificationCode' => 'Send Verification Code',
+			'parent.auth.backToLogin' => 'Back to Login',
+			'parent.auth.sendCodeFailed' => 'Failed to send code',
+			'parent.auth.resetPasswordTitle' => 'Reset Your Password',
+			'parent.auth.resetPasswordSubtitle' => ({required Object phone}) => 'Enter the 6-digit code sent to\n${phone}',
+			'parent.auth.otpCodeLabel' => 'OTP Code',
+			'parent.auth.newPasswordLabel' => 'New Password',
+			'parent.auth.confirmPasswordLabel' => 'Confirm New Password',
+			'parent.auth.passwordPlaceholder' => '••••••••',
+			'parent.auth.updatePasswordNow' => 'Update Password Now',
+			'parent.auth.validationCheckInputs' => 'Please check your inputs and try again',
+			'parent.auth.passwordResetSuccess' => 'Password reset successfully',
+			'parent.auth.regStep1Title' => 'Link Your Child',
+			'parent.auth.regStep2Title' => 'Personal Info',
+			'parent.auth.regStep3Title' => 'Security',
+			'parent.auth.regDefaultTitle' => 'Register',
+			'parent.auth.regFindStudent' => 'Find Student',
+			'parent.auth.regConfirmChild' => 'Confirm Child',
+			'parent.auth.regContinue' => 'Continue',
+			'parent.auth.regCreateAccount' => 'Create Account',
+			'parent.auth.regPleaseWait' => 'Please wait…',
+			'parent.auth.regAlreadyHaveAccount' => 'Already have an account? Login',
+			'parent.auth.regLookupPhoneTab' => 'Phone',
+			'parent.auth.regLookupCodeTab' => 'Student Code',
+			'parent.auth.regChildPhoneLabel' => 'Child Phone',
+			'parent.auth.regChildPhoneHint' => 'Enter registered phone',
+			'parent.auth.regStudentCodeLabel' => 'Student Code',
+			'parent.auth.regStudentCodeHint' => 'Enter unique code',
+			'parent.auth.regFirstNameLabel' => 'First Name',
+			'parent.auth.regFirstNameHint' => 'e.g. John',
+			'parent.auth.regLastNameLabel' => 'Last Name',
+			'parent.auth.regLastNameHint' => 'e.g. Doe',
+			'parent.auth.regYourPhoneHint' => 'Your phone number',
+			'parent.auth.regEmailLabel' => 'Email',
+			'parent.auth.regEmailHint' => 'Optional email',
+			'parent.auth.regSecurityHint' => 'Set a secure password to protect your account access.',
+			'parent.auth.regRelationshipLabel' => 'Relationship to Child',
+			'parent.auth.regChildConfirmed' => 'Child confirmed successfully',
+			'parent.auth.regConfirmIsYourChild' => 'Confirm if this is your child',
+			'parent.auth.regErrorLookupEmpty' => 'Please enter a child phone number or student code.',
+			'parent.auth.regErrorStudentNotFound' => 'No student found with this identifier.',
+			'parent.auth.regErrorFindFailed' => 'Failed to find student. Please try again.',
+			'parent.auth.regErrorFindChildFirst' => 'Please find your child first.',
+			'parent.auth.regErrorConfirmChild' => 'Please confirm that this is your child.',
+			'parent.auth.regErrorFirstNameShort' => 'First name must be at least 2 characters.',
+			'parent.auth.regErrorLastNameShort' => 'Last name must be at least 2 characters.',
+			'parent.auth.regErrorInvalidPhone' => 'Please enter a valid Egyptian phone number.',
+			'parent.auth.regErrorInvalidEmail' => 'Please enter a valid email address.',
+			'parent.auth.regErrorRelationshipRequired' => 'Please select relationship with the child.',
+			'parent.auth.regErrorPasswordWeak' => 'Password must be at least 6 characters.',
+			'parent.auth.regErrorPasswordMismatch' => 'Passwords do not match.',
+			'parent.auth.regErrorRegistrationFailed' => 'Registration failed. Please try again.',
+			'parent.auth.regErrorPhoneAlreadyExists' => 'An account with this phone number already exists.',
+			'parent.profile.verifiedAccount' => 'Verified Account',
+			'parent.profile.fullNameLabel' => 'Full Name',
+			'parent.profile.phoneNumberLabel' => 'Phone Number',
+			'parent.profile.emailLabel' => 'Email Address',
+			'parent.profile.notificationsEnabled' => 'Enabled',
+			'parent.profile.notificationsDisabled' => 'Disabled',
+			'parent.profile.securityValue' => 'Password & Biometrics',
+			'parent.profile.signOutConfirmTitle' => 'Sign Out?',
+			'parent.profile.signOutConfirmMessage' => 'You will be signed out and returned to the login screen.',
+			'parent.profile.signOutAction' => 'Sign Out',
+			'parent.profile.signOutCancel' => 'Cancel',
+			'parent.profile.fallbackName' => 'Parent User',
+			'parent.profile.settingsTitle' => 'Settings',
+			'parent.profile.appConfigurationSection' => 'App Configuration',
+			'parent.profile.preferencesSection' => 'Preferences',
+			'parent.profile.supportSection' => 'Support',
+			'parent.profile.pushNotifications' => 'Push Notifications',
+			'parent.profile.themeMode' => 'Theme Mode',
+			'parent.profile.themeSystem' => 'System',
+			'parent.profile.themeLight' => 'Light',
+			'parent.profile.themeDark' => 'Dark',
+			'parent.profile.appLanguage' => 'App Language',
+			'parent.profile.languageEnglish' => 'English',
+			'parent.profile.languageArabic' => 'العربية',
+			'parent.profile.helpCenter' => 'Help Center',
+			'parent.profile.helpCenterValue' => 'FAQs & Support',
+			'parent.profile.aboutTitle' => 'About MentorX',
+			'parent.profile.aboutVersion' => ({required Object version}) => 'Version ${version}',
+			'parent.communication.notificationsTitle' => 'Notifications',
+			'parent.communication.announcementsTitle' => 'Announcements',
+			'parent.communication.whatsAppTitle' => 'WhatsApp Groups',
+			'parent.communication.noNotificationsTitle' => 'No Notifications',
+			'parent.communication.noNotificationsHint' => 'You\'re all caught up — new updates will appear here.',
+			'parent.communication.noAnnouncementsTitle' => 'No Announcements',
+			'parent.communication.noAnnouncementsHint' => 'Stay tuned! School announcements will appear here.',
+			'parent.communication.noGroupsTitle' => 'No Groups',
+			'parent.communication.noGroupsHint' => 'No WhatsApp groups are available for this child yet.',
+			'parent.communication.readMore' => 'Read More',
+			'parent.communication.joinGroup' => 'Join',
+			'parent.communication.groupSubtitle' => 'Tap to join for the latest updates',
+			'parent.academic.pageTitle' => 'Academic Monitor',
+			'parent.academic.overallAverageHeading' => 'Overall Average',
+			'parent.academic.averageLabel' => 'Average',
+			'parent.academic.gradedLabel' => 'Graded',
+			'parent.academic.pendingLabel' => 'Pending',
+			'parent.academic.noCoursesTitle' => 'No Courses',
+			'parent.academic.noCoursesHint' => 'Academic data will appear here once available.',
+			'parent.academic.sessionsCount' => ({required Object count}) => '${count} sessions',
+			'parent.academic.completedSessionsLabel' => ({required Object completed, required Object total}) => '${completed} / ${total} sessions',
+			'parent.academic.courseDetailsTitle' => 'Course Progress',
+			'parent.financial.balance' => 'Balance',
+			'parent.financial.spent' => 'Spent',
+			'parent.financial.points' => 'Points',
+			'parent.financial.noDataTitle' => 'No Data',
+			'parent.financial.noDataHint' => 'Financial data will appear here once available.',
+			'parent.financial.noTransactionsTitle' => 'No Transactions',
+			'parent.financial.noTransactionsHint' => 'No transaction history found for this child.',
+			'parent.financial.credit' => 'Credit',
+			'parent.financial.debit' => 'Debit',
+			'parent.financial.deposit' => 'Top Up',
+			'parent.financial.withdrawal' => 'Withdrawal',
+			'parent.financial.payment' => 'Payment',
+			'parent.financial.refund' => 'Refund',
+			'parent.financial.reward' => 'Reward',
+			'parent.financial.statusPending' => 'Pending',
+			'parent.financial.statusSuccess' => 'Success',
+			'parent.financial.statusFailed' => 'Failed',
+			'parent.attendanceTracking.pageTitle' => 'Attendance Monitor',
+			'parent.attendanceTracking.attendanceLog' => 'Attendance Log',
+			'parent.attendanceTracking.present' => 'Present',
+			'parent.attendanceTracking.absent' => 'Absent',
+			'parent.attendanceTracking.late' => 'Late',
+			'parent.attendanceTracking.excused' => 'Excused',
+			'parent.attendanceTracking.noRecordsTitle' => 'No Records',
+			'parent.attendanceTracking.noRecordsHint' => 'No attendance records found for this student.',
+			'parent.attendanceTracking.regularSession' => 'Regular Session',
+			'parent.attendanceTracking.generalAcademic' => 'General Academic',
+			'parent.attendanceTracking.onlineSession' => 'Online',
+			'parent.attendanceTracking.checkInTimeLabel' => ({required Object time}) => 'Checked in at ${time}',
+			'parent.assessments.pageTitle' => 'Academic Performance',
+			'parent.assessments.overallPerformance' => 'Overall Performance',
+			'parent.assessments.average' => 'Average',
+			'parent.assessments.graded' => 'Graded',
+			'parent.assessments.pending' => 'Pending',
+			'parent.assessments.passed' => 'Passed',
+			'parent.assessments.failed' => 'Failed',
+			'parent.assessments.assessmentHistory' => 'Assessment History',
+			'parent.assessments.noAssessmentsTitle' => 'No Assessments',
+			'parent.assessments.noAssessmentsHint' => 'Academic evaluation data will appear here once submitted.',
+			'parent.assessments.passLabel' => 'Passed',
+			'parent.assessments.failLabel' => 'Failed',
+			'parent.assessments.scoreLabel' => ({required Object score, required Object total}) => 'Score: ${score}/${total}',
+			'parent.assessments.quizPrefix' => 'Quiz',
+			'parent.assessments.assignmentPrefix' => 'Assignment',
+			'parent.assessments.examPrefix' => 'Exam',
+			'parent.assessments.trendUp' => 'Trending up',
+			'parent.assessments.trendDown' => 'Trending down',
+			'parent.assessments.trendStable' => 'Stable',
+			'parent.children.title' => 'Linked Children',
+			'parent.children.linkNewChild' => 'Link New Child',
+			'parent.children.linkChildTitle' => 'Link Your Child',
+			'parent.children.linkChildHint' => 'Enter your child\'s admission number or registered phone number to link their account.',
+			'parent.children.searchLabel' => 'Search Child',
+			'parent.children.searchHint' => 'Admission Number / Phone',
+			'parent.children.confirmLink' => 'Confirm & Link Child',
+			'parent.children.specifyRelationship' => 'Specify Relationship',
+			'parent.children.linkSuccess' => 'Child linked successfully',
+			'parent.children.unlinkConfirmTitle' => 'Remove Child?',
+			'parent.children.unlinkConfirmMessage' => ({required Object name}) => '${name} will be unlinked from your account. You can re-link them at any time.',
+			'parent.children.unlink' => 'Unlink',
+			'parent.children.unlinkSuccess' => 'Child unlinked',
+			'parent.children.studentIdLabel' => ({required Object id}) => 'Student ID: ${id}',
+			'parent.children.studentCodeLabel' => ({required Object code}) => 'Code: ${code}',
+			'parent.children.gradeLabel' => ({required Object grade}) => 'Grade: ${grade}',
+			'parent.children.centerLabel' => ({required Object center}) => 'Center: ${center}',
+			'parent.children.cancel' => 'Cancel',
+			'parent.children.relationship.father' => 'Father',
+			'parent.children.relationship.mother' => 'Mother',
+			'parent.children.relationship.guardian' => 'Guardian',
+			'parent.children.relationship.other' => 'Other',
+			'parent.children.errorAlreadyLinked' => 'This child is already linked to your account.',
+			'parent.children.errorStudentNotFound' => 'No student matched that admission number or phone.',
+			'parent.children.errorNetwork' => 'Network problem. Please check your connection and try again.',
+			'parent.children.errorGeneric' => 'Something went wrong. Please try again.',
+			'parent.children.lookupEmpty' => 'Type the admission number or phone number first.',
+			'parent.app.title' => 'MentorX Parent',
 			'assignments.listTitle' => 'Assignments',
 			'assignments.dueAt' => ({required Object date}) => 'Due: ${date}',
 			'assignments.noDeadline' => 'No deadline',

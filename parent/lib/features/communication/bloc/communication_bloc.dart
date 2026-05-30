@@ -20,13 +20,16 @@ final class CommunicationFailurePresentationEvent
 /// individual pages can avoid blocking on unrelated data.
 final class CommunicationBloc
     extends Bloc<CommunicationEvent, CommunicationState>
-    with BlocPresentationMixin<CommunicationState,
-        CommunicationPresentationEvent> {
+    with
+        BlocPresentationMixin<
+          CommunicationState,
+          CommunicationPresentationEvent
+        > {
   final ParentCommunicationRepository _repository;
 
   CommunicationBloc({required ParentCommunicationRepository repository})
-      : _repository = repository,
-        super(CommunicationState.initial()) {
+    : _repository = repository,
+      super(CommunicationState.initial()) {
     on<CommunicationStarted>(_onStarted);
     on<CommunicationRefreshRequested>(_onRefreshRequested);
     on<CommunicationRetrySectionRequested>(_onRetrySection);
@@ -63,14 +66,18 @@ final class CommunicationBloc
 
     switch (event.section) {
       case CommunicationSection.announcements:
-        emit(state.copyWith(
-          announcementsSection: state.announcementsSection.toLoading(),
-        ));
+        emit(
+          state.copyWith(
+            announcementsSection: state.announcementsSection.toLoading(),
+          ),
+        );
         await _loadAnnouncements(emit, childId);
       case CommunicationSection.whatsAppGroups:
-        emit(state.copyWith(
-          whatsAppGroupsSection: state.whatsAppGroupsSection.toLoading(),
-        ));
+        emit(
+          state.copyWith(
+            whatsAppGroupsSection: state.whatsAppGroupsSection.toLoading(),
+          ),
+        );
         await _loadWhatsAppGroups(emit, childId);
     }
   }
@@ -79,10 +86,12 @@ final class CommunicationBloc
     Emitter<CommunicationState> emit,
     String childId,
   ) async {
-    emit(state.copyWith(
-      announcementsSection: state.announcementsSection.toLoading(),
-      whatsAppGroupsSection: state.whatsAppGroupsSection.toLoading(),
-    ));
+    emit(
+      state.copyWith(
+        announcementsSection: state.announcementsSection.toLoading(),
+        whatsAppGroupsSection: state.whatsAppGroupsSection.toLoading(),
+      ),
+    );
 
     await Future.wait([
       _loadAnnouncements(emit, childId),
@@ -96,14 +105,17 @@ final class CommunicationBloc
   ) async {
     try {
       final list = await _repository.getAnnouncements(childId);
-      emit(state.copyWith(
-        announcementsSection: CommunicationAsyncSection.loaded(list),
-      ));
+      emit(
+        state.copyWith(
+          announcementsSection: CommunicationAsyncSection.loaded(list),
+        ),
+      );
     } catch (e) {
-      emit(state.copyWith(
-        announcementsSection:
-            CommunicationAsyncSection.failure(e.toString()),
-      ));
+      emit(
+        state.copyWith(
+          announcementsSection: CommunicationAsyncSection.failure(e.toString()),
+        ),
+      );
       emitPresentation(
         CommunicationFailurePresentationEvent(message: e.toString()),
       );
@@ -116,14 +128,19 @@ final class CommunicationBloc
   ) async {
     try {
       final list = await _repository.getWhatsAppGroups(childId);
-      emit(state.copyWith(
-        whatsAppGroupsSection: CommunicationAsyncSection.loaded(list),
-      ));
+      emit(
+        state.copyWith(
+          whatsAppGroupsSection: CommunicationAsyncSection.loaded(list),
+        ),
+      );
     } catch (e) {
-      emit(state.copyWith(
-        whatsAppGroupsSection:
-            CommunicationAsyncSection.failure(e.toString()),
-      ));
+      emit(
+        state.copyWith(
+          whatsAppGroupsSection: CommunicationAsyncSection.failure(
+            e.toString(),
+          ),
+        ),
+      );
       emitPresentation(
         CommunicationFailurePresentationEvent(message: e.toString()),
       );

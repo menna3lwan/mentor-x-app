@@ -53,24 +53,24 @@ class ParentActivityFeedWidget extends StatelessWidget {
       case 'attendance':
         return (
           icon: Icons.calendar_today_rounded,
-          color: context.brandPrimaryColor
+          color: context.brandPrimaryColor,
         );
       case 'grade':
         return (icon: Icons.grade_rounded, color: context.statusSuccessColor);
       case 'payment':
         return (
           icon: Icons.account_balance_wallet_rounded,
-          color: context.brandSecondaryColor
+          color: context.brandSecondaryColor,
         );
       case 'announcement':
         return (
           icon: Icons.campaign_rounded,
-          color: context.statusWarningColor
+          color: context.statusWarningColor,
         );
       default:
         return (
           icon: Icons.notifications_rounded,
-          color: context.textTertiaryColor
+          color: context.textTertiaryColor,
         );
     }
   }

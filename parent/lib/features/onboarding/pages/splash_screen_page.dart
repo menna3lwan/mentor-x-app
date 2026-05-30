@@ -42,7 +42,7 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
           gradient: LinearGradient(
             colors: [
               context.brandPrimaryColor,
-              context.brandPrimaryColor.withValues(alpha: 0.8)
+              context.brandPrimaryColor.withValues(alpha: 0.8),
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -58,7 +58,11 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
                 shape: BoxShape.circle,
                 border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
               ),
-              child: const Icon(Icons.family_restroom_rounded, size: 80, color: Colors.white),
+              child: const Icon(
+                Icons.family_restroom_rounded,
+                size: 80,
+                color: Colors.white,
+              ),
             ),
             const SizedBox(height: 32),
             Text(

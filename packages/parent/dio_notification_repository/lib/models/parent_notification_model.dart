@@ -24,7 +24,8 @@ final class ParentNotificationModel extends NotificationEntity {
         json['message'] ?? json['body'] ?? json['content'],
       ),
       type: _parseType(json['type'] ?? json['category']),
-      createdAt: ModelParser.asDateTime(
+      createdAt:
+          ModelParser.asDateTime(
             json['created_at'] ?? json['createdAt'] ?? json['date'],
           ) ??
           DateTime.fromMillisecondsSinceEpoch(0),

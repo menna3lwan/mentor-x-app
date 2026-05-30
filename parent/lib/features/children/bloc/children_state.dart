@@ -16,27 +16,28 @@ final class ChildrenAsyncSection<T> extends Equatable {
   });
 
   const ChildrenAsyncSection.initial()
-      : this._(status: ChildrenSectionStatus.initial);
+    : this._(status: ChildrenSectionStatus.initial);
 
   const ChildrenAsyncSection.loading({T? data})
-      : this._(status: ChildrenSectionStatus.loading, data: data);
+    : this._(status: ChildrenSectionStatus.loading, data: data);
 
   const ChildrenAsyncSection.loaded(T data)
-      : this._(status: ChildrenSectionStatus.loaded, data: data);
+    : this._(status: ChildrenSectionStatus.loaded, data: data);
 
   const ChildrenAsyncSection.failure(String message, {T? data})
-      : this._(
-          status: ChildrenSectionStatus.failure,
-          data: data,
-          errorMessage: message,
-        );
+    : this._(
+        status: ChildrenSectionStatus.failure,
+        data: data,
+        errorMessage: message,
+      );
 
   bool get isInitial => status == ChildrenSectionStatus.initial;
   bool get isLoading => status == ChildrenSectionStatus.loading;
   bool get isLoaded => status == ChildrenSectionStatus.loaded;
   bool get isFailure => status == ChildrenSectionStatus.failure;
 
-  ChildrenAsyncSection<T> toLoading() => ChildrenAsyncSection.loading(data: data);
+  ChildrenAsyncSection<T> toLoading() =>
+      ChildrenAsyncSection.loading(data: data);
 
   @override
   List<Object?> get props => [status, data, errorMessage];
@@ -104,10 +105,10 @@ final class ChildrenState extends Equatable {
 
   @override
   List<Object?> get props => [
-        childrenSection,
-        lookupSection,
-        linkSection,
-        unlinkSection,
-        unlinkingChildId,
-      ];
+    childrenSection,
+    lookupSection,
+    linkSection,
+    unlinkSection,
+    unlinkingChildId,
+  ];
 }

@@ -42,15 +42,14 @@ class _AcademicMonitorView extends StatelessWidget {
       },
       child: AppDashboardScaffold(
         title: t.academic.pageTitle,
-        onRefresh: () async => context
-            .read<CoursesBloc>()
-            .add(CoursesRefreshRequested(childId)),
+        onRefresh: () async =>
+            context.read<CoursesBloc>().add(CoursesRefreshRequested(childId)),
         actions: [
           IconButton(
             tooltip: t.retry,
-            onPressed: () => context
-                .read<CoursesBloc>()
-                .add(CoursesRefreshRequested(childId)),
+            onPressed: () => context.read<CoursesBloc>().add(
+              CoursesRefreshRequested(childId),
+            ),
             icon: const Icon(Icons.refresh_rounded),
           ),
         ],

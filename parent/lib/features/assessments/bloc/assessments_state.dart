@@ -16,17 +16,17 @@ final class AssessmentsAsyncSection<T> extends Equatable {
   });
 
   const AssessmentsAsyncSection.initial()
-      : this._(status: AssessmentsSectionStatus.initial);
+    : this._(status: AssessmentsSectionStatus.initial);
   const AssessmentsAsyncSection.loading({T? data})
-      : this._(status: AssessmentsSectionStatus.loading, data: data);
+    : this._(status: AssessmentsSectionStatus.loading, data: data);
   const AssessmentsAsyncSection.loaded(T data)
-      : this._(status: AssessmentsSectionStatus.loaded, data: data);
+    : this._(status: AssessmentsSectionStatus.loaded, data: data);
   const AssessmentsAsyncSection.failure(String message, {T? data})
-      : this._(
-          status: AssessmentsSectionStatus.failure,
-          data: data,
-          errorMessage: message,
-        );
+    : this._(
+        status: AssessmentsSectionStatus.failure,
+        data: data,
+        errorMessage: message,
+      );
 
   bool get isInitial => status == AssessmentsSectionStatus.initial;
   bool get isLoading => status == AssessmentsSectionStatus.loading;
@@ -90,10 +90,10 @@ final class AssessmentsState extends Equatable {
 
   @override
   List<Object?> get props => [
-        childId,
-        isRefreshing,
-        assessmentsSection,
-        summarySection,
-        trendSection,
-      ];
+    childId,
+    isRefreshing,
+    assessmentsSection,
+    summarySection,
+    trendSection,
+  ];
 }

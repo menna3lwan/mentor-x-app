@@ -60,9 +60,9 @@ final class _NotificationsViewState extends State<_NotificationsView> {
     if (!_scrollController.hasClients) return;
     final position = _scrollController.position;
     if (position.pixels >= position.maxScrollExtent - 160) {
-      context
-          .read<NotificationsBloc>()
-          .add(const NotificationsLoadMoreRequested());
+      context.read<NotificationsBloc>().add(
+        const NotificationsLoadMoreRequested(),
+      );
     }
   }
 
@@ -79,8 +79,10 @@ final class _NotificationsViewState extends State<_NotificationsView> {
             context.read<NotificationsBadgeCubit>().setCount(state.unreadCount);
           },
         ),
-        BlocPresentationListener<NotificationsBloc,
-            NotificationsPresentationEvent>(
+        BlocPresentationListener<
+          NotificationsBloc,
+          NotificationsPresentationEvent
+        >(
           listener: (context, event) {
             switch (event) {
               case NotificationsFailurePresentationEvent(:final message):
@@ -95,9 +97,9 @@ final class _NotificationsViewState extends State<_NotificationsView> {
       ],
       child: AppDashboardScaffold(
         title: t.title,
-        onRefresh: () async => context
-            .read<NotificationsBloc>()
-            .add(const NotificationsRefreshRequested()),
+        onRefresh: () async => context.read<NotificationsBloc>().add(
+          const NotificationsRefreshRequested(),
+        ),
         actions: [
           BlocBuilder<NotificationsBloc, NotificationsState>(
             buildWhen: (previous, current) =>
@@ -108,9 +110,9 @@ final class _NotificationsViewState extends State<_NotificationsView> {
                 tooltip: t.markAllRead,
                 onPressed: state.unreadCount == 0 || state.isMarkingAllRead
                     ? null
-                    : () => context
-                        .read<NotificationsBloc>()
-                        .add(const NotificationsMarkAllReadRequested()),
+                    : () => context.read<NotificationsBloc>().add(
+                        const NotificationsMarkAllReadRequested(),
+                      ),
                 icon: state.isMarkingAllRead
                     ? const SizedBox.square(
                         dimension: 20,
@@ -139,9 +141,9 @@ final class _NotificationsViewState extends State<_NotificationsView> {
             if (state.errorMessage != null && state.notifications.isEmpty) {
               return AppErrorView(
                 message: t.loadFailed,
-                onRetry: () => context
-                    .read<NotificationsBloc>()
-                    .add(const NotificationsStarted()),
+                onRetry: () => context.read<NotificationsBloc>().add(
+                  const NotificationsStarted(),
+                ),
               );
             }
 
@@ -181,16 +183,16 @@ final class _NotificationsViewState extends State<_NotificationsView> {
                   onTap: () {
                     if (!notification.isRead) {
                       context.read<NotificationsBloc>().add(
-                            NotificationMarkReadRequested(notification.id),
-                          );
+                        NotificationMarkReadRequested(notification.id),
+                      );
                     }
                     _showNotificationDetails(context, notification);
                   },
                   onMarkRead: notification.isRead
                       ? null
                       : () => context.read<NotificationsBloc>().add(
-                            NotificationMarkReadRequested(notification.id),
-                          ),
+                          NotificationMarkReadRequested(notification.id),
+                        ),
                 );
               },
             );
@@ -218,7 +220,9 @@ final class _NotificationTile extends StatelessWidget {
     final isUnread = !notification.isRead;
     final accentColor = _colorForType(context, notification.type);
     final locale = Localizations.localeOf(context).toLanguageTag();
-    final date = DateFormat.yMMMd(locale).add_jm().format(notification.createdAt);
+    final date = DateFormat.yMMMd(
+      locale,
+    ).add_jm().format(notification.createdAt);
 
     return Semantics(
       button: true,
@@ -371,7 +375,9 @@ Future<void> _showNotificationDetails(
 ) {
   final t = Translations.of(context).parent.notificationCenter;
   final locale = Localizations.localeOf(context).toLanguageTag();
-  final date = DateFormat.yMMMMd(locale).add_jm().format(notification.createdAt);
+  final date = DateFormat.yMMMMd(
+    locale,
+  ).add_jm().format(notification.createdAt);
 
   return showModalBottomSheet<void>(
     context: context,

@@ -16,8 +16,7 @@ class AttendanceRecordsListWrapper extends StatelessWidget {
     final t = Translations.of(context).parent;
 
     return BlocBuilder<AttendanceBloc, AttendanceState>(
-      buildWhen: (prev, curr) =>
-          prev.recordsSection != curr.recordsSection,
+      buildWhen: (prev, curr) => prev.recordsSection != curr.recordsSection,
       builder: (context, state) {
         final section = state.recordsSection;
 
@@ -34,10 +33,10 @@ class AttendanceRecordsListWrapper extends StatelessWidget {
           return AppErrorView(
             message: section.errorMessage ?? t.unableToLoad,
             onRetry: () => context.read<AttendanceBloc>().add(
-                  const AttendanceRetrySectionRequested(
-                    AttendanceSection.records,
-                  ),
-                ),
+              const AttendanceRetrySectionRequested(
+                AttendanceSection.records,
+              ),
+            ),
           );
         }
 
@@ -50,8 +49,7 @@ class AttendanceRecordsListWrapper extends StatelessWidget {
         }
 
         return Column(
-          children:
-              state.attendanceRecords.asMap().entries.map((entry) {
+          children: state.attendanceRecords.asMap().entries.map((entry) {
             final index = entry.key;
             final record = entry.value;
             return FadeInUp(
@@ -66,8 +64,7 @@ class AttendanceRecordsListWrapper extends StatelessWidget {
                 checkInTimeLabel: record.checkInTime == null
                     ? null
                     : t.attendanceTracking.checkInTimeLabel(
-                        time: DateFormat('hh:mm a')
-                            .format(record.checkInTime!),
+                        time: DateFormat('hh:mm a').format(record.checkInTime!),
                       ),
               ),
             );

@@ -8,8 +8,8 @@ final class NotificationsBadgeCubit extends Cubit<NotificationsBadgeState> {
 
   NotificationsBadgeCubit({
     required NotificationRepository notificationRepository,
-  })  : _notificationRepository = notificationRepository,
-        super(NotificationsBadgeState.initial());
+  }) : _notificationRepository = notificationRepository,
+       super(NotificationsBadgeState.initial());
 
   Future<void> load() async {
     emit(state.copyWith(isLoading: true, errorMessage: null));
@@ -17,10 +17,12 @@ final class NotificationsBadgeCubit extends Cubit<NotificationsBadgeState> {
       final count = await _notificationRepository.getUnreadCount();
       emit(state.copyWith(count: count, isLoading: false));
     } catch (error) {
-      emit(state.copyWith(
-        isLoading: false,
-        errorMessage: _describe(error),
-      ));
+      emit(
+        state.copyWith(
+          isLoading: false,
+          errorMessage: _describe(error),
+        ),
+      );
     }
   }
 

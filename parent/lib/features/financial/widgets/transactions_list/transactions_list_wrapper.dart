@@ -33,10 +33,10 @@ class TransactionsListWrapper extends StatelessWidget {
           return AppErrorView(
             message: section.errorMessage ?? t.unableToLoad,
             onRetry: () => context.read<FinancialBloc>().add(
-                  const FinancialRetrySectionRequested(
-                    FinancialSection.transactions,
-                  ),
-                ),
+              const FinancialRetrySectionRequested(
+                FinancialSection.transactions,
+              ),
+            ),
           );
         }
 

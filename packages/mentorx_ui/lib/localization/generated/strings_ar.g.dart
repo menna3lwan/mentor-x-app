@@ -1004,411 +1004,22 @@ class _TranslationsParentAr implements TranslationsParentEn {
 	@override String get spentThisMonth => 'المنفق هذا الشهر';
 	@override String get transactionHistory => 'سجل المعاملات';
 	@override String get pointsEarned => 'النقاط المكتسبة';
-
-	@override late final _TranslationsParentHomeAr home =
-			_TranslationsParentHomeAr._(_root);
-
-	@override late final _TranslationsParentQuickActionsAr quickActions =
-			_TranslationsParentQuickActionsAr._(_root);
-
-	@override late final _TranslationsParentChildrenAr children =
-			_TranslationsParentChildrenAr._(_root);
-
-	@override late final _TranslationsParentAssessmentsAr assessments =
-			_TranslationsParentAssessmentsAr._(_root);
-
-	@override late final _TranslationsParentAttendanceTrackingAr attendanceTracking =
-			_TranslationsParentAttendanceTrackingAr._(_root);
-
-	@override late final _TranslationsParentFinancialAr financial =
-			_TranslationsParentFinancialAr._(_root);
-
-	@override late final _TranslationsParentAcademicAr academic =
-			_TranslationsParentAcademicAr._(_root);
-
-	@override late final _TranslationsParentCommunicationAr communication =
-			_TranslationsParentCommunicationAr._(_root);
-
-	@override late final _TranslationsParentProfileAr profile =
-			_TranslationsParentProfileAr._(_root);
-
-	@override late final _TranslationsParentAuthAr auth =
-			_TranslationsParentAuthAr._(_root);
-
-	@override late final _TranslationsParentOnboardingAr onboarding =
-			_TranslationsParentOnboardingAr._(_root);
-}
-
-// Path: parent.onboarding
-class _TranslationsParentOnboardingAr
-		implements TranslationsParentOnboardingEn {
-	_TranslationsParentOnboardingAr._(this._root);
-	final TranslationsAr _root; // ignore: unused_field
-
-	@override String get parentPortalTag => 'بوابة ولي الأمر';
-	@override String get slide1Title => 'تابع التقدم';
-	@override String get slide1Description =>
-			'تابع درجات ابنك وحضوره وإنجازاته الأكاديمية لحظة بلحظة.';
-	@override String get slide2Title => 'ابقَ على تواصل';
-	@override String get slide2Description =>
-			'تواصل مباشر مع المعلمين وإدارة المدرسة لتجربة تعليمية أفضل.';
-	@override String get slide3Title => 'مدفوعات آمنة';
-	@override String get slide3Description =>
-			'أدر المصاريف المدرسية ورصيد محفظة ابنك بأمان وسهولة.';
-	@override String get skip => 'تخطّي';
-	@override String get getStarted => 'ابدأ الآن';
-}
-
-// Path: parent.auth
-class _TranslationsParentAuthAr implements TranslationsParentAuthEn {
-	_TranslationsParentAuthAr._(this._root);
-	final TranslationsAr _root; // ignore: unused_field
-
-	@override String get otpTitle => 'تأكيد رقم الهاتف';
-	@override String otpSubtitle({required Object phone}) =>
-			'أدخل الكود المكوّن من 6 أرقام المُرسل إلى\n${phone}';
-	@override String get otpFieldLabel => 'كود التحقق';
-	@override String get otpFieldHint => '000000';
-	@override String get verifyAndContinue => 'تأكيد ومتابعة';
-	@override String get resending => 'جاري إعادة الإرسال…';
-	@override String get resendCode => 'إعادة إرسال الكود';
-	@override String resendInSeconds({required Object seconds}) =>
-			'إعادة الإرسال خلال ${seconds} ثانية';
-	@override String get verificationFailed => 'فشل التحقق';
-
-	@override String get appName => 'MentorX لولي الأمر';
-	@override String get loginTagline => 'تابع رحلة ابنك الأكاديمية بثقة كاملة';
-	@override String get phoneNumberLabel => 'رقم الهاتف';
-	@override String get phoneNumberHint => 'أدخل رقم هاتفك';
-	@override String get phoneRequired => 'من فضلك أدخل رقم الهاتف';
-	@override String get passwordLabel => 'كلمة المرور';
-	@override String get passwordRequired => 'من فضلك أدخل كلمة المرور';
-	@override String get forgotPassword => 'نسيت كلمة المرور؟';
-	@override String get signInToDashboard => 'تسجيل الدخول';
-	@override String get newToMentorX => 'جديد في MentorX؟';
-	@override String get createAccount => 'إنشاء حساب';
-	@override String get loginFailed => 'فشل تسجيل الدخول. حاول مرة أخرى.';
-	@override String get passwordRecoveryHeading => 'استرجاع كلمة المرور';
-	@override String get forgotPasswordTitle => 'نسيت كلمة المرور؟';
-	@override String get forgotPasswordSubtitle =>
-			'لا تقلق! أدخل رقم هاتفك المسجّل وسنرسل لك كود تحقق لإعادة تعيين حسابك بأمان.';
-	@override String get sendVerificationCode => 'إرسال كود التحقق';
-	@override String get backToLogin => 'الرجوع لتسجيل الدخول';
-	@override String get sendCodeFailed => 'تعذّر إرسال الكود';
-	@override String get resetPasswordTitle => 'إعادة تعيين كلمة المرور';
-	@override String resetPasswordSubtitle({required Object phone}) =>
-			'أدخل الكود المكوّن من 6 أرقام المُرسل إلى\n${phone}';
-	@override String get otpCodeLabel => 'كود التحقق';
-	@override String get newPasswordLabel => 'كلمة المرور الجديدة';
-	@override String get confirmPasswordLabel => 'تأكيد كلمة المرور';
-	@override String get passwordPlaceholder => '••••••••';
-	@override String get updatePasswordNow => 'تحديث كلمة المرور';
-	@override String get validationCheckInputs =>
-			'من فضلك تحقّق من البيانات المدخلة وحاول مرة أخرى';
-	@override String get passwordResetSuccess => 'تم إعادة تعيين كلمة المرور بنجاح';
-
-	@override String get regStep1Title => 'ربط ابنك';
-	@override String get regStep2Title => 'البيانات الشخصية';
-	@override String get regStep3Title => 'الأمان';
-	@override String get regDefaultTitle => 'التسجيل';
-	@override String get regFindStudent => 'ابحث عن الطالب';
-	@override String get regConfirmChild => 'أكّد الابن';
-	@override String get regContinue => 'متابعة';
-	@override String get regCreateAccount => 'إنشاء حساب';
-	@override String get regPleaseWait => 'جاري المعالجة…';
-	@override String get regAlreadyHaveAccount => 'لديك حساب بالفعل؟ تسجيل الدخول';
-	@override String get regLookupPhoneTab => 'الهاتف';
-	@override String get regLookupCodeTab => 'كود الطالب';
-	@override String get regChildPhoneLabel => 'هاتف الابن';
-	@override String get regChildPhoneHint => 'أدخل رقم الهاتف المسجّل';
-	@override String get regStudentCodeLabel => 'كود الطالب';
-	@override String get regStudentCodeHint => 'أدخل الكود المميّز';
-	@override String get regFirstNameLabel => 'الاسم الأول';
-	@override String get regFirstNameHint => 'مثال: أحمد';
-	@override String get regLastNameLabel => 'الاسم الأخير';
-	@override String get regLastNameHint => 'مثال: محمد';
-	@override String get regYourPhoneHint => 'رقم هاتفك';
-	@override String get regEmailLabel => 'البريد الإلكتروني';
-	@override String get regEmailHint => 'اختياري';
-	@override String get regSecurityHint =>
-			'اضبط كلمة مرور قوية لحماية الوصول إلى حسابك.';
-	@override String get regRelationshipLabel => 'صلة القرابة بالابن';
-	@override String get regChildConfirmed => 'تم تأكيد الابن بنجاح';
-	@override String get regConfirmIsYourChild => 'أكّد إذا كان هذا هو ابنك';
-
-	@override String get regErrorLookupEmpty =>
-			'من فضلك أدخل رقم هاتف الابن أو كود الطالب.';
-	@override String get regErrorStudentNotFound =>
-			'لم يتم العثور على طالب بهذا الرقم.';
-	@override String get regErrorFindFailed =>
-			'تعذّر البحث عن الطالب. حاول مرة أخرى.';
-	@override String get regErrorFindChildFirst => 'من فضلك ابحث عن ابنك أولًا.';
-	@override String get regErrorConfirmChild => 'من فضلك أكّد أن هذا هو ابنك.';
-	@override String get regErrorFirstNameShort =>
-			'الاسم الأول يجب أن يكون حرفين على الأقل.';
-	@override String get regErrorLastNameShort =>
-			'الاسم الأخير يجب أن يكون حرفين على الأقل.';
-	@override String get regErrorInvalidPhone =>
-			'من فضلك أدخل رقم هاتف مصري صحيح.';
-	@override String get regErrorInvalidEmail =>
-			'من فضلك أدخل بريدًا إلكترونيًا صحيحًا.';
-	@override String get regErrorRelationshipRequired =>
-			'من فضلك اختر صلة القرابة بالابن.';
-	@override String get regErrorPasswordWeak =>
-			'كلمة المرور يجب أن تكون 6 أحرف على الأقل.';
-	@override String get regErrorPasswordMismatch =>
-			'كلمتا المرور غير متطابقتين.';
-	@override String get regErrorRegistrationFailed =>
-			'فشل التسجيل. حاول مرة أخرى.';
-	@override String get regErrorPhoneAlreadyExists =>
-			'يوجد حساب مسجّل بهذا الرقم بالفعل.';
-}
-
-// Path: parent.profile
-class _TranslationsParentProfileAr implements TranslationsParentProfileEn {
-	_TranslationsParentProfileAr._(this._root);
-	final TranslationsAr _root; // ignore: unused_field
-
-	@override String get verifiedAccount => 'حساب موثّق';
-	@override String get fullNameLabel => 'الاسم بالكامل';
-	@override String get phoneNumberLabel => 'رقم الهاتف';
-	@override String get emailLabel => 'البريد الإلكتروني';
-	@override String get notificationsEnabled => 'مفعّلة';
-	@override String get notificationsDisabled => 'متوقّفة';
-	@override String get securityValue => 'كلمة المرور والمصادقة الحيوية';
-	@override String get signOutConfirmTitle => 'تسجيل الخروج؟';
-	@override String get signOutConfirmMessage =>
-			'سيتم تسجيل خروجك وإعادتك إلى شاشة تسجيل الدخول.';
-	@override String get signOutAction => 'تسجيل الخروج';
-	@override String get signOutCancel => 'إلغاء';
-	@override String get fallbackName => 'ولي أمر';
-	@override String get settingsTitle => 'الإعدادات';
-	@override String get appConfigurationSection => 'إعدادات التطبيق';
-	@override String get preferencesSection => 'التفضيلات';
-	@override String get supportSection => 'الدعم';
-	@override String get pushNotifications => 'إشعارات الدفع';
-	@override String get themeMode => 'وضع الواجهة';
-	@override String get themeSystem => 'النظام';
-	@override String get themeLight => 'فاتح';
-	@override String get themeDark => 'داكن';
-	@override String get appLanguage => 'لغة التطبيق';
-	@override String get languageEnglish => 'English';
-	@override String get languageArabic => 'العربية';
-	@override String get helpCenter => 'مركز المساعدة';
-	@override String get helpCenterValue => 'الأسئلة الشائعة والدعم';
-	@override String get aboutTitle => 'عن MentorX';
-	@override String aboutVersion({required Object version}) =>
-			'الإصدار ${version}';
-}
-
-// Path: parent.communication
-class _TranslationsParentCommunicationAr
-		implements TranslationsParentCommunicationEn {
-	_TranslationsParentCommunicationAr._(this._root);
-	final TranslationsAr _root; // ignore: unused_field
-
-	@override String get notificationsTitle => 'الإشعارات';
-	@override String get announcementsTitle => 'الإعلانات';
-	@override String get whatsAppTitle => 'مجموعات واتساب';
-	@override String get noNotificationsTitle => 'لا توجد إشعارات';
-	@override String get noNotificationsHint =>
-			'كل شيء على ما يرام — ستظهر التحديثات الجديدة هنا.';
-	@override String get noAnnouncementsTitle => 'لا توجد إعلانات';
-	@override String get noAnnouncementsHint =>
-			'ابق على اطلاع! ستظهر إعلانات المدرسة هنا.';
-	@override String get noGroupsTitle => 'لا توجد مجموعات';
-	@override String get noGroupsHint =>
-			'لا توجد مجموعات واتساب متاحة لهذا الابن بعد.';
-	@override String get readMore => 'اقرأ المزيد';
-	@override String get joinGroup => 'انضمام';
-	@override String get groupSubtitle => 'اضغط للانضمام والحصول على آخر التحديثات';
-}
-
-// Path: parent.academic
-class _TranslationsParentAcademicAr implements TranslationsParentAcademicEn {
-	_TranslationsParentAcademicAr._(this._root);
-	final TranslationsAr _root; // ignore: unused_field
-
-	@override String get pageTitle => 'المتابعة الأكاديمية';
-	@override String get overallAverageHeading => 'المعدل العام';
-	@override String get averageLabel => 'المعدل';
-	@override String get gradedLabel => 'المصححة';
-	@override String get pendingLabel => 'المعلقة';
-	@override String get noCoursesTitle => 'لا توجد كورسات';
-	@override String get noCoursesHint =>
-			'ستظهر البيانات الأكاديمية هنا بمجرد توفرها.';
-	@override String sessionsCount({required Object count}) => '${count} حصة';
-	@override String completedSessionsLabel({
-		required Object completed,
-		required Object total,
-	}) => '${completed} / ${total} حصة';
-	@override String get courseDetailsTitle => 'تفاصيل الكورس';
-}
-
-// Path: parent.financial
-class _TranslationsParentFinancialAr implements TranslationsParentFinancialEn {
-	_TranslationsParentFinancialAr._(this._root);
-	final TranslationsAr _root; // ignore: unused_field
-
-	@override String get balance => 'الرصيد';
-	@override String get spent => 'المنفق';
-	@override String get points => 'النقاط';
-	@override String get noDataTitle => 'لا توجد بيانات';
-	@override String get noDataHint => 'ستظهر البيانات المالية هنا بمجرد توفرها.';
-	@override String get noTransactionsTitle => 'لا توجد معاملات';
-	@override String get noTransactionsHint =>
-			'لم يتم العثور على سجل معاملات لهذا الابن.';
-	@override String get credit => 'إيداع';
-	@override String get debit => 'خصم';
-	@override String get deposit => 'شحن';
-	@override String get withdrawal => 'سحب';
-	@override String get payment => 'دفع';
-	@override String get refund => 'استرجاع';
-	@override String get reward => 'مكافأة';
-	@override String get statusPending => 'قيد المعالجة';
-	@override String get statusSuccess => 'ناجحة';
-	@override String get statusFailed => 'فاشلة';
-}
-
-// Path: parent.attendanceTracking
-class _TranslationsParentAttendanceTrackingAr
-		implements TranslationsParentAttendanceTrackingEn {
-	_TranslationsParentAttendanceTrackingAr._(this._root);
-	final TranslationsAr _root; // ignore: unused_field
-
-	@override String get pageTitle => 'متابعة الحضور';
-	@override String get attendanceLog => 'سجل الحضور';
-	@override String get present => 'حاضر';
-	@override String get absent => 'غائب';
-	@override String get late => 'متأخر';
-	@override String get excused => 'بعذر';
-	@override String get noRecordsTitle => 'لا توجد سجلات';
-	@override String get noRecordsHint =>
-			'لم يتم العثور على سجلات حضور لهذا الطالب.';
-	@override String get regularSession => 'حصة عادية';
-	@override String get generalAcademic => 'عام';
-	@override String get onlineSession => 'أونلاين';
-	@override String checkInTimeLabel({required Object time}) =>
-			'تم التسجيل في ${time}';
-}
-
-// Path: parent.assessments
-class _TranslationsParentAssessmentsAr implements TranslationsParentAssessmentsEn {
-	_TranslationsParentAssessmentsAr._(this._root);
-	final TranslationsAr _root; // ignore: unused_field
-
-	@override String get pageTitle => 'الأداء الأكاديمي';
-	@override String get overallPerformance => 'الأداء العام';
-	@override String get average => 'المعدل';
-	@override String get graded => 'المصححة';
-	@override String get pending => 'المعلقة';
-	@override String get passed => 'ناجح';
-	@override String get failed => 'راسب';
-	@override String get assessmentHistory => 'سجل التقييمات';
-	@override String get noAssessmentsTitle => 'لا توجد تقييمات';
-	@override String get noAssessmentsHint =>
-			'ستظهر بيانات التقييم الأكاديمي هنا فور تقديمها.';
-	@override String get passLabel => 'ناجح';
-	@override String get failLabel => 'راسب';
-	@override String scoreLabel({required Object score, required Object total}) =>
-			'الدرجة: ${score}/${total}';
-	@override String get quizPrefix => 'اختبار';
-	@override String get assignmentPrefix => 'واجب';
-	@override String get examPrefix => 'امتحان';
-	@override String get trendUp => 'في تحسن';
-	@override String get trendDown => 'في انخفاض';
-	@override String get trendStable => 'مستقر';
-}
-
-// Path: parent.home
-class _TranslationsParentHomeAr implements TranslationsParentHomeEn {
-	_TranslationsParentHomeAr._(this._root);
-	final TranslationsAr _root; // ignore: unused_field
-
-	@override String get parentAccount => 'حساب ولي الأمر';
-	@override String get addChild => 'إضافة ابن';
-	@override String get academicStanding => 'المستوى الأكاديمي';
-	@override String get avgGrade => 'متوسط الدرجات';
-	@override String get attendance => 'الحضور';
-	@override String get unpaidFees => 'رسوم غير مدفوعة';
-	@override String get noRecentActivity => 'لا يوجد نشاط حديث';
-	@override String get noRecentActivityHint =>
-			'ستظهر النشاطات هنا بمجرد أن يبدأ ابنك في رحلته التعليمية.';
-	@override String get noChildrenTitle => 'لم يتم ربط أبناء';
-	@override String get noChildrenHint => 'اربط أول ابن لك لمتابعة تقدمه.';
-	@override String get linkChild => 'ربط ابن';
-	@override String updatedAt({required Object time}) => 'آخر تحديث ${time}';
-	@override String get upcomingSessions => 'الحصص القادمة';
-	@override String get noUpcomingSessions => 'لا توجد حصص قادمة';
-	@override String get recentGrades => 'أحدث الدرجات';
-	@override String get noRecentGrades => 'لا توجد درجات بعد';
-	@override String get viewDetails => 'عرض التفاصيل';
-}
-
-// Path: parent.quickActions
-class _TranslationsParentQuickActionsAr implements TranslationsParentQuickActionsEn {
-	_TranslationsParentQuickActionsAr._(this._root);
-	final TranslationsAr _root; // ignore: unused_field
-
-	@override String get attendance => 'الحضور';
-	@override String get courses => 'الكورسات';
-	@override String get fees => 'المصاريف';
-	@override String get messages => 'الرسائل';
-	@override String get grades => 'الدرجات';
-	@override String get announcements => 'الإعلانات';
-	@override String get schedule => 'الجدول';
-	@override String get support => 'الدعم';
-}
-
-// Path: parent.children
-class _TranslationsParentChildrenAr implements TranslationsParentChildrenEn {
-	_TranslationsParentChildrenAr._(this._root);
-	final TranslationsAr _root; // ignore: unused_field
-
-	@override String get title => 'الأبناء المرتبطين';
-	@override String get linkNewChild => 'ربط ابن جديد';
-	@override String get linkChildTitle => 'اربط ابنك';
-	@override String get linkChildHint =>
-			'أدخل رقم القيد الخاص بابنك أو رقم الهاتف المسجل لربط حسابه.';
-	@override String get searchLabel => 'ابحث عن الابن';
-	@override String get searchHint => 'رقم القيد / رقم الهاتف';
-	@override String get confirmLink => 'تأكيد وربط الابن';
-	@override String get specifyRelationship => 'حدد صلة القرابة';
-	@override String get linkSuccess => 'تم ربط الابن بنجاح';
-	@override String get unlinkConfirmTitle => 'إزالة الابن؟';
-	@override String unlinkConfirmMessage({required Object name}) =>
-			'سيتم إلغاء ربط ${name} من حسابك. يمكنك إعادة الربط في أي وقت.';
-	@override String get unlink => 'إلغاء الربط';
-	@override String get unlinkSuccess => 'تم إلغاء ربط الابن';
-	@override String studentIdLabel({required Object id}) => 'رقم الطالب: ${id}';
-	@override String studentCodeLabel({required Object code}) => 'الكود: ${code}';
-	@override String gradeLabel({required Object grade}) => 'الصف: ${grade}';
-	@override String centerLabel({required Object center}) => 'السنتر: ${center}';
-	@override String get cancel => 'إلغاء';
-
-	@override late final _TranslationsParentChildrenRelationshipAr relationship =
-			_TranslationsParentChildrenRelationshipAr._(_root);
-
-	@override String get errorAlreadyLinked =>
-			'هذا الابن مرتبط بالفعل بحسابك.';
-	@override String get errorStudentNotFound => 'لم نجد طالبًا بهذا الرقم.';
-	@override String get errorNetwork =>
-			'مشكلة في الشبكة. تحقّق من اتصالك وحاول مرة أخرى.';
-	@override String get errorGeneric => 'حدث خطأ ما. حاول مرة أخرى.';
-	@override String get lookupEmpty =>
-			'اكتب رقم القيد أو رقم الهاتف أولًا.';
-}
-
-// Path: parent.children.relationship
-class _TranslationsParentChildrenRelationshipAr
-		implements TranslationsParentChildrenRelationshipEn {
-	_TranslationsParentChildrenRelationshipAr._(this._root);
-	final TranslationsAr _root; // ignore: unused_field
-
-	@override String get father => 'أب';
-	@override String get mother => 'أم';
-	@override String get guardian => 'وصي';
-	@override String get other => 'أخرى';
+	@override late final _TranslationsParentSplashAr splash = _TranslationsParentSplashAr._(_root);
+	@override late final _TranslationsParentCourseDetailAr courseDetail = _TranslationsParentCourseDetailAr._(_root);
+	@override late final _TranslationsParentGradeDetailAr gradeDetail = _TranslationsParentGradeDetailAr._(_root);
+	@override late final _TranslationsParentNotificationCenterAr notificationCenter = _TranslationsParentNotificationCenterAr._(_root);
+	@override late final _TranslationsParentHomeAr home = _TranslationsParentHomeAr._(_root);
+	@override late final _TranslationsParentQuickActionsAr quickActions = _TranslationsParentQuickActionsAr._(_root);
+	@override late final _TranslationsParentOnboardingAr onboarding = _TranslationsParentOnboardingAr._(_root);
+	@override late final _TranslationsParentAuthAr auth = _TranslationsParentAuthAr._(_root);
+	@override late final _TranslationsParentProfileAr profile = _TranslationsParentProfileAr._(_root);
+	@override late final _TranslationsParentCommunicationAr communication = _TranslationsParentCommunicationAr._(_root);
+	@override late final _TranslationsParentAcademicAr academic = _TranslationsParentAcademicAr._(_root);
+	@override late final _TranslationsParentFinancialAr financial = _TranslationsParentFinancialAr._(_root);
+	@override late final _TranslationsParentAttendanceTrackingAr attendanceTracking = _TranslationsParentAttendanceTrackingAr._(_root);
+	@override late final _TranslationsParentAssessmentsAr assessments = _TranslationsParentAssessmentsAr._(_root);
+	@override late final _TranslationsParentChildrenAr children = _TranslationsParentChildrenAr._(_root);
+	@override late final _TranslationsParentAppAr app = _TranslationsParentAppAr._(_root);
 }
 
 // Path: assignments
@@ -1747,6 +1358,428 @@ class _TranslationsCourseErrorsAr implements TranslationsCourseErrorsEn {
 	@override String get failedToLoadSessions => 'فشل تحميل الحصص';
 }
 
+// Path: parent.splash
+class _TranslationsParentSplashAr implements TranslationsParentSplashEn {
+	_TranslationsParentSplashAr._(this._root);
+
+	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
+	@override String get appName => 'MENTORX';
+	@override String get tagline => 'بوابة ولي الأمر';
+}
+
+// Path: parent.courseDetail
+class _TranslationsParentCourseDetailAr implements TranslationsParentCourseDetailEn {
+	_TranslationsParentCourseDetailAr._(this._root);
+
+	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
+	@override String get pageTitle => 'تفاصيل الكورس';
+	@override String get courseBreakdown => 'تفاصيل المادة';
+	@override String get courseId => 'رقم الكورس';
+	@override String get fullTitle => 'العنوان الكامل';
+	@override String get status => 'الحالة';
+	@override String get statusActive => 'نشط';
+	@override String get sessions => 'الحصص';
+	@override String get progress => 'التقدم';
+	@override String get id => 'المعرّف';
+}
+
+// Path: parent.gradeDetail
+class _TranslationsParentGradeDetailAr implements TranslationsParentGradeDetailEn {
+	_TranslationsParentGradeDetailAr._(this._root);
+
+	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
+	@override String get pageTitle => 'تفاصيل الدرجة';
+	@override String get quizDetail => 'تفاصيل الاختبار';
+	@override String get quizScore => 'نتيجة الاختبار';
+	@override String get assessmentInfo => 'معلومات التقييم';
+	@override String get score => 'الدرجة';
+	@override String get percentage => 'النسبة';
+	@override String get result => 'النتيجة';
+	@override String get pass => 'ناجح';
+	@override String get fail => 'راسب';
+	@override String get questionBreakdown => 'تفصيل الأسئلة';
+	@override String questionLabel({required Object number}) => 'السؤال ${number}';
+	@override String get correctAnswer => 'إجابة صحيحة';
+	@override String get incorrectAnswer => 'إجابة خاطئة';
+	@override String get additionalDetails => 'تفاصيل إضافية';
+	@override String get quizId => 'رقم الاختبار';
+	@override String get submittedAt => 'تاريخ التسليم';
+	@override String get passCriteria => 'حد النجاح';
+	@override String get notFound => 'لم يتم العثور على محاولة الاختبار.';
+}
+
+// Path: parent.notificationCenter
+class _TranslationsParentNotificationCenterAr implements TranslationsParentNotificationCenterEn {
+	_TranslationsParentNotificationCenterAr._(this._root);
+
+	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'الإشعارات';
+	@override String get markAllRead => 'تحديد الكل كمقروء';
+	@override String get markRead => 'تحديد كمقروء';
+	@override String get unread => 'غير مقروء';
+	@override String get read => 'مقروء';
+	@override String get detailsTitle => 'تفاصيل الإشعار';
+	@override String get receivedAt => 'وقت الاستلام';
+	@override String get student => 'الطالب';
+	@override String get openLink => 'فتح الرابط';
+	@override String get noNotificationsTitle => 'لا توجد إشعارات';
+	@override String get noNotificationsHint => 'أنت متابع لكل جديد. ستظهر التحديثات هنا.';
+	@override String get loadFailed => 'تعذر تحميل الإشعارات';
+	@override String get markReadSuccess => 'تم تحديد الإشعار كمقروء';
+	@override String get markAllReadSuccess => 'تم تحديد كل الإشعارات كمقروءة';
+	@override String get unreadCountFailed => 'تعذر تحميل عدد الإشعارات غير المقروءة';
+}
+
+// Path: parent.home
+class _TranslationsParentHomeAr implements TranslationsParentHomeEn {
+	_TranslationsParentHomeAr._(this._root);
+
+	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
+	@override String get parentAccount => 'حساب ولي الأمر';
+	@override String get addChild => 'إضافة ابن';
+	@override String get academicStanding => 'المستوى الأكاديمي';
+	@override String get avgGrade => 'متوسط الدرجات';
+	@override String get attendance => 'الحضور';
+	@override String get unpaidFees => 'رسوم غير مدفوعة';
+	@override String get noRecentActivity => 'لا يوجد نشاط حديث';
+	@override String get noRecentActivityHint => 'ستظهر النشاطات هنا بمجرد أن يبدأ ابنك في رحلته التعليمية.';
+	@override String get noChildrenTitle => 'لم يتم ربط أبناء';
+	@override String get noChildrenHint => 'اربط أول ابن لك لمتابعة تقدمه.';
+	@override String get linkChild => 'ربط ابن';
+	@override String updatedAt({required Object time}) => 'آخر تحديث ${time}';
+	@override String get upcomingSessions => 'الحصص القادمة';
+	@override String get noUpcomingSessions => 'لا توجد حصص قادمة';
+	@override String get recentGrades => 'أحدث الدرجات';
+	@override String get noRecentGrades => 'لا توجد درجات بعد';
+	@override String get viewDetails => 'عرض التفاصيل';
+}
+
+// Path: parent.quickActions
+class _TranslationsParentQuickActionsAr implements TranslationsParentQuickActionsEn {
+	_TranslationsParentQuickActionsAr._(this._root);
+
+	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
+	@override String get attendance => 'الحضور';
+	@override String get courses => 'الكورسات';
+	@override String get fees => 'المصاريف';
+	@override String get messages => 'الرسائل';
+	@override String get grades => 'الدرجات';
+	@override String get announcements => 'الإعلانات';
+	@override String get schedule => 'الجدول';
+	@override String get support => 'الدعم';
+}
+
+// Path: parent.onboarding
+class _TranslationsParentOnboardingAr implements TranslationsParentOnboardingEn {
+	_TranslationsParentOnboardingAr._(this._root);
+
+	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
+	@override String get parentPortalTag => 'بوابة ولي الأمر';
+	@override String get slide1Title => 'تابع التقدم';
+	@override String get slide1Description => 'تابع درجات ابنك وحضوره وإنجازاته الأكاديمية لحظة بلحظة.';
+	@override String get slide2Title => 'ابقَ على تواصل';
+	@override String get slide2Description => 'تواصل مباشر مع المعلمين وإدارة المدرسة لتجربة تعليمية أفضل.';
+	@override String get slide3Title => 'مدفوعات آمنة';
+	@override String get slide3Description => 'أدر المصاريف المدرسية ورصيد محفظة ابنك بأمان وسهولة.';
+	@override String get skip => 'تخطّي';
+	@override String get getStarted => 'ابدأ الآن';
+}
+
+// Path: parent.auth
+class _TranslationsParentAuthAr implements TranslationsParentAuthEn {
+	_TranslationsParentAuthAr._(this._root);
+
+	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
+	@override String get otpTitle => 'تأكيد رقم الهاتف';
+	@override String otpSubtitle({required Object phone}) => 'أدخل الكود المكوّن من 6 أرقام المُرسل إلى\n${phone}';
+	@override String get otpFieldLabel => 'كود التحقق';
+	@override String get otpFieldHint => '000000';
+	@override String get verifyAndContinue => 'تأكيد ومتابعة';
+	@override String get resending => 'جاري إعادة الإرسال…';
+	@override String get resendCode => 'إعادة إرسال الكود';
+	@override String resendInSeconds({required Object seconds}) => 'إعادة الإرسال خلال ${seconds} ثانية';
+	@override String get verificationFailed => 'فشل التحقق';
+	@override String get appName => 'MentorX لولي الأمر';
+	@override String get loginTagline => 'تابع رحلة ابنك الأكاديمية بثقة كاملة';
+	@override String get phoneNumberLabel => 'رقم الهاتف';
+	@override String get phoneNumberHint => 'أدخل رقم هاتفك';
+	@override String get phoneRequired => 'من فضلك أدخل رقم الهاتف';
+	@override String get passwordLabel => 'كلمة المرور';
+	@override String get passwordRequired => 'من فضلك أدخل كلمة المرور';
+	@override String get forgotPassword => 'نسيت كلمة المرور؟';
+	@override String get signInToDashboard => 'تسجيل الدخول';
+	@override String get newToMentorX => 'جديد في MentorX؟';
+	@override String get createAccount => 'إنشاء حساب';
+	@override String get loginFailed => 'فشل تسجيل الدخول. حاول مرة أخرى.';
+	@override String get passwordRecoveryHeading => 'استرجاع كلمة المرور';
+	@override String get forgotPasswordTitle => 'نسيت كلمة المرور؟';
+	@override String get forgotPasswordSubtitle => 'لا تقلق! أدخل رقم هاتفك المسجّل وسنرسل لك كود تحقق لإعادة تعيين حسابك بأمان.';
+	@override String get sendVerificationCode => 'إرسال كود التحقق';
+	@override String get backToLogin => 'الرجوع لتسجيل الدخول';
+	@override String get sendCodeFailed => 'تعذّر إرسال الكود';
+	@override String get resetPasswordTitle => 'إعادة تعيين كلمة المرور';
+	@override String resetPasswordSubtitle({required Object phone}) => 'أدخل الكود المكوّن من 6 أرقام المُرسل إلى\n${phone}';
+	@override String get otpCodeLabel => 'كود التحقق';
+	@override String get newPasswordLabel => 'كلمة المرور الجديدة';
+	@override String get confirmPasswordLabel => 'تأكيد كلمة المرور';
+	@override String get passwordPlaceholder => '••••••••';
+	@override String get updatePasswordNow => 'تحديث كلمة المرور';
+	@override String get validationCheckInputs => 'من فضلك تحقّق من البيانات المدخلة وحاول مرة أخرى';
+	@override String get passwordResetSuccess => 'تم إعادة تعيين كلمة المرور بنجاح';
+	@override String get regStep1Title => 'ربط ابنك';
+	@override String get regStep2Title => 'البيانات الشخصية';
+	@override String get regStep3Title => 'الأمان';
+	@override String get regDefaultTitle => 'التسجيل';
+	@override String get regFindStudent => 'ابحث عن الطالب';
+	@override String get regConfirmChild => 'أكّد الابن';
+	@override String get regContinue => 'متابعة';
+	@override String get regCreateAccount => 'إنشاء حساب';
+	@override String get regPleaseWait => 'جاري المعالجة…';
+	@override String get regAlreadyHaveAccount => 'لديك حساب بالفعل؟ تسجيل الدخول';
+	@override String get regLookupPhoneTab => 'الهاتف';
+	@override String get regLookupCodeTab => 'كود الطالب';
+	@override String get regChildPhoneLabel => 'هاتف الابن';
+	@override String get regChildPhoneHint => 'أدخل رقم الهاتف المسجّل';
+	@override String get regStudentCodeLabel => 'كود الطالب';
+	@override String get regStudentCodeHint => 'أدخل الكود المميّز';
+	@override String get regFirstNameLabel => 'الاسم الأول';
+	@override String get regFirstNameHint => 'مثال: أحمد';
+	@override String get regLastNameLabel => 'الاسم الأخير';
+	@override String get regLastNameHint => 'مثال: محمد';
+	@override String get regYourPhoneHint => 'رقم هاتفك';
+	@override String get regEmailLabel => 'البريد الإلكتروني';
+	@override String get regEmailHint => 'اختياري';
+	@override String get regSecurityHint => 'اضبط كلمة مرور قوية لحماية الوصول إلى حسابك.';
+	@override String get regRelationshipLabel => 'صلة القرابة بالابن';
+	@override String get regChildConfirmed => 'تم تأكيد الابن بنجاح';
+	@override String get regConfirmIsYourChild => 'أكّد إذا كان هذا هو ابنك';
+	@override String get regErrorLookupEmpty => 'من فضلك أدخل رقم هاتف الابن أو كود الطالب.';
+	@override String get regErrorStudentNotFound => 'لم يتم العثور على طالب بهذا الرقم.';
+	@override String get regErrorFindFailed => 'تعذّر البحث عن الطالب. حاول مرة أخرى.';
+	@override String get regErrorFindChildFirst => 'من فضلك ابحث عن ابنك أولًا.';
+	@override String get regErrorConfirmChild => 'من فضلك أكّد أن هذا هو ابنك.';
+	@override String get regErrorFirstNameShort => 'الاسم الأول يجب أن يكون حرفين على الأقل.';
+	@override String get regErrorLastNameShort => 'الاسم الأخير يجب أن يكون حرفين على الأقل.';
+	@override String get regErrorInvalidPhone => 'من فضلك أدخل رقم هاتف مصري صحيح.';
+	@override String get regErrorInvalidEmail => 'من فضلك أدخل بريدًا إلكترونيًا صحيحًا.';
+	@override String get regErrorRelationshipRequired => 'من فضلك اختر صلة القرابة بالابن.';
+	@override String get regErrorPasswordWeak => 'كلمة المرور يجب أن تكون 6 أحرف على الأقل.';
+	@override String get regErrorPasswordMismatch => 'كلمتا المرور غير متطابقتين.';
+	@override String get regErrorRegistrationFailed => 'فشل التسجيل. حاول مرة أخرى.';
+	@override String get regErrorPhoneAlreadyExists => 'يوجد حساب مسجّل بهذا الرقم بالفعل.';
+}
+
+// Path: parent.profile
+class _TranslationsParentProfileAr implements TranslationsParentProfileEn {
+	_TranslationsParentProfileAr._(this._root);
+
+	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
+	@override String get verifiedAccount => 'حساب موثّق';
+	@override String get fullNameLabel => 'الاسم بالكامل';
+	@override String get phoneNumberLabel => 'رقم الهاتف';
+	@override String get emailLabel => 'البريد الإلكتروني';
+	@override String get notificationsEnabled => 'مفعّلة';
+	@override String get notificationsDisabled => 'متوقّفة';
+	@override String get securityValue => 'كلمة المرور والمصادقة الحيوية';
+	@override String get signOutConfirmTitle => 'تسجيل الخروج؟';
+	@override String get signOutConfirmMessage => 'سيتم تسجيل خروجك وإعادتك إلى شاشة تسجيل الدخول.';
+	@override String get signOutAction => 'تسجيل الخروج';
+	@override String get signOutCancel => 'إلغاء';
+	@override String get fallbackName => 'ولي أمر';
+	@override String get settingsTitle => 'الإعدادات';
+	@override String get appConfigurationSection => 'إعدادات التطبيق';
+	@override String get preferencesSection => 'التفضيلات';
+	@override String get supportSection => 'الدعم';
+	@override String get pushNotifications => 'إشعارات الدفع';
+	@override String get themeMode => 'وضع الواجهة';
+	@override String get themeSystem => 'النظام';
+	@override String get themeLight => 'فاتح';
+	@override String get themeDark => 'داكن';
+	@override String get appLanguage => 'لغة التطبيق';
+	@override String get languageEnglish => 'English';
+	@override String get languageArabic => 'العربية';
+	@override String get helpCenter => 'مركز المساعدة';
+	@override String get helpCenterValue => 'الأسئلة الشائعة والدعم';
+	@override String get aboutTitle => 'عن MentorX';
+	@override String aboutVersion({required Object version}) => 'الإصدار ${version}';
+}
+
+// Path: parent.communication
+class _TranslationsParentCommunicationAr implements TranslationsParentCommunicationEn {
+	_TranslationsParentCommunicationAr._(this._root);
+
+	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
+	@override String get notificationsTitle => 'الإشعارات';
+	@override String get announcementsTitle => 'الإعلانات';
+	@override String get whatsAppTitle => 'مجموعات واتساب';
+	@override String get noNotificationsTitle => 'لا توجد إشعارات';
+	@override String get noNotificationsHint => 'كل شيء على ما يرام — ستظهر التحديثات الجديدة هنا.';
+	@override String get noAnnouncementsTitle => 'لا توجد إعلانات';
+	@override String get noAnnouncementsHint => 'ابق على اطلاع! ستظهر إعلانات المدرسة هنا.';
+	@override String get noGroupsTitle => 'لا توجد مجموعات';
+	@override String get noGroupsHint => 'لا توجد مجموعات واتساب متاحة لهذا الابن بعد.';
+	@override String get readMore => 'اقرأ المزيد';
+	@override String get joinGroup => 'انضمام';
+	@override String get groupSubtitle => 'اضغط للانضمام والحصول على آخر التحديثات';
+}
+
+// Path: parent.academic
+class _TranslationsParentAcademicAr implements TranslationsParentAcademicEn {
+	_TranslationsParentAcademicAr._(this._root);
+
+	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
+	@override String get pageTitle => 'المتابعة الأكاديمية';
+	@override String get overallAverageHeading => 'المعدل العام';
+	@override String get averageLabel => 'المعدل';
+	@override String get gradedLabel => 'المصححة';
+	@override String get pendingLabel => 'المعلقة';
+	@override String get noCoursesTitle => 'لا توجد كورسات';
+	@override String get noCoursesHint => 'ستظهر البيانات الأكاديمية هنا بمجرد توفرها.';
+	@override String sessionsCount({required Object count}) => '${count} حصة';
+	@override String completedSessionsLabel({required Object completed, required Object total}) => '${completed} / ${total} حصة';
+	@override String get courseDetailsTitle => 'تفاصيل الكورس';
+}
+
+// Path: parent.financial
+class _TranslationsParentFinancialAr implements TranslationsParentFinancialEn {
+	_TranslationsParentFinancialAr._(this._root);
+
+	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
+	@override String get balance => 'الرصيد';
+	@override String get spent => 'المنفق';
+	@override String get points => 'النقاط';
+	@override String get noDataTitle => 'لا توجد بيانات';
+	@override String get noDataHint => 'ستظهر البيانات المالية هنا بمجرد توفرها.';
+	@override String get noTransactionsTitle => 'لا توجد معاملات';
+	@override String get noTransactionsHint => 'لم يتم العثور على سجل معاملات لهذا الابن.';
+	@override String get credit => 'إيداع';
+	@override String get debit => 'خصم';
+	@override String get deposit => 'شحن';
+	@override String get withdrawal => 'سحب';
+	@override String get payment => 'دفع';
+	@override String get refund => 'استرجاع';
+	@override String get reward => 'مكافأة';
+	@override String get statusPending => 'قيد المعالجة';
+	@override String get statusSuccess => 'ناجحة';
+	@override String get statusFailed => 'فاشلة';
+}
+
+// Path: parent.attendanceTracking
+class _TranslationsParentAttendanceTrackingAr implements TranslationsParentAttendanceTrackingEn {
+	_TranslationsParentAttendanceTrackingAr._(this._root);
+
+	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
+	@override String get pageTitle => 'متابعة الحضور';
+	@override String get attendanceLog => 'سجل الحضور';
+	@override String get present => 'حاضر';
+	@override String get absent => 'غائب';
+	@override String get late => 'متأخر';
+	@override String get excused => 'بعذر';
+	@override String get noRecordsTitle => 'لا توجد سجلات';
+	@override String get noRecordsHint => 'لم يتم العثور على سجلات حضور لهذا الطالب.';
+	@override String get regularSession => 'حصة عادية';
+	@override String get generalAcademic => 'عام';
+	@override String get onlineSession => 'أونلاين';
+	@override String checkInTimeLabel({required Object time}) => 'تم التسجيل في ${time}';
+}
+
+// Path: parent.assessments
+class _TranslationsParentAssessmentsAr implements TranslationsParentAssessmentsEn {
+	_TranslationsParentAssessmentsAr._(this._root);
+
+	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
+	@override String get pageTitle => 'الأداء الأكاديمي';
+	@override String get overallPerformance => 'الأداء العام';
+	@override String get average => 'المعدل';
+	@override String get graded => 'المصححة';
+	@override String get pending => 'المعلقة';
+	@override String get passed => 'ناجح';
+	@override String get failed => 'راسب';
+	@override String get assessmentHistory => 'سجل التقييمات';
+	@override String get noAssessmentsTitle => 'لا توجد تقييمات';
+	@override String get noAssessmentsHint => 'ستظهر بيانات التقييم الأكاديمي هنا فور تقديمها.';
+	@override String get passLabel => 'ناجح';
+	@override String get failLabel => 'راسب';
+	@override String scoreLabel({required Object score, required Object total}) => 'الدرجة: ${score}/${total}';
+	@override String get quizPrefix => 'اختبار';
+	@override String get assignmentPrefix => 'واجب';
+	@override String get examPrefix => 'امتحان';
+	@override String get trendUp => 'في تحسن';
+	@override String get trendDown => 'في انخفاض';
+	@override String get trendStable => 'مستقر';
+}
+
+// Path: parent.children
+class _TranslationsParentChildrenAr implements TranslationsParentChildrenEn {
+	_TranslationsParentChildrenAr._(this._root);
+
+	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'الأبناء المرتبطين';
+	@override String get linkNewChild => 'ربط ابن جديد';
+	@override String get linkChildTitle => 'اربط ابنك';
+	@override String get linkChildHint => 'أدخل رقم القيد الخاص بابنك أو رقم الهاتف المسجل لربط حسابه.';
+	@override String get searchLabel => 'ابحث عن الابن';
+	@override String get searchHint => 'رقم القيد / رقم الهاتف';
+	@override String get confirmLink => 'تأكيد وربط الابن';
+	@override String get specifyRelationship => 'حدد صلة القرابة';
+	@override String get linkSuccess => 'تم ربط الابن بنجاح';
+	@override String get unlinkConfirmTitle => 'إزالة الابن؟';
+	@override String unlinkConfirmMessage({required Object name}) => 'سيتم إلغاء ربط ${name} من حسابك. يمكنك إعادة الربط في أي وقت.';
+	@override String get unlink => 'إلغاء الربط';
+	@override String get unlinkSuccess => 'تم إلغاء ربط الابن';
+	@override String studentIdLabel({required Object id}) => 'رقم الطالب: ${id}';
+	@override String studentCodeLabel({required Object code}) => 'الكود: ${code}';
+	@override String gradeLabel({required Object grade}) => 'الصف: ${grade}';
+	@override String centerLabel({required Object center}) => 'السنتر: ${center}';
+	@override String get cancel => 'إلغاء';
+	@override late final _TranslationsParentChildrenRelationshipAr relationship = _TranslationsParentChildrenRelationshipAr._(_root);
+	@override String get errorAlreadyLinked => 'هذا الابن مرتبط بالفعل بحسابك.';
+	@override String get errorStudentNotFound => 'لم نجد طالبًا بهذا الرقم.';
+	@override String get errorNetwork => 'مشكلة في الشبكة. تحقّق من اتصالك وحاول مرة أخرى.';
+	@override String get errorGeneric => 'حدث خطأ ما. حاول مرة أخرى.';
+	@override String get lookupEmpty => 'اكتب رقم القيد أو رقم الهاتف أولًا.';
+}
+
+// Path: parent.app
+class _TranslationsParentAppAr implements TranslationsParentAppEn {
+	_TranslationsParentAppAr._(this._root);
+
+	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'MentorX لولي الأمر';
+}
+
 // Path: onboarding.steps.learn
 class _TranslationsOnboardingStepsLearnAr implements TranslationsOnboardingStepsLearnEn {
 	_TranslationsOnboardingStepsLearnAr._(this._root);
@@ -1795,6 +1828,19 @@ class _TranslationsHomeDashboardActionsAr implements TranslationsHomeDashboardAc
 	@override String get rewards => 'المكافآت';
 	@override String get marketplace => 'المتجر';
 	@override String get analytics => 'تحليلات الأداء';
+}
+
+// Path: parent.children.relationship
+class _TranslationsParentChildrenRelationshipAr implements TranslationsParentChildrenRelationshipEn {
+	_TranslationsParentChildrenRelationshipAr._(this._root);
+
+	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
+	@override String get father => 'أب';
+	@override String get mother => 'أم';
+	@override String get guardian => 'وصي';
+	@override String get other => 'أخرى';
 }
 
 /// The flat map containing all translations for locale <ar>.
@@ -2744,6 +2790,289 @@ extension on TranslationsAr {
 			'parent.spentThisMonth' => 'المنفق هذا الشهر',
 			'parent.transactionHistory' => 'سجل المعاملات',
 			'parent.pointsEarned' => 'النقاط المكتسبة',
+			'parent.splash.appName' => 'MENTORX',
+			'parent.splash.tagline' => 'بوابة ولي الأمر',
+			'parent.courseDetail.pageTitle' => 'تفاصيل الكورس',
+			'parent.courseDetail.courseBreakdown' => 'تفاصيل المادة',
+			'parent.courseDetail.courseId' => 'رقم الكورس',
+			'parent.courseDetail.fullTitle' => 'العنوان الكامل',
+			'parent.courseDetail.status' => 'الحالة',
+			'parent.courseDetail.statusActive' => 'نشط',
+			'parent.courseDetail.sessions' => 'الحصص',
+			'parent.courseDetail.progress' => 'التقدم',
+			'parent.courseDetail.id' => 'المعرّف',
+			'parent.gradeDetail.pageTitle' => 'تفاصيل الدرجة',
+			'parent.gradeDetail.quizDetail' => 'تفاصيل الاختبار',
+			'parent.gradeDetail.quizScore' => 'نتيجة الاختبار',
+			'parent.gradeDetail.assessmentInfo' => 'معلومات التقييم',
+			'parent.gradeDetail.score' => 'الدرجة',
+			'parent.gradeDetail.percentage' => 'النسبة',
+			'parent.gradeDetail.result' => 'النتيجة',
+			'parent.gradeDetail.pass' => 'ناجح',
+			'parent.gradeDetail.fail' => 'راسب',
+			'parent.gradeDetail.questionBreakdown' => 'تفصيل الأسئلة',
+			'parent.gradeDetail.questionLabel' => ({required Object number}) => 'السؤال ${number}',
+			'parent.gradeDetail.correctAnswer' => 'إجابة صحيحة',
+			'parent.gradeDetail.incorrectAnswer' => 'إجابة خاطئة',
+			'parent.gradeDetail.additionalDetails' => 'تفاصيل إضافية',
+			'parent.gradeDetail.quizId' => 'رقم الاختبار',
+			'parent.gradeDetail.submittedAt' => 'تاريخ التسليم',
+			'parent.gradeDetail.passCriteria' => 'حد النجاح',
+			'parent.gradeDetail.notFound' => 'لم يتم العثور على محاولة الاختبار.',
+			'parent.notificationCenter.title' => 'الإشعارات',
+			'parent.notificationCenter.markAllRead' => 'تحديد الكل كمقروء',
+			'parent.notificationCenter.markRead' => 'تحديد كمقروء',
+			'parent.notificationCenter.unread' => 'غير مقروء',
+			'parent.notificationCenter.read' => 'مقروء',
+			'parent.notificationCenter.detailsTitle' => 'تفاصيل الإشعار',
+			'parent.notificationCenter.receivedAt' => 'وقت الاستلام',
+			'parent.notificationCenter.student' => 'الطالب',
+			'parent.notificationCenter.openLink' => 'فتح الرابط',
+			'parent.notificationCenter.noNotificationsTitle' => 'لا توجد إشعارات',
+			'parent.notificationCenter.noNotificationsHint' => 'أنت متابع لكل جديد. ستظهر التحديثات هنا.',
+			'parent.notificationCenter.loadFailed' => 'تعذر تحميل الإشعارات',
+			'parent.notificationCenter.markReadSuccess' => 'تم تحديد الإشعار كمقروء',
+			'parent.notificationCenter.markAllReadSuccess' => 'تم تحديد كل الإشعارات كمقروءة',
+			'parent.notificationCenter.unreadCountFailed' => 'تعذر تحميل عدد الإشعارات غير المقروءة',
+			'parent.home.parentAccount' => 'حساب ولي الأمر',
+			'parent.home.addChild' => 'إضافة ابن',
+			'parent.home.academicStanding' => 'المستوى الأكاديمي',
+			'parent.home.avgGrade' => 'متوسط الدرجات',
+			'parent.home.attendance' => 'الحضور',
+			'parent.home.unpaidFees' => 'رسوم غير مدفوعة',
+			'parent.home.noRecentActivity' => 'لا يوجد نشاط حديث',
+			'parent.home.noRecentActivityHint' => 'ستظهر النشاطات هنا بمجرد أن يبدأ ابنك في رحلته التعليمية.',
+			'parent.home.noChildrenTitle' => 'لم يتم ربط أبناء',
+			'parent.home.noChildrenHint' => 'اربط أول ابن لك لمتابعة تقدمه.',
+			'parent.home.linkChild' => 'ربط ابن',
+			'parent.home.updatedAt' => ({required Object time}) => 'آخر تحديث ${time}',
+			'parent.home.upcomingSessions' => 'الحصص القادمة',
+			'parent.home.noUpcomingSessions' => 'لا توجد حصص قادمة',
+			'parent.home.recentGrades' => 'أحدث الدرجات',
+			'parent.home.noRecentGrades' => 'لا توجد درجات بعد',
+			'parent.home.viewDetails' => 'عرض التفاصيل',
+			'parent.quickActions.attendance' => 'الحضور',
+			'parent.quickActions.courses' => 'الكورسات',
+			'parent.quickActions.fees' => 'المصاريف',
+			'parent.quickActions.messages' => 'الرسائل',
+			'parent.quickActions.grades' => 'الدرجات',
+			'parent.quickActions.announcements' => 'الإعلانات',
+			'parent.quickActions.schedule' => 'الجدول',
+			'parent.quickActions.support' => 'الدعم',
+			'parent.onboarding.parentPortalTag' => 'بوابة ولي الأمر',
+			'parent.onboarding.slide1Title' => 'تابع التقدم',
+			'parent.onboarding.slide1Description' => 'تابع درجات ابنك وحضوره وإنجازاته الأكاديمية لحظة بلحظة.',
+			'parent.onboarding.slide2Title' => 'ابقَ على تواصل',
+			'parent.onboarding.slide2Description' => 'تواصل مباشر مع المعلمين وإدارة المدرسة لتجربة تعليمية أفضل.',
+			'parent.onboarding.slide3Title' => 'مدفوعات آمنة',
+			'parent.onboarding.slide3Description' => 'أدر المصاريف المدرسية ورصيد محفظة ابنك بأمان وسهولة.',
+			'parent.onboarding.skip' => 'تخطّي',
+			'parent.onboarding.getStarted' => 'ابدأ الآن',
+			'parent.auth.otpTitle' => 'تأكيد رقم الهاتف',
+			'parent.auth.otpSubtitle' => ({required Object phone}) => 'أدخل الكود المكوّن من 6 أرقام المُرسل إلى\n${phone}',
+			'parent.auth.otpFieldLabel' => 'كود التحقق',
+			'parent.auth.otpFieldHint' => '000000',
+			'parent.auth.verifyAndContinue' => 'تأكيد ومتابعة',
+			'parent.auth.resending' => 'جاري إعادة الإرسال…',
+			'parent.auth.resendCode' => 'إعادة إرسال الكود',
+			'parent.auth.resendInSeconds' => ({required Object seconds}) => 'إعادة الإرسال خلال ${seconds} ثانية',
+			'parent.auth.verificationFailed' => 'فشل التحقق',
+			_ => null,
+		} ?? switch (path) {
+			'parent.auth.appName' => 'MentorX لولي الأمر',
+			'parent.auth.loginTagline' => 'تابع رحلة ابنك الأكاديمية بثقة كاملة',
+			'parent.auth.phoneNumberLabel' => 'رقم الهاتف',
+			'parent.auth.phoneNumberHint' => 'أدخل رقم هاتفك',
+			'parent.auth.phoneRequired' => 'من فضلك أدخل رقم الهاتف',
+			'parent.auth.passwordLabel' => 'كلمة المرور',
+			'parent.auth.passwordRequired' => 'من فضلك أدخل كلمة المرور',
+			'parent.auth.forgotPassword' => 'نسيت كلمة المرور؟',
+			'parent.auth.signInToDashboard' => 'تسجيل الدخول',
+			'parent.auth.newToMentorX' => 'جديد في MentorX؟',
+			'parent.auth.createAccount' => 'إنشاء حساب',
+			'parent.auth.loginFailed' => 'فشل تسجيل الدخول. حاول مرة أخرى.',
+			'parent.auth.passwordRecoveryHeading' => 'استرجاع كلمة المرور',
+			'parent.auth.forgotPasswordTitle' => 'نسيت كلمة المرور؟',
+			'parent.auth.forgotPasswordSubtitle' => 'لا تقلق! أدخل رقم هاتفك المسجّل وسنرسل لك كود تحقق لإعادة تعيين حسابك بأمان.',
+			'parent.auth.sendVerificationCode' => 'إرسال كود التحقق',
+			'parent.auth.backToLogin' => 'الرجوع لتسجيل الدخول',
+			'parent.auth.sendCodeFailed' => 'تعذّر إرسال الكود',
+			'parent.auth.resetPasswordTitle' => 'إعادة تعيين كلمة المرور',
+			'parent.auth.resetPasswordSubtitle' => ({required Object phone}) => 'أدخل الكود المكوّن من 6 أرقام المُرسل إلى\n${phone}',
+			'parent.auth.otpCodeLabel' => 'كود التحقق',
+			'parent.auth.newPasswordLabel' => 'كلمة المرور الجديدة',
+			'parent.auth.confirmPasswordLabel' => 'تأكيد كلمة المرور',
+			'parent.auth.passwordPlaceholder' => '••••••••',
+			'parent.auth.updatePasswordNow' => 'تحديث كلمة المرور',
+			'parent.auth.validationCheckInputs' => 'من فضلك تحقّق من البيانات المدخلة وحاول مرة أخرى',
+			'parent.auth.passwordResetSuccess' => 'تم إعادة تعيين كلمة المرور بنجاح',
+			'parent.auth.regStep1Title' => 'ربط ابنك',
+			'parent.auth.regStep2Title' => 'البيانات الشخصية',
+			'parent.auth.regStep3Title' => 'الأمان',
+			'parent.auth.regDefaultTitle' => 'التسجيل',
+			'parent.auth.regFindStudent' => 'ابحث عن الطالب',
+			'parent.auth.regConfirmChild' => 'أكّد الابن',
+			'parent.auth.regContinue' => 'متابعة',
+			'parent.auth.regCreateAccount' => 'إنشاء حساب',
+			'parent.auth.regPleaseWait' => 'جاري المعالجة…',
+			'parent.auth.regAlreadyHaveAccount' => 'لديك حساب بالفعل؟ تسجيل الدخول',
+			'parent.auth.regLookupPhoneTab' => 'الهاتف',
+			'parent.auth.regLookupCodeTab' => 'كود الطالب',
+			'parent.auth.regChildPhoneLabel' => 'هاتف الابن',
+			'parent.auth.regChildPhoneHint' => 'أدخل رقم الهاتف المسجّل',
+			'parent.auth.regStudentCodeLabel' => 'كود الطالب',
+			'parent.auth.regStudentCodeHint' => 'أدخل الكود المميّز',
+			'parent.auth.regFirstNameLabel' => 'الاسم الأول',
+			'parent.auth.regFirstNameHint' => 'مثال: أحمد',
+			'parent.auth.regLastNameLabel' => 'الاسم الأخير',
+			'parent.auth.regLastNameHint' => 'مثال: محمد',
+			'parent.auth.regYourPhoneHint' => 'رقم هاتفك',
+			'parent.auth.regEmailLabel' => 'البريد الإلكتروني',
+			'parent.auth.regEmailHint' => 'اختياري',
+			'parent.auth.regSecurityHint' => 'اضبط كلمة مرور قوية لحماية الوصول إلى حسابك.',
+			'parent.auth.regRelationshipLabel' => 'صلة القرابة بالابن',
+			'parent.auth.regChildConfirmed' => 'تم تأكيد الابن بنجاح',
+			'parent.auth.regConfirmIsYourChild' => 'أكّد إذا كان هذا هو ابنك',
+			'parent.auth.regErrorLookupEmpty' => 'من فضلك أدخل رقم هاتف الابن أو كود الطالب.',
+			'parent.auth.regErrorStudentNotFound' => 'لم يتم العثور على طالب بهذا الرقم.',
+			'parent.auth.regErrorFindFailed' => 'تعذّر البحث عن الطالب. حاول مرة أخرى.',
+			'parent.auth.regErrorFindChildFirst' => 'من فضلك ابحث عن ابنك أولًا.',
+			'parent.auth.regErrorConfirmChild' => 'من فضلك أكّد أن هذا هو ابنك.',
+			'parent.auth.regErrorFirstNameShort' => 'الاسم الأول يجب أن يكون حرفين على الأقل.',
+			'parent.auth.regErrorLastNameShort' => 'الاسم الأخير يجب أن يكون حرفين على الأقل.',
+			'parent.auth.regErrorInvalidPhone' => 'من فضلك أدخل رقم هاتف مصري صحيح.',
+			'parent.auth.regErrorInvalidEmail' => 'من فضلك أدخل بريدًا إلكترونيًا صحيحًا.',
+			'parent.auth.regErrorRelationshipRequired' => 'من فضلك اختر صلة القرابة بالابن.',
+			'parent.auth.regErrorPasswordWeak' => 'كلمة المرور يجب أن تكون 6 أحرف على الأقل.',
+			'parent.auth.regErrorPasswordMismatch' => 'كلمتا المرور غير متطابقتين.',
+			'parent.auth.regErrorRegistrationFailed' => 'فشل التسجيل. حاول مرة أخرى.',
+			'parent.auth.regErrorPhoneAlreadyExists' => 'يوجد حساب مسجّل بهذا الرقم بالفعل.',
+			'parent.profile.verifiedAccount' => 'حساب موثّق',
+			'parent.profile.fullNameLabel' => 'الاسم بالكامل',
+			'parent.profile.phoneNumberLabel' => 'رقم الهاتف',
+			'parent.profile.emailLabel' => 'البريد الإلكتروني',
+			'parent.profile.notificationsEnabled' => 'مفعّلة',
+			'parent.profile.notificationsDisabled' => 'متوقّفة',
+			'parent.profile.securityValue' => 'كلمة المرور والمصادقة الحيوية',
+			'parent.profile.signOutConfirmTitle' => 'تسجيل الخروج؟',
+			'parent.profile.signOutConfirmMessage' => 'سيتم تسجيل خروجك وإعادتك إلى شاشة تسجيل الدخول.',
+			'parent.profile.signOutAction' => 'تسجيل الخروج',
+			'parent.profile.signOutCancel' => 'إلغاء',
+			'parent.profile.fallbackName' => 'ولي أمر',
+			'parent.profile.settingsTitle' => 'الإعدادات',
+			'parent.profile.appConfigurationSection' => 'إعدادات التطبيق',
+			'parent.profile.preferencesSection' => 'التفضيلات',
+			'parent.profile.supportSection' => 'الدعم',
+			'parent.profile.pushNotifications' => 'إشعارات الدفع',
+			'parent.profile.themeMode' => 'وضع الواجهة',
+			'parent.profile.themeSystem' => 'النظام',
+			'parent.profile.themeLight' => 'فاتح',
+			'parent.profile.themeDark' => 'داكن',
+			'parent.profile.appLanguage' => 'لغة التطبيق',
+			'parent.profile.languageEnglish' => 'English',
+			'parent.profile.languageArabic' => 'العربية',
+			'parent.profile.helpCenter' => 'مركز المساعدة',
+			'parent.profile.helpCenterValue' => 'الأسئلة الشائعة والدعم',
+			'parent.profile.aboutTitle' => 'عن MentorX',
+			'parent.profile.aboutVersion' => ({required Object version}) => 'الإصدار ${version}',
+			'parent.communication.notificationsTitle' => 'الإشعارات',
+			'parent.communication.announcementsTitle' => 'الإعلانات',
+			'parent.communication.whatsAppTitle' => 'مجموعات واتساب',
+			'parent.communication.noNotificationsTitle' => 'لا توجد إشعارات',
+			'parent.communication.noNotificationsHint' => 'كل شيء على ما يرام — ستظهر التحديثات الجديدة هنا.',
+			'parent.communication.noAnnouncementsTitle' => 'لا توجد إعلانات',
+			'parent.communication.noAnnouncementsHint' => 'ابق على اطلاع! ستظهر إعلانات المدرسة هنا.',
+			'parent.communication.noGroupsTitle' => 'لا توجد مجموعات',
+			'parent.communication.noGroupsHint' => 'لا توجد مجموعات واتساب متاحة لهذا الابن بعد.',
+			'parent.communication.readMore' => 'اقرأ المزيد',
+			'parent.communication.joinGroup' => 'انضمام',
+			'parent.communication.groupSubtitle' => 'اضغط للانضمام والحصول على آخر التحديثات',
+			'parent.academic.pageTitle' => 'المتابعة الأكاديمية',
+			'parent.academic.overallAverageHeading' => 'المعدل العام',
+			'parent.academic.averageLabel' => 'المعدل',
+			'parent.academic.gradedLabel' => 'المصححة',
+			'parent.academic.pendingLabel' => 'المعلقة',
+			'parent.academic.noCoursesTitle' => 'لا توجد كورسات',
+			'parent.academic.noCoursesHint' => 'ستظهر البيانات الأكاديمية هنا بمجرد توفرها.',
+			'parent.academic.sessionsCount' => ({required Object count}) => '${count} حصة',
+			'parent.academic.completedSessionsLabel' => ({required Object completed, required Object total}) => '${completed} / ${total} حصة',
+			'parent.academic.courseDetailsTitle' => 'تفاصيل الكورس',
+			'parent.financial.balance' => 'الرصيد',
+			'parent.financial.spent' => 'المنفق',
+			'parent.financial.points' => 'النقاط',
+			'parent.financial.noDataTitle' => 'لا توجد بيانات',
+			'parent.financial.noDataHint' => 'ستظهر البيانات المالية هنا بمجرد توفرها.',
+			'parent.financial.noTransactionsTitle' => 'لا توجد معاملات',
+			'parent.financial.noTransactionsHint' => 'لم يتم العثور على سجل معاملات لهذا الابن.',
+			'parent.financial.credit' => 'إيداع',
+			'parent.financial.debit' => 'خصم',
+			'parent.financial.deposit' => 'شحن',
+			'parent.financial.withdrawal' => 'سحب',
+			'parent.financial.payment' => 'دفع',
+			'parent.financial.refund' => 'استرجاع',
+			'parent.financial.reward' => 'مكافأة',
+			'parent.financial.statusPending' => 'قيد المعالجة',
+			'parent.financial.statusSuccess' => 'ناجحة',
+			'parent.financial.statusFailed' => 'فاشلة',
+			'parent.attendanceTracking.pageTitle' => 'متابعة الحضور',
+			'parent.attendanceTracking.attendanceLog' => 'سجل الحضور',
+			'parent.attendanceTracking.present' => 'حاضر',
+			'parent.attendanceTracking.absent' => 'غائب',
+			'parent.attendanceTracking.late' => 'متأخر',
+			'parent.attendanceTracking.excused' => 'بعذر',
+			'parent.attendanceTracking.noRecordsTitle' => 'لا توجد سجلات',
+			'parent.attendanceTracking.noRecordsHint' => 'لم يتم العثور على سجلات حضور لهذا الطالب.',
+			'parent.attendanceTracking.regularSession' => 'حصة عادية',
+			'parent.attendanceTracking.generalAcademic' => 'عام',
+			'parent.attendanceTracking.onlineSession' => 'أونلاين',
+			'parent.attendanceTracking.checkInTimeLabel' => ({required Object time}) => 'تم التسجيل في ${time}',
+			'parent.assessments.pageTitle' => 'الأداء الأكاديمي',
+			'parent.assessments.overallPerformance' => 'الأداء العام',
+			'parent.assessments.average' => 'المعدل',
+			'parent.assessments.graded' => 'المصححة',
+			'parent.assessments.pending' => 'المعلقة',
+			'parent.assessments.passed' => 'ناجح',
+			'parent.assessments.failed' => 'راسب',
+			'parent.assessments.assessmentHistory' => 'سجل التقييمات',
+			'parent.assessments.noAssessmentsTitle' => 'لا توجد تقييمات',
+			'parent.assessments.noAssessmentsHint' => 'ستظهر بيانات التقييم الأكاديمي هنا فور تقديمها.',
+			'parent.assessments.passLabel' => 'ناجح',
+			'parent.assessments.failLabel' => 'راسب',
+			'parent.assessments.scoreLabel' => ({required Object score, required Object total}) => 'الدرجة: ${score}/${total}',
+			'parent.assessments.quizPrefix' => 'اختبار',
+			'parent.assessments.assignmentPrefix' => 'واجب',
+			'parent.assessments.examPrefix' => 'امتحان',
+			'parent.assessments.trendUp' => 'في تحسن',
+			'parent.assessments.trendDown' => 'في انخفاض',
+			'parent.assessments.trendStable' => 'مستقر',
+			'parent.children.title' => 'الأبناء المرتبطين',
+			'parent.children.linkNewChild' => 'ربط ابن جديد',
+			'parent.children.linkChildTitle' => 'اربط ابنك',
+			'parent.children.linkChildHint' => 'أدخل رقم القيد الخاص بابنك أو رقم الهاتف المسجل لربط حسابه.',
+			'parent.children.searchLabel' => 'ابحث عن الابن',
+			'parent.children.searchHint' => 'رقم القيد / رقم الهاتف',
+			'parent.children.confirmLink' => 'تأكيد وربط الابن',
+			'parent.children.specifyRelationship' => 'حدد صلة القرابة',
+			'parent.children.linkSuccess' => 'تم ربط الابن بنجاح',
+			'parent.children.unlinkConfirmTitle' => 'إزالة الابن؟',
+			'parent.children.unlinkConfirmMessage' => ({required Object name}) => 'سيتم إلغاء ربط ${name} من حسابك. يمكنك إعادة الربط في أي وقت.',
+			'parent.children.unlink' => 'إلغاء الربط',
+			'parent.children.unlinkSuccess' => 'تم إلغاء ربط الابن',
+			'parent.children.studentIdLabel' => ({required Object id}) => 'رقم الطالب: ${id}',
+			'parent.children.studentCodeLabel' => ({required Object code}) => 'الكود: ${code}',
+			'parent.children.gradeLabel' => ({required Object grade}) => 'الصف: ${grade}',
+			'parent.children.centerLabel' => ({required Object center}) => 'السنتر: ${center}',
+			'parent.children.cancel' => 'إلغاء',
+			'parent.children.relationship.father' => 'أب',
+			'parent.children.relationship.mother' => 'أم',
+			'parent.children.relationship.guardian' => 'وصي',
+			'parent.children.relationship.other' => 'أخرى',
+			'parent.children.errorAlreadyLinked' => 'هذا الابن مرتبط بالفعل بحسابك.',
+			'parent.children.errorStudentNotFound' => 'لم نجد طالبًا بهذا الرقم.',
+			'parent.children.errorNetwork' => 'مشكلة في الشبكة. تحقّق من اتصالك وحاول مرة أخرى.',
+			'parent.children.errorGeneric' => 'حدث خطأ ما. حاول مرة أخرى.',
+			'parent.children.lookupEmpty' => 'اكتب رقم القيد أو رقم الهاتف أولًا.',
+			'parent.app.title' => 'MentorX لولي الأمر',
 			'assignments.listTitle' => 'الواجبات',
 			'assignments.dueAt' => ({required Object date}) => 'تاريخ التسليم: ${date}',
 			'assignments.noDeadline' => 'لا يوجد موعد تسليم',

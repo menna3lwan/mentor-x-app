@@ -45,10 +45,10 @@ final class HomeBloc extends Bloc<HomeEvent, HomeState>
     required ParentChildrenRepository childrenRepository,
     required ParentHomeRepository homeRepository,
     required CacheRepository cacheRepository,
-  })  : _childrenRepository = childrenRepository,
-        _homeRepository = homeRepository,
-        _cacheRepository = cacheRepository,
-        super(HomeState.initial()) {
+  }) : _childrenRepository = childrenRepository,
+       _homeRepository = homeRepository,
+       _cacheRepository = cacheRepository,
+       super(HomeState.initial()) {
     on<HomeStarted>(_onStarted);
     on<HomeChildSwitched>(_onChildSwitched, transformer: restartable());
     on<HomeRefreshRequested>(_onRefreshRequested, transformer: droppable());
@@ -70,12 +70,14 @@ final class HomeBloc extends Bloc<HomeEvent, HomeState>
   ) async {
     if (state.selectedChild?.id == event.child.id) return;
 
-    emit(state.copyWith(
-      selectedChild: event.child,
-      summarySection: state.summarySection.toLoading(),
-      activitySection: state.activitySection.toLoading(),
-      announcementsSection: state.announcementsSection.toLoading(),
-    ));
+    emit(
+      state.copyWith(
+        selectedChild: event.child,
+        summarySection: state.summarySection.toLoading(),
+        activitySection: state.activitySection.toLoading(),
+        announcementsSection: state.announcementsSection.toLoading(),
+      ),
+    );
 
     await _safeCachePut(_selectedChildCacheKey, event.child.id);
     await _loadDashboard(emit: emit, childId: event.child.id);
@@ -114,13 +116,17 @@ final class HomeBloc extends Bloc<HomeEvent, HomeState>
         await _loadSummary(emit, childId);
       case HomeSection.activity:
         if (childId == null) return;
-        emit(state.copyWith(activitySection: state.activitySection.toLoading()));
+        emit(
+          state.copyWith(activitySection: state.activitySection.toLoading()),
+        );
         await _loadActivity(emit, childId);
       case HomeSection.announcements:
         if (childId == null) return;
-        emit(state.copyWith(
-          announcementsSection: state.announcementsSection.toLoading(),
-        ));
+        emit(
+          state.copyWith(
+            announcementsSection: state.announcementsSection.toLoading(),
+          ),
+        );
         await _loadAnnouncements(emit, childId);
     }
   }
@@ -137,9 +143,11 @@ final class HomeBloc extends Bloc<HomeEvent, HomeState>
     try {
       final children = await _childrenRepository.getChildren();
       if (emit.isDone) return;
-      emit(state.copyWith(
-        childrenSection: HomeAsyncSection.loaded(children),
-      ));
+      emit(
+        state.copyWith(
+          childrenSection: HomeAsyncSection.loaded(children),
+        ),
+      );
 
       if (children.isEmpty) {
         // Reset selection if the previously-selected child has been unlinked
@@ -172,9 +180,11 @@ final class HomeBloc extends Bloc<HomeEvent, HomeState>
       }
     } catch (e) {
       if (emit.isDone) return;
-      emit(state.copyWith(
-        childrenSection: HomeAsyncSection.failure(_describe(e)),
-      ));
+      emit(
+        state.copyWith(
+          childrenSection: HomeAsyncSection.failure(_describe(e)),
+        ),
+      );
       _maybeEmitUnauthorized(e);
       emitPresentation(HomeFailurePresentationEvent(message: _describe(e)));
     }
@@ -184,11 +194,13 @@ final class HomeBloc extends Bloc<HomeEvent, HomeState>
     required Emitter<HomeState> emit,
     required String childId,
   }) async {
-    emit(state.copyWith(
-      summarySection: state.summarySection.toLoading(),
-      activitySection: state.activitySection.toLoading(),
-      announcementsSection: state.announcementsSection.toLoading(),
-    ));
+    emit(
+      state.copyWith(
+        summarySection: state.summarySection.toLoading(),
+        activitySection: state.activitySection.toLoading(),
+        announcementsSection: state.announcementsSection.toLoading(),
+      ),
+    );
 
     final results = await Future.wait([
       _loadSummary(emit, childId),
@@ -208,15 +220,19 @@ final class HomeBloc extends Bloc<HomeEvent, HomeState>
     try {
       final summary = await _homeRepository.getSummary(childId);
       if (emit.isDone) return false;
-      emit(state.copyWith(
-        summarySection: HomeAsyncSection.loaded(summary),
-      ));
+      emit(
+        state.copyWith(
+          summarySection: HomeAsyncSection.loaded(summary),
+        ),
+      );
       return true;
     } catch (e) {
       if (emit.isDone) return false;
-      emit(state.copyWith(
-        summarySection: HomeAsyncSection.failure(_describe(e)),
-      ));
+      emit(
+        state.copyWith(
+          summarySection: HomeAsyncSection.failure(_describe(e)),
+        ),
+      );
       _maybeEmitUnauthorized(e);
       emitPresentation(HomeFailurePresentationEvent(message: _describe(e)));
       return false;
@@ -227,15 +243,19 @@ final class HomeBloc extends Bloc<HomeEvent, HomeState>
     try {
       final activity = await _homeRepository.getRecentActivity(childId);
       if (emit.isDone) return false;
-      emit(state.copyWith(
-        activitySection: HomeAsyncSection.loaded(activity),
-      ));
+      emit(
+        state.copyWith(
+          activitySection: HomeAsyncSection.loaded(activity),
+        ),
+      );
       return true;
     } catch (e) {
       if (emit.isDone) return false;
-      emit(state.copyWith(
-        activitySection: HomeAsyncSection.failure(_describe(e)),
-      ));
+      emit(
+        state.copyWith(
+          activitySection: HomeAsyncSection.failure(_describe(e)),
+        ),
+      );
       _maybeEmitUnauthorized(e);
       // Activity is non-critical; don't toast for it.
       return false;
@@ -249,15 +269,19 @@ final class HomeBloc extends Bloc<HomeEvent, HomeState>
     try {
       final announcements = await _homeRepository.getAnnouncements(childId);
       if (emit.isDone) return false;
-      emit(state.copyWith(
-        announcementsSection: HomeAsyncSection.loaded(announcements),
-      ));
+      emit(
+        state.copyWith(
+          announcementsSection: HomeAsyncSection.loaded(announcements),
+        ),
+      );
       return true;
     } catch (e) {
       if (emit.isDone) return false;
-      emit(state.copyWith(
-        announcementsSection: HomeAsyncSection.failure(_describe(e)),
-      ));
+      emit(
+        state.copyWith(
+          announcementsSection: HomeAsyncSection.failure(_describe(e)),
+        ),
+      );
       _maybeEmitUnauthorized(e);
       // Announcements are non-critical.
       return false;

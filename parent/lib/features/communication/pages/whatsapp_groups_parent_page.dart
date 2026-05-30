@@ -33,8 +33,10 @@ class _WhatsAppGroupsView extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = Translations.of(context).parent;
 
-    return BlocPresentationListener<CommunicationBloc,
-        CommunicationPresentationEvent>(
+    return BlocPresentationListener<
+      CommunicationBloc,
+      CommunicationPresentationEvent
+    >(
       listener: (context, event) {
         switch (event) {
           case CommunicationFailurePresentationEvent(:final message):
@@ -43,15 +45,15 @@ class _WhatsAppGroupsView extends StatelessWidget {
       },
       child: AppDashboardScaffold(
         title: t.communication.whatsAppTitle,
-        onRefresh: () async => context
-            .read<CommunicationBloc>()
-            .add(CommunicationRefreshRequested(childId)),
+        onRefresh: () async => context.read<CommunicationBloc>().add(
+          CommunicationRefreshRequested(childId),
+        ),
         actions: [
           IconButton(
             tooltip: t.retry,
-            onPressed: () => context
-                .read<CommunicationBloc>()
-                .add(CommunicationRefreshRequested(childId)),
+            onPressed: () => context.read<CommunicationBloc>().add(
+              CommunicationRefreshRequested(childId),
+            ),
             icon: const Icon(Icons.refresh_rounded),
           ),
         ],
@@ -75,12 +77,11 @@ class _WhatsAppGroupsView extends StatelessWidget {
             if (section.isFailure && state.whatsAppGroups.isEmpty) {
               return AppErrorView(
                 message: section.errorMessage ?? t.unableToLoad,
-                onRetry: () =>
-                    context.read<CommunicationBloc>().add(
-                          const CommunicationRetrySectionRequested(
-                            CommunicationSection.whatsAppGroups,
-                          ),
-                        ),
+                onRetry: () => context.read<CommunicationBloc>().add(
+                  const CommunicationRetrySectionRequested(
+                    CommunicationSection.whatsAppGroups,
+                  ),
+                ),
               );
             }
 

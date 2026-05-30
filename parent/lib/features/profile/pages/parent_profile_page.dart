@@ -134,9 +134,7 @@ class ParentProfilePage extends StatelessWidget {
     if (confirmed != true || !context.mounted) return;
 
     try {
-      await context
-          .read<AuthenticationRepository<ParentEntity>>()
-          .logout();
+      await context.read<AuthenticationRepository<ParentEntity>>().logout();
     } catch (_) {
       // Even if the network call fails, drop the local session.
     }

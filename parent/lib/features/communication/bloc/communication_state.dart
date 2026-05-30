@@ -16,17 +16,17 @@ final class CommunicationAsyncSection<T> extends Equatable {
   });
 
   const CommunicationAsyncSection.initial()
-      : this._(status: CommunicationSectionStatus.initial);
+    : this._(status: CommunicationSectionStatus.initial);
   const CommunicationAsyncSection.loading({T? data})
-      : this._(status: CommunicationSectionStatus.loading, data: data);
+    : this._(status: CommunicationSectionStatus.loading, data: data);
   const CommunicationAsyncSection.loaded(T data)
-      : this._(status: CommunicationSectionStatus.loaded, data: data);
+    : this._(status: CommunicationSectionStatus.loaded, data: data);
   const CommunicationAsyncSection.failure(String message, {T? data})
-      : this._(
-          status: CommunicationSectionStatus.failure,
-          data: data,
-          errorMessage: message,
-        );
+    : this._(
+        status: CommunicationSectionStatus.failure,
+        data: data,
+        errorMessage: message,
+      );
 
   bool get isInitial => status == CommunicationSectionStatus.initial;
   bool get isLoading => status == CommunicationSectionStatus.loading;
@@ -45,9 +45,9 @@ final class CommunicationState extends Equatable {
   final bool isRefreshing;
 
   final CommunicationAsyncSection<List<AnnouncementEntity>>
-      announcementsSection;
+  announcementsSection;
   final CommunicationAsyncSection<List<WhatsAppGroupEntity>>
-      whatsAppGroupsSection;
+  whatsAppGroupsSection;
 
   const CommunicationState({
     required this.childId,
@@ -75,14 +75,12 @@ final class CommunicationState extends Equatable {
     String? childId,
     bool? isRefreshing,
     CommunicationAsyncSection<List<AnnouncementEntity>>? announcementsSection,
-    CommunicationAsyncSection<List<WhatsAppGroupEntity>>?
-        whatsAppGroupsSection,
+    CommunicationAsyncSection<List<WhatsAppGroupEntity>>? whatsAppGroupsSection,
   }) {
     return CommunicationState(
       childId: childId ?? this.childId,
       isRefreshing: isRefreshing ?? this.isRefreshing,
-      announcementsSection:
-          announcementsSection ?? this.announcementsSection,
+      announcementsSection: announcementsSection ?? this.announcementsSection,
       whatsAppGroupsSection:
           whatsAppGroupsSection ?? this.whatsAppGroupsSection,
     );
@@ -90,9 +88,9 @@ final class CommunicationState extends Equatable {
 
   @override
   List<Object?> get props => [
-      childId,
-      isRefreshing,
-      announcementsSection,
-      whatsAppGroupsSection,
-    ];
+    childId,
+    isRefreshing,
+    announcementsSection,
+    whatsAppGroupsSection,
+  ];
 }

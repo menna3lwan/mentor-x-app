@@ -20,7 +20,8 @@ class LinkedChildrenListWrapper extends StatelessWidget {
           prev.unlinkingChildId != curr.unlinkingChildId,
       builder: (context, state) {
         return LinkedChildrenListWidget(
-          isLoading: state.childrenSection.isLoading ||
+          isLoading:
+              state.childrenSection.isLoading ||
               state.childrenSection.isInitial,
           errorMessage: state.childrenSection.isFailure
               ? state.childrenSection.errorMessage ?? t.unableToLoad
@@ -29,14 +30,11 @@ class LinkedChildrenListWrapper extends StatelessWidget {
               context.read<ChildrenBloc>().add(const ChildrenStarted()),
           onLinkChildPressed: () => const AddChildLinkRoute().go(context),
           onRefresh: () async {
-            context
-                .read<ChildrenBloc>()
-                .add(const ChildrenRefreshRequested());
+            context.read<ChildrenBloc>().add(const ChildrenRefreshRequested());
           },
           children: state.children,
           unlinkingChildId: state.unlinkingChildId,
-          onUnlinkPressed: (child) =>
-              _confirmUnlink(context, child, t),
+          onUnlinkPressed: (child) => _confirmUnlink(context, child, t),
           emptyTitle: t.home.noChildrenTitle,
           emptyMessage: t.home.noChildrenHint,
           emptyActionLabel: t.home.linkChild,

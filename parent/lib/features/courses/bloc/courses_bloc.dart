@@ -23,9 +23,9 @@ final class CoursesBloc extends Bloc<CoursesEvent, CoursesState>
   CoursesBloc({
     required ParentCourseRepository courseRepository,
     required ParentGradeRepository gradeRepository,
-  })  : _courseRepository = courseRepository,
-        _gradeRepository = gradeRepository,
-        super(CoursesState.initial()) {
+  }) : _courseRepository = courseRepository,
+       _gradeRepository = gradeRepository,
+       super(CoursesState.initial()) {
     on<CoursesStarted>(_onStarted);
     on<CoursesRefreshRequested>(_onRefreshRequested);
     on<CoursesRetrySectionRequested>(_onRetrySection);
@@ -73,11 +73,13 @@ final class CoursesBloc extends Bloc<CoursesEvent, CoursesState>
   }
 
   Future<void> _loadAll(Emitter<CoursesState> emit, String childId) async {
-    emit(state.copyWith(
-      coursesSection: state.coursesSection.toLoading(),
-      summarySection: state.summarySection.toLoading(),
-      trendSection: state.trendSection.toLoading(),
-    ));
+    emit(
+      state.copyWith(
+        coursesSection: state.coursesSection.toLoading(),
+        summarySection: state.summarySection.toLoading(),
+        trendSection: state.trendSection.toLoading(),
+      ),
+    );
 
     await Future.wait([
       _loadCourses(emit, childId),
@@ -92,13 +94,17 @@ final class CoursesBloc extends Bloc<CoursesEvent, CoursesState>
   ) async {
     try {
       final courses = await _courseRepository.getCourses(childId);
-      emit(state.copyWith(
-        coursesSection: CoursesAsyncSection.loaded(courses),
-      ));
+      emit(
+        state.copyWith(
+          coursesSection: CoursesAsyncSection.loaded(courses),
+        ),
+      );
     } catch (e) {
-      emit(state.copyWith(
-        coursesSection: CoursesAsyncSection.failure(e.toString()),
-      ));
+      emit(
+        state.copyWith(
+          coursesSection: CoursesAsyncSection.failure(e.toString()),
+        ),
+      );
       emitPresentation(CoursesFailurePresentationEvent(message: e.toString()));
     }
   }
@@ -109,13 +115,17 @@ final class CoursesBloc extends Bloc<CoursesEvent, CoursesState>
   ) async {
     try {
       final summary = await _gradeRepository.getGradeSummary(childId);
-      emit(state.copyWith(
-        summarySection: CoursesAsyncSection.loaded(summary),
-      ));
+      emit(
+        state.copyWith(
+          summarySection: CoursesAsyncSection.loaded(summary),
+        ),
+      );
     } catch (e) {
-      emit(state.copyWith(
-        summarySection: CoursesAsyncSection.failure(e.toString()),
-      ));
+      emit(
+        state.copyWith(
+          summarySection: CoursesAsyncSection.failure(e.toString()),
+        ),
+      );
       emitPresentation(CoursesFailurePresentationEvent(message: e.toString()));
     }
   }
@@ -126,13 +136,17 @@ final class CoursesBloc extends Bloc<CoursesEvent, CoursesState>
   ) async {
     try {
       final trend = await _gradeRepository.getGradeTrend(childId);
-      emit(state.copyWith(
-        trendSection: CoursesAsyncSection.loaded(trend),
-      ));
+      emit(
+        state.copyWith(
+          trendSection: CoursesAsyncSection.loaded(trend),
+        ),
+      );
     } catch (e) {
-      emit(state.copyWith(
-        trendSection: CoursesAsyncSection.failure(e.toString()),
-      ));
+      emit(
+        state.copyWith(
+          trendSection: CoursesAsyncSection.failure(e.toString()),
+        ),
+      );
       // Trend is non-blocking; don't toast.
     }
   }

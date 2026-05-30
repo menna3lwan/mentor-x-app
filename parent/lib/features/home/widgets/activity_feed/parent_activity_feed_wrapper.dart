@@ -29,9 +29,9 @@ class ParentActivityFeedWrapper extends StatelessWidget {
         if (section.isFailure && (section.data?.isEmpty ?? true)) {
           return AppErrorView(
             message: section.errorMessage ?? t.unableToLoad,
-            onRetry: () => context
-                .read<HomeBloc>()
-                .add(const HomeRetrySectionRequested(HomeSection.activity)),
+            onRetry: () => context.read<HomeBloc>().add(
+              const HomeRetrySectionRequested(HomeSection.activity),
+            ),
           );
         }
 

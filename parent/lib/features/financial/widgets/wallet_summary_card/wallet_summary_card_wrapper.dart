@@ -25,10 +25,10 @@ class WalletSummaryCardWrapper extends StatelessWidget {
           return AppErrorView(
             message: section.errorMessage ?? t.unableToLoad,
             onRetry: () => context.read<FinancialBloc>().add(
-                  const FinancialRetrySectionRequested(
-                    FinancialSection.summary,
-                  ),
-                ),
+              const FinancialRetrySectionRequested(
+                FinancialSection.summary,
+              ),
+            ),
           );
         }
 

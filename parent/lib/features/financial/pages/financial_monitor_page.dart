@@ -38,7 +38,10 @@ class _FinancialMonitorView extends StatelessWidget {
     return BlocPresentationListener<FinancialBloc, FinancialPresentationEvent>(
       listener: (context, event) {
         switch (event) {
-          case FinancialFailurePresentationEvent(:final kind, :final rawMessage):
+          case FinancialFailurePresentationEvent(
+            :final kind,
+            :final rawMessage,
+          ):
             MentorXUI.showToast(
               message: _messageFor(t, kind, rawMessage),
               isError: true,
@@ -50,15 +53,15 @@ class _FinancialMonitorView extends StatelessWidget {
       },
       child: AppDashboardScaffold(
         title: t.financialMonitor,
-        onRefresh: () async => context
-            .read<FinancialBloc>()
-            .add(FinancialRefreshRequested(childId: childId)),
+        onRefresh: () async => context.read<FinancialBloc>().add(
+          FinancialRefreshRequested(childId: childId),
+        ),
         actions: [
           IconButton(
             tooltip: t.retry,
-            onPressed: () => context
-                .read<FinancialBloc>()
-                .add(FinancialRefreshRequested(childId: childId)),
+            onPressed: () => context.read<FinancialBloc>().add(
+              FinancialRefreshRequested(childId: childId),
+            ),
             icon: const Icon(Icons.refresh_rounded),
           ),
         ],

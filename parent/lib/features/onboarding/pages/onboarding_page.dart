@@ -90,7 +90,11 @@ class _OnboardingPageState extends State<OnboardingPage> {
                               color: slide.color.withValues(alpha: 0.1),
                               shape: BoxShape.circle,
                             ),
-                            child: Icon(slide.icon, size: 80, color: slide.color),
+                            child: Icon(
+                              slide.icon,
+                              size: 80,
+                              color: slide.color,
+                            ),
                           ),
                           const SizedBox(height: 60),
                           Text(

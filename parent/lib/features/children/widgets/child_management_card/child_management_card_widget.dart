@@ -99,7 +99,10 @@ class ChildManagementCardWidget extends StatelessWidget {
                     runSpacing: 6,
                     children: [
                       if (gradeLabel != null)
-                        _MetaChip(label: gradeLabel!, icon: Icons.school_rounded),
+                        _MetaChip(
+                          label: gradeLabel!,
+                          icon: Icons.school_rounded,
+                        ),
                       if (centerLabel != null)
                         _MetaChip(
                           label: centerLabel!,

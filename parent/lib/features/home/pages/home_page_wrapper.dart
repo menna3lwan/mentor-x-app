@@ -55,13 +55,11 @@ class _HomePageView extends StatelessWidget {
             context.read<HomeBloc>().add(const HomeRefreshRequested()),
         child: HomePagePage(
           title: t.dashboardTitle,
-          onRefresh: () async => context
-              .read<HomeBloc>()
-              .add(const HomeRefreshRequested()),
+          onRefresh: () async =>
+              context.read<HomeBloc>().add(const HomeRefreshRequested()),
           actions: [
             BlocBuilder<HomeBloc, HomeState>(
-              buildWhen: (a, b) =>
-                  a.selectedChild?.id != b.selectedChild?.id,
+              buildWhen: (a, b) => a.selectedChild?.id != b.selectedChild?.id,
               builder: (context, state) {
                 final childId = state.selectedChild?.id;
                 return _NotificationActionButton(
@@ -156,7 +154,7 @@ class _HomeContent extends StatelessWidget {
               message: state.childrenSection.errorMessage ?? t.unableToLoad,
               onRetry: () => context.read<HomeBloc>().add(
                 HomeRetrySectionRequested(HomeSection.children),
-                  ),
+              ),
             ),
           );
         }

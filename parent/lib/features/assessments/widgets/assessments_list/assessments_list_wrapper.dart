@@ -33,10 +33,10 @@ class AssessmentsListWrapper extends StatelessWidget {
           return AppErrorView(
             message: section.errorMessage ?? t.unableToLoad,
             onRetry: () => context.read<AssessmentsBloc>().add(
-                  const AssessmentsRetrySectionRequested(
-                    AssessmentsSection.history,
-                  ),
-                ),
+              const AssessmentsRetrySectionRequested(
+                AssessmentsSection.history,
+              ),
+            ),
           );
         }
 

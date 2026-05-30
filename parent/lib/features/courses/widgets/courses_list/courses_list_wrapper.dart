@@ -33,8 +33,8 @@ class CoursesListWrapper extends StatelessWidget {
           return AppErrorView(
             message: section.errorMessage ?? t.unableToLoad,
             onRetry: () => context.read<CoursesBloc>().add(
-                  const CoursesRetrySectionRequested(CoursesSection.courses),
-                ),
+              const CoursesRetrySectionRequested(CoursesSection.courses),
+            ),
           );
         }
 
