@@ -30,14 +30,18 @@ void main() {
   );
 
   ParentRegistrationBloc buildBloc() => ParentRegistrationBloc(
-        authenticationRepository: auth,
-        deviceInfoService: deviceInfo,
-      );
+    authenticationRepository: auth,
+    deviceInfoService: deviceInfo,
+  );
 
   // Helper that walks the state into "step 0 fully valid" (lookup + confirm).
   void prepareValidStep0(ParentRegistrationBloc bloc) {
     bloc.add(const ParentRegistrationLookupValueChanged(value: '01001234567'));
   }
+
+  setUpAll(() {
+    registerFallbackValue(ParentLookupType.phone);
+  });
 
   setUp(() {
     auth = _MockAuthRepository();
@@ -73,6 +77,7 @@ void main() {
       build: buildBloc,
       act: (bloc) async {
         prepareValidStep0(bloc);
+        await Future<void>.delayed(Duration.zero);
         bloc.add(const ParentRegistrationFindStudentSubmitted());
       },
       wait: const Duration(milliseconds: 40),
@@ -103,6 +108,7 @@ void main() {
       build: buildBloc,
       act: (bloc) async {
         prepareValidStep0(bloc);
+        await Future<void>.delayed(Duration.zero);
         bloc.add(const ParentRegistrationFindStudentSubmitted());
       },
       wait: const Duration(milliseconds: 40),
@@ -138,6 +144,7 @@ void main() {
       build: buildBloc,
       act: (bloc) async {
         prepareValidStep0(bloc);
+        await Future<void>.delayed(Duration.zero);
         bloc.add(const ParentRegistrationFindStudentSubmitted());
         await Future<void>.delayed(const Duration(milliseconds: 20));
         bloc.add(const ParentRegistrationStudentConfirmed());
@@ -173,6 +180,7 @@ void main() {
       build: buildBloc,
       act: (bloc) async {
         prepareValidStep0(bloc);
+        await Future<void>.delayed(Duration.zero);
         bloc.add(const ParentRegistrationFindStudentSubmitted());
         await Future<void>.delayed(const Duration(milliseconds: 20));
         bloc.add(const ParentRegistrationStudentConfirmed());

@@ -23,10 +23,12 @@ void main() {
   AttendanceBloc buildBloc() => AttendanceBloc(repository: repo);
 
   void stubAllSuccess() {
-    when(() => repo.getAttendance(childId))
-        .thenAnswer((_) async => const <AttendanceRecordEntity>[]);
-    when(() => repo.getAttendanceSummary(childId))
-        .thenAnswer((_) async => summary);
+    when(
+      () => repo.getAttendance(childId),
+    ).thenAnswer((_) async => const <AttendanceRecordEntity>[]);
+    when(
+      () => repo.getAttendanceSummary(childId),
+    ).thenAnswer((_) async => summary);
   }
 
   setUp(() {
@@ -50,8 +52,9 @@ void main() {
       'records fetch failure leaves section in failure but keeps summary',
       setUp: () {
         when(() => repo.getAttendance(childId)).thenThrow(Exception('500'));
-        when(() => repo.getAttendanceSummary(childId))
-            .thenAnswer((_) async => summary);
+        when(
+          () => repo.getAttendanceSummary(childId),
+        ).thenAnswer((_) async => summary);
       },
       build: buildBloc,
       act: (bloc) => bloc.add(const AttendanceStarted(childId)),
@@ -81,7 +84,16 @@ void main() {
   group('AttendanceBloc.AttendanceRefreshRequested', () {
     blocTest<AttendanceBloc, AttendanceState>(
       'rapid refresh taps are dropped',
-      setUp: stubAllSuccess,
+      setUp: () {
+        when(() => repo.getAttendance(childId)).thenAnswer((_) async {
+          await Future<void>.delayed(const Duration(milliseconds: 30));
+          return const <AttendanceRecordEntity>[];
+        });
+        when(() => repo.getAttendanceSummary(childId)).thenAnswer((_) async {
+          await Future<void>.delayed(const Duration(milliseconds: 30));
+          return summary;
+        });
+      },
       build: buildBloc,
       act: (bloc) async {
         bloc.add(const AttendanceRefreshRequested(childId));

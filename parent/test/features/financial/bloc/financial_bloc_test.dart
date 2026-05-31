@@ -25,14 +25,16 @@ void main() {
   FinancialBloc buildBloc() => FinancialBloc(repository: repo);
 
   void stubAllSuccess() {
-    when(() => repo.getTransactions(childId))
-        .thenAnswer((_) async => const <WalletTransactionEntity>[]);
-    when(() => repo.getWalletSummary(childId))
-        .thenAnswer((_) async => summary);
-    when(() => repo.getPayments(childId))
-        .thenAnswer((_) async => const <PaymentEntity>[]);
-    when(() => repo.getWalletAnalytics(childId))
-        .thenAnswer((_) async => analytics);
+    when(
+      () => repo.getTransactions(childId),
+    ).thenAnswer((_) async => const <WalletTransactionEntity>[]);
+    when(() => repo.getWalletSummary(childId)).thenAnswer((_) async => summary);
+    when(
+      () => repo.getPayments(childId),
+    ).thenAnswer((_) async => const <PaymentEntity>[]);
+    when(
+      () => repo.getWalletAnalytics(childId),
+    ).thenAnswer((_) async => analytics);
   }
 
   setUp(() {
@@ -84,7 +86,24 @@ void main() {
   group('FinancialBloc.FinancialRefreshRequested', () {
     blocTest<FinancialBloc, FinancialState>(
       'rapid refresh taps are dropped',
-      setUp: stubAllSuccess,
+      setUp: () {
+        when(() => repo.getTransactions(childId)).thenAnswer((_) async {
+          await Future<void>.delayed(const Duration(milliseconds: 30));
+          return const <WalletTransactionEntity>[];
+        });
+        when(() => repo.getWalletSummary(childId)).thenAnswer((_) async {
+          await Future<void>.delayed(const Duration(milliseconds: 30));
+          return summary;
+        });
+        when(() => repo.getPayments(childId)).thenAnswer((_) async {
+          await Future<void>.delayed(const Duration(milliseconds: 30));
+          return const <PaymentEntity>[];
+        });
+        when(() => repo.getWalletAnalytics(childId)).thenAnswer((_) async {
+          await Future<void>.delayed(const Duration(milliseconds: 30));
+          return analytics;
+        });
+      },
       build: buildBloc,
       act: (bloc) async {
         bloc.add(const FinancialRefreshRequested(childId: childId));

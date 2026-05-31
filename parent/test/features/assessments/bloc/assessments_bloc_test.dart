@@ -16,12 +16,11 @@ void main() {
   AssessmentsBloc buildBloc() => AssessmentsBloc(repository: repo);
 
   void stubAllSuccess() {
-    when(() => repo.getAssessments(childId))
-        .thenAnswer((_) async => const <QuizAttemptEntity>[]);
-    when(() => repo.getGradeSummary(childId))
-        .thenAnswer((_) async => summary);
-    when(() => repo.getGradeTrend(childId))
-        .thenAnswer((_) async => trend);
+    when(
+      () => repo.getAssessments(childId),
+    ).thenAnswer((_) async => const <QuizAttemptEntity>[]);
+    when(() => repo.getGradeSummary(childId)).thenAnswer((_) async => summary);
+    when(() => repo.getGradeTrend(childId)).thenAnswer((_) async => trend);
   }
 
   setUp(() {
@@ -64,10 +63,10 @@ void main() {
       'history fetch failure puts the history section in failure',
       setUp: () {
         when(() => repo.getAssessments(childId)).thenThrow(Exception('500'));
-        when(() => repo.getGradeSummary(childId))
-            .thenAnswer((_) async => summary);
-        when(() => repo.getGradeTrend(childId))
-            .thenAnswer((_) async => trend);
+        when(
+          () => repo.getGradeSummary(childId),
+        ).thenAnswer((_) async => summary);
+        when(() => repo.getGradeTrend(childId)).thenAnswer((_) async => trend);
       },
       build: buildBloc,
       act: (bloc) => bloc.add(const AssessmentsStarted(childId)),
@@ -82,7 +81,20 @@ void main() {
   group('AssessmentsBloc.AssessmentsRefreshRequested', () {
     blocTest<AssessmentsBloc, AssessmentsState>(
       'refresh while already refreshing is dropped',
-      setUp: stubAllSuccess,
+      setUp: () {
+        when(() => repo.getAssessments(childId)).thenAnswer((_) async {
+          await Future<void>.delayed(const Duration(milliseconds: 30));
+          return const <QuizAttemptEntity>[];
+        });
+        when(() => repo.getGradeSummary(childId)).thenAnswer((_) async {
+          await Future<void>.delayed(const Duration(milliseconds: 30));
+          return summary;
+        });
+        when(() => repo.getGradeTrend(childId)).thenAnswer((_) async {
+          await Future<void>.delayed(const Duration(milliseconds: 30));
+          return trend;
+        });
+      },
       build: buildBloc,
       act: (bloc) async {
         bloc.add(const AssessmentsRefreshRequested(childId));
