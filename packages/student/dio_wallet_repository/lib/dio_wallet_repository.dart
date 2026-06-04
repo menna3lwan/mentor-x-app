@@ -169,11 +169,17 @@ final class DioWalletRepository
         '/api/coupons/preview',
         data: {
           'code': code,
-          'amount': amount,
-          if (courseId != null) 'courseId': courseId,
+          'originalPrice': amount,
         },
       );
-      return response.asMap();
+      // Backend returns GlobalResponse<ApplyCouponResponse> — unwrap 'data' field.
+      final wrapper = response.asMap();
+      final data = wrapper['data'];
+      if (data != null && data is Map<String, dynamic>) {
+        return data;
+      }
+      // Fallback: maybe the interceptor already unwrapped it.
+      return wrapper;
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,

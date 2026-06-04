@@ -824,6 +824,18 @@ class _TranslationsCourseDetailAr extends TranslationsCourseDetailEn {
 	@override String get enrollNow => 'سجل الآن';
 	@override String get pointsReward => 'جائزة نقاط';
 	@override String durationShort({required Object mins, required Object secs}) => '${mins}د ${secs}ث';
+	@override String get couponCode => 'كود الخصم';
+	@override String get enterCouponCode => 'أدخل كود الخصم';
+	@override String get apply => 'تطبيق';
+	@override String get remove => 'حذف';
+	@override String get couponApplied => 'تم تطبيق الكوبون بنجاح!';
+	@override String get invalidCoupon => 'كود الخصم غير صحيح.';
+	@override String get originalPriceLabel => 'السعر الأصلي';
+	@override String get discountLabel => 'الخصم';
+	@override String get finalPriceLabel => 'السعر النهائي';
+	@override String get confirmPayment => 'تأكيد الدفع والتسجيل';
+	@override String get insufficientBalance => 'رصيد المحفظة غير كافٍ. يرجى شحن الرصيد.';
+	@override String get enrollToAccess => 'سجّل في هذه الدورة للوصول إلى محتواها.';
 }
 
 // Path: course.errors
@@ -1391,6 +1403,18 @@ extension on TranslationsAr {
 			'course.detail.enrollNow' => 'سجل الآن',
 			'course.detail.pointsReward' => 'جائزة نقاط',
 			'course.detail.durationShort' => ({required Object mins, required Object secs}) => '${mins}د ${secs}ث',
+			'course.detail.couponCode' => 'كود الخصم',
+			'course.detail.enterCouponCode' => 'أدخل كود الخصم',
+			'course.detail.apply' => 'تطبيق',
+			'course.detail.remove' => 'حذف',
+			'course.detail.couponApplied' => 'تم تطبيق الكوبون بنجاح!',
+			'course.detail.invalidCoupon' => 'كود الخصم غير صحيح.',
+			'course.detail.originalPriceLabel' => 'السعر الأصلي',
+			'course.detail.discountLabel' => 'الخصم',
+			'course.detail.finalPriceLabel' => 'السعر النهائي',
+			'course.detail.confirmPayment' => 'تأكيد الدفع والتسجيل',
+			'course.detail.insufficientBalance' => 'رصيد المحفظة غير كافٍ. يرجى شحن الرصيد.',
+			'course.detail.enrollToAccess' => 'سجّل في هذه الدورة للوصول إلى محتواها.',
 			'course.errors.failedToLoadSessions' => 'فشل في تحميل حصص الدورة',
 			'course.errors.tryRefreshing' => 'حاول تحديث الصفحة',
 			'course.player.completed' => 'مكتمل',
@@ -1591,6 +1615,8 @@ extension on TranslationsAr {
 			'quizzes.exitQuizDesc' => 'يتم حفظ تقدمك تلقائياً. يمكنك استئناف هذا الاختبار لاحقاً من صفحة المقدمة.',
 			'quizzes.cancel' => 'إلغاء',
 			'quizzes.exit' => 'خروج',
+			_ => null,
+		} ?? switch (path) {
 			'quizzes.questionLabel' => 'سؤال',
 			'quizzes.chooseCorrect' => 'اختر الإجابة الصحيحة:',
 			'quizzes.typeAnswerHere' => 'اكتب إجابتك هنا...',
@@ -1603,8 +1629,6 @@ extension on TranslationsAr {
 			'quizzes.rewards.xpPoints' => 'نقاط الخبرة',
 			'quizzes.rewards.quizCompleted' => 'الاختبارات',
 			'quizzes.rewards.badge' => 'الأوسمة',
-			_ => null,
-		} ?? switch (path) {
 			'quizzes.rewards.dailyStreak' => 'النشاط اليومي',
 			'quizzes.rewards.streakDaysMsg' => ({required Object days}) => 'لديك سلسلة نشاط لمدة ${days} أيام!',
 			'quizzes.rewards.earnedBadges' => 'الأوسمة',

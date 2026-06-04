@@ -26,13 +26,17 @@ final class StudentApp extends StatefulWidget {
   State<StudentApp> createState() => _StudentAppState();
 }
 
-class _StudentAppState extends State<StudentApp> {
+class _StudentAppState extends State<StudentApp> with WidgetsBindingObserver {
   late final StreamSubscription<AppAuthenticationLogoutEvent>
   _logoutSubscription;
+  late final StreamSubscription<AppAuthenticationUpdateEvent>
+  _updateSubscription;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
+
     _logoutSubscription = appEventBus.on<AppAuthenticationLogoutEvent>().listen(
       (event) {
         StudentApp._logger.info(
@@ -41,12 +45,63 @@ class _StudentAppState extends State<StudentApp> {
         rootNavigatorKey.currentContext?.go('/login');
       },
     );
+
+    _updateSubscription = appEventBus.on<AppAuthenticationUpdateEvent>().listen(
+      (event) {
+        final user = event.user;
+        if (user != null) {
+          final context = rootNavigatorKey.currentContext;
+          if (context != null && context.mounted) {
+            StudentApp._logger.info(
+              'Global auth update: User status is ${user.status}, resolving redirection',
+            );
+            switch (user.status) {
+              case StudentStatus.active:
+                break;
+              case StudentStatus.pending:
+                context.go('/status-pending');
+              case StudentStatus.suspended:
+                context.go('/status-blocked');
+              case StudentStatus.rejected:
+              case StudentStatus.inactive:
+                context.go('/status-rejected');
+            }
+          }
+        }
+      },
+    );
   }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _logoutSubscription.cancel();
+    _updateSubscription.cancel();
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _checkAccountStatus();
+    }
+  }
+
+  Future<void> _checkAccountStatus() async {
+    final context = rootNavigatorKey.currentContext;
+    if (context == null) return;
+
+    try {
+      final authCubit = context.read<AppAuthenticationCubit>();
+      if (authCubit.state != null) {
+        final authRepo = context.read<StudentAuthenticationRepository>();
+        StudentApp._logger.info('App resumed: Checking latest account status from backend');
+        final updatedUser = await authRepo.getAccountStatus();
+        appEventBus.fire(AppAuthenticationUpdateEvent(user: updatedUser));
+      }
+    } catch (e, s) {
+      StudentApp._logger.error('Failed to verify account status on resume', e, s);
+    }
   }
 
   @override

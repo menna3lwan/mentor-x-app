@@ -1,6 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mock_course_repository/mock_course_repository.dart';
+import 'package:mock_wallet_repository/mock_wallet_repository.dart';
 import 'package:mentorx_student/core/core.dart';
 import 'package:mentorx_student/features/course/pages/course_detail/bloc/course_detail_page_bloc.dart';
 
@@ -21,18 +22,20 @@ class MockAnalyticsService implements AnalyticsService {
 
 void main() {
   late MockCourseRepository courseRepository;
+  late MockWalletRepository walletRepository;
   late MockAnalyticsService analyticsService;
 
   setUp(() {
     courseRepository = const MockCourseRepository(delay: Duration.zero);
+    walletRepository = const MockWalletRepository(delay: Duration.zero);
     analyticsService = MockAnalyticsService();
-
   });
 
   group('CourseDetailPageBloc', () {
     test('initial state has correct defaults', () {
       final bloc = CourseDetailPageBloc(
         courseRepository: courseRepository,
+        walletRepository: walletRepository,
         analyticsService: analyticsService,
         courseId: 'ep1',
       );
@@ -49,13 +52,21 @@ void main() {
       expect(bloc.state.enrollErrorMessage, isNull);
       expect(bloc.state.isEnrolled, false);
       expect(bloc.state.isEnrolling, false);
+      expect(bloc.state.appliedCouponCode, isNull);
+      expect(bloc.state.discountAmount, isNull);
+      expect(bloc.state.finalPrice, isNull);
+      expect(bloc.state.couponErrorMessage, isNull);
+      expect(bloc.state.isCouponLoading, false);
+      expect(bloc.state.couponDiscountSummary, isNull);
+      expect(bloc.state.walletBalance, isNull);
       bloc.close();
     });
 
     blocTest<CourseDetailPageBloc, CourseDetailPageState>(
-      'loads course, sessions, and items when initialized',
+      'loads course, sessions, items, and wallet balance when initialized',
       build: () => CourseDetailPageBloc(
         courseRepository: courseRepository,
+        walletRepository: walletRepository,
         analyticsService: analyticsService,
         courseId: 'ep1',
       ),
@@ -71,6 +82,8 @@ void main() {
         // ep1 starts with 'ep' so progress should be returned
         expect(bloc.state.enrollment, isNotNull);
         expect(bloc.state.isEnrolled, true);
+        expect(bloc.state.walletBalance, isNotNull);
+        expect(bloc.state.validCoupons, isNotEmpty);
       },
     );
 
@@ -78,6 +91,7 @@ void main() {
       'switches tab to sessions correctly',
       build: () => CourseDetailPageBloc(
         courseRepository: courseRepository,
+        walletRepository: walletRepository,
         analyticsService: analyticsService,
         courseId: 'ep1',
       ),
@@ -96,6 +110,7 @@ void main() {
       'switches tab back to description',
       build: () => CourseDetailPageBloc(
         courseRepository: courseRepository,
+        walletRepository: walletRepository,
         analyticsService: analyticsService,
         courseId: 'ep1',
       ),
@@ -119,6 +134,7 @@ void main() {
       'enrolls successfully',
       build: () => CourseDetailPageBloc(
         courseRepository: courseRepository,
+        walletRepository: walletRepository,
         analyticsService: analyticsService,
         courseId: 'ep1',
       ),
@@ -149,6 +165,7 @@ void main() {
       'returns null enrollment for non-enrolled course',
       build: () => CourseDetailPageBloc(
         courseRepository: courseRepository,
+        walletRepository: walletRepository,
         analyticsService: analyticsService,
         courseId: 'test1',
       ),
@@ -165,6 +182,7 @@ void main() {
       'refresh reloads all data',
       build: () => CourseDetailPageBloc(
         courseRepository: courseRepository,
+        walletRepository: walletRepository,
         analyticsService: analyticsService,
         courseId: 'ep1',
       ),
@@ -181,6 +199,7 @@ void main() {
         expect(bloc.state.course, isNotNull);
         expect(bloc.state.sessions, isNotEmpty);
         expect(bloc.state.sessionItems, isNotEmpty);
+        expect(bloc.state.walletBalance, isNotNull);
       },
     );
 
@@ -188,6 +207,7 @@ void main() {
       'enrollment with ec prefix returns enrollment',
       build: () => CourseDetailPageBloc(
         courseRepository: courseRepository,
+        walletRepository: walletRepository,
         analyticsService: analyticsService,
         courseId: 'ep1',
       ),
@@ -204,6 +224,7 @@ void main() {
       'sessions have correct items loaded',
       build: () => CourseDetailPageBloc(
         courseRepository: courseRepository,
+        walletRepository: walletRepository,
         analyticsService: analyticsService,
         courseId: 'ep1',
       ),
@@ -246,6 +267,108 @@ void main() {
       );
       expect(failureState.isCourseFailure, true);
       expect(failureState.isCourseLoaded, false);
+    });
+
+    group('Coupon Flow Tests', () {
+      blocTest<CourseDetailPageBloc, CourseDetailPageState>(
+        'applies a valid coupon successfully',
+        build: () => CourseDetailPageBloc(
+          courseRepository: courseRepository,
+          walletRepository: walletRepository,
+          analyticsService: analyticsService,
+          courseId: 'ep1',
+        ),
+        seed: () => CourseDetailPageState(
+          courseId: 'ep1',
+          course: const CourseEntity(
+            id: 'ep1',
+            title: 'Title',
+            price: 200.0,
+            isFree: false,
+            totalVideos: 5,
+            totalDurationMinutes: 120,
+            enrolledCount: 10,
+            totalSessions: 3,
+            pointsReward: 50,
+          ),
+        ),
+        act: (bloc) => bloc.add(const CourseDetailPageApplyCouponRequested('SAVE50')),
+        expect: () => [
+          isA<CourseDetailPageState>().having(
+            (s) => s.isCouponLoading,
+            'isCouponLoading',
+            true,
+          ),
+          isA<CourseDetailPageState>()
+              .having((s) => s.isCouponLoading, 'isCouponLoading', false)
+              .having((s) => s.appliedCouponCode, 'appliedCouponCode', 'SAVE50')
+              .having((s) => s.discountAmount, 'discountAmount', 50.0)
+              .having((s) => s.finalPrice, 'finalPrice', 150.0)
+              .having((s) => s.couponDiscountSummary, 'discountSummary', 'خصم 50.0 جنيه')
+              .having((s) => s.couponErrorMessage, 'couponErrorMessage', isNull),
+        ],
+      );
+
+      blocTest<CourseDetailPageBloc, CourseDetailPageState>(
+        'handles invalid coupon validation error',
+        build: () => CourseDetailPageBloc(
+          courseRepository: courseRepository,
+          walletRepository: walletRepository,
+          analyticsService: analyticsService,
+          courseId: 'ep1',
+        ),
+        seed: () => CourseDetailPageState(
+          courseId: 'ep1',
+          course: const CourseEntity(
+            id: 'ep1',
+            title: 'Title',
+            price: 200.0,
+            isFree: false,
+            totalVideos: 5,
+            totalDurationMinutes: 120,
+            enrolledCount: 10,
+            totalSessions: 3,
+            pointsReward: 50,
+          ),
+        ),
+        act: (bloc) => bloc.add(const CourseDetailPageApplyCouponRequested('INVALID')),
+        expect: () => [
+          isA<CourseDetailPageState>().having(
+            (s) => s.isCouponLoading,
+            'isCouponLoading',
+            true,
+          ),
+          isA<CourseDetailPageState>()
+              .having((s) => s.isCouponLoading, 'isCouponLoading', false)
+              .having((s) => s.appliedCouponCode, 'appliedCouponCode', isNull)
+              .having((s) => s.couponErrorMessage, 'couponErrorMessage', 'Invalid coupon code.'),
+        ],
+      );
+
+      blocTest<CourseDetailPageBloc, CourseDetailPageState>(
+        'removes applied coupon successfully',
+        build: () => CourseDetailPageBloc(
+          courseRepository: courseRepository,
+          walletRepository: walletRepository,
+          analyticsService: analyticsService,
+          courseId: 'ep1',
+        ),
+        seed: () => CourseDetailPageState(
+          courseId: 'ep1',
+          appliedCouponCode: 'SAVE50',
+          discountAmount: 50.0,
+          finalPrice: 150.0,
+          couponDiscountSummary: 'خصم 50.0 جنيه',
+        ),
+        act: (bloc) => bloc.add(const CourseDetailPageRemoveCouponRequested()),
+        expect: () => [
+          isA<CourseDetailPageState>()
+              .having((s) => s.appliedCouponCode, 'appliedCouponCode', isNull)
+              .having((s) => s.discountAmount, 'discountAmount', isNull)
+              .having((s) => s.finalPrice, 'finalPrice', isNull)
+              .having((s) => s.couponDiscountSummary, 'couponDiscountSummary', isNull),
+        ],
+      );
     });
   });
 }

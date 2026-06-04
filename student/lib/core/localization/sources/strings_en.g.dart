@@ -1874,6 +1874,42 @@ class TranslationsCourseDetailEn {
 
 	/// en: '${mins}m ${secs}s'
 	String durationShort({required Object mins, required Object secs}) => '${mins}m ${secs}s';
+
+	/// en: 'Coupon Code'
+	String get couponCode => 'Coupon Code';
+
+	/// en: 'Enter coupon code'
+	String get enterCouponCode => 'Enter coupon code';
+
+	/// en: 'Apply'
+	String get apply => 'Apply';
+
+	/// en: 'Remove'
+	String get remove => 'Remove';
+
+	/// en: 'Coupon applied successfully!'
+	String get couponApplied => 'Coupon applied successfully!';
+
+	/// en: 'Invalid coupon code.'
+	String get invalidCoupon => 'Invalid coupon code.';
+
+	/// en: 'Original Price'
+	String get originalPriceLabel => 'Original Price';
+
+	/// en: 'Discount'
+	String get discountLabel => 'Discount';
+
+	/// en: 'Final Price'
+	String get finalPriceLabel => 'Final Price';
+
+	/// en: 'Confirm & Enroll'
+	String get confirmPayment => 'Confirm & Enroll';
+
+	/// en: 'Insufficient balance. Please top up your wallet.'
+	String get insufficientBalance => 'Insufficient balance. Please top up your wallet.';
+
+	/// en: 'Enroll in this course to access its content.'
+	String get enrollToAccess => 'Enroll in this course to access its content.';
 }
 
 // Path: course.errors
@@ -2657,6 +2693,18 @@ extension on Translations {
 			'course.detail.enrollNow' => 'Enroll Now',
 			'course.detail.pointsReward' => 'Points Reward',
 			'course.detail.durationShort' => ({required Object mins, required Object secs}) => '${mins}m ${secs}s',
+			'course.detail.couponCode' => 'Coupon Code',
+			'course.detail.enterCouponCode' => 'Enter coupon code',
+			'course.detail.apply' => 'Apply',
+			'course.detail.remove' => 'Remove',
+			'course.detail.couponApplied' => 'Coupon applied successfully!',
+			'course.detail.invalidCoupon' => 'Invalid coupon code.',
+			'course.detail.originalPriceLabel' => 'Original Price',
+			'course.detail.discountLabel' => 'Discount',
+			'course.detail.finalPriceLabel' => 'Final Price',
+			'course.detail.confirmPayment' => 'Confirm & Enroll',
+			'course.detail.insufficientBalance' => 'Insufficient balance. Please top up your wallet.',
+			'course.detail.enrollToAccess' => 'Enroll in this course to access its content.',
 			'course.errors.failedToLoadSessions' => 'Failed to load course sessions',
 			'course.errors.tryRefreshing' => 'Try refreshing the page',
 			'course.player.completed' => 'Completed',
@@ -2857,6 +2905,8 @@ extension on Translations {
 			'quizzes.exitQuizDesc' => 'Your progress is automatically saved. You can resume this quiz later from the intro page.',
 			'quizzes.cancel' => 'Cancel',
 			'quizzes.exit' => 'Exit',
+			_ => null,
+		} ?? switch (path) {
 			'quizzes.questionLabel' => 'QUESTION',
 			'quizzes.chooseCorrect' => 'Choose the correct answer:',
 			'quizzes.typeAnswerHere' => 'Type your answer here...',
@@ -2869,8 +2919,6 @@ extension on Translations {
 			'quizzes.rewards.xpPoints' => 'XP Points',
 			'quizzes.rewards.quizCompleted' => 'Quizzes',
 			'quizzes.rewards.badge' => 'Badges',
-			_ => null,
-		} ?? switch (path) {
 			'quizzes.rewards.dailyStreak' => 'Daily Streak',
 			'quizzes.rewards.streakDaysMsg' => ({required Object days}) => 'You have a ${days}-day streak!',
 			'quizzes.rewards.earnedBadges' => 'Badges',

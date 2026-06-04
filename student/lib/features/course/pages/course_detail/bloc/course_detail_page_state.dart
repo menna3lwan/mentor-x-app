@@ -20,6 +20,16 @@ final class CourseDetailPageState extends Equatable {
   final String? errorMessage;
   final String? enrollErrorMessage;
 
+  // Coupon Flow State
+  final String? appliedCouponCode;
+  final double? discountAmount;
+  final double? finalPrice;
+  final String? couponErrorMessage;
+  final bool isCouponLoading;
+  final String? couponDiscountSummary;
+  final double? walletBalance;
+  final List<CouponEntity> validCoupons;
+
   const CourseDetailPageState({
     required this.courseId,
     this.courseStatus = DetailSectionStatus.initial,
@@ -33,6 +43,14 @@ final class CourseDetailPageState extends Equatable {
     this.enrollStatus = EnrollActionStatus.initial,
     this.errorMessage,
     this.enrollErrorMessage,
+    this.appliedCouponCode,
+    this.discountAmount,
+    this.finalPrice,
+    this.couponErrorMessage,
+    this.isCouponLoading = false,
+    this.couponDiscountSummary,
+    this.walletBalance,
+    this.validCoupons = const [],
   });
 
   bool get isCourseLoading =>
@@ -63,6 +81,15 @@ final class CourseDetailPageState extends Equatable {
     EnrollActionStatus? enrollStatus,
     String? errorMessage,
     String? enrollErrorMessage,
+    String? appliedCouponCode,
+    double? discountAmount,
+    double? finalPrice,
+    String? couponErrorMessage,
+    bool? isCouponLoading,
+    String? couponDiscountSummary,
+    bool clearCoupon = false,
+    double? walletBalance,
+    List<CouponEntity>? validCoupons,
   }) {
     return CourseDetailPageState(
       courseId: courseId ?? this.courseId,
@@ -77,6 +104,14 @@ final class CourseDetailPageState extends Equatable {
       enrollStatus: enrollStatus ?? this.enrollStatus,
       errorMessage: errorMessage,
       enrollErrorMessage: enrollErrorMessage,
+      appliedCouponCode: appliedCouponCode ?? (clearCoupon ? null : this.appliedCouponCode),
+      discountAmount: discountAmount ?? (clearCoupon ? null : this.discountAmount),
+      finalPrice: finalPrice ?? (clearCoupon ? null : this.finalPrice),
+      couponErrorMessage: couponErrorMessage ?? (clearCoupon ? null : this.couponErrorMessage),
+      isCouponLoading: isCouponLoading ?? this.isCouponLoading,
+      couponDiscountSummary: couponDiscountSummary ?? (clearCoupon ? null : this.couponDiscountSummary),
+      walletBalance: walletBalance ?? this.walletBalance,
+      validCoupons: validCoupons ?? this.validCoupons,
     );
   }
 
@@ -94,5 +129,13 @@ final class CourseDetailPageState extends Equatable {
     enrollStatus,
     errorMessage,
     enrollErrorMessage,
+    appliedCouponCode,
+    discountAmount,
+    finalPrice,
+    couponErrorMessage,
+    isCouponLoading,
+    couponDiscountSummary,
+    walletBalance,
+    validCoupons,
   ];
 }

@@ -116,7 +116,7 @@ final class MockCourseRepository implements CourseRepository {
   }
 
   @override
-  Future<EnrollmentEntity> enrollInCourse(String courseId) async {
+  Future<EnrollmentEntity> enrollInCourse(String courseId, {String? couponCode}) async {
     await Future<void>.delayed(delay);
     return MockCourseGenerator.enrollResult(courseId);
   }

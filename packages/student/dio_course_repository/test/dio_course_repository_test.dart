@@ -51,9 +51,11 @@ void main() {
         final mockWeeks = [
           {'id': 'w1', 'title': 'Week 1', 'session_ids': [1]}
         ];
-        final mockMaterials = [
-          {'id': 'm1', 'title': 'Material 1', 'week_ids': [1], 'materialType': 'VIDEO'}
-        ];
+        final mockMaterials = {
+          'content': [
+            {'id': 'm1', 'title': 'Material 1', 'week_ids': [1], 'materialType': 'VIDEO'}
+          ]
+        };
 
         when(() => httpClient.get('/api/weeks/session/s1'))
             .thenAnswer((_) async => HttpClientResponse(data: mockWeeks, statusCode: 200));
@@ -74,9 +76,11 @@ void main() {
         final mockWeeks = [
           {'id': 'w1', 'title': 'Week 1', 'session_ids': [1]}
         ];
-        final mockMaterials = [
-          {'id': 'm1', 'title': 'Material 1', 'week_ids': [1], 'materialType': 'VIDEO'}
-        ];
+        final mockMaterials = {
+          'content': [
+            {'id': 'm1', 'title': 'Material 1', 'week_ids': [1], 'materialType': 'VIDEO'}
+          ]
+        };
 
         when(() => httpClient.get('/api/weeks/session/s1'))
             .thenAnswer((_) async => HttpClientResponse(data: mockWeeks, statusCode: 200));

@@ -83,7 +83,7 @@ final class EditProfilePageBloc
         final updatedProfile = await profileRepository.getProfile();
         appEventBus.fire(AppAuthenticationUpdateEvent(user: updatedProfile));
       } catch (e) {
-        print('Failed to refetch profile: $e');
+        // Silently fail
       }
 
       emit(state.copyWith(loadingState: LoadingState.loaded));

@@ -72,7 +72,6 @@ final class PdfViewerPageBloc
     emit(state.copyWith(loadingState: LoadingState.loading));
     try {
       final url = await _courseRepository.getContentUrl(state.itemId);
-      print('PdfViewerPageBloc: Fetched URL: "$url"');
       emit(
         state.copyWith(
           loadingState: LoadingState.loaded,

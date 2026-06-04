@@ -20,6 +20,7 @@ final class CourseDetailPagePage extends StatelessWidget {
   final String? errorMessage;
   final ValueChanged<CourseDetailTab> onTabChanged;
   final VoidCallback onEnrollTap;
+  final VoidCallback? onContinueTap;
   final ValueChanged<SessionItemEntity> onSessionItemTap;
   final Future<void> Function() onRefresh;
 
@@ -38,6 +39,7 @@ final class CourseDetailPagePage extends StatelessWidget {
     required this.errorMessage,
     required this.onTabChanged,
     required this.onEnrollTap,
+    this.onContinueTap,
     required this.onSessionItemTap,
     required this.onRefresh,
   });
@@ -60,6 +62,7 @@ final class CourseDetailPagePage extends StatelessWidget {
                 isEnrolling: isEnrolling,
                 isEnrolled: isEnrolled,
                 onEnrollTap: onEnrollTap,
+                onContinueTap: onContinueTap,
               ),
             ),
         ],
@@ -468,6 +471,7 @@ final class _EnrollmentBar extends StatelessWidget {
   final bool isEnrolling;
   final bool isEnrolled;
   final VoidCallback onEnrollTap;
+  final VoidCallback? onContinueTap;
 
   const _EnrollmentBar({
     required this.course,
@@ -475,6 +479,7 @@ final class _EnrollmentBar extends StatelessWidget {
     required this.isEnrolling,
     required this.isEnrolled,
     required this.onEnrollTap,
+    this.onContinueTap,
   });
 
   @override
@@ -595,7 +600,7 @@ final class _EnrollmentBar extends StatelessWidget {
       final status = enrollment!.status;
       return MentorXButton(
         width: 220,
-        onPressed: status == EnrollmentStatus.active ? () {} : null,
+        onPressed: status == EnrollmentStatus.active ? onContinueTap : null,
         label: status == EnrollmentStatus.active
             ? context.t.course.detail.continueStudying
             : status == EnrollmentStatus.completed

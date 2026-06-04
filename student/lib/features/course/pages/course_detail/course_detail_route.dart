@@ -15,6 +15,7 @@ final class CourseDetailPageRoute extends GoRouteData
     return BlocProvider<CourseDetailPageBloc>(
       create: (context) => CourseDetailPageBloc(
         courseRepository: context.read<CourseRepository>(),
+        walletRepository: context.read<WalletRepository>(),
         analyticsService: context.read<AnalyticsService>(),
         courseId: courseId,
       )..add(const CourseDetailPageInitialized()),

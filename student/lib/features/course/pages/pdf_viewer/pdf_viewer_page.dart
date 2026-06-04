@@ -30,7 +30,6 @@ final class PdfViewerPagePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('PDF contentUrl: $contentUrl');
     return Scaffold(
       backgroundColor: context.backgroundPrimaryColor,
       body: Column(

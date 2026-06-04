@@ -249,26 +249,30 @@ final class DioCourseRepository
   }
 
   @override
-  Future<EnrollmentEntity> enrollInCourse(String courseId) async {
+  Future<EnrollmentEntity> enrollInCourse(String courseId, {String? couponCode}) async {
     try {
+      // Backend PurchaseItemDto.productId is a Long — must be sent as a number.
+      final productId = int.tryParse(courseId) ?? courseId;
+
       // 1. Create Order
       final orderResponse = await httpClient.post(
         '/api/payment/orders',
         data: {
           'items': [
-            {'productType': 'COURSE', 'productId': courseId}
+            {'productType': 'COURSE', 'productId': productId}
           ]
         },
       );
       final orderData = orderResponse.asMap();
       final orderId = orderData['id'];
 
-      // 2. Process Payment (Default to WALLET)
+      // 2. Process Payment (Default to WALLET for free or wallet-pay courses)
       await httpClient.post(
         '/api/payment/process',
         data: {
           'orderId': orderId,
           'paymentMethod': 'WALLET',
+          if (couponCode != null) 'couponCode': couponCode,
         },
       );
 

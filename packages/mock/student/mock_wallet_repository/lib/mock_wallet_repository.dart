@@ -201,11 +201,20 @@ final class MockWalletRepository implements WalletRepository {
     String? courseId,
   }) async {
     await Future<void>.delayed(delay);
+    if (code.trim().toUpperCase() == 'INVALID') {
+      throw WalletRepositoryException(
+        code: WalletRepositoryExceptionCode.failedToRedeemCode,
+        message: 'Invalid coupon code.',
+      );
+    }
+    final discount = code.trim().toUpperCase() == 'SAVE50' ? 50.0 : 10.0;
     return {
-      'originalTotal': amount,
-      'discountAmount': 10.0,
-      'finalTotal': amount - 10.0,
-      'message': 'Coupon applied successfully!',
+      'couponCode': code.toUpperCase(),
+      'couponDescription': 'Mock Discount Coupon',
+      'originalPrice': amount,
+      'discountAmount': discount,
+      'finalPrice': (amount - discount).clamp(0.0, double.infinity),
+      'discountSummary': 'خصم $discount جنيه',
     };
   }
 

@@ -22,6 +22,7 @@ class RefreshTokenInterceptor extends Interceptor {
   
   // Use the project's actual endpoint found in Swagger
   static const String _refreshEndpoint = '/api/auth/refresh';
+  static const String _retryKey = 'is_retry';
 
   static final MentorXLogger _logger = MentorXLogger('RefreshTokenInterceptor');
 
@@ -45,9 +46,19 @@ class RefreshTokenInterceptor extends Interceptor {
   void onError(DioException err, ErrorInterceptorHandler handler) async {
     // Check if this is a 401 Unauthorized error
     if (err.response?.statusCode == 401) {
-      // Don't refresh if the request was already a refresh attempt
-      if (err.requestOptions.path.contains(_refreshEndpoint)) {
+      // Don't refresh if the request was already a refresh attempt or is already a retry
+      final isRetry = err.requestOptions.extra[_retryKey] == true;
+      if (err.requestOptions.path.contains(_refreshEndpoint) || isRetry) {
         _isRefreshing = false;
+        
+        // If it was already a retry and still failed with 401, the session is dead
+        if (isRetry) {
+          _logger.warning('Retry request failed with 401 again, triggering session expiry');
+          if (_onSessionExpired != null) {
+            await _onSessionExpired();
+          }
+        }
+        
         return handler.next(err);
       }
 
@@ -194,6 +205,9 @@ class RefreshTokenInterceptor extends Interceptor {
       // Update the Authorization header
       requestOptions.headers['Authorization'] = 'Bearer $accessToken';
     }
+
+    // Mark request as a retry to prevent infinite loops if the new token is also invalid
+    requestOptions.extra[_retryKey] = true;
 
     // Retry the request using the main dio instance
     return _dio.fetch(requestOptions);

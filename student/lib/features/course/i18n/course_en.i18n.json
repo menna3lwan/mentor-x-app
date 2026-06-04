@@ -35,7 +35,19 @@
         "courseExpired": "Course Expired",
         "enrollNow": "Enroll Now",
         "pointsReward": "Points Reward",
-        "durationShort": "${mins}m ${secs}s"
+        "durationShort": "${mins}m ${secs}s",
+        "couponCode": "Coupon Code",
+        "enterCouponCode": "Enter coupon code",
+        "apply": "Apply",
+        "remove": "Remove",
+        "couponApplied": "Coupon applied successfully!",
+        "invalidCoupon": "Invalid coupon code.",
+        "originalPriceLabel": "Original Price",
+        "discountLabel": "Discount",
+        "finalPriceLabel": "Final Price",
+        "confirmPayment": "Confirm & Enroll",
+        "insufficientBalance": "Insufficient balance. Please top up your wallet.",
+        "enrollToAccess": "Enroll in this course to access its content."
     },
     "errors": {
         "failedToLoadSessions": "Failed to load course sessions",

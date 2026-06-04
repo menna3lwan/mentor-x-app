@@ -66,7 +66,7 @@ abstract interface class CourseRepository {
   Future<EnrollmentEntity?> getCourseProgress(String courseId);
 
   /// Enroll the current student in a course.
-  Future<EnrollmentEntity> enrollInCourse(String courseId);
+  Future<EnrollmentEntity> enrollInCourse(String courseId, {String? couponCode});
 
   /// Get a signed video streaming URL.
   Future<String> getStreamUrl(String itemId);

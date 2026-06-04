@@ -27,3 +27,15 @@ final class CourseDetailPageEnrollRequested extends CourseDetailPageEvent {
 final class CourseDetailPageRefreshed extends CourseDetailPageEvent {
   const CourseDetailPageRefreshed();
 }
+
+final class CourseDetailPageApplyCouponRequested extends CourseDetailPageEvent {
+  final String code;
+  const CourseDetailPageApplyCouponRequested(this.code);
+
+  @override
+  List<Object?> get props => [code];
+}
+
+final class CourseDetailPageRemoveCouponRequested extends CourseDetailPageEvent {
+  const CourseDetailPageRemoveCouponRequested();
+}

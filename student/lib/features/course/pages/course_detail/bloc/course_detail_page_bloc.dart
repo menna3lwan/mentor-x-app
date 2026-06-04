@@ -34,19 +34,24 @@ final class CourseDetailPageBloc
           CourseDetailPagePresentationEvent
         > {
   final CourseRepository _courseRepository;
+  final WalletRepository _walletRepository;
   final AnalyticsService _analyticsService;
 
   CourseDetailPageBloc({
     required CourseRepository courseRepository,
+    required WalletRepository walletRepository,
     required AnalyticsService analyticsService,
     required String courseId,
   }) : _courseRepository = courseRepository,
+       _walletRepository = walletRepository,
        _analyticsService = analyticsService,
        super(CourseDetailPageState(courseId: courseId)) {
     on<CourseDetailPageInitialized>(_onInitialized);
     on<CourseDetailPageTabChanged>(_onTabChanged);
     on<CourseDetailPageEnrollRequested>(_onEnrollRequested);
     on<CourseDetailPageRefreshed>(_onRefreshed);
+    on<CourseDetailPageApplyCouponRequested>(_onApplyCouponRequested);
+    on<CourseDetailPageRemoveCouponRequested>(_onRemoveCouponRequested);
   }
 
   Future<void> _onInitialized(
@@ -70,7 +75,10 @@ final class CourseDetailPageBloc
   ) async {
     emit(state.copyWith(enrollStatus: EnrollActionStatus.loading));
     try {
-      final enrollment = await _courseRepository.enrollInCourse(state.courseId);
+      final enrollment = await _courseRepository.enrollInCourse(
+        state.courseId,
+        couponCode: state.appliedCouponCode,
+      );
       emit(
         state.copyWith(
           enrollStatus: EnrollActionStatus.success,
@@ -128,7 +136,23 @@ final class CourseDetailPageBloc
     await Future.wait([
       _loadCourseDetail(emit),
       _loadSessions(emit),
+      _loadWalletBalance(emit),
+      _loadValidCoupons(emit),
     ]);
+  }
+
+  Future<void> _loadWalletBalance(Emitter<CourseDetailPageState> emit) async {
+    try {
+      final summary = await _walletRepository.getSummary();
+      emit(state.copyWith(walletBalance: summary.walletBalance));
+    } catch (_) {}
+  }
+
+  Future<void> _loadValidCoupons(Emitter<CourseDetailPageState> emit) async {
+    try {
+      final coupons = await _walletRepository.getValidCoupons();
+      emit(state.copyWith(validCoupons: coupons));
+    } catch (_) {}
   }
 
   Future<void> _loadCourseDetail(Emitter<CourseDetailPageState> emit) async {
@@ -172,11 +196,10 @@ final class CourseDetailPageBloc
       final weekFutures = <String, Future<List<WeekEntity>>>{};
       final itemFutures = <String, Future<List<SessionItemEntity>>>{};
 
-      if (state.enrollment != null) {
-        for (final session in sessions) {
-          weekFutures[session.id] = _courseRepository.getSessionWeeks(session.id);
-          itemFutures[session.id] = _courseRepository.getSessionItems(session.id);
-        }
+      // Always load session structure for preview (enrolled or not).
+      for (final session in sessions) {
+        weekFutures[session.id] = _courseRepository.getSessionWeeks(session.id);
+        itemFutures[session.id] = _courseRepository.getSessionItems(session.id);
       }
 
       final weeksMap = <String, List<WeekEntity>>{};
@@ -221,5 +244,54 @@ final class CourseDetailPageBloc
         ),
       );
     } catch (_) {}
+  }
+
+  Future<void> _onApplyCouponRequested(
+    CourseDetailPageApplyCouponRequested event,
+    Emitter<CourseDetailPageState> emit,
+  ) async {
+    if (event.code.trim().isEmpty) return;
+    emit(state.copyWith(
+      isCouponLoading: true,
+      couponErrorMessage: null,
+    ));
+    try {
+      final response = await _walletRepository.previewCoupon(
+        code: event.code,
+        amount: state.course?.price ?? 0.0,
+      );
+      
+      final couponCode = response['couponCode'] as String?;
+      final discountAmount = (response['discountAmount'] as num?)?.toDouble();
+      final finalPrice = (response['finalPrice'] as num?)?.toDouble();
+      final discountSummary = response['discountSummary'] as String?;
+      
+      emit(state.copyWith(
+        isCouponLoading: false,
+        appliedCouponCode: couponCode ?? event.code,
+        discountAmount: discountAmount,
+        finalPrice: finalPrice,
+        couponDiscountSummary: discountSummary,
+      ));
+    } on WalletRepositoryException catch (e) {
+      emit(state.copyWith(
+        isCouponLoading: false,
+        couponErrorMessage: e.message ?? 'Invalid coupon code.',
+        clearCoupon: true,
+      ));
+    } catch (e) {
+      emit(state.copyWith(
+        isCouponLoading: false,
+        couponErrorMessage: e.toString(),
+        clearCoupon: true,
+      ));
+    }
+  }
+
+  Future<void> _onRemoveCouponRequested(
+    CourseDetailPageRemoveCouponRequested event,
+    Emitter<CourseDetailPageState> emit,
+  ) async {
+    emit(state.copyWith(clearCoupon: true));
   }
 }

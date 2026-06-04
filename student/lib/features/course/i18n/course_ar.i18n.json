@@ -35,7 +35,19 @@
         "courseExpired": "انتهت صلاحية الدورة",
         "enrollNow": "سجل الآن",
         "pointsReward": "جائزة نقاط",
-        "durationShort": "${mins}د ${secs}ث"
+        "durationShort": "${mins}د ${secs}ث",
+        "couponCode": "كود الخصم",
+        "enterCouponCode": "أدخل كود الخصم",
+        "apply": "تطبيق",
+        "remove": "حذف",
+        "couponApplied": "تم تطبيق الكوبون بنجاح!",
+        "invalidCoupon": "كود الخصم غير صحيح.",
+        "originalPriceLabel": "السعر الأصلي",
+        "discountLabel": "الخصم",
+        "finalPriceLabel": "السعر النهائي",
+        "confirmPayment": "تأكيد الدفع والتسجيل",
+        "insufficientBalance": "رصيد المحفظة غير كافٍ. يرجى شحن الرصيد.",
+        "enrollToAccess": "سجّل في هذه الدورة للوصول إلى محتواها."
     },
     "errors": {
         "failedToLoadSessions": "فشل في تحميل حصص الدورة",
