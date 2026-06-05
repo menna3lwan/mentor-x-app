@@ -54,6 +54,20 @@ final class DioAuthenticationRepository
     String? fcmToken,
     String? appVersion,
   }) async {
+    // ─────────────────────────────────────────────────────────────────────
+    // API-CONTRACT (KNOWN MISMATCH):
+    // The EduCore Postman collection ONLY documents an OTP-based parent
+    // login flow:
+    //   POST /api/parent/start-login    body: { phone }
+    //   POST /api/parent/complete-login body: { phone, otp }
+    // A password-based parent login endpoint is NOT documented.
+    //
+    // This implementation still posts the password to the legacy
+    // /api/parent/login (and /api/auth/parent/login) for backward
+    // compatibility with builds that supported it. If the backend rejects
+    // it with 404/405, the call escalates as `otpRequired` so the UI
+    // switches to the OTP flow (sendOtp + verifyOtp).
+    // ─────────────────────────────────────────────────────────────────────
     try {
       final payload = {
         'phone': phone,
@@ -68,8 +82,29 @@ final class DioAuthenticationRepository
       try {
         response = await httpClient.post('/api/parent/login', data: payload);
       } on HttpClientResponse catch (e) {
-        if (e.statusCode != 404) rethrow;
-        response = await httpClient.post('/api/auth/parent/login', data: payload);
+        if (e.statusCode != 404 && e.statusCode != 405) rethrow;
+        try {
+          response = await httpClient.post(
+            '/api/auth/parent/login',
+            data: payload,
+          );
+        } on HttpClientResponse catch (e2) {
+          if (e2.statusCode != 404 && e2.statusCode != 405) rethrow;
+          // Neither password path exists on this backend — trigger the OTP
+          // flow now so the user actually receives the SMS by the time the
+          // UI lands on the OTP page, then surface `otpRequired` to the
+          // caller so it switches screens.
+          try {
+            await sendOtp(phone);
+          } catch (sendOtpError, sendOtpStack) {
+            _logger.error(
+              'Auto-sendOtp during login escalation failed: $sendOtpError',
+              sendOtpError,
+              sendOtpStack,
+            );
+          }
+          throw const _Exception(code: _ExceptionCode.otpRequired);
+        }
       }
 
       final data = _extractDataMap(response.data);
@@ -92,6 +127,16 @@ final class DioAuthenticationRepository
     }
   }
 
+  // ─────────────────────────────────────────────────────────────────────────
+  // API-CONTRACT (KNOWN MISMATCH):
+  // The EduCore Postman collection does NOT declare a parent self-registration
+  // endpoint. The methods below (registerParent / findStudentForParentRegistration)
+  // continue to call the legacy paths /api/parent/register and
+  // /api/parent/find-student so the UI flow does not regress; on a 404/405
+  // they surface AuthenticationException with the appropriate code so the
+  // caller can present a localized "feature unavailable" message.
+  // Coordinate with backend before re-enabling this flow in production.
+  // ─────────────────────────────────────────────────────────────────────────
   @override
   Future<ParentRegistrationResult> registerParent({
     required String firstName,
@@ -177,12 +222,19 @@ final class DioAuthenticationRepository
     required String value,
   }) async {
     try {
+      final lookupTypeWire = switch (lookupType) {
+        ParentLookupType.phone => 'phone',
+        ParentLookupType.studentCode => 'student_code',
+      };
       final payload = {
-        'lookup_type': lookupType == ParentLookupType.phone ? 'phone' : 'student_code',
+        'lookup_type': lookupTypeWire,
         'value': value.trim(),
       };
 
-      final response = await httpClient.post('/api/parent/find-student', data: payload);
+      final response = await httpClient.post(
+        '/api/parent/find-student',
+        data: payload,
+      );
 
       final data = _extractDataMap(response.data);
       final studentId = stringOrNull(data['student_id'] ?? data['id']);
@@ -221,9 +273,24 @@ final class DioAuthenticationRepository
 
   @override
   Future<void> logout() async {
+    // Backend contract (Postman): primary logout is POST /api/parent/logout.
+    // Generic /api/auth/logout is the secondary fallback; the legacy
+    // /api/auth/parent/logout path is kept last for backward compatibility
+    // with older backend builds. Local session is always cleared.
     try {
-      await httpClient.post('/api/auth/parent/logout');
+      try {
+        await httpClient.post('/api/parent/logout');
+      } on HttpClientResponse catch (e) {
+        if (e.statusCode != 404 && e.statusCode != 405) rethrow;
+        try {
+          await httpClient.post('/api/auth/logout');
+        } on HttpClientResponse catch (e2) {
+          if (e2.statusCode != 404 && e2.statusCode != 405) rethrow;
+          await httpClient.post('/api/auth/parent/logout');
+        }
+      }
     } catch (_) {
+      // Network or unknown error — drop local session regardless.
     } finally {
       await _deleteCachedUser();
       await httpClient.clearTokens();
@@ -280,25 +347,31 @@ final class DioAuthenticationRepository
     required String otp,
     required String newPassword,
   }) async {
+    // Backend contract (Postman): /api/auth/reset-password body shape is
+    // { phone, otp, newPassword } (camelCase). Legacy snake_case payloads
+    // are kept as a fallback for older backend builds.
     final primaryPayload = {
       'phone': phone,
       'otp': otp,
-      'new_password': newPassword,
+      'newPassword': newPassword,
     };
-    final secondaryPayload = {
+    final legacyPayload = {
       'phone': phone,
-      'otp_code': otp,
-      'password': newPassword,
+      'otp': otp,
+      'new_password': newPassword,
     };
 
     try {
       await httpClient.post('/api/auth/reset-password', data: primaryPayload);
       await _clearLocalSession();
     } on HttpClientResponse catch (e) {
-      // If the primary payload shape was rejected, try the secondary shape.
+      // If the primary payload shape was rejected, try the legacy shape.
       if (e.statusCode == 400 || e.statusCode == 422) {
         try {
-          await httpClient.post('/api/auth/reset-password', data: secondaryPayload);
+          await httpClient.post(
+            '/api/auth/reset-password',
+            data: legacyPayload,
+          );
           await _clearLocalSession();
           return;
         } catch (_) {}
@@ -328,15 +401,26 @@ final class DioAuthenticationRepository
       );
     }
 
+    // Backend contract (Postman): the parent OTP send path is
+    //   POST /api/parent/start-login  body: { phone }
+    // or the generic
+    //   POST /api/auth/resend-otp     body: { phone }
+    // The legacy /api/parent/register/start is kept as a last fallback only.
     try {
+      final payload = {'phone': phone};
       try {
-        await httpClient.post('/api/parent/register/start', data: {'phone': phone});
+        await httpClient.post('/api/parent/start-login', data: payload);
       } on HttpClientResponse catch (e) {
-        if (e.statusCode != 404) rethrow;
-        await httpClient.post('/api/auth/resend-otp', data: {
-          'phone': phone,
-          'purpose': 'registration',
-        });
+        if (e.statusCode != 404 && e.statusCode != 405) rethrow;
+        try {
+          await httpClient.post('/api/auth/resend-otp', data: payload);
+        } on HttpClientResponse catch (e2) {
+          if (e2.statusCode != 404 && e2.statusCode != 405) rethrow;
+          await httpClient.post(
+            '/api/parent/register/start',
+            data: payload,
+          );
+        }
       }
       AuthRateLimiter.recordSuccessfulAttempt(phone, 'send_otp');
     } on HttpClientResponse catch (e) {
@@ -360,18 +444,38 @@ final class DioAuthenticationRepository
       );
     }
 
+    // Backend contract (Postman): POST /api/auth/resend-otp body { phone }.
+    // Older builds may not support it; fall back to /api/parent/start-login,
+    // and as a last resort the legacy /api/parent/register/resend-otp.
     try {
       HttpClientResponse response;
+      final payload = {'phone': phone};
       try {
-        response = await httpClient.post('/api/auth/resend-otp', data: {'phone': phone});
+        response = await httpClient.post(
+          '/api/auth/resend-otp',
+          data: payload,
+        );
       } on HttpClientResponse catch (e) {
-        if (e.statusCode != 404) rethrow;
-        response = await httpClient.post('/api/parent/register/resend-otp', data: {'phone': phone});
+        if (e.statusCode != 404 && e.statusCode != 405) rethrow;
+        try {
+          response = await httpClient.post(
+            '/api/parent/start-login',
+            data: payload,
+          );
+        } on HttpClientResponse catch (e2) {
+          if (e2.statusCode != 404 && e2.statusCode != 405) rethrow;
+          response = await httpClient.post(
+            '/api/parent/register/resend-otp',
+            data: payload,
+          );
+        }
       }
 
       AuthRateLimiter.recordSuccessfulAttempt(phone, 'resend_otp');
       final data = _extractDataMap(response.data);
-      final seconds = intOrNull(data['otp_expires_in_seconds']);
+      final seconds = intOrNull(
+        data['otp_expires_in_seconds'] ?? data['otpExpiresInSeconds'],
+      );
       return seconds != null && seconds > 0 ? Duration(seconds: seconds) : null;
     } on HttpClientResponse catch (e) {
       AuthRateLimiter.recordFailedAttempt(phone, 'resend_otp');
@@ -384,20 +488,30 @@ final class DioAuthenticationRepository
 
   @override
   Future<ParentEntity> verifyOtp(String phone, String code) async {
+    // Backend contract (Postman):
+    //   POST /api/auth/verify-otp        body: { phone, otp }
+    //   POST /api/parent/complete-login  body: { phone, otp }
+    // The legacy /api/parent/register/complete is kept as a last-resort
+    // fallback for older backend builds.
     try {
       HttpClientResponse response;
+      final payload = {'phone': phone, 'otp': code};
       try {
-        response = await httpClient.post('/api/auth/verify-otp', data: {
-          'phone': phone,
-          'otp_code': code,
-          'purpose': 'registration',
-        });
+        response = await httpClient.post('/api/auth/verify-otp', data: payload);
       } on HttpClientResponse catch (e) {
-        if (e.statusCode != 404) rethrow;
-        response = await httpClient.post('/api/parent/register/complete', data: {
-          'phone': phone,
-          'otp': code,
-        });
+        if (e.statusCode != 404 && e.statusCode != 405) rethrow;
+        try {
+          response = await httpClient.post(
+            '/api/parent/complete-login',
+            data: payload,
+          );
+        } on HttpClientResponse catch (e2) {
+          if (e2.statusCode != 404 && e2.statusCode != 405) rethrow;
+          response = await httpClient.post(
+            '/api/parent/register/complete',
+            data: payload,
+          );
+        }
       }
 
       final data = _extractDataMap(response.data);

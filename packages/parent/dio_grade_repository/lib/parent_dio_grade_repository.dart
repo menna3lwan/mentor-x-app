@@ -20,6 +20,16 @@ final class DioParentGradeRepository
   }) =>
       throw ParentGradeRepositoryException(code: code, message: message);
 
+  // ─────────────────────────────────────────────────────────────────────────
+  // API-CONTRACT (KNOWN MISMATCH):
+  // /api/parent/children/{id}/grades/summary, /grades/trend, /assessments are
+  // NOT declared in the EduCore Postman collection. The closest backend
+  // endpoints are under /api/analytics/parent/child/{id}/* (grade-comparison,
+  // course-progress) but the shapes do not match these entities yet.
+  // We keep the calls so the UI keeps compiling and exercising mock data,
+  // and surface 404/405 as a graceful empty/default so the UI degrades
+  // instead of throwing.
+  // ─────────────────────────────────────────────────────────────────────────
   @override
   Future<ParentGradeSummaryEntity> getGradeSummary(String childId) async {
     try {
@@ -30,6 +40,9 @@ final class DioParentGradeRepository
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return ParentGradeSummaryModel.fromJson(data);
     } on HttpClientResponse catch (e) {
+      if (e.statusCode == 404 || e.statusCode == 405) {
+        return ParentGradeSummaryModel.fromJson(const <String, dynamic>{});
+      }
       handleHttpClientErrorResponse(
         e,
         defaultCode: ParentGradeRepositoryExceptionCode.fetchError,
@@ -51,6 +64,9 @@ final class DioParentGradeRepository
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return ParentGradeTrendModel.fromJson(data);
     } on HttpClientResponse catch (e) {
+      if (e.statusCode == 404 || e.statusCode == 405) {
+        return ParentGradeTrendModel.fromJson(const <String, dynamic>{});
+      }
       handleHttpClientErrorResponse(
         e,
         defaultCode: ParentGradeRepositoryExceptionCode.fetchError,
@@ -69,13 +85,21 @@ final class DioParentGradeRepository
         '/api/parent/children/$childId/assessments',
         queryParameters: {
           if (type != null) 'type': type,
+          if (courseId != null) 'courseId': courseId,
           if (courseId != null) 'course_id': courseId,
         },
       );
 
-      final data = asList(response.data);
-      return data.map((e) => QuizAttemptModel.fromJson(asMap(e))).toList();
+      final root = asMap(response.data);
+      final payload = root['data'] ?? response.data;
+      final items = payload is Map
+          ? asList(payload['content'])
+          : asList(payload);
+      return items.map((e) => QuizAttemptModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
+      if (e.statusCode == 404 || e.statusCode == 405) {
+        return const <QuizAttemptEntity>[];
+      }
       handleHttpClientErrorResponse(
         e,
         defaultCode: ParentGradeRepositoryExceptionCode.fetchError,

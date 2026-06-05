@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../events/app_global_events.dart';
@@ -28,12 +30,24 @@ final class AppRefreshListener extends StatefulWidget {
 }
 
 class _AppRefreshListenerState extends State<AppRefreshListener> {
+  StreamSubscription<AppRefreshEvent>? _subscription;
+
   @override
   void initState() {
     super.initState();
-    appEventBus.on<AppRefreshEvent>().listen((_) {
+    // Holding the subscription so it can be cancelled in [dispose] — without
+    // this the listener leaks: every page that mounted this widget keeps a
+    // dangling closure pointing at the old [BuildContext], firing forever.
+    _subscription = appEventBus.on<AppRefreshEvent>().listen((_) {
       if (mounted) widget.onRefresh();
     });
+  }
+
+  @override
+  void dispose() {
+    _subscription?.cancel();
+    _subscription = null;
+    super.dispose();
   }
 
   @override

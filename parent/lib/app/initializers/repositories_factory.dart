@@ -1,4 +1,5 @@
 import 'package:dio_http_client/dio_http_client.dart';
+import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage_cache_repository/flutter_secure_storage_cache_repository.dart';
 import 'package:mentorx_core/mentorx_core.dart';
@@ -99,32 +100,55 @@ final class AppRepositories {
 final class RepositoriesFactory {
   RepositoriesFactory._();
 
+  // Each lazy resource is memoized by *future* — not by boolean — so any
+  // number of concurrent callers (e.g. inside `Future.wait`) share a single
+  // initialization. This eliminates the previous race where two callers
+  // could see `isHttpClientInitialized == false`, both create a `DioHttpClient`,
+  // and one would silently overwrite the other.
+  static Future<HttpClient>? _httpClientFuture;
+  static Future<CacheRepository>? _cacheRepositoryFuture;
+
   static HttpClient? _httpClient;
-  static bool isHttpClientInitialized = false;
 
   static late final String initialLanguageCode;
 
-  static CacheRepository? _cacheRepository;
   static DeviceInfoService? _deviceInfoService;
+
+  /// Visible to tests so they can reset the singleton state between runs.
+  /// Production code never calls this.
+  @visibleForTesting
+  static void resetForTests() {
+    _httpClientFuture = null;
+    _cacheRepositoryFuture = null;
+    _httpClient = null;
+    _deviceInfoService = null;
+  }
 
   static DeviceInfoService _initDeviceInfoService() {
     return _deviceInfoService ??= DeviceInfoServiceImpl();
   }
 
-  static Future<CacheRepository> _initCacheRepository() async {
-    if (_cacheRepository != null) return _cacheRepository!;
+  static Future<CacheRepository> _initCacheRepository() {
+    return _cacheRepositoryFuture ??= _createCacheRepository();
+  }
+
+  static Future<CacheRepository> _createCacheRepository() async {
     final CacheRepository cacheRepository =
         FlutterSecureStorageCacheRepository();
     await cacheRepository.initialize();
-    _cacheRepository = cacheRepository;
     return cacheRepository;
   }
 
-  static Future<HttpClient> _initHttpClient() async {
-    if (isHttpClientInitialized && _httpClient != null) return _httpClient!;
+  static Future<HttpClient> _initHttpClient() {
+    return _httpClientFuture ??= _createHttpClient();
+  }
+
+  static Future<HttpClient> _createHttpClient() async {
     if (!Env.hasMentorXBaseUrl) {
       throw StateError(
-        'MENTORX_API_BASE_URL is required when any repository mode is PROD.',
+        'MENTORX_API_BASE_URL is required when any repository mode is PROD. '
+        'Pass it via --dart-define-from-file=.env or '
+        '--dart-define=MENTORX_API_BASE_URL=...',
       );
     }
     final cacheRepository = await _initCacheRepository();
@@ -132,20 +156,19 @@ final class RepositoriesFactory {
       baseUrl: Env.mentorXBaseUrl,
       cacheRepository: cacheRepository,
     );
-    _httpClient = httpClient;
     await httpClient.initialize();
 
     // Use DeviceInfoService to get the hardware identifier as a fallback.
     final deviceInfoService = _initDeviceInfoService();
     final hardwareId = await deviceInfoService.getDeviceHash();
 
-    // Only set the hardware ID as default if we don't already have a cached one
-    // (e.g., a server-generated hash from a previous session).
+    // Only set the hardware ID as default if we don't already have a cached
+    // one (e.g. a server-generated hash from a previous session).
     if (httpClient.deviceId == null || httpClient.deviceId!.isEmpty) {
       httpClient.setDefaultHeader(NetworkConstants.deviceIdHeader, hardwareId);
     }
 
-    isHttpClientInitialized = true;
+    _httpClient = httpClient;
     return httpClient;
   }
 
@@ -269,13 +292,20 @@ final class RepositoriesFactory {
   initRepositories() async {
     if (Env.usesAnyProdRepository && !Env.hasMentorXBaseUrl) {
       throw StateError(
-        'MENTORX_API_BASE_URL must be provided when any repository mode is PROD.',
+        'MENTORX_API_BASE_URL must be provided when any repository mode is '
+        'PROD. Pass it via --dart-define-from-file=.env or '
+        '--dart-define=MENTORX_API_BASE_URL=...',
       );
     }
 
     final CacheRepository cacheRepository = await _initCacheRepository();
-    // Pre-initialize HttpClient to avoid race conditions during concurrent repository initialization
-    await _initHttpClient();
+    // Pre-initialize HttpClient (only if any repository needs it) to avoid
+    // race conditions inside the Future.wait below. Memoization in
+    // `_initHttpClient` itself guarantees idempotency, so calling it twice
+    // is safe; pre-warming just makes the first call sequential.
+    if (Env.usesAnyProdRepository) {
+      await _initHttpClient();
+    }
 
     initialLanguageCode =
         await cacheRepository.get(CacheKeys.languageCode) ??

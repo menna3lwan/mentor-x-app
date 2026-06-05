@@ -165,8 +165,8 @@ final class ChildrenBloc extends Bloc<ChildrenEvent, ChildrenState>
     if (state.children.any((c) => c.id == event.studentId)) {
       _failLink(
         emit,
-        const AuthenticationException(
-          code: AuthenticationExceptionCode.unknown,
+        const ParentChildrenRepositoryException(
+          code: ParentChildrenRepositoryExceptionCode.unknown,
           message: 'already linked',
         ),
         ChildrenFailureKind.alreadyLinked,
@@ -275,16 +275,21 @@ final class ChildrenBloc extends Bloc<ChildrenEvent, ChildrenState>
   }
 
   ChildrenFailureKind _classifyFailure(Object error) {
-    if (error is AuthenticationException) {
+    // Children repository surfaces failures as both its own
+    // `ParentChildrenRepositoryException` (for typed domain errors) and as
+    // raw `HttpClientResponse` (for unmapped HTTP errors). Earlier this
+    // method also accepted `AuthenticationException`, which only ever
+    // travels through the auth flow — that mapping was dead and misleading.
+    if (error is ParentChildrenRepositoryException) {
       return switch (error.code) {
-        AuthenticationExceptionCode.studentNotFound =>
+        ParentChildrenRepositoryExceptionCode.studentNotFound =>
           ChildrenFailureKind.studentNotFound,
-        AuthenticationExceptionCode.phoneAlreadyExists =>
-          ChildrenFailureKind.alreadyLinked,
-        AuthenticationExceptionCode.networkError => ChildrenFailureKind.network,
-        AuthenticationExceptionCode.sessionExpired =>
-          ChildrenFailureKind.unauthorized,
-        _ => ChildrenFailureKind.unknown,
+        ParentChildrenRepositoryExceptionCode.registrationFailed =>
+          ChildrenFailureKind.unknown,
+        ParentChildrenRepositoryExceptionCode.fetchError =>
+          ChildrenFailureKind.network,
+        ParentChildrenRepositoryExceptionCode.unknown =>
+          ChildrenFailureKind.unknown,
       };
     }
     if (error is HttpClientResponse) {
@@ -301,10 +306,6 @@ final class ChildrenBloc extends Bloc<ChildrenEvent, ChildrenState>
   void _maybeEmitUnauthorized(Object error) {
     if (error is HttpClientResponse &&
         (error.statusCode == 401 || error.statusCode == 403)) {
-      emitPresentation(const ChildrenUnauthorizedPresentationEvent());
-    }
-    if (error is AuthenticationException &&
-        error.code == AuthenticationExceptionCode.sessionExpired) {
       emitPresentation(const ChildrenUnauthorizedPresentationEvent());
     }
   }

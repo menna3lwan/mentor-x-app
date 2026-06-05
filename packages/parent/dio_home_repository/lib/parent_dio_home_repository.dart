@@ -24,10 +24,17 @@ final class DioParentHomeRepository
 
   @override
   Future<ParentHomeSummaryEntity> getSummary(String studentId) async {
+    // Backend contract (Postman): GET /api/parent/dashboard/summary.
+    // The collection does not expose a query-parameter contract. We pass
+    // student_id / studentId (snake + camel) for forward-compatibility
+    // without breaking the default no-arg signature used by Spring controllers.
     try {
       final response = await _httpClient.get(
         '/api/parent/dashboard/summary',
-        queryParameters: {'student_id': studentId},
+        queryParameters: {
+          'student_id': studentId,
+          'studentId': studentId,
+        },
       );
 
       final data = asMap(response.data)['data'] ?? asMap(response.data);
@@ -46,11 +53,18 @@ final class DioParentHomeRepository
     int limit = 10,
     int page = 1,
   }) async {
+    // API-CONTRACT (KNOWN MISMATCH):
+    // /api/parent/dashboard/recent-activity is NOT declared in the EduCore
+    // Postman collection. We probe it once and silently return an empty
+    // list on 404/405 so the dashboard does not surface an error banner
+    // for a non-existent backend endpoint. Coordinate with backend before
+    // wiring this section to a real source.
     try {
       final response = await _httpClient.get(
         '/api/parent/dashboard/recent-activity',
         queryParameters: {
           'student_id': studentId,
+          'studentId': studentId,
           'limit': limit,
           'page': page,
         },
@@ -62,6 +76,9 @@ final class DioParentHomeRepository
           .map((json) => ParentRecentActivityModel.fromJson(asMap(json)))
           .toList();
     } on HttpClientResponse catch (e) {
+      if (e.statusCode == 404 || e.statusCode == 405) {
+        return const <ParentRecentActivityEntity>[];
+      }
       handleHttpClientErrorResponse(
         e,
         defaultCode: ParentHomeRepositoryExceptionCode.fetchError,

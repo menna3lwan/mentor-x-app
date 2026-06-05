@@ -13,14 +13,26 @@ class SplashScreenPage extends StatefulWidget {
 }
 
 class _SplashScreenPageState extends State<SplashScreenPage> {
+  static const Duration _minimumSplashVisible = Duration(milliseconds: 900);
+
   @override
   void initState() {
     super.initState();
     _checkStatus();
   }
 
+  /// Holds the splash visible for [_minimumSplashVisible] (so the brand frame
+  /// isn't a flash) but no longer; once that timer elapses we read the *live*
+  /// authentication state and route, instead of trusting whatever the state
+  /// was at frame-1.
   Future<void> _checkStatus() async {
-    await Future.delayed(const Duration(seconds: 2));
+    // Wait one frame so [BlocProvider] has finished injecting cubits before
+    // we read them — without this, hot-reloading the splash on cold start can
+    // call `context.read` before the parent widget completes its mount.
+    await Future<void>.delayed(Duration.zero);
+    if (!mounted) return;
+
+    await Future<void>.delayed(_minimumSplashVisible);
     if (!mounted) return;
 
     final authState = context.read<AppAuthenticationCubit>().state;

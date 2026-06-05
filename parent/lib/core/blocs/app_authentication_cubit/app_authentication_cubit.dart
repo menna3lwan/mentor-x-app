@@ -15,14 +15,14 @@ final class AppAuthenticationCubit extends Cubit<AppAuthenticationState> {
   void login(ParentEntity user) {
     _logger.info('User logged in: ${user.fullName}');
     emit(AppAuthenticationState(user: user));
-    appEventBus.fire(AppRefreshEvent());
+    appEventBus.fire(const AppRefreshEvent());
   }
 
   /// Called after logout to clear the user.
   void logout() {
     _logger.info('User logged out');
     emit(const AppAuthenticationState(user: null));
-    appEventBus.fire(AppRefreshEvent());
+    appEventBus.fire(const AppRefreshEvent());
   }
 
   /// Called to update user data (e.g. after a profile edit).

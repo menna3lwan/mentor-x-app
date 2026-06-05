@@ -54,7 +54,14 @@ final class DioParentNotificationRepository
   @override
   Future<void> markAsRead(String notificationId) async {
     try {
-      await _httpClient.post('/api/notifications/$notificationId/read');
+      // Backend contract: PATCH /api/notifications/{id}/read (Postman).
+      // Older builds used POST; kept as a fallback when backend returns 405.
+      try {
+        await _httpClient.patch('/api/notifications/$notificationId/read');
+      } on HttpClientResponse catch (e) {
+        if (e.statusCode != 405) rethrow;
+        await _httpClient.post('/api/notifications/$notificationId/read');
+      }
     } on HttpClientResponse catch (error) {
       handleHttpClientErrorResponse(
         error,
@@ -66,7 +73,13 @@ final class DioParentNotificationRepository
   @override
   Future<void> markAllAsRead() async {
     try {
-      await _httpClient.post('/api/notifications/read-all');
+      // Backend contract: PATCH /api/notifications/read-all (Postman).
+      try {
+        await _httpClient.patch('/api/notifications/read-all');
+      } on HttpClientResponse catch (e) {
+        if (e.statusCode != 405) rethrow;
+        await _httpClient.post('/api/notifications/read-all');
+      }
     } on HttpClientResponse catch (error) {
       handleHttpClientErrorResponse(
         error,
@@ -95,9 +108,12 @@ final class DioParentNotificationRepository
 
   @override
   Future<void> deleteNotification(String notificationId) async {
+    // API-CONTRACT: DELETE /api/notifications/{id} is not declared in the
+    // EduCore Postman collection. Treated as best-effort.
     try {
       await _httpClient.delete('/api/notifications/$notificationId');
     } on HttpClientResponse catch (error) {
+      if (error.statusCode == 404 || error.statusCode == 405) return;
       handleHttpClientErrorResponse(
         error,
         defaultCode: NotificationRepositoryExceptionCode.failedToDelete,
@@ -107,12 +123,16 @@ final class DioParentNotificationRepository
 
   @override
   Future<void> updateFCMToken(String token) async {
+    // API-CONTRACT: /api/notifications/fcm-token is not declared in the
+    // EduCore Postman collection. The call is kept for forward-compatibility
+    // and silently swallows 404/405 so it cannot break the auth flow.
     try {
       await _httpClient.post(
         '/api/notifications/fcm-token',
         data: {'token': token},
       );
     } on HttpClientResponse catch (error) {
+      if (error.statusCode == 404 || error.statusCode == 405) return;
       handleHttpClientErrorResponse(
         error,
         defaultCode: NotificationRepositoryExceptionCode.unknown,

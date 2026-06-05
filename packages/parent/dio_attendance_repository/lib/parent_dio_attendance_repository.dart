@@ -20,6 +20,10 @@ final class DioParentAttendanceRepository
   }) =>
       throw ParentAttendanceRepositoryException(code: code, message: message);
 
+  // Backend contract (Postman):
+  //   GET /api/parent/dashboard/child/{studentId}/attendance
+  //   GET /api/parent/dashboard/child/{studentId}/overview
+  // Both wrap their payload in the standard {success, data, error} envelope.
   @override
   Future<List<AttendanceRecordEntity>> getAttendance(
     String childId, {
@@ -35,8 +39,11 @@ final class DioParentAttendanceRepository
         },
       );
 
-      final data = asMap(response.data)['data'] ?? asList(response.data);
-      final list = asList(data is Map ? data['content'] : data);
+      final root = asMap(response.data);
+      final payload = root['data'] ?? response.data;
+      final list = payload is Map
+          ? asList(payload['content'])
+          : asList(payload);
       return list
           .map((e) => AttendanceRecordModel.fromJson(asMap(e)))
           .toList();

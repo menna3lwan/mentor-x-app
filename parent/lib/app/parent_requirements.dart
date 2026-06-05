@@ -79,6 +79,7 @@ final class ParentRequirements {
     final AppRouter appRouter = AppRouter(
       navigatorKey: rootNavigatorKey,
       initialLocation: '/',
+      authenticationCubit: blocs.appAuthenticationCubit,
     );
 
     return ParentRequirements(

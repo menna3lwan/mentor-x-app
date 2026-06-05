@@ -48,3 +48,8 @@ app.*.map.json
 
 # Patrol generated bundle
 integration_test/test_bundle.dart
+
+# Environment files (personal overrides). Committed templates kept:
+# .env.example / .env.production / .env.mock
+.env
+.env.local

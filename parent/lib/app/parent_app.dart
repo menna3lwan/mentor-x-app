@@ -1,4 +1,3 @@
-import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -7,7 +6,10 @@ import 'package:mentorx_ui/mentorx_ui.dart';
 import '../core/core.dart';
 import 'parent_requirements.dart';
 
-final EventBus appEventBus = EventBus();
+// NOTE: the global `appEventBus` lives in `core/events/app_global_events.dart`.
+// Importing from anywhere else previously created a second EventBus instance
+// that silently swallowed every event — this declaration was removed to
+// prevent that bug from ever returning.
 
 final class ParentApp extends StatelessWidget {
   final ParentRequirements requirements;

@@ -226,8 +226,11 @@ final class NotificationsBloc
 }
 
 extension on MentorXPaginationInfo {
+  /// Returns a new info pinned to [page] **without** carrying the previous
+  /// cursor — the two are mutually exclusive on the wire, and re-sending a
+  /// stale cursor would make the backend silently ignore the page change.
   MentorXPaginationInfo copyWithPage(int page) {
-    return MentorXPaginationInfo(limit: limit, page: page, cursor: cursor);
+    return MentorXPaginationInfo(limit: limit, page: page);
   }
 }
 

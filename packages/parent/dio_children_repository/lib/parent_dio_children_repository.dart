@@ -22,11 +22,16 @@ final class DioParentChildrenRepository
 
   @override
   Future<List<ParentChildEntity>> getChildren() async {
+    // Backend contract (Postman): GET /api/parent/children — envelope shape
+    // is {success, data:[...]} or {success, data:{content:[...]}}.
     try {
       final response = await _httpClient.get('/api/parent/children');
 
-      final data = asMap(response.data)['data'] ?? asList(response.data);
-      final list = asList(data);
+      final root = asMap(response.data);
+      final payload = root['data'] ?? response.data;
+      final list = payload is Map
+          ? asList(payload['content'])
+          : asList(payload);
       return list
           .map((json) => ParentChildModel.fromJson(asMap(json)))
           .toList();
@@ -38,6 +43,15 @@ final class DioParentChildrenRepository
     }
   }
 
+  // ─────────────────────────────────────────────────────────────────────────
+  // API-CONTRACT (KNOWN MISMATCH):
+  // /api/parent/find-student, /api/parent/link-child, and
+  // DELETE /api/parent/children/{id} are NOT declared in the EduCore Postman
+  // collection. They are kept as-is so the existing UI flow keeps compiling
+  // and exercising the Mock repository in development. Any 404/405 from a
+  // real backend is surfaced as a typed exception so the UI can display a
+  // localized "service unavailable" toast instead of crashing.
+  // ─────────────────────────────────────────────────────────────────────────
   @override
   Future<ParentStudentLookupEntity> findStudentByChildQuery({
     required String query,
@@ -67,6 +81,7 @@ final class DioParentChildrenRepository
       final response = await _httpClient.post(
         '/api/parent/link-child',
         data: {
+          'studentId': studentId,
           'student_id': studentId,
           'relationship': relationship,
         },
