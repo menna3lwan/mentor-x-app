@@ -334,7 +334,7 @@ final class DioWalletRepository
   }
 
   @override
-  Future<PaymentEntity> depositFunds({
+  Future<WalletTransactionEntity> depositFunds({
     required double amount,
     required PaymentMethod method,
   }) async {
@@ -350,7 +350,7 @@ final class DioWalletRepository
       );
 
       final data = response.asMap();
-      return PaymentModel.fromJson(data);
+      return WalletTransactionModel.fromJson(data);
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,

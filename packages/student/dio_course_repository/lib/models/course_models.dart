@@ -88,7 +88,10 @@ final class CourseModel extends CourseEntity {
         data['totalDurationMinutes'] ?? data['total_duration_minutes'],
       ),
       enrolledCount: ModelParser.asInt(
-        data['enrolledCount'] ?? data['enrolled_count'],
+        data['enrolledStudentsCount'] ??
+        data['enrolledCount'] ??
+        data['enrolled_count'] ??
+        data['enrolled_students_count'],
       ),
       featured: ModelParser.asBool(data['featured']),
       pinned: ModelParser.asBool(data['pinned']),
@@ -144,7 +147,10 @@ final class CourseSummaryModel extends CourseSummaryEntity {
             data['image_url'],
       ),
       enrolledCount: ModelParser.asInt(
-        data['enrolledCount'] ?? data['enrolled_count'],
+        data['enrolledStudentsCount'] ??
+        data['enrolledCount'] ??
+        data['enrolled_count'] ??
+        data['enrolled_students_count'],
       ),
       progressPercent: _nullableDouble(
         data['progressPercent'] ?? data['progress_percent'],

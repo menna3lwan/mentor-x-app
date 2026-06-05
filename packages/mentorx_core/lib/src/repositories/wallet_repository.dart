@@ -64,7 +64,7 @@ abstract interface class WalletRepository {
   });
 
   /// Deposit funds into wallet.
-  Future<PaymentEntity> depositFunds({
+  Future<WalletTransactionEntity> depositFunds({
     required double amount,
     required PaymentMethod method,
   });

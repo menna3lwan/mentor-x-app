@@ -180,17 +180,21 @@ final class MockWalletRepository implements WalletRepository {
   }
 
   @override
-  Future<PaymentEntity> depositFunds({
+  Future<WalletTransactionEntity> depositFunds({
     required double amount,
     required PaymentMethod method,
   }) async {
     await Future<void>.delayed(delay);
-    return PaymentEntity(
-      id: 'pay-id',
+    return WalletTransactionEntity(
+      id: 'txn-mock-001',
+      transactionType: WalletTransactionType.deposit,
       amount: amount,
-      method: method,
-      reference: 'REF-NEW',
-      pending: true,
+      balanceAfter: amount + 500.0,
+      description: 'Wallet deposit via ${method.name}',
+      createdAt: DateTime.now(),
+      referenceId: 'REF-MOCK-DEPOSIT',
+      paymentMethod: method.name.toUpperCase(),
+      status: TransactionStatus.success,
     );
   }
 

@@ -215,6 +215,8 @@ final class WalletTransactionModel extends WalletTransactionEntity {
   static TransactionStatus? _parseStatus(dynamic value) {
     if (value == null) return null;
     final str = ModelParser.asString(value).toLowerCase();
+    if (str == 'completed' || str == 'success') return TransactionStatus.success;
+    if (str == 'failed' || str == 'error') return TransactionStatus.failed;
     for (final status in TransactionStatus.values) {
       if (status.name.toLowerCase() == str) return status;
     }

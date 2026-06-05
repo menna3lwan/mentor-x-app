@@ -10,8 +10,8 @@ sealed class AddBalancePagePresentationEvent {
 }
 
 final class AddBalancePageSuccess extends AddBalancePagePresentationEvent {
-  final PaymentEntity payment;
-  const AddBalancePageSuccess(this.payment);
+  final double amount;
+  const AddBalancePageSuccess(this.amount);
 }
 
 final class AddBalancePageBloc
@@ -51,7 +51,7 @@ final class AddBalancePageBloc
       state.copyWith(loadingState: LoadingState.loading, errorMessage: null),
     );
     try {
-      final payment = await walletRepository.depositFunds(
+      await walletRepository.depositFunds(
         amount: event.amount,
         method: event.method,
       );
@@ -60,24 +60,23 @@ final class AddBalancePageBloc
         name: AnalyticsEvents.addBalanceCompleted,
         parameters: {
           AnalyticsParams.amount: event.amount,
-          AnalyticsParams.paymentMethod: event.method,
+          AnalyticsParams.paymentMethod: event.method.name,
         },
       );
 
       emit(
         state.copyWith(
           loadingState: LoadingState.loaded,
-          payment: payment,
         ),
       );
 
-      emitPresentation(AddBalancePageSuccess(payment));
+      emitPresentation(AddBalancePageSuccess(event.amount));
     } catch (e) {
       analyticsService.logEvent(
         name: AnalyticsEvents.addBalanceFailed,
         parameters: {
           AnalyticsParams.amount: event.amount,
-          AnalyticsParams.paymentMethod: event.method,
+          AnalyticsParams.paymentMethod: event.method.name,
           AnalyticsParams.errorMessage: e.toString(),
         },
       );

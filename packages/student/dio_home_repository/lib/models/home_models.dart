@@ -19,16 +19,21 @@ final class CourseModel extends CourseSummaryEntity {
         json['description'] ?? json['courseDescription'],
       ),
       thumbnailUrl: ModelParser.asString(
-        json['courseThumbnailUrl'] ??
-            json['thumbnailUrl'] ??
-            json['thumbnail_url'],
+        json['thumbnailUrl'] ??
+            json['thumbnail_url'] ??
+            json['courseThumbnailUrl'] ??
+            json['imageUrl'] ??
+            json['image_url'],
       ),
       progressPercent: ModelParser.asDouble(
         json['progress'] ?? json['progressPercent'] ?? json['progress_percent'],
       ),
       price: ModelParser.asDouble(json['price']),
       enrolledCount: ModelParser.asInt(
-        json['enrolledCount'] ?? json['enrolled_count'],
+        json['enrolledStudentsCount'] ??
+        json['enrolledCount'] ??
+        json['enrolled_count'] ??
+        json['enrolled_students_count'],
       ),
     );
   }
