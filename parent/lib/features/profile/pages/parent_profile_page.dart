@@ -40,9 +40,11 @@ class ParentProfilePage extends StatelessWidget {
                 name: profile.fullName.isEmpty
                     ? t.profile.fallbackName
                     : profile.fullName,
+                avatarUrl: profile.profileImageUrl,
                 verifiedLabel: t.profile.verifiedAccount,
                 isVerified: profile.status == ParentStatus.active,
-                onChangeAvatarPressed: () {},
+                onChangeAvatarPressed: () =>
+                    const EditProfileRoute().go(context),
               ),
               const Gap(40),
               ProfileSection(
@@ -52,6 +54,7 @@ class ParentProfilePage extends StatelessWidget {
                     icon: Icons.person_rounded,
                     label: t.profile.fullNameLabel,
                     value: profile.fullName.isEmpty ? '—' : profile.fullName,
+                    onTap: () => const EditProfileRoute().go(context),
                   ),
                   ProfileTileWidget(
                     icon: Icons.phone_android_rounded,

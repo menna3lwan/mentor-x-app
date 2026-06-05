@@ -13,6 +13,8 @@ import 'package:parent_dio_financial_repository/parent_dio_financial_repository.
 import 'package:parent_dio_grade_repository/parent_dio_grade_repository.dart';
 import 'package:parent_dio_communication_repository/parent_dio_communication_repository.dart';
 import 'package:parent_dio_notification_repository/parent_dio_notification_repository.dart';
+import 'package:parent_dio_profile_repository/parent_dio_profile_repository.dart';
+import 'package:parent_dio_analytics_repository/parent_dio_analytics_repository.dart';
 import 'package:device_info_service/device_info_service.dart';
 
 import 'package:parent_mock_authentication_repository/parent_mock_authentication_repository.dart';
@@ -23,6 +25,8 @@ import 'package:parent_mock_course_repository/parent_mock_course_repository.dart
 import 'package:parent_mock_attendance_repository/parent_mock_attendance_repository.dart';
 import 'package:parent_mock_grade_repository/parent_mock_grade_repository.dart';
 import 'package:parent_mock_communication_repository/parent_mock_communication_repository.dart';
+import 'package:mock_parent_profile_repository/mock_parent_profile_repository.dart';
+import 'package:mock_parent_analytics_repository/mock_parent_analytics_repository.dart';
 import 'package:mock_notification_repository/mock_notification_repository.dart';
 
 import '../../core/utils/env.dart';
@@ -38,6 +42,8 @@ final class AppRepositories {
   final ParentGradeRepository gradeRepository;
   final ParentCommunicationRepository communicationRepository;
   final NotificationRepository notificationRepository;
+  final ParentProfileRepository profileRepository;
+  final ParentAnalyticsRepository analyticsRepository;
 
   const AppRepositories._({
     required this.cacheRepository,
@@ -50,6 +56,8 @@ final class AppRepositories {
     required this.gradeRepository,
     required this.communicationRepository,
     required this.notificationRepository,
+    required this.profileRepository,
+    required this.analyticsRepository,
   });
 
   List<Object> toList() {
@@ -64,6 +72,8 @@ final class AppRepositories {
       gradeRepository,
       communicationRepository,
       notificationRepository,
+      profileRepository,
+      analyticsRepository,
     ];
   }
 
@@ -92,6 +102,12 @@ final class AppRepositories {
       ),
       RepositoryProvider<NotificationRepository>(
         create: (_) => notificationRepository,
+      ),
+      RepositoryProvider<ParentProfileRepository>(
+        create: (_) => profileRepository,
+      ),
+      RepositoryProvider<ParentAnalyticsRepository>(
+        create: (_) => analyticsRepository,
       ),
     ];
   }
@@ -267,6 +283,32 @@ final class RepositoriesFactory {
     }
   }
 
+  static Future<ParentProfileRepository> _initProfileRepository() async {
+    late final ParentProfileRepository repo;
+    switch (Env.profileRepositoryMode) {
+      case RepositoryMode.mock:
+        repo = MockParentProfileRepository(delay: Env.mockDelayDuration);
+      case RepositoryMode.prod:
+        final httpClient = await _initHttpClient();
+        repo = DioParentProfileRepository(httpClient: httpClient);
+    }
+    await repo.initialize();
+    return repo;
+  }
+
+  static Future<ParentAnalyticsRepository> _initAnalyticsRepository() async {
+    late final ParentAnalyticsRepository repo;
+    switch (Env.analyticsRepositoryMode) {
+      case RepositoryMode.mock:
+        repo = MockParentAnalyticsRepository(delay: Env.mockDelayDuration);
+      case RepositoryMode.prod:
+        final httpClient = await _initHttpClient();
+        repo = DioParentAnalyticsRepository(httpClient: httpClient);
+    }
+    await repo.initialize();
+    return repo;
+  }
+
   static Future<NotificationRepository> _initNotificationRepository() async {
     late final NotificationRepository repo;
     switch (Env.notificationRepositoryMode) {
@@ -321,6 +363,8 @@ final class RepositoriesFactory {
       gradeRepository as ParentGradeRepository,
       communicationRepository as ParentCommunicationRepository,
       notificationRepository as NotificationRepository,
+      profileRepository as ParentProfileRepository,
+      analyticsRepository as ParentAnalyticsRepository,
     ] = await Future.wait(
       [
         _initAuthenticationRepository(),
@@ -332,6 +376,8 @@ final class RepositoriesFactory {
         _initGradeRepository(),
         _initCommunicationRepository(),
         _initNotificationRepository(),
+        _initProfileRepository(),
+        _initAnalyticsRepository(),
       ],
     );
 
@@ -346,6 +392,8 @@ final class RepositoriesFactory {
       gradeRepository: gradeRepository,
       communicationRepository: communicationRepository,
       notificationRepository: notificationRepository,
+      profileRepository: profileRepository,
+      analyticsRepository: analyticsRepository,
     );
 
     final localizedClients = <LocalizedClient>[];

@@ -1,0 +1,20 @@
+name: parent_dio_analytics_repository
+description: A Dio implementation of the parent analytics repository.
+version: 0.0.1
+publish_to: none
+
+environment:
+  sdk: ^3.11.4
+
+resolution: workspace
+
+dependencies:
+  mentorx_core:
+    path: ../../mentorx_core
+  dio_http_client:
+    path: ../../clients/dio_http_client
+
+dev_dependencies:
+  test: ^1.25.6
+  mocktail: ^1.0.4
+  lints: ^6.0.0

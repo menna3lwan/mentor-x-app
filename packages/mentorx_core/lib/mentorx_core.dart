@@ -37,6 +37,7 @@ part 'src/entities/parent/parent_home_entities.dart';
 part 'src/entities/parent/parent_dashboard_entities.dart';
 part 'src/entities/parent/parent_financial_entities.dart';
 part 'src/entities/parent/parent_grade_entities.dart';
+part 'src/entities/parent/parent_analytics_entities.dart';
 part 'src/entities/tenant_entity.dart';
 part 'src/entities/device_entity.dart';
 part 'src/entities/center_entity.dart';
@@ -136,6 +137,8 @@ part 'src/repositories/parent_course_repository.dart';
 part 'src/repositories/parent_attendance_repository.dart';
 part 'src/repositories/parent_grade_repository.dart';
 part 'src/repositories/parent_communication_repository.dart';
+part 'src/repositories/parent_profile_repository.dart';
+part 'src/repositories/parent_analytics_repository.dart';
 part 'src/repositories/onboarding_repository.dart';
 
 // Role-specific interfaces

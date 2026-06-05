@@ -2539,6 +2539,57 @@ class TranslationsParentProfileEn {
 
 	/// en: 'Version ${version}'
 	String aboutVersion({required Object version}) => 'Version ${version}';
+
+	/// en: 'Edit Profile'
+	String get editTitle => 'Edit Profile';
+
+	/// en: 'Full Name'
+	String get editFullNameLabel => 'Full Name';
+
+	/// en: 'Your full name as you'd like it displayed'
+	String get editFullNameHint => 'Your full name as you\'d like it displayed';
+
+	/// en: 'Name must be at least 4 characters.'
+	String get editFullNameTooShort => 'Name must be at least 4 characters.';
+
+	/// en: 'Save Changes'
+	String get editSaveAction => 'Save Changes';
+
+	/// en: 'Profile updated successfully.'
+	String get editSaveSuccess => 'Profile updated successfully.';
+
+	/// en: 'Couldn't update your profile. Please try again.'
+	String get editSaveFailed => 'Couldn\'t update your profile. Please try again.';
+
+	/// en: 'Couldn't load your profile.'
+	String get editLoadFailed => 'Couldn\'t load your profile.';
+
+	/// en: 'Your session has expired. Please sign in again.'
+	String get editUnauthorized => 'Your session has expired. Please sign in again.';
+
+	/// en: 'Network problem — please check your connection.'
+	String get editNetworkError => 'Network problem — please check your connection.';
+
+	/// en: 'Change Photo'
+	String get avatarChangeAction => 'Change Photo';
+
+	/// en: 'Choose from Library'
+	String get avatarPickFromGallery => 'Choose from Library';
+
+	/// en: 'Take Photo'
+	String get avatarTakePhoto => 'Take Photo';
+
+	/// en: 'Uploading photo...'
+	String get avatarUploading => 'Uploading photo...';
+
+	/// en: 'Profile photo updated.'
+	String get avatarUploadSuccess => 'Profile photo updated.';
+
+	/// en: 'Couldn't upload your photo. Please try again.'
+	String get avatarUploadFailed => 'Couldn\'t upload your photo. Please try again.';
+
+	/// en: 'Please choose a valid image.'
+	String get avatarInvalidImage => 'Please choose a valid image.';
 }
 
 // Path: parent.communication

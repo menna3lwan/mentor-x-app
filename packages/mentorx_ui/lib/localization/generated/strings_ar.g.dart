@@ -1620,6 +1620,23 @@ class _TranslationsParentProfileAr implements TranslationsParentProfileEn {
 	@override String get helpCenterValue => 'الأسئلة الشائعة والدعم';
 	@override String get aboutTitle => 'عن MentorX';
 	@override String aboutVersion({required Object version}) => 'الإصدار ${version}';
+	@override String get editTitle => 'تعديل الملف الشخصي';
+	@override String get editFullNameLabel => 'الاسم الكامل';
+	@override String get editFullNameHint => 'اسمك الكامل كما تريد عرضه';
+	@override String get editFullNameTooShort => 'يجب ألا يقل الاسم عن 4 أحرف.';
+	@override String get editSaveAction => 'حفظ التغييرات';
+	@override String get editSaveSuccess => 'تم تحديث الملف الشخصي بنجاح.';
+	@override String get editSaveFailed => 'تعذّر تحديث الملف الشخصي. حاول مرة أخرى.';
+	@override String get editLoadFailed => 'تعذّر تحميل ملفك الشخصي.';
+	@override String get editUnauthorized => 'انتهت جلستك. يُرجى تسجيل الدخول من جديد.';
+	@override String get editNetworkError => 'مشكلة في الشبكة — تحقق من الاتصال.';
+	@override String get avatarChangeAction => 'تغيير الصورة';
+	@override String get avatarPickFromGallery => 'اختيار من المعرض';
+	@override String get avatarTakePhoto => 'التقاط صورة';
+	@override String get avatarUploading => 'جاري رفع الصورة...';
+	@override String get avatarUploadSuccess => 'تم تحديث صورة الملف الشخصي.';
+	@override String get avatarUploadFailed => 'تعذّر رفع الصورة. حاول مرة أخرى.';
+	@override String get avatarInvalidImage => 'يرجى اختيار صورة صالحة.';
 }
 
 // Path: parent.communication

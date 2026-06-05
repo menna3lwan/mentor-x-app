@@ -18,6 +18,7 @@ import '../../features/auth/pages/parent_registration/parent_registration_page_w
 
 import '../../features/children/pages/linked_children_management_page.dart';
 import '../../features/children/pages/add_child_link_page.dart';
+import '../../features/profile/pages/edit_profile_page_wrapper.dart';
 import '../../features/profile/pages/parent_profile_page.dart';
 import '../../features/profile/pages/settings_parent_page.dart';
 
@@ -167,6 +168,14 @@ class ProfileRoute extends GoRouteData with $ProfileRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const ParentProfilePage();
+}
+
+@TypedGoRoute<EditProfileRoute>(path: '/profile/edit')
+class EditProfileRoute extends GoRouteData with $EditProfileRoute {
+  const EditProfileRoute();
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const EditProfilePageWrapper();
 }
 
 @TypedGoRoute<SettingsRoute>(path: '/settings')

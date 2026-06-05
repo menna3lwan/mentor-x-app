@@ -37,6 +37,10 @@ dependencies:
     path: ../packages/parent/dio_communication_repository
   parent_dio_notification_repository:
     path: ../packages/parent/dio_notification_repository
+  parent_dio_profile_repository:
+    path: ../packages/parent/dio_parent_profile_repository
+  parent_dio_analytics_repository:
+    path: ../packages/parent/dio_parent_analytics_repository
   parent_mock_authentication_repository:
     path: ../packages/mock/parent/mock_authentication_repository
   parent_mock_home_repository:
@@ -53,6 +57,10 @@ dependencies:
     path: ../packages/mock/parent/mock_grade_repository
   parent_mock_communication_repository:
     path: ../packages/mock/parent/mock_communication_repository
+  mock_parent_profile_repository:
+    path: ../packages/mock/parent/mock_parent_profile_repository
+  mock_parent_analytics_repository:
+    path: ../packages/mock/parent/mock_parent_analytics_repository
   mock_notification_repository:
     path: ../packages/mock/student/mock_notification_repository
   flutter_secure_storage_cache_repository:
@@ -79,6 +87,7 @@ dependencies:
   mix: ^1.7.0
   animate_do: ^5.1.0
   gap: ^3.0.1
+  image_picker: ^1.2.1
   # Services
   device_info_service:
     path: ../packages/services/device_info_service
