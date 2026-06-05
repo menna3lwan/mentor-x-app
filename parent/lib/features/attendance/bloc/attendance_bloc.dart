@@ -3,6 +3,8 @@ import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 
+import '../../../core/blocs/bloc_error_helpers.dart';
+
 part 'attendance_event.dart';
 part 'attendance_state.dart';
 
@@ -176,30 +178,19 @@ final class AttendanceBloc extends Bloc<AttendanceEvent, AttendanceState>
     );
   }
 
-  String _describe(Object error) {
-    if (error is MentorXException) {
-      return error.message ?? error.toString();
-    }
-    if (error is HttpClientResponse) {
-      return error.exception?.message ?? 'Request failed (${error.statusCode})';
-    }
-    return error.toString();
-  }
+  String _describe(Object error) => error.describeError();
 
   AttendanceFailureKind _classifyFailure(Object error) {
-    if (error is HttpClientResponse) {
-      return switch (error.statusCode) {
-        401 || 403 => AttendanceFailureKind.unauthorized,
-        404 => AttendanceFailureKind.notFound,
-        _ => AttendanceFailureKind.unknown,
-      };
-    }
-    return AttendanceFailureKind.unknown;
+    return switch (classifyHttpFailure(error)) {
+      GenericFailureKind.unauthorized => AttendanceFailureKind.unauthorized,
+      GenericFailureKind.notFound => AttendanceFailureKind.notFound,
+      GenericFailureKind.network => AttendanceFailureKind.network,
+      GenericFailureKind.unknown => AttendanceFailureKind.unknown,
+    };
   }
 
   void _maybeEmitUnauthorized(Object error) {
-    if (error is HttpClientResponse &&
-        (error.statusCode == 401 || error.statusCode == 403)) {
+    if (isUnauthorizedError(error)) {
       emitPresentation(const AttendanceUnauthorizedPresentationEvent());
     }
   }

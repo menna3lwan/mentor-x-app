@@ -153,18 +153,24 @@ class HomeUpdatedAtChip extends StatelessWidget {
   }
 }
 
-/// Lightweight wrapper to make `[SectionHeader] + Gap + child` consistent
-/// across the home page (and ensures bottom padding is uniform).
-class HomeSection extends StatelessWidget {
+/// Reusable "section title + optional 'see all' button + body" block used
+/// throughout the parent home page. Replaces the older `_SectionBlock` /
+/// `_SectionHeader` duplicates that used to live in `home_page_wrapper.dart`.
+class HomeSectionBlock extends StatelessWidget {
   final String title;
   final Widget child;
   final VoidCallback? onSeeAll;
 
-  const HomeSection({
+  /// Vertical spacing between header and body. Defaults to 12 to match the
+  /// existing dashboard layout; pass 16 for less-dense sections.
+  final double headerSpacing;
+
+  const HomeSectionBlock({
     super.key,
     required this.title,
     required this.child,
     this.onSeeAll,
+    this.headerSpacing = 12,
   });
 
   @override
@@ -172,39 +178,27 @@ class HomeSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _SectionHeader(title: title, onSeeAll: onSeeAll),
-        const Gap(16),
-        child,
-      ],
-    );
-  }
-}
-
-class _SectionHeader extends StatelessWidget {
-  final String title;
-  final VoidCallback? onSeeAll;
-
-  const _SectionHeader({required this.title, this.onSeeAll});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: Text(
-            title,
-            style: TextStyle(
-              color: context.textPrimaryColor,
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
+        Row(
+          children: [
+            Expanded(
+              child: Text(
+                title,
+                style: TextStyle(
+                  color: context.textPrimaryColor,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
             ),
-          ),
+            if (onSeeAll != null)
+              TextButton(
+                onPressed: onSeeAll,
+                child: Text(Translations.of(context).parent.viewAll),
+              ),
+          ],
         ),
-        if (onSeeAll != null)
-          TextButton(
-            onPressed: onSeeAll,
-            child: Text(Translations.of(context).parent.viewAll),
-          ),
+        Gap(headerSpacing),
+        child,
       ],
     );
   }

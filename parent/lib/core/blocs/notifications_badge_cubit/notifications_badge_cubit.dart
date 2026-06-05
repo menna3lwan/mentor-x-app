@@ -1,6 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 
+import '../bloc_error_helpers.dart';
+
 part 'notifications_badge_state.dart';
 
 final class NotificationsBadgeCubit extends Cubit<NotificationsBadgeState> {
@@ -20,7 +22,7 @@ final class NotificationsBadgeCubit extends Cubit<NotificationsBadgeState> {
       emit(
         state.copyWith(
           isLoading: false,
-          errorMessage: _describe(error),
+          errorMessage: error.describeError(),
         ),
       );
     }
@@ -32,15 +34,5 @@ final class NotificationsBadgeCubit extends Cubit<NotificationsBadgeState> {
 
   void decrement() {
     setCount(state.count - 1);
-  }
-
-  String _describe(Object error) {
-    if (error is MentorXException) {
-      return error.message ?? error.toString();
-    }
-    if (error is HttpClientResponse) {
-      return error.exception?.message ?? 'Request failed (${error.statusCode})';
-    }
-    return error.toString();
   }
 }

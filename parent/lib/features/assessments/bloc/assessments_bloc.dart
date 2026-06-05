@@ -3,6 +3,8 @@ import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 
+import '../../../core/blocs/bloc_error_helpers.dart';
+
 part 'assessments_event.dart';
 part 'assessments_state.dart';
 
@@ -210,30 +212,19 @@ final class AssessmentsBloc extends Bloc<AssessmentsEvent, AssessmentsState>
     );
   }
 
-  String _describe(Object error) {
-    if (error is MentorXException) {
-      return error.message ?? error.toString();
-    }
-    if (error is HttpClientResponse) {
-      return 'Request failed (${error.statusCode})';
-    }
-    return error.toString();
-  }
+  String _describe(Object error) => error.describeError();
 
   AssessmentsFailureKind _classifyFailure(Object error) {
-    if (error is HttpClientResponse) {
-      return switch (error.statusCode) {
-        401 || 403 => AssessmentsFailureKind.unauthorized,
-        404 => AssessmentsFailureKind.notFound,
-        _ => AssessmentsFailureKind.unknown,
-      };
-    }
-    return AssessmentsFailureKind.unknown;
+    return switch (classifyHttpFailure(error)) {
+      GenericFailureKind.unauthorized => AssessmentsFailureKind.unauthorized,
+      GenericFailureKind.notFound => AssessmentsFailureKind.notFound,
+      GenericFailureKind.network => AssessmentsFailureKind.network,
+      GenericFailureKind.unknown => AssessmentsFailureKind.unknown,
+    };
   }
 
   void _maybeEmitUnauthorized(Object error) {
-    if (error is HttpClientResponse &&
-        (error.statusCode == 401 || error.statusCode == 403)) {
+    if (isUnauthorizedError(error)) {
       emitPresentation(const AssessmentsUnauthorizedPresentationEvent());
     }
   }

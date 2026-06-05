@@ -3,6 +3,9 @@ import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 
+import '../../../core/blocs/bloc_error_helpers.dart';
+import '../../../core/utils/parent_cache_keys.dart';
+
 part 'home_event.dart';
 part 'home_state.dart';
 
@@ -39,7 +42,7 @@ final class HomeBloc extends Bloc<HomeEvent, HomeState>
   final ParentHomeRepository _homeRepository;
   final CacheRepository _cacheRepository;
 
-  static const String _selectedChildCacheKey = 'selected_child_id';
+  static const String _selectedChildCacheKey = ParentCacheKeys.selectedChildId;
 
   HomeBloc({
     required ParentChildrenRepository childrenRepository,
@@ -308,19 +311,16 @@ final class HomeBloc extends Bloc<HomeEvent, HomeState>
     }
   }
 
-  /// Extracts a user-friendly message from common exception shapes.
-  String _describe(Object error) {
-    if (error is HttpClientResponse) {
-      return error.exception?.message ?? 'Request failed (${error.statusCode})';
-    }
-    return error.toString();
-  }
+  /// Extracts a user-friendly message from common exception shapes. Routes
+  /// through the shared [BlocErrorDescribe] extension so all dashboards
+  /// stringify failures consistently.
+  String _describe(Object error) => error.describeError();
 
   /// Fires a presentation event if the error looks like an auth failure so
-  /// the UI layer can redirect to login.
+  /// the UI layer can redirect to login. Defers the classification to the
+  /// shared [isUnauthorizedError] helper.
   void _maybeEmitUnauthorized(Object error) {
-    if (error is HttpClientResponse &&
-        (error.statusCode == 401 || error.statusCode == 403)) {
+    if (isUnauthorizedError(error)) {
       emitPresentation(const HomeUnauthorizedPresentationEvent());
     }
   }

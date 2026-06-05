@@ -3,6 +3,8 @@ import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 
+import '../../../core/blocs/bloc_error_helpers.dart';
+
 part 'financial_event.dart';
 part 'financial_state.dart';
 
@@ -256,30 +258,19 @@ final class FinancialBloc extends Bloc<FinancialEvent, FinancialState>
     );
   }
 
-  String _describe(Object error) {
-    if (error is MentorXException) {
-      return error.message ?? error.toString();
-    }
-    if (error is HttpClientResponse) {
-      return 'Request failed (${error.statusCode})';
-    }
-    return error.toString();
-  }
+  String _describe(Object error) => error.describeError();
 
   FinancialFailureKind _classifyFailure(Object error) {
-    if (error is HttpClientResponse) {
-      return switch (error.statusCode) {
-        401 || 403 => FinancialFailureKind.unauthorized,
-        404 => FinancialFailureKind.notFound,
-        _ => FinancialFailureKind.unknown,
-      };
-    }
-    return FinancialFailureKind.unknown;
+    return switch (classifyHttpFailure(error)) {
+      GenericFailureKind.unauthorized => FinancialFailureKind.unauthorized,
+      GenericFailureKind.notFound => FinancialFailureKind.notFound,
+      GenericFailureKind.network => FinancialFailureKind.network,
+      GenericFailureKind.unknown => FinancialFailureKind.unknown,
+    };
   }
 
   void _maybeEmitUnauthorized(Object error) {
-    if (error is HttpClientResponse &&
-        (error.statusCode == 401 || error.statusCode == 403)) {
+    if (isUnauthorizedError(error)) {
       emitPresentation(const FinancialUnauthorizedPresentationEvent());
     }
   }

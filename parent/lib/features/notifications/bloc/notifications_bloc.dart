@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 
+import '../../../core/blocs/bloc_error_helpers.dart';
 import '../domain/usecases/notification_usecases.dart';
 
 part 'notifications_event.dart';
@@ -214,15 +215,7 @@ final class NotificationsBloc
     }
   }
 
-  String _describe(Object error) {
-    if (error is MentorXException) {
-      return error.message ?? error.toString();
-    }
-    if (error is HttpClientResponse) {
-      return error.exception?.message ?? 'Request failed (${error.statusCode})';
-    }
-    return error.toString();
-  }
+  String _describe(Object error) => error.describeError();
 }
 
 extension on MentorXPaginationInfo {

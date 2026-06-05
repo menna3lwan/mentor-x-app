@@ -177,7 +177,6 @@ class SettingsRoute extends GoRouteData with $SettingsRoute {
       const SettingsParentPage();
 }
 
-final router = GoRouter(
-  initialLocation: '/',
-  routes: $appRoutes,
-);
+// Note: the GoRouter instance is constructed inside `AppRouter` (see
+// app_router.dart) which wires it up with the authentication redirect.
+// Importers of this file only use the typed route classes above.

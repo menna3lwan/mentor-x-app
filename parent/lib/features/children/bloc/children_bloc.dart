@@ -3,6 +3,8 @@ import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 
+import '../../../core/blocs/bloc_error_helpers.dart';
+
 part 'children_event.dart';
 part 'children_state.dart';
 
@@ -264,15 +266,7 @@ final class ChildrenBloc extends Bloc<ChildrenEvent, ChildrenState>
   // Helpers
   // ───────────────────────────────────────────────────────────────────────
 
-  String _describe(Object error) {
-    if (error is MentorXException) {
-      return error.message ?? error.toString();
-    }
-    if (error is HttpClientResponse) {
-      return error.exception?.message ?? 'Request failed (${error.statusCode})';
-    }
-    return error.toString();
-  }
+  String _describe(Object error) => error.describeError();
 
   ChildrenFailureKind _classifyFailure(Object error) {
     // Children repository surfaces failures as both its own
@@ -304,8 +298,7 @@ final class ChildrenBloc extends Bloc<ChildrenEvent, ChildrenState>
   }
 
   void _maybeEmitUnauthorized(Object error) {
-    if (error is HttpClientResponse &&
-        (error.statusCode == 401 || error.statusCode == 403)) {
+    if (isUnauthorizedError(error)) {
       emitPresentation(const ChildrenUnauthorizedPresentationEvent());
     }
   }

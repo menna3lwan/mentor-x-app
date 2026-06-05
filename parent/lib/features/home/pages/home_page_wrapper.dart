@@ -9,7 +9,7 @@ import 'package:intl/intl.dart';
 import '../../../core/core.dart';
 import '../bloc/home_bloc.dart';
 import '../widgets/widgets.dart';
-import 'home_page_page.dart' hide HomeSection;
+import 'home_page_page.dart';
 
 /// Top-level entry for the parent home tab. Owns the [HomeBloc] lifecycle,
 /// listens for one-shot presentation events (toasts), and composes the
@@ -204,7 +204,7 @@ class _HomeContent extends StatelessWidget {
             FadeInUp(
               duration: const Duration(milliseconds: 600),
               delay: const Duration(milliseconds: 100),
-              child: _SectionBlock(
+              child: HomeSectionBlock(
                 title: t.services,
                 child: const ParentQuickActionsWrapper(),
               ),
@@ -213,7 +213,7 @@ class _HomeContent extends StatelessWidget {
             FadeInUp(
               duration: const Duration(milliseconds: 600),
               delay: const Duration(milliseconds: 200),
-              child: _SectionBlock(
+              child: HomeSectionBlock(
                 title: t.home.upcomingSessions,
                 onSeeAll: _onSeeAllAcademic(context),
                 child: const UpcomingSessionsWrapper(),
@@ -223,7 +223,7 @@ class _HomeContent extends StatelessWidget {
             FadeInUp(
               duration: const Duration(milliseconds: 600),
               delay: const Duration(milliseconds: 300),
-              child: _SectionBlock(
+              child: HomeSectionBlock(
                 title: t.home.recentGrades,
                 onSeeAll: _onSeeAllGrades(context),
                 child: const RecentGradesWrapper(),
@@ -233,7 +233,7 @@ class _HomeContent extends StatelessWidget {
             FadeInUp(
               duration: const Duration(milliseconds: 600),
               delay: const Duration(milliseconds: 400),
-              child: _SectionBlock(
+              child: HomeSectionBlock(
                 title: t.announcements,
                 onSeeAll: _onSeeAllAnnouncements(context),
                 child: const ParentAnnouncementsWrapper(),
@@ -243,7 +243,7 @@ class _HomeContent extends StatelessWidget {
             FadeInUp(
               duration: const Duration(milliseconds: 600),
               delay: const Duration(milliseconds: 500),
-              child: _SectionBlock(
+              child: HomeSectionBlock(
                 title: t.recentActivity,
                 child: const ParentActivityFeedWrapper(),
               ),
@@ -298,44 +298,6 @@ class _HeroHeading extends StatelessWidget {
   }
 }
 
-class _SectionBlock extends StatelessWidget {
-  final String title;
-  final Widget child;
-  final VoidCallback? onSeeAll;
-
-  const _SectionBlock({
-    required this.title,
-    required this.child,
-    this.onSeeAll,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Expanded(
-              child: Text(
-                title,
-                style: TextStyle(
-                  color: context.textPrimaryColor,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-            ),
-            if (onSeeAll != null)
-              TextButton(
-                onPressed: onSeeAll,
-                child: Text(Translations.of(context).parent.viewAll),
-              ),
-          ],
-        ),
-        const Gap(12),
-        child,
-      ],
-    );
-  }
-}
+// The previous `_SectionBlock` private class was removed — its callers now
+// use the shared [HomeSection] from `home_page_page.dart`, which exposes the
+// same "title + see-all + body" layout with one authoritative implementation.

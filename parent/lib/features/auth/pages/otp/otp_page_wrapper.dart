@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
-import 'package:parent/core/core.dart';
+import '../../../../core/core.dart';
 
 import 'bloc/otp_bloc.dart';
 import 'otp_page.dart';

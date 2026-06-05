@@ -3,7 +3,7 @@ import 'package:device_info_service/device_info_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
-import 'package:parent/core/core.dart';
+import '../../../../core/core.dart';
 
 import 'package:gap/gap.dart';
 import 'bloc/parent_registration_bloc.dart';
