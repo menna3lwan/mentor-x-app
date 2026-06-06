@@ -112,4 +112,48 @@ final class DioParentProfileRepository
       _ => ParentProfileRepositoryExceptionCode.unknown,
     };
   }
+
+  @override
+  Future<void> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) async {
+    // The EduCore Postman collection does not declare a parent-specific
+    // change-password endpoint. We post to the generic `/api/auth/change-password`
+    // used by the Student app and, on 404/405, fall back to the legacy
+    // `/api/parent/change-password` path. Backend can later normalise either.
+    final payload = {
+      'currentPassword': currentPassword,
+      'current_password': currentPassword,
+      'newPassword': newPassword,
+      'new_password': newPassword,
+    };
+    try {
+      try {
+        await _httpClient.post(
+          '/api/auth/change-password',
+          data: payload,
+        );
+      } on HttpClientResponse catch (e) {
+        if (e.statusCode != 404 && e.statusCode != 405) rethrow;
+        await _httpClient.post(
+          '/api/parent/change-password',
+          data: payload,
+        );
+      }
+    } on HttpClientResponse catch (e) {
+      if (e.statusCode == 401 || e.statusCode == 422 || e.statusCode == 400) {
+        throw const ParentProfileRepositoryException(
+          code: ParentProfileRepositoryExceptionCode.wrongCurrentPassword,
+          message: 'Current password is incorrect.',
+        );
+      }
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode:
+            ParentProfileRepositoryExceptionCode.failedToChangePassword,
+        codeFromStatusCode: _statusToCode,
+      );
+    }
+  }
 }

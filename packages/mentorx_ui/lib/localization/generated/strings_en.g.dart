@@ -1279,6 +1279,7 @@ class TranslationsParentEn {
 	late final TranslationsParentAuthEn auth = TranslationsParentAuthEn._(_root);
 	late final TranslationsParentProfileEn profile = TranslationsParentProfileEn._(_root);
 	late final TranslationsParentCommunicationEn communication = TranslationsParentCommunicationEn._(_root);
+	late final TranslationsParentAnalyticsEn analytics = TranslationsParentAnalyticsEn._(_root);
 	late final TranslationsParentAcademicEn academic = TranslationsParentAcademicEn._(_root);
 	late final TranslationsParentFinancialEn financial = TranslationsParentFinancialEn._(_root);
 	late final TranslationsParentAttendanceTrackingEn attendanceTracking = TranslationsParentAttendanceTrackingEn._(_root);
@@ -2590,6 +2591,149 @@ class TranslationsParentProfileEn {
 
 	/// en: 'Please choose a valid image.'
 	String get avatarInvalidImage => 'Please choose a valid image.';
+
+	/// en: 'Change Password'
+	String get changePasswordTitle => 'Change Password';
+
+	/// en: 'For your security, choose a strong password that you don't use anywhere else.'
+	String get changePasswordHint =>
+		'For your security, choose a strong password that you don\'t use anywhere else.';
+
+	/// en: 'Current Password'
+	String get changePasswordCurrentLabel => 'Current Password';
+
+	/// en: 'New Password'
+	String get changePasswordNewLabel => 'New Password';
+
+	/// en: 'Confirm New Password'
+	String get changePasswordConfirmLabel => 'Confirm New Password';
+
+	/// en: 'Please enter your current password.'
+	String get changePasswordCurrentRequired => 'Please enter your current password.';
+
+	/// en: 'Password must be at least 8 characters.'
+	String get changePasswordTooWeak => 'Password must be at least 8 characters.';
+
+	/// en: 'Passwords don't match.'
+	String get changePasswordMismatch => 'Passwords don\'t match.';
+
+	/// en: 'Your current password is incorrect.'
+	String get changePasswordWrongCurrent => 'Your current password is incorrect.';
+
+	/// en: 'Couldn't change your password. Please try again.'
+	String get changePasswordFailed => 'Couldn\'t change your password. Please try again.';
+
+	/// en: 'Password changed successfully.'
+	String get changePasswordSuccess => 'Password changed successfully.';
+
+	/// en: 'Update Password'
+	String get changePasswordAction => 'Update Password';
+
+	/// en: 'Change password'
+	String get securityChangePassword => 'Change password';
+
+	/// en: 'https://docs.mentorx.com/help'
+	String get settingsHelpUrl => 'https://docs.mentorx.com/help';
+
+	/// en: 'About MentorX'
+	String get settingsAboutTitle => 'About MentorX';
+
+	/// en: 'MentorX is a learning platform built to help students grow and parents stay informed. Version ${version}.'
+	String settingsAboutBody({required Object version}) =>
+		'MentorX is a learning platform built to help students grow and parents stay informed. Version ${version}.';
+}
+
+// Path: parent.analytics
+class TranslationsParentAnalyticsEn {
+	TranslationsParentAnalyticsEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	/// en: 'Performance Insights'
+	String get pageTitle => 'Performance Insights';
+
+	/// en: 'Grade Comparison'
+	String get sectionGradeComparison => 'Grade Comparison';
+
+	/// en: 'Course Progress'
+	String get sectionCourseProgress => 'Course Progress';
+
+	/// en: 'Study Hours'
+	String get sectionActiveHours => 'Study Hours';
+
+	/// en: 'Achievements'
+	String get sectionAchievements => 'Achievements';
+
+	/// en: 'Streak'
+	String get sectionStreak => 'Streak';
+
+	/// en: 'Quiz Speed'
+	String get sectionQuizSpeed => 'Quiz Speed';
+
+	/// en: 'Child Average'
+	String get childAverageLabel => 'Child Average';
+
+	/// en: 'Class Average'
+	String get classAverageLabel => 'Class Average';
+
+	/// en: 'Rank ${rank} of ${total}'
+	String rankLabel({required Object rank, required Object total}) =>
+		'Rank ${rank} of ${total}';
+
+	/// en: 'Overall Progress'
+	String get overallProgressLabel => 'Overall Progress';
+
+	/// en: '${completed} / ${total} sessions'
+	String completedSessionsLabel({required Object completed, required Object total}) =>
+		'${completed} / ${total} sessions';
+
+	/// en: '${minutes} min'
+	String minutesToday({required Object minutes}) => '${minutes} min';
+
+	/// en: 'Average: ${minutes} min/day'
+	String averagePerDay({required Object minutes}) =>
+		'Average: ${minutes} min/day';
+
+	/// en: 'Total: ${minutes} min'
+	String totalMinutes({required Object minutes}) => 'Total: ${minutes} min';
+
+	/// en: 'Current Streak'
+	String get currentStreak => 'Current Streak';
+
+	/// en: 'Longest Streak'
+	String get longestStreak => 'Longest Streak';
+
+	/// en: '${days} days'
+	String streakDays({required Object days}) => '${days} days';
+
+	/// en: 'Last active ${time}'
+	String lastActive({required Object time}) => 'Last active ${time}';
+
+	/// en: '${unlocked} unlocked'
+	String unlockedCount({required Object unlocked}) => '${unlocked} unlocked';
+
+	/// en: '${seconds}s / question'
+	String averageQuizSpeed({required Object seconds}) =>
+		'${seconds}s / question';
+
+	/// en: '${count} quizzes'
+	String quizCountLabel({required Object count}) => '${count} quizzes';
+
+	/// en: 'No data yet'
+	String get emptySectionTitle => 'No data yet';
+
+	/// en: 'Insights will appear here as your child uses the app.'
+	String get emptySectionHint =>
+		'Insights will appear here as your child uses the app.';
+
+	/// en: 'Try again'
+	String get errorRetry => 'Try again';
+
+	/// en: 'Couldn't load this section.'
+	String get loadFailed => 'Couldn\'t load this section.';
+
+	/// en: 'Your session has expired. Please sign in again.'
+	String get unauthorized => 'Your session has expired. Please sign in again.';
 }
 
 // Path: parent.communication
@@ -2734,6 +2878,54 @@ class TranslationsParentFinancialEn {
 
 	/// en: 'Failed'
 	String get statusFailed => 'Failed';
+
+	/// en: 'My Wallet'
+	String get myWalletTitle => 'My Wallet';
+
+	/// en: 'Available Balance'
+	String get myWalletBalanceLabel => 'Available Balance';
+
+	/// en: 'Top-ups'
+	String get creditsThisMonth => 'Top-ups';
+
+	/// en: 'EGP'
+	String get currencySymbol => 'EGP';
+
+	/// en: 'Recent Transactions'
+	String get transactionsTitle => 'Recent Transactions';
+
+	/// en: 'Top Up'
+	String get topUpTitle => 'Top Up';
+
+	/// en: 'Top Up Wallet'
+	String get topUpAction => 'Top Up Wallet';
+
+	/// en: 'Add credit to your wallet to pay for your child's courses and materials. Minimum top-up is 10 EGP.'
+	String get topUpHint =>
+		'Add credit to your wallet to pay for your child\'s courses and materials. Minimum top-up is 10 EGP.';
+
+	/// en: 'Amount'
+	String get topUpAmountLabel => 'Amount';
+
+	/// en: 'Enter the amount you want to add'
+	String get topUpAmountHint => 'Enter the amount you want to add';
+
+	/// en: 'Please enter a valid amount.'
+	String get topUpInvalidAmount => 'Please enter a valid amount.';
+
+	/// en: 'Minimum top-up is 10 EGP.'
+	String get topUpBelowMinimum => 'Minimum top-up is 10 EGP.';
+
+	/// en: 'Insufficient funds for this top-up method.'
+	String get topUpInsufficientFunds =>
+		'Insufficient funds for this top-up method.';
+
+	/// en: 'Couldn't process your top-up. Please try again.'
+	String get topUpFailed =>
+		'Couldn\'t process your top-up. Please try again.';
+
+	/// en: 'Wallet topped up successfully.'
+	String get topUpSuccess => 'Wallet topped up successfully.';
 }
 
 // Path: parent.attendanceTracking

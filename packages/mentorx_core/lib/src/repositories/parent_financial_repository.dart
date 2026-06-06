@@ -5,6 +5,10 @@ part of 'package:mentorx_core/mentorx_core.dart';
 enum ParentFinancialRepositoryExceptionCode {
   unknown,
   fetchError,
+  topUpFailed,
+  invalidAmount,
+  insufficientFunds,
+  unauthorized,
 }
 
 final class ParentFinancialRepositoryException
@@ -29,4 +33,27 @@ abstract interface class ParentFinancialRepository {
   });
 
   Future<List<PaymentEntity>> getPayments(String childId);
+
+  // ─────────────────── Parent's own wallet (no childId) ──────────────────
+  //
+  // Backend endpoints (Postman):
+  //   GET  /api/wallet/my
+  //   GET  /api/wallet/my/transactions
+  //   POST /api/wallet/top-up        body: { amount, studentId? }
+  //   POST /api/payment/wallet/deposit  body: { amount }   (fallback)
+
+  /// Fetches the parent's own wallet summary.
+  Future<WalletSummaryEntity> getMyWallet();
+
+  /// Fetches the parent's own transaction history.
+  Future<List<WalletTransactionEntity>> getMyTransactions({
+    MentorXPaginationInfo? paginationInfo,
+  });
+
+  /// Tops up either the parent's own wallet (when [studentId] is null) or
+  /// a specific child's wallet. Returns the updated wallet summary.
+  Future<WalletSummaryEntity> topUpWallet({
+    required double amount,
+    String? studentId,
+  });
 }

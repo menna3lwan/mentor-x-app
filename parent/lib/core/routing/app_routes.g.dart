@@ -18,6 +18,7 @@ List<RouteBase> get $appRoutes => [
   $financialMonitorRoute,
   $academicMonitorRoute,
   $gradeMonitorRoute,
+  $analyticsMonitorRoute,
   $notificationsRoute,
   $announcementsRoute,
   $whatsAppGroupsRoute,
@@ -26,6 +27,9 @@ List<RouteBase> get $appRoutes => [
   $profileRoute,
   $editProfileRoute,
   $settingsRoute,
+  $changePasswordRoute,
+  $myWalletRoute,
+  $topUpRoute,
 ];
 
 RouteBase get $splashRoute =>
@@ -324,6 +328,36 @@ mixin $GradeMonitorRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
+RouteBase get $analyticsMonitorRoute => GoRouteData.$route(
+  path: '/analytics/:childId',
+  factory: $AnalyticsMonitorRoute._fromState,
+);
+
+mixin $AnalyticsMonitorRoute on GoRouteData {
+  static AnalyticsMonitorRoute _fromState(GoRouterState state) =>
+      AnalyticsMonitorRoute(childId: state.pathParameters['childId']!);
+
+  AnalyticsMonitorRoute get _self => this as AnalyticsMonitorRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/analytics/${Uri.encodeComponent(_self.childId)}',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
 RouteBase get $notificationsRoute => GoRouteData.$route(
   path: '/notifications/:childId',
   factory: $NotificationsRoute._fromState,
@@ -517,6 +551,89 @@ mixin $EditProfileRoute on GoRouteData {
 
 RouteBase get $settingsRoute =>
     GoRouteData.$route(path: '/settings', factory: $SettingsRoute._fromState);
+
+RouteBase get $changePasswordRoute => GoRouteData.$route(
+  path: '/profile/change-password',
+  factory: $ChangePasswordRoute._fromState,
+);
+
+mixin $ChangePasswordRoute on GoRouteData {
+  static ChangePasswordRoute _fromState(GoRouterState state) =>
+      const ChangePasswordRoute();
+
+  @override
+  String get location => GoRouteData.$location('/profile/change-password');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $myWalletRoute =>
+    GoRouteData.$route(path: '/my-wallet', factory: $MyWalletRoute._fromState);
+
+mixin $MyWalletRoute on GoRouteData {
+  static MyWalletRoute _fromState(GoRouterState state) => const MyWalletRoute();
+
+  @override
+  String get location => GoRouteData.$location('/my-wallet');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $topUpRoute => GoRouteData.$route(
+  path: '/my-wallet/top-up',
+  factory: $TopUpRoute._fromState,
+);
+
+mixin $TopUpRoute on GoRouteData {
+  static TopUpRoute _fromState(GoRouterState state) =>
+      TopUpRoute(studentId: state.uri.queryParameters['studentId']);
+
+  TopUpRoute get _self => this as TopUpRoute;
+
+  @override
+  String get location {
+    final params = <String, String>{};
+    if (_self.studentId != null && _self.studentId!.isNotEmpty) {
+      params['studentId'] = _self.studentId!;
+    }
+    return GoRouteData.$location('/my-wallet/top-up', queryParams: params);
+  }
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
 
 mixin $SettingsRoute on GoRouteData {
   static SettingsRoute _fromState(GoRouterState state) => const SettingsRoute();

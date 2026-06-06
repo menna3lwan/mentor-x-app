@@ -1014,6 +1014,7 @@ class _TranslationsParentAr implements TranslationsParentEn {
 	@override late final _TranslationsParentAuthAr auth = _TranslationsParentAuthAr._(_root);
 	@override late final _TranslationsParentProfileAr profile = _TranslationsParentProfileAr._(_root);
 	@override late final _TranslationsParentCommunicationAr communication = _TranslationsParentCommunicationAr._(_root);
+	@override late final _TranslationsParentAnalyticsAr analytics = _TranslationsParentAnalyticsAr._(_root);
 	@override late final _TranslationsParentAcademicAr academic = _TranslationsParentAcademicAr._(_root);
 	@override late final _TranslationsParentFinancialAr financial = _TranslationsParentFinancialAr._(_root);
 	@override late final _TranslationsParentAttendanceTrackingAr attendanceTracking = _TranslationsParentAttendanceTrackingAr._(_root);
@@ -1637,9 +1638,67 @@ class _TranslationsParentProfileAr implements TranslationsParentProfileEn {
 	@override String get avatarUploadSuccess => 'تم تحديث صورة الملف الشخصي.';
 	@override String get avatarUploadFailed => 'تعذّر رفع الصورة. حاول مرة أخرى.';
 	@override String get avatarInvalidImage => 'يرجى اختيار صورة صالحة.';
+	@override String get changePasswordTitle => 'تغيير كلمة السر';
+	@override String get changePasswordHint =>
+		'لأمانك، اختر كلمة سر قوية لا تستخدمها في أي مكان آخر.';
+	@override String get changePasswordCurrentLabel => 'كلمة السر الحالية';
+	@override String get changePasswordNewLabel => 'كلمة السر الجديدة';
+	@override String get changePasswordConfirmLabel => 'تأكيد كلمة السر';
+	@override String get changePasswordCurrentRequired => 'يرجى إدخال كلمة السر الحالية.';
+	@override String get changePasswordTooWeak => 'يجب ألا تقل كلمة السر عن 8 أحرف.';
+	@override String get changePasswordMismatch => 'كلمتا السر غير متطابقتين.';
+	@override String get changePasswordWrongCurrent => 'كلمة السر الحالية غير صحيحة.';
+	@override String get changePasswordFailed => 'تعذّر تغيير كلمة السر. حاول مرة أخرى.';
+	@override String get changePasswordSuccess => 'تم تغيير كلمة السر بنجاح.';
+	@override String get changePasswordAction => 'تحديث كلمة السر';
+	@override String get securityChangePassword => 'تغيير كلمة السر';
+	@override String get settingsHelpUrl => 'https://docs.mentorx.com/help';
+	@override String get settingsAboutTitle => 'عن MentorX';
+	@override String settingsAboutBody({required Object version}) =>
+		'MentorX منصة تعليمية تساعد الطلاب على التطور والآباء على المتابعة. الإصدار ${version}.';
 }
 
 // Path: parent.communication
+class _TranslationsParentAnalyticsAr implements TranslationsParentAnalyticsEn {
+	_TranslationsParentAnalyticsAr._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	@override String get pageTitle => 'إحصاءات الأداء';
+	@override String get sectionGradeComparison => 'مقارنة الدرجات';
+	@override String get sectionCourseProgress => 'تقدم الكورسات';
+	@override String get sectionActiveHours => 'ساعات الدراسة';
+	@override String get sectionAchievements => 'الإنجازات';
+	@override String get sectionStreak => 'السلسلة';
+	@override String get sectionQuizSpeed => 'سرعة الاختبارات';
+	@override String get childAverageLabel => 'متوسط الطالب';
+	@override String get classAverageLabel => 'متوسط الفصل';
+	@override String rankLabel({required Object rank, required Object total}) =>
+		'الترتيب ${rank} من ${total}';
+	@override String get overallProgressLabel => 'التقدم العام';
+	@override String completedSessionsLabel({required Object completed, required Object total}) =>
+		'${completed} / ${total} حصص';
+	@override String minutesToday({required Object minutes}) => '${minutes} دقيقة';
+	@override String averagePerDay({required Object minutes}) =>
+		'المتوسط: ${minutes} د/يوم';
+	@override String totalMinutes({required Object minutes}) =>
+		'الإجمالي: ${minutes} دقيقة';
+	@override String get currentStreak => 'السلسلة الحالية';
+	@override String get longestStreak => 'أطول سلسلة';
+	@override String streakDays({required Object days}) => '${days} يوم';
+	@override String lastActive({required Object time}) => 'آخر نشاط ${time}';
+	@override String unlockedCount({required Object unlocked}) => '${unlocked} مفتوحة';
+	@override String averageQuizSpeed({required Object seconds}) =>
+		'${seconds}ث / سؤال';
+	@override String quizCountLabel({required Object count}) => '${count} اختبار';
+	@override String get emptySectionTitle => 'لا توجد بيانات بعد';
+	@override String get emptySectionHint =>
+		'ستظهر الإحصاءات هنا مع استخدام التطبيق.';
+	@override String get errorRetry => 'إعادة المحاولة';
+	@override String get loadFailed => 'تعذّر تحميل هذا القسم.';
+	@override String get unauthorized => 'انتهت جلستك. يُرجى تسجيل الدخول من جديد.';
+}
+
 class _TranslationsParentCommunicationAr implements TranslationsParentCommunicationEn {
 	_TranslationsParentCommunicationAr._(this._root);
 
@@ -1703,6 +1762,22 @@ class _TranslationsParentFinancialAr implements TranslationsParentFinancialEn {
 	@override String get statusPending => 'قيد المعالجة';
 	@override String get statusSuccess => 'ناجحة';
 	@override String get statusFailed => 'فاشلة';
+	@override String get myWalletTitle => 'محفظتي';
+	@override String get myWalletBalanceLabel => 'الرصيد المتاح';
+	@override String get creditsThisMonth => 'الشحن';
+	@override String get currencySymbol => 'ج.م';
+	@override String get transactionsTitle => 'آخر المعاملات';
+	@override String get topUpTitle => 'شحن المحفظة';
+	@override String get topUpAction => 'شحن المحفظة';
+	@override String get topUpHint =>
+		'أضف رصيدًا لمحفظتك لدفع كورسات ومواد طفلك. الحد الأدنى للشحن 10 ج.م.';
+	@override String get topUpAmountLabel => 'المبلغ';
+	@override String get topUpAmountHint => 'أدخل المبلغ الذي تريد إضافته';
+	@override String get topUpInvalidAmount => 'يرجى إدخال مبلغ صالح.';
+	@override String get topUpBelowMinimum => 'الحد الأدنى للشحن 10 ج.م.';
+	@override String get topUpInsufficientFunds => 'رصيد طريقة الدفع غير كافٍ.';
+	@override String get topUpFailed => 'تعذّر إتمام عملية الشحن. حاول مرة أخرى.';
+	@override String get topUpSuccess => 'تم شحن المحفظة بنجاح.';
 }
 
 // Path: parent.attendanceTracking

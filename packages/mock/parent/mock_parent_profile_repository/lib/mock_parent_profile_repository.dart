@@ -44,6 +44,25 @@ final class MockParentProfileRepository implements ParentProfileRepository {
   }
 
   @override
+  Future<void> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) async {
+    await Future<void>.delayed(delay);
+    // Mock accepts any 8+ char password and any non-empty current password.
+    if (currentPassword.trim().isEmpty) {
+      throw const ParentProfileRepositoryException(
+        code: ParentProfileRepositoryExceptionCode.wrongCurrentPassword,
+      );
+    }
+    if (newPassword.length < 8) {
+      throw const ParentProfileRepositoryException(
+        code: ParentProfileRepositoryExceptionCode.invalidPassword,
+      );
+    }
+  }
+
+  @override
   Future<ParentEntity> uploadAvatar(String imagePath) async {
     await Future<void>.delayed(delay);
     if (imagePath.trim().isEmpty) {

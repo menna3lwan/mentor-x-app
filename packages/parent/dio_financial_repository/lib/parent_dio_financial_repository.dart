@@ -116,6 +116,113 @@ final class DioParentFinancialRepository
     }
   }
 
+  // ─────────────────── Parent's own wallet ────────────────────────────────
+
+  @override
+  Future<WalletSummaryEntity> getMyWallet() async {
+    try {
+      final response = await _httpClient.get('/api/wallet/my');
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      return WalletSummaryModel.fromJson(data);
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: ParentFinancialRepositoryExceptionCode.fetchError,
+        codeFromStatusCode: _classifyStatusCode,
+      );
+    }
+  }
+
+  @override
+  Future<List<WalletTransactionEntity>> getMyTransactions({
+    MentorXPaginationInfo? paginationInfo,
+  }) async {
+    try {
+      final response = await _httpClient.get(
+        '/api/wallet/my/transactions',
+        queryParameters: paginationInfo?.toJson(),
+      );
+      final root = asMap(response.data);
+      final payload = root['data'] ?? response.data;
+      final items = payload is Map
+          ? asList(payload['content'])
+          : asList(payload);
+      return items
+          .map((e) => WalletTransactionModel.fromJson(asMap(e)))
+          .toList();
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: ParentFinancialRepositoryExceptionCode.fetchError,
+        codeFromStatusCode: _classifyStatusCode,
+      );
+    }
+  }
+
+  @override
+  Future<WalletSummaryEntity> topUpWallet({
+    required double amount,
+    String? studentId,
+  }) async {
+    if (amount <= 0) {
+      throw const ParentFinancialRepositoryException(
+        code: ParentFinancialRepositoryExceptionCode.invalidAmount,
+        message: 'Top-up amount must be positive.',
+      );
+    }
+    final payload = <String, dynamic>{
+      'amount': amount,
+      if (studentId != null && studentId.isNotEmpty) ...{
+        'studentId': studentId,
+        'student_id': studentId,
+      },
+    };
+    try {
+      HttpClientResponse response;
+      try {
+        response = await _httpClient.post(
+          '/api/wallet/top-up',
+          data: payload,
+        );
+      } on HttpClientResponse catch (e) {
+        if (e.statusCode != 404 && e.statusCode != 405) rethrow;
+        // Fallback to the generic deposit endpoint. Note this one cannot
+        // target a specific child; the backend deposits into the caller's
+        // own wallet.
+        response = await _httpClient.post(
+          '/api/payment/wallet/deposit',
+          data: {'amount': amount},
+        );
+      }
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      return WalletSummaryModel.fromJson(data);
+    } on HttpClientResponse catch (e) {
+      if (e.statusCode == 400 || e.statusCode == 422) {
+        throw const ParentFinancialRepositoryException(
+          code: ParentFinancialRepositoryExceptionCode.invalidAmount,
+        );
+      }
+      if (e.statusCode == 402) {
+        throw const ParentFinancialRepositoryException(
+          code: ParentFinancialRepositoryExceptionCode.insufficientFunds,
+        );
+      }
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: ParentFinancialRepositoryExceptionCode.topUpFailed,
+        codeFromStatusCode: _classifyStatusCode,
+      );
+    }
+  }
+
+  ParentFinancialRepositoryExceptionCode _classifyStatusCode(int statusCode) {
+    return switch (statusCode) {
+      401 || 403 => ParentFinancialRepositoryExceptionCode.unauthorized,
+      404 => ParentFinancialRepositoryExceptionCode.fetchError,
+      _ => ParentFinancialRepositoryExceptionCode.unknown,
+    };
+  }
+
   @override
   Future<List<PaymentEntity>> getPayments(String childId) async {
     // API-CONTRACT: no per-child payments endpoint in Postman. The closest

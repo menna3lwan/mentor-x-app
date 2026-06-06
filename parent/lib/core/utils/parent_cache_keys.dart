@@ -14,4 +14,9 @@ final class ParentCacheKeys {
   /// can skip the "find your child first" gate when navigating back into
   /// dashboards on subsequent sessions.
   static const String hasLinkedChildren = 'parent_has_linked_children';
+
+  /// Whether push notifications are enabled. Persisted from the Settings
+  /// screen so the toggle survives app restart.
+  static const String pushNotificationsEnabled =
+      'parent_push_notifications_enabled';
 }

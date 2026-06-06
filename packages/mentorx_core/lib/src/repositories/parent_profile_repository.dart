@@ -7,7 +7,10 @@ enum ParentProfileRepositoryExceptionCode {
   failedToLoadProfile,
   failedToUpdateProfile,
   failedToUploadAvatar,
+  failedToChangePassword,
   invalidImage,
+  invalidPassword,
+  wrongCurrentPassword,
   networkError,
   unauthorized,
 }
@@ -45,4 +48,15 @@ abstract interface class ParentProfileRepository {
   /// new `profileImageUrl` populated). [imagePath] is a local filesystem
   /// path produced by `image_picker` or similar.
   Future<ParentEntity> uploadAvatar(String imagePath);
+
+  /// Changes the password of the currently-authenticated parent.
+  ///
+  /// The backend response is intentionally unparsed — we only care about the
+  /// status code. Throws [ParentProfileRepositoryException] with
+  /// `wrongCurrentPassword` on a 401/422 from the wrong current password,
+  /// or `failedToChangePassword` for anything else.
+  Future<void> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  });
 }

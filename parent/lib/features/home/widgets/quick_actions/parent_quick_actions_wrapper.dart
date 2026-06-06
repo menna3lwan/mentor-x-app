@@ -66,6 +66,15 @@ class ParentQuickActionsWrapper extends StatelessWidget {
                   : null,
             ),
             ParentQuickAction(
+              icon: Icons.insights_rounded,
+              label: t.analytics.pageTitle,
+              enabled: hasChild,
+              onTap: hasChild
+                  ? () =>
+                        AnalyticsMonitorRoute(childId: childId).go(context)
+                  : null,
+            ),
+            ParentQuickAction(
               icon: Icons.campaign_rounded,
               label: t.quickActions.announcements,
               enabled: hasChild,
@@ -80,6 +89,11 @@ class ParentQuickActionsWrapper extends StatelessWidget {
               onTap: hasChild
                   ? () => NotificationsRoute(childId: childId).go(context)
                   : null,
+            ),
+            ParentQuickAction(
+              icon: Icons.account_balance_wallet_outlined,
+              label: t.financial.myWalletTitle,
+              onTap: () => const MyWalletRoute().go(context),
             ),
             ParentQuickAction(
               icon: Icons.person_outline_rounded,

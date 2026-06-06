@@ -7,6 +7,7 @@ import '../../features/home/pages/home_page_wrapper.dart';
 import '../../features/attendance/pages/attendance_monitor_page.dart';
 import '../../features/financial/pages/financial_monitor_page.dart';
 import '../../features/courses/pages/academic_monitor_page.dart';
+import '../../features/analytics/pages/analytics_monitor_page.dart';
 import '../../features/assessments/pages/grade_monitor_page.dart';
 import '../../features/notifications/pages/notifications_parent_page.dart';
 import '../../features/communication/pages/announcements_archive_page.dart';
@@ -21,6 +22,9 @@ import '../../features/children/pages/add_child_link_page.dart';
 import '../../features/profile/pages/edit_profile_page_wrapper.dart';
 import '../../features/profile/pages/parent_profile_page.dart';
 import '../../features/profile/pages/settings_parent_page.dart';
+import '../../features/my_wallet/pages/my_wallet_page_wrapper.dart';
+import '../../features/my_wallet/pages/top_up_page_wrapper.dart';
+import '../../features/settings/pages/change_password_page_wrapper.dart';
 
 part 'app_routes.g.dart';
 
@@ -119,6 +123,15 @@ class GradeMonitorRoute extends GoRouteData with $GradeMonitorRoute {
       GradeMonitorPage(childId: childId);
 }
 
+@TypedGoRoute<AnalyticsMonitorRoute>(path: '/analytics/:childId')
+class AnalyticsMonitorRoute extends GoRouteData with $AnalyticsMonitorRoute {
+  final String childId;
+  const AnalyticsMonitorRoute({required this.childId});
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      AnalyticsMonitorPage(childId: childId);
+}
+
 @TypedGoRoute<NotificationsRoute>(path: '/notifications/:childId')
 class NotificationsRoute extends GoRouteData with $NotificationsRoute {
   final String childId;
@@ -184,6 +197,31 @@ class SettingsRoute extends GoRouteData with $SettingsRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const SettingsParentPage();
+}
+
+@TypedGoRoute<ChangePasswordRoute>(path: '/profile/change-password')
+class ChangePasswordRoute extends GoRouteData with $ChangePasswordRoute {
+  const ChangePasswordRoute();
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const ChangePasswordPageWrapper();
+}
+
+@TypedGoRoute<MyWalletRoute>(path: '/my-wallet')
+class MyWalletRoute extends GoRouteData with $MyWalletRoute {
+  const MyWalletRoute();
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const MyWalletPageWrapper();
+}
+
+@TypedGoRoute<TopUpRoute>(path: '/my-wallet/top-up')
+class TopUpRoute extends GoRouteData with $TopUpRoute {
+  final String? studentId;
+  const TopUpRoute({this.studentId});
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      TopUpPageWrapper(studentId: studentId);
 }
 
 // Note: the GoRouter instance is constructed inside `AppRouter` (see

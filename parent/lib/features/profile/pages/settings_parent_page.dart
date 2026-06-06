@@ -2,24 +2,41 @@ import 'package:device_info_service/device_info_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:mentorx_core/mentorx_core.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/blocs/app_brightness_cubit/app_brightness_cubit.dart';
 import '../../../core/blocs/app_locale_cubit/app_locale_cubit.dart';
+import '../../../core/routing/app_routes.dart';
+import '../../settings/bloc/settings_cubit.dart';
 import '../widgets/widgets.dart';
 
 /// Configurable app preferences for the parent — push notifications,
 /// theme mode, language, help links. Language is wired through the existing
 /// [AppLocaleCubit].
-class SettingsParentPage extends StatefulWidget {
+class SettingsParentPage extends StatelessWidget {
   const SettingsParentPage({super.key});
 
   @override
-  State<SettingsParentPage> createState() => _SettingsParentPageState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => SettingsCubit(
+        cacheRepository: context.read<CacheRepository>(),
+      ),
+      child: const _SettingsView(),
+    );
+  }
 }
 
-class _SettingsParentPageState extends State<SettingsParentPage> {
-  bool _pushNotifications = true;
+class _SettingsView extends StatefulWidget {
+  const _SettingsView();
+
+  @override
+  State<_SettingsView> createState() => _SettingsViewState();
+}
+
+class _SettingsViewState extends State<_SettingsView> {
   String _appVersion = '0.0.1';
 
   @override
@@ -48,11 +65,20 @@ class _SettingsParentPageState extends State<SettingsParentPage> {
           ProfileSection(
             title: t.profile.appConfigurationSection,
             children: [
-              ProfileToggleTileWidget(
-                icon: Icons.notifications_active_rounded,
-                label: t.profile.pushNotifications,
-                value: _pushNotifications,
-                onChanged: (val) => setState(() => _pushNotifications = val),
+              BlocBuilder<SettingsCubit, SettingsState>(
+                buildWhen: (a, b) =>
+                    a.pushNotificationsEnabled !=
+                    b.pushNotificationsEnabled,
+                builder: (context, state) {
+                  return ProfileToggleTileWidget(
+                    icon: Icons.notifications_active_rounded,
+                    label: t.profile.pushNotifications,
+                    value: state.pushNotificationsEnabled,
+                    onChanged: (val) => context
+                        .read<SettingsCubit>()
+                        .setPushNotificationsEnabled(val),
+                  );
+                },
               ),
             ],
           ),
@@ -93,13 +119,25 @@ class _SettingsParentPageState extends State<SettingsParentPage> {
           ),
           const Gap(24),
           ProfileSection(
+            title: t.security,
+            children: [
+              ProfileTileWidget(
+                icon: Icons.lock_reset_rounded,
+                label: t.profile.changePasswordTitle,
+                value: t.profile.securityChangePassword,
+                onTap: () => const ChangePasswordRoute().go(context),
+              ),
+            ],
+          ),
+          const Gap(24),
+          ProfileSection(
             title: t.profile.supportSection,
             children: [
               ProfileTileWidget(
                 icon: Icons.help_outline_rounded,
                 label: t.profile.helpCenter,
                 value: t.profile.helpCenterValue,
-                onTap: () {},
+                onTap: () => _openHelpCenter(context, t),
               ),
               ProfileTileWidget(
                 icon: Icons.info_outline_rounded,
@@ -107,13 +145,57 @@ class _SettingsParentPageState extends State<SettingsParentPage> {
                 value: t.profile.aboutVersion(
                   version: _appVersion.isEmpty ? '...' : _appVersion,
                 ),
-                onTap: () {},
+                onTap: () => _openAbout(context, t),
               ),
             ],
           ),
           const Gap(40),
         ],
       ),
+    );
+  }
+
+  Future<void> _openHelpCenter(
+    BuildContext context,
+    TranslationsParentEn t,
+  ) async {
+    final uri = Uri.tryParse(t.profile.settingsHelpUrl);
+    if (uri == null) return;
+    final canOpen = await canLaunchUrl(uri);
+    if (!context.mounted) return;
+    if (!canOpen) {
+      MentorXUI.showToast(message: t.unableToLoad, isError: true);
+      return;
+    }
+    await launchUrl(uri, mode: LaunchMode.externalApplication);
+  }
+
+  Future<void> _openAbout(
+    BuildContext context,
+    TranslationsParentEn t,
+  ) async {
+    await showDialog<void>(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          backgroundColor: dialogContext.backgroundSecondaryColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+          ),
+          title: Text(t.profile.settingsAboutTitle),
+          content: Text(
+            t.profile.settingsAboutBody(
+              version: _appVersion.isEmpty ? '...' : _appVersion,
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              child: Text(t.profile.signOutCancel),
+            ),
+          ],
+        );
+      },
     );
   }
 

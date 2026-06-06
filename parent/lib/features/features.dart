@@ -1,4 +1,6 @@
+export 'analytics/analytics.dart';
 export 'auth/auth.dart';
+export 'my_wallet/my_wallet.dart';
 export 'assessments/assessments.dart';
 export 'attendance/attendance.dart';
 export 'children/children.dart';
