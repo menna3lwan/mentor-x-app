@@ -4,7 +4,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:mentorx_student/core/core.dart';
 
-final class PdfViewerPagePage extends StatelessWidget {
+final class PdfViewerPage extends StatelessWidget {
   final String title;
   final String? contentUrl;
   final bool isLoading;
@@ -15,7 +15,7 @@ final class PdfViewerPagePage extends StatelessWidget {
   final VoidCallback onMarkComplete;
   final VoidCallback? onDownloadTap;
 
-  const PdfViewerPagePage({
+  const PdfViewerPage({
     super.key,
     required this.title,
     required this.contentUrl,

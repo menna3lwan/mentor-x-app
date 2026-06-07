@@ -1,23 +1,23 @@
 part of '../../../../core/routing/app_routes.dart';
 
-@TypedGoRoute<AssignmentSubmitPageRoute>(
+@TypedGoRoute<AssignmentSubmitRoute>(
   path: '/assignment-submit/:assignmentId',
   name: 'assignmentSubmit',
 )
-final class AssignmentSubmitPageRoute extends GoRouteData
-    with $AssignmentSubmitPageRoute {
+final class AssignmentSubmitRoute extends GoRouteData
+    with $AssignmentSubmitRoute {
   final String assignmentId;
 
-  const AssignmentSubmitPageRoute({required this.assignmentId});
+  const AssignmentSubmitRoute({required this.assignmentId});
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return BlocProvider<AssignmentSubmitPageBloc>(
-      create: (context) => AssignmentSubmitPageBloc(
+    return BlocProvider<AssignmentSubmitBloc>(
+      create: (context) => AssignmentSubmitBloc(
         assignmentRepository: context.read<AssignmentRepository>(),
         analyticsService: context.read<AnalyticsService>(),
         assignmentId: assignmentId,
-      )..add(const AssignmentSubmitPageLoadEvent()),
+      )..add(const AssignmentSubmitLoadEvent()),
       child: const AssignmentSubmitPageWrapper(),
     );
   }

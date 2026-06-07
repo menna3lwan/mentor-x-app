@@ -1,3 +1,3 @@
-export 'bloc/change_password_page_bloc.dart';
+export 'bloc/change_password_bloc.dart';
 export 'change_password_page.dart';
-export 'change_password_wrapper.dart';
+export 'change_password_page_wrapper.dart';

@@ -2,7 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:mentorx_student/core/core.dart';
-import 'package:mentorx_student/features/account_status/pages/status_rejected/bloc/status_rejected_page_bloc.dart';
+import 'package:mentorx_student/features/account_status/pages/status_rejected/bloc/status_rejected_bloc.dart';
 
 class MockAnalyticsService implements AnalyticsService {
   @override
@@ -20,7 +20,7 @@ class MockAnalyticsService implements AnalyticsService {
 }
 
 void main() {
-  group('StatusRejectedPageBloc', () {
+  group('StatusRejectedBloc', () {
     late AnalyticsService analyticsService;
 
     setUp(() {
@@ -28,18 +28,18 @@ void main() {
     });
 
     test('initial state is correct', () {
-      final bloc = StatusRejectedPageBloc(analyticsService: analyticsService);
-      expect(bloc.state, StatusRejectedPageState.initial);
+      final bloc = StatusRejectedBloc(analyticsService: analyticsService);
+      expect(bloc.state, StatusRejectedState.initial);
       expect(bloc.state.loadingState, LoadingState.initial);
       bloc.close();
     });
 
-    blocTest<StatusRejectedPageBloc, StatusRejectedPageState>(
+    blocTest<StatusRejectedBloc, StatusRejectedState>(
       'emits loaded when initialized',
-      build: () => StatusRejectedPageBloc(analyticsService: analyticsService),
-      act: (bloc) => bloc.add(const StatusRejectedPageInitialized()),
+      build: () => StatusRejectedBloc(analyticsService: analyticsService),
+      act: (bloc) => bloc.add(const StatusRejectedInitialized()),
       expect: () => [
-        isA<StatusRejectedPageState>().having(
+        isA<StatusRejectedState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loaded,

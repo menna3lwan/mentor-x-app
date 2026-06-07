@@ -1,9 +1,9 @@
 part of '../../../../core/routing/app_routes.dart';
 
-final class LeaderboardPageRoute extends GoRouteData
-    with $LeaderboardPageRoute {
+final class LeaderboardRoute extends GoRouteData
+    with $LeaderboardRoute {
   final String? courseId;
-  const LeaderboardPageRoute({this.courseId});
+  const LeaderboardRoute({this.courseId});
 
   @override
   Widget build(BuildContext context, GoRouterState state) {

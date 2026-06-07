@@ -7,7 +7,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:mentorx_student/core/core.dart';
 import '../../cubit/marketplace_cart_cubit.dart';
 
-final class MarketplaceGridPagePage extends StatelessWidget {
+final class MarketplaceGridPage extends StatelessWidget {
   final LoadingState loadingState;
   final List<MarketplaceItemEntity> items;
   final List<MarketplaceCategoryEntity> categories;
@@ -19,7 +19,7 @@ final class MarketplaceGridPagePage extends StatelessWidget {
   final VoidCallback onCartPressed;
   final VoidCallback onOrdersPressed;
 
-  const MarketplaceGridPagePage({
+  const MarketplaceGridPage({
     super.key,
     required this.loadingState,
     required this.items,
@@ -346,7 +346,7 @@ final class _ProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => MarketplaceDetailPageRoute(itemId: item.id).push(context),
+      onTap: () => MarketplaceDetailRoute(itemId: item.id).push(context),
       child: MentorXGlassCard(
         style: Style(
           $box.padding.all(0),

@@ -1,18 +1,18 @@
 part of '../../../../core/routing/app_routes.dart';
 
-@TypedGoRoute<SplashPageRoute>(path: '/splash', name: 'splash')
-final class SplashPageRoute extends GoRouteData with $SplashPageRoute {
-  const SplashPageRoute();
+@TypedGoRoute<SplashRoute>(path: '/splash', name: 'splash')
+final class SplashRoute extends GoRouteData with $SplashRoute {
+  const SplashRoute();
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return BlocProvider<SplashPageBloc>(
-      create: (context) => SplashPageBloc(
+    return BlocProvider<SplashBloc>(
+      create: (context) => SplashBloc(
         authenticationRepository: context
             .read<StudentAuthenticationRepository>(),
         cacheRepository: context.read<CacheRepository>(),
         analyticsService: context.read<AnalyticsService>(),
-      )..add(const SplashPageStarted()),
+      )..add(const SplashStarted()),
       child: const SplashPageWrapper(),
     );
   }

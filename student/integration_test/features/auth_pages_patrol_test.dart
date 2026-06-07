@@ -11,9 +11,9 @@ void main() {
     await launchStudentApp($);
 
     final routes = <GoRouteData>[
-      const LoginPageRoute(),
-      const RegistrationPageRoute(),
-      const OtpPageRoute(
+      const LoginRoute(),
+      const RegistrationRoute(),
+      const OtpRoute(
         phoneNumber: '01000000000',
         otpLength: 6,
         otpDurationSeconds: 60,
@@ -27,7 +27,7 @@ void main() {
 
   patrolTest('Student login active account routes to home shell', ($) async {
     await launchStudentApp($);
-    await goToStudentRoute($, const LoginPageRoute());
+    await goToStudentRoute($, const LoginRoute());
 
     await _submitStudentLogin($, phone: '01000000000');
     await $.pumpAndSettle();
@@ -39,7 +39,7 @@ void main() {
     $,
   ) async {
     await launchStudentApp($);
-    await goToStudentRoute($, const LoginPageRoute());
+    await goToStudentRoute($, const LoginRoute());
 
     await _submitStudentLogin($, phone: '01000000001');
     await $.pumpAndSettle();
@@ -51,7 +51,7 @@ void main() {
     $,
   ) async {
     await launchStudentApp($);
-    await goToStudentRoute($, const LoginPageRoute());
+    await goToStudentRoute($, const LoginRoute());
 
     await _submitStudentLogin($, phone: '01000000002');
     await $.pumpAndSettle();
@@ -63,7 +63,7 @@ void main() {
     $,
   ) async {
     await launchStudentApp($);
-    await goToStudentRoute($, const LoginPageRoute());
+    await goToStudentRoute($, const LoginRoute());
 
     await _submitStudentLogin($, phone: '01000000003');
     await $.pumpAndSettle();
@@ -75,7 +75,7 @@ void main() {
     $,
   ) async {
     await launchStudentApp($);
-    await goToStudentRoute($, const LoginPageRoute());
+    await goToStudentRoute($, const LoginRoute());
 
     await _submitStudentLogin($, phone: '01000000004');
     await $.pumpAndSettle();

@@ -91,14 +91,14 @@ final class _OtpPageWrapperState extends State<OtpPageWrapper> {
 
     switch (user.status) {
       case StudentStatus.active:
-        const HomePageRoute().go(context);
+        const HomeRoute().go(context);
       case StudentStatus.pending:
-        const StatusPendingPageRoute().go(context);
+        const StatusPendingRoute().go(context);
       case StudentStatus.suspended:
-        const StatusBlockedPageRoute().go(context);
+        const StatusBlockedRoute().go(context);
       case StudentStatus.rejected:
       case StudentStatus.inactive:
-        const StatusRejectedPageRoute().go(context);
+        const StatusRejectedRoute().go(context);
     }
   }
 }

@@ -6,7 +6,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:mentorx_student/core/core.dart';
 import 'package:flutter/services.dart';
 
-final class QuizResultPagePage extends StatelessWidget {
+final class QuizResultPage extends StatelessWidget {
   final LoadingState loadingState;
   final String? errorMessage;
   final QuizAttemptEntity? result;
@@ -14,7 +14,7 @@ final class QuizResultPagePage extends StatelessWidget {
   final LeaderboardEntryEntity? myRank;
   final VoidCallback onRetry;
 
-  const QuizResultPagePage({
+  const QuizResultPage({
     super.key,
     required this.loadingState,
     this.errorMessage,

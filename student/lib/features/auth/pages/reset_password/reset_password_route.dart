@@ -1,14 +1,14 @@
 part of '../../../../core/routing/app_routes.dart';
 
-@TypedGoRoute<ResetPasswordPageRoute>(
+@TypedGoRoute<ResetPasswordRoute>(
   path: '/reset-password',
   name: 'resetPassword',
 )
-final class ResetPasswordPageRoute extends GoRouteData
-    with $ResetPasswordPageRoute {
+final class ResetPasswordRoute extends GoRouteData
+    with $ResetPasswordRoute {
   final String phoneNumber;
 
-  const ResetPasswordPageRoute({required this.phoneNumber});
+  const ResetPasswordRoute({required this.phoneNumber});
 
   @override
   Widget build(BuildContext context, GoRouterState state) {

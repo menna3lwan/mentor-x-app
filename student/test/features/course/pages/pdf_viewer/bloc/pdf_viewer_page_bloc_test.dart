@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mock_course_repository/mock_course_repository.dart';
 import 'package:mentorx_student/core/core.dart';
 
-import 'package:mentorx_student/features/course/pages/pdf_viewer/bloc/pdf_viewer_page_bloc.dart';
+import 'package:mentorx_student/features/course/pages/pdf_viewer/bloc/pdf_viewer_bloc.dart';
 
 class MockAnalyticsService implements AnalyticsService {
   @override
@@ -30,9 +30,9 @@ void main() {
     courseRepository = const MockCourseRepository(delay: Duration.zero);
   });
 
-  group('PdfViewerPageBloc', () {
+  group('PdfViewerBloc', () {
     test('initial state is correct', () {
-      final bloc = PdfViewerPageBloc(courseRepository: courseRepository,
+      final bloc = PdfViewerBloc(courseRepository: courseRepository,
         itemId: 'i3',
         title: 'Test PDF',
         analyticsService: analyticsService,
@@ -46,41 +46,41 @@ void main() {
       bloc.close();
     });
 
-    blocTest<PdfViewerPageBloc, PdfViewerPageState>(
+    blocTest<PdfViewerBloc, PdfViewerState>(
       'emits [loading, loaded] with content URL when initialized',
-      build: () => PdfViewerPageBloc(courseRepository: courseRepository,
+      build: () => PdfViewerBloc(courseRepository: courseRepository,
         itemId: 'i3',
         title: 'Test PDF',
         analyticsService: analyticsService,
       ),
-      act: (bloc) => bloc.add(const PdfViewerPageInitialized()),
+      act: (bloc) => bloc.add(const PdfViewerInitialized()),
       expect: () => [
-        isA<PdfViewerPageState>().having(
+        isA<PdfViewerState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loading,
         ),
-        isA<PdfViewerPageState>()
+        isA<PdfViewerState>()
             .having((s) => s.loadingState, 'loadingState', LoadingState.loaded)
             .having((s) => s.contentUrl, 'contentUrl', isNotNull),
       ],
     );
 
-    blocTest<PdfViewerPageBloc, PdfViewerPageState>(
+    blocTest<PdfViewerBloc, PdfViewerState>(
       'marks item as completed',
-      build: () => PdfViewerPageBloc(courseRepository: courseRepository,
+      build: () => PdfViewerBloc(courseRepository: courseRepository,
         itemId: 'i3',
         title: 'Test PDF',
         analyticsService: analyticsService,
       ),
-      seed: () => const PdfViewerPageState(
+      seed: () => const PdfViewerState(
         itemId: 'i3',
         title: 'Test PDF',
         loadingState: LoadingState.loaded,
       ),
-      act: (bloc) => bloc.add(const PdfViewerPageCompleted()),
+      act: (bloc) => bloc.add(const PdfViewerCompleted()),
       expect: () => [
-        isA<PdfViewerPageState>().having(
+        isA<PdfViewerState>().having(
           (s) => s.isCompleted,
           'isCompleted',
           true,
@@ -88,14 +88,14 @@ void main() {
       ],
     );
 
-    blocTest<PdfViewerPageBloc, PdfViewerPageState>(
+    blocTest<PdfViewerBloc, PdfViewerState>(
       'contentUrl is set after successful initialization',
-      build: () => PdfViewerPageBloc(courseRepository: courseRepository,
+      build: () => PdfViewerBloc(courseRepository: courseRepository,
         itemId: 'i3',
         title: 'Test PDF',
         analyticsService: analyticsService,
       ),
-      act: (bloc) => bloc.add(const PdfViewerPageInitialized()),
+      act: (bloc) => bloc.add(const PdfViewerInitialized()),
       wait: const Duration(milliseconds: 50),
       verify: (bloc) {
         expect(bloc.state.loadingState, LoadingState.loaded);

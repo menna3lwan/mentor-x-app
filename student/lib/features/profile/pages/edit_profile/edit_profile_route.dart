@@ -1,17 +1,17 @@
 part of '../../../../core/routing/app_routes.dart';
 
-@TypedGoRoute<EditProfilePageRoute>(path: '/edit-profile', name: 'editProfile')
-final class EditProfilePageRoute extends GoRouteData
-    with $EditProfilePageRoute {
-  const EditProfilePageRoute();
+@TypedGoRoute<EditProfileRoute>(path: '/edit-profile', name: 'editProfile')
+final class EditProfileRoute extends GoRouteData
+    with $EditProfileRoute {
+  const EditProfileRoute();
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return BlocProvider<EditProfilePageBloc>(
-      create: (context) => EditProfilePageBloc(
+    return BlocProvider<EditProfileBloc>(
+      create: (context) => EditProfileBloc(
         profileRepository: context.read<ProfileRepository>(),
         analyticsService: context.read<AnalyticsService>(),
-      )..add(const EditProfilePageLoadEvent()),
+      )..add(const EditProfileLoadEvent()),
       child: const EditProfilePageWrapper(),
     );
   }

@@ -5,15 +5,15 @@ import 'package:intl/intl.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:mentorx_student/core/core.dart';
 import 'package:animate_do/animate_do.dart';
-import 'bloc/notifications_page_bloc.dart';
+import 'bloc/notifications_bloc.dart';
 
 final class NotificationsPage extends StatefulWidget {
   const NotificationsPage({super.key});
   @override
-  State<NotificationsPage> createState() => _NotificationsPageState();
+  State<NotificationsPage> createState() => _NotificationsState();
 }
 
-final class _NotificationsPageState extends State<NotificationsPage> {
+final class _NotificationsState extends State<NotificationsPage> {
   final _scrollController = ScrollController();
 
   @override
@@ -31,8 +31,8 @@ final class _NotificationsPageState extends State<NotificationsPage> {
   void _onScroll() {
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 200) {
-      context.read<NotificationsPageBloc>().add(
-        const NotificationsPageLoadMoreEvent(),
+      context.read<NotificationsBloc>().add(
+        const NotificationsLoadMoreEvent(),
       );
     }
   }
@@ -44,14 +44,14 @@ final class _NotificationsPageState extends State<NotificationsPage> {
     return Builder(
       builder: (context) {
         final notifications = context
-            .select<NotificationsPageBloc, List<NotificationEntity>>(
+            .select<NotificationsBloc, List<NotificationEntity>>(
               (bloc) => bloc.state.notifications,
             );
         final loadingState = context
-            .select<NotificationsPageBloc, LoadingState>(
+            .select<NotificationsBloc, LoadingState>(
               (bloc) => bloc.state.loadingState,
             );
-        final hasMore = context.select<NotificationsPageBloc, bool>(
+        final hasMore = context.select<NotificationsBloc, bool>(
           (bloc) => bloc.state.hasMore,
         );
 
@@ -88,8 +88,8 @@ final class _NotificationsPageState extends State<NotificationsPage> {
                     : RefreshIndicator(
                         color: context.brandPrimaryColor,
                         onRefresh: () async {
-                          context.read<NotificationsPageBloc>().add(
-                            const NotificationsPageLoadEvent(),
+                          context.read<NotificationsBloc>().add(
+                            const NotificationsLoadEvent(),
                           );
                         },
                         child: ListView.builder(
@@ -119,8 +119,8 @@ final class _NotificationsPageState extends State<NotificationsPage> {
                                 notification: notification,
                                 onTap: () {
                                   if (!notification.isRead) {
-                                    context.read<NotificationsPageBloc>().add(
-                                      NotificationsPageMarkAsReadEvent(
+                                    context.read<NotificationsBloc>().add(
+                                      NotificationsMarkAsReadEvent(
                                         notification.id,
                                       ),
                                     );
@@ -210,8 +210,8 @@ final class _BuildHeader extends StatelessWidget {
               if (hasNotifications)
                 MentorXIconButton(
                   onPressed: () {
-                    context.read<NotificationsPageBloc>().add(
-                      const NotificationsPageMarkAllAsReadEvent(),
+                    context.read<NotificationsBloc>().add(
+                      const NotificationsMarkAllAsReadEvent(),
                     );
                   },
                   icon: Icons.done_all_rounded,

@@ -1,0 +1,143 @@
+part of 'home_bloc.dart';
+
+enum HomeSectionStatus { initial, loading, loaded, failure }
+
+enum HomeSection {
+  wallet,
+  unreadCount,
+  banners,
+  continueLearning,
+  featuredCourses,
+  announcements,
+}
+
+final class HomeAsyncSection<T> extends Equatable {
+  final HomeSectionStatus status;
+  final T? data;
+  final String? errorMessage;
+
+  const HomeAsyncSection._({
+    required this.status,
+    this.data,
+    this.errorMessage,
+  });
+
+  const HomeAsyncSection.initial() : this._(status: HomeSectionStatus.initial);
+
+  const HomeAsyncSection.loading({T? data})
+    : this._(status: HomeSectionStatus.loading, data: data);
+
+  const HomeAsyncSection.loaded(T data)
+    : this._(status: HomeSectionStatus.loaded, data: data);
+
+  const HomeAsyncSection.failure(String message, {T? data})
+    : this._(
+        status: HomeSectionStatus.failure,
+        data: data,
+        errorMessage: message,
+      );
+
+  bool get isInitial => status == HomeSectionStatus.initial;
+  bool get isLoading => status == HomeSectionStatus.loading;
+  bool get isLoaded => status == HomeSectionStatus.loaded;
+  bool get isFailure => status == HomeSectionStatus.failure;
+
+  HomeAsyncSection<T> toLoading() => HomeAsyncSection.loading(data: data);
+
+  @override
+  List<Object?> get props => [status, data, errorMessage];
+}
+
+final class HomeState extends Equatable {
+  final String studentName;
+  final String? avatarUrl;
+  final bool isRefreshing;
+  final DateTime? lastUpdatedAt;
+
+  final HomeAsyncSection<WalletSummaryEntity> walletSection;
+  final HomeAsyncSection<int> unreadCountSection;
+  final HomeAsyncSection<List<BannerEntity>> bannersSection;
+  final HomeAsyncSection<List<CourseSummaryEntity>> continueLearningSection;
+  final HomeAsyncSection<List<CourseSummaryEntity>> featuredCoursesSection;
+  final HomeAsyncSection<List<AnnouncementEntity>> announcementsSection;
+
+  const HomeState({
+    required this.studentName,
+    required this.isRefreshing,
+    required this.walletSection,
+    required this.unreadCountSection,
+    required this.bannersSection,
+    required this.continueLearningSection,
+    required this.featuredCoursesSection,
+    required this.announcementsSection,
+    this.avatarUrl,
+    this.lastUpdatedAt,
+  });
+
+  factory HomeState.initial({
+    required String studentName,
+    String? avatarUrl,
+  }) {
+    return HomeState(
+      studentName: studentName,
+      avatarUrl: avatarUrl,
+      isRefreshing: false,
+      walletSection: const HomeAsyncSection.initial(),
+      unreadCountSection: const HomeAsyncSection.initial(),
+      bannersSection: const HomeAsyncSection.initial(),
+      continueLearningSection: const HomeAsyncSection.initial(),
+      featuredCoursesSection: const HomeAsyncSection.initial(),
+      announcementsSection: const HomeAsyncSection.initial(),
+    );
+  }
+
+  bool get isFirstLoading =>
+      walletSection.isInitial &&
+      unreadCountSection.isInitial &&
+      bannersSection.isInitial &&
+      continueLearningSection.isInitial &&
+      featuredCoursesSection.isInitial &&
+      announcementsSection.isInitial;
+
+  HomeState copyWith({
+    String? studentName,
+    String? avatarUrl,
+    bool? isRefreshing,
+    DateTime? lastUpdatedAt,
+    HomeAsyncSection<WalletSummaryEntity>? walletSection,
+    HomeAsyncSection<int>? unreadCountSection,
+    HomeAsyncSection<List<BannerEntity>>? bannersSection,
+    HomeAsyncSection<List<CourseSummaryEntity>>? continueLearningSection,
+    HomeAsyncSection<List<CourseSummaryEntity>>? featuredCoursesSection,
+    HomeAsyncSection<List<AnnouncementEntity>>? announcementsSection,
+  }) {
+    return HomeState(
+      studentName: studentName ?? this.studentName,
+      avatarUrl: avatarUrl ?? this.avatarUrl,
+      isRefreshing: isRefreshing ?? this.isRefreshing,
+      lastUpdatedAt: lastUpdatedAt ?? this.lastUpdatedAt,
+      walletSection: walletSection ?? this.walletSection,
+      unreadCountSection: unreadCountSection ?? this.unreadCountSection,
+      bannersSection: bannersSection ?? this.bannersSection,
+      continueLearningSection:
+          continueLearningSection ?? this.continueLearningSection,
+      featuredCoursesSection:
+          featuredCoursesSection ?? this.featuredCoursesSection,
+      announcementsSection: announcementsSection ?? this.announcementsSection,
+    );
+  }
+
+  @override
+  List<Object?> get props => [
+    studentName,
+    avatarUrl,
+    isRefreshing,
+    lastUpdatedAt,
+    walletSection,
+    unreadCountSection,
+    bannersSection,
+    continueLearningSection,
+    featuredCoursesSection,
+    announcementsSection,
+  ];
+}

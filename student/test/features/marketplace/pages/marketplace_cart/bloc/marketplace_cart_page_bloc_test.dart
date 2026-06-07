@@ -4,7 +4,7 @@ import 'package:mock_marketplace_repository/mock_marketplace_repository.dart';
 import 'package:mock_wallet_repository/mock_wallet_repository.dart';
 
 import 'package:mentorx_student/core/core.dart';
-import 'package:mentorx_student/features/marketplace/pages/marketplace_cart/bloc/marketplace_cart_page_bloc.dart';
+import 'package:mentorx_student/features/marketplace/pages/marketplace_cart/bloc/marketplace_cart_bloc.dart';
 
 class MockAnalyticsService implements AnalyticsService {
   @override
@@ -37,21 +37,21 @@ void main() {
     );
   });
 
-  group('MarketplaceCartPageBloc', () {
-    blocTest<MarketplaceCartPageBloc, MarketplaceCartPageState>(
+  group('MarketplaceCartBloc', () {
+    blocTest<MarketplaceCartBloc, MarketplaceCartState>(
       'emits [loading, loaded] when load event is added',
-      build: () => MarketplaceCartPageBloc(marketplaceRepository: marketplaceRepository,
+      build: () => MarketplaceCartBloc(marketplaceRepository: marketplaceRepository,
         walletRepository: walletRepository,
         analyticsService: analyticsService,
       ),
-      act: (bloc) => bloc.add(const MarketplaceCartPageLoadEvent()),
+      act: (bloc) => bloc.add(const MarketplaceCartLoadEvent()),
       expect: () => [
-        isA<MarketplaceCartPageState>().having(
+        isA<MarketplaceCartState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loading,
         ),
-        isA<MarketplaceCartPageState>().having(
+        isA<MarketplaceCartState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loaded,
@@ -59,9 +59,9 @@ void main() {
       ],
     );
 
-    blocTest<MarketplaceCartPageBloc, MarketplaceCartPageState>(
+    blocTest<MarketplaceCartBloc, MarketplaceCartState>(
       'starts with initial loading state',
-      build: () => MarketplaceCartPageBloc(marketplaceRepository: marketplaceRepository,
+      build: () => MarketplaceCartBloc(marketplaceRepository: marketplaceRepository,
         walletRepository: walletRepository,
         analyticsService: analyticsService,
       ),

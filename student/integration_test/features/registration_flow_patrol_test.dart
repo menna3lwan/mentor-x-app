@@ -9,7 +9,7 @@ import '../helpers/robot_helper.dart';
 void main() {
   patrolTest('Full Registration Flow end-to-end', ($) async {
     await launchStudentApp($);
-    await goToStudentRoute($, const RegistrationPageRoute());
+    await goToStudentRoute($, const RegistrationRoute());
 
     // Step 0: Start
     await $.enterRegistrationStartInfo(
@@ -71,7 +71,7 @@ void main() {
 
   patrolTest('Registration validation - phone equals parent phone', ($) async {
     await launchStudentApp($);
-    await goToStudentRoute($, const RegistrationPageRoute());
+    await goToStudentRoute($, const RegistrationRoute());
 
     await $.enterRegistrationStartInfo(
       firstName: 'Test',

@@ -1,23 +1,23 @@
 part of '../../../../core/routing/app_routes.dart';
 
-@TypedGoRoute<QuizIntroPageRoute>(
+@TypedGoRoute<QuizIntroRoute>(
   path: '/quiz-intro/:quizId',
   name: 'quizIntro',
 )
-final class QuizIntroPageRoute extends GoRouteData with $QuizIntroPageRoute {
+final class QuizIntroRoute extends GoRouteData with $QuizIntroRoute {
   final String quizId;
 
-  const QuizIntroPageRoute({required this.quizId});
+  const QuizIntroRoute({required this.quizId});
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return BlocProvider<QuizIntroPageBloc>(
-      create: (context) => QuizIntroPageBloc(
+    return BlocProvider<QuizIntroBloc>(
+      create: (context) => QuizIntroBloc(
         quizRepository: context.read<QuizRepository>(),
         profileRepository: context.read<ProfileRepository>(),
         analyticsService: context.read<AnalyticsService>(),
         quizId: quizId,
-      )..add(const QuizIntroPageLoadEvent()),
+      )..add(const QuizIntroLoadEvent()),
 
       child: const QuizIntroPageWrapper(),
     );

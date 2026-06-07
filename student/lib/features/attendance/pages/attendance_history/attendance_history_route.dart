@@ -1,20 +1,20 @@
 part of '../../../../core/routing/app_routes.dart';
 
-@TypedGoRoute<AttendanceHistoryPageRoute>(
+@TypedGoRoute<AttendanceHistoryRoute>(
   path: '/attendance-history',
   name: 'attendanceHistory',
 )
-final class AttendanceHistoryPageRoute extends GoRouteData
-    with $AttendanceHistoryPageRoute {
-  const AttendanceHistoryPageRoute();
+final class AttendanceHistoryRoute extends GoRouteData
+    with $AttendanceHistoryRoute {
+  const AttendanceHistoryRoute();
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return BlocProvider<AttendanceHistoryPageBloc>(
-      create: (context) => AttendanceHistoryPageBloc(
+    return BlocProvider<AttendanceHistoryBloc>(
+      create: (context) => AttendanceHistoryBloc(
         attendanceRepository: context.read<AttendanceRepository>(),
         analyticsService: context.read<AnalyticsService>(),
-      )..add(const AttendanceHistoryPageLoadEvent()),
+      )..add(const AttendanceHistoryLoadEvent()),
       child: const AttendanceHistoryPageWrapper(),
     );
   }

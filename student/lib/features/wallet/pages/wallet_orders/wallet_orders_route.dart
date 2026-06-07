@@ -1,20 +1,20 @@
 part of '../../../../core/routing/app_routes.dart';
 
-@TypedGoRoute<WalletOrdersPageRoute>(
+@TypedGoRoute<WalletOrdersRoute>(
   path: '/wallet/orders',
   name: 'walletOrders',
 )
-final class WalletOrdersPageRoute extends GoRouteData
-    with $WalletOrdersPageRoute {
-  const WalletOrdersPageRoute();
+final class WalletOrdersRoute extends GoRouteData
+    with $WalletOrdersRoute {
+  const WalletOrdersRoute();
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return BlocProvider<WalletOrdersPageBloc>(
-      create: (context) => WalletOrdersPageBloc(
+    return BlocProvider<WalletOrdersBloc>(
+      create: (context) => WalletOrdersBloc(
         walletRepository: context.read<WalletRepository>(),
         analyticsService: context.read<AnalyticsService>(),
-      )..add(const WalletOrdersPageLoadEvent()),
+      )..add(const WalletOrdersLoadEvent()),
       child: const WalletOrdersPageWrapper(),
     );
   }

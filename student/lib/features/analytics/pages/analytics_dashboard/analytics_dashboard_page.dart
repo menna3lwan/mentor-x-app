@@ -4,10 +4,10 @@ import 'package:go_router/go_router.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:mentorx_student/core/core.dart';
-import 'bloc/analytics_dashboard_page_bloc.dart';
+import 'bloc/analytics_dashboard_bloc.dart';
 import 'widgets/widgets.dart';
 
-final class AnalyticsDashboardPagePage extends StatelessWidget {
+final class AnalyticsDashboardPage extends StatelessWidget {
   final AnalyticsDashboardStatus status;
   final List<EnrollmentEntity> courses;
   final String? selectedCourseId;
@@ -25,7 +25,7 @@ final class AnalyticsDashboardPagePage extends StatelessWidget {
   final ValueChanged<String?> onCourseChanged;
   final StudentAnalyticsSummaryEntity? summary;
 
-  const AnalyticsDashboardPagePage({
+  const AnalyticsDashboardPage({
     super.key,
     required this.status,
     required this.courses,
@@ -107,7 +107,7 @@ final class AnalyticsDashboardPagePage extends StatelessWidget {
                                 totalStudents: totalStudents ?? 0,
                                 studentAverage: studentAverage ?? 0,
                                 classAverage: classAverage ?? 0,
-                                onTap: () => LeaderboardPageRoute(
+                                onTap: () => LeaderboardRoute(
                                   courseId: selectedCourseId,
                                 ).push(context),
                               ),
@@ -237,7 +237,7 @@ final class AnalyticsDashboardPagePage extends StatelessWidget {
                 ),
               ),
               MentorXIconButton(
-                onPressed: () => const NotificationsPageRoute().push(context),
+                onPressed: () => const NotificationsRoute().push(context),
                 icon: Icons.notifications_none_rounded,
                 variant: MentorXIconButtonVariant.ghost,
                 size: MentorXIconButtonSize.small,

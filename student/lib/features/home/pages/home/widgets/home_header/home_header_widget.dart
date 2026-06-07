@@ -25,7 +25,7 @@ final class HomeHeaderWidget extends StatelessWidget {
           Row(
             children: [
               GestureDetector(
-                onTap: () => const ProfileViewPageRoute().push(context),
+                onTap: () => const ProfileViewRoute().push(context),
                 child: Hero(
                   tag: 'student_avatar',
                   child: Container(
@@ -98,7 +98,7 @@ final class _SearchShortcut extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PressableBox(
-      onPress: () => const CourseCatalogPageRoute().push(context),
+      onPress: () => const CourseCatalogRoute().push(context),
       style: Style(
         $box.padding.all(16),
         $box.borderRadius(20),
@@ -155,7 +155,7 @@ final class _NotificationButton extends StatelessWidget {
       clipBehavior: Clip.none,
       children: [
         MentorXIconButton(
-          onPressed: () => const NotificationsPageRoute().push(context),
+          onPressed: () => const NotificationsRoute().push(context),
           icon: Icons.notifications_none_rounded,
           variant: MentorXIconButtonVariant.outline,
           size: MentorXIconButtonSize.medium,

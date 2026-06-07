@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mock_marketplace_repository/mock_marketplace_repository.dart';
 
 import 'package:mentorx_student/core/core.dart';
-import 'package:mentorx_student/features/marketplace/pages/marketplace_grid/bloc/marketplace_grid_page_bloc.dart';
+import 'package:mentorx_student/features/marketplace/pages/marketplace_grid/bloc/marketplace_grid_bloc.dart';
 
 class _MockAnalyticsService implements AnalyticsService {
   @override
@@ -29,21 +29,21 @@ void main() {
     analyticsService = _MockAnalyticsService();
   });
 
-  group('MarketplaceGridPageBloc', () {
-    blocTest<MarketplaceGridPageBloc, MarketplaceGridPageState>(
+  group('MarketplaceGridBloc', () {
+    blocTest<MarketplaceGridBloc, MarketplaceGridState>(
       'emits [loading, loaded] when load event is added',
-      build: () => MarketplaceGridPageBloc(
+      build: () => MarketplaceGridBloc(
         marketplaceRepository: marketplaceRepository,
         analyticsService: analyticsService,
       ),
-      act: (bloc) => bloc.add(const MarketplaceGridPageLoadEvent()),
+      act: (bloc) => bloc.add(const MarketplaceGridLoadEvent()),
       expect: () => [
-        isA<MarketplaceGridPageState>().having(
+        isA<MarketplaceGridState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loading,
         ),
-        isA<MarketplaceGridPageState>().having(
+        isA<MarketplaceGridState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loaded,
@@ -51,9 +51,9 @@ void main() {
       ],
     );
 
-    blocTest<MarketplaceGridPageBloc, MarketplaceGridPageState>(
+    blocTest<MarketplaceGridBloc, MarketplaceGridState>(
       'starts with initial loading state',
-      build: () => MarketplaceGridPageBloc(
+      build: () => MarketplaceGridBloc(
         marketplaceRepository: marketplaceRepository,
         analyticsService: analyticsService,
       ),

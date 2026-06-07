@@ -1,19 +1,19 @@
 part of '../../../../core/routing/app_routes.dart';
 
-@TypedGoRoute<DeviceManagementPageRoute>(
+@TypedGoRoute<DeviceManagementRoute>(
   path: '/device-management',
   name: 'deviceManagement',
 )
-final class DeviceManagementPageRoute extends GoRouteData
-    with $DeviceManagementPageRoute {
-  const DeviceManagementPageRoute();
+final class DeviceManagementRoute extends GoRouteData
+    with $DeviceManagementRoute {
+  const DeviceManagementRoute();
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return BlocProvider<DeviceManagementPageBloc>(
-      create: (context) => DeviceManagementPageBloc(
+    return BlocProvider<DeviceManagementBloc>(
+      create: (context) => DeviceManagementBloc(
         profileRepository: context.read<ProfileRepository>(),
-      )..add(const DeviceManagementPageInitialized()),
+      )..add(const DeviceManagementInitialized()),
       child: const DeviceManagementPageWrapper(),
     );
   }

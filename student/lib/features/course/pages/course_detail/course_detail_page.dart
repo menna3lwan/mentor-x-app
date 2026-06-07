@@ -3,10 +3,10 @@ import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:mentorx_student/core/core.dart';
 
-import 'bloc/course_detail_page_bloc.dart';
+import 'bloc/course_detail_bloc.dart';
 import 'widgets/widgets.dart';
 
-final class CourseDetailPagePage extends StatelessWidget {
+final class CourseDetailPage extends StatelessWidget {
   final CourseEntity? course;
   final List<SessionEntity> sessions;
   final Map<String, List<SessionItemEntity>> sessionItems;
@@ -24,7 +24,7 @@ final class CourseDetailPagePage extends StatelessWidget {
   final ValueChanged<SessionItemEntity> onSessionItemTap;
   final Future<void> Function() onRefresh;
 
-  const CourseDetailPagePage({
+  const CourseDetailPage({
     super.key,
     required this.course,
     required this.sessions,

@@ -4,15 +4,15 @@ import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:mentorx_student/core/core.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:animate_do/animate_do.dart';
-import 'bloc/ai_chat_page_bloc.dart';
+import 'bloc/ai_chat_bloc.dart';
 
 final class AiChatPage extends StatefulWidget {
   const AiChatPage({super.key});
   @override
-  State<AiChatPage> createState() => _AiChatPageState();
+  State<AiChatPage> createState() => _AiChatState();
 }
 
-final class _AiChatPageState extends State<AiChatPage> {
+final class _AiChatState extends State<AiChatPage> {
   final _controller = TextEditingController();
   final _scrollController = ScrollController();
 
@@ -26,7 +26,7 @@ final class _AiChatPageState extends State<AiChatPage> {
   void _sendMessage() {
     final text = _controller.text.trim();
     if (text.isEmpty) return;
-    context.read<AiChatPageBloc>().add(AiChatPageSendMessage(content: text));
+    context.read<AiChatBloc>().add(AiChatSendMessage(content: text));
     _controller.clear();
   }
 
@@ -46,7 +46,7 @@ final class _AiChatPageState extends State<AiChatPage> {
   Widget build(BuildContext context) {
     final t = context.t.aichat;
 
-    return BlocConsumer<AiChatPageBloc, AiChatPageState>(
+    return BlocConsumer<AiChatBloc, AiChatState>(
       listener: (context, state) {
         _scrollToBottom();
       },
@@ -184,7 +184,7 @@ final class _AiChatPageState extends State<AiChatPage> {
   Widget _buildInputArea(
     BuildContext context,
     dynamic t,
-    AiChatPageState state,
+    AiChatState state,
   ) {
     return Container(
       padding: EdgeInsets.fromLTRB(

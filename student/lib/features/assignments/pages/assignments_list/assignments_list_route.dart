@@ -1,12 +1,12 @@
 part of '../../../../core/routing/app_routes.dart';
 
-@TypedGoRoute<AssignmentsListPageRoute>(
+@TypedGoRoute<AssignmentsListRoute>(
   path: '/assignments',
   name: 'assignmentsList',
 )
-final class AssignmentsListPageRoute extends GoRouteData
-    with $AssignmentsListPageRoute {
-  const AssignmentsListPageRoute();
+final class AssignmentsListRoute extends GoRouteData
+    with $AssignmentsListRoute {
+  const AssignmentsListRoute();
 
   @override
   Widget build(BuildContext context, GoRouterState state) {

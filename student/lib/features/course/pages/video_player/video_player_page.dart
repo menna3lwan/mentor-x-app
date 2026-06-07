@@ -5,7 +5,7 @@ import 'package:chewie/chewie.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:mentorx_student/core/core.dart';
 
-final class VideoPlayerPagePage extends StatefulWidget {
+final class VideoPlayerPage extends StatefulWidget {
   final String title;
   final String? streamUrl;
   final bool isLoading;
@@ -18,7 +18,7 @@ final class VideoPlayerPagePage extends StatefulWidget {
   final void Function(int position, int total) onProgressChanged;
   final VoidCallback onCompleted;
 
-  const VideoPlayerPagePage({
+  const VideoPlayerPage({
     super.key,
     required this.title,
     required this.streamUrl,
@@ -34,10 +34,10 @@ final class VideoPlayerPagePage extends StatefulWidget {
   });
 
   @override
-  State<VideoPlayerPagePage> createState() => _VideoPlayerPagePageState();
+  State<VideoPlayerPage> createState() => _VideoPlayerPageState();
 }
 
-class _VideoPlayerPagePageState extends State<VideoPlayerPagePage> {
+class _VideoPlayerPageState extends State<VideoPlayerPage> {
   VideoPlayerController? _videoPlayerController;
   ChewieController? _chewieController;
   YoutubePlayerController? _youtubeController;
@@ -52,7 +52,7 @@ class _VideoPlayerPagePageState extends State<VideoPlayerPagePage> {
   }
 
   @override
-  void didUpdateWidget(VideoPlayerPagePage oldWidget) {
+  void didUpdateWidget(VideoPlayerPage oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.streamUrl != oldWidget.streamUrl && widget.streamUrl != null) {
       _initializePlayer();

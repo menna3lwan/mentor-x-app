@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:mentorx_student/core/core.dart';
-import 'bloc/rewards_page_bloc.dart';
+import 'bloc/rewards_catalog_bloc.dart';
 
 final class RewardsCatalogPage extends StatelessWidget {
   const RewardsCatalogPage({super.key});
@@ -22,7 +22,7 @@ final class RewardsCatalogPage extends StatelessWidget {
             child: Builder(
               builder: (context) {
                 final isFirstLoading = context.select(
-                  (RewardsPageBloc bloc) => bloc.state.isFirstLoading,
+                  (RewardsCatalogBloc bloc) => bloc.state.isFirstLoading,
                 );
 
                 if (isFirstLoading) {
@@ -56,7 +56,7 @@ final class RewardsCatalogPage extends StatelessWidget {
                 return RefreshIndicator(
                   color: context.brandPrimaryColor,
                   onRefresh: () async {
-                    context.read<RewardsPageBloc>().add(
+                    context.read<RewardsCatalogBloc>().add(
                       RewardsPageStartedEvent(),
                     );
                   },
@@ -69,7 +69,7 @@ final class RewardsCatalogPage extends StatelessWidget {
                           child: Builder(
                             builder: (context) {
                               final points = context.select(
-                                (RewardsPageBloc bloc) =>
+                                (RewardsCatalogBloc bloc) =>
                                     bloc.state.pointsSection.data ?? 0,
                               );
                               return _PointsHeader(points: points, t: t);
@@ -80,7 +80,7 @@ final class RewardsCatalogPage extends StatelessWidget {
                       Builder(
                         builder: (context) {
                           final items = context.select(
-                            (RewardsPageBloc bloc) =>
+                            (RewardsCatalogBloc bloc) =>
                                 bloc.state.itemsSection.data ?? [],
                           );
 
@@ -114,7 +114,7 @@ final class RewardsCatalogPage extends StatelessWidget {
                                       item: item,
                                       t: t,
                                       onRedeem: () {
-                                        context.read<RewardsPageBloc>().add(
+                                        context.read<RewardsCatalogBloc>().add(
                                           RewardsPageClaimRequestedEvent(
                                             item.id,
                                           ),
@@ -207,7 +207,7 @@ final class _BuildHeader extends StatelessWidget {
               ),
               MentorXIconButton(
                 icon: Icons.history_rounded,
-                onPressed: () => const RewardsHistoryPageRoute().push(context),
+                onPressed: () => const RewardsHistoryRoute().push(context),
                 variant: MentorXIconButtonVariant.ghost,
                 size: MentorXIconButtonSize.small,
               ),

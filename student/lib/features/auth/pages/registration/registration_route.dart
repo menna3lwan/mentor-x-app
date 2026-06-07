@@ -1,9 +1,9 @@
 part of '../../../../core/routing/app_routes.dart';
 
-@TypedGoRoute<RegistrationPageRoute>(path: '/register', name: 'register')
-final class RegistrationPageRoute extends GoRouteData
-    with $RegistrationPageRoute {
-  const RegistrationPageRoute();
+@TypedGoRoute<RegistrationRoute>(path: '/register', name: 'register')
+final class RegistrationRoute extends GoRouteData
+    with $RegistrationRoute {
+  const RegistrationRoute();
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
@@ -13,7 +13,7 @@ final class RegistrationPageRoute extends GoRouteData
         analyticsService: context.read<AnalyticsService>(),
         tenantId: '1',
       )..add(const StudentRegistrationBootstrapRequested()),
-      child: const RegistrationWrapper(),
+      child: const RegistrationPageWrapper(),
     );
   }
 }

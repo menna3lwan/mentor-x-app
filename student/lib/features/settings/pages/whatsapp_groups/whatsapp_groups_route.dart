@@ -1,20 +1,20 @@
 part of '../../../../core/routing/app_routes.dart';
 
-@TypedGoRoute<WhatsappGroupsPageRoute>(
+@TypedGoRoute<WhatsappGroupsRoute>(
   path: '/whatsapp-groups',
   name: 'whatsappGroups',
 )
-final class WhatsappGroupsPageRoute extends GoRouteData
-    with $WhatsappGroupsPageRoute {
-  const WhatsappGroupsPageRoute();
+final class WhatsappGroupsRoute extends GoRouteData
+    with $WhatsappGroupsRoute {
+  const WhatsappGroupsRoute();
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return BlocProvider<WhatsappGroupsPageBloc>(
-      create: (context) => WhatsappGroupsPageBloc(
+    return BlocProvider<WhatsappGroupsBloc>(
+      create: (context) => WhatsappGroupsBloc(
         repository: context.read<StudentCommunicationRepository>(),
         analyticsService: context.read<AnalyticsService>(),
-      )..add(const WhatsappGroupsPageInitialized()),
+      )..add(const WhatsappGroupsInitialized()),
       child: const WhatsappGroupsPageWrapper(),
     );
   }

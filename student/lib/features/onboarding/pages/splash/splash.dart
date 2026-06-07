@@ -1,3 +1,3 @@
-export 'bloc/splash_page_bloc.dart';
-export 'splash_view.dart';
-export 'splash_wrapper.dart';
+export 'bloc/splash_bloc.dart';
+export 'splash_page.dart';
+export 'splash_page_wrapper.dart';

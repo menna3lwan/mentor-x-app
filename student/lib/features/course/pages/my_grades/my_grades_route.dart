@@ -1,17 +1,17 @@
 part of '../../../../core/routing/app_routes.dart';
 
-@TypedGoRoute<MyGradesPageRoute>(path: '/my-grades', name: 'myGrades')
-final class MyGradesPageRoute extends GoRouteData with $MyGradesPageRoute {
-  const MyGradesPageRoute();
+@TypedGoRoute<MyGradesRoute>(path: '/my-grades', name: 'myGrades')
+final class MyGradesRoute extends GoRouteData with $MyGradesRoute {
+  const MyGradesRoute();
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return BlocProvider<MyGradesPageBloc>(
-      create: (context) => MyGradesPageBloc(
+    return BlocProvider<MyGradesBloc>(
+      create: (context) => MyGradesBloc(
         gradeRepository: context.read<GradeRepository>(),
         courseRepository: context.read<CourseRepository>(),
         analyticsService: context.read<AnalyticsService>(),
-      )..add(const MyGradesPageInitialized()),
+      )..add(const MyGradesInitialized()),
       child: const MyGradesPageWrapper(),
     );
   }

@@ -5,10 +5,10 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:mentorx_student/core/core.dart';
 
-final class AttendanceQrPagePage extends StatelessWidget {
+final class AttendanceQrPage extends StatelessWidget {
   final String code;
 
-  const AttendanceQrPagePage({
+  const AttendanceQrPage({
     super.key,
     required this.code,
   });

@@ -1,21 +1,21 @@
 part of '../../../../core/routing/app_routes.dart';
 
-@TypedGoRoute<StatusBlockedPageRoute>(
+@TypedGoRoute<StatusBlockedRoute>(
   path: '/status-blocked',
   name: 'statusBlocked',
 )
-final class StatusBlockedPageRoute extends GoRouteData
-    with $StatusBlockedPageRoute {
-  const StatusBlockedPageRoute();
+final class StatusBlockedRoute extends GoRouteData
+    with $StatusBlockedRoute {
+  const StatusBlockedRoute();
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return BlocProvider<StatusBlockedPageBloc>(
+    return BlocProvider<StatusBlockedBloc>(
       create: (context) =>
-          StatusBlockedPageBloc(
+          StatusBlockedBloc(
             analyticsService: context.read<AnalyticsService>(),
           )..add(
-            const StatusBlockedPageInitialized(),
+            const StatusBlockedInitialized(),
           ),
       child: const StatusBlockedPageWrapper(),
     );

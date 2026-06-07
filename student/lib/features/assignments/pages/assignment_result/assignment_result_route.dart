@@ -1,22 +1,22 @@
 part of '../../../../core/routing/app_routes.dart';
 
-@TypedGoRoute<AssignmentResultPageRoute>(
+@TypedGoRoute<AssignmentResultRoute>(
   path: '/assignment-result/:assignmentId',
   name: 'assignmentResult',
 )
-final class AssignmentResultPageRoute extends GoRouteData
-    with $AssignmentResultPageRoute {
+final class AssignmentResultRoute extends GoRouteData
+    with $AssignmentResultRoute {
   final String assignmentId;
-  const AssignmentResultPageRoute({required this.assignmentId});
+  const AssignmentResultRoute({required this.assignmentId});
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return BlocProvider<AssignmentResultPageBloc>(
-      create: (context) => AssignmentResultPageBloc(
+    return BlocProvider<AssignmentResultBloc>(
+      create: (context) => AssignmentResultBloc(
         assignmentRepository: context.read<AssignmentRepository>(),
         analyticsService: context.read<AnalyticsService>(),
         assignmentId: assignmentId,
-      )..add(const AssignmentResultPageLoadEvent()),
+      )..add(const AssignmentResultLoadEvent()),
       child: const AssignmentResultPageWrapper(),
     );
   }

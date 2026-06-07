@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mock_assignment_repository/mock_assignment_repository.dart';
 
 import 'package:mentorx_student/core/core.dart';
-import 'package:mentorx_student/features/assignments/pages/assignment_detail/bloc/assignment_detail_page_bloc.dart';
+import 'package:mentorx_student/features/assignments/pages/assignment_detail/bloc/assignment_detail_bloc.dart';
 
 class MockAnalyticsService implements AnalyticsService {
   @override
@@ -30,22 +30,22 @@ void main() {
     assignmentRepository = const MockAssignmentRepository(delay: Duration.zero);
   });
 
-  group('AssignmentDetailPageBloc', () {
-    blocTest<AssignmentDetailPageBloc, AssignmentDetailPageState>(
+  group('AssignmentDetailBloc', () {
+    blocTest<AssignmentDetailBloc, AssignmentDetailState>(
       'emits [loading, loaded] when load event is added',
-      build: () => AssignmentDetailPageBloc(assignmentRepository: assignmentRepository,
+      build: () => AssignmentDetailBloc(assignmentRepository: assignmentRepository,
         analyticsService: analyticsService,
       ),
       act: (bloc) =>
-          bloc.add(const AssignmentDetailPageLoadEvent(assignmentId: '1')),
+          bloc.add(const AssignmentDetailLoadEvent(assignmentId: '1')),
       wait: Duration.zero,
       expect: () => [
-        isA<AssignmentDetailPageState>().having(
+        isA<AssignmentDetailState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loading,
         ),
-        isA<AssignmentDetailPageState>().having(
+        isA<AssignmentDetailState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loaded,
@@ -53,13 +53,13 @@ void main() {
       ],
     );
 
-    blocTest<AssignmentDetailPageBloc, AssignmentDetailPageState>(
+    blocTest<AssignmentDetailBloc, AssignmentDetailState>(
       'initial state has LoadingState.initial',
-      build: () => AssignmentDetailPageBloc(assignmentRepository: assignmentRepository,
+      build: () => AssignmentDetailBloc(assignmentRepository: assignmentRepository,
         analyticsService: analyticsService,
       ),
       verify: (bloc) {
-        expect(bloc.state, AssignmentDetailPageState.initial);
+        expect(bloc.state, AssignmentDetailState.initial);
         expect(bloc.state.loadingState, LoadingState.initial);
       },
     );

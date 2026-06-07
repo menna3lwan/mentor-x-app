@@ -3,10 +3,10 @@ import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:mentorx_student/core/core.dart';
 
-import 'bloc/course_catalog_page_bloc.dart';
+import 'bloc/course_catalog_bloc.dart';
 import 'widgets/widgets.dart';
 
-final class CourseCatalogPagePage extends StatelessWidget {
+final class CourseCatalogPage extends StatelessWidget {
   final TextEditingController searchController;
   final List<CourseSummaryEntity> courses;
   final List<GradeEntity> grades;
@@ -23,7 +23,7 @@ final class CourseCatalogPagePage extends StatelessWidget {
   final Future<void> Function() onRefresh;
   final ValueChanged<String> onCourseTap;
 
-  const CourseCatalogPagePage({
+  const CourseCatalogPage({
     super.key,
     required this.searchController,
     required this.courses,

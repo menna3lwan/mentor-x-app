@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mock_wallet_repository/mock_wallet_repository.dart';
 
 import 'package:mentorx_student/core/core.dart';
-import 'package:mentorx_student/features/wallet/pages/redeem_code/bloc/redeem_code_page_bloc.dart';
+import 'package:mentorx_student/features/wallet/pages/redeem_code/bloc/redeem_code_bloc.dart';
 
 class _MockAnalyticsService implements AnalyticsService {
   @override
@@ -29,31 +29,31 @@ void main() {
     analyticsService = _MockAnalyticsService();
   });
 
-  group('RedeemCodePageBloc', () {
+  group('RedeemCodeBloc', () {
     test('initial state is correct', () {
-      final bloc = RedeemCodePageBloc(
+      final bloc = RedeemCodeBloc(
         walletRepository: walletRepository,
         analyticsService: analyticsService,
       );
-      expect(bloc.state, RedeemCodePageState.initial);
+      expect(bloc.state, RedeemCodeState.initial);
       expect(bloc.state.loadingState, LoadingState.initial);
       bloc.close();
     });
 
-    blocTest<RedeemCodePageBloc, RedeemCodePageState>(
-      'emits [loading, loaded] when RedeemCodePageLoadEvent is added',
-      build: () => RedeemCodePageBloc(
+    blocTest<RedeemCodeBloc, RedeemCodeState>(
+      'emits [loading, loaded] when RedeemCodeLoadEvent is added',
+      build: () => RedeemCodeBloc(
         walletRepository: walletRepository,
         analyticsService: analyticsService,
       ),
-      act: (bloc) => bloc.add(const RedeemCodePageLoadEvent()),
+      act: (bloc) => bloc.add(const RedeemCodeLoadEvent()),
       expect: () => [
-        isA<RedeemCodePageState>().having(
+        isA<RedeemCodeState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loading,
         ),
-        isA<RedeemCodePageState>().having(
+        isA<RedeemCodeState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loaded,

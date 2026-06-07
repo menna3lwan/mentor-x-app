@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mock_assignment_repository/mock_assignment_repository.dart';
 
 import 'package:mentorx_student/core/core.dart';
-import 'package:mentorx_student/features/assignments/pages/assignment_submit/bloc/assignment_submit_page_bloc.dart';
+import 'package:mentorx_student/features/assignments/pages/assignment_submit/bloc/assignment_submit_bloc.dart';
 
 class _MockAnalyticsService implements AnalyticsService {
   @override
@@ -30,22 +30,22 @@ void main() {
     analyticsService = _MockAnalyticsService();
   });
 
-  group('AssignmentSubmitPageBloc', () {
-    blocTest<AssignmentSubmitPageBloc, AssignmentSubmitPageState>(
+  group('AssignmentSubmitBloc', () {
+    blocTest<AssignmentSubmitBloc, AssignmentSubmitState>(
       'emits [loading, loaded] when load event is added',
-      build: () => AssignmentSubmitPageBloc(
+      build: () => AssignmentSubmitBloc(
         assignmentRepository: assignmentRepository,
         analyticsService: analyticsService,
         assignmentId: testId,
       ),
-      act: (bloc) => bloc.add(const AssignmentSubmitPageLoadEvent()),
+      act: (bloc) => bloc.add(const AssignmentSubmitLoadEvent()),
       expect: () => [
-        isA<AssignmentSubmitPageState>().having(
+        isA<AssignmentSubmitState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loading,
         ),
-        isA<AssignmentSubmitPageState>().having(
+        isA<AssignmentSubmitState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loaded,
@@ -53,9 +53,9 @@ void main() {
       ],
     );
 
-    blocTest<AssignmentSubmitPageBloc, AssignmentSubmitPageState>(
+    blocTest<AssignmentSubmitBloc, AssignmentSubmitState>(
       'initial state is correct',
-      build: () => AssignmentSubmitPageBloc(
+      build: () => AssignmentSubmitBloc(
         assignmentRepository: assignmentRepository,
         analyticsService: analyticsService,
         assignmentId: testId,

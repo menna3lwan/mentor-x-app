@@ -1,20 +1,20 @@
 part of '../../../../core/routing/app_routes.dart';
 
-@TypedGoRoute<AiConversationsPageRoute>(
+@TypedGoRoute<AiConversationsRoute>(
   path: '/ai-conversations',
   name: 'aiConversations',
 )
-final class AiConversationsPageRoute extends GoRouteData
-    with $AiConversationsPageRoute {
-  const AiConversationsPageRoute();
+final class AiConversationsRoute extends GoRouteData
+    with $AiConversationsRoute {
+  const AiConversationsRoute();
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return BlocProvider<AiConversationsPageBloc>(
-      create: (context) => AiConversationsPageBloc(
+    return BlocProvider<AiConversationsBloc>(
+      create: (context) => AiConversationsBloc(
         aiRepository: context.read<AIRepository>(),
         analyticsService: context.read<AnalyticsService>(),
-      )..add(const AiConversationsPageInitialized()),
+      )..add(const AiConversationsInitialized()),
       child: const AiConversationsPageWrapper(),
     );
   }

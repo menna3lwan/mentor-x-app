@@ -2,7 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:mentorx_student/core/core.dart';
-import 'package:mentorx_student/features/account_status/pages/status_blocked/bloc/status_blocked_page_bloc.dart';
+import 'package:mentorx_student/features/account_status/pages/status_blocked/bloc/status_blocked_bloc.dart';
 
 class MockAnalyticsService implements AnalyticsService {
   @override
@@ -20,7 +20,7 @@ class MockAnalyticsService implements AnalyticsService {
 }
 
 void main() {
-  group('StatusBlockedPageBloc', () {
+  group('StatusBlockedBloc', () {
     late AnalyticsService analyticsService;
 
     setUp(() {
@@ -28,18 +28,18 @@ void main() {
     });
 
     test('initial state is correct', () {
-      final bloc = StatusBlockedPageBloc(analyticsService: analyticsService);
-      expect(bloc.state, StatusBlockedPageState.initial);
+      final bloc = StatusBlockedBloc(analyticsService: analyticsService);
+      expect(bloc.state, StatusBlockedState.initial);
       expect(bloc.state.loadingState, LoadingState.initial);
       bloc.close();
     });
 
-    blocTest<StatusBlockedPageBloc, StatusBlockedPageState>(
+    blocTest<StatusBlockedBloc, StatusBlockedState>(
       'emits loaded when initialized',
-      build: () => StatusBlockedPageBloc(analyticsService: analyticsService),
-      act: (bloc) => bloc.add(const StatusBlockedPageInitialized()),
+      build: () => StatusBlockedBloc(analyticsService: analyticsService),
+      act: (bloc) => bloc.add(const StatusBlockedInitialized()),
       expect: () => [
-        isA<StatusBlockedPageState>().having(
+        isA<StatusBlockedState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loaded,

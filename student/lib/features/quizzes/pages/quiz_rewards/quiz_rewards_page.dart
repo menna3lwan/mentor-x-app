@@ -5,7 +5,7 @@ import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_student/core/core.dart';
 import 'package:animate_do/animate_do.dart';
-import 'bloc/quiz_rewards_page_bloc.dart';
+import 'bloc/quiz_rewards_bloc.dart';
 
 final class QuizRewardsPage extends StatelessWidget {
   const QuizRewardsPage({super.key});
@@ -23,7 +23,7 @@ final class QuizRewardsPage extends StatelessWidget {
             child: Builder(
               builder: (context) {
                 final loadingState = context.select(
-                  (QuizRewardsPageBloc bloc) => bloc.state.loadingState,
+                  (QuizRewardsBloc bloc) => bloc.state.loadingState,
                 );
 
                 if (loadingState == LoadingState.loading) {
@@ -40,8 +40,8 @@ final class QuizRewardsPage extends StatelessWidget {
                 if (loadingState == LoadingState.error) {
                   return AppErrorView(
                     message: 'Failed to load rewards',
-                    onRetry: () => context.read<QuizRewardsPageBloc>().add(
-                      const QuizRewardsPageLoadEvent(),
+                    onRetry: () => context.read<QuizRewardsBloc>().add(
+                      const QuizRewardsLoadEvent(),
                     ),
                   );
                 }
@@ -79,7 +79,7 @@ final class QuizRewardsPage extends StatelessWidget {
                         child: Builder(
                           builder: (context) {
                             final leaderboardEntries = context.select(
-                              (QuizRewardsPageBloc bloc) =>
+                              (QuizRewardsBloc bloc) =>
                                   bloc.state.leaderboardEntries,
                             );
                             return _LeaderboardSection(

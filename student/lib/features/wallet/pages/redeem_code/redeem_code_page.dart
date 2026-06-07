@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:mentorx_student/core/core.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 
-final class RedeemCodePagePage extends StatelessWidget {
+final class RedeemCodePage extends StatelessWidget {
   final TextEditingController codeController;
   final LoadingState loadingState;
   final String? errorMessage;
   final Function(String) onSubmit;
 
-  const RedeemCodePagePage({
+  const RedeemCodePage({
     super.key,
     required this.codeController,
     required this.loadingState,

@@ -26,7 +26,7 @@ final class LeaderboardShortcutCardWidget extends StatelessWidget {
         child: Material(
           color: Colors.transparent,
           child: InkWell(
-            onTap: () => const LeaderboardPageRoute().push(context),
+            onTap: () => const LeaderboardRoute().push(context),
             child: Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(

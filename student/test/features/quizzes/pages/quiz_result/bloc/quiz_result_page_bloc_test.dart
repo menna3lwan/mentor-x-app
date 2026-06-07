@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 import 'package:mentorx_student/core/core.dart';
-import 'package:mentorx_student/features/quizzes/pages/quiz_result/bloc/quiz_result_page_bloc.dart';
+import 'package:mentorx_student/features/quizzes/pages/quiz_result/bloc/quiz_result_bloc.dart';
 
 class _MockAnalyticsService implements AnalyticsService {
   @override
@@ -40,19 +40,19 @@ void main() {
     leaderboardRepository = MockLeaderboardRepo();
   });
 
-  group('QuizResultPageBloc', () {
+  group('QuizResultBloc', () {
     test('initial state is correct', () {
-      final bloc = QuizResultPageBloc(quizRepository: quizRepository,
+      final bloc = QuizResultBloc(quizRepository: quizRepository,
         leaderboardRepository: leaderboardRepository,
         analyticsService: analyticsService,
       );
-      expect(bloc.state, QuizResultPageState.initial);
+      expect(bloc.state, QuizResultState.initial);
       expect(bloc.state.loadingState, LoadingState.initial);
       bloc.close();
     });
 
-    blocTest<QuizResultPageBloc, QuizResultPageState>(
-      'emits [loading, loaded] when QuizResultPageLoadEvent is added',
+    blocTest<QuizResultBloc, QuizResultState>(
+      'emits [loading, loaded] when QuizResultLoadEvent is added',
       build: () {
         final attempt = QuizAttemptEntity(
           id: '1',
@@ -82,20 +82,20 @@ void main() {
         when(
           () => leaderboardRepository.getQuizLeaderboard(any()),
         ).thenAnswer((_) async => [entry]);
-        return QuizResultPageBloc(quizRepository: quizRepository,
+        return QuizResultBloc(quizRepository: quizRepository,
           leaderboardRepository: leaderboardRepository,
         analyticsService: analyticsService,
       );
       },
-      act: (bloc) => bloc.add(const QuizResultPageLoadEvent(attemptId: '1')),
+      act: (bloc) => bloc.add(const QuizResultLoadEvent(attemptId: '1')),
       wait: const Duration(milliseconds: 100),
       expect: () => [
-        isA<QuizResultPageState>().having(
+        isA<QuizResultState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loading,
         ),
-        isA<QuizResultPageState>()
+        isA<QuizResultState>()
             .having((s) => s.loadingState, 'loadingState', LoadingState.loaded)
             .having((s) => s.result, 'result', isNotNull)
             .having((s) => s.myRank, 'myRank', isNotNull)
@@ -103,7 +103,7 @@ void main() {
       ],
     );
 
-    blocTest<QuizResultPageBloc, QuizResultPageState>(
+    blocTest<QuizResultBloc, QuizResultState>(
       'emits [loading, error] when leaderboard fetching fails',
       build: () {
         final attempt = QuizAttemptEntity(
@@ -126,20 +126,20 @@ void main() {
         when(
           () => leaderboardRepository.getQuizLeaderboard(any()),
         ).thenAnswer((_) async => []);
-        return QuizResultPageBloc(quizRepository: quizRepository,
+        return QuizResultBloc(quizRepository: quizRepository,
           leaderboardRepository: leaderboardRepository,
         analyticsService: analyticsService,
       );
       },
-      act: (bloc) => bloc.add(const QuizResultPageLoadEvent(attemptId: '1')),
+      act: (bloc) => bloc.add(const QuizResultLoadEvent(attemptId: '1')),
       wait: const Duration(milliseconds: 100),
       expect: () => [
-        isA<QuizResultPageState>().having(
+        isA<QuizResultState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loading,
         ),
-        isA<QuizResultPageState>().having(
+        isA<QuizResultState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.error,

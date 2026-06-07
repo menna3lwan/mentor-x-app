@@ -2,7 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:mentorx_student/core/core.dart';
-import 'package:mentorx_student/features/shell/pages/shell/bloc/shell_page_bloc.dart';
+import 'package:mentorx_student/features/shell/pages/shell/bloc/shell_bloc.dart';
 
 class MockAnalyticsService implements AnalyticsService {
   @override
@@ -25,25 +25,25 @@ void main() {
   setUp(() {
     analyticsService = MockAnalyticsService();
   });
-  group('ShellPageBloc', () {
+  group('ShellBloc', () {
     test('initial state is correct', () {
-      final bloc = ShellPageBloc(analyticsService: analyticsService);
-      expect(bloc.state, ShellPageState.initial);
+      final bloc = ShellBloc(analyticsService: analyticsService);
+      expect(bloc.state, ShellState.initial);
       expect(bloc.state.loadingState, LoadingState.initial);
       bloc.close();
     });
 
-    blocTest<ShellPageBloc, ShellPageState>(
-      'emits [loading, loaded] when ShellPageLoadEvent is added',
-      build: () => ShellPageBloc(analyticsService: analyticsService),
-      act: (bloc) => bloc.add(const ShellPageLoadEvent()),
+    blocTest<ShellBloc, ShellState>(
+      'emits [loading, loaded] when ShellLoadEvent is added',
+      build: () => ShellBloc(analyticsService: analyticsService),
+      act: (bloc) => bloc.add(const ShellLoadEvent()),
       expect: () => [
-        isA<ShellPageState>().having(
+        isA<ShellState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loading,
         ),
-        isA<ShellPageState>().having(
+        isA<ShellState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loaded,

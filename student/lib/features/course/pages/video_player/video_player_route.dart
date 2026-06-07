@@ -1,18 +1,18 @@
 part of '../../../../core/routing/app_routes.dart';
 
-@TypedGoRoute<VideoPlayerPageRoute>(
+@TypedGoRoute<VideoPlayerRoute>(
   path: '/video-player/:itemId',
   name: 'videoPlayer',
 )
-final class VideoPlayerPageRoute extends GoRouteData
-    with $VideoPlayerPageRoute {
+final class VideoPlayerRoute extends GoRouteData
+    with $VideoPlayerRoute {
   final String itemId;
   final String title;
   final String? enrollmentId;
   final int completedLessons;
   final int totalLessons;
 
-  const VideoPlayerPageRoute({
+  const VideoPlayerRoute({
     required this.itemId,
     required this.title,
     this.enrollmentId,
@@ -22,8 +22,8 @@ final class VideoPlayerPageRoute extends GoRouteData
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return BlocProvider<VideoPlayerPageBloc>(
-      create: (context) => VideoPlayerPageBloc(
+    return BlocProvider<VideoPlayerBloc>(
+      create: (context) => VideoPlayerBloc(
         courseRepository: context.read<CourseRepository>(),
         analyticsService: context.read<AnalyticsService>(),
         itemId: itemId,
@@ -31,7 +31,7 @@ final class VideoPlayerPageRoute extends GoRouteData
         enrollmentId: enrollmentId,
         completedLessons: completedLessons,
         totalLessons: totalLessons,
-      )..add(const VideoPlayerPageInitialized()),
+      )..add(const VideoPlayerInitialized()),
       child: const VideoPlayerPageWrapper(),
     );
   }

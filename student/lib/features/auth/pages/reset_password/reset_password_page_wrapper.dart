@@ -50,7 +50,7 @@ final class _ResetPasswordPageWrapperState
                 context.showSuccessSnackBar(
                   context.t.auth.passwordResetSuccess,
                 );
-                const LoginPageRoute().go(context);
+                const LoginRoute().go(context);
               }
             },
             child: Builder(
@@ -86,7 +86,7 @@ final class _ResetPasswordPageWrapperState
                     if (context.canPop()) {
                       context.pop();
                     } else {
-                      const ForgotPasswordPageRoute().go(context);
+                      const ForgotPasswordRoute().go(context);
                     }
                   },
                 );

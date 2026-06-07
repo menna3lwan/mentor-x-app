@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mock_course_repository/mock_course_repository.dart';
 import 'package:mentorx_student/core/core.dart';
 
-import 'package:mentorx_student/features/course/pages/video_player/bloc/video_player_page_bloc.dart';
+import 'package:mentorx_student/features/course/pages/video_player/bloc/video_player_bloc.dart';
 
 class MockAnalyticsService implements AnalyticsService {
   @override
@@ -30,9 +30,9 @@ void main() {
     courseRepository = const MockCourseRepository(delay: Duration.zero);
   });
 
-  group('VideoPlayerPageBloc', () {
+  group('VideoPlayerBloc', () {
     test('initial state is correct', () {
-      final bloc = VideoPlayerPageBloc(courseRepository: courseRepository,
+      final bloc = VideoPlayerBloc(courseRepository: courseRepository,
         itemId: 'i1',
         title: 'Test Video',
         analyticsService: analyticsService,
@@ -48,67 +48,67 @@ void main() {
       bloc.close();
     });
 
-    blocTest<VideoPlayerPageBloc, VideoPlayerPageState>(
+    blocTest<VideoPlayerBloc, VideoPlayerState>(
       'emits [loading, loaded] with stream URL when initialized',
-      build: () => VideoPlayerPageBloc(courseRepository: courseRepository,
+      build: () => VideoPlayerBloc(courseRepository: courseRepository,
         itemId: 'i1',
         title: 'Test Video',
         analyticsService: analyticsService,
       ),
-      act: (bloc) => bloc.add(const VideoPlayerPageInitialized()),
+      act: (bloc) => bloc.add(const VideoPlayerInitialized()),
       expect: () => [
-        isA<VideoPlayerPageState>().having(
+        isA<VideoPlayerState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loading,
         ),
-        isA<VideoPlayerPageState>()
+        isA<VideoPlayerState>()
             .having((s) => s.loadingState, 'loadingState', LoadingState.loaded)
             .having((s) => s.streamUrl, 'streamUrl', isNotNull),
       ],
     );
 
-    blocTest<VideoPlayerPageBloc, VideoPlayerPageState>(
+    blocTest<VideoPlayerBloc, VideoPlayerState>(
       'updates progress when progress event is added',
-      build: () => VideoPlayerPageBloc(courseRepository: courseRepository,
+      build: () => VideoPlayerBloc(courseRepository: courseRepository,
         itemId: 'i1',
         title: 'Test Video',
         analyticsService: analyticsService,
       ),
-      seed: () => const VideoPlayerPageState(
+      seed: () => const VideoPlayerState(
         itemId: 'i1',
         title: 'Test Video',
         loadingState: LoadingState.loaded,
         streamUrl: 'https://example.com/video.mp4',
       ),
       act: (bloc) => bloc.add(
-        const VideoPlayerPageProgressUpdated(
+        const VideoPlayerProgressUpdated(
           positionSeconds: 60,
           totalSeconds: 300,
         ),
       ),
       expect: () => [
-        isA<VideoPlayerPageState>()
+        isA<VideoPlayerState>()
             .having((s) => s.currentPositionSeconds, 'position', 60)
             .having((s) => s.totalDurationSeconds, 'total', 300),
       ],
     );
 
-    blocTest<VideoPlayerPageBloc, VideoPlayerPageState>(
+    blocTest<VideoPlayerBloc, VideoPlayerState>(
       'marks item as completed',
-      build: () => VideoPlayerPageBloc(courseRepository: courseRepository,
+      build: () => VideoPlayerBloc(courseRepository: courseRepository,
         itemId: 'i1',
         title: 'Test Video',
         analyticsService: analyticsService,
       ),
-      seed: () => const VideoPlayerPageState(
+      seed: () => const VideoPlayerState(
         itemId: 'i1',
         title: 'Test Video',
         loadingState: LoadingState.loaded,
       ),
-      act: (bloc) => bloc.add(const VideoPlayerPageCompleted()),
+      act: (bloc) => bloc.add(const VideoPlayerCompleted()),
       expect: () => [
-        isA<VideoPlayerPageState>().having(
+        isA<VideoPlayerState>().having(
           (s) => s.isCompleted,
           'isCompleted',
           true,
@@ -116,40 +116,40 @@ void main() {
       ],
     );
 
-    blocTest<VideoPlayerPageBloc, VideoPlayerPageState>(
+    blocTest<VideoPlayerBloc, VideoPlayerState>(
       'progress with totalSeconds 0 does not crash',
-      build: () => VideoPlayerPageBloc(courseRepository: courseRepository,
+      build: () => VideoPlayerBloc(courseRepository: courseRepository,
         itemId: 'i1',
         title: 'Test Video',
         analyticsService: analyticsService,
       ),
-      seed: () => const VideoPlayerPageState(
+      seed: () => const VideoPlayerState(
         itemId: 'i1',
         title: 'Test Video',
         loadingState: LoadingState.loaded,
         streamUrl: 'https://example.com/video.mp4',
       ),
       act: (bloc) => bloc.add(
-        const VideoPlayerPageProgressUpdated(
+        const VideoPlayerProgressUpdated(
           positionSeconds: 10,
           totalSeconds: 0,
         ),
       ),
       expect: () => [
-        isA<VideoPlayerPageState>()
+        isA<VideoPlayerState>()
             .having((s) => s.currentPositionSeconds, 'position', 10)
             .having((s) => s.totalDurationSeconds, 'total', 0),
       ],
     );
 
-    blocTest<VideoPlayerPageBloc, VideoPlayerPageState>(
+    blocTest<VideoPlayerBloc, VideoPlayerState>(
       'multiple progress updates accumulate correctly',
-      build: () => VideoPlayerPageBloc(courseRepository: courseRepository,
+      build: () => VideoPlayerBloc(courseRepository: courseRepository,
         itemId: 'i1',
         title: 'Test Video',
         analyticsService: analyticsService,
       ),
-      seed: () => const VideoPlayerPageState(
+      seed: () => const VideoPlayerState(
         itemId: 'i1',
         title: 'Test Video',
         loadingState: LoadingState.loaded,
@@ -158,13 +158,13 @@ void main() {
       act: (bloc) {
         bloc
           ..add(
-            const VideoPlayerPageProgressUpdated(
+            const VideoPlayerProgressUpdated(
               positionSeconds: 30,
               totalSeconds: 600,
             ),
           )
           ..add(
-            const VideoPlayerPageProgressUpdated(
+            const VideoPlayerProgressUpdated(
               positionSeconds: 120,
               totalSeconds: 600,
             ),

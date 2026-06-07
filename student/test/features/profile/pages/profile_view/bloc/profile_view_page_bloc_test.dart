@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mock_profile_repository/mock_profile_repository.dart';
 
 import 'package:mentorx_student/core/core.dart';
-import 'package:mentorx_student/features/profile/pages/profile_view/bloc/profile_view_page_bloc.dart';
+import 'package:mentorx_student/features/profile/pages/profile_view/bloc/profile_view_bloc.dart';
 
 class _MockAnalyticsService implements AnalyticsService {
   @override
@@ -29,21 +29,21 @@ void main() {
     analyticsService = _MockAnalyticsService();
   });
 
-  group('ProfileViewPageBloc', () {
-    blocTest<ProfileViewPageBloc, ProfileViewPageState>(
+  group('ProfileViewBloc', () {
+    blocTest<ProfileViewBloc, ProfileViewState>(
       'emits [loading, loaded] when load event is added',
-      build: () => ProfileViewPageBloc(
+      build: () => ProfileViewBloc(
         profileRepository: profileRepository,
         analyticsService: analyticsService,
       ),
-      act: (bloc) => bloc.add(const ProfileViewPageLoadEvent()),
+      act: (bloc) => bloc.add(const ProfileViewLoadEvent()),
       expect: () => [
-        isA<ProfileViewPageState>().having(
+        isA<ProfileViewState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loading,
         ),
-        isA<ProfileViewPageState>().having(
+        isA<ProfileViewState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loaded,
@@ -51,9 +51,9 @@ void main() {
       ],
     );
 
-    blocTest<ProfileViewPageBloc, ProfileViewPageState>(
+    blocTest<ProfileViewBloc, ProfileViewState>(
       'starts with initial loading state',
-      build: () => ProfileViewPageBloc(
+      build: () => ProfileViewBloc(
         profileRepository: profileRepository,
         analyticsService: analyticsService,
       ),

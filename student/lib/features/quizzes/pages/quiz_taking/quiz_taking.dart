@@ -1,3 +1,3 @@
-export 'bloc/quiz_taking_page_bloc.dart';
+export 'bloc/quiz_taking_bloc.dart';
 export 'quiz_taking_page.dart';
-export 'quiz_taking_wrapper.dart';
+export 'quiz_taking_page_wrapper.dart';

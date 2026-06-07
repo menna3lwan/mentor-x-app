@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mock_assignment_repository/mock_assignment_repository.dart';
 
 import 'package:mentorx_student/core/core.dart';
-import 'package:mentorx_student/features/assignments/pages/assignment_result/bloc/assignment_result_page_bloc.dart';
+import 'package:mentorx_student/features/assignments/pages/assignment_result/bloc/assignment_result_bloc.dart';
 
 class MockAnalyticsService implements AnalyticsService {
   @override
@@ -30,22 +30,22 @@ void main() {
     assignmentRepository = const MockAssignmentRepository(delay: Duration.zero);
   });
 
-  group('AssignmentResultPageBloc', () {
-    blocTest<AssignmentResultPageBloc, AssignmentResultPageState>(
+  group('AssignmentResultBloc', () {
+    blocTest<AssignmentResultBloc, AssignmentResultState>(
       'emits [loading, loaded] when load event is added',
-      build: () => AssignmentResultPageBloc(
+      build: () => AssignmentResultBloc(
         assignmentRepository: assignmentRepository,
         analyticsService: analyticsService,
         assignmentId: 'dummy-id',
       ),
-      act: (bloc) => bloc.add(const AssignmentResultPageLoadEvent()),
+      act: (bloc) => bloc.add(const AssignmentResultLoadEvent()),
       expect: () => [
-        isA<AssignmentResultPageState>().having(
+        isA<AssignmentResultState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loading,
         ),
-        isA<AssignmentResultPageState>().having(
+        isA<AssignmentResultState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loaded,
@@ -53,15 +53,15 @@ void main() {
       ],
     );
 
-    blocTest<AssignmentResultPageBloc, AssignmentResultPageState>(
+    blocTest<AssignmentResultBloc, AssignmentResultState>(
       'initial state has LoadingState.initial',
-      build: () => AssignmentResultPageBloc(
+      build: () => AssignmentResultBloc(
         assignmentRepository: assignmentRepository,
         analyticsService: analyticsService,
         assignmentId: 'dummy-id',
       ),
       verify: (bloc) {
-        expect(bloc.state, const AssignmentResultPageState(assignmentId: 'dummy-id'));
+        expect(bloc.state, const AssignmentResultState(assignmentId: 'dummy-id'));
         expect(bloc.state.loadingState, LoadingState.initial);
       },
     );

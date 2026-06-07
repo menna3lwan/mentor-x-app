@@ -1,21 +1,21 @@
 part of '../../../../core/routing/app_routes.dart';
 
-@TypedGoRoute<StatusRejectedPageRoute>(
+@TypedGoRoute<StatusRejectedRoute>(
   path: '/status-rejected',
   name: 'statusRejected',
 )
-final class StatusRejectedPageRoute extends GoRouteData
-    with $StatusRejectedPageRoute {
-  const StatusRejectedPageRoute();
+final class StatusRejectedRoute extends GoRouteData
+    with $StatusRejectedRoute {
+  const StatusRejectedRoute();
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return BlocProvider<StatusRejectedPageBloc>(
+    return BlocProvider<StatusRejectedBloc>(
       create: (context) =>
-          StatusRejectedPageBloc(
+          StatusRejectedBloc(
             analyticsService: context.read<AnalyticsService>(),
           )..add(
-            const StatusRejectedPageInitialized(),
+            const StatusRejectedInitialized(),
           ),
       child: const StatusRejectedPageWrapper(),
     );

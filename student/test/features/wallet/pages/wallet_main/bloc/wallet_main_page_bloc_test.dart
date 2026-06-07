@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mock_wallet_repository/mock_wallet_repository.dart';
 
 import 'package:mentorx_student/core/core.dart';
-import 'package:mentorx_student/features/wallet/pages/wallet_main/bloc/wallet_main_page_bloc.dart';
+import 'package:mentorx_student/features/wallet/pages/wallet_main/bloc/wallet_main_bloc.dart';
 
 class _MockAnalyticsService implements AnalyticsService {
   @override
@@ -29,32 +29,32 @@ void main() {
     analyticsService = _MockAnalyticsService();
   });
 
-  group('WalletMainPageBloc', () {
+  group('WalletMainBloc', () {
     test('initial state is correct', () {
-      final bloc = WalletMainPageBloc(
+      final bloc = WalletMainBloc(
         walletRepository: walletRepository,
         analyticsService: analyticsService,
       );
-      expect(bloc.state, WalletMainPageState.initial);
+      expect(bloc.state, WalletMainState.initial);
       expect(bloc.state.loadingState, LoadingState.initial);
       bloc.close();
     });
 
-    blocTest<WalletMainPageBloc, WalletMainPageState>(
-      'emits [loading, loaded] when WalletMainPageLoadEvent is added',
-      build: () => WalletMainPageBloc(
+    blocTest<WalletMainBloc, WalletMainState>(
+      'emits [loading, loaded] when WalletMainLoadEvent is added',
+      build: () => WalletMainBloc(
         walletRepository: walletRepository,
         analyticsService: analyticsService,
       ),
-      act: (bloc) => bloc.add(const WalletMainPageLoadEvent()),
+      act: (bloc) => bloc.add(const WalletMainLoadEvent()),
       wait: const Duration(milliseconds: 100),
       expect: () => [
-        isA<WalletMainPageState>().having(
+        isA<WalletMainState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loading,
         ),
-        isA<WalletMainPageState>().having(
+        isA<WalletMainState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loaded,

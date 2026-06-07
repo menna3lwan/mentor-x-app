@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:mentorx_student/core/core.dart';
-import 'bloc/marketplace_orders_page_bloc.dart';
+import 'bloc/marketplace_orders_bloc.dart';
 
-final class MarketplaceOrdersPagePage extends StatelessWidget {
-  final MarketplaceOrdersPageState state;
+final class MarketplaceOrdersPage extends StatelessWidget {
+  final MarketplaceOrdersState state;
   final VoidCallback onRefresh;
 
-  const MarketplaceOrdersPagePage({
+  const MarketplaceOrdersPage({
     super.key,
     required this.state,
     required this.onRefresh,

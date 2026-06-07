@@ -4,7 +4,7 @@ import 'package:mock_quiz_repository/mock_quiz_repository.dart';
 import 'package:mock_leaderboard_repository/mock_leaderboard_repository.dart';
 
 import 'package:mentorx_student/core/core.dart';
-import 'package:mentorx_student/features/quizzes/pages/quiz_rewards/bloc/quiz_rewards_page_bloc.dart';
+import 'package:mentorx_student/features/quizzes/pages/quiz_rewards/bloc/quiz_rewards_bloc.dart';
 
 class MockAnalyticsService implements AnalyticsService {
   @override
@@ -33,31 +33,31 @@ void main() {
     leaderboardRepository = MockLeaderboardRepository(delay: Duration.zero);
   });
 
-  group('QuizRewardsPageBloc', () {
+  group('QuizRewardsBloc', () {
     test('initial state is correct', () {
-      final bloc = QuizRewardsPageBloc(quizRepository: quizRepository,
+      final bloc = QuizRewardsBloc(quizRepository: quizRepository,
         leaderboardRepository: leaderboardRepository,
         analyticsService: analyticsService,
       );
-      expect(bloc.state, QuizRewardsPageState.initial);
+      expect(bloc.state, QuizRewardsState.initial);
       expect(bloc.state.loadingState, LoadingState.initial);
       bloc.close();
     });
 
-    blocTest<QuizRewardsPageBloc, QuizRewardsPageState>(
-      'emits [loading, loaded] when QuizRewardsPageLoadEvent is added',
-      build: () => QuizRewardsPageBloc(quizRepository: quizRepository,
+    blocTest<QuizRewardsBloc, QuizRewardsState>(
+      'emits [loading, loaded] when QuizRewardsLoadEvent is added',
+      build: () => QuizRewardsBloc(quizRepository: quizRepository,
         leaderboardRepository: leaderboardRepository,
         analyticsService: analyticsService,
       ),
-      act: (bloc) => bloc.add(const QuizRewardsPageLoadEvent()),
+      act: (bloc) => bloc.add(const QuizRewardsLoadEvent()),
       expect: () => [
-        isA<QuizRewardsPageState>().having(
+        isA<QuizRewardsState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loading,
         ),
-        isA<QuizRewardsPageState>().having(
+        isA<QuizRewardsState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loaded,

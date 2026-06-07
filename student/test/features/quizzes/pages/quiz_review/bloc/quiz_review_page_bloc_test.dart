@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mock_quiz_repository/mock_quiz_repository.dart';
 
 import 'package:mentorx_student/core/core.dart';
-import 'package:mentorx_student/features/quizzes/pages/quiz_review/bloc/quiz_review_page_bloc.dart';
+import 'package:mentorx_student/features/quizzes/pages/quiz_review/bloc/quiz_review_bloc.dart';
 
 class _MockAnalyticsService implements AnalyticsService {
   @override
@@ -30,9 +30,9 @@ void main() {
     quizRepository = const MockQuizRepository(delay: Duration.zero);
   });
 
-  group('QuizReviewPageBloc', () {
+  group('QuizReviewBloc', () {
     test('initial state is correct', () {
-      final bloc = QuizReviewPageBloc(
+      final bloc = QuizReviewBloc(
         quizRepository: quizRepository,
         analyticsService: analyticsService,
         quizId: 'q1',
@@ -42,22 +42,22 @@ void main() {
       bloc.close();
     });
 
-    blocTest<QuizReviewPageBloc, QuizReviewPageState>(
-      'emits [loading, loaded] when QuizReviewPageLoadEvent is added',
-      build: () => QuizReviewPageBloc(
+    blocTest<QuizReviewBloc, QuizReviewState>(
+      'emits [loading, loaded] when QuizReviewLoadEvent is added',
+      build: () => QuizReviewBloc(
         quizRepository: quizRepository,
         analyticsService: analyticsService,
         quizId: 'q1',
         attemptId: 'attempt_1',
       ),
-      act: (bloc) => bloc.add(const QuizReviewPageLoadEvent()),
+      act: (bloc) => bloc.add(const QuizReviewLoadEvent()),
       expect: () => [
-        isA<QuizReviewPageState>().having(
+        isA<QuizReviewState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loading,
         ),
-        isA<QuizReviewPageState>().having(
+        isA<QuizReviewState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loaded,

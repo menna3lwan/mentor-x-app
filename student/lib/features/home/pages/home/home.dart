@@ -1,4 +1,4 @@
-export 'bloc/home_page_bloc.dart';
+export 'bloc/home_bloc.dart';
 export 'home_page.dart';
-export 'home_wrapper.dart';
+export 'home_page_wrapper.dart';
 export 'widgets/widgets.dart';

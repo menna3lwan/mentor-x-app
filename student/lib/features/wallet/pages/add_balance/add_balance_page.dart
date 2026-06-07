@@ -4,7 +4,7 @@ import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:mentorx_student/core/core.dart';
 import 'package:animate_do/animate_do.dart';
-import 'bloc/add_balance_page_bloc.dart';
+import 'bloc/add_balance_bloc.dart';
 
 final class AddBalancePage extends StatelessWidget {
   final TextEditingController amountController;
@@ -40,12 +40,12 @@ final class AddBalancePage extends StatelessWidget {
     ];
 
     return BlocPresentationListener<
-      AddBalancePageBloc,
-      AddBalancePagePresentationEvent
+      AddBalanceBloc,
+      AddBalancePresentationEvent
     >(
       listener: (context, event) {
-        if (event is AddBalancePageSuccess) {
-          PaymentSuccessPageRoute(
+        if (event is AddBalanceSuccess) {
+          PaymentSuccessRoute(
             amount: event.amount.toStringAsFixed(2),
           ).go(context);
         }
@@ -324,7 +324,7 @@ final class AddBalancePage extends StatelessWidget {
 class _ErrorSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final errorMessage = context.select<AddBalancePageBloc, String?>(
+    final errorMessage = context.select<AddBalanceBloc, String?>(
       (bloc) => bloc.state.errorMessage,
     );
     if (errorMessage == null) return const SizedBox.shrink();
@@ -357,7 +357,7 @@ class _SubmitButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isSubmitting = context.select<AddBalancePageBloc, bool>(
+    final isSubmitting = context.select<AddBalanceBloc, bool>(
       (bloc) => bloc.state.isSubmitting,
     );
 
@@ -378,8 +378,8 @@ class _SubmitButton extends StatelessWidget {
                 ? () {
                     final amount =
                         double.tryParse(amountController.text) ?? 0.0;
-                    context.read<AddBalancePageBloc>().add(
-                      AddBalancePageSubmitEvent(
+                    context.read<AddBalanceBloc>().add(
+                      AddBalanceSubmitEvent(
                         amount: amount,
                         method: getPaymentMethod(
                           selectedMethodNotifier.value,

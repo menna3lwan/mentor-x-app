@@ -3,10 +3,10 @@ import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:mentorx_student/core/core.dart';
 
-import 'bloc/my_courses_page_bloc.dart';
+import 'bloc/my_courses_bloc.dart';
 import 'widgets/widgets.dart';
 
-final class MyCoursesPagePage extends StatelessWidget {
+final class MyCoursesPage extends StatelessWidget {
   final MyCoursesTab selectedTab;
   final bool isLoading;
   final List<EnrollmentEntity> courses;
@@ -16,7 +16,7 @@ final class MyCoursesPagePage extends StatelessWidget {
   final ValueChanged<String> onCourseTap;
   final VoidCallback onBrowseCatalog;
 
-  const MyCoursesPagePage({
+  const MyCoursesPage({
     super.key,
     required this.selectedTab,
     required this.isLoading,

@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 import 'package:mentorx_student/core/core.dart';
-import 'package:mentorx_student/features/account_status/pages/status_pending/bloc/status_pending_page_bloc.dart';
+import 'package:mentorx_student/features/account_status/pages/status_pending/bloc/status_pending_bloc.dart';
 
 class _MockStudentAuthenticationRepository extends Mock
     implements StudentAuthenticationRepository {}
@@ -55,28 +55,28 @@ void main() {
     when(() => cacheRepository.get(any())).thenAnswer((_) async => null);
   });
 
-  group('StatusPendingPageBloc', () {
+  group('StatusPendingBloc', () {
     test('initial state is correct', () {
-      final bloc = StatusPendingPageBloc(
+      final bloc = StatusPendingBloc(
         authRepository: authenticationRepository,
         cacheRepository: cacheRepository,
         analyticsService: analyticsService,
       );
-      expect(bloc.state, StatusPendingPageState.initial);
+      expect(bloc.state, StatusPendingState.initial);
       expect(bloc.state.loadingState, LoadingState.initial);
       bloc.close();
     });
 
-    blocTest<StatusPendingPageBloc, StatusPendingPageState>(
+    blocTest<StatusPendingBloc, StatusPendingState>(
       'emits loaded and refreshes account status when initialized',
-      build: () => StatusPendingPageBloc(
+      build: () => StatusPendingBloc(
         authRepository: authenticationRepository,
         cacheRepository: cacheRepository,
         analyticsService: analyticsService,
       ),
-      act: (bloc) => bloc.add(const StatusPendingPageInitialized()),
+      act: (bloc) => bloc.add(const StatusPendingInitialized()),
       expect: () => [
-        isA<StatusPendingPageState>()
+        isA<StatusPendingState>()
             .having(
               (s) => s.loadingState,
               'loadingState',
@@ -87,12 +87,12 @@ void main() {
               'studentCode',
               pendingUser.studentCode,
             ),
-        isA<StatusPendingPageState>().having(
+        isA<StatusPendingState>().having(
           (s) => s.isRefreshing,
           'isRefreshing',
           true,
         ),
-        isA<StatusPendingPageState>()
+        isA<StatusPendingState>()
             .having(
               (s) => s.isRefreshing,
               'isRefreshing',

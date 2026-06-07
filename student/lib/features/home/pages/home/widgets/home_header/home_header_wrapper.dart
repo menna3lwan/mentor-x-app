@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_student/core/core.dart';
 
-import '../../bloc/home_page_bloc.dart';
+import '../../bloc/home_bloc.dart';
 import 'home_header_widget.dart';
 
 final class HomeHeaderWrapper extends StatelessWidget {
@@ -10,13 +10,13 @@ final class HomeHeaderWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final studentName = context.select<HomePageBloc, String>(
+    final studentName = context.select<HomeBloc, String>(
       (bloc) => bloc.state.studentName,
     );
-    final unreadCount = context.select<HomePageBloc, int>(
+    final unreadCount = context.select<HomeBloc, int>(
       (bloc) => bloc.state.unreadCountSection.data ?? 0,
     );
-    final avatarUrl = context.select<HomePageBloc, String?>(
+    final avatarUrl = context.select<HomeBloc, String?>(
       (bloc) => bloc.state.avatarUrl,
     );
 

@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mock_profile_repository/mock_profile_repository.dart';
 
 import 'package:mentorx_student/core/core.dart';
-import 'package:mentorx_student/features/profile/pages/change_password/bloc/change_password_page_bloc.dart';
+import 'package:mentorx_student/features/profile/pages/change_password/bloc/change_password_bloc.dart';
 
 class MockAnalyticsService implements AnalyticsService {
   @override
@@ -30,20 +30,20 @@ void main() {
     profileRepository = const MockProfileRepository(delay: Duration.zero);
   });
 
-  group('ChangePasswordPageBloc', () {
-    blocTest<ChangePasswordPageBloc, ChangePasswordPageState>(
+  group('ChangePasswordBloc', () {
+    blocTest<ChangePasswordBloc, ChangePasswordState>(
       'emits [loading, loaded] when load event is added',
-      build: () => ChangePasswordPageBloc(profileRepository: profileRepository,
+      build: () => ChangePasswordBloc(profileRepository: profileRepository,
         analyticsService: analyticsService,
       ),
-      act: (bloc) => bloc.add(const ChangePasswordPageLoadEvent()),
+      act: (bloc) => bloc.add(const ChangePasswordLoadEvent()),
       expect: () => [
-        isA<ChangePasswordPageState>().having(
+        isA<ChangePasswordState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loading,
         ),
-        isA<ChangePasswordPageState>().having(
+        isA<ChangePasswordState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loaded,
@@ -51,9 +51,9 @@ void main() {
       ],
     );
 
-    blocTest<ChangePasswordPageBloc, ChangePasswordPageState>(
+    blocTest<ChangePasswordBloc, ChangePasswordState>(
       'starts with initial loading state',
-      build: () => ChangePasswordPageBloc(profileRepository: profileRepository,
+      build: () => ChangePasswordBloc(profileRepository: profileRepository,
         analyticsService: analyticsService,
       ),
       verify: (bloc) {

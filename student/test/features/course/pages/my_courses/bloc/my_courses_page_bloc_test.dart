@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mock_course_repository/mock_course_repository.dart';
 import 'package:mentorx_student/core/core.dart';
 
-import 'package:mentorx_student/features/course/pages/my_courses/bloc/my_courses_page_bloc.dart';
+import 'package:mentorx_student/features/course/pages/my_courses/bloc/my_courses_bloc.dart';
 
 class MockAnalyticsService implements AnalyticsService {
   @override
@@ -30,87 +30,87 @@ void main() {
     courseRepository = const MockCourseRepository(delay: Duration.zero);
   });
 
-  group('MyCoursesPageBloc', () {
-    blocTest<MyCoursesPageBloc, MyCoursesPageState>(
+  group('MyCoursesBloc', () {
+    blocTest<MyCoursesBloc, MyCoursesState>(
       'emits [loading, loaded] when initialized',
-      build: () => MyCoursesPageBloc(courseRepository: courseRepository, analyticsService: analyticsService),
-      act: (bloc) => bloc.add(const MyCoursesPageInitialized()),
+      build: () => MyCoursesBloc(courseRepository: courseRepository, analyticsService: analyticsService),
+      act: (bloc) => bloc.add(const MyCoursesInitialized()),
       expect: () => [
-        isA<MyCoursesPageState>().having(
+        isA<MyCoursesState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loading,
         ),
-        isA<MyCoursesPageState>()
+        isA<MyCoursesState>()
             .having((s) => s.loadingState, 'loadingState', LoadingState.loaded)
             .having((s) => s.courses.isNotEmpty, 'has courses', true),
       ],
     );
 
-    blocTest<MyCoursesPageBloc, MyCoursesPageState>(
+    blocTest<MyCoursesBloc, MyCoursesState>(
       'emits state with new tab when tab changed',
-      build: () => MyCoursesPageBloc(courseRepository: courseRepository, analyticsService: analyticsService),
-      seed: () => const MyCoursesPageState(
+      build: () => MyCoursesBloc(courseRepository: courseRepository, analyticsService: analyticsService),
+      seed: () => const MyCoursesState(
         loadingState: LoadingState.loaded,
       ),
       act: (bloc) =>
-          bloc.add(const MyCoursesPageTabChanged(MyCoursesTab.completed)),
+          bloc.add(const MyCoursesTabChanged(MyCoursesTab.completed)),
       expect: () => [
-        isA<MyCoursesPageState>()
+        isA<MyCoursesState>()
             .having((s) => s.selectedTab, 'tab', MyCoursesTab.completed)
             .having(
               (s) => s.loadingState,
               'loadingState',
               LoadingState.loading,
             ),
-        isA<MyCoursesPageState>()
+        isA<MyCoursesState>()
             .having((s) => s.selectedTab, 'tab', MyCoursesTab.completed)
             .having((s) => s.loadingState, 'loadingState', LoadingState.loaded),
       ],
     );
 
-    blocTest<MyCoursesPageBloc, MyCoursesPageState>(
+    blocTest<MyCoursesBloc, MyCoursesState>(
       'loads expired courses when expired tab selected',
-      build: () => MyCoursesPageBloc(courseRepository: courseRepository, analyticsService: analyticsService),
-      seed: () => const MyCoursesPageState(
+      build: () => MyCoursesBloc(courseRepository: courseRepository, analyticsService: analyticsService),
+      seed: () => const MyCoursesState(
         loadingState: LoadingState.loaded,
       ),
       act: (bloc) =>
-          bloc.add(const MyCoursesPageTabChanged(MyCoursesTab.expired)),
+          bloc.add(const MyCoursesTabChanged(MyCoursesTab.expired)),
       expect: () => [
-        isA<MyCoursesPageState>().having(
+        isA<MyCoursesState>().having(
           (s) => s.selectedTab,
           'tab',
           MyCoursesTab.expired,
         ),
-        isA<MyCoursesPageState>()
+        isA<MyCoursesState>()
             .having((s) => s.selectedTab, 'tab', MyCoursesTab.expired)
             .having((s) => s.courses.length, 'expired count', 2),
       ],
     );
 
-    blocTest<MyCoursesPageBloc, MyCoursesPageState>(
+    blocTest<MyCoursesBloc, MyCoursesState>(
       'search filters courses',
-      build: () => MyCoursesPageBloc(courseRepository: courseRepository, analyticsService: analyticsService),
-      seed: () => const MyCoursesPageState(
+      build: () => MyCoursesBloc(courseRepository: courseRepository, analyticsService: analyticsService),
+      seed: () => const MyCoursesState(
         loadingState: LoadingState.loaded,
       ),
-      act: (bloc) => bloc.add(const MyCoursesPageSearchChanged('Algebra')),
+      act: (bloc) => bloc.add(const MyCoursesSearchChanged('Algebra')),
       expect: () => [
         // searchQuery updated
-        isA<MyCoursesPageState>().having(
+        isA<MyCoursesState>().having(
           (s) => s.searchQuery,
           'query',
           'Algebra',
         ),
         // loading
-        isA<MyCoursesPageState>().having(
+        isA<MyCoursesState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loading,
         ),
         // loaded with filtered results
-        isA<MyCoursesPageState>()
+        isA<MyCoursesState>()
             .having((s) => s.loadingState, 'loadingState', LoadingState.loaded)
             .having(
               (s) => s.courses.every(
@@ -122,21 +122,21 @@ void main() {
       ],
     );
 
-    blocTest<MyCoursesPageBloc, MyCoursesPageState>(
+    blocTest<MyCoursesBloc, MyCoursesState>(
       'refresh reloads courses',
-      build: () => MyCoursesPageBloc(courseRepository: courseRepository, analyticsService: analyticsService),
-      seed: () => const MyCoursesPageState(
+      build: () => MyCoursesBloc(courseRepository: courseRepository, analyticsService: analyticsService),
+      seed: () => const MyCoursesState(
         loadingState: LoadingState.loaded,
         selectedTab: MyCoursesTab.inProgress,
       ),
-      act: (bloc) => bloc.add(const MyCoursesPageRefreshed()),
+      act: (bloc) => bloc.add(const MyCoursesRefreshed()),
       expect: () => [
-        isA<MyCoursesPageState>().having(
+        isA<MyCoursesState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loading,
         ),
-        isA<MyCoursesPageState>().having(
+        isA<MyCoursesState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loaded,
@@ -145,7 +145,7 @@ void main() {
     );
 
     test('initial state has default values', () {
-      final bloc = MyCoursesPageBloc(courseRepository: courseRepository, analyticsService: analyticsService);
+      final bloc = MyCoursesBloc(courseRepository: courseRepository, analyticsService: analyticsService);
       expect(bloc.state.loadingState, LoadingState.initial);
       expect(bloc.state.selectedTab, MyCoursesTab.inProgress);
       expect(bloc.state.courses, isEmpty);
@@ -155,20 +155,20 @@ void main() {
     });
 
     test('inProgress tab is default', () {
-      final bloc = MyCoursesPageBloc(courseRepository: courseRepository, analyticsService: analyticsService);
+      final bloc = MyCoursesBloc(courseRepository: courseRepository, analyticsService: analyticsService);
       expect(bloc.state.selectedTab, MyCoursesTab.inProgress);
-      expect(bloc.state, equals(MyCoursesPageState.initial));
+      expect(bloc.state, equals(MyCoursesState.initial));
       bloc.close();
     });
 
-    blocTest<MyCoursesPageBloc, MyCoursesPageState>(
+    blocTest<MyCoursesBloc, MyCoursesState>(
       'clearing search loads all courses',
-      build: () => MyCoursesPageBloc(courseRepository: courseRepository, analyticsService: analyticsService),
-      seed: () => const MyCoursesPageState(
+      build: () => MyCoursesBloc(courseRepository: courseRepository, analyticsService: analyticsService),
+      seed: () => const MyCoursesState(
         loadingState: LoadingState.loaded,
         searchQuery: 'Algebra',
       ),
-      act: (bloc) => bloc.add(const MyCoursesPageSearchChanged('')),
+      act: (bloc) => bloc.add(const MyCoursesSearchChanged('')),
       wait: const Duration(milliseconds: 50),
       verify: (bloc) {
         expect(bloc.state.searchQuery, '');

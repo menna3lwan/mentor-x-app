@@ -1,3 +1,3 @@
-export 'bloc/shell_page_bloc.dart';
+export 'bloc/shell_bloc.dart';
 export 'shell_page.dart';
-export 'shell_wrapper.dart';
+export 'shell_page_wrapper.dart';

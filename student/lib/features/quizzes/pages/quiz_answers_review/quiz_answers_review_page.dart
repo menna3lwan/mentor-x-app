@@ -4,7 +4,7 @@ import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:mentorx_student/core/core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'bloc/quiz_answers_review_page_bloc.dart';
+import 'bloc/quiz_answers_review_bloc.dart';
 
 final class QuizAnswersReviewPage extends StatelessWidget {
   const QuizAnswersReviewPage({super.key});
@@ -28,7 +28,7 @@ final class QuizAnswersReviewPage extends StatelessWidget {
         children: [
           const _BuildHeader(),
           Expanded(
-            child: BlocBuilder<QuizAnswersReviewPageBloc, QuizAnswersReviewPageState>(
+            child: BlocBuilder<QuizAnswersReviewBloc, QuizAnswersReviewState>(
               builder: (context, state) {
                 if (state.loadingState == LoadingState.loading) {
                   return const Center(child: CircularProgressIndicator());
@@ -38,8 +38,8 @@ final class QuizAnswersReviewPage extends StatelessWidget {
                   return AppErrorView(
                     message: state.errorMessage!,
                     onRetry: () => context
-                        .read<QuizAnswersReviewPageBloc>()
-                        .add(const QuizAnswersReviewPageLoadEvent()),
+                        .read<QuizAnswersReviewBloc>()
+                        .add(const QuizAnswersReviewLoadEvent()),
                   );
                 }
 

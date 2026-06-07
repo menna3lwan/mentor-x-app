@@ -1,0 +1,201 @@
+import 'package:bloc/bloc.dart';
+import 'package:bloc_presentation/bloc_presentation.dart';
+import 'package:mentorx_student/core/core.dart';
+
+part 'quiz_taking_event.dart';
+part 'quiz_taking_state.dart';
+
+sealed class QuizTakingPresentationEvent {
+  const QuizTakingPresentationEvent();
+}
+
+final class QuizTakingNavigateBack extends QuizTakingPresentationEvent {
+  const QuizTakingNavigateBack();
+}
+
+final class QuizTakingBloc
+    extends Bloc<QuizTakingEvent, QuizTakingState>
+    with
+        BlocPresentationMixin<
+          QuizTakingState,
+          QuizTakingPresentationEvent
+        > {
+  static final MentorXLogger _log = MentorXLogger('QuizTakingBloc');
+
+  QuizTakingBloc({
+    required this.quizRepository,
+    required this.analyticsService,
+    required String quizId,
+  }) : super(QuizTakingState(quizId: quizId)) {
+    on<QuizTakingLoadEvent>(_onLoad);
+    on<QuizTakingAnswerSelected>(_onAnswerSelected);
+    on<QuizTakingNextQuestion>(_onNextQuestion);
+    on<QuizTakingPreviousQuestion>(_onPreviousQuestion);
+    on<QuizTakingSubmit>(_onSubmit);
+    on<QuizTakingJumpToQuestion>((event, emit) {
+      if (event.index >= 0 && event.index < state.questions.length) {
+        emit(state.copyWith(currentQuestionIndex: event.index));
+      }
+    });
+  }
+
+  final QuizRepository quizRepository;
+  final AnalyticsService analyticsService;
+
+  Future<void> _onLoad(
+    QuizTakingLoadEvent event,
+    Emitter<QuizTakingState> emit,
+  ) async {
+    emit(state.copyWith(loadingState: LoadingState.loading));
+    try {
+      final quizEntity = await quizRepository.getQuiz(state.quizId);
+      QuizAttemptEntity attempt;
+      List<QuizQuestionEntity> questions;
+
+      try {
+        final startResult = await quizRepository.startQuiz(state.quizId);
+        attempt = startResult.$1;
+        questions = startResult.$2;
+      } on QuizRepositoryException catch (e) {
+        if (e.code == QuizRepositoryExceptionCode.quizAlreadyStarted) {
+          final activeAttempt = await quizRepository.getStudentAttemptForQuiz('', state.quizId);
+          if (activeAttempt == null) {
+            emit(
+              state.copyWith(
+                loadingState: LoadingState.error,
+                errorMessage: 'alreadyAttempted',
+              ),
+            );
+            return;
+          }
+          attempt = activeAttempt;
+          questions = await quizRepository.getQuizQuestions(state.quizId);
+        } else {
+          rethrow;
+        }
+      }
+
+      int? remainingSeconds;
+      if (quizEntity.timeRestricted) {
+        if (attempt.expiresAt != null) {
+          remainingSeconds = attempt.expiresAt!
+              .difference(DateTime.now())
+              .inSeconds;
+        } else {
+          remainingSeconds = quizEntity.durationMinutes * 60;
+        }
+        // Ensure we don't have negative time
+        if (remainingSeconds < 0) remainingSeconds = 0;
+      }
+
+      analyticsService.logEvent(
+        name: AnalyticsEvents.quizStarted,
+        parameters: {
+          AnalyticsParams.quizId: state.quizId,
+          AnalyticsParams.name: quizEntity.title,
+          'attempt_id': attempt.id,
+          'remaining_seconds': remainingSeconds,
+        },
+      );
+
+      emit(
+        state.copyWith(
+          loadingState: LoadingState.loaded,
+          quiz: quizEntity,
+          attemptId: attempt.id,
+          questions: questions.isNotEmpty ? questions : quizEntity.questions,
+          answers: attempt.answers,
+          remainingSeconds: remainingSeconds,
+        ),
+      );
+    } catch (e) {
+      emit(
+        state.copyWith(
+          loadingState: LoadingState.error,
+          errorMessage: e.toString(),
+        ),
+      );
+    }
+  }
+
+  Future<void> _onAnswerSelected(
+    QuizTakingAnswerSelected event,
+    Emitter<QuizTakingState> emit,
+  ) async {
+    final newAnswers = Map<String, String>.from(state.answers);
+    newAnswers[event.questionId] = event.selectedAnswer;
+    emit(state.copyWith(answers: newAnswers));
+
+    if (state.attemptId != null) {
+      try {
+        await quizRepository.saveAnswer(
+          attemptId: state.attemptId!,
+          questionId: event.questionId,
+          selectedOptions: [event.selectedAnswer],
+        );
+      } catch (e) {
+        // Optionally handle save error (e.g. show a toast)
+        _log.warning('Failed to save answer: $e');
+      }
+    }
+  }
+
+  void _onNextQuestion(
+    QuizTakingNextQuestion event,
+    Emitter<QuizTakingState> emit,
+  ) {
+    if (state.currentQuestionIndex < state.questions.length - 1) {
+      emit(
+        state.copyWith(currentQuestionIndex: state.currentQuestionIndex + 1),
+      );
+    }
+  }
+
+  void _onPreviousQuestion(
+    QuizTakingPreviousQuestion event,
+    Emitter<QuizTakingState> emit,
+  ) {
+    if (state.currentQuestionIndex > 0) {
+      emit(
+        state.copyWith(currentQuestionIndex: state.currentQuestionIndex - 1),
+      );
+    }
+  }
+
+  Future<void> _onSubmit(
+    QuizTakingSubmit event,
+    Emitter<QuizTakingState> emit,
+  ) async {
+    if (state.attemptId == null) return;
+
+    emit(state.copyWith(loadingState: LoadingState.actionInProgress));
+    try {
+      final result = await quizRepository.submitQuiz(
+        state.quizId,
+        answers: state.answers,
+        attemptId: state.attemptId,
+      );
+      analyticsService.logEvent(
+        name: 'quiz_submit_success',
+        parameters: {
+          'quiz_id': state.quizId,
+          'attempt_id': state.attemptId,
+          'score': result.score,
+        },
+      );
+      emit(
+        state.copyWith(
+          loadingState: LoadingState.success,
+          result: result,
+        ),
+      );
+    } catch (e) {
+      emit(
+        state.copyWith(
+          loadingState: LoadingState.error,
+          errorMessage: e.toString(),
+        ),
+      );
+    }
+  }
+}

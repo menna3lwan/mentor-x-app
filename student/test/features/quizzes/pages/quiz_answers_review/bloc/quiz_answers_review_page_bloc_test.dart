@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mock_quiz_repository/mock_quiz_repository.dart';
 
 import 'package:mentorx_student/core/core.dart';
-import 'package:mentorx_student/features/quizzes/pages/quiz_answers_review/bloc/quiz_answers_review_page_bloc.dart';
+import 'package:mentorx_student/features/quizzes/pages/quiz_answers_review/bloc/quiz_answers_review_bloc.dart';
 
 class MockAnalyticsService implements AnalyticsService {
   @override
@@ -30,25 +30,25 @@ void main() {
     quizRepository = const MockQuizRepository(delay: Duration.zero);
   });
 
-  group('QuizAnswersReviewPageBloc', () {
+  group('QuizAnswersReviewBloc', () {
     test('initial state is correct', () {
-      final bloc = QuizAnswersReviewPageBloc(quizRepository: quizRepository, analyticsService: analyticsService);
-      expect(bloc.state, QuizAnswersReviewPageState.initial);
+      final bloc = QuizAnswersReviewBloc(quizRepository: quizRepository, analyticsService: analyticsService);
+      expect(bloc.state, QuizAnswersReviewState.initial);
       expect(bloc.state.loadingState, LoadingState.initial);
       bloc.close();
     });
 
-    blocTest<QuizAnswersReviewPageBloc, QuizAnswersReviewPageState>(
-      'emits [loading, loaded] when QuizAnswersReviewPageLoadEvent is added',
-      build: () => QuizAnswersReviewPageBloc(quizRepository: quizRepository, analyticsService: analyticsService),
-      act: (bloc) => bloc.add(const QuizAnswersReviewPageLoadEvent()),
+    blocTest<QuizAnswersReviewBloc, QuizAnswersReviewState>(
+      'emits [loading, loaded] when QuizAnswersReviewLoadEvent is added',
+      build: () => QuizAnswersReviewBloc(quizRepository: quizRepository, analyticsService: analyticsService),
+      act: (bloc) => bloc.add(const QuizAnswersReviewLoadEvent()),
       expect: () => [
-        isA<QuizAnswersReviewPageState>().having(
+        isA<QuizAnswersReviewState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loading,
         ),
-        isA<QuizAnswersReviewPageState>().having(
+        isA<QuizAnswersReviewState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loaded,

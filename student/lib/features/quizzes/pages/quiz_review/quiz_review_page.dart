@@ -6,7 +6,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:mentorx_student/core/core.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'bloc/quiz_review_page_bloc.dart';
+import 'bloc/quiz_review_bloc.dart';
 
 final class QuizReviewPage extends StatelessWidget {
   const QuizReviewPage({super.key});
@@ -17,7 +17,7 @@ final class QuizReviewPage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: context.backgroundPrimaryColor,
-      body: BlocBuilder<QuizReviewPageBloc, QuizReviewPageState>(
+      body: BlocBuilder<QuizReviewBloc, QuizReviewState>(
         builder: (context, state) {
           if (state.loadingState == LoadingState.loading) {
             return const Center(child: CircularProgressIndicator());
@@ -27,8 +27,8 @@ final class QuizReviewPage extends StatelessWidget {
             return AppErrorView(
               message: state.errorMessage!,
               onRetry: () => context
-                  .read<QuizReviewPageBloc>()
-                  .add(const QuizReviewPageLoadEvent()),
+                  .read<QuizReviewBloc>()
+                  .add(const QuizReviewLoadEvent()),
             );
           }
 
@@ -100,8 +100,8 @@ final class QuizReviewPage extends StatelessWidget {
                         child: MentorXButton(
                           loading: state.loadingState == LoadingState.actionInProgress,
                           onPressed: () {
-                            context.read<QuizReviewPageBloc>().add(
-                              const QuizReviewPageSubmitEvent(),
+                            context.read<QuizReviewBloc>().add(
+                              const QuizReviewSubmitEvent(),
                             );
                           },
                           label: t.review.submitQuiz,

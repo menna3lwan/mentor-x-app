@@ -7,20 +7,20 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter/services.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:mentorx_student/core/core.dart';
-import 'bloc/assignment_submit_page_bloc.dart';
+import 'bloc/assignment_submit_bloc.dart';
 
 final class AssignmentSubmitPage extends StatefulWidget {
   const AssignmentSubmitPage({super.key});
   @override
-  State<AssignmentSubmitPage> createState() => _AssignmentSubmitPageState();
+  State<AssignmentSubmitPage> createState() => _AssignmentSubmitState();
 }
 
-final class _AssignmentSubmitPageState extends State<AssignmentSubmitPage> {
+final class _AssignmentSubmitState extends State<AssignmentSubmitPage> {
   @override
   Widget build(BuildContext context) {
     final t = context.t.assignments;
 
-    return BlocConsumer<AssignmentSubmitPageBloc, AssignmentSubmitPageState>(
+    return BlocConsumer<AssignmentSubmitBloc, AssignmentSubmitState>(
       listener: (context, state) {
         if (state.isSuccess) {
           context.pop();
@@ -61,8 +61,8 @@ final class _AssignmentSubmitPageState extends State<AssignmentSubmitPage> {
             backgroundColor: context.backgroundPrimaryColor,
             body: AppErrorView(
               message: state.errorMessage!,
-              onRetry: () => context.read<AssignmentSubmitPageBloc>().add(
-                const AssignmentSubmitPageLoadEvent(),
+              onRetry: () => context.read<AssignmentSubmitBloc>().add(
+                const AssignmentSubmitLoadEvent(),
               ),
             ),
           );
@@ -125,9 +125,9 @@ final class _AssignmentSubmitPageState extends State<AssignmentSubmitPage> {
                                   child: _EssayCard(
                                     initialValue: state.contentText ?? '',
                                     onChanged: (val) => context
-                                        .read<AssignmentSubmitPageBloc>()
+                                        .read<AssignmentSubmitBloc>()
                                         .add(
-                                          AssignmentSubmitPageContentChanged(
+                                          AssignmentSubmitContentChanged(
                                             val,
                                           ),
                                         ),
@@ -151,10 +151,10 @@ final class _AssignmentSubmitPageState extends State<AssignmentSubmitPage> {
                                           if (file.path != null) {
                                             context
                                                 .read<
-                                                  AssignmentSubmitPageBloc
+                                                  AssignmentSubmitBloc
                                                 >()
                                                 .add(
-                                                  AssignmentSubmitPageFileAdded(
+                                                  AssignmentSubmitFileAdded(
                                                     file.path!,
                                                   ),
                                                 );
@@ -163,9 +163,9 @@ final class _AssignmentSubmitPageState extends State<AssignmentSubmitPage> {
                                       }
                                     },
                                     onRemove: (path) => context
-                                        .read<AssignmentSubmitPageBloc>()
+                                        .read<AssignmentSubmitBloc>()
                                         .add(
-                                          AssignmentSubmitPageFileRemoved(
+                                          AssignmentSubmitFileRemoved(
                                             path,
                                           ),
                                         ),
@@ -399,8 +399,8 @@ final class _BuildNavigation extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.only(right: 12),
                 child: MentorXButton(
-                  onPressed: () => context.read<AssignmentSubmitPageBloc>().add(
-                    const AssignmentSubmitPagePreviousQuestion(),
+                  onPressed: () => context.read<AssignmentSubmitBloc>().add(
+                    const AssignmentSubmitPreviousQuestion(),
                   ),
                   label: context.t.assignments.previous,
                   variant: MentorXButtonVariant.outline,
@@ -414,12 +414,12 @@ final class _BuildNavigation extends StatelessWidget {
                   ? null
                   : () {
                       if (isLast) {
-                        context.read<AssignmentSubmitPageBloc>().add(
-                          const AssignmentSubmitPageSubmit(),
+                        context.read<AssignmentSubmitBloc>().add(
+                          const AssignmentSubmitSubmit(),
                         );
                       } else {
-                        context.read<AssignmentSubmitPageBloc>().add(
-                          const AssignmentSubmitPageNextQuestion(),
+                        context.read<AssignmentSubmitBloc>().add(
+                          const AssignmentSubmitNextQuestion(),
                         );
                       }
                     },
@@ -738,8 +738,8 @@ final class _QuestionCard extends StatelessWidget {
               label: label,
               text: optionText,
               isSelected: isSelected,
-              onTap: () => context.read<AssignmentSubmitPageBloc>().add(
-                AssignmentSubmitPageAnswerSelected(
+              onTap: () => context.read<AssignmentSubmitBloc>().add(
+                AssignmentSubmitAnswerSelected(
                   questionId: q.id,
                   selectedAnswer: optionText,
                 ),

@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:mentorx_core/mentorx_core.dart';
 import 'package:mentorx_student/core/core.dart';
-import '../../bloc/home_page_bloc.dart';
+import '../../bloc/home_bloc.dart';
 import 'banners_carousel_widget.dart';
 
 final class BannersCarouselWrapper extends StatelessWidget {
@@ -11,10 +11,10 @@ final class BannersCarouselWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final banners = context.select<HomePageBloc, List<BannerEntity>>(
+    final banners = context.select<HomeBloc, List<BannerEntity>>(
       (bloc) => bloc.state.bannersSection.data ?? const [],
     );
-    final isLoading = context.select<HomePageBloc, bool>(
+    final isLoading = context.select<HomeBloc, bool>(
       (bloc) =>
           bloc.state.isFirstLoading || bloc.state.bannersSection.isLoading,
     );
@@ -22,8 +22,8 @@ final class BannersCarouselWrapper extends StatelessWidget {
     return BannersCarouselWidget(
       banners: banners,
       isLoading: isLoading,
-      onTapBanner: (bannerId) => context.read<HomePageBloc>().add(
-        HomePageBannerClickedEvent(bannerId),
+      onTapBanner: (bannerId) => context.read<HomeBloc>().add(
+        HomeBannerClickedEvent(bannerId),
       ),
     );
   }

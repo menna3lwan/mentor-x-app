@@ -4,10 +4,10 @@ import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 
 import 'package:mentorx_student/core/core.dart';
-import 'bloc/ai_conversations_page_bloc.dart';
+import 'bloc/ai_conversations_bloc.dart';
 
-final class AiConversationsPagePage extends StatelessWidget {
-  final AiConversationsPageState state;
+final class AiConversationsPage extends StatelessWidget {
+  final AiConversationsState state;
   final VoidCallback onRefresh;
   final VoidCallback onCreateConversationTapped;
   final ValueChanged<String> onConversationTapped;
@@ -15,7 +15,7 @@ final class AiConversationsPagePage extends StatelessWidget {
   final void Function(String conversationId, String title)
   onRenameConversationSubmitted;
 
-  const AiConversationsPagePage({
+  const AiConversationsPage({
     super.key,
     required this.state,
     required this.onRefresh,

@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:mentorx_student/core/core.dart';
 
-final class QuizIntroPagePage extends StatelessWidget {
+final class QuizIntroPage extends StatelessWidget {
   final LoadingState loadingState;
   final String? errorMessage;
   final QuizEntity? quiz;
@@ -14,7 +14,7 @@ final class QuizIntroPagePage extends StatelessWidget {
   final VoidCallback onRetry;
   final VoidCallback onStartResume;
 
-  const QuizIntroPagePage({
+  const QuizIntroPage({
     super.key,
     required this.loadingState,
     this.errorMessage,

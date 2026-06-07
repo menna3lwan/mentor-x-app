@@ -1,10 +1,10 @@
 part of '../../../../core/routing/app_routes.dart';
 
-@TypedGoRoute<PdfViewerPageRoute>(
+@TypedGoRoute<PdfViewerRoute>(
   path: '/pdf-viewer/:itemId',
   name: 'pdfViewer',
 )
-final class PdfViewerPageRoute extends GoRouteData with $PdfViewerPageRoute {
+final class PdfViewerRoute extends GoRouteData with $PdfViewerRoute {
   final String itemId;
   final String title;
   final String? enrollmentId;
@@ -12,7 +12,7 @@ final class PdfViewerPageRoute extends GoRouteData with $PdfViewerPageRoute {
   final int totalLessons;
   final String? contentUrl;
 
-  const PdfViewerPageRoute({
+  const PdfViewerRoute({
     required this.itemId,
     required this.title,
     this.enrollmentId,
@@ -23,8 +23,8 @@ final class PdfViewerPageRoute extends GoRouteData with $PdfViewerPageRoute {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return BlocProvider<PdfViewerPageBloc>(
-      create: (context) => PdfViewerPageBloc(
+    return BlocProvider<PdfViewerBloc>(
+      create: (context) => PdfViewerBloc(
         courseRepository: context.read<CourseRepository>(),
         analyticsService: context.read<AnalyticsService>(),
         itemId: itemId,
@@ -33,7 +33,7 @@ final class PdfViewerPageRoute extends GoRouteData with $PdfViewerPageRoute {
         completedLessons: completedLessons,
         totalLessons: totalLessons,
         contentUrl: contentUrl,
-      )..add(const PdfViewerPageInitialized()),
+      )..add(const PdfViewerInitialized()),
       child: const PdfViewerPageWrapper(),
     );
   }

@@ -4,8 +4,8 @@ import 'package:animate_do/animate_do.dart';
 import 'package:mentorx_student/core/core.dart';
 import '../../widgets/status_layout.dart';
 
-final class StatusBlockedPagePage extends StatelessWidget {
-  const StatusBlockedPagePage({super.key});
+final class StatusBlockedPage extends StatelessWidget {
+  const StatusBlockedPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +34,7 @@ final class StatusBlockedPagePage extends StatelessWidget {
           duration: const Duration(milliseconds: 500),
           delay: const Duration(milliseconds: 300),
           child: MentorXButton(
-            onPressed: () => const LoginPageRoute().go(context),
+            onPressed: () => const LoginRoute().go(context),
             label: context.t.auth.backToLogin,
           ),
         ),

@@ -60,7 +60,7 @@ final class _ForgotPasswordPageWrapperState
           >(
             listener: (context, event) {
               if (event is ForgotPasswordSuccessPresentationEvent) {
-                ResetPasswordPageRoute(phoneNumber: event.phone).push(context);
+                ResetPasswordRoute(phoneNumber: event.phone).push(context);
               }
             },
             child: Builder(
@@ -95,7 +95,7 @@ final class _ForgotPasswordPageWrapperState
                     if (context.canPop()) {
                       context.pop();
                     } else {
-                      const LoginPageRoute().go(context);
+                      const LoginRoute().go(context);
                     }
                   },
                 );

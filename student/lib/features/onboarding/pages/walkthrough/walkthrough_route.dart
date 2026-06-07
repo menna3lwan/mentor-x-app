@@ -1,14 +1,14 @@
 part of '../../../../core/routing/app_routes.dart';
 
-@TypedGoRoute<WalkthroughPageRoute>(path: '/walkthrough', name: 'walkthrough')
-final class WalkthroughPageRoute extends GoRouteData
-    with $WalkthroughPageRoute {
-  const WalkthroughPageRoute();
+@TypedGoRoute<WalkthroughRoute>(path: '/walkthrough', name: 'walkthrough')
+final class WalkthroughRoute extends GoRouteData
+    with $WalkthroughRoute {
+  const WalkthroughRoute();
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return BlocProvider<WalkthroughPageBloc>(
-      create: (context) => WalkthroughPageBloc(
+    return BlocProvider<WalkthroughBloc>(
+      create: (context) => WalkthroughBloc(
         cacheRepository: context.read<CacheRepository>(),
         analyticsService: context.read<AnalyticsService>(),
       ),

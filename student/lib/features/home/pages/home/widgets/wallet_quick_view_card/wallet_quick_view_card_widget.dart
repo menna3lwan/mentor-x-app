@@ -33,21 +33,21 @@ final class WalletQuickViewCardWidget extends StatelessWidget {
             value: context.t.core.price(amount: balance),
             label: 'Balance',
             onTap: () {
-              const WalletMainPageRoute().push(context);
+              const WalletMainRoute().push(context);
             },
           ),
           AppHeroStatItem(
             value: context.t.home.dashboard.points(count: points),
             label: 'Points',
             onTap: () {
-              const RewardsCatalogPageRoute().push(context);
+              const RewardsCatalogRoute().push(context);
             },
           ),
           AppHeroStatItem(
             value: 'Level 5',
             label: 'Rank',
             onTap: () {
-              const LeaderboardPageRoute().push(context);
+              const LeaderboardRoute().push(context);
             },
           ),
         ],

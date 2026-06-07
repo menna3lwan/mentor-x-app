@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:mentorx_student/core/core.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'bloc/purchase_confirm_page_bloc.dart';
+import 'bloc/purchase_confirm_bloc.dart';
 
 final class PurchaseConfirmPage extends StatelessWidget {
   const PurchaseConfirmPage({super.key});
@@ -14,13 +14,13 @@ final class PurchaseConfirmPage extends StatelessWidget {
     final t = context.t.wallet;
 
     final payment = context.select(
-      (PurchaseConfirmPageBloc bloc) => bloc.state.payment,
+      (PurchaseConfirmBloc bloc) => bloc.state.payment,
     );
     final loadingState = context.select(
-      (PurchaseConfirmPageBloc bloc) => bloc.state.loadingState,
+      (PurchaseConfirmBloc bloc) => bloc.state.loadingState,
     );
     final errorMessage = context.select(
-      (PurchaseConfirmPageBloc bloc) => bloc.state.errorMessage,
+      (PurchaseConfirmBloc bloc) => bloc.state.errorMessage,
     );
 
     return Scaffold(
@@ -68,12 +68,12 @@ final class PurchaseConfirmPage extends StatelessWidget {
               message: t.failedToLoadPayment,
               onRetry: () {
                 final paymentId = context
-                    .read<PurchaseConfirmPageBloc>()
+                    .read<PurchaseConfirmBloc>()
                     .state
                     .paymentId;
                 if (paymentId != null) {
-                  context.read<PurchaseConfirmPageBloc>().add(
-                    PurchaseConfirmPageLoadEvent(paymentId: paymentId),
+                  context.read<PurchaseConfirmBloc>().add(
+                    PurchaseConfirmLoadEvent(paymentId: paymentId),
                   );
                 }
               },
@@ -178,7 +178,7 @@ final class PurchaseConfirmPage extends StatelessWidget {
                               );
                             }
                           } else {
-                            PaymentSuccessPageRoute(
+                            PaymentSuccessRoute(
                               amount: payment.amount.toString(),
                             ).go(context);
                           }

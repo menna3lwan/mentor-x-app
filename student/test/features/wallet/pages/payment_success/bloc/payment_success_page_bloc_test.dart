@@ -2,7 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:mentorx_student/core/core.dart';
-import 'package:mentorx_student/features/wallet/pages/payment_success/bloc/payment_success_page_bloc.dart';
+import 'package:mentorx_student/features/wallet/pages/payment_success/bloc/payment_success_bloc.dart';
 
 class MockAnalyticsService implements AnalyticsService {
   @override
@@ -28,25 +28,25 @@ void main() {
   });
 
 
-  group('PaymentSuccessPageBloc', () {
+  group('PaymentSuccessBloc', () {
     test('initial state is correct', () {
-      final bloc = PaymentSuccessPageBloc(analyticsService: analyticsService);
-      expect(bloc.state, PaymentSuccessPageState.initial);
+      final bloc = PaymentSuccessBloc(analyticsService: analyticsService);
+      expect(bloc.state, PaymentSuccessState.initial);
       expect(bloc.state.loadingState, LoadingState.initial);
       bloc.close();
     });
 
-    blocTest<PaymentSuccessPageBloc, PaymentSuccessPageState>(
-      'emits [loading, loaded] when PaymentSuccessPageLoadEvent is added',
-      build: () => PaymentSuccessPageBloc(analyticsService: analyticsService),
-      act: (bloc) => bloc.add(const PaymentSuccessPageLoadEvent()),
+    blocTest<PaymentSuccessBloc, PaymentSuccessState>(
+      'emits [loading, loaded] when PaymentSuccessLoadEvent is added',
+      build: () => PaymentSuccessBloc(analyticsService: analyticsService),
+      act: (bloc) => bloc.add(const PaymentSuccessLoadEvent()),
       expect: () => [
-        isA<PaymentSuccessPageState>().having(
+        isA<PaymentSuccessState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loading,
         ),
-        isA<PaymentSuccessPageState>().having(
+        isA<PaymentSuccessState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loaded,

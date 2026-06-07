@@ -3,7 +3,7 @@ import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:mentorx_student/core/core.dart';
 
-final class WalkthroughPagePage extends StatelessWidget {
+final class WalkthroughPage extends StatelessWidget {
   final PageController pageController;
   final int currentPage;
   final ValueChanged<int> onPageChanged;
@@ -11,7 +11,7 @@ final class WalkthroughPagePage extends StatelessWidget {
   final VoidCallback onNext;
   final VoidCallback onSkip;
 
-  const WalkthroughPagePage({
+  const WalkthroughPage({
     super.key,
     required this.pageController,
     required this.currentPage,

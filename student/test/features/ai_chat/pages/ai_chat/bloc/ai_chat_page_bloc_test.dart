@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mock_ai_repository/mock_ai_repository.dart';
 
 import 'package:mentorx_student/core/core.dart';
-import 'package:mentorx_student/features/ai_chat/pages/ai_chat/bloc/ai_chat_page_bloc.dart';
+import 'package:mentorx_student/features/ai_chat/pages/ai_chat/bloc/ai_chat_bloc.dart';
 
 class _MockAnalyticsService implements AnalyticsService {
   @override
@@ -29,32 +29,32 @@ void main() {
     analyticsService = _MockAnalyticsService();
   });
 
-  group('AiChatPageBloc', () {
+  group('AiChatBloc', () {
     test('initial state is correct', () {
-      final bloc = AiChatPageBloc(
+      final bloc = AiChatBloc(
         aiRepository: aiRepository,
         analyticsService: analyticsService,
       );
-      expect(bloc.state, AiChatPageState.initial);
+      expect(bloc.state, AiChatState.initial);
       expect(bloc.state.loadingState, LoadingState.initial);
       bloc.close();
     });
 
-    blocTest<AiChatPageBloc, AiChatPageState>(
-      'emits [loading, loaded] when AiChatPageLoadEvent is added',
-      build: () => AiChatPageBloc(
+    blocTest<AiChatBloc, AiChatState>(
+      'emits [loading, loaded] when AiChatLoadEvent is added',
+      build: () => AiChatBloc(
         aiRepository: aiRepository,
         analyticsService: analyticsService,
       ),
-      act: (bloc) => bloc.add(const AiChatPageLoadEvent()),
+      act: (bloc) => bloc.add(const AiChatLoadEvent()),
       wait: const Duration(milliseconds: 100),
       expect: () => [
-        isA<AiChatPageState>().having(
+        isA<AiChatState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loading,
         ),
-        isA<AiChatPageState>().having(
+        isA<AiChatState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loaded,

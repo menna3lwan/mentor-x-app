@@ -4,14 +4,14 @@ import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:mentorx_student/core/core.dart';
 
-final class AssignmentsListPagePage extends StatelessWidget {
+final class AssignmentsListPage extends StatelessWidget {
   final bool isLoading;
   final List<AssignmentEntity> assignments;
   final String? errorMessage;
   final Future<void> Function() onRefresh;
   final ValueChanged<String> onAssignmentTap;
 
-  const AssignmentsListPagePage({
+  const AssignmentsListPage({
     super.key,
     required this.isLoading,
     required this.assignments,

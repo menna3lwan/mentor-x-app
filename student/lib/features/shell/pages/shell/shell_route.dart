@@ -11,21 +11,21 @@ final class WalletShellBranchData extends StatefulShellBranchData {}
 
 final class ProfileShellBranchData extends StatefulShellBranchData {}
 
-@TypedStatefulShellRoute<ShellPageRoute>(
+@TypedStatefulShellRoute<ShellRoute>(
   branches: [
     TypedStatefulShellBranch<HomeShellBranchData>(
       routes: [
-        TypedGoRoute<HomePageRoute>(
+        TypedGoRoute<HomeRoute>(
           path: '/',
           name: 'home',
           routes: [
-            TypedGoRoute<AnnouncementsPageRoute>(
+            TypedGoRoute<AnnouncementsRoute>(
               path: 'announcements',
             ),
-            TypedGoRoute<AnalyticsDashboardPageRoute>(
+            TypedGoRoute<AnalyticsDashboardRoute>(
               path: 'analytics',
               routes: [
-                TypedGoRoute<LeaderboardPageRoute>(path: 'leaderboard'),
+                TypedGoRoute<LeaderboardRoute>(path: 'leaderboard'),
               ],
             ),
           ],
@@ -34,7 +34,7 @@ final class ProfileShellBranchData extends StatefulShellBranchData {}
     ),
     TypedStatefulShellBranch<CoursesShellBranchData>(
       routes: [
-        TypedGoRoute<MyCoursesPageRoute>(
+        TypedGoRoute<MyCoursesRoute>(
           path: '/my-courses',
           name: 'myCourses',
         ),
@@ -42,17 +42,17 @@ final class ProfileShellBranchData extends StatefulShellBranchData {}
     ),
     TypedStatefulShellBranch<QuizzesShellBranchData>(
       routes: [
-        TypedGoRoute<QuizListPageRoute>(path: '/quiz-list', name: 'quizList'),
+        TypedGoRoute<QuizListRoute>(path: '/quiz-list', name: 'quizList'),
       ],
     ),
     TypedStatefulShellBranch<WalletShellBranchData>(
       routes: [
-        TypedGoRoute<WalletMainPageRoute>(path: '/wallet', name: 'walletMain'),
+        TypedGoRoute<WalletMainRoute>(path: '/wallet', name: 'walletMain'),
       ],
     ),
     TypedStatefulShellBranch<ProfileShellBranchData>(
       routes: [
-        TypedGoRoute<ProfileViewPageRoute>(
+        TypedGoRoute<ProfileViewRoute>(
           path: '/profile',
           name: 'profileView',
         ),
@@ -60,8 +60,8 @@ final class ProfileShellBranchData extends StatefulShellBranchData {}
     ),
   ],
 )
-final class ShellPageRoute extends StatefulShellRouteData {
-  const ShellPageRoute();
+final class ShellRoute extends StatefulShellRouteData {
+  const ShellRoute();
 
   @override
   Widget builder(
@@ -69,10 +69,10 @@ final class ShellPageRoute extends StatefulShellRouteData {
     GoRouterState state,
     StatefulNavigationShell navigationShell,
   ) {
-    return BlocProvider<ShellPageBloc>(
-      create: (context) => ShellPageBloc(
+    return BlocProvider<ShellBloc>(
+      create: (context) => ShellBloc(
         analyticsService: context.read<AnalyticsService>(),
-      )..add(const ShellPageLoadEvent()),
+      )..add(const ShellLoadEvent()),
       child: ShellPageWrapper(navigationShell: navigationShell),
     );
   }

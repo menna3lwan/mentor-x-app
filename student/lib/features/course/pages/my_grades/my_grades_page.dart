@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:mentorx_student/core/core.dart';
-import 'bloc/my_grades_page_bloc.dart';
+import 'bloc/my_grades_bloc.dart';
 
-final class MyGradesPagePage extends StatelessWidget {
-  final MyGradesPageState state;
+final class MyGradesPage extends StatelessWidget {
+  final MyGradesState state;
   final VoidCallback onRefresh;
   final ValueChanged<String?> onCourseFilterChanged;
   final ValueChanged<String> onQuizTap;
   final ValueChanged<String> onAssignmentTap;
 
-  const MyGradesPagePage({
+  const MyGradesPage({
     super.key,
     required this.state,
     required this.onRefresh,

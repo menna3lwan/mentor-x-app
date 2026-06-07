@@ -4,17 +4,17 @@ import 'wallet_quick_view_card_widget.dart';
 
 import 'package:mentorx_core/mentorx_core.dart';
 import 'package:mentorx_student/core/core.dart';
-import '../../bloc/home_page_bloc.dart';
+import '../../bloc/home_bloc.dart';
 
 final class WalletQuickViewCardWrapper extends StatelessWidget {
   const WalletQuickViewCardWrapper({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final walletSummary = context.select<HomePageBloc, WalletSummaryEntity?>(
+    final walletSummary = context.select<HomeBloc, WalletSummaryEntity?>(
       (bloc) => bloc.state.walletSection.data,
     );
-    final isLoading = context.select<HomePageBloc, bool>(
+    final isLoading = context.select<HomeBloc, bool>(
       (bloc) => bloc.state.isFirstLoading || bloc.state.walletSection.isLoading,
     );
 

@@ -1,8 +1,8 @@
 part of '../../../../core/routing/app_routes.dart';
 
-@TypedGoRoute<LoginPageRoute>(path: '/login', name: 'login')
-final class LoginPageRoute extends GoRouteData with $LoginPageRoute {
-  const LoginPageRoute();
+@TypedGoRoute<LoginRoute>(path: '/login', name: 'login')
+final class LoginRoute extends GoRouteData with $LoginRoute {
+  const LoginRoute();
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
@@ -11,7 +11,7 @@ final class LoginPageRoute extends GoRouteData with $LoginPageRoute {
         authRepository: context.read<StudentAuthenticationRepository>(),
         analyticsService: context.read<AnalyticsService>(),
       ),
-      child: const LoginWrapper(),
+      child: const LoginPageWrapper(),
     );
   }
 }

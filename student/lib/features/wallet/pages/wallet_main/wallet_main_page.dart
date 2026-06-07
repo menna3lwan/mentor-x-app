@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:mentorx_student/core/core.dart';
-import 'bloc/wallet_main_page_bloc.dart';
+import 'bloc/wallet_main_bloc.dart';
 
 final class WalletMainPage extends StatelessWidget {
   final VoidCallback onRefresh;
@@ -21,16 +21,16 @@ final class WalletMainPage extends StatelessWidget {
     final t = context.t.wallet;
 
     final balance = context.select(
-      (WalletMainPageBloc bloc) => bloc.state.summary?.walletBalance ?? 0.0,
+      (WalletMainBloc bloc) => bloc.state.summary?.walletBalance ?? 0.0,
     );
     final points = context.select(
-      (WalletMainPageBloc bloc) => bloc.state.summary?.points ?? 0,
+      (WalletMainBloc bloc) => bloc.state.summary?.points ?? 0,
     );
     final transactions = context.select(
-      (WalletMainPageBloc bloc) => bloc.state.transactions,
+      (WalletMainBloc bloc) => bloc.state.transactions,
     );
     final loadingState = context.select(
-      (WalletMainPageBloc bloc) => bloc.state.loadingState,
+      (WalletMainBloc bloc) => bloc.state.loadingState,
     );
     final isLoading = loadingState == LoadingState.loading;
 
@@ -117,7 +117,7 @@ final class WalletMainPage extends StatelessWidget {
                                 child: _ActionButton(
                                   icon: Icons.receipt_long_rounded,
                                   label: t.myOrders,
-                                  onTap: () => const WalletOrdersPageRoute()
+                                  onTap: () => const WalletOrdersRoute()
                                       .push(context),
                                   color: context.statusSuccessColor,
                                 ),

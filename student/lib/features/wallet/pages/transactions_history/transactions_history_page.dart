@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:mentorx_student/core/core.dart';
 import 'package:animate_do/animate_do.dart';
-import 'bloc/transactions_history_page_bloc.dart';
+import 'bloc/transactions_history_bloc.dart';
 
 final class TransactionsHistoryPage extends StatelessWidget {
   final ScrollController scrollController;
@@ -22,13 +22,13 @@ final class TransactionsHistoryPage extends StatelessWidget {
     final t = context.t.wallet;
 
     final transactions = context.select(
-      (TransactionsHistoryPageBloc bloc) => bloc.state.transactions,
+      (TransactionsHistoryBloc bloc) => bloc.state.transactions,
     );
     final hasMore = context.select(
-      (TransactionsHistoryPageBloc bloc) => bloc.state.hasMore,
+      (TransactionsHistoryBloc bloc) => bloc.state.hasMore,
     );
     final loadingState = context.select(
-      (TransactionsHistoryPageBloc bloc) => bloc.state.loadingState,
+      (TransactionsHistoryBloc bloc) => bloc.state.loadingState,
     );
     final isLoading = loadingState == LoadingState.loading;
     final isInitialLoading = isLoading && transactions.isEmpty;

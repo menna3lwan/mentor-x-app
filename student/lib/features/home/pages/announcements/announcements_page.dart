@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:mentorx_student/core/core.dart';
-import 'cubit/announcements_cubit.dart';
+import 'bloc/announcements_bloc.dart';
 import 'package:intl/intl.dart';
 
 class AnnouncementsPage extends StatelessWidget {
@@ -29,68 +29,64 @@ class _AnnouncementsBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final state = context.watch<AnnouncementsCubit>().state;
+    final state = context.watch<AnnouncementsBloc>().state;
 
-    if (state is AnnouncementsLoading) {
+    if (state.loadingState.isLoading || state.loadingState == LoadingState.initial) {
       return const Center(child: CircularProgressIndicator());
     }
 
-    if (state is AnnouncementsFailure) {
+    if (state.loadingState.isError) {
       return AppErrorView(
-        message: state.message,
-        onRetry: () => context.read<AnnouncementsCubit>().loadAnnouncements(),
+        message: state.errorMessage ?? '',
+        onRetry: () => context.read<AnnouncementsBloc>().add(const AnnouncementsLoadRequested()),
       );
     }
 
-    if (state is AnnouncementsLoaded) {
-      final announcements = state.announcements;
+    final announcements = state.announcements;
 
-      return RefreshIndicator(
-        displacement: MediaQuery.paddingOf(context).top + 80,
-        color: context.brandPrimaryColor,
-        onRefresh: () async {
-          await context.read<AnnouncementsCubit>().loadAnnouncements();
-        },
-        child: CustomScrollView(
-          physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-          slivers: [
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Gap(MediaQuery.paddingOf(context).top + 12),
-                    _buildHeader(context),
-                    const Gap(32),
+    return RefreshIndicator(
+      displacement: MediaQuery.paddingOf(context).top + 80,
+      color: context.brandPrimaryColor,
+      onRefresh: () async {
+        context.read<AnnouncementsBloc>().add(const AnnouncementsLoadRequested());
+      },
+      child: CustomScrollView(
+        physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+        slivers: [
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Gap(MediaQuery.paddingOf(context).top + 12),
+                  _buildHeader(context),
+                  const Gap(32),
 
-                    if (announcements.isEmpty)
-                      FadeInUp(
-                        duration: const Duration(milliseconds: 600),
-                        child: AppEmptyView(
-                          title: 'No Announcements',
-                          message: 'Stay tuned! School announcements will appear here.',
-                          icon: Icons.campaign_rounded,
-                          onAction: () => context.read<AnnouncementsCubit>().loadAnnouncements(),
-                          actionLabel: 'Refresh',
-                        ),
-                      )
-                    else
-                      ...announcements.asMap().entries.map(
-                        (entry) => _AnnouncementCard(announcement: entry.value, index: entry.key),
+                  if (announcements.isEmpty)
+                    FadeInUp(
+                      duration: const Duration(milliseconds: 600),
+                      child: AppEmptyView(
+                        title: 'No Announcements',
+                        message: 'Stay tuned! School announcements will appear here.',
+                        icon: Icons.campaign_rounded,
+                        onAction: () => context.read<AnnouncementsBloc>().add(const AnnouncementsLoadRequested()),
+                        actionLabel: 'Refresh',
                       ),
+                    )
+                  else
+                    ...announcements.asMap().entries.map(
+                      (entry) => _AnnouncementCard(announcement: entry.value, index: entry.key),
+                    ),
 
-                    const Gap(100),
-                  ],
-                ),
+                  const Gap(100),
+                ],
               ),
             ),
-          ],
-        ),
-      );
-    }
-
-    return const SizedBox.shrink();
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildHeader(BuildContext context) {
@@ -124,7 +120,7 @@ class _AnnouncementsBody extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
             ),
             child: IconButton(
-              onPressed: () => context.read<AnnouncementsCubit>().loadAnnouncements(),
+              onPressed: () => context.read<AnnouncementsBloc>().add(const AnnouncementsLoadRequested()),
               icon: const Icon(Icons.refresh_rounded),
             ),
           ),

@@ -5,9 +5,9 @@ import 'package:animate_do/animate_do.dart';
 
 import 'package:mentorx_student/core/core.dart';
 import '../../cubit/marketplace_cart_cubit.dart';
-import 'bloc/marketplace_cart_page_bloc.dart';
+import 'bloc/marketplace_cart_bloc.dart';
 
-final class MarketplaceCartPagePage extends StatelessWidget {
+final class MarketplaceCartPage extends StatelessWidget {
   final List<MarketplaceCartItem> cartItems;
   final double cartSubtotal;
   final double cartDiscountAmount;
@@ -20,7 +20,7 @@ final class MarketplaceCartPagePage extends StatelessWidget {
   final VoidCallback onRemoveCoupon;
   final Function(String, String, String) onPlaceOrder;
 
-  const MarketplaceCartPagePage({
+  const MarketplaceCartPage({
     super.key,
     required this.cartItems,
     required this.cartSubtotal,
@@ -142,7 +142,7 @@ final class MarketplaceCartPagePage extends StatelessWidget {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (_) => BlocProvider.value(
-        value: context.read<MarketplaceCartPageBloc>(),
+        value: context.read<MarketplaceCartBloc>(),
         child: Container(
           decoration: BoxDecoration(
             color: context.backgroundSecondaryColor,

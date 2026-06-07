@@ -4,13 +4,13 @@ import 'package:animate_do/animate_do.dart';
 import 'package:mentorx_student/core/core.dart';
 import '../../widgets/status_layout.dart';
 
-final class StatusPendingPagePage extends StatelessWidget {
+final class StatusPendingPage extends StatelessWidget {
   final String? studentCode;
   final bool isRefreshing;
   final VoidCallback onRefresh;
   final VoidCallback onLogout;
 
-  const StatusPendingPagePage({
+  const StatusPendingPage({
     super.key,
     required this.studentCode,
     required this.isRefreshing,

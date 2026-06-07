@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mock_marketplace_repository/mock_marketplace_repository.dart';
 
 import 'package:mentorx_student/core/core.dart';
-import 'package:mentorx_student/features/marketplace/pages/marketplace_detail/bloc/marketplace_detail_page_bloc.dart';
+import 'package:mentorx_student/features/marketplace/pages/marketplace_detail/bloc/marketplace_detail_bloc.dart';
 
 class MockAnalyticsService implements AnalyticsService {
   @override
@@ -32,20 +32,20 @@ void main() {
     );
   });
 
-  group('MarketplaceDetailPageBloc', () {
-    blocTest<MarketplaceDetailPageBloc, MarketplaceDetailPageState>(
+  group('MarketplaceDetailBloc', () {
+    blocTest<MarketplaceDetailBloc, MarketplaceDetailState>(
       'emits [loading, loaded] when load event is added',
-      build: () => MarketplaceDetailPageBloc(marketplaceRepository: marketplaceRepository,
+      build: () => MarketplaceDetailBloc(marketplaceRepository: marketplaceRepository,
         analyticsService: analyticsService,
       ),
-      act: (bloc) => bloc.add(const MarketplaceDetailPageLoadEvent('item-1')),
+      act: (bloc) => bloc.add(const MarketplaceDetailLoadEvent('item-1')),
       expect: () => [
-        isA<MarketplaceDetailPageState>().having(
+        isA<MarketplaceDetailState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loading,
         ),
-        isA<MarketplaceDetailPageState>().having(
+        isA<MarketplaceDetailState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loaded,
@@ -53,9 +53,9 @@ void main() {
       ],
     );
 
-    blocTest<MarketplaceDetailPageBloc, MarketplaceDetailPageState>(
+    blocTest<MarketplaceDetailBloc, MarketplaceDetailState>(
       'starts with initial loading state',
-      build: () => MarketplaceDetailPageBloc(marketplaceRepository: marketplaceRepository,
+      build: () => MarketplaceDetailBloc(marketplaceRepository: marketplaceRepository,
         analyticsService: analyticsService,
       ),
       verify: (bloc) {

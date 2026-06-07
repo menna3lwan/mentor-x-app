@@ -1,0 +1,141 @@
+part of 'course_detail_bloc.dart';
+
+enum DetailSectionStatus { initial, loading, loaded, failure }
+
+enum CourseDetailTab { description, sessions }
+
+enum EnrollActionStatus { initial, loading, success, failure }
+
+final class CourseDetailState extends Equatable {
+  final String courseId;
+  final DetailSectionStatus courseStatus;
+  final DetailSectionStatus sessionsStatus;
+  final CourseEntity? course;
+  final List<SessionEntity> sessions;
+  final Map<String, List<SessionItemEntity>> sessionItems;
+  final Map<String, List<WeekEntity>> sessionWeeks;
+  final EnrollmentEntity? enrollment;
+  final CourseDetailTab selectedTab;
+  final EnrollActionStatus enrollStatus;
+  final String? errorMessage;
+  final String? enrollErrorMessage;
+
+  // Coupon Flow State
+  final String? appliedCouponCode;
+  final double? discountAmount;
+  final double? finalPrice;
+  final String? couponErrorMessage;
+  final bool isCouponLoading;
+  final String? couponDiscountSummary;
+  final double? walletBalance;
+  final List<CouponEntity> validCoupons;
+
+  const CourseDetailState({
+    required this.courseId,
+    this.courseStatus = DetailSectionStatus.initial,
+    this.sessionsStatus = DetailSectionStatus.initial,
+    this.course,
+    this.sessions = const [],
+    this.sessionItems = const {},
+    this.sessionWeeks = const {},
+    this.enrollment,
+    this.selectedTab = CourseDetailTab.description,
+    this.enrollStatus = EnrollActionStatus.initial,
+    this.errorMessage,
+    this.enrollErrorMessage,
+    this.appliedCouponCode,
+    this.discountAmount,
+    this.finalPrice,
+    this.couponErrorMessage,
+    this.isCouponLoading = false,
+    this.couponDiscountSummary,
+    this.walletBalance,
+    this.validCoupons = const [],
+  });
+
+  bool get isCourseLoading =>
+      courseStatus == DetailSectionStatus.loading ||
+      courseStatus == DetailSectionStatus.initial;
+  bool get isCourseLoaded => courseStatus == DetailSectionStatus.loaded;
+  bool get isCourseFailure => courseStatus == DetailSectionStatus.failure;
+  bool get isSessionsLoading =>
+      sessionsStatus == DetailSectionStatus.loading ||
+      sessionsStatus == DetailSectionStatus.initial;
+
+  bool get isEnrolled => enrollment != null;
+  bool get isEnrolling => enrollStatus == EnrollActionStatus.loading;
+  bool get isEnrollSuccess => enrollStatus == EnrollActionStatus.success;
+  bool get isEnrollFailure => enrollStatus == EnrollActionStatus.failure;
+
+  CourseDetailState copyWith({
+    String? courseId,
+    DetailSectionStatus? courseStatus,
+    DetailSectionStatus? sessionsStatus,
+    CourseEntity? course,
+    List<SessionEntity>? sessions,
+    Map<String, List<SessionItemEntity>>? sessionItems,
+    Map<String, List<WeekEntity>>? sessionWeeks,
+    EnrollmentEntity? enrollment,
+    bool clearEnrollment = false,
+    CourseDetailTab? selectedTab,
+    EnrollActionStatus? enrollStatus,
+    String? errorMessage,
+    String? enrollErrorMessage,
+    String? appliedCouponCode,
+    double? discountAmount,
+    double? finalPrice,
+    String? couponErrorMessage,
+    bool? isCouponLoading,
+    String? couponDiscountSummary,
+    bool clearCoupon = false,
+    double? walletBalance,
+    List<CouponEntity>? validCoupons,
+  }) {
+    return CourseDetailState(
+      courseId: courseId ?? this.courseId,
+      courseStatus: courseStatus ?? this.courseStatus,
+      sessionsStatus: sessionsStatus ?? this.sessionsStatus,
+      course: course ?? this.course,
+      sessions: sessions ?? this.sessions,
+      sessionItems: sessionItems ?? this.sessionItems,
+      sessionWeeks: sessionWeeks ?? this.sessionWeeks,
+      enrollment: clearEnrollment ? null : (enrollment ?? this.enrollment),
+      selectedTab: selectedTab ?? this.selectedTab,
+      enrollStatus: enrollStatus ?? this.enrollStatus,
+      errorMessage: errorMessage,
+      enrollErrorMessage: enrollErrorMessage,
+      appliedCouponCode: appliedCouponCode ?? (clearCoupon ? null : this.appliedCouponCode),
+      discountAmount: discountAmount ?? (clearCoupon ? null : this.discountAmount),
+      finalPrice: finalPrice ?? (clearCoupon ? null : this.finalPrice),
+      couponErrorMessage: couponErrorMessage ?? (clearCoupon ? null : this.couponErrorMessage),
+      isCouponLoading: isCouponLoading ?? this.isCouponLoading,
+      couponDiscountSummary: couponDiscountSummary ?? (clearCoupon ? null : this.couponDiscountSummary),
+      walletBalance: walletBalance ?? this.walletBalance,
+      validCoupons: validCoupons ?? this.validCoupons,
+    );
+  }
+
+  @override
+  List<Object?> get props => [
+    courseId,
+    courseStatus,
+    sessionsStatus,
+    course,
+    sessions,
+    sessionItems,
+    sessionWeeks,
+    enrollment,
+    selectedTab,
+    enrollStatus,
+    errorMessage,
+    enrollErrorMessage,
+    appliedCouponCode,
+    discountAmount,
+    finalPrice,
+    couponErrorMessage,
+    isCouponLoading,
+    couponDiscountSummary,
+    walletBalance,
+    validCoupons,
+  ];
+}

@@ -1,9 +1,9 @@
 part of '../../../../core/routing/app_routes.dart';
 
-@TypedGoRoute<RewardsHistoryPageRoute>(path: '/rewards-history')
-class RewardsHistoryPageRoute extends GoRouteData
-    with $RewardsHistoryPageRoute {
-  const RewardsHistoryPageRoute();
+@TypedGoRoute<RewardsHistoryRoute>(path: '/rewards-history')
+class RewardsHistoryRoute extends GoRouteData
+    with $RewardsHistoryRoute {
+  const RewardsHistoryRoute();
 
   @override
   Widget build(BuildContext context, GoRouterState state) {

@@ -2,28 +2,28 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:mentorx_student/core/core.dart';
-import 'package:mentorx_student/features/settings/pages/about/bloc/about_page_bloc.dart';
+import 'package:mentorx_student/features/settings/pages/about/bloc/about_bloc.dart';
 
 void main() {
-  group('AboutPageBloc', () {
+  group('AboutBloc', () {
     test('initial state is correct', () {
-      final bloc = AboutPageBloc();
-      expect(bloc.state, AboutPageState.initial);
+      final bloc = AboutBloc();
+      expect(bloc.state, AboutState.initial);
       expect(bloc.state.loadingState, LoadingState.initial);
       bloc.close();
     });
 
-    blocTest<AboutPageBloc, AboutPageState>(
-      'emits [loading, loaded] when AboutPageLoadEvent is added',
-      build: () => AboutPageBloc(),
-      act: (bloc) => bloc.add(const AboutPageLoadEvent()),
+    blocTest<AboutBloc, AboutState>(
+      'emits [loading, loaded] when AboutLoadEvent is added',
+      build: () => AboutBloc(),
+      act: (bloc) => bloc.add(const AboutLoadEvent()),
       expect: () => [
-        isA<AboutPageState>().having(
+        isA<AboutState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loading,
         ),
-        isA<AboutPageState>().having(
+        isA<AboutState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loaded,

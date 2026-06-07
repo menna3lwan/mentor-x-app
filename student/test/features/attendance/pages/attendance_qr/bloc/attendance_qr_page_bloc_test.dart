@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mock_attendance_repository/mock_attendance_repository.dart';
 
 import 'package:mentorx_student/core/core.dart';
-import 'package:mentorx_student/features/attendance/pages/attendance_qr/bloc/attendance_qr_page_bloc.dart';
+import 'package:mentorx_student/features/attendance/pages/attendance_qr/bloc/attendance_qr_bloc.dart';
 
 class MockAnalyticsService implements AnalyticsService {
   @override
@@ -30,20 +30,20 @@ void main() {
     attendanceRepository = const MockAttendanceRepository(delay: Duration.zero);
   });
 
-  group('AttendanceQrPageBloc', () {
-    blocTest<AttendanceQrPageBloc, AttendanceQrPageState>(
+  group('AttendanceQrBloc', () {
+    blocTest<AttendanceQrBloc, AttendanceQrState>(
       'emits [loading, loaded] when load event is added',
-      build: () => AttendanceQrPageBloc(attendanceRepository: attendanceRepository,
+      build: () => AttendanceQrBloc(attendanceRepository: attendanceRepository,
         analyticsService: analyticsService,
       ),
-      act: (bloc) => bloc.add(const AttendanceQrPageLoadEvent()),
+      act: (bloc) => bloc.add(const AttendanceQrLoadEvent()),
       expect: () => [
-        isA<AttendanceQrPageState>().having(
+        isA<AttendanceQrState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loading,
         ),
-        isA<AttendanceQrPageState>().having(
+        isA<AttendanceQrState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loaded,
@@ -51,13 +51,13 @@ void main() {
       ],
     );
 
-    blocTest<AttendanceQrPageBloc, AttendanceQrPageState>(
+    blocTest<AttendanceQrBloc, AttendanceQrState>(
       'initial state has LoadingState.initial',
-      build: () => AttendanceQrPageBloc(attendanceRepository: attendanceRepository,
+      build: () => AttendanceQrBloc(attendanceRepository: attendanceRepository,
         analyticsService: analyticsService,
       ),
       verify: (bloc) {
-        expect(bloc.state, AttendanceQrPageState.initial);
+        expect(bloc.state, AttendanceQrState.initial);
         expect(bloc.state.loadingState, LoadingState.initial);
       },
     );

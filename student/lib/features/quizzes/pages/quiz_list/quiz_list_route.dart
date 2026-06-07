@@ -1,15 +1,15 @@
 part of '../../../../core/routing/app_routes.dart';
 
-final class QuizListPageRoute extends GoRouteData with $QuizListPageRoute {
-  const QuizListPageRoute();
+final class QuizListRoute extends GoRouteData with $QuizListRoute {
+  const QuizListRoute();
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return BlocProvider<QuizListPageBloc>(
-      create: (context) => QuizListPageBloc(
+    return BlocProvider<QuizListBloc>(
+      create: (context) => QuizListBloc(
         quizRepository: context.read<QuizRepository>(),
         analyticsService: context.read<AnalyticsService>(),
-      )..add(const QuizListPageLoadEvent()),
+      )..add(const QuizListLoadEvent()),
       child: const QuizListPageWrapper(),
     );
   }

@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:mentorx_student/core/core.dart';
-import 'bloc/assignment_detail_page_bloc.dart';
+import 'bloc/assignment_detail_bloc.dart';
 
 final class AssignmentDetailPage extends StatelessWidget {
   const AssignmentDetailPage({super.key});
@@ -17,18 +17,18 @@ final class AssignmentDetailPage extends StatelessWidget {
     return Builder(
       builder: (context) {
         final loadingState = context
-            .select<AssignmentDetailPageBloc, LoadingState>(
+            .select<AssignmentDetailBloc, LoadingState>(
               (bloc) => bloc.state.loadingState,
             );
-        final errorMessage = context.select<AssignmentDetailPageBloc, String?>(
+        final errorMessage = context.select<AssignmentDetailBloc, String?>(
           (bloc) => bloc.state.errorMessage,
         );
         final assignment = context
-            .select<AssignmentDetailPageBloc, AssignmentEntity?>(
+            .select<AssignmentDetailBloc, AssignmentEntity?>(
               (bloc) => bloc.state.assignment,
             );
         final submission = context
-            .select<AssignmentDetailPageBloc, AssignmentSubmissionEntity?>(
+            .select<AssignmentDetailBloc, AssignmentSubmissionEntity?>(
               (bloc) => bloc.state.submission,
             );
 
@@ -82,13 +82,13 @@ final class AssignmentDetailPage extends StatelessWidget {
               message: errorMessage,
               onRetry: () {
                 final assignmentId = context
-                    .read<AssignmentDetailPageBloc>()
+                    .read<AssignmentDetailBloc>()
                     .state
                     .assignment
                     ?.id;
                 if (assignmentId != null) {
-                  context.read<AssignmentDetailPageBloc>().add(
-                    AssignmentDetailPageLoadEvent(assignmentId: assignmentId),
+                  context.read<AssignmentDetailBloc>().add(
+                    AssignmentDetailLoadEvent(assignmentId: assignmentId),
                   );
                 }
               },
@@ -121,8 +121,8 @@ final class AssignmentDetailPage extends StatelessWidget {
               Expanded(
                 child: RefreshIndicator(
                   onRefresh: () async {
-                    context.read<AssignmentDetailPageBloc>().add(
-                      AssignmentDetailPageLoadEvent(
+                    context.read<AssignmentDetailBloc>().add(
+                      AssignmentDetailLoadEvent(
                         assignmentId: assignment.id,
                       ),
                     );

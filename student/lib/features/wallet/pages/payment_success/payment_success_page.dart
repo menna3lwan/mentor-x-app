@@ -9,10 +9,10 @@ final class PaymentSuccessPage extends StatefulWidget {
   final String? amount;
   const PaymentSuccessPage({super.key, this.amount});
   @override
-  State<PaymentSuccessPage> createState() => _PaymentSuccessPageState();
+  State<PaymentSuccessPage> createState() => _PaymentSuccessState();
 }
 
-final class _PaymentSuccessPageState extends State<PaymentSuccessPage> {
+final class _PaymentSuccessState extends State<PaymentSuccessPage> {
   double _addedAmount = 200.0;
   bool _balanceUpdated = false;
 

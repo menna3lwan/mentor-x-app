@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:mentorx_student/core/core.dart';
-import 'bloc/quiz_list_page_bloc.dart';
+import 'bloc/quiz_list_bloc.dart';
 
 final class QuizListPage extends StatelessWidget {
   const QuizListPage({super.key});
@@ -22,11 +22,11 @@ final class QuizListPage extends StatelessWidget {
             child: Builder(
               builder: (context) {
                 final loadingState = context
-                    .select<QuizListPageBloc, LoadingState>(
+                    .select<QuizListBloc, LoadingState>(
                       (bloc) => bloc.state.loadingState,
                     );
                 final quizzes = context
-                    .select<QuizListPageBloc, List<QuizEntity>>(
+                    .select<QuizListBloc, List<QuizEntity>>(
                       (bloc) => bloc.state.quizzes,
                     );
 
@@ -63,7 +63,7 @@ final class QuizListPage extends StatelessWidget {
                       child: _QuizItemCard(
                         quiz: quiz,
                         onTap: () {
-                          QuizIntroPageRoute(
+                          QuizIntroRoute(
                             quizId: quiz.id,
                           ).push(context);
                         },

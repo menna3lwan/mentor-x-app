@@ -1,20 +1,20 @@
 part of '../../../../core/routing/app_routes.dart';
 
-@TypedGoRoute<PaymentSuccessPageRoute>(
+@TypedGoRoute<PaymentSuccessRoute>(
   path: '/payment-success',
   name: 'paymentSuccess',
 )
-final class PaymentSuccessPageRoute extends GoRouteData
-    with $PaymentSuccessPageRoute {
+final class PaymentSuccessRoute extends GoRouteData
+    with $PaymentSuccessRoute {
   final String? amount;
-  const PaymentSuccessPageRoute({this.amount});
+  const PaymentSuccessRoute({this.amount});
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return BlocProvider<PaymentSuccessPageBloc>(
-      create: (context) => PaymentSuccessPageBloc(
+    return BlocProvider<PaymentSuccessBloc>(
+      create: (context) => PaymentSuccessBloc(
         analyticsService: context.read<AnalyticsService>(),
-      )..add(const PaymentSuccessPageLoadEvent()),
+      )..add(const PaymentSuccessLoadEvent()),
       child: PaymentSuccessPageWrapper(amount: amount),
     );
   }

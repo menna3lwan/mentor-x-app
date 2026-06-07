@@ -1,21 +1,21 @@
 part of '../../../../core/routing/app_routes.dart';
 
-@TypedGoRoute<QuizResultPageRoute>(
+@TypedGoRoute<QuizResultRoute>(
   path: '/quiz-result/:attemptId',
   name: 'quizResult',
 )
-final class QuizResultPageRoute extends GoRouteData with $QuizResultPageRoute {
+final class QuizResultRoute extends GoRouteData with $QuizResultRoute {
   final String attemptId;
-  const QuizResultPageRoute({required this.attemptId});
+  const QuizResultRoute({required this.attemptId});
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return BlocProvider<QuizResultPageBloc>(
-      create: (context) => QuizResultPageBloc(
+    return BlocProvider<QuizResultBloc>(
+      create: (context) => QuizResultBloc(
         quizRepository: context.read<QuizRepository>(),
         leaderboardRepository: context.read<LeaderboardRepository>(),
         analyticsService: context.read<AnalyticsService>(),
-      )..add(QuizResultPageLoadEvent(attemptId: attemptId)),
+      )..add(QuizResultLoadEvent(attemptId: attemptId)),
       child: const QuizResultPageWrapper(),
     );
   }

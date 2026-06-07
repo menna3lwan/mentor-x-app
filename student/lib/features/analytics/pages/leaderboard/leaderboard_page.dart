@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:mentorx_student/core/core.dart';
-import 'bloc/leaderboard_page_bloc.dart';
+import 'bloc/leaderboard_bloc.dart';
 
-final class LeaderboardPagePage extends StatelessWidget {
-  final LeaderboardPageState state;
+final class LeaderboardPage extends StatelessWidget {
+  final LeaderboardState state;
   final ValueChanged<String?> onCourseChanged;
   final VoidCallback onRefresh;
 
-  const LeaderboardPagePage({
+  const LeaderboardPage({
     super.key,
     required this.state,
     required this.onCourseChanged,

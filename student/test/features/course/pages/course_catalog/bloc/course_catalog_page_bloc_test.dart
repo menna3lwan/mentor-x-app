@@ -3,7 +3,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mock_course_repository/mock_course_repository.dart';
 
-import 'package:mentorx_student/features/course/pages/course_catalog/bloc/course_catalog_page_bloc.dart';
+import 'package:mentorx_student/features/course/pages/course_catalog/bloc/course_catalog_bloc.dart';
 import 'package:mock_student_registration_repository/mock_student_registration_repository.dart';
 
 class MockAnalyticsService implements AnalyticsService {
@@ -35,14 +35,14 @@ void main() {
     );
   });
 
-  group('CourseCatalogPageBloc', () {
-    blocTest<CourseCatalogPageBloc, CourseCatalogPageState>(
+  group('CourseCatalogBloc', () {
+    blocTest<CourseCatalogBloc, CourseCatalogState>(
       'loads categories and courses when initialized',
-      build: () => CourseCatalogPageBloc(courseRepository: courseRepository,
+      build: () => CourseCatalogBloc(courseRepository: courseRepository,
         registrationRepository: registrationRepository,
         analyticsService: analyticsService,
       ),
-      act: (bloc) => bloc.add(const CourseCatalogPageInitialized()),
+      act: (bloc) => bloc.add(const CourseCatalogInitialized()),
       wait: const Duration(milliseconds: 50),
       verify: (bloc) {
         expect(bloc.state.categoriesStatus, CatalogSectionStatus.loaded);
@@ -52,21 +52,21 @@ void main() {
       },
     );
 
-    blocTest<CourseCatalogPageBloc, CourseCatalogPageState>(
+    blocTest<CourseCatalogBloc, CourseCatalogState>(
       'changes sort option and reloads courses',
-      build: () => CourseCatalogPageBloc(courseRepository: courseRepository,
+      build: () => CourseCatalogBloc(courseRepository: courseRepository,
         registrationRepository: registrationRepository,
         analyticsService: analyticsService,
       ),
-      seed: () => const CourseCatalogPageState(
+      seed: () => const CourseCatalogState(
         coursesStatus: CatalogSectionStatus.loaded,
       ),
       act: (bloc) => bloc.add(
-        const CourseCatalogPageSortChanged(CatalogSortOption.priceAsc),
+        const CourseCatalogSortChanged(CatalogSortOption.priceAsc),
       ),
       expect: () => [
         // sortOption updated
-        isA<CourseCatalogPageState>()
+        isA<CourseCatalogState>()
             .having((s) => s.sortOption, 'sort', CatalogSortOption.priceAsc)
             .having(
               (s) => s.coursesStatus,
@@ -74,7 +74,7 @@ void main() {
               CatalogSectionStatus.loaded,
             ),
         // courses loading
-        isA<CourseCatalogPageState>()
+        isA<CourseCatalogState>()
             .having((s) => s.sortOption, 'sort', CatalogSortOption.priceAsc)
             .having(
               (s) => s.coursesStatus,
@@ -82,7 +82,7 @@ void main() {
               CatalogSectionStatus.loading,
             ),
         // courses loaded
-        isA<CourseCatalogPageState>()
+        isA<CourseCatalogState>()
             .having((s) => s.sortOption, 'sort', CatalogSortOption.priceAsc)
             .having(
               (s) => s.coursesStatus,
@@ -93,32 +93,32 @@ void main() {
       ],
     );
 
-    blocTest<CourseCatalogPageBloc, CourseCatalogPageState>(
+    blocTest<CourseCatalogBloc, CourseCatalogState>(
       'search updates query and reloads',
-      build: () => CourseCatalogPageBloc(courseRepository: courseRepository,
+      build: () => CourseCatalogBloc(courseRepository: courseRepository,
         registrationRepository: registrationRepository,
         analyticsService: analyticsService,
       ),
-      seed: () => const CourseCatalogPageState(
+      seed: () => const CourseCatalogState(
         coursesStatus: CatalogSectionStatus.loaded,
       ),
       act: (bloc) =>
-          bloc.add(const CourseCatalogPageSearchChanged('Chemistry')),
+          bloc.add(const CourseCatalogSearchChanged('Chemistry')),
       expect: () => [
         // searchQuery updated
-        isA<CourseCatalogPageState>().having(
+        isA<CourseCatalogState>().having(
           (s) => s.searchQuery,
           'query',
           'Chemistry',
         ),
         // courses loading
-        isA<CourseCatalogPageState>().having(
+        isA<CourseCatalogState>().having(
           (s) => s.coursesStatus,
           'status',
           CatalogSectionStatus.loading,
         ),
         // courses loaded filtered
-        isA<CourseCatalogPageState>()
+        isA<CourseCatalogState>()
             .having(
               (s) => s.coursesStatus,
               'status',
@@ -134,20 +134,20 @@ void main() {
       ],
     );
 
-    blocTest<CourseCatalogPageBloc, CourseCatalogPageState>(
+    blocTest<CourseCatalogBloc, CourseCatalogState>(
       'category selection filters courses',
-      build: () => CourseCatalogPageBloc(courseRepository: courseRepository,
+      build: () => CourseCatalogBloc(courseRepository: courseRepository,
         registrationRepository: registrationRepository,
         analyticsService: analyticsService,
       ),
-      seed: () => const CourseCatalogPageState(
+      seed: () => const CourseCatalogState(
         coursesStatus: CatalogSectionStatus.loaded,
       ),
       act: (bloc) =>
-          bloc.add(const CourseCatalogPageCategoryChanged('cat_math')),
+          bloc.add(const CourseCatalogCategoryChanged('cat_math')),
       expect: () => [
         // categoryId updated
-        isA<CourseCatalogPageState>()
+        isA<CourseCatalogState>()
             .having((s) => s.selectedCategoryId, 'cat', 'cat_math')
             .having(
               (s) => s.coursesStatus,
@@ -155,7 +155,7 @@ void main() {
               CatalogSectionStatus.loaded,
             ),
         // courses loading
-        isA<CourseCatalogPageState>()
+        isA<CourseCatalogState>()
             .having((s) => s.selectedCategoryId, 'cat', 'cat_math')
             .having(
               (s) => s.coursesStatus,
@@ -163,7 +163,7 @@ void main() {
               CatalogSectionStatus.loading,
             ),
         // courses loaded
-        isA<CourseCatalogPageState>()
+        isA<CourseCatalogState>()
             .having((s) => s.selectedCategoryId, 'cat', 'cat_math')
             .having(
               (s) => s.coursesStatus,
@@ -174,25 +174,25 @@ void main() {
       ],
     );
 
-    blocTest<CourseCatalogPageBloc, CourseCatalogPageState>(
+    blocTest<CourseCatalogBloc, CourseCatalogState>(
       'refresh reloads courses',
-      build: () => CourseCatalogPageBloc(courseRepository: courseRepository,
+      build: () => CourseCatalogBloc(courseRepository: courseRepository,
         registrationRepository: registrationRepository,
         analyticsService: analyticsService,
       ),
-      seed: () => const CourseCatalogPageState(
+      seed: () => const CourseCatalogState(
         coursesStatus: CatalogSectionStatus.loaded,
       ),
-      act: (bloc) => bloc.add(const CourseCatalogPageRefreshed()),
+      act: (bloc) => bloc.add(const CourseCatalogRefreshed()),
       expect: () => [
         // courses loading
-        isA<CourseCatalogPageState>().having(
+        isA<CourseCatalogState>().having(
           (s) => s.coursesStatus,
           'status',
           CatalogSectionStatus.loading,
         ),
         // courses loaded
-        isA<CourseCatalogPageState>()
+        isA<CourseCatalogState>()
             .having(
               (s) => s.coursesStatus,
               'status',
@@ -203,7 +203,7 @@ void main() {
     );
 
     test('initial state has default values', () {
-      final bloc = CourseCatalogPageBloc(courseRepository: courseRepository,
+      final bloc = CourseCatalogBloc(courseRepository: courseRepository,
         registrationRepository: registrationRepository,
         analyticsService: analyticsService,
       );
@@ -218,17 +218,17 @@ void main() {
       bloc.close();
     });
 
-    blocTest<CourseCatalogPageBloc, CourseCatalogPageState>(
+    blocTest<CourseCatalogBloc, CourseCatalogState>(
       'clearing category resets to null',
-      build: () => CourseCatalogPageBloc(courseRepository: courseRepository,
+      build: () => CourseCatalogBloc(courseRepository: courseRepository,
         registrationRepository: registrationRepository,
         analyticsService: analyticsService,
       ),
-      seed: () => const CourseCatalogPageState(
+      seed: () => const CourseCatalogState(
         coursesStatus: CatalogSectionStatus.loaded,
         selectedCategoryId: 'cat_math',
       ),
-      act: (bloc) => bloc.add(const CourseCatalogPageCategoryChanged(null)),
+      act: (bloc) => bloc.add(const CourseCatalogCategoryChanged(null)),
       wait: const Duration(milliseconds: 50),
       verify: (bloc) {
         expect(bloc.state.selectedCategoryId, isNull);
@@ -237,17 +237,17 @@ void main() {
       },
     );
 
-    blocTest<CourseCatalogPageBloc, CourseCatalogPageState>(
+    blocTest<CourseCatalogBloc, CourseCatalogState>(
       'search with empty string loads all courses',
-      build: () => CourseCatalogPageBloc(courseRepository: courseRepository,
+      build: () => CourseCatalogBloc(courseRepository: courseRepository,
         registrationRepository: registrationRepository,
         analyticsService: analyticsService,
       ),
-      seed: () => const CourseCatalogPageState(
+      seed: () => const CourseCatalogState(
         coursesStatus: CatalogSectionStatus.loaded,
         searchQuery: 'Chemistry',
       ),
-      act: (bloc) => bloc.add(const CourseCatalogPageSearchChanged('')),
+      act: (bloc) => bloc.add(const CourseCatalogSearchChanged('')),
       wait: const Duration(milliseconds: 50),
       verify: (bloc) {
         expect(bloc.state.searchQuery, '');

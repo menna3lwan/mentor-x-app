@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
-import 'bloc/rewards_history_page_bloc.dart';
+import 'bloc/rewards_history_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:mentorx_student/core/core.dart';
 
@@ -22,7 +22,7 @@ final class RewardsHistoryPage extends StatelessWidget {
             child: Builder(
               builder: (context) {
                 final isLoading = context.select(
-                  (RewardsHistoryPageBloc bloc) =>
+                  (RewardsHistoryBloc bloc) =>
                       bloc.state.historySection.isLoading,
                 );
 
@@ -39,7 +39,7 @@ final class RewardsHistoryPage extends StatelessWidget {
                 }
 
                 final transactions = context.select(
-                  (RewardsHistoryPageBloc bloc) =>
+                  (RewardsHistoryBloc bloc) =>
                       bloc.state.historySection.data ?? [],
                 );
 

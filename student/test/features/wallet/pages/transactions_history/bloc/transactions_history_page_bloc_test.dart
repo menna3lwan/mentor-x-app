@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mock_wallet_repository/mock_wallet_repository.dart';
 
 import 'package:mentorx_student/core/core.dart';
-import 'package:mentorx_student/features/wallet/pages/transactions_history/bloc/transactions_history_page_bloc.dart';
+import 'package:mentorx_student/features/wallet/pages/transactions_history/bloc/transactions_history_bloc.dart';
 
 class _MockAnalyticsService implements AnalyticsService {
   @override
@@ -29,31 +29,31 @@ void main() {
     analyticsService = _MockAnalyticsService();
   });
 
-  group('TransactionsHistoryPageBloc', () {
+  group('TransactionsHistoryBloc', () {
     test('initial state is correct', () {
-      final bloc = TransactionsHistoryPageBloc(
+      final bloc = TransactionsHistoryBloc(
         walletRepository: walletRepository,
         analyticsService: analyticsService,
       );
-      expect(bloc.state, TransactionsHistoryPageState.initial);
+      expect(bloc.state, TransactionsHistoryState.initial);
       expect(bloc.state.loadingState, LoadingState.initial);
       bloc.close();
     });
 
-    blocTest<TransactionsHistoryPageBloc, TransactionsHistoryPageState>(
-      'emits [loading, loaded] when TransactionsHistoryPageLoadEvent is added',
-      build: () => TransactionsHistoryPageBloc(
+    blocTest<TransactionsHistoryBloc, TransactionsHistoryState>(
+      'emits [loading, loaded] when TransactionsHistoryLoadEvent is added',
+      build: () => TransactionsHistoryBloc(
         walletRepository: walletRepository,
         analyticsService: analyticsService,
       ),
-      act: (bloc) => bloc.add(const TransactionsHistoryPageLoadEvent()),
+      act: (bloc) => bloc.add(const TransactionsHistoryLoadEvent()),
       expect: () => [
-        isA<TransactionsHistoryPageState>().having(
+        isA<TransactionsHistoryState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loading,
         ),
-        isA<TransactionsHistoryPageState>().having(
+        isA<TransactionsHistoryState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loaded,

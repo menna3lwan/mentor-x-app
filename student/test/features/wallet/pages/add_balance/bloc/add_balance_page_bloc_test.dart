@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mock_wallet_repository/mock_wallet_repository.dart';
 
 import 'package:mentorx_student/core/core.dart';
-import 'package:mentorx_student/features/wallet/pages/add_balance/bloc/add_balance_page_bloc.dart';
+import 'package:mentorx_student/features/wallet/pages/add_balance/bloc/add_balance_bloc.dart';
 
 class MockAnalyticsService implements AnalyticsService {
   @override
@@ -30,25 +30,25 @@ void main() {
     walletRepository = const MockWalletRepository(delay: Duration.zero);
   });
 
-  group('AddBalancePageBloc', () {
+  group('AddBalanceBloc', () {
     test('initial state is correct', () {
-      final bloc = AddBalancePageBloc(walletRepository: walletRepository, analyticsService: analyticsService);
-      expect(bloc.state, AddBalancePageState.initial);
+      final bloc = AddBalanceBloc(walletRepository: walletRepository, analyticsService: analyticsService);
+      expect(bloc.state, AddBalanceState.initial);
       expect(bloc.state.loadingState, LoadingState.initial);
       bloc.close();
     });
 
-    blocTest<AddBalancePageBloc, AddBalancePageState>(
-      'emits [loading, loaded] when AddBalancePageLoadEvent is added',
-      build: () => AddBalancePageBloc(walletRepository: walletRepository, analyticsService: analyticsService),
-      act: (bloc) => bloc.add(const AddBalancePageLoadEvent()),
+    blocTest<AddBalanceBloc, AddBalanceState>(
+      'emits [loading, loaded] when AddBalanceLoadEvent is added',
+      build: () => AddBalanceBloc(walletRepository: walletRepository, analyticsService: analyticsService),
+      act: (bloc) => bloc.add(const AddBalanceLoadEvent()),
       expect: () => [
-        isA<AddBalancePageState>().having(
+        isA<AddBalanceState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loading,
         ),
-        isA<AddBalancePageState>().having(
+        isA<AddBalanceState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loaded,

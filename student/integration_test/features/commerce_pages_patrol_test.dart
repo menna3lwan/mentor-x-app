@@ -6,26 +6,26 @@ import '../helpers/student_patrol_harness.dart';
 
 void main() {
   final routes = <({String name, GoRouteData route})>[
-    (name: 'products_grid', route: const MarketplaceGridPageRoute()),
+    (name: 'products_grid', route: const MarketplaceGridRoute()),
     (
       name: 'product_detail',
-      route: const MarketplaceDetailPageRoute(itemId: '1'),
+      route: const MarketplaceDetailRoute(itemId: '1'),
     ),
-    (name: 'shopping_cart', route: const MarketplaceCartPageRoute()),
-    (name: 'order_history', route: const MarketplaceOrdersPageRoute()),
-    (name: 'wallet_add_balance', route: const AddBalancePageRoute()),
-    (name: 'wallet_redeem_code', route: const RedeemCodePageRoute()),
+    (name: 'shopping_cart', route: const MarketplaceCartRoute()),
+    (name: 'order_history', route: const MarketplaceOrdersRoute()),
+    (name: 'wallet_add_balance', route: const AddBalanceRoute()),
+    (name: 'wallet_redeem_code', route: const RedeemCodeRoute()),
     (
       name: 'wallet_purchase_confirm',
-      route: const PurchaseConfirmPageRoute(paymentId: '1'),
+      route: const PurchaseConfirmRoute(paymentId: '1'),
     ),
-    (name: 'wallet_payment_success', route: const PaymentSuccessPageRoute()),
+    (name: 'wallet_payment_success', route: const PaymentSuccessRoute()),
     (
       name: 'wallet_transactions_history',
-      route: const TransactionsHistoryPageRoute(),
+      route: const TransactionsHistoryRoute(),
     ),
-    (name: 'rewards_catalog', route: const RewardsCatalogPageRoute()),
-    (name: 'rewards_history', route: const RewardsHistoryPageRoute()),
+    (name: 'rewards_catalog', route: const RewardsCatalogRoute()),
+    (name: 'rewards_history', route: const RewardsHistoryRoute()),
   ];
 
   for (final entry in routes) {

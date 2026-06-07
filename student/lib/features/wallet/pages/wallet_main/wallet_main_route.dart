@@ -1,15 +1,15 @@
 part of '../../../../core/routing/app_routes.dart';
 
-final class WalletMainPageRoute extends GoRouteData with $WalletMainPageRoute {
-  const WalletMainPageRoute();
+final class WalletMainRoute extends GoRouteData with $WalletMainRoute {
+  const WalletMainRoute();
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return BlocProvider<WalletMainPageBloc>(
-      create: (context) => WalletMainPageBloc(
+    return BlocProvider<WalletMainBloc>(
+      create: (context) => WalletMainBloc(
         walletRepository: context.read<WalletRepository>(),
         analyticsService: context.read<AnalyticsService>(),
-      )..add(const WalletMainPageLoadEvent()),
+      )..add(const WalletMainLoadEvent()),
       child: const WalletMainPageWrapper(),
     );
   }

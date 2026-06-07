@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mock_settings_repository/mock_settings_repository.dart';
 
 import 'package:mentorx_student/core/core.dart';
-import 'package:mentorx_student/features/settings/pages/settings_list/bloc/settings_list_page_bloc.dart';
+import 'package:mentorx_student/features/settings/pages/settings_list/bloc/settings_list_bloc.dart';
 
 class MockAnalyticsService implements AnalyticsService {
   @override
@@ -30,29 +30,29 @@ void main() {
     settingsRepository = MockSettingsRepository(delay: Duration.zero);
   });
 
-  group('SettingsListPageBloc', () {
+  group('SettingsListBloc', () {
     test('initial state is correct', () {
-      final bloc = SettingsListPageBloc(settingsRepository: settingsRepository,
+      final bloc = SettingsListBloc(settingsRepository: settingsRepository,
         analyticsService: analyticsService,
       );
-      expect(bloc.state, SettingsListPageState.initial);
+      expect(bloc.state, SettingsListState.initial);
       expect(bloc.state.loadingState, LoadingState.initial);
       bloc.close();
     });
 
-    blocTest<SettingsListPageBloc, SettingsListPageState>(
-      'emits [loading, loaded] when SettingsListPageLoadEvent is added',
-      build: () => SettingsListPageBloc(settingsRepository: settingsRepository,
+    blocTest<SettingsListBloc, SettingsListState>(
+      'emits [loading, loaded] when SettingsListLoadEvent is added',
+      build: () => SettingsListBloc(settingsRepository: settingsRepository,
         analyticsService: analyticsService,
       ),
-      act: (bloc) => bloc.add(const SettingsListPageLoadEvent()),
+      act: (bloc) => bloc.add(const SettingsListLoadEvent()),
       expect: () => [
-        isA<SettingsListPageState>().having(
+        isA<SettingsListState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loading,
         ),
-        isA<SettingsListPageState>().having(
+        isA<SettingsListState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loaded,

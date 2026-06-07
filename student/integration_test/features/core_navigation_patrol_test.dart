@@ -6,12 +6,12 @@ import '../helpers/student_patrol_harness.dart';
 
 void main() {
   final routes = <({String name, GoRouteData route})>[
-    (name: 'home', route: const HomePageRoute()),
-    (name: 'my_courses', route: const MyCoursesPageRoute()),
-    (name: 'quiz_list', route: const QuizListPageRoute()),
-    (name: 'wallet_main', route: const WalletMainPageRoute()),
-    (name: 'profile_view', route: const ProfileViewPageRoute()),
-    (name: 'notifications', route: const NotificationsPageRoute()),
+    (name: 'home', route: const HomeRoute()),
+    (name: 'my_courses', route: const MyCoursesRoute()),
+    (name: 'quiz_list', route: const QuizListRoute()),
+    (name: 'wallet_main', route: const WalletMainRoute()),
+    (name: 'profile_view', route: const ProfileViewRoute()),
+    (name: 'notifications', route: const NotificationsRoute()),
   ];
 
   for (final entry in routes) {

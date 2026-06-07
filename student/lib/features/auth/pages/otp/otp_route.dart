@@ -1,12 +1,12 @@
 part of '../../../../core/routing/app_routes.dart';
 
-@TypedGoRoute<OtpPageRoute>(path: '/otp', name: 'otp')
-final class OtpPageRoute extends GoRouteData with $OtpPageRoute {
+@TypedGoRoute<OtpRoute>(path: '/otp', name: 'otp')
+final class OtpRoute extends GoRouteData with $OtpRoute {
   final String phoneNumber;
   final int? otpLength;
   final int? otpDurationSeconds;
 
-  const OtpPageRoute({
+  const OtpRoute({
     required this.phoneNumber,
     this.otpLength,
     this.otpDurationSeconds,

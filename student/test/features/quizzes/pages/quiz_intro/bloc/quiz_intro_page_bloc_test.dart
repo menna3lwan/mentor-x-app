@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mock_quiz_repository/mock_quiz_repository.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:mentorx_student/core/core.dart';
-import 'package:mentorx_student/features/quizzes/pages/quiz_intro/bloc/quiz_intro_page_bloc.dart';
+import 'package:mentorx_student/features/quizzes/pages/quiz_intro/bloc/quiz_intro_bloc.dart';
 
 class _MockProfileRepository extends Mock implements ProfileRepository {}
 
@@ -47,9 +47,9 @@ void main() {
     );
   });
 
-  group('QuizIntroPageBloc', () {
+  group('QuizIntroBloc', () {
     test('initial state is correct', () {
-      final bloc = QuizIntroPageBloc(
+      final bloc = QuizIntroBloc(
         quizRepository: quizRepository,
         profileRepository: profileRepository,
         analyticsService: analyticsService,
@@ -60,23 +60,23 @@ void main() {
       bloc.close();
     });
 
-    blocTest<QuizIntroPageBloc, QuizIntroPageState>(
-      'emits [loading, loaded] when QuizIntroPageLoadEvent is added',
-      build: () => QuizIntroPageBloc(
+    blocTest<QuizIntroBloc, QuizIntroState>(
+      'emits [loading, loaded] when QuizIntroLoadEvent is added',
+      build: () => QuizIntroBloc(
         quizRepository: quizRepository,
         profileRepository: profileRepository,
         analyticsService: analyticsService,
         quizId: testId,
       ),
-      act: (bloc) => bloc.add(const QuizIntroPageLoadEvent()),
+      act: (bloc) => bloc.add(const QuizIntroLoadEvent()),
       wait: const Duration(milliseconds: 100),
       expect: () => [
-        isA<QuizIntroPageState>().having(
+        isA<QuizIntroState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loading,
         ),
-        isA<QuizIntroPageState>().having(
+        isA<QuizIntroState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loaded,

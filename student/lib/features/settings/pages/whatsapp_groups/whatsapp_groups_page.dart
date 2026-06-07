@@ -4,16 +4,16 @@ import 'package:flutter/services.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:mentorx_student/core/core.dart';
-import 'bloc/whatsapp_groups_page_bloc.dart';
+import 'bloc/whatsapp_groups_bloc.dart';
 
-final class WhatsappGroupsPagePage extends StatelessWidget {
+final class WhatsappGroupsPage extends StatelessWidget {
   final bool isLoading;
   final List<WhatsappGroupUiModel> groups;
   final String? joinedGroupId;
   final VoidCallback onRefresh;
   final ValueChanged<String> onJoinGroup;
 
-  const WhatsappGroupsPagePage({
+  const WhatsappGroupsPage({
     super.key,
     required this.isLoading,
     required this.groups,

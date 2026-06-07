@@ -1,20 +1,20 @@
 part of '../../../../core/routing/app_routes.dart';
 
-@TypedGoRoute<AttendanceQrPageRoute>(
+@TypedGoRoute<AttendanceQrRoute>(
   path: '/attendance-qr',
   name: 'attendanceQr',
 )
-final class AttendanceQrPageRoute extends GoRouteData
-    with $AttendanceQrPageRoute {
-  const AttendanceQrPageRoute();
+final class AttendanceQrRoute extends GoRouteData
+    with $AttendanceQrRoute {
+  const AttendanceQrRoute();
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return BlocProvider<AttendanceQrPageBloc>(
-      create: (context) => AttendanceQrPageBloc(
+    return BlocProvider<AttendanceQrBloc>(
+      create: (context) => AttendanceQrBloc(
         attendanceRepository: context.read<AttendanceRepository>(),
         analyticsService: context.read<AnalyticsService>(),
-      )..add(const AttendanceQrPageLoadEvent()),
+      )..add(const AttendanceQrLoadEvent()),
       child: const AttendanceQrPageWrapper(),
     );
   }

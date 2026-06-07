@@ -6,15 +6,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:mentorx_student/core/core.dart';
 import 'package:animate_do/animate_do.dart';
-import 'bloc/quiz_taking_page_bloc.dart';
+import 'bloc/quiz_taking_bloc.dart';
 
 final class QuizTakingPage extends StatefulWidget {
   const QuizTakingPage({super.key});
   @override
-  State<QuizTakingPage> createState() => _QuizTakingPageState();
+  State<QuizTakingPage> createState() => _QuizTakingState();
 }
 
-final class _QuizTakingPageState extends State<QuizTakingPage> {
+final class _QuizTakingState extends State<QuizTakingPage> {
   int _remainingSeconds = 0;
   Timer? _timer;
   bool _timerInitialized = false;
@@ -33,7 +33,7 @@ final class _QuizTakingPageState extends State<QuizTakingPage> {
       if (!mounted) return;
       if (_remainingSeconds <= 0) {
         _timer?.cancel();
-        context.read<QuizTakingPageBloc>().add(const QuizTakingPageSubmit());
+        context.read<QuizTakingBloc>().add(const QuizTakingSubmit());
         return;
       }
       setState(() => _remainingSeconds--);
@@ -50,13 +50,13 @@ final class _QuizTakingPageState extends State<QuizTakingPage> {
   Widget build(BuildContext context) {
     final t = context.t.quizzes;
 
-    return BlocConsumer<QuizTakingPageBloc, QuizTakingPageState>(
+    return BlocConsumer<QuizTakingBloc, QuizTakingState>(
       listener: (context, state) {
         if (state.remainingSeconds != null && !_timerInitialized) {
           _startTimer(state.remainingSeconds!);
         }
         if (state.isSuccess && state.result != null) {
-          QuizResultPageRoute(attemptId: state.result!.id).go(context);
+          QuizResultRoute(attemptId: state.result!.id).go(context);
         }
       },
 
@@ -108,8 +108,8 @@ final class _QuizTakingPageState extends State<QuizTakingPage> {
                   )
                 : AppErrorView(
                     message: state.errorMessage!,
-                    onRetry: () => context.read<QuizTakingPageBloc>().add(
-                      const QuizTakingPageLoadEvent(),
+                    onRetry: () => context.read<QuizTakingBloc>().add(
+                      const QuizTakingLoadEvent(),
                     ),
                   ),
           );
@@ -512,8 +512,8 @@ class _QuestionCard extends StatelessWidget {
               label: label,
               text: optionText,
               isSelected: isSelected,
-              onTap: () => context.read<QuizTakingPageBloc>().add(
-                QuizTakingPageAnswerSelected(
+              onTap: () => context.read<QuizTakingBloc>().add(
+                QuizTakingAnswerSelected(
                   questionId: q.id,
                   selectedAnswer: optionText,
                 ),
@@ -583,8 +583,8 @@ class _TextAnswerFieldState extends State<_TextAnswerField> {
         hintText: context.t.quizzes.typeAnswerHere,
         maxLines: widget.isLong ? 6 : 1,
         onChanged: (value) {
-          context.read<QuizTakingPageBloc>().add(
-            QuizTakingPageAnswerSelected(
+          context.read<QuizTakingBloc>().add(
+            QuizTakingAnswerSelected(
               questionId: widget.questionId,
               selectedAnswer: value,
             ),
@@ -754,8 +754,8 @@ class _BuildNavigation extends StatelessWidget {
             Expanded(
               flex: 1,
               child: MentorXButton(
-                onPressed: () => context.read<QuizTakingPageBloc>().add(
-                  const QuizTakingPagePreviousQuestion(),
+                onPressed: () => context.read<QuizTakingBloc>().add(
+                  const QuizTakingPreviousQuestion(),
                 ),
                 label: t.commonPrevious,
                 variant: MentorXButtonVariant.outline,
@@ -769,20 +769,20 @@ class _BuildNavigation extends StatelessWidget {
               loading: isSubmitting,
               onPressed: () {
                 if (!isLast) {
-                  context.read<QuizTakingPageBloc>().add(
-                    const QuizTakingPageNextQuestion(),
+                  context.read<QuizTakingBloc>().add(
+                    const QuizTakingNextQuestion(),
                   );
                 } else {
                   if (attemptId != null) {
                     () async {
-                      final targetIndex = await QuizReviewPageRoute(
+                      final targetIndex = await QuizReviewRoute(
                         quizId: quizId,
                         attemptId: attemptId!,
                         $extra: answers,
                       ).push<int>(context);
                       if (targetIndex != null && context.mounted) {
-                        context.read<QuizTakingPageBloc>().add(
-                          QuizTakingPageJumpToQuestion(targetIndex),
+                        context.read<QuizTakingBloc>().add(
+                          QuizTakingJumpToQuestion(targetIndex),
                         );
                       }
                     }();

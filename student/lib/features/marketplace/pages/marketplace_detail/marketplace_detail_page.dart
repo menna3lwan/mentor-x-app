@@ -5,13 +5,13 @@ import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:mentorx_student/core/core.dart';
 import 'widgets/widgets.dart';
 
-final class MarketplaceDetailPagePage extends StatefulWidget {
+final class MarketplaceDetailPage extends StatefulWidget {
   final LoadingState loadingState;
   final MarketplaceItemEntity? item;
   final VoidCallback onRetry;
   final Function(MarketplaceItemEntity) onAddToCart;
 
-  const MarketplaceDetailPagePage({
+  const MarketplaceDetailPage({
     super.key,
     required this.loadingState,
     this.item,
@@ -20,12 +20,12 @@ final class MarketplaceDetailPagePage extends StatefulWidget {
   });
 
   @override
-  State<MarketplaceDetailPagePage> createState() =>
-      _MarketplaceDetailPagePageState();
+  State<MarketplaceDetailPage> createState() =>
+      _MarketplaceDetailPageState();
 }
 
-final class _MarketplaceDetailPagePageState
-    extends State<MarketplaceDetailPagePage> {
+final class _MarketplaceDetailPageState
+    extends State<MarketplaceDetailPage> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
 

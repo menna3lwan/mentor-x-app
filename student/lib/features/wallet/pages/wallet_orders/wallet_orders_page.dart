@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:mentorx_student/core/core.dart';
-import 'bloc/wallet_orders_page_bloc.dart';
+import 'bloc/wallet_orders_bloc.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:intl/intl.dart';
 
@@ -28,15 +28,15 @@ final class WalletOrdersPage extends StatelessWidget {
           child: Builder(
             builder: (context) {
               final loadingState = context
-                  .select<WalletOrdersPageBloc, LoadingState>(
+                  .select<WalletOrdersBloc, LoadingState>(
                     (bloc) => bloc.state.loadingState,
                   );
               final errorMessage = context
-                  .select<WalletOrdersPageBloc, String?>(
+                  .select<WalletOrdersBloc, String?>(
                     (bloc) => bloc.state.errorMessage,
                   );
               final orders = context
-                  .select<WalletOrdersPageBloc, List<PaymentOrderEntity>>(
+                  .select<WalletOrdersBloc, List<PaymentOrderEntity>>(
                     (bloc) => bloc.state.orders,
                   );
 
@@ -53,8 +53,8 @@ final class WalletOrdersPage extends StatelessWidget {
               if (loadingState == LoadingState.error) {
                 return AppErrorView(
                   message: errorMessage ?? 'Failed to load orders',
-                  onRetry: () => context.read<WalletOrdersPageBloc>().add(
-                    const WalletOrdersPageLoadEvent(),
+                  onRetry: () => context.read<WalletOrdersBloc>().add(
+                    const WalletOrdersLoadEvent(),
                   ),
                 );
               }

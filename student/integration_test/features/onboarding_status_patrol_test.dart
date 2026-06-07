@@ -6,11 +6,11 @@ import '../helpers/student_patrol_harness.dart';
 
 void main() {
   final routes = <({String name, GoRouteData route})>[
-    (name: 'splash', route: const SplashPageRoute()),
-    (name: 'walkthrough', route: const WalkthroughPageRoute()),
-    (name: 'status_pending', route: const StatusPendingPageRoute()),
-    (name: 'status_blocked', route: const StatusBlockedPageRoute()),
-    (name: 'status_rejected', route: const StatusRejectedPageRoute()),
+    (name: 'splash', route: const SplashRoute()),
+    (name: 'walkthrough', route: const WalkthroughRoute()),
+    (name: 'status_pending', route: const StatusPendingRoute()),
+    (name: 'status_blocked', route: const StatusBlockedRoute()),
+    (name: 'status_rejected', route: const StatusRejectedRoute()),
   ];
 
   for (final entry in routes) {

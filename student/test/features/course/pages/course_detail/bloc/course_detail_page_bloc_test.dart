@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mock_course_repository/mock_course_repository.dart';
 import 'package:mock_wallet_repository/mock_wallet_repository.dart';
 import 'package:mentorx_student/core/core.dart';
-import 'package:mentorx_student/features/course/pages/course_detail/bloc/course_detail_page_bloc.dart';
+import 'package:mentorx_student/features/course/pages/course_detail/bloc/course_detail_bloc.dart';
 
 class MockAnalyticsService implements AnalyticsService {
   @override
@@ -31,9 +31,9 @@ void main() {
     analyticsService = MockAnalyticsService();
   });
 
-  group('CourseDetailPageBloc', () {
+  group('CourseDetailBloc', () {
     test('initial state has correct defaults', () {
-      final bloc = CourseDetailPageBloc(
+      final bloc = CourseDetailBloc(
         courseRepository: courseRepository,
         walletRepository: walletRepository,
         analyticsService: analyticsService,
@@ -62,15 +62,15 @@ void main() {
       bloc.close();
     });
 
-    blocTest<CourseDetailPageBloc, CourseDetailPageState>(
+    blocTest<CourseDetailBloc, CourseDetailState>(
       'loads course, sessions, items, and wallet balance when initialized',
-      build: () => CourseDetailPageBloc(
+      build: () => CourseDetailBloc(
         courseRepository: courseRepository,
         walletRepository: walletRepository,
         analyticsService: analyticsService,
         courseId: 'ep1',
       ),
-      act: (bloc) => bloc.add(const CourseDetailPageInitialized()),
+      act: (bloc) => bloc.add(const CourseDetailInitialized()),
       wait: const Duration(milliseconds: 50),
       verify: (bloc) {
         expect(bloc.state.courseStatus, DetailSectionStatus.loaded);
@@ -87,18 +87,18 @@ void main() {
       },
     );
 
-    blocTest<CourseDetailPageBloc, CourseDetailPageState>(
+    blocTest<CourseDetailBloc, CourseDetailState>(
       'switches tab to sessions correctly',
-      build: () => CourseDetailPageBloc(
+      build: () => CourseDetailBloc(
         courseRepository: courseRepository,
         walletRepository: walletRepository,
         analyticsService: analyticsService,
         courseId: 'ep1',
       ),
       act: (bloc) =>
-          bloc.add(const CourseDetailPageTabChanged(CourseDetailTab.sessions)),
+          bloc.add(const CourseDetailTabChanged(CourseDetailTab.sessions)),
       expect: () => [
-        isA<CourseDetailPageState>().having(
+        isA<CourseDetailState>().having(
           (s) => s.selectedTab,
           'tab',
           CourseDetailTab.sessions,
@@ -106,23 +106,23 @@ void main() {
       ],
     );
 
-    blocTest<CourseDetailPageBloc, CourseDetailPageState>(
+    blocTest<CourseDetailBloc, CourseDetailState>(
       'switches tab back to description',
-      build: () => CourseDetailPageBloc(
+      build: () => CourseDetailBloc(
         courseRepository: courseRepository,
         walletRepository: walletRepository,
         analyticsService: analyticsService,
         courseId: 'ep1',
       ),
-      seed: () => CourseDetailPageState(
+      seed: () => CourseDetailState(
         courseId: 'ep1',
         selectedTab: CourseDetailTab.sessions,
       ),
       act: (bloc) => bloc.add(
-        const CourseDetailPageTabChanged(CourseDetailTab.description),
+        const CourseDetailTabChanged(CourseDetailTab.description),
       ),
       expect: () => [
-        isA<CourseDetailPageState>().having(
+        isA<CourseDetailState>().having(
           (s) => s.selectedTab,
           'tab',
           CourseDetailTab.description,
@@ -130,26 +130,26 @@ void main() {
       ],
     );
 
-    blocTest<CourseDetailPageBloc, CourseDetailPageState>(
+    blocTest<CourseDetailBloc, CourseDetailState>(
       'enrolls successfully',
-      build: () => CourseDetailPageBloc(
+      build: () => CourseDetailBloc(
         courseRepository: courseRepository,
         walletRepository: walletRepository,
         analyticsService: analyticsService,
         courseId: 'ep1',
       ),
-      seed: () => CourseDetailPageState(
+      seed: () => CourseDetailState(
         courseId: 'cat1',
         courseStatus: DetailSectionStatus.loaded,
       ),
-      act: (bloc) => bloc.add(const CourseDetailPageEnrollRequested()),
+      act: (bloc) => bloc.add(const CourseDetailEnrollRequested()),
       expect: () => [
-        isA<CourseDetailPageState>().having(
+        isA<CourseDetailState>().having(
           (s) => s.enrollStatus,
           'enrollStatus',
           EnrollActionStatus.loading,
         ),
-        isA<CourseDetailPageState>()
+        isA<CourseDetailState>()
             .having(
               (s) => s.enrollStatus,
               'enrollStatus',
@@ -161,15 +161,15 @@ void main() {
       ],
     );
 
-    blocTest<CourseDetailPageBloc, CourseDetailPageState>(
+    blocTest<CourseDetailBloc, CourseDetailState>(
       'returns null enrollment for non-enrolled course',
-      build: () => CourseDetailPageBloc(
+      build: () => CourseDetailBloc(
         courseRepository: courseRepository,
         walletRepository: walletRepository,
         analyticsService: analyticsService,
         courseId: 'test1',
       ),
-      act: (bloc) => bloc.add(const CourseDetailPageInitialized()),
+      act: (bloc) => bloc.add(const CourseDetailInitialized()),
       wait: const Duration(milliseconds: 100),
       verify: (bloc) {
         // test1 doesn't start with 'ep' or 'ec', so no enrollment returned
@@ -178,20 +178,20 @@ void main() {
       },
     );
 
-    blocTest<CourseDetailPageBloc, CourseDetailPageState>(
+    blocTest<CourseDetailBloc, CourseDetailState>(
       'refresh reloads all data',
-      build: () => CourseDetailPageBloc(
+      build: () => CourseDetailBloc(
         courseRepository: courseRepository,
         walletRepository: walletRepository,
         analyticsService: analyticsService,
         courseId: 'ep1',
       ),
-      seed: () => CourseDetailPageState(
+      seed: () => CourseDetailState(
         courseId: 'ep1',
         courseStatus: DetailSectionStatus.loaded,
         sessionsStatus: DetailSectionStatus.loaded,
       ),
-      act: (bloc) => bloc.add(const CourseDetailPageRefreshed()),
+      act: (bloc) => bloc.add(const CourseDetailRefreshed()),
       wait: const Duration(milliseconds: 50),
       verify: (bloc) {
         expect(bloc.state.courseStatus, DetailSectionStatus.loaded);
@@ -203,15 +203,15 @@ void main() {
       },
     );
 
-    blocTest<CourseDetailPageBloc, CourseDetailPageState>(
+    blocTest<CourseDetailBloc, CourseDetailState>(
       'enrollment with ec prefix returns enrollment',
-      build: () => CourseDetailPageBloc(
+      build: () => CourseDetailBloc(
         courseRepository: courseRepository,
         walletRepository: walletRepository,
         analyticsService: analyticsService,
         courseId: 'ep1',
       ),
-      act: (bloc) => bloc.add(const CourseDetailPageInitialized()),
+      act: (bloc) => bloc.add(const CourseDetailInitialized()),
       wait: const Duration(milliseconds: 50),
       verify: (bloc) {
         // ec1 starts with 'ec', so enrollment should be returned
@@ -220,15 +220,15 @@ void main() {
       },
     );
 
-    blocTest<CourseDetailPageBloc, CourseDetailPageState>(
+    blocTest<CourseDetailBloc, CourseDetailState>(
       'sessions have correct items loaded',
-      build: () => CourseDetailPageBloc(
+      build: () => CourseDetailBloc(
         courseRepository: courseRepository,
         walletRepository: walletRepository,
         analyticsService: analyticsService,
         courseId: 'ep1',
       ),
-      act: (bloc) => bloc.add(const CourseDetailPageInitialized()),
+      act: (bloc) => bloc.add(const CourseDetailInitialized()),
       wait: const Duration(milliseconds: 50),
       verify: (bloc) {
         expect(bloc.state.sessions, isNotEmpty);
@@ -244,7 +244,7 @@ void main() {
     );
 
     test('state getters reflect correct values', () {
-      const state = CourseDetailPageState(courseId: 'test');
+      const state = CourseDetailState(courseId: 'test');
       expect(state.isCourseLoading, true); // initial is treated as loading
       expect(state.isCourseLoaded, false);
       expect(state.isCourseFailure, false);
@@ -270,15 +270,15 @@ void main() {
     });
 
     group('Coupon Flow Tests', () {
-      blocTest<CourseDetailPageBloc, CourseDetailPageState>(
+      blocTest<CourseDetailBloc, CourseDetailState>(
         'applies a valid coupon successfully',
-        build: () => CourseDetailPageBloc(
+        build: () => CourseDetailBloc(
           courseRepository: courseRepository,
           walletRepository: walletRepository,
           analyticsService: analyticsService,
           courseId: 'ep1',
         ),
-        seed: () => CourseDetailPageState(
+        seed: () => CourseDetailState(
           courseId: 'ep1',
           course: const CourseEntity(
             id: 'ep1',
@@ -292,14 +292,14 @@ void main() {
             pointsReward: 50,
           ),
         ),
-        act: (bloc) => bloc.add(const CourseDetailPageApplyCouponRequested('SAVE50')),
+        act: (bloc) => bloc.add(const CourseDetailApplyCouponRequested('SAVE50')),
         expect: () => [
-          isA<CourseDetailPageState>().having(
+          isA<CourseDetailState>().having(
             (s) => s.isCouponLoading,
             'isCouponLoading',
             true,
           ),
-          isA<CourseDetailPageState>()
+          isA<CourseDetailState>()
               .having((s) => s.isCouponLoading, 'isCouponLoading', false)
               .having((s) => s.appliedCouponCode, 'appliedCouponCode', 'SAVE50')
               .having((s) => s.discountAmount, 'discountAmount', 50.0)
@@ -309,15 +309,15 @@ void main() {
         ],
       );
 
-      blocTest<CourseDetailPageBloc, CourseDetailPageState>(
+      blocTest<CourseDetailBloc, CourseDetailState>(
         'handles invalid coupon validation error',
-        build: () => CourseDetailPageBloc(
+        build: () => CourseDetailBloc(
           courseRepository: courseRepository,
           walletRepository: walletRepository,
           analyticsService: analyticsService,
           courseId: 'ep1',
         ),
-        seed: () => CourseDetailPageState(
+        seed: () => CourseDetailState(
           courseId: 'ep1',
           course: const CourseEntity(
             id: 'ep1',
@@ -331,38 +331,38 @@ void main() {
             pointsReward: 50,
           ),
         ),
-        act: (bloc) => bloc.add(const CourseDetailPageApplyCouponRequested('INVALID')),
+        act: (bloc) => bloc.add(const CourseDetailApplyCouponRequested('INVALID')),
         expect: () => [
-          isA<CourseDetailPageState>().having(
+          isA<CourseDetailState>().having(
             (s) => s.isCouponLoading,
             'isCouponLoading',
             true,
           ),
-          isA<CourseDetailPageState>()
+          isA<CourseDetailState>()
               .having((s) => s.isCouponLoading, 'isCouponLoading', false)
               .having((s) => s.appliedCouponCode, 'appliedCouponCode', isNull)
               .having((s) => s.couponErrorMessage, 'couponErrorMessage', 'Invalid coupon code.'),
         ],
       );
 
-      blocTest<CourseDetailPageBloc, CourseDetailPageState>(
+      blocTest<CourseDetailBloc, CourseDetailState>(
         'removes applied coupon successfully',
-        build: () => CourseDetailPageBloc(
+        build: () => CourseDetailBloc(
           courseRepository: courseRepository,
           walletRepository: walletRepository,
           analyticsService: analyticsService,
           courseId: 'ep1',
         ),
-        seed: () => CourseDetailPageState(
+        seed: () => CourseDetailState(
           courseId: 'ep1',
           appliedCouponCode: 'SAVE50',
           discountAmount: 50.0,
           finalPrice: 150.0,
           couponDiscountSummary: 'خصم 50.0 جنيه',
         ),
-        act: (bloc) => bloc.add(const CourseDetailPageRemoveCouponRequested()),
+        act: (bloc) => bloc.add(const CourseDetailRemoveCouponRequested()),
         expect: () => [
-          isA<CourseDetailPageState>()
+          isA<CourseDetailState>()
               .having((s) => s.appliedCouponCode, 'appliedCouponCode', isNull)
               .having((s) => s.discountAmount, 'discountAmount', isNull)
               .having((s) => s.finalPrice, 'finalPrice', isNull)

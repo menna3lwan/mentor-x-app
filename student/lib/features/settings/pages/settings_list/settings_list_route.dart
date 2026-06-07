@@ -1,17 +1,17 @@
 part of '../../../../core/routing/app_routes.dart';
 
-@TypedGoRoute<SettingsListPageRoute>(path: '/settings', name: 'settingsList')
-final class SettingsListPageRoute extends GoRouteData
-    with $SettingsListPageRoute {
-  const SettingsListPageRoute();
+@TypedGoRoute<SettingsListRoute>(path: '/settings', name: 'settingsList')
+final class SettingsListRoute extends GoRouteData
+    with $SettingsListRoute {
+  const SettingsListRoute();
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return BlocProvider<SettingsListPageBloc>(
-      create: (context) => SettingsListPageBloc(
+    return BlocProvider<SettingsListBloc>(
+      create: (context) => SettingsListBloc(
         settingsRepository: context.read<SettingsRepository>(),
         analyticsService: context.read<AnalyticsService>(),
-      )..add(const SettingsListPageLoadEvent()),
+      )..add(const SettingsListLoadEvent()),
       child: const SettingsListPageWrapper(),
     );
   }

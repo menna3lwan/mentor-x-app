@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mock_attendance_repository/mock_attendance_repository.dart';
 
 import 'package:mentorx_student/core/core.dart';
-import 'package:mentorx_student/features/attendance/pages/attendance_history/bloc/attendance_history_page_bloc.dart';
+import 'package:mentorx_student/features/attendance/pages/attendance_history/bloc/attendance_history_bloc.dart';
 
 class MockAnalyticsService implements AnalyticsService {
   @override
@@ -30,20 +30,20 @@ void main() {
     attendanceRepository = const MockAttendanceRepository(delay: Duration.zero);
   });
 
-  group('AttendanceHistoryPageBloc', () {
-    blocTest<AttendanceHistoryPageBloc, AttendanceHistoryPageState>(
+  group('AttendanceHistoryBloc', () {
+    blocTest<AttendanceHistoryBloc, AttendanceHistoryState>(
       'emits [loading, loaded] when load event is added',
-      build: () => AttendanceHistoryPageBloc(attendanceRepository: attendanceRepository,
+      build: () => AttendanceHistoryBloc(attendanceRepository: attendanceRepository,
         analyticsService: analyticsService,
       ),
-      act: (bloc) => bloc.add(const AttendanceHistoryPageLoadEvent()),
+      act: (bloc) => bloc.add(const AttendanceHistoryLoadEvent()),
       expect: () => [
-        isA<AttendanceHistoryPageState>().having(
+        isA<AttendanceHistoryState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loading,
         ),
-        isA<AttendanceHistoryPageState>().having(
+        isA<AttendanceHistoryState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loaded,
@@ -51,13 +51,13 @@ void main() {
       ],
     );
 
-    blocTest<AttendanceHistoryPageBloc, AttendanceHistoryPageState>(
+    blocTest<AttendanceHistoryBloc, AttendanceHistoryState>(
       'initial state has LoadingState.initial',
-      build: () => AttendanceHistoryPageBloc(attendanceRepository: attendanceRepository,
+      build: () => AttendanceHistoryBloc(attendanceRepository: attendanceRepository,
         analyticsService: analyticsService,
       ),
       verify: (bloc) {
-        expect(bloc.state, AttendanceHistoryPageState.initial);
+        expect(bloc.state, AttendanceHistoryState.initial);
         expect(bloc.state.loadingState, LoadingState.initial);
       },
     );

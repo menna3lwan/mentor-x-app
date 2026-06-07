@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 
-final class DeviceManagementPagePage extends StatelessWidget {
+final class DeviceManagementPage extends StatelessWidget {
   final bool isLoading;
   final LoadingState loadingState;
   final String? errorMessage;
@@ -14,7 +14,7 @@ final class DeviceManagementPagePage extends StatelessWidget {
   final VoidCallback onRefresh;
   final ValueChanged<String> onDeactivateTapped;
 
-  const DeviceManagementPagePage({
+  const DeviceManagementPage({
     super.key,
     required this.isLoading,
     required this.loadingState,

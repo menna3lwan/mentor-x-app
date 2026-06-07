@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mock_profile_repository/mock_profile_repository.dart';
 
 import 'package:mentorx_student/core/core.dart';
-import 'package:mentorx_student/features/profile/pages/edit_profile/bloc/edit_profile_page_bloc.dart';
+import 'package:mentorx_student/features/profile/pages/edit_profile/bloc/edit_profile_bloc.dart';
 
 class _MockAnalyticsService implements AnalyticsService {
   @override
@@ -29,21 +29,21 @@ void main() {
     analyticsService = _MockAnalyticsService();
   });
 
-  group('EditProfilePageBloc', () {
-    blocTest<EditProfilePageBloc, EditProfilePageState>(
+  group('EditProfileBloc', () {
+    blocTest<EditProfileBloc, EditProfileState>(
       'emits [loading, loaded] when load event is added',
-      build: () => EditProfilePageBloc(
+      build: () => EditProfileBloc(
         profileRepository: profileRepository,
         analyticsService: analyticsService,
       ),
-      act: (bloc) => bloc.add(const EditProfilePageLoadEvent()),
+      act: (bloc) => bloc.add(const EditProfileLoadEvent()),
       expect: () => [
-        isA<EditProfilePageState>().having(
+        isA<EditProfileState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loading,
         ),
-        isA<EditProfilePageState>().having(
+        isA<EditProfileState>().having(
           (s) => s.loadingState,
           'loadingState',
           LoadingState.loaded,
@@ -51,9 +51,9 @@ void main() {
       ],
     );
 
-    blocTest<EditProfilePageBloc, EditProfilePageState>(
+    blocTest<EditProfileBloc, EditProfileState>(
       'starts with initial loading state',
-      build: () => EditProfilePageBloc(
+      build: () => EditProfileBloc(
         profileRepository: profileRepository,
         analyticsService: analyticsService,
       ),

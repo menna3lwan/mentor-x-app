@@ -1,3 +1,3 @@
-export 'bloc/quiz_list_page_bloc.dart';
+export 'bloc/quiz_list_bloc.dart';
 export 'quiz_list_page.dart';
-export 'quiz_list_wrapper.dart';
+export 'quiz_list_page_wrapper.dart';

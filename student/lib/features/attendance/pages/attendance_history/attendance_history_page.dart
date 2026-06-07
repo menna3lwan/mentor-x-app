@@ -5,7 +5,7 @@ import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:mentorx_student/core/core.dart';
 
-final class AttendanceHistoryPagePage extends StatelessWidget {
+final class AttendanceHistoryPage extends StatelessWidget {
   final LoadingState loadingState;
   final List<AttendanceRecordEntity> records;
   final int presentCount;
@@ -13,7 +13,7 @@ final class AttendanceHistoryPagePage extends StatelessWidget {
   final int absentCount;
   final VoidCallback onRefresh;
 
-  const AttendanceHistoryPagePage({
+  const AttendanceHistoryPage({
     super.key,
     required this.loadingState,
     required this.records,

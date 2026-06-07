@@ -1,12 +1,12 @@
 part of '../../../../core/routing/app_routes.dart';
 
-@TypedGoRoute<StudentCardPageRoute>(
+@TypedGoRoute<StudentCardRoute>(
   path: '/student-card',
   name: 'studentCard',
 )
-final class StudentCardPageRoute extends GoRouteData
-    with $StudentCardPageRoute {
-  const StudentCardPageRoute();
+final class StudentCardRoute extends GoRouteData
+    with $StudentCardRoute {
+  const StudentCardRoute();
 
   @override
   Widget build(BuildContext context, GoRouterState state) {

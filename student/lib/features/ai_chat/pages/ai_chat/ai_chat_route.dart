@@ -1,16 +1,16 @@
 part of '../../../../core/routing/app_routes.dart';
 
-@TypedGoRoute<AiChatPageRoute>(path: '/ai-chat', name: 'aiChat')
-final class AiChatPageRoute extends GoRouteData with $AiChatPageRoute {
-  const AiChatPageRoute();
+@TypedGoRoute<AiChatRoute>(path: '/ai-chat', name: 'aiChat')
+final class AiChatRoute extends GoRouteData with $AiChatRoute {
+  const AiChatRoute();
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return BlocProvider<AiChatPageBloc>(
-      create: (context) => AiChatPageBloc(
+    return BlocProvider<AiChatBloc>(
+      create: (context) => AiChatBloc(
         aiRepository: context.read<AIRepository>(),
         analyticsService: context.read<AnalyticsService>(),
-      )..add(const AiChatPageLoadEvent()),
+      )..add(const AiChatLoadEvent()),
       child: const AiChatPageWrapper(),
     );
   }

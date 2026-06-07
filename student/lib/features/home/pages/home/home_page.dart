@@ -4,21 +4,21 @@ import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:mentorx_student/core/core.dart';
-import 'bloc/home_page_bloc.dart';
+import 'bloc/home_bloc.dart';
 import 'widgets/widgets.dart';
 
-final class HomePagePage extends StatelessWidget {
-  const HomePagePage({super.key});
+final class HomePage extends StatelessWidget {
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final bloc = context.read<HomePageBloc>();
+    final bloc = context.read<HomeBloc>();
 
     return Scaffold(
       backgroundColor: context.backgroundPrimaryColor,
       body: RefreshIndicator(
         onRefresh: () async {
-          bloc.add(const HomePageRefreshedEvent());
+          bloc.add(const HomeRefreshedEvent());
         },
         displacement: MediaQuery.paddingOf(context).top + 80,
         color: context.brandPrimaryColor,
@@ -65,10 +65,10 @@ final class HomePagePage extends StatelessWidget {
   Widget _buildUpdatedAt(BuildContext context) {
     return Builder(
       builder: (context) {
-        final isRefreshing = context.select<HomePageBloc, bool>(
+        final isRefreshing = context.select<HomeBloc, bool>(
           (bloc) => bloc.state.isRefreshing,
         );
-        final lastUpdatedAt = context.select<HomePageBloc, DateTime?>(
+        final lastUpdatedAt = context.select<HomeBloc, DateTime?>(
           (bloc) => bloc.state.lastUpdatedAt,
         );
 
@@ -124,28 +124,28 @@ final class HomePagePage extends StatelessWidget {
             onActionTap: (index) {
               switch (index) {
                 case 0:
-                  const MyCoursesPageRoute().push(context);
+                  const MyCoursesRoute().push(context);
                   return;
                 case 1:
-                  const AttendanceHistoryPageRoute().push(context);
+                  const AttendanceHistoryRoute().push(context);
                   return;
                 case 2:
-                  const MyGradesPageRoute().push(context);
+                  const MyGradesRoute().push(context);
                   return;
                 case 3:
-                  const AiConversationsPageRoute().push(context);
+                  const AiConversationsRoute().push(context);
                   return;
                 case 4:
-                  const AssignmentsListPageRoute().push(context);
+                  const AssignmentsListRoute().push(context);
                   return;
                 case 5:
-                  const RewardsCatalogPageRoute().push(context);
+                  const RewardsCatalogRoute().push(context);
                   return;
                 case 6:
-                  const AnalyticsDashboardPageRoute().push(context);
+                  const AnalyticsDashboardRoute().push(context);
                   return;
                 case 7:
-                  const LeaderboardPageRoute().push(context);
+                  const LeaderboardRoute().push(context);
                   return;
                 default:
                   return;
@@ -165,7 +165,7 @@ final class HomePagePage extends StatelessWidget {
         children: [
           SectionHeader(
             title: context.t.home.dashboard.continueLearning,
-            onSeeAll: () => const MyCoursesPageRoute().push(context),
+            onSeeAll: () => const MyCoursesRoute().push(context),
           ),
           const Gap(16),
           const ContinueLearningSectionWrapper(),
@@ -182,7 +182,7 @@ final class HomePagePage extends StatelessWidget {
         children: [
           SectionHeader(
             title: context.t.home.dashboard.featuredCourses,
-            onSeeAll: () => const CourseCatalogPageRoute().push(context),
+            onSeeAll: () => const CourseCatalogRoute().push(context),
           ),
           const Gap(16),
           const FeaturedCoursesSectionWrapper(),
@@ -194,7 +194,7 @@ final class HomePagePage extends StatelessWidget {
   Widget _buildAnnouncements(BuildContext context) {
     return Builder(
       builder: (context) {
-        final announcementsSection = context.select<HomePageBloc, dynamic>(
+        final announcementsSection = context.select<HomeBloc, dynamic>(
           (bloc) => bloc.state.announcementsSection,
         );
 
@@ -208,7 +208,7 @@ final class HomePagePage extends StatelessWidget {
               children: [
                 SectionHeader(
                   title: context.t.home.dashboard.announcements,
-                  onSeeAll: () => const AnnouncementsPageRoute().push(context),
+                  onSeeAll: () => const AnnouncementsRoute().push(context),
                 ),
                 const Gap(16),
                 const AnnouncementsSectionWrapper(),

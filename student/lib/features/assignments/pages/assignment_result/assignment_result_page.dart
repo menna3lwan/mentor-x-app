@@ -4,7 +4,7 @@ import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:mentorx_student/core/core.dart';
 import '../../../../core/widgets/score_circle.dart';
-import 'bloc/assignment_result_page_bloc.dart';
+import 'bloc/assignment_result_bloc.dart';
 
 final class AssignmentResultPage extends StatelessWidget {
   const AssignmentResultPage({super.key});
@@ -13,7 +13,7 @@ final class AssignmentResultPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = context.t.assignments;
 
-    return BlocBuilder<AssignmentResultPageBloc, AssignmentResultPageState>(
+    return BlocBuilder<AssignmentResultBloc, AssignmentResultState>(
       builder: (context, state) {
         if (state.loadingState == LoadingState.loading) {
           return Scaffold(
@@ -44,8 +44,8 @@ final class AssignmentResultPage extends StatelessWidget {
             backgroundColor: context.backgroundPrimaryColor,
             body: AppErrorView(
               message: state.errorMessage!,
-              onRetry: () => context.read<AssignmentResultPageBloc>().add(
-                const AssignmentResultPageLoadEvent(),
+              onRetry: () => context.read<AssignmentResultBloc>().add(
+                const AssignmentResultLoadEvent(),
               ),
             ),
           );

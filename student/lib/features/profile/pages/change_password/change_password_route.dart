@@ -1,20 +1,20 @@
 part of '../../../../core/routing/app_routes.dart';
 
-@TypedGoRoute<ChangePasswordPageRoute>(
+@TypedGoRoute<ChangePasswordRoute>(
   path: '/change-password',
   name: 'changePassword',
 )
-final class ChangePasswordPageRoute extends GoRouteData
-    with $ChangePasswordPageRoute {
-  const ChangePasswordPageRoute();
+final class ChangePasswordRoute extends GoRouteData
+    with $ChangePasswordRoute {
+  const ChangePasswordRoute();
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return BlocProvider<ChangePasswordPageBloc>(
-      create: (context) => ChangePasswordPageBloc(
+    return BlocProvider<ChangePasswordBloc>(
+      create: (context) => ChangePasswordBloc(
         profileRepository: context.read<ProfileRepository>(),
         analyticsService: context.read<AnalyticsService>(),
-      )..add(const ChangePasswordPageLoadEvent()),
+      )..add(const ChangePasswordLoadEvent()),
       child: const ChangePasswordPageWrapper(),
     );
   }

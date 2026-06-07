@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:mentorx_student/core/core.dart';
-import '../../bloc/home_page_bloc.dart';
+import '../../bloc/home_bloc.dart';
 import 'featured_courses_section_widget.dart';
 
 final class FeaturedCoursesSectionWrapper extends StatelessWidget {
@@ -11,7 +11,7 @@ final class FeaturedCoursesSectionWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final section = context
-        .select<HomePageBloc, HomeAsyncSection<List<CourseSummaryEntity>>>(
+        .select<HomeBloc, HomeAsyncSection<List<CourseSummaryEntity>>>(
           (bloc) => bloc.state.featuredCoursesSection,
         );
 
@@ -20,10 +20,10 @@ final class FeaturedCoursesSectionWrapper extends StatelessWidget {
       isLoading: section.isLoading,
       hasFailedWithEmptyData:
           section.isFailure && (section.data?.isEmpty ?? true),
-      onRetry: () => context.read<HomePageBloc>().add(
-        const HomePageRetrySectionEvent(HomeSection.featuredCourses),
+      onRetry: () => context.read<HomeBloc>().add(
+        const HomeRetrySectionEvent(HomeSection.featuredCourses),
       ),
-      onTapCourse: (courseId) => CourseDetailPageRoute(
+      onTapCourse: (courseId) => CourseDetailRoute(
         courseId: courseId,
       ).push(context),
     );
