@@ -2997,6 +2997,113 @@ class TranslationsParentAttendanceTrackingEn {
 
 	/// en: 'Checked in at ${time}'
 	String checkInTimeLabel({required Object time}) => 'Checked in at ${time}';
+
+	/// en: 'View Groups'
+	String get groupsAction => 'View Groups';
+
+	/// en: 'Attendance Groups'
+	String get groupsTitle => 'Attendance Groups';
+
+	/// en: 'Groups your child is enrolled in.'
+	String get groupsHint => 'Groups your child is enrolled in.';
+
+	/// en: 'Active'
+	String get groupActiveBadge => 'Active';
+
+	/// en: 'Inactive'
+	String get groupInactiveBadge => 'Inactive';
+
+	/// en: 'Teacher'
+	String get groupTeacherLabel => 'Teacher';
+
+	/// en: 'Course'
+	String get groupCourseLabel => 'Course';
+
+	/// en: '${count} students'
+	String groupEnrolledLabel({required Object count}) => '${count} students';
+
+	/// en: 'Weekly Schedule'
+	String get groupScheduleTitle => 'Weekly Schedule';
+
+	/// en: 'No schedule available.'
+	String get groupNoSchedule => 'No schedule available.';
+
+	/// en: 'Room ${room}'
+	String groupSessionRoomLabel({required Object room}) => 'Room ${room}';
+
+	/// en: 'Group Details'
+	String get groupDetailTitle => 'Group Details';
+
+	/// en: 'Attendance Summary'
+	String get groupAttendanceTitle => 'Attendance Summary';
+
+	/// en: 'Recent Sessions'
+	String get groupRecentSessionsTitle => 'Recent Sessions';
+
+	/// en: 'Attendance Ratio'
+	String get groupAttendanceRatioLabel => 'Attendance Ratio';
+
+	/// en: '${count} sessions'
+	String groupTotalSessions({required Object count}) => '${count} sessions';
+
+	/// en: 'Attended: ${count}'
+	String groupAttendedSessions({required Object count}) =>
+		'Attended: ${count}';
+
+	/// en: 'Missed: ${count}'
+	String groupMissedSessions({required Object count}) => 'Missed: ${count}';
+
+	/// en: 'Late: ${count}'
+	String groupLateSessions({required Object count}) => 'Late: ${count}';
+
+	/// en: 'Started ${date}'
+	String groupStartDateLabel({required Object date}) => 'Started ${date}';
+
+	/// en: 'Ends ${date}'
+	String groupEndDateLabel({required Object date}) => 'Ends ${date}';
+
+	/// en: 'Location'
+	String get groupLocationLabel => 'Location';
+
+	/// en: 'Description'
+	String get groupDescriptionLabel => 'Description';
+
+	/// en: 'No Groups'
+	String get groupsEmptyTitle => 'No Groups';
+
+	/// en: 'Your child isn't enrolled in any attendance groups yet.'
+	String get groupsEmptyHint =>
+		'Your child isn\'t enrolled in any attendance groups yet.';
+
+	/// en: 'Couldn't load groups'
+	String get groupFailureTitle => 'Couldn\'t load groups';
+
+	/// en: 'Group Not Found'
+	String get groupNotFoundTitle => 'Group Not Found';
+
+	/// en: 'This group is no longer available.'
+	String get groupNotFoundHint => 'This group is no longer available.';
+
+	/// en: 'Monday'
+	String get dayMonday => 'Monday';
+
+	/// en: 'Tuesday'
+	String get dayTuesday => 'Tuesday';
+
+	/// en: 'Wednesday'
+	String get dayWednesday => 'Wednesday';
+
+	/// en: 'Thursday'
+	String get dayThursday => 'Thursday';
+
+	/// en: 'Friday'
+	String get dayFriday => 'Friday';
+
+	/// en: 'Saturday'
+	String get daySaturday => 'Saturday';
+
+	/// en: 'Sunday'
+	String get daySunday => 'Sunday';
 }
 
 // Path: parent.assessments

@@ -140,6 +140,7 @@ part 'src/repositories/parent_grade_repository.dart';
 part 'src/repositories/parent_communication_repository.dart';
 part 'src/repositories/parent_profile_repository.dart';
 part 'src/repositories/parent_analytics_repository.dart';
+part 'src/repositories/parent_attendance_groups_repository.dart';
 part 'src/repositories/onboarding_repository.dart';
 
 // Role-specific interfaces

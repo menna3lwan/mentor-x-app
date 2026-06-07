@@ -41,6 +41,8 @@ dependencies:
     path: ../packages/parent/dio_parent_profile_repository
   parent_dio_analytics_repository:
     path: ../packages/parent/dio_parent_analytics_repository
+  parent_dio_attendance_groups_repository:
+    path: ../packages/parent/dio_parent_attendance_groups_repository
   parent_mock_authentication_repository:
     path: ../packages/mock/parent/mock_authentication_repository
   parent_mock_home_repository:
@@ -61,6 +63,8 @@ dependencies:
     path: ../packages/mock/parent/mock_parent_profile_repository
   mock_parent_analytics_repository:
     path: ../packages/mock/parent/mock_parent_analytics_repository
+  mock_parent_attendance_groups_repository:
+    path: ../packages/mock/parent/mock_parent_attendance_groups_repository
   mock_notification_repository:
     path: ../packages/mock/student/mock_notification_repository
   flutter_secure_storage_cache_repository:
@@ -91,6 +95,8 @@ dependencies:
   # Services
   device_info_service:
     path: ../packages/services/device_info_service
+  push_notification_service:
+    path: ../packages/services/push_notification_service
 
 dev_dependencies:
   flutter_test:

@@ -126,6 +126,14 @@ final class Env {
         ),
       );
 
+  static final RepositoryMode attendanceGroupsRepositoryMode =
+      RepositoryMode.fromString(
+        const String.fromEnvironment(
+          'ATTENDANCE_GROUPS_REPOSITORY_MODE',
+          defaultValue: 'prod',
+        ),
+      );
+
   // ──────────────────────── Mock-only knobs ───────────────────────────────
   static const int _mockDelayDurationInSeconds = int.fromEnvironment(
     'MOCK_DELAY_IN_SECONDS',
@@ -164,7 +172,8 @@ final class Env {
       communicationRepositoryMode == RepositoryMode.prod ||
       notificationRepositoryMode == RepositoryMode.prod ||
       profileRepositoryMode == RepositoryMode.prod ||
-      analyticsRepositoryMode == RepositoryMode.prod;
+      analyticsRepositoryMode == RepositoryMode.prod ||
+      attendanceGroupsRepositoryMode == RepositoryMode.prod;
 
   /// `true` when every repository is in mock mode. Useful for CI / widget
   /// tests that want to assert "no network is touched".
@@ -179,5 +188,6 @@ final class Env {
       communicationRepositoryMode == RepositoryMode.mock &&
       notificationRepositoryMode == RepositoryMode.mock &&
       profileRepositoryMode == RepositoryMode.mock &&
-      analyticsRepositoryMode == RepositoryMode.mock;
+      analyticsRepositoryMode == RepositoryMode.mock &&
+      attendanceGroupsRepositoryMode == RepositoryMode.mock;
 }

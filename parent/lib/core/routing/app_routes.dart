@@ -9,6 +9,8 @@ import '../../features/financial/pages/financial_monitor_page.dart';
 import '../../features/courses/pages/academic_monitor_page.dart';
 import '../../features/analytics/pages/analytics_monitor_page.dart';
 import '../../features/assessments/pages/grade_monitor_page.dart';
+import '../../features/attendance_groups/pages/attendance_group_detail_page_wrapper.dart';
+import '../../features/attendance_groups/pages/attendance_groups_page_wrapper.dart';
 import '../../features/courses/pages/course_progress_detail_page_wrapper.dart';
 import '../../features/notifications/pages/notifications_parent_page.dart';
 import '../../features/communication/pages/announcements_archive_page.dart';
@@ -95,6 +97,34 @@ class AttendanceMonitorRoute extends GoRouteData with $AttendanceMonitorRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       AttendanceMonitorPage(childId: childId);
+}
+
+@TypedGoRoute<AttendanceGroupsRoute>(path: '/attendance/:childId/groups')
+class AttendanceGroupsRoute extends GoRouteData with $AttendanceGroupsRoute {
+  final String childId;
+  const AttendanceGroupsRoute({required this.childId});
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      AttendanceGroupsPageWrapper(childId: childId);
+}
+
+@TypedGoRoute<AttendanceGroupDetailRoute>(
+  path: '/attendance/:childId/groups/:groupId',
+)
+class AttendanceGroupDetailRoute extends GoRouteData
+    with $AttendanceGroupDetailRoute {
+  final String childId;
+  final String groupId;
+  const AttendanceGroupDetailRoute({
+    required this.childId,
+    required this.groupId,
+  });
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      AttendanceGroupDetailPageWrapper(
+        childId: childId,
+        groupId: groupId,
+      );
 }
 
 @TypedGoRoute<FinancialMonitorRoute>(path: '/financial/:childId')

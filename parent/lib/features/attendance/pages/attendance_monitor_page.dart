@@ -61,6 +61,12 @@ class _AttendanceMonitorView extends StatelessWidget {
         ),
         actions: [
           IconButton(
+            tooltip: t.attendanceTracking.groupsAction,
+            onPressed: () =>
+                AttendanceGroupsRoute(childId: childId).go(context),
+            icon: const Icon(Icons.groups_rounded),
+          ),
+          IconButton(
             tooltip: t.retry,
             onPressed: () => context.read<AttendanceBloc>().add(
               AttendanceRefreshRequested(childId),

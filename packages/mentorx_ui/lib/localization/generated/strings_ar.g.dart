@@ -1809,6 +1809,50 @@ class _TranslationsParentAttendanceTrackingAr implements TranslationsParentAtten
 	@override String get generalAcademic => 'عام';
 	@override String get onlineSession => 'أونلاين';
 	@override String checkInTimeLabel({required Object time}) => 'تم التسجيل في ${time}';
+	@override String get groupsAction => 'عرض المجموعات';
+	@override String get groupsTitle => 'مجموعات الحضور';
+	@override String get groupsHint => 'المجموعات التي ينتمي إليها طفلك.';
+	@override String get groupActiveBadge => 'نشطة';
+	@override String get groupInactiveBadge => 'موقوفة';
+	@override String get groupTeacherLabel => 'المعلم';
+	@override String get groupCourseLabel => 'المادة';
+	@override String groupEnrolledLabel({required Object count}) =>
+		'${count} طالب';
+	@override String get groupScheduleTitle => 'الجدول الأسبوعي';
+	@override String get groupNoSchedule => 'لا يوجد جدول متاح.';
+	@override String groupSessionRoomLabel({required Object room}) =>
+		'قاعة ${room}';
+	@override String get groupDetailTitle => 'تفاصيل المجموعة';
+	@override String get groupAttendanceTitle => 'ملخص الحضور';
+	@override String get groupRecentSessionsTitle => 'آخر الحصص';
+	@override String get groupAttendanceRatioLabel => 'نسبة الحضور';
+	@override String groupTotalSessions({required Object count}) =>
+		'${count} حصة';
+	@override String groupAttendedSessions({required Object count}) =>
+		'حضور: ${count}';
+	@override String groupMissedSessions({required Object count}) =>
+		'غياب: ${count}';
+	@override String groupLateSessions({required Object count}) =>
+		'تأخّر: ${count}';
+	@override String groupStartDateLabel({required Object date}) =>
+		'بدأت في ${date}';
+	@override String groupEndDateLabel({required Object date}) =>
+		'تنتهي في ${date}';
+	@override String get groupLocationLabel => 'المكان';
+	@override String get groupDescriptionLabel => 'الوصف';
+	@override String get groupsEmptyTitle => 'لا توجد مجموعات';
+	@override String get groupsEmptyHint =>
+		'لم يُسجَّل طفلك في أي مجموعة حضور بعد.';
+	@override String get groupFailureTitle => 'تعذّر تحميل المجموعات';
+	@override String get groupNotFoundTitle => 'المجموعة غير موجودة';
+	@override String get groupNotFoundHint => 'هذه المجموعة لم تعد متاحة.';
+	@override String get dayMonday => 'الإثنين';
+	@override String get dayTuesday => 'الثلاثاء';
+	@override String get dayWednesday => 'الأربعاء';
+	@override String get dayThursday => 'الخميس';
+	@override String get dayFriday => 'الجمعة';
+	@override String get daySaturday => 'السبت';
+	@override String get daySunday => 'الأحد';
 }
 
 // Path: parent.assessments

@@ -15,6 +15,8 @@ List<RouteBase> get $appRoutes => [
   $parentRegistrationPageRoute,
   $homePageRoute,
   $attendanceMonitorRoute,
+  $attendanceGroupsRoute,
+  $attendanceGroupDetailRoute,
   $financialMonitorRoute,
   $academicMonitorRoute,
   $courseProgressRoute,
@@ -226,6 +228,70 @@ mixin $AttendanceMonitorRoute on GoRouteData {
   @override
   String get location => GoRouteData.$location(
     '/attendance/${Uri.encodeComponent(_self.childId)}',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $attendanceGroupsRoute => GoRouteData.$route(
+  path: '/attendance/:childId/groups',
+  factory: $AttendanceGroupsRoute._fromState,
+);
+
+mixin $AttendanceGroupsRoute on GoRouteData {
+  static AttendanceGroupsRoute _fromState(GoRouterState state) =>
+      AttendanceGroupsRoute(childId: state.pathParameters['childId']!);
+
+  AttendanceGroupsRoute get _self => this as AttendanceGroupsRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/attendance/${Uri.encodeComponent(_self.childId)}/groups',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $attendanceGroupDetailRoute => GoRouteData.$route(
+  path: '/attendance/:childId/groups/:groupId',
+  factory: $AttendanceGroupDetailRoute._fromState,
+);
+
+mixin $AttendanceGroupDetailRoute on GoRouteData {
+  static AttendanceGroupDetailRoute _fromState(GoRouterState state) =>
+      AttendanceGroupDetailRoute(
+        childId: state.pathParameters['childId']!,
+        groupId: state.pathParameters['groupId']!,
+      );
+
+  AttendanceGroupDetailRoute get _self =>
+      this as AttendanceGroupDetailRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/attendance/${Uri.encodeComponent(_self.childId)}/groups/${Uri.encodeComponent(_self.groupId)}',
   );
 
   @override
