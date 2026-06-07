@@ -1205,6 +1205,11 @@
             "regErrorRegistrationFailed": "فشل التسجيل. حاول مرة أخرى.",
             "regErrorPhoneAlreadyExists": "يوجد حساب مسجّل بهذا الرقم بالفعل."
         },
+        "pushNotifications": {
+            "bannerOpen": "فتح",
+            "bannerDismiss": "تجاهل",
+            "permissionDeniedMessage": "تم رفض إذن الإشعارات. يمكنك تفعيله من إعدادات جهازك."
+        },
         "profile": {
             "verifiedAccount": "حساب موثّق",
             "fullNameLabel": "الاسم بالكامل",

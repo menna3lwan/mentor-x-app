@@ -1013,6 +1013,7 @@ class _TranslationsParentAr implements TranslationsParentEn {
 	@override late final _TranslationsParentOnboardingAr onboarding = _TranslationsParentOnboardingAr._(_root);
 	@override late final _TranslationsParentAuthAr auth = _TranslationsParentAuthAr._(_root);
 	@override late final _TranslationsParentProfileAr profile = _TranslationsParentProfileAr._(_root);
+	@override late final _TranslationsParentPushNotificationsAr pushNotifications = _TranslationsParentPushNotificationsAr._(_root);
 	@override late final _TranslationsParentCommunicationAr communication = _TranslationsParentCommunicationAr._(_root);
 	@override late final _TranslationsParentAnalyticsAr analytics = _TranslationsParentAnalyticsAr._(_root);
 	@override late final _TranslationsParentAcademicAr academic = _TranslationsParentAcademicAr._(_root);
@@ -1594,6 +1595,18 @@ class _TranslationsParentAuthAr implements TranslationsParentAuthEn {
 	@override String get regErrorPasswordMismatch => 'كلمتا المرور غير متطابقتين.';
 	@override String get regErrorRegistrationFailed => 'فشل التسجيل. حاول مرة أخرى.';
 	@override String get regErrorPhoneAlreadyExists => 'يوجد حساب مسجّل بهذا الرقم بالفعل.';
+}
+
+// Path: parent.pushNotifications
+class _TranslationsParentPushNotificationsAr implements TranslationsParentPushNotificationsEn {
+	_TranslationsParentPushNotificationsAr._(this._root);
+
+	final TranslationsAr _root; // ignore: unused_field
+
+	@override String get bannerOpen => 'فتح';
+	@override String get bannerDismiss => 'تجاهل';
+	@override String get permissionDeniedMessage =>
+		'تم رفض إذن الإشعارات. يمكنك تفعيله من إعدادات جهازك.';
 }
 
 // Path: parent.profile

@@ -1278,6 +1278,7 @@ class TranslationsParentEn {
 	late final TranslationsParentOnboardingEn onboarding = TranslationsParentOnboardingEn._(_root);
 	late final TranslationsParentAuthEn auth = TranslationsParentAuthEn._(_root);
 	late final TranslationsParentProfileEn profile = TranslationsParentProfileEn._(_root);
+	late final TranslationsParentPushNotificationsEn pushNotifications = TranslationsParentPushNotificationsEn._(_root);
 	late final TranslationsParentCommunicationEn communication = TranslationsParentCommunicationEn._(_root);
 	late final TranslationsParentAnalyticsEn analytics = TranslationsParentAnalyticsEn._(_root);
 	late final TranslationsParentAcademicEn academic = TranslationsParentAcademicEn._(_root);
@@ -2473,6 +2474,23 @@ class TranslationsParentAuthEn {
 
 	/// en: 'An account with this phone number already exists.'
 	String get regErrorPhoneAlreadyExists => 'An account with this phone number already exists.';
+}
+
+// Path: parent.pushNotifications
+class TranslationsParentPushNotificationsEn {
+	TranslationsParentPushNotificationsEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	/// en: 'Open'
+	String get bannerOpen => 'Open';
+
+	/// en: 'Dismiss'
+	String get bannerDismiss => 'Dismiss';
+
+	/// en: 'Push permission was denied. You can enable it from your device settings.'
+	String get permissionDeniedMessage =>
+		'Push permission was denied. You can enable it from your device settings.';
 }
 
 // Path: parent.profile

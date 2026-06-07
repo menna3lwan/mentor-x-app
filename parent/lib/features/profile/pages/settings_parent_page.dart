@@ -9,6 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../core/blocs/app_brightness_cubit/app_brightness_cubit.dart';
 import '../../../core/blocs/app_locale_cubit/app_locale_cubit.dart';
 import '../../../core/routing/app_routes.dart';
+import '../../push_notifications/push_notifications.dart';
 import '../../settings/bloc/settings_cubit.dart';
 import '../widgets/widgets.dart';
 
@@ -74,9 +75,7 @@ class _SettingsViewState extends State<_SettingsView> {
                     icon: Icons.notifications_active_rounded,
                     label: t.profile.pushNotifications,
                     value: state.pushNotificationsEnabled,
-                    onChanged: (val) => context
-                        .read<SettingsCubit>()
-                        .setPushNotificationsEnabled(val),
+                    onChanged: (val) => _togglePushNotifications(context, val),
                   );
                 },
               ),
@@ -153,6 +152,39 @@ class _SettingsViewState extends State<_SettingsView> {
         ],
       ),
     );
+  }
+
+  /// Bridges the Settings toggle to the [PushNotificationsCubit]:
+  /// - turning ON requests system permission and registers the token,
+  /// - turning OFF unregisters the device.
+  /// Persistence happens via [SettingsCubit] in both cases.
+  Future<void> _togglePushNotifications(
+    BuildContext context,
+    bool enabled,
+  ) async {
+    final t = Translations.of(context).parent;
+    final settings = context.read<SettingsCubit>();
+    final push = context.read<PushNotificationsCubit>();
+
+    // Optimistic UI: persist the toggle immediately so the switch animates
+    // and the choice survives even if the permission prompt is cancelled.
+    await settings.setPushNotificationsEnabled(enabled);
+    if (!enabled) {
+      await push.disable();
+      return;
+    }
+    final permission = await push.enable();
+    if (!context.mounted) return;
+    if (!permission.isGranted) {
+      // Roll the toggle back if the user denied the system prompt so the
+      // UI stays in sync with reality.
+      await settings.setPushNotificationsEnabled(false);
+      if (!context.mounted) return;
+      MentorXUI.showToast(
+        message: t.pushNotifications.permissionDeniedMessage,
+        isError: true,
+      );
+    }
   }
 
   Future<void> _openHelpCenter(

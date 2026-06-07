@@ -1196,6 +1196,11 @@
             "regErrorRegistrationFailed": "Registration failed. Please try again.",
             "regErrorPhoneAlreadyExists": "An account with this phone number already exists."
         },
+        "pushNotifications": {
+            "bannerOpen": "Open",
+            "bannerDismiss": "Dismiss",
+            "permissionDeniedMessage": "Push permission was denied. You can enable it from your device settings."
+        },
         "profile": {
             "verifiedAccount": "Verified Account",
             "fullNameLabel": "Full Name",
