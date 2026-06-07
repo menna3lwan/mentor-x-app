@@ -10,3 +10,7 @@ sealed class QuizReviewPageEvent extends Equatable {
 final class QuizReviewPageLoadEvent extends QuizReviewPageEvent {
   const QuizReviewPageLoadEvent();
 }
+
+final class QuizReviewPageSubmitEvent extends QuizReviewPageEvent {
+  const QuizReviewPageSubmitEvent();
+}

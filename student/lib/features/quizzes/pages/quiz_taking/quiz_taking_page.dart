@@ -95,14 +95,23 @@ final class _QuizTakingPageState extends State<QuizTakingPage> {
         }
 
         if (state.errorMessage != null) {
+          final isAlreadyAttempted = state.errorMessage == 'alreadyAttempted';
           return Scaffold(
             backgroundColor: context.backgroundPrimaryColor,
-            body: AppErrorView(
-              message: state.errorMessage!,
-              onRetry: () => context.read<QuizTakingPageBloc>().add(
-                const QuizTakingPageLoadEvent(),
-              ),
-            ),
+            body: isAlreadyAttempted
+                ? AppEmptyView(
+                    title: t.alreadyAttempted,
+                    message: t.alreadyAttemptedDesc,
+                    icon: Icons.check_circle_outline_rounded,
+                    actionLabel: t.commonBack,
+                    onAction: () => Navigator.of(context).pop(),
+                  )
+                : AppErrorView(
+                    message: state.errorMessage!,
+                    onRetry: () => context.read<QuizTakingPageBloc>().add(
+                      const QuizTakingPageLoadEvent(),
+                    ),
+                  ),
           );
         }
 
@@ -168,6 +177,9 @@ final class _QuizTakingPageState extends State<QuizTakingPage> {
                     isFirst: currentQuestionIndex == 0,
                     isLast: currentQuestionIndex == totalQuestions - 1,
                     isSubmitting: state.isSubmitting,
+                    quizId: state.quizId,
+                    attemptId: state.attemptId,
+                    answers: state.answers,
                   ),
                 ],
               ),
@@ -710,11 +722,17 @@ class _BuildNavigation extends StatelessWidget {
   final bool isFirst;
   final bool isLast;
   final bool isSubmitting;
+  final String quizId;
+  final String? attemptId;
+  final Map<String, String> answers;
 
   const _BuildNavigation({
     required this.isFirst,
     required this.isLast,
     required this.isSubmitting,
+    required this.quizId,
+    required this.attemptId,
+    required this.answers,
   });
 
   @override
@@ -755,12 +773,23 @@ class _BuildNavigation extends StatelessWidget {
                     const QuizTakingPageNextQuestion(),
                   );
                 } else {
-                  context.read<QuizTakingPageBloc>().add(
-                    const QuizTakingPageSubmit(),
-                  );
+                  if (attemptId != null) {
+                    () async {
+                      final targetIndex = await QuizReviewPageRoute(
+                        quizId: quizId,
+                        attemptId: attemptId!,
+                        $extra: answers,
+                      ).push<int>(context);
+                      if (targetIndex != null && context.mounted) {
+                        context.read<QuizTakingPageBloc>().add(
+                          QuizTakingPageJumpToQuestion(targetIndex),
+                        );
+                      }
+                    }();
+                  }
                 }
               },
-              label: isLast ? t.commonSubmit : t.commonNext,
+              label: isLast ? t.reviewAnswers : t.commonNext,
               size: MentorXButtonSize.large,
             ),
           ),

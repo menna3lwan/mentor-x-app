@@ -3,26 +3,24 @@ import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:mentorx_student/core/core.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'bloc/quiz_answers_review_page_bloc.dart';
 
 final class QuizAnswersReviewPage extends StatelessWidget {
   const QuizAnswersReviewPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final isAr = Localizations.localeOf(context).languageCode == 'ar';
+    final t = context.t.quizzes;
 
-    // Mock data for UI demonstration
-    final answers = List.generate(
-      10,
-      (i) => (
-        i % 3 != 0, // isCorrect
-        isAr
-            ? '${i + 1}. \u0645\u0627 \u0647\u064A \u0648\u062D\u062F\u0629 \u0642\u064A\u0627\u0633 \u0627\u0644\u062A\u0631\u062F\u062F\u061F'
-            : '${i + 1}. What is the unit of frequency?',
-        'Option ${i % 2 == 0 ? "A" : "B"}', // userAnswer
-        'Option A', // correctAnswer
-      ),
-    );
+    // Define mock correct answers for the mock quiz questions
+    const mockCorrectAnswers = {
+      'qq1': 'x = 5',
+      'qq2': 'True',
+      'qq3': '2',
+      'qq4': '2',
+      'qq5': 'Linear equations have degree 1, quadratic have degree 2.',
+    };
 
     return Scaffold(
       backgroundColor: context.backgroundPrimaryColor,
@@ -30,22 +28,55 @@ final class QuizAnswersReviewPage extends StatelessWidget {
         children: [
           const _BuildHeader(),
           Expanded(
-            child: ListView.builder(
-              physics: const BouncingScrollPhysics(),
-              padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
-              itemCount: answers.length,
-              itemBuilder: (context, i) {
-                final (isCorrect, question, userAnswer, correctAnswer) =
-                    answers[i];
-                return FadeInUp(
-                  duration: const Duration(milliseconds: 500),
-                  delay: Duration(milliseconds: 50 * i),
-                  child: _AnswerReviewCard(
-                    question: question,
-                    userAnswer: userAnswer,
-                    correctAnswer: correctAnswer,
-                    isCorrect: isCorrect,
-                  ),
+            child: BlocBuilder<QuizAnswersReviewPageBloc, QuizAnswersReviewPageState>(
+              builder: (context, state) {
+                if (state.loadingState == LoadingState.loading) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                if (state.errorMessage != null) {
+                  return AppErrorView(
+                    message: state.errorMessage!,
+                    onRetry: () => context
+                        .read<QuizAnswersReviewPageBloc>()
+                        .add(const QuizAnswersReviewPageLoadEvent()),
+                  );
+                }
+
+                final attempt = state.attempt;
+                final questions = state.questions;
+
+                if (attempt == null || questions.isEmpty) {
+                  return AppEmptyView(
+                    title: t.resultNotFound,
+                    message: 'No questions to review.',
+                  );
+                }
+
+                return ListView.builder(
+                  physics: const BouncingScrollPhysics(),
+                  padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
+                  itemCount: questions.length,
+                  itemBuilder: (context, i) {
+                    final question = questions[i];
+                    final userAnswer = attempt.answers[question.id] ?? 'Unanswered';
+                    final correctAnswer = mockCorrectAnswers[question.id] ?? 'N/A';
+                    
+                    // In mock/test mode, check correctness against mockCorrectAnswers.
+                    // For others, if the selected answer is correct, show correct.
+                    final isCorrect = userAnswer.trim().toLowerCase() == correctAnswer.trim().toLowerCase();
+
+                    return FadeInUp(
+                      duration: const Duration(milliseconds: 500),
+                      delay: Duration(milliseconds: 50 * i),
+                      child: _AnswerReviewCard(
+                        question: '${i + 1}. ${question.description}',
+                        userAnswer: userAnswer,
+                        correctAnswer: correctAnswer,
+                        isCorrect: isCorrect,
+                      ),
+                    );
+                  },
                 );
               },
             ),

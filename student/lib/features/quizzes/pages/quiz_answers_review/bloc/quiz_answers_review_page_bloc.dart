@@ -24,7 +24,8 @@ final class QuizAnswersReviewPageBloc
   QuizAnswersReviewPageBloc({
     required this.quizRepository,
     required this.analyticsService,
-  }) : super(QuizAnswersReviewPageState.initial) {
+    QuizAttemptEntity? attempt,
+  }) : super(QuizAnswersReviewPageState(attempt: attempt)) {
     on<QuizAnswersReviewPageLoadEvent>(_onLoad);
   }
 
@@ -37,6 +38,27 @@ final class QuizAnswersReviewPageBloc
   ) async {
     emit(state.copyWith(loadingState: LoadingState.loading));
     analyticsService.logEvent(name: AnalyticsEvents.quizAnswersReviewViewed);
-    emit(state.copyWith(loadingState: LoadingState.loaded));
+    
+    if (state.attempt == null) {
+      emit(state.copyWith(loadingState: LoadingState.loaded));
+      return;
+    }
+
+    try {
+      final questions = await quizRepository.getQuizQuestions(state.attempt!.quizId);
+      emit(
+        state.copyWith(
+          loadingState: LoadingState.loaded,
+          questions: questions,
+        ),
+      );
+    } catch (e) {
+      emit(
+        state.copyWith(
+          loadingState: LoadingState.error,
+          errorMessage: e.toString(),
+        ),
+      );
+    }
   }
 }

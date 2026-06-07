@@ -5,6 +5,9 @@ import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:mentorx_student/core/core.dart';
 
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'bloc/quiz_review_page_bloc.dart';
+
 final class QuizReviewPage extends StatelessWidget {
   const QuizReviewPage({super.key});
 
@@ -12,92 +15,119 @@ final class QuizReviewPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = context.t.quizzes;
 
-    // Mock data for UI demonstration
-    const timerText = '24:35';
-    final answered = List.generate(16, (i) => i);
-    const total = 20;
-
     return Scaffold(
       backgroundColor: context.backgroundPrimaryColor,
-      body: Column(
-        children: [
-          _BuildHeader(t: t, timerText: timerText),
-          Expanded(
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  FadeInDown(
-                    child: _BuildProgressOverview(
-                      t: t,
-                      answeredCount: answered.length,
-                      totalCount: total,
-                    ),
-                  ),
-                  const Gap(40),
-                  FadeInUp(
-                    delay: const Duration(milliseconds: 200),
-                    child: Text(
-                      t.review.jumpToQuestion,
-                      style: context.bodyPrimaryStyle.copyWith(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w900,
-                        letterSpacing: -0.5,
+      body: BlocBuilder<QuizReviewPageBloc, QuizReviewPageState>(
+        builder: (context, state) {
+          if (state.loadingState == LoadingState.loading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (state.errorMessage != null) {
+            return AppErrorView(
+              message: state.errorMessage!,
+              onRetry: () => context
+                  .read<QuizReviewPageBloc>()
+                  .add(const QuizReviewPageLoadEvent()),
+            );
+          }
+
+          final total = state.questions.length;
+          final answeredCount = state.questions
+              .where((q) => state.answers[q.id]?.isNotEmpty == true)
+              .length;
+
+          return Column(
+            children: [
+              _BuildHeader(t: t, timerText: '--:--'),
+              Expanded(
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      FadeInDown(
+                        child: _BuildProgressOverview(
+                          t: t,
+                          answeredCount: answeredCount,
+                          totalCount: total,
+                        ),
                       ),
-                    ),
-                  ),
-                  const Gap(20),
-                  FadeInUp(
-                    delay: const Duration(milliseconds: 300),
-                    child: GridView.builder(
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 5,
-                            mainAxisSpacing: 12,
-                            crossAxisSpacing: 12,
-                            childAspectRatio: 1,
+                      const Gap(40),
+                      FadeInUp(
+                        delay: const Duration(milliseconds: 200),
+                        child: Text(
+                          t.review.jumpToQuestion,
+                          style: context.bodyPrimaryStyle.copyWith(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: -0.5,
                           ),
-                      itemCount: total,
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemBuilder: (context, i) {
-                        final isAnswered = answered.contains(i);
-                        return _QuestionStatusBox(
-                          index: i + 1,
-                          isAnswered: isAnswered,
-                        );
-                      },
-                    ),
-                  ),
-                  const Gap(48),
-                  FadeInUp(
-                    delay: const Duration(milliseconds: 400),
-                    child: MentorXButton(
-                      onPressed: () => context.push('/quiz-result'),
-                      label: t.review.submitQuiz,
-                      size: MentorXButtonSize.large,
-                    ),
-                  ),
-                  const Gap(16),
-                  FadeInUp(
-                    delay: const Duration(milliseconds: 500),
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: MentorXButton(
-                        onPressed: () => context.pop(),
-                        label: t.review.backToQuestions,
-                        variant: MentorXButtonVariant.outline,
-                        size: MentorXButtonSize.large,
+                        ),
                       ),
-                    ),
+                      const Gap(20),
+                      FadeInUp(
+                        delay: const Duration(milliseconds: 300),
+                        child: GridView.builder(
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 5,
+                                mainAxisSpacing: 12,
+                                crossAxisSpacing: 12,
+                                childAspectRatio: 1,
+                              ),
+                          itemCount: total,
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, i) {
+                            final question = state.questions[i];
+                            final isAnswered =
+                                state.answers[question.id]?.isNotEmpty == true;
+                            return GestureDetector(
+                              onTap: () => Navigator.of(context).pop(i),
+                              child: _QuestionStatusBox(
+                                index: i + 1,
+                                isAnswered: isAnswered,
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      const Gap(48),
+                      FadeInUp(
+                        delay: const Duration(milliseconds: 400),
+                        child: MentorXButton(
+                          loading: state.loadingState == LoadingState.actionInProgress,
+                          onPressed: () {
+                            context.read<QuizReviewPageBloc>().add(
+                              const QuizReviewPageSubmitEvent(),
+                            );
+                          },
+                          label: t.review.submitQuiz,
+                          size: MentorXButtonSize.large,
+                        ),
+                      ),
+                      const Gap(16),
+                      FadeInUp(
+                        delay: const Duration(milliseconds: 500),
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: MentorXButton(
+                            onPressed: () => context.pop(),
+                            label: t.review.backToQuestions,
+                            variant: MentorXButtonVariant.outline,
+                            size: MentorXButtonSize.large,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
-            ),
-          ),
-        ],
+            ],
+          );
+        },
       ),
     );
   }

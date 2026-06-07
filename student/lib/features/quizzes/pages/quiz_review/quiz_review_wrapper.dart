@@ -1,5 +1,7 @@
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mentorx_student/core/core.dart';
 
 import 'bloc/quiz_review_page_bloc.dart';
 import 'quiz_review_page.dart';
@@ -24,7 +26,17 @@ class _QuizReviewPageWrapperState extends State<QuizReviewPageWrapper> {
             Navigator.of(context).pop();
         }
       },
-      child: const QuizReviewPage(),
+      child: BlocListener<QuizReviewPageBloc, QuizReviewPageState>(
+        listenWhen: (previous, current) =>
+            previous.loadingState != current.loadingState &&
+            current.loadingState == LoadingState.success,
+        listener: (context, state) {
+          if (state.result != null) {
+            QuizResultPageRoute(attemptId: state.result!.id).go(context);
+          }
+        },
+        child: const QuizReviewPage(),
+      ),
     );
   }
 }

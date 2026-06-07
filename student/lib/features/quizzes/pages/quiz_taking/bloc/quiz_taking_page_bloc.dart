@@ -32,6 +32,11 @@ final class QuizTakingPageBloc
     on<QuizTakingPageNextQuestion>(_onNextQuestion);
     on<QuizTakingPagePreviousQuestion>(_onPreviousQuestion);
     on<QuizTakingPageSubmit>(_onSubmit);
+    on<QuizTakingPageJumpToQuestion>((event, emit) {
+      if (event.index >= 0 && event.index < state.questions.length) {
+        emit(state.copyWith(currentQuestionIndex: event.index));
+      }
+    });
   }
 
   final QuizRepository quizRepository;
@@ -43,14 +48,32 @@ final class QuizTakingPageBloc
   ) async {
     emit(state.copyWith(loadingState: LoadingState.loading));
     try {
-      final [quiz, startResult] = await Future.wait([
-        quizRepository.getQuiz(state.quizId),
-        quizRepository.startQuiz(state.quizId),
-      ]);
+      final quizEntity = await quizRepository.getQuiz(state.quizId);
+      QuizAttemptEntity attempt;
+      List<QuizQuestionEntity> questions;
 
-      final quizEntity = quiz as QuizEntity;
-      final (attempt, questions) =
-          startResult as (QuizAttemptEntity, List<QuizQuestionEntity>);
+      try {
+        final startResult = await quizRepository.startQuiz(state.quizId);
+        attempt = startResult.$1;
+        questions = startResult.$2;
+      } on QuizRepositoryException catch (e) {
+        if (e.code == QuizRepositoryExceptionCode.quizAlreadyStarted) {
+          final activeAttempt = await quizRepository.getStudentAttemptForQuiz('', state.quizId);
+          if (activeAttempt == null) {
+            emit(
+              state.copyWith(
+                loadingState: LoadingState.error,
+                errorMessage: 'alreadyAttempted',
+              ),
+            );
+            return;
+          }
+          attempt = activeAttempt;
+          questions = await quizRepository.getQuizQuestions(state.quizId);
+        } else {
+          rethrow;
+        }
+      }
 
       int? remainingSeconds;
       if (quizEntity.timeRestricted) {

@@ -52,7 +52,7 @@ final class MockQuizRepository implements QuizRepository {
     String? attemptId,
   }) async {
     await Future<void>.delayed(delay);
-    return MockQuizGenerator.submitResult(quizId);
+    return MockQuizGenerator.submitResult(quizId, answers: answers);
   }
 
   @override

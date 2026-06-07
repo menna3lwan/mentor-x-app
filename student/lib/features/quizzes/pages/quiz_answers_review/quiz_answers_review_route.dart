@@ -6,7 +6,8 @@ part of '../../../../core/routing/app_routes.dart';
 )
 final class QuizAnswersReviewPageRoute extends GoRouteData
     with $QuizAnswersReviewPageRoute {
-  const QuizAnswersReviewPageRoute();
+  final QuizAttemptEntity? $extra;
+  const QuizAnswersReviewPageRoute({this.$extra});
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
@@ -14,6 +15,7 @@ final class QuizAnswersReviewPageRoute extends GoRouteData
       create: (context) => QuizAnswersReviewPageBloc(
         quizRepository: context.read<QuizRepository>(),
         analyticsService: context.read<AnalyticsService>(),
+        attempt: $extra,
       )..add(const QuizAnswersReviewPageLoadEvent()),
       child: const QuizAnswersReviewPageWrapper(),
     );

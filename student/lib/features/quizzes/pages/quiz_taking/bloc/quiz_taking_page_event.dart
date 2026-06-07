@@ -35,3 +35,11 @@ final class QuizTakingPagePreviousQuestion extends QuizTakingPageEvent {
 final class QuizTakingPageSubmit extends QuizTakingPageEvent {
   const QuizTakingPageSubmit();
 }
+
+final class QuizTakingPageJumpToQuestion extends QuizTakingPageEvent {
+  final int index;
+  const QuizTakingPageJumpToQuestion(this.index);
+
+  @override
+  List<Object?> get props => [index];
+}

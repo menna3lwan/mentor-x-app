@@ -103,7 +103,7 @@ final class MockQuizGenerator {
     );
   }
 
-  static QuizAttemptEntity submitResult(String attemptId) {
+  static QuizAttemptEntity submitResult(String attemptId, {Map<String, String>? answers}) {
     return QuizAttemptEntity(
       id: attemptId,
       quizId: 'q1',
@@ -116,6 +116,13 @@ final class MockQuizGenerator {
       startedAt: DateTime.now().subtract(const Duration(minutes: 25)),
       submittedAt: DateTime.now(),
       timeSpentSeconds: 1500,
+      answers: answers ?? const {
+        'qq1': 'x = 5',
+        'qq2': 'True',
+        'qq3': '2',
+        'qq4': '2',
+        'qq5': 'Linear equations have degree 1, quadratic have degree 2.',
+      },
     );
   }
 }

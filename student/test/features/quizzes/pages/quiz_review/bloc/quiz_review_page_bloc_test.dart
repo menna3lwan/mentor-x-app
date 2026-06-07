@@ -32,15 +32,24 @@ void main() {
 
   group('QuizReviewPageBloc', () {
     test('initial state is correct', () {
-      final bloc = QuizReviewPageBloc(quizRepository: quizRepository, analyticsService: analyticsService);
-      expect(bloc.state, QuizReviewPageState.initial);
+      final bloc = QuizReviewPageBloc(
+        quizRepository: quizRepository,
+        analyticsService: analyticsService,
+        quizId: 'q1',
+        attemptId: 'attempt_1',
+      );
       expect(bloc.state.loadingState, LoadingState.initial);
       bloc.close();
     });
 
     blocTest<QuizReviewPageBloc, QuizReviewPageState>(
       'emits [loading, loaded] when QuizReviewPageLoadEvent is added',
-      build: () => QuizReviewPageBloc(quizRepository: quizRepository, analyticsService: analyticsService),
+      build: () => QuizReviewPageBloc(
+        quizRepository: quizRepository,
+        analyticsService: analyticsService,
+        quizId: 'q1',
+        attemptId: 'attempt_1',
+      ),
       act: (bloc) => bloc.add(const QuizReviewPageLoadEvent()),
       expect: () => [
         isA<QuizReviewPageState>().having(

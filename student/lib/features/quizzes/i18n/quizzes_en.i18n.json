@@ -17,6 +17,8 @@
     "questions": "Questions",
     "minutesShort": "mins",
     "quizNotFound": "Quiz not found",
+    "alreadyAttempted": "You have already completed this quiz.",
+    "alreadyAttemptedDesc": "Each quiz can only be attempted once. You can view your results from the course page.",
     "resumeQuiz": "Resume Quiz",
     "startQuiz": "Start Quiz",
     "commonBack": "Back",

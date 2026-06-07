@@ -1540,50 +1540,64 @@ RouteBase get $quizAnswersReviewPageRoute => GoRouteData.$route(
 
 mixin $QuizAnswersReviewPageRoute on GoRouteData {
   static QuizAnswersReviewPageRoute _fromState(GoRouterState state) =>
-      const QuizAnswersReviewPageRoute();
+      QuizAnswersReviewPageRoute($extra: state.extra as QuizAttemptEntity?);
+
+  QuizAnswersReviewPageRoute get _self => this as QuizAnswersReviewPageRoute;
 
   @override
   String get location => GoRouteData.$location('/quiz-answers-review');
 
   @override
-  void go(BuildContext context) => context.go(location);
+  void go(BuildContext context) => context.go(location, extra: _self.$extra);
 
   @override
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+  Future<T?> push<T>(BuildContext context) =>
+      context.push<T>(location, extra: _self.$extra);
 
   @override
   void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
+      context.pushReplacement(location, extra: _self.$extra);
 
   @override
-  void replace(BuildContext context) => context.replace(location);
+  void replace(BuildContext context) =>
+      context.replace(location, extra: _self.$extra);
 }
 
 RouteBase get $quizReviewPageRoute => GoRouteData.$route(
-  path: '/quiz-review',
+  path: '/quiz-review/:quizId/:attemptId',
   name: 'quizReview',
   factory: $QuizReviewPageRoute._fromState,
 );
 
 mixin $QuizReviewPageRoute on GoRouteData {
   static QuizReviewPageRoute _fromState(GoRouterState state) =>
-      const QuizReviewPageRoute();
+      QuizReviewPageRoute(
+        quizId: state.pathParameters['quizId']!,
+        attemptId: state.pathParameters['attemptId']!,
+        $extra: state.extra as Map<String, String>?,
+      );
+
+  QuizReviewPageRoute get _self => this as QuizReviewPageRoute;
 
   @override
-  String get location => GoRouteData.$location('/quiz-review');
+  String get location => GoRouteData.$location(
+    '/quiz-review/${Uri.encodeComponent(_self.quizId)}/${Uri.encodeComponent(_self.attemptId)}',
+  );
 
   @override
-  void go(BuildContext context) => context.go(location);
+  void go(BuildContext context) => context.go(location, extra: _self.$extra);
 
   @override
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+  Future<T?> push<T>(BuildContext context) =>
+      context.push<T>(location, extra: _self.$extra);
 
   @override
   void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
+      context.pushReplacement(location, extra: _self.$extra);
 
   @override
-  void replace(BuildContext context) => context.replace(location);
+  void replace(BuildContext context) =>
+      context.replace(location, extra: _self.$extra);
 }
 
 RouteBase get $quizIntroPageRoute => GoRouteData.$route(

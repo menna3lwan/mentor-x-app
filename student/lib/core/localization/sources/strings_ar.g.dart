@@ -562,6 +562,8 @@ class _TranslationsQuizzesAr extends TranslationsQuizzesEn {
 	@override String get questions => 'أسئلة';
 	@override String get minutesShort => 'دقيقة';
 	@override String get quizNotFound => 'الاختبار غير موجود';
+	@override String get alreadyAttempted => 'لقد قمت بالفعل بإجراء هذا الاختبار.';
+	@override String get alreadyAttemptedDesc => 'يمكن إجراء كل اختبار مرة واحدة فقط. يمكنك عرض نتائجك من صفحة المادة.';
 	@override String get resumeQuiz => 'استئناف الاختبار';
 	@override String get startQuiz => 'بدء الاختبار';
 	@override String get commonBack => 'رجوع';
@@ -1592,6 +1594,8 @@ extension on TranslationsAr {
 			'quizzes.questions' => 'أسئلة',
 			'quizzes.minutesShort' => 'دقيقة',
 			'quizzes.quizNotFound' => 'الاختبار غير موجود',
+			'quizzes.alreadyAttempted' => 'لقد قمت بالفعل بإجراء هذا الاختبار.',
+			'quizzes.alreadyAttemptedDesc' => 'يمكن إجراء كل اختبار مرة واحدة فقط. يمكنك عرض نتائجك من صفحة المادة.',
 			'quizzes.resumeQuiz' => 'استئناف الاختبار',
 			'quizzes.startQuiz' => 'بدء الاختبار',
 			'quizzes.commonBack' => 'رجوع',
@@ -1613,10 +1617,10 @@ extension on TranslationsAr {
 			'quizzes.noQuestions' => 'لا توجد أسئلة متاحة',
 			'quizzes.exitQuizTitle' => 'الخروج من الاختبار؟',
 			'quizzes.exitQuizDesc' => 'يتم حفظ تقدمك تلقائياً. يمكنك استئناف هذا الاختبار لاحقاً من صفحة المقدمة.',
-			'quizzes.cancel' => 'إلغاء',
-			'quizzes.exit' => 'خروج',
 			_ => null,
 		} ?? switch (path) {
+			'quizzes.cancel' => 'إلغاء',
+			'quizzes.exit' => 'خروج',
 			'quizzes.questionLabel' => 'سؤال',
 			'quizzes.chooseCorrect' => 'اختر الإجابة الصحيحة:',
 			'quizzes.typeAnswerHere' => 'اكتب إجابتك هنا...',

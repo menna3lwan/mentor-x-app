@@ -1290,6 +1290,12 @@ class TranslationsQuizzesEn {
 	/// en: 'Quiz not found'
 	String get quizNotFound => 'Quiz not found';
 
+	/// en: 'You have already completed this quiz.'
+	String get alreadyAttempted => 'You have already completed this quiz.';
+
+	/// en: 'Each quiz can only be attempted once. You can view your results from the course page.'
+	String get alreadyAttemptedDesc => 'Each quiz can only be attempted once. You can view your results from the course page.';
+
 	/// en: 'Resume Quiz'
 	String get resumeQuiz => 'Resume Quiz';
 
@@ -2882,6 +2888,8 @@ extension on Translations {
 			'quizzes.questions' => 'Questions',
 			'quizzes.minutesShort' => 'mins',
 			'quizzes.quizNotFound' => 'Quiz not found',
+			'quizzes.alreadyAttempted' => 'You have already completed this quiz.',
+			'quizzes.alreadyAttemptedDesc' => 'Each quiz can only be attempted once. You can view your results from the course page.',
 			'quizzes.resumeQuiz' => 'Resume Quiz',
 			'quizzes.startQuiz' => 'Start Quiz',
 			'quizzes.commonBack' => 'Back',
@@ -2903,10 +2911,10 @@ extension on Translations {
 			'quizzes.noQuestions' => 'No questions available',
 			'quizzes.exitQuizTitle' => 'Exit Quiz?',
 			'quizzes.exitQuizDesc' => 'Your progress is automatically saved. You can resume this quiz later from the intro page.',
-			'quizzes.cancel' => 'Cancel',
-			'quizzes.exit' => 'Exit',
 			_ => null,
 		} ?? switch (path) {
+			'quizzes.cancel' => 'Cancel',
+			'quizzes.exit' => 'Exit',
 			'quizzes.questionLabel' => 'QUESTION',
 			'quizzes.chooseCorrect' => 'Choose the correct answer:',
 			'quizzes.typeAnswerHere' => 'Type your answer here...',

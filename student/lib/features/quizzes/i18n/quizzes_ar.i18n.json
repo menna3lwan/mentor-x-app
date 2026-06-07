@@ -17,6 +17,8 @@
     "questions": "أسئلة",
     "minutesShort": "دقيقة",
     "quizNotFound": "الاختبار غير موجود",
+    "alreadyAttempted": "لقد قمت بالفعل بإجراء هذا الاختبار.",
+    "alreadyAttemptedDesc": "يمكن إجراء كل اختبار مرة واحدة فقط. يمكنك عرض نتائجك من صفحة المادة.",
     "resumeQuiz": "استئناف الاختبار",
     "startQuiz": "بدء الاختبار",
     "commonBack": "رجوع",
