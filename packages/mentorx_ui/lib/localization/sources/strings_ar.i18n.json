@@ -1429,10 +1429,18 @@
             "courseId": "رقم الكورس",
             "fullTitle": "العنوان الكامل",
             "status": "الحالة",
+            "statusLabel": "الحالة",
             "statusActive": "نشط",
+            "statusInProgress": "قيد التقدم",
+            "statusCompleted": "مكتمل",
+            "descriptionLabel": "الوصف",
             "sessions": "الحصص",
             "progress": "التقدم",
-            "id": "المعرّف"
+            "id": "المعرّف",
+            "enrolledCount": "${count} طالب مسجَّل",
+            "failureTitle": "تعذّر تحميل تقدم الكورس",
+            "emptyTitle": "لا توجد بيانات تقدم",
+            "emptyHint": "سيظهر تقدم هذا الكورس هنا أثناء دراسة طفلك."
         },
         "gradeDetail": {
             "pageTitle": "تفاصيل الدرجة",

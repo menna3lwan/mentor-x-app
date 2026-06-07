@@ -1961,6 +1961,32 @@ class TranslationsParentCourseDetailEn {
 
 	/// en: 'ID'
 	String get id => 'ID';
+
+	/// en: 'Status'
+	String get statusLabel => 'Status';
+
+	/// en: 'In Progress'
+	String get statusInProgress => 'In Progress';
+
+	/// en: 'Completed'
+	String get statusCompleted => 'Completed';
+
+	/// en: 'Description'
+	String get descriptionLabel => 'Description';
+
+	/// en: '${count} students enrolled'
+	String enrolledCount({required Object count}) =>
+		'${count} students enrolled';
+
+	/// en: 'Couldn't load course progress'
+	String get failureTitle => 'Couldn\'t load course progress';
+
+	/// en: 'No progress data'
+	String get emptyTitle => 'No progress data';
+
+	/// en: 'Progress for this course will appear here as your child studies.'
+	String get emptyHint =>
+		'Progress for this course will appear here as your child studies.';
 }
 
 // Path: parent.gradeDetail

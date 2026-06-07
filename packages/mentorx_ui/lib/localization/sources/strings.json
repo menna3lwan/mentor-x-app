@@ -1368,10 +1368,18 @@
             "courseId": "Course ID",
             "fullTitle": "Full Title",
             "status": "Status",
+            "statusLabel": "Status",
             "statusActive": "Active",
+            "statusInProgress": "In Progress",
+            "statusCompleted": "Completed",
+            "descriptionLabel": "Description",
             "sessions": "Sessions",
             "progress": "Progress",
-            "id": "ID"
+            "id": "ID",
+            "enrolledCount": "${count} students enrolled",
+            "failureTitle": "Couldn't load course progress",
+            "emptyTitle": "No progress data",
+            "emptyHint": "Progress for this course will appear here as your child studies."
         },
         "gradeDetail": {
             "pageTitle": "Grade Details",

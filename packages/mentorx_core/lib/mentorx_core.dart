@@ -38,6 +38,7 @@ part 'src/entities/parent/parent_dashboard_entities.dart';
 part 'src/entities/parent/parent_financial_entities.dart';
 part 'src/entities/parent/parent_grade_entities.dart';
 part 'src/entities/parent/parent_analytics_entities.dart';
+part 'src/entities/parent/parent_attendance_group_entities.dart';
 part 'src/entities/tenant_entity.dart';
 part 'src/entities/device_entity.dart';
 part 'src/entities/center_entity.dart';

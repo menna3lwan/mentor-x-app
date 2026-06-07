@@ -17,6 +17,7 @@ List<RouteBase> get $appRoutes => [
   $attendanceMonitorRoute,
   $financialMonitorRoute,
   $academicMonitorRoute,
+  $courseProgressRoute,
   $gradeMonitorRoute,
   $analyticsMonitorRoute,
   $notificationsRoute,
@@ -284,6 +285,39 @@ mixin $AcademicMonitorRoute on GoRouteData {
   @override
   String get location =>
       GoRouteData.$location('/academic/${Uri.encodeComponent(_self.childId)}');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $courseProgressRoute => GoRouteData.$route(
+  path: '/academic/:childId/progress/:courseId',
+  factory: $CourseProgressRoute._fromState,
+);
+
+mixin $CourseProgressRoute on GoRouteData {
+  static CourseProgressRoute _fromState(GoRouterState state) =>
+      CourseProgressRoute(
+        childId: state.pathParameters['childId']!,
+        courseId: state.pathParameters['courseId']!,
+      );
+
+  CourseProgressRoute get _self => this as CourseProgressRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/academic/${Uri.encodeComponent(_self.childId)}/progress/${Uri.encodeComponent(_self.courseId)}',
+  );
 
   @override
   void go(BuildContext context) => context.go(location);

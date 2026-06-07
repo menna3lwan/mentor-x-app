@@ -9,6 +9,7 @@ import '../../features/financial/pages/financial_monitor_page.dart';
 import '../../features/courses/pages/academic_monitor_page.dart';
 import '../../features/analytics/pages/analytics_monitor_page.dart';
 import '../../features/assessments/pages/grade_monitor_page.dart';
+import '../../features/courses/pages/course_progress_detail_page_wrapper.dart';
 import '../../features/notifications/pages/notifications_parent_page.dart';
 import '../../features/communication/pages/announcements_archive_page.dart';
 import '../../features/communication/pages/whatsapp_groups_parent_page.dart';
@@ -112,6 +113,24 @@ class AcademicMonitorRoute extends GoRouteData with $AcademicMonitorRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       AcademicMonitorPage(childId: childId);
+}
+
+@TypedGoRoute<CourseProgressRoute>(
+  path: '/academic/:childId/progress/:courseId',
+)
+class CourseProgressRoute extends GoRouteData with $CourseProgressRoute {
+  final String childId;
+  final String courseId;
+  const CourseProgressRoute({
+    required this.childId,
+    required this.courseId,
+  });
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      CourseProgressDetailPageWrapper(
+        childId: childId,
+        courseId: courseId,
+      );
 }
 
 @TypedGoRoute<GradeMonitorRoute>(path: '/grades/:childId')

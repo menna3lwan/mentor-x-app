@@ -1386,6 +1386,16 @@ class _TranslationsParentCourseDetailAr implements TranslationsParentCourseDetai
 	@override String get sessions => 'الحصص';
 	@override String get progress => 'التقدم';
 	@override String get id => 'المعرّف';
+	@override String get statusLabel => 'الحالة';
+	@override String get statusInProgress => 'قيد التقدم';
+	@override String get statusCompleted => 'مكتمل';
+	@override String get descriptionLabel => 'الوصف';
+	@override String enrolledCount({required Object count}) =>
+		'${count} طالب مسجَّل';
+	@override String get failureTitle => 'تعذّر تحميل تقدم الكورس';
+	@override String get emptyTitle => 'لا توجد بيانات تقدم';
+	@override String get emptyHint =>
+		'سيظهر تقدم هذا الكورس هنا أثناء دراسة طفلك.';
 }
 
 // Path: parent.gradeDetail

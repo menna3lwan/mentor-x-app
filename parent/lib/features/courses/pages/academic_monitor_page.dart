@@ -5,6 +5,7 @@ import 'package:gap/gap.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 
+import '../../../core/routing/app_routes.dart';
 import '../bloc/courses_bloc.dart';
 import '../widgets/widgets.dart';
 
@@ -63,7 +64,12 @@ class _AcademicMonitorView extends StatelessWidget {
             const Gap(32),
             AppSectionHeader(title: t.enrolledCourses),
             const Gap(16),
-            const CoursesListWrapper(),
+            CoursesListWrapper(
+              onCourseTap: (courseId) => CourseProgressRoute(
+                childId: childId,
+                courseId: courseId,
+              ).go(context),
+            ),
             const Gap(40),
           ],
         ),
