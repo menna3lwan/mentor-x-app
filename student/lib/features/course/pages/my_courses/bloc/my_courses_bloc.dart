@@ -22,6 +22,8 @@ final class MyCoursesBloc
           MyCoursesState,
           MyCoursesPresentationEvent
         > {
+  static final MentorXLogger _logger = MentorXLogger('MyCoursesBloc');
+
   final CourseRepository _courseRepository;
   final AnalyticsService _analyticsService;
 
@@ -41,6 +43,7 @@ final class MyCoursesBloc
     MyCoursesInitialized event,
     Emitter<MyCoursesState> emit,
   ) async {
+    _logger.info('_onInitialized entered');
     _analyticsService.logEvent(name: AnalyticsEvents.myCoursesViewed);
     await _loadCourses(emit: emit);
   }
@@ -49,6 +52,7 @@ final class MyCoursesBloc
     MyCoursesTabChanged event,
     Emitter<MyCoursesState> emit,
   ) async {
+    _logger.info('_onTabChanged entered');
     emit(
       state.copyWith(
         selectedTab: event.tab,
@@ -62,6 +66,7 @@ final class MyCoursesBloc
     MyCoursesRefreshed event,
     Emitter<MyCoursesState> emit,
   ) async {
+    _logger.info('_onRefreshed entered');
     await _loadCourses(emit: emit);
   }
 
@@ -69,6 +74,7 @@ final class MyCoursesBloc
     MyCoursesSearchChanged event,
     Emitter<MyCoursesState> emit,
   ) async {
+    _logger.info('_onSearchChanged entered');
     emit(state.copyWith(searchQuery: event.query));
     await _loadCourses(emit: emit);
   }

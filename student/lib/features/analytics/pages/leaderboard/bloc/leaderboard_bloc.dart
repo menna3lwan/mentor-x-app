@@ -6,6 +6,8 @@ part 'leaderboard_state.dart';
 
 final class LeaderboardBloc
     extends Bloc<LeaderboardEvent, LeaderboardState> {
+  static final MentorXLogger _logger = MentorXLogger('LeaderboardBloc');
+
   final LeaderboardRepository _leaderboardRepository;
   final CourseRepository _courseRepository;
   final AnalyticsService _analyticsService;
@@ -26,6 +28,7 @@ final class LeaderboardBloc
     LeaderboardLoadRequested event,
     Emitter<LeaderboardState> emit,
   ) async {
+    _logger.info('_onLoadRequested entered');
     _analyticsService.logEvent(name: AnalyticsEvents.leaderboardViewed);
     emit(
       state.copyWith(
@@ -85,6 +88,7 @@ final class LeaderboardBloc
     LeaderboardFilterChanged event,
     Emitter<LeaderboardState> emit,
   ) async {
+    _logger.info('_onFilterChanged entered');
     add(LeaderboardLoadRequested(courseId: event.courseId));
   }
 }

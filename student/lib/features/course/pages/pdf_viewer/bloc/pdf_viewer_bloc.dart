@@ -24,6 +24,8 @@ final class PdfViewerBloc
           PdfViewerState,
           PdfViewerPresentationEvent
         > {
+  static final MentorXLogger _logger = MentorXLogger('PdfViewerBloc');
+
   final CourseRepository _courseRepository;
   final AnalyticsService _analyticsService;
 
@@ -56,6 +58,7 @@ final class PdfViewerBloc
     PdfViewerInitialized event,
     Emitter<PdfViewerState> emit,
   ) async {
+    _logger.info('_onInitialized entered');
     _analyticsService.logEvent(
       name: AnalyticsEvents.pdfViewed,
       parameters: {
@@ -105,6 +108,7 @@ final class PdfViewerBloc
     PdfViewerCompleted event,
     Emitter<PdfViewerState> emit,
   ) async {
+    _logger.info('_onCompleted entered');
     emit(state.copyWith(isCompleted: true));
 
     if (state.enrollmentId == null) return;

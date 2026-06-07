@@ -2,22 +2,74 @@ import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:mentorx_student/core/core.dart';
 import 'package:animate_do/animate_do.dart';
-import 'bloc/quiz_taking_bloc.dart';
 
 final class QuizTakingPage extends StatefulWidget {
-  const QuizTakingPage({super.key});
+  final bool isLoading;
+  final bool isSubmitting;
+  final String? errorMessage;
+  final QuizEntity? quiz;
+  final List<QuizQuestionEntity> questions;
+  final int currentQuestionIndex;
+  final Map<String, String> answers;
+  final int? remainingSeconds;
+  final String quizId;
+  final String? attemptId;
+  final VoidCallback onRetry;
+  final VoidCallback onSubmit;
+  final VoidCallback onPrevious;
+  final VoidCallback onNext;
+  final ValueChanged<int> onJumpToQuestion;
+  final void Function(String questionId, String answer) onAnswerSelected;
+  final VoidCallback? onReview;
+
+  const QuizTakingPage({
+    super.key,
+    required this.isLoading,
+    required this.isSubmitting,
+    required this.errorMessage,
+    required this.quiz,
+    required this.questions,
+    required this.currentQuestionIndex,
+    required this.answers,
+    required this.remainingSeconds,
+    required this.quizId,
+    required this.attemptId,
+    required this.onRetry,
+    required this.onSubmit,
+    required this.onPrevious,
+    required this.onNext,
+    required this.onJumpToQuestion,
+    required this.onAnswerSelected,
+    required this.onReview,
+  });
+
   @override
-  State<QuizTakingPage> createState() => _QuizTakingState();
+  State<QuizTakingPage> createState() => _QuizTakingPageState();
 }
 
-final class _QuizTakingState extends State<QuizTakingPage> {
+final class _QuizTakingPageState extends State<QuizTakingPage> {
   int _remainingSeconds = 0;
   Timer? _timer;
   bool _timerInitialized = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.remainingSeconds != null) {
+      _startTimer(widget.remainingSeconds!);
+    }
+  }
+
+  @override
+  void didUpdateWidget(QuizTakingPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.remainingSeconds != null && !_timerInitialized) {
+      _startTimer(widget.remainingSeconds!);
+    }
+  }
 
   @override
   void dispose() {
@@ -26,14 +78,14 @@ final class _QuizTakingState extends State<QuizTakingPage> {
   }
 
   void _startTimer(int seconds) {
-    if (_timerInitialized) return;
     _remainingSeconds = seconds;
     _timerInitialized = true;
+    _timer?.cancel();
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
       if (!mounted) return;
       if (_remainingSeconds <= 0) {
         _timer?.cancel();
-        context.read<QuizTakingBloc>().add(const QuizTakingSubmit());
+        widget.onSubmit();
         return;
       }
       setState(() => _remainingSeconds--);
@@ -50,143 +102,133 @@ final class _QuizTakingState extends State<QuizTakingPage> {
   Widget build(BuildContext context) {
     final t = context.t.quizzes;
 
-    return BlocConsumer<QuizTakingBloc, QuizTakingState>(
-      listener: (context, state) {
-        if (state.remainingSeconds != null && !_timerInitialized) {
-          _startTimer(state.remainingSeconds!);
-        }
-        if (state.isSuccess && state.result != null) {
-          QuizResultRoute(attemptId: state.result!.id).go(context);
-        }
-      },
+    if (widget.isLoading) {
+      return Scaffold(
+        backgroundColor: context.backgroundPrimaryColor,
+        body: Column(
+          children: [
+            const MentorXSkeleton(height: 150, borderRadius: 32),
+            const Gap(32),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  children: [
+                    const MentorXSkeleton(height: 200, borderRadius: 28),
+                    const Gap(32),
+                    ...List.generate(
+                      3,
+                      (index) => const Padding(
+                        padding: EdgeInsets.only(bottom: 12),
+                        child: MentorXSkeleton(
+                          height: 72,
+                          borderRadius: 24,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
 
-      builder: (context, state) {
-        if (state.isLoading) {
-          return Scaffold(
-            backgroundColor: context.backgroundPrimaryColor,
-            body: Column(
-              children: [
-                const MentorXSkeleton(height: 150, borderRadius: 32),
-                const Gap(32),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Column(
-                      children: [
-                        const MentorXSkeleton(height: 200, borderRadius: 28),
-                        const Gap(32),
-                        ...List.generate(
-                          3,
-                          (index) => const Padding(
-                            padding: EdgeInsets.only(bottom: 12),
-                            child: MentorXSkeleton(
-                              height: 72,
-                              borderRadius: 24,
+    if (widget.errorMessage != null) {
+      final isAlreadyAttempted = widget.errorMessage == 'alreadyAttempted';
+      return Scaffold(
+        backgroundColor: context.backgroundPrimaryColor,
+        body: isAlreadyAttempted
+            ? AppEmptyView(
+                title: t.alreadyAttempted,
+                message: t.alreadyAttemptedDesc,
+                icon: Icons.check_circle_outline_rounded,
+                actionLabel: t.commonBack,
+                onAction: () => Navigator.of(context).pop(),
+              )
+            : AppErrorView(
+                message: widget.errorMessage!,
+                onRetry: widget.onRetry,
+              ),
+      );
+    }
+
+    if (widget.quiz == null) {
+      return Scaffold(
+        backgroundColor: context.backgroundPrimaryColor,
+        body: AppEmptyView(
+          title: t.quizNotFound,
+          message: 'Try again later',
+        ),
+      );
+    }
+
+    final q = widget.questions.isNotEmpty &&
+            widget.currentQuestionIndex >= 0 &&
+            widget.currentQuestionIndex < widget.questions.length
+        ? widget.questions[widget.currentQuestionIndex]
+        : null;
+    final totalQuestions = widget.questions.length;
+    final currentQuestionIndex = widget.currentQuestionIndex;
+    final progress = totalQuestions > 0
+        ? (currentQuestionIndex + 1) / totalQuestions
+        : 0.0;
+
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle.light.copyWith(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light,
+      ),
+      child: PopScope(
+        canPop: false,
+        child: Scaffold(
+          backgroundColor: context.backgroundPrimaryColor,
+          body: Column(
+            children: [
+              _BuildHeader(
+                title: widget.quiz!.title,
+                timerText: _timerText,
+                showTimer: widget.quiz!.timeRestricted,
+                progress: progress,
+                current: currentQuestionIndex + 1,
+                total: totalQuestions,
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  padding: const EdgeInsets.fromLTRB(20, 24, 20, 32),
+                  child: q != null
+                      ? _QuestionCard(
+                          q: q,
+                          current: currentQuestionIndex + 1,
+                          total: totalQuestions,
+                          selectedAnswer: widget.answers[q.id],
+                          onAnswerSelected: widget.onAnswerSelected,
+                        )
+                      : Center(
+                          child: Text(
+                            t.noQuestions,
+                            style: context.bodySecondaryStyle.copyWith(
+                              color: context.textTertiaryColor,
+                              fontWeight: FontWeight.w800,
                             ),
                           ),
                         ),
-                      ],
-                    ),
-                  ),
                 ),
-              ],
-            ),
-          );
-        }
-
-        if (state.errorMessage != null) {
-          final isAlreadyAttempted = state.errorMessage == 'alreadyAttempted';
-          return Scaffold(
-            backgroundColor: context.backgroundPrimaryColor,
-            body: isAlreadyAttempted
-                ? AppEmptyView(
-                    title: t.alreadyAttempted,
-                    message: t.alreadyAttemptedDesc,
-                    icon: Icons.check_circle_outline_rounded,
-                    actionLabel: t.commonBack,
-                    onAction: () => Navigator.of(context).pop(),
-                  )
-                : AppErrorView(
-                    message: state.errorMessage!,
-                    onRetry: () => context.read<QuizTakingBloc>().add(
-                      const QuizTakingLoadEvent(),
-                    ),
-                  ),
-          );
-        }
-
-        if (state.quiz == null) {
-          return Scaffold(
-            backgroundColor: context.backgroundPrimaryColor,
-            body: AppEmptyView(
-              title: t.quizNotFound,
-              message: 'Try again later',
-            ),
-          );
-        }
-
-        final q = state.currentQuestion;
-        final totalQuestions = state.questions.length;
-        final currentQuestionIndex = state.currentQuestionIndex;
-        final progress = totalQuestions > 0
-            ? (currentQuestionIndex + 1) / totalQuestions
-            : 0.0;
-
-        return AnnotatedRegion<SystemUiOverlayStyle>(
-          value: SystemUiOverlayStyle.light.copyWith(
-            statusBarColor: Colors.transparent,
-            statusBarIconBrightness: Brightness.light,
-          ),
-          child: PopScope(
-            canPop: false,
-            child: Scaffold(
-              backgroundColor: context.backgroundPrimaryColor,
-              body: Column(
-                children: [
-                  _BuildHeader(
-                    title: state.quiz!.title,
-                    timerText: _timerText,
-                    showTimer: state.quiz!.timeRestricted,
-                    progress: progress,
-                    current: currentQuestionIndex + 1,
-                    total: totalQuestions,
-                  ),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      physics: const BouncingScrollPhysics(),
-                      padding: const EdgeInsets.fromLTRB(20, 24, 20, 32),
-                      child: q != null
-                          ? _QuestionCard(
-                              q: q,
-                              current: currentQuestionIndex + 1,
-                              total: totalQuestions,
-                              selectedAnswer: state.answers[q.id],
-                            )
-                          : Center(
-                              child: Text(
-                                t.noQuestions,
-                                style: context.bodySecondaryStyle.copyWith(
-                                  color: context.textTertiaryColor,
-                                  fontWeight: FontWeight.w800,
-                                ),
-                              ),
-                            ),
-                    ),
-                  ),
-                  _BuildNavigation(
-                    isFirst: currentQuestionIndex == 0,
-                    isLast: currentQuestionIndex == totalQuestions - 1,
-                    isSubmitting: state.isSubmitting,
-                    quizId: state.quizId,
-                    attemptId: state.attemptId,
-                    answers: state.answers,
-                  ),
-                ],
               ),
-            ),
+              _BuildNavigation(
+                isFirst: currentQuestionIndex == 0,
+                isLast: currentQuestionIndex == totalQuestions - 1,
+                isSubmitting: widget.isSubmitting,
+                onPrevious: widget.onPrevious,
+                onNext: widget.onNext,
+                onReview: widget.onReview,
+              ),
+            ],
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }
@@ -387,7 +429,6 @@ class _BuildHeader extends StatelessWidget {
             fontWeight: FontWeight.w600,
           ),
         ),
-
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
@@ -420,12 +461,14 @@ class _QuestionCard extends StatelessWidget {
   final int current;
   final int total;
   final String? selectedAnswer;
+  final void Function(String questionId, String answer) onAnswerSelected;
 
   const _QuestionCard({
     required this.q,
     required this.current,
     required this.total,
     required this.selectedAnswer,
+    required this.onAnswerSelected,
   });
 
   @override
@@ -512,12 +555,7 @@ class _QuestionCard extends StatelessWidget {
               label: label,
               text: optionText,
               isSelected: isSelected,
-              onTap: () => context.read<QuizTakingBloc>().add(
-                QuizTakingAnswerSelected(
-                  questionId: q.id,
-                  selectedAnswer: optionText,
-                ),
-              ),
+              onTap: () => onAnswerSelected(q.id, optionText),
             );
           })
         else if (q.type == QuizQuestionType.shortAnswer ||
@@ -526,6 +564,7 @@ class _QuestionCard extends StatelessWidget {
             questionId: q.id,
             initialValue: selectedAnswer,
             isLong: q.type == QuizQuestionType.essay,
+            onAnswerSelected: onAnswerSelected,
           ),
       ],
     );
@@ -536,11 +575,13 @@ class _TextAnswerField extends StatefulWidget {
   final String questionId;
   final String? initialValue;
   final bool isLong;
+  final void Function(String questionId, String answer) onAnswerSelected;
 
   const _TextAnswerField({
     required this.questionId,
     required this.initialValue,
     required this.isLong,
+    required this.onAnswerSelected,
   });
 
   @override
@@ -583,12 +624,7 @@ class _TextAnswerFieldState extends State<_TextAnswerField> {
         hintText: context.t.quizzes.typeAnswerHere,
         maxLines: widget.isLong ? 6 : 1,
         onChanged: (value) {
-          context.read<QuizTakingBloc>().add(
-            QuizTakingAnswerSelected(
-              questionId: widget.questionId,
-              selectedAnswer: value,
-            ),
-          );
+          widget.onAnswerSelected(widget.questionId, value);
         },
       ),
     );
@@ -722,17 +758,17 @@ class _BuildNavigation extends StatelessWidget {
   final bool isFirst;
   final bool isLast;
   final bool isSubmitting;
-  final String quizId;
-  final String? attemptId;
-  final Map<String, String> answers;
+  final VoidCallback onPrevious;
+  final VoidCallback onNext;
+  final VoidCallback? onReview;
 
   const _BuildNavigation({
     required this.isFirst,
     required this.isLast,
     required this.isSubmitting,
-    required this.quizId,
-    required this.attemptId,
-    required this.answers,
+    required this.onPrevious,
+    required this.onNext,
+    required this.onReview,
   });
 
   @override
@@ -754,9 +790,7 @@ class _BuildNavigation extends StatelessWidget {
             Expanded(
               flex: 1,
               child: MentorXButton(
-                onPressed: () => context.read<QuizTakingBloc>().add(
-                  const QuizTakingPreviousQuestion(),
-                ),
+                onPressed: onPrevious,
                 label: t.commonPrevious,
                 variant: MentorXButtonVariant.outline,
               ),
@@ -769,23 +803,10 @@ class _BuildNavigation extends StatelessWidget {
               loading: isSubmitting,
               onPressed: () {
                 if (!isLast) {
-                  context.read<QuizTakingBloc>().add(
-                    const QuizTakingNextQuestion(),
-                  );
+                  onNext();
                 } else {
-                  if (attemptId != null) {
-                    () async {
-                      final targetIndex = await QuizReviewRoute(
-                        quizId: quizId,
-                        attemptId: attemptId!,
-                        $extra: answers,
-                      ).push<int>(context);
-                      if (targetIndex != null && context.mounted) {
-                        context.read<QuizTakingBloc>().add(
-                          QuizTakingJumpToQuestion(targetIndex),
-                        );
-                      }
-                    }();
+                  if (onReview != null) {
+                    onReview!();
                   }
                 }
               },

@@ -6,16 +6,18 @@ import 'package:mentorx_student/core/core.dart';
 import 'bloc/profile_view_bloc.dart';
 import 'profile_view_page.dart';
 
-final class ProfileViewPageWrapper extends StatefulWidget {
+final class ProfileViewPageWrapper extends StatelessWidget {
   const ProfileViewPageWrapper({super.key});
 
   @override
-  State<ProfileViewPageWrapper> createState() => _ProfileViewPageWrapperState();
-}
-
-class _ProfileViewPageWrapperState extends State<ProfileViewPageWrapper> {
-  @override
   Widget build(BuildContext context) {
+    final session = context.select<AppSessionCubit, AppSessionState>(
+      (cubit) => cubit.state,
+    );
+    final user = context.select<AppAuthenticationCubit, StudentEntity?>(
+      (cubit) => cubit.state,
+    );
+
     return BlocPresentationListener<
       ProfileViewBloc,
       ProfileViewPresentationEvent
@@ -26,18 +28,13 @@ class _ProfileViewPageWrapperState extends State<ProfileViewPageWrapper> {
             Navigator.of(context).pop();
         }
       },
-      child: Builder(
-        builder: (context) {
-          final session = context.select<AppSessionCubit, AppSessionState>(
-            (cubit) => cubit.state,
-          );
-          final user = context.select<AppAuthenticationCubit, StudentEntity?>(
-            (cubit) => cubit.state,
-          );
-          return ProfileViewPage(
-            session: session,
-            avatarUrl: user?.profileImageUrl,
-          );
+      child: ProfileViewPage(
+        session: session,
+        avatarUrl: user?.profileImageUrl,
+        onLogout: () {
+          final authCubit = context.read<AppAuthenticationCubit>();
+          authCubit.logout();
+          const LoginRoute().go(context);
         },
       ),
     );

@@ -1,64 +1,60 @@
-import 'package:analytics_service/analytics_service.dart';
 import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 import 'package:animate_do/animate_do.dart';
 import '../bloc/assessments_bloc.dart';
 
-class GradeMonitorPage extends StatelessWidget {
-  final String childId;
+final class GradeMonitorPage extends StatelessWidget {
+  final AssessmentsStatus status;
+  final List<QuizAttemptEntity> assessments;
+  final ParentGradeSummaryEntity? gradeSummary;
+  final String? errorMessage;
+  final VoidCallback onRefresh;
+  final VoidCallback onRetry;
 
   const GradeMonitorPage({
     super.key,
-    required this.childId,
+    required this.status,
+    required this.assessments,
+    required this.gradeSummary,
+    required this.errorMessage,
+    required this.onRefresh,
+    required this.onRetry,
   });
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => AssessmentsBloc(
-        repository: context.read<ParentGradeRepository>(),
-        analyticsService: context.read<AnalyticsService>(),
-      )..add(AssessmentsStarted(childId)),
-      child: BlocBuilder<AssessmentsBloc, AssessmentsState>(
-        builder: (context, state) {
-          return AppDashboardScaffold(
-            title: 'Academic Performance',
-            onRefresh: () async {
-              context.read<AssessmentsBloc>().add(AssessmentsRefreshRequested(childId));
-            },
-            actions: [
-              IconButton(
-                onPressed: () => context.read<AssessmentsBloc>().add(AssessmentsRefreshRequested(childId)),
-                icon: const Icon(Icons.refresh_rounded),
-              ),
-            ],
-            body: _buildBody(context, state),
-          );
-        },
-      ),
+    return AppDashboardScaffold(
+      title: 'Academic Performance',
+      onRefresh: () async => onRefresh(),
+      actions: [
+        IconButton(
+          onPressed: onRefresh,
+          icon: const Icon(Icons.refresh_rounded),
+        ),
+      ],
+      body: _buildBody(context),
     );
   }
 
-  Widget _buildBody(BuildContext context, AssessmentsState state) {
-    if (state.status == AssessmentsStatus.loading) {
+  Widget _buildBody(BuildContext context) {
+    if (status == AssessmentsStatus.loading) {
       return const Center(child: CircularProgressIndicator());
     }
 
-    if (state.status == AssessmentsStatus.failure) {
+    if (status == AssessmentsStatus.failure) {
       return AppErrorView(
-        message: state.errorMessage ?? 'Failed to load grades',
-        onRetry: () => context.read<AssessmentsBloc>().add(AssessmentsStarted(childId)),
+        message: errorMessage ?? 'Failed to load grades',
+        onRetry: onRetry,
       );
     }
 
-    if (state.assessments.isEmpty) {
+    if (assessments.isEmpty) {
       return AppEmptyView(
         title: 'No Assessments',
         message: 'Academic evaluation data will appear here once submitted.',
         icon: Icons.assessment_rounded,
-        onAction: () => context.read<AssessmentsBloc>().add(AssessmentsRefreshRequested(childId)),
+        onAction: onRefresh,
         actionLabel: 'Refresh',
       );
     }
@@ -67,7 +63,7 @@ class GradeMonitorPage extends StatelessWidget {
       physics: const BouncingScrollPhysics(),
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       children: [
-        if (state.gradeSummary != null) ...[
+        if (gradeSummary != null) ...[
           FadeInDown(
             duration: const Duration(milliseconds: 600),
             child: AppHeroCard(
@@ -76,17 +72,17 @@ class GradeMonitorPage extends StatelessWidget {
               stats: [
                 AppHeroStatItem(
                   label: 'Average',
-                  value: '${state.gradeSummary!.overallAverage.toStringAsFixed(1)}%',
+                  value: '${gradeSummary!.overallAverage.toStringAsFixed(1)}%',
                   onTap: () {},
                 ),
                 AppHeroStatItem(
                   label: 'Graded',
-                  value: state.gradeSummary!.graded.toString(),
+                  value: gradeSummary!.graded.toString(),
                   onTap: () {},
                 ),
                 AppHeroStatItem(
                   label: 'Pending',
-                  value: state.gradeSummary!.pending.toString(),
+                  value: gradeSummary!.pending.toString(),
                   onTap: () {},
                 ),
               ],
@@ -101,7 +97,7 @@ class GradeMonitorPage extends StatelessWidget {
         ),
         const Gap(16),
         
-        ...state.assessments.asMap().entries.map((entry) {
+        ...assessments.asMap().entries.map((entry) {
           final index = entry.key;
           final assessment = entry.value;
           return FadeInUp(

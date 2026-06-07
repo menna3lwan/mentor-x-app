@@ -1,27 +1,27 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:mentorx_student/core/core.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'bloc/purchase_confirm_bloc.dart';
 
 final class PurchaseConfirmPage extends StatelessWidget {
-  const PurchaseConfirmPage({super.key});
+  final PaymentEntity? payment;
+  final LoadingState loadingState;
+  final String? errorMessage;
+  final VoidCallback onRetry;
+  final Function(PaymentEntity) onConfirm;
+
+  const PurchaseConfirmPage({
+    super.key,
+    required this.payment,
+    required this.loadingState,
+    required this.errorMessage,
+    required this.onRetry,
+    required this.onConfirm,
+  });
 
   @override
   Widget build(BuildContext context) {
     final t = context.t.wallet;
-
-    final payment = context.select(
-      (PurchaseConfirmBloc bloc) => bloc.state.payment,
-    );
-    final loadingState = context.select(
-      (PurchaseConfirmBloc bloc) => bloc.state.loadingState,
-    );
-    final errorMessage = context.select(
-      (PurchaseConfirmBloc bloc) => bloc.state.errorMessage,
-    );
 
     return Scaffold(
       backgroundColor: context.backgroundPrimaryColor,
@@ -61,22 +61,12 @@ final class PurchaseConfirmPage extends StatelessWidget {
       body: loadingState == LoadingState.loading
           ? Padding(
               padding: const EdgeInsets.all(24),
-              child: MentorXSkeleton(height: 300, borderRadius: 32),
+              child: const MentorXSkeleton(height: 300, borderRadius: 32),
             )
           : loadingState == LoadingState.error
           ? AppErrorView(
               message: t.failedToLoadPayment,
-              onRetry: () {
-                final paymentId = context
-                    .read<PurchaseConfirmBloc>()
-                    .state
-                    .paymentId;
-                if (paymentId != null) {
-                  context.read<PurchaseConfirmBloc>().add(
-                    PurchaseConfirmLoadEvent(paymentId: paymentId),
-                  );
-                }
-              },
+              onRetry: onRetry,
             )
           : SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
@@ -88,7 +78,7 @@ final class PurchaseConfirmPage extends StatelessWidget {
                       padding: const EdgeInsets.only(bottom: 24),
                       child: FadeInDown(
                         child: StatusBadge(
-                          message: errorMessage,
+                          message: errorMessage!,
                           status: StatusBadgeType.danger,
                         ),
                       ),
@@ -120,7 +110,7 @@ final class PurchaseConfirmPage extends StatelessWidget {
                             _SummaryRow(
                               label: t.amount,
                               value:
-                                  '${payment.amount.toStringAsFixed(2)} ${payment.currency}',
+                                  '${payment!.amount.toStringAsFixed(2)} ${payment!.currency}',
                             ),
                             Divider(
                               height: 48,
@@ -130,7 +120,7 @@ final class PurchaseConfirmPage extends StatelessWidget {
                             ),
                             _SummaryRow(
                               label: t.paymentMethod,
-                              value: payment.method.name.toUpperCase(),
+                              value: payment!.method.name.toUpperCase(),
                             ),
                             Divider(
                               height: 48,
@@ -140,7 +130,7 @@ final class PurchaseConfirmPage extends StatelessWidget {
                             ),
                             _SummaryRow(
                               label: t.reference,
-                              value: payment.reference ?? '---',
+                              value: payment!.reference ?? '---',
                             ),
                             Divider(
                               height: 48,
@@ -151,7 +141,7 @@ final class PurchaseConfirmPage extends StatelessWidget {
                             _SummaryRow(
                               label: t.total,
                               value:
-                                  '${payment.amount.toStringAsFixed(2)} ${payment.currency}',
+                                  '${payment!.amount.toStringAsFixed(2)} ${payment!.currency}',
                               isBold: true,
                             ),
                           ],
@@ -163,27 +153,8 @@ final class PurchaseConfirmPage extends StatelessWidget {
                       duration: const Duration(milliseconds: 500),
                       delay: const Duration(milliseconds: 200),
                       child: MentorXButton(
-                        onPressed: () async {
-                          if (payment.redirectUrl != null &&
-                              payment.redirectUrl!.isNotEmpty) {
-                            final url = Uri.parse(payment.redirectUrl!);
-                            if (await canLaunchUrl(url)) {
-                              await launchUrl(url,
-                                  mode: LaunchMode.externalApplication);
-                            } else {
-                              if (!context.mounted) return;
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text('Could not launch URL')),
-                              );
-                            }
-                          } else {
-                            PaymentSuccessRoute(
-                              amount: payment.amount.toString(),
-                            ).go(context);
-                          }
-                        },
-                        label: payment.redirectUrl != null
+                        onPressed: () => onConfirm(payment!),
+                        label: payment!.redirectUrl != null
                             ? 'انتقل للدفع'
                             : t.confirmPayment,
                       ),

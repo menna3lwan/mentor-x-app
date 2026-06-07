@@ -1,57 +1,41 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:animate_do/animate_do.dart';
-import 'package:parent/core/core.dart';
+import 'package:mentorx_core/mentorx_core.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../bloc/communication_bloc.dart';
 
-class WhatsAppGroupsParentPage extends StatelessWidget {
-  final String childId;
+final class WhatsAppGroupsParentPage extends StatelessWidget {
+  final CommunicationStatus status;
+  final String? errorMessage;
+  final List<WhatsAppGroupEntity> whatsAppGroups;
+  final VoidCallback onRefresh;
+  final VoidCallback onRetry;
 
   const WhatsAppGroupsParentPage({
     super.key,
-    required this.childId,
+    required this.status,
+    required this.errorMessage,
+    required this.whatsAppGroups,
+    required this.onRefresh,
+    required this.onRetry,
   });
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => CommunicationBloc(
-        analyticsService: context.read<AnalyticsService>(),
-        repository: context.read<ParentCommunicationRepository>(),
-      )..add(CommunicationStarted(childId)),
-      child: Scaffold(
-        backgroundColor: context.backgroundPrimaryColor,
-        body: Stack(
-          children: [
-            const _BackgroundDecorations(),
-            _WhatsAppGroupsBody(childId: childId),
-          ],
-        ),
+    return Scaffold(
+      backgroundColor: context.backgroundPrimaryColor,
+      body: Stack(
+        children: [
+          const _BackgroundDecorations(),
+          _buildContent(context),
+        ],
       ),
     );
   }
-}
 
-class _WhatsAppGroupsBody extends StatelessWidget {
-  const _WhatsAppGroupsBody({required this.childId});
-
-  final String childId;
-
-  @override
-  Widget build(BuildContext context) {
-    final status = context.select(
-      (CommunicationBloc bloc) => bloc.state.status,
-    );
-    final errorMessage = context.select(
-      (CommunicationBloc bloc) => bloc.state.errorMessage,
-    );
-    final whatsAppGroups = context.select(
-      (CommunicationBloc bloc) => bloc.state.whatsAppGroups,
-    );
-
+  Widget _buildContent(BuildContext context) {
     if (status == CommunicationStatus.loading) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -59,18 +43,14 @@ class _WhatsAppGroupsBody extends StatelessWidget {
     if (status == CommunicationStatus.failure) {
       return AppErrorView(
         message: errorMessage ?? 'Failed to load groups',
-        onRetry: () => context.read<CommunicationBloc>().add(
-          CommunicationStarted(childId),
-        ),
+        onRetry: onRetry,
       );
     }
 
     return RefreshIndicator(
       displacement: MediaQuery.paddingOf(context).top + 80,
       color: context.brandPrimaryColor,
-      onRefresh: () async {
-        context.read<CommunicationBloc>().add(CommunicationRefreshRequested(childId));
-      },
+      onRefresh: () async => onRefresh(),
       child: CustomScrollView(
         physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
         slivers: [
@@ -91,9 +71,7 @@ class _WhatsAppGroupsBody extends StatelessWidget {
                         title: 'No Groups',
                         message: 'No WhatsApp groups available for this child.',
                         icon: Icons.forum_outlined,
-                        onAction: () => context.read<CommunicationBloc>().add(
-                          CommunicationRefreshRequested(childId),
-                        ),
+                        onAction: onRefresh,
                         actionLabel: 'Refresh',
                       ),
                     )
@@ -143,7 +121,7 @@ class _WhatsAppGroupsBody extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
             ),
             child: IconButton(
-              onPressed: () => context.read<CommunicationBloc>().add(CommunicationRefreshRequested(childId)),
+              onPressed: onRefresh,
               icon: const Icon(Icons.refresh_rounded),
             ),
           ),
@@ -154,7 +132,7 @@ class _WhatsAppGroupsBody extends StatelessWidget {
 }
 
 class _GroupCard extends StatelessWidget {
-  final dynamic group;
+  final WhatsAppGroupEntity group;
   final int index;
 
   const _GroupCard({required this.group, required this.index});

@@ -2,7 +2,7 @@ part of 'courses_bloc.dart';
 
 enum CoursesStatus { initial, loading, success, failure }
 
-class CoursesState extends Equatable {
+final class CoursesState extends Equatable {
   final CoursesStatus status;
   final List<CourseEntity> courses;
   final ParentGradeSummaryEntity? gradeSummary;

@@ -16,6 +16,8 @@ final class WalletOrdersBloc
           WalletOrdersState,
           WalletOrdersPresentationEvent
         > {
+  static final MentorXLogger _logger = MentorXLogger('WalletOrdersBloc');
+
   WalletOrdersBloc({
     required this.walletRepository,
     required this.analyticsService,
@@ -30,6 +32,7 @@ final class WalletOrdersBloc
     WalletOrdersLoadEvent event,
     Emitter<WalletOrdersState> emit,
   ) async {
+    _logger.info('_onLoad entered');
     analyticsService.logEvent(name: AnalyticsEvents.walletOrdersViewed);
     emit(
       state.copyWith(loadingState: LoadingState.loading, errorMessage: null),

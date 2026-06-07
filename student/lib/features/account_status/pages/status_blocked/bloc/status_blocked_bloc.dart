@@ -24,6 +24,8 @@ final class StatusBlockedBloc
           StatusBlockedState,
           StatusBlockedPresentationEvent
         > {
+  static final MentorXLogger _logger = MentorXLogger('StatusBlockedBloc');
+
   StatusBlockedBloc({required this.analyticsService})
     : super(StatusBlockedState.initial) {
     on<StatusBlockedInitialized>(_onInitialized);
@@ -35,6 +37,7 @@ final class StatusBlockedBloc
     StatusBlockedInitialized event,
     Emitter<StatusBlockedState> emit,
   ) {
+    _logger.info('Initializing StatusBlockedBloc');
     analyticsService.logEvent(
       name: AnalyticsEvents.accountStatusViewed,
       parameters: {AnalyticsParams.status: 'blocked'},

@@ -19,6 +19,8 @@ final class QuizListBloc extends Bloc<QuizListEvent, QuizListState>
           QuizListState,
           QuizListPresentationEvent
         > {
+  static final MentorXLogger _logger = MentorXLogger('QuizListBloc');
+
   QuizListBloc({
     required this.quizRepository,
     required this.analyticsService,
@@ -33,17 +35,20 @@ final class QuizListBloc extends Bloc<QuizListEvent, QuizListState>
     QuizListLoadEvent event,
     Emitter<QuizListState> emit,
   ) async {
+    _logger.info('onLoad entered');
     emit(state.copyWith(loadingState: LoadingState.loading));
     analyticsService.logEvent(name: AnalyticsEvents.quizListViewed);
     try {
       final quizzes = await quizRepository.getQuizzes();
+      _logger.info('onLoad success: loaded ${quizzes.length} quizzes');
       emit(
         state.copyWith(
           loadingState: LoadingState.loaded,
           quizzes: quizzes,
         ),
       );
-    } catch (e) {
+    } catch (e, s) {
+      _logger.error('onLoad error', e, s);
       emit(
         state.copyWith(
           loadingState: LoadingState.error,

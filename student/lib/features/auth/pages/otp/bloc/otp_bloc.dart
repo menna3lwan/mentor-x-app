@@ -25,6 +25,8 @@ final class OtpFailurePresentationEvent extends OtpPresentationEvent {
 // ──── Bloc ────
 final class OtpBloc extends Bloc<OtpEvent, OtpState>
     with BlocPresentationMixin<OtpState, OtpPresentationEvent> {
+  static final MentorXLogger _logger = MentorXLogger('OtpBloc');
+
   final StudentAuthenticationRepository _authRepository;
   final AnalyticsService _analyticsService;
 
@@ -67,6 +69,7 @@ final class OtpBloc extends Bloc<OtpEvent, OtpState>
     OtpOtpChanged event,
     Emitter<OtpState> emit,
   ) {
+    _logger.info('_onOtpChanged entered');
     emit(
       state.copyWith(
         otp: event.otp,
@@ -80,6 +83,7 @@ final class OtpBloc extends Bloc<OtpEvent, OtpState>
     OtpSubmitted event,
     Emitter<OtpState> emit,
   ) async {
+    _logger.info('_onSubmitted entered');
     if (state.otp.length != state.otpLength) return;
 
     emit(state.copyWith(loadingState: LoadingState.loading));
@@ -117,6 +121,7 @@ final class OtpBloc extends Bloc<OtpEvent, OtpState>
     OtpResendRequested event,
     Emitter<OtpState> emit,
   ) async {
+    _logger.info('_onResendRequested entered');
     if (state.resendCountdown > 0) return;
 
     emit(state.copyWith(isResending: true));
@@ -151,6 +156,7 @@ final class OtpBloc extends Bloc<OtpEvent, OtpState>
     OtpResendViaWhatsappRequested event,
     Emitter<OtpState> emit,
   ) async {
+    _logger.info('_onResendViaWhatsappRequested entered');
     if (state.resendCountdown > 0) return;
 
     emit(state.copyWith(isResendingWhatsapp: true));
@@ -187,6 +193,7 @@ final class OtpBloc extends Bloc<OtpEvent, OtpState>
     OtpCountdownTicked event,
     Emitter<OtpState> emit,
   ) {
+    _logger.info('_onCountdownTicked entered');
     if (state.resendCountdown <= 0) {
       _countdownTimer?.cancel();
       return;

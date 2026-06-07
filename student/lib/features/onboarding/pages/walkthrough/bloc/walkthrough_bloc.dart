@@ -29,6 +29,8 @@ final class WalkthroughBloc
           WalkthroughState,
           WalkthroughPresentationEvent
         > {
+  static final MentorXLogger _logger = MentorXLogger('WalkthroughBloc');
+
   final CacheRepository _cacheRepository;
   final AnalyticsService _analyticsService;
 
@@ -46,6 +48,7 @@ final class WalkthroughBloc
     WalkthroughEvent event,
     Emitter<WalkthroughState> emit,
   ) async {
+    _logger.info('_persistAndComplete entered');
     emit(state.copyWith(loadingState: LoadingState.loading));
 
     try {
@@ -56,8 +59,10 @@ final class WalkthroughBloc
             ? AnalyticsEvents.walkthroughSkipped
             : AnalyticsEvents.walkthroughCompleted,
       );
+      _logger.info('_persistAndComplete success');
       emitPresentation(const WalkthroughCompletedPresentationEvent());
-    } catch (_) {
+    } catch (e, s) {
+      _logger.error('_persistAndComplete error', e, s);
       emit(state.copyWith(loadingState: LoadingState.error));
     }
   }

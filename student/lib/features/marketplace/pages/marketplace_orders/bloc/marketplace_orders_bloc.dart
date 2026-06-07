@@ -24,6 +24,7 @@ final class MarketplaceOrdersBloc
           MarketplaceOrdersState,
           MarketplaceOrdersPresentationEvent
         > {
+  static final MentorXLogger _logger = MentorXLogger('MarketplaceOrdersBloc');
   final MarketplaceRepository _marketplaceRepository;
   final AnalyticsService _analyticsService;
 
@@ -41,6 +42,7 @@ final class MarketplaceOrdersBloc
     MarketplaceOrdersInitialized event,
     Emitter<MarketplaceOrdersState> emit,
   ) async {
+    _logger.info('Handling MarketplaceOrdersInitialized');
     _analyticsService.logEvent(name: AnalyticsEvents.ordersViewed);
     await _load(emit);
   }
@@ -49,10 +51,12 @@ final class MarketplaceOrdersBloc
     MarketplaceOrdersRefreshed event,
     Emitter<MarketplaceOrdersState> emit,
   ) async {
+    _logger.info('Handling MarketplaceOrdersRefreshed');
     await _load(emit);
   }
 
   Future<void> _load(Emitter<MarketplaceOrdersState> emit) async {
+    _logger.debug('Loading marketplace orders');
     emit(
       state.copyWith(loadingState: LoadingState.loading, errorMessage: null),
     );
@@ -60,14 +64,17 @@ final class MarketplaceOrdersBloc
     try {
       final orders = await _marketplaceRepository.getOrders();
       emit(state.copyWith(loadingState: LoadingState.loaded, orders: orders));
-    } on MarketplaceRepositoryException catch (e) {
+      _logger.info('Marketplace orders loaded successfully');
+    } on MarketplaceRepositoryException catch (e, s) {
       final message = e.message ?? 'Unable to load orders.';
+      _logger.error('Failed to load marketplace orders', e, s);
       emit(
         state.copyWith(loadingState: LoadingState.error, errorMessage: message),
       );
       emitPresentation(OrderHistoryFailurePresentationEvent(message: message));
-    } catch (e) {
+    } catch (e, s) {
       final message = e.toString();
+      _logger.error('Failed to load marketplace orders (generic error)', e, s);
       emit(
         state.copyWith(loadingState: LoadingState.error, errorMessage: message),
       );

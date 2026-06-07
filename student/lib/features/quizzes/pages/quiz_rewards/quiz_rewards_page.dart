@@ -2,13 +2,20 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_student/core/core.dart';
 import 'package:animate_do/animate_do.dart';
-import 'bloc/quiz_rewards_bloc.dart';
 
 final class QuizRewardsPage extends StatelessWidget {
-  const QuizRewardsPage({super.key});
+  final LoadingState loadingState;
+  final List<LeaderboardEntryEntity> leaderboardEntries;
+  final VoidCallback onRetry;
+
+  const QuizRewardsPage({
+    super.key,
+    required this.loadingState,
+    required this.leaderboardEntries,
+    required this.onRetry,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -22,10 +29,6 @@ final class QuizRewardsPage extends StatelessWidget {
           Expanded(
             child: Builder(
               builder: (context) {
-                final loadingState = context.select(
-                  (QuizRewardsBloc bloc) => bloc.state.loadingState,
-                );
-
                 if (loadingState == LoadingState.loading) {
                   return ListView.separated(
                     padding: const EdgeInsets.all(20),
@@ -40,9 +43,7 @@ final class QuizRewardsPage extends StatelessWidget {
                 if (loadingState == LoadingState.error) {
                   return AppErrorView(
                     message: 'Failed to load rewards',
-                    onRetry: () => context.read<QuizRewardsBloc>().add(
-                      const QuizRewardsLoadEvent(),
-                    ),
+                    onRetry: onRetry,
                   );
                 }
 
@@ -76,17 +77,9 @@ final class QuizRewardsPage extends StatelessWidget {
                       const Gap(16),
                       FadeInUp(
                         delay: const Duration(milliseconds: 500),
-                        child: Builder(
-                          builder: (context) {
-                            final leaderboardEntries = context.select(
-                              (QuizRewardsBloc bloc) =>
-                                  bloc.state.leaderboardEntries,
-                            );
-                            return _LeaderboardSection(
-                              t: t,
-                              entries: leaderboardEntries,
-                            );
-                          },
+                        child: _LeaderboardSection(
+                          t: t,
+                          entries: leaderboardEntries,
                         ),
                       ),
                       const Gap(40),

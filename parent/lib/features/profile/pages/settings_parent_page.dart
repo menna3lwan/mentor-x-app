@@ -1,102 +1,95 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
-import 'package:analytics_service/analytics_service.dart';
 import '../bloc/profile_bloc.dart';
 
-class SettingsParentPage extends StatelessWidget {
-  const SettingsParentPage({super.key});
+final class SettingsParentPage extends StatelessWidget {
+  final ProfileStatus status;
+  final Map<String, dynamic> settingsData;
+  final ValueChanged<bool> onNotificationToggle;
+  final VoidCallback onThemeTap;
+  final VoidCallback onLanguageTap;
+  final VoidCallback onHelpCenterTap;
+  final VoidCallback onAboutTap;
+
+  const SettingsParentPage({
+    super.key,
+    required this.status,
+    required this.settingsData,
+    required this.onNotificationToggle,
+    required this.onThemeTap,
+    required this.onLanguageTap,
+    required this.onHelpCenterTap,
+    required this.onAboutTap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ProfileBloc(
-        analyticsService: context.read<AnalyticsService>(),
-      )..add(ProfileStarted()),
-      child: BlocBuilder<ProfileBloc, ProfileState>(
-        builder: (context, state) {
-          return AppDashboardScaffold(
-            title: 'Settings',
-            body: const SettingsParentView(),
-          );
-        },
-      ),
+    return AppDashboardScaffold(
+      title: 'Settings',
+      body: _buildBody(context),
     );
   }
-}
 
-class SettingsParentView extends StatelessWidget {
-  const SettingsParentView({super.key});
+  Widget _buildBody(BuildContext context) {
+    if (status == ProfileStatus.loading) {
+      return const Center(child: CircularProgressIndicator());
+    }
 
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<ProfileBloc, ProfileState>(
-      builder: (context, state) {
-        if (state.status == ProfileStatus.loading) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        return ListView(
-          physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+    return ListView(
+      physics: const BouncingScrollPhysics(),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      children: [
+        _SettingsSection(
+          title: 'App Configuration',
           children: [
-            _SettingsSection(
-              title: 'App Configuration',
-              children: [
-                _SettingsToggleTile(
-                  icon: Icons.notifications_active_rounded,
-                  label: 'Push Notifications',
-                  value: state.settingsData['notificationsEnabled'] as bool? ?? true,
-                  onChanged: (val) {
-                    // context.read<ProfileBloc>().add(ProfileSettingsUpdated({'notificationsEnabled': val}));
-                  },
-                ),
-              ],
-            ),
-            const Gap(24),
-            _SettingsSection(
-              title: 'Preferences',
-              children: [
-                _SettingsNavigationTile(
-                  icon: Icons.palette_rounded,
-                  label: 'Theme Mode',
-                  value: state.settingsData['themeMode'].toString().toUpperCase(),
-                  onTap: () {},
-                ),
-                _SettingsNavigationTile(
-                  icon: Icons.language_rounded,
-                  label: 'App Language',
-                  value: state.settingsData['languageCode'].toString().toUpperCase(),
-                  onTap: () {},
-                ),
-              ],
-            ),
-            const Gap(24),
-            _SettingsSection(
-              title: 'Support',
-              children: [
-                _SettingsNavigationTile(
-                  icon: Icons.help_outline_rounded,
-                  label: 'Help Center',
-                  value: 'FAQs & Support',
-                  onTap: () {},
-                ),
-                _SettingsNavigationTile(
-                  icon: Icons.info_outline_rounded,
-                  label: 'About MentorX',
-                  value: 'Version 1.0.0',
-                  onTap: () {},
-                ),
-              ],
+            _SettingsToggleTile(
+              icon: Icons.notifications_active_rounded,
+              label: 'Push Notifications',
+              value: settingsData['notificationsEnabled'] as bool? ?? true,
+              onChanged: onNotificationToggle,
             ),
           ],
-        );
-      },
+        ),
+        const Gap(24),
+        _SettingsSection(
+          title: 'Preferences',
+          children: [
+            _SettingsNavigationTile(
+              icon: Icons.palette_rounded,
+              label: 'Theme Mode',
+              value: settingsData['themeMode'].toString().toUpperCase(),
+              onTap: onThemeTap,
+            ),
+            _SettingsNavigationTile(
+              icon: Icons.language_rounded,
+              label: 'App Language',
+              value: settingsData['languageCode'].toString().toUpperCase(),
+              onTap: onLanguageTap,
+            ),
+          ],
+        ),
+        const Gap(24),
+        _SettingsSection(
+          title: 'Support',
+          children: [
+            _SettingsNavigationTile(
+              icon: Icons.help_outline_rounded,
+              label: 'Help Center',
+              value: 'FAQs & Support',
+              onTap: onHelpCenterTap,
+            ),
+            _SettingsNavigationTile(
+              icon: Icons.info_outline_rounded,
+              label: 'About MentorX',
+              value: 'Version 1.0.0',
+              onTap: onAboutTap,
+            ),
+          ],
+        ),
+      ],
     );
   }
 }
-
-// Removed _BuildHeader in favor of AppDashboardScaffold
 
 class _SettingsSection extends StatelessWidget {
   final String title;

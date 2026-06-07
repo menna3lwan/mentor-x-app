@@ -23,6 +23,8 @@ final class MyGradesBloc extends Bloc<MyGradesEvent, MyGradesState>
           MyGradesState,
           MyGradesPresentationEvent
         > {
+  static final MentorXLogger _logger = MentorXLogger('MyGradesBloc');
+
   final GradeRepository _gradeRepository;
   final CourseRepository _courseRepository;
   final AnalyticsService _analyticsService;
@@ -44,6 +46,7 @@ final class MyGradesBloc extends Bloc<MyGradesEvent, MyGradesState>
     MyGradesInitialized event,
     Emitter<MyGradesState> emit,
   ) async {
+    _logger.info('_onInitialized entered');
     _analyticsService.logEvent(name: AnalyticsEvents.myGradesViewed);
     await _load(emit: emit);
   }
@@ -52,6 +55,7 @@ final class MyGradesBloc extends Bloc<MyGradesEvent, MyGradesState>
     MyGradesRefreshed event,
     Emitter<MyGradesState> emit,
   ) async {
+    _logger.info('_onRefreshed entered');
     await _load(emit: emit);
   }
 
@@ -59,6 +63,7 @@ final class MyGradesBloc extends Bloc<MyGradesEvent, MyGradesState>
     MyGradesCourseFilterChanged event,
     Emitter<MyGradesState> emit,
   ) async {
+    _logger.info('_onCourseFilterChanged entered');
     emit(state.copyWith(selectedCourseId: event.courseId));
     await _load(emit: emit);
   }

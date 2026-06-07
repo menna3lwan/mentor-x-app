@@ -8,16 +8,9 @@ import '../../cubit/marketplace_cart_cubit.dart';
 import 'bloc/marketplace_cart_bloc.dart' hide MarketplaceCartState;
 import 'marketplace_cart_page.dart';
 
-final class MarketplaceCartPageWrapper extends StatefulWidget {
+final class MarketplaceCartPageWrapper extends StatelessWidget {
   const MarketplaceCartPageWrapper({super.key});
 
-  @override
-  State<MarketplaceCartPageWrapper> createState() =>
-      _MarketplaceCartPageWrapperState();
-}
-
-class _MarketplaceCartPageWrapperState
-    extends State<MarketplaceCartPageWrapper> {
   @override
   Widget build(BuildContext context) {
     return BlocPresentationListener<
@@ -26,19 +19,23 @@ class _MarketplaceCartPageWrapperState
     >(
       listener: (context, event) {
         if (event is MarketplaceCartOrderPlacedSuccess) {
-          context.read<MarketplaceCartCubit>().clear();
+          final cubit = context.read<MarketplaceCartCubit>();
+          cubit.clear();
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(t.marketplace.orderPlaced)),
+            SnackBar(content: Text(context.t.marketplace.orderPlaced)),
           );
           Navigator.of(context).pop();
         } else if (event is MarketplaceCartOrderPlacedError) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(t.marketplace.orderFailed)),
+            SnackBar(content: Text(context.t.marketplace.orderFailed)),
           );
         }
       },
       child: Builder(
         builder: (context) {
+          final user = context.select(
+            (AppAuthenticationCubit cubit) => cubit.state,
+          );
           final cartState = context.select(
             (MarketplaceCartCubit cubit) => cubit.state,
           );
@@ -54,22 +51,27 @@ class _MarketplaceCartPageWrapperState
             walletBalance: blocState.walletSummary?.walletBalance ?? 0.0,
             loadingState: blocState.loadingState,
             appliedCoupon: cartState.appliedCoupon,
+            defaultAddress: user?.address ?? '',
+            defaultPhone: user?.phoneNumber ?? '',
             onUpdateQuantity: (itemId, quantity) {
-              context.read<MarketplaceCartCubit>().updateQuantity(
+              final cubit = context.read<MarketplaceCartCubit>();
+              cubit.updateQuantity(
                 itemId,
                 quantity,
               );
             },
             onViewCoupons: () => _showCouponsSheet(context),
             onRemoveCoupon: () {
-              context.read<MarketplaceCartCubit>().removeCoupon();
+              final cubit = context.read<MarketplaceCartCubit>();
+              cubit.removeCoupon();
             },
             onPlaceOrder: (address, phone, notes) {
               final items = cartState.items
                   .map((i) => (itemId: i.item.id, quantity: i.quantity))
                   .toList();
 
-              context.read<MarketplaceCartBloc>().add(
+              final bloc = context.read<MarketplaceCartBloc>();
+              bloc.add(
                 MarketplaceCartPlaceOrderEvent(
                   items: items,
                   address: address,
@@ -85,13 +87,14 @@ class _MarketplaceCartPageWrapperState
 
   void _showCouponsSheet(BuildContext context) {
     final cartCubit = context.read<MarketplaceCartCubit>();
+    final cartBloc = context.read<MarketplaceCartBloc>();
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
       builder: (_) {
         return BlocProvider.value(
-          value: context.read<MarketplaceCartBloc>(),
+          value: cartBloc,
           child: Container(
             height: MediaQuery.of(context).size.height * 0.6,
             decoration: BoxDecoration(
@@ -190,7 +193,7 @@ class _MarketplaceCartPageWrapperState
                                   cartCubit.applyCoupon(coupon);
                                   Navigator.pop(context);
                                 },
-                                child: Text(t.marketplace.apply),
+                                child: Text(context.t.marketplace.apply),
                               ),
                             ),
                           );

@@ -1,35 +1,29 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:mentorx_student/core/core.dart';
 import 'package:animate_do/animate_do.dart';
-import 'bloc/transactions_history_bloc.dart';
 
 final class TransactionsHistoryPage extends StatelessWidget {
   final ScrollController scrollController;
   final Future<void> Function() onRefresh;
+  final List<WalletTransactionEntity> transactions;
+  final bool hasMore;
+  final LoadingState loadingState;
 
   const TransactionsHistoryPage({
     super.key,
     required this.scrollController,
     required this.onRefresh,
+    required this.transactions,
+    required this.hasMore,
+    required this.loadingState,
   });
 
   @override
   Widget build(BuildContext context) {
     final t = context.t.wallet;
-
-    final transactions = context.select(
-      (TransactionsHistoryBloc bloc) => bloc.state.transactions,
-    );
-    final hasMore = context.select(
-      (TransactionsHistoryBloc bloc) => bloc.state.hasMore,
-    );
-    final loadingState = context.select(
-      (TransactionsHistoryBloc bloc) => bloc.state.loadingState,
-    );
     final isLoading = loadingState == LoadingState.loading;
     final isInitialLoading = isLoading && transactions.isEmpty;
 

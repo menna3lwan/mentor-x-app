@@ -20,6 +20,8 @@ final class RedeemCodeBloc
           RedeemCodeState,
           RedeemCodePresentationEvent
         > {
+  static final MentorXLogger _logger = MentorXLogger('RedeemCodeBloc');
+
   RedeemCodeBloc({
     required this.walletRepository,
     required this.analyticsService,
@@ -35,8 +37,8 @@ final class RedeemCodeBloc
     RedeemCodeLoadEvent event,
     Emitter<RedeemCodeState> emit,
   ) async {
+    _logger.info('Handling RedeemCodeLoadEvent');
     emit(state.copyWith(loadingState: LoadingState.loading));
-    // No async work for now, just simulating the pattern
     emit(state.copyWith(loadingState: LoadingState.loaded));
   }
 
@@ -44,6 +46,7 @@ final class RedeemCodeBloc
     RedeemCodeSubmitEvent event,
     Emitter<RedeemCodeState> emit,
   ) async {
+    _logger.info('Handling RedeemCodeSubmitEvent: code=${event.code}');
     emit(state.copyWith(loadingState: LoadingState.loading));
     try {
       await walletRepository.redeemCode(event.code);
@@ -53,7 +56,9 @@ final class RedeemCodeBloc
         parameters: {'code': event.code},
       );
       emitPresentation(const RedeemCodeNavigateBack());
-    } catch (e) {
+      _logger.info('Code successfully redeemed: ${event.code}');
+    } catch (e, s) {
+      _logger.error('Failed to redeem code: ${event.code}', e, s);
       emit(
         state.copyWith(
           loadingState: LoadingState.error,

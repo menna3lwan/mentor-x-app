@@ -1,195 +1,167 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
-import 'package:go_router/go_router.dart';
 import 'package:flutter/services.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:mentorx_student/core/core.dart';
 import 'bloc/assignment_submit_bloc.dart';
 
-final class AssignmentSubmitPage extends StatefulWidget {
-  const AssignmentSubmitPage({super.key});
-  @override
-  State<AssignmentSubmitPage> createState() => _AssignmentSubmitState();
-}
+final class AssignmentSubmitPage extends StatelessWidget {
+  final AssignmentSubmitState state;
+  final ValueChanged<String> onEssayChanged;
+  final VoidCallback onAddFile;
+  final ValueChanged<String> onRemoveFile;
+  final Function(String questionId, String selectedAnswer) onOptionSelected;
+  final VoidCallback onPreviousQuestion;
+  final VoidCallback onNextQuestion;
+  final VoidCallback onSubmit;
+  final VoidCallback onRetry;
 
-final class _AssignmentSubmitState extends State<AssignmentSubmitPage> {
+  const AssignmentSubmitPage({
+    super.key,
+    required this.state,
+    required this.onEssayChanged,
+    required this.onAddFile,
+    required this.onRemoveFile,
+    required this.onOptionSelected,
+    required this.onPreviousQuestion,
+    required this.onNextQuestion,
+    required this.onSubmit,
+    required this.onRetry,
+  });
+
   @override
   Widget build(BuildContext context) {
     final t = context.t.assignments;
 
-    return BlocConsumer<AssignmentSubmitBloc, AssignmentSubmitState>(
-      listener: (context, state) {
-        if (state.isSuccess) {
-          context.pop();
-          MentorXUI.showToast(
-            message: t.submitted,
-          );
-        }
-      },
-      builder: (context, state) {
-        if (state.isLoading) {
-          return Scaffold(
-            backgroundColor: context.backgroundPrimaryColor,
-            body: Column(
-              children: [
-                const MentorXSkeleton(height: 150, borderRadius: 32),
-                const Gap(32),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: Column(
-                      children: List.generate(
-                        4,
-                        (index) => const Padding(
-                          padding: EdgeInsets.only(bottom: 16),
-                          child: MentorXSkeleton(height: 80, borderRadius: 24),
-                        ),
-                      ),
+    if (state.isLoading) {
+      return Scaffold(
+        backgroundColor: context.backgroundPrimaryColor,
+        body: Column(
+          children: [
+            const MentorXSkeleton(height: 150, borderRadius: 32),
+            const Gap(32),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Column(
+                  children: List.generate(
+                    4,
+                    (index) => const Padding(
+                      padding: EdgeInsets.only(bottom: 16),
+                      child: MentorXSkeleton(height: 80, borderRadius: 24),
                     ),
                   ),
                 ),
-              ],
-            ),
-          );
-        }
-
-        if (state.errorMessage != null) {
-          return Scaffold(
-            backgroundColor: context.backgroundPrimaryColor,
-            body: AppErrorView(
-              message: state.errorMessage!,
-              onRetry: () => context.read<AssignmentSubmitBloc>().add(
-                const AssignmentSubmitLoadEvent(),
               ),
             ),
-          );
-        }
+          ],
+        ),
+      );
+    }
 
-        if (state.assignment == null) {
-          return Scaffold(
-            backgroundColor: context.backgroundPrimaryColor,
-            body: AppEmptyView(
-              title: t.notFound,
-              message: 'Try again later',
-            ),
-          );
-        }
+    if (state.errorMessage != null) {
+      return Scaffold(
+        backgroundColor: context.backgroundPrimaryColor,
+        body: AppErrorView(
+          message: state.errorMessage!,
+          onRetry: onRetry,
+        ),
+      );
+    }
 
-        final q = state.currentQuestion;
-        final totalQuestions = state.questions.length;
-        final currentQuestionIndex = state.currentQuestionIndex;
-        final progress = totalQuestions > 0
-            ? (currentQuestionIndex + 1) / totalQuestions
-            : 1.0;
+    if (state.assignment == null) {
+      return Scaffold(
+        backgroundColor: context.backgroundPrimaryColor,
+        body: AppEmptyView(
+          title: t.notFound,
+          message: 'Try again later',
+        ),
+      );
+    }
 
-        return AnnotatedRegion<SystemUiOverlayStyle>(
-          value: SystemUiOverlayStyle.light,
-          child: PopScope(
-            canPop: false,
-            child: Scaffold(
-              backgroundColor: context.backgroundPrimaryColor,
-              body: Column(
-                children: [
-                  _BuildHeader(
-                    title: state.assignment!.title,
-                    progress: progress,
-                    current: totalQuestions > 0 ? currentQuestionIndex + 1 : 1,
-                    total: totalQuestions > 0 ? totalQuestions : 1,
-                  ),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      physics: const BouncingScrollPhysics(),
-                      padding: const EdgeInsets.fromLTRB(24, 32, 24, 120),
-                      child: totalQuestions > 0
-                          ? FadeInRight(
-                              key: ValueKey(
-                                'question_$currentQuestionIndex',
+    final q = state.currentQuestion;
+    final totalQuestions = state.questions.length;
+    final currentQuestionIndex = state.currentQuestionIndex;
+    final progress = totalQuestions > 0
+        ? (currentQuestionIndex + 1) / totalQuestions
+        : 1.0;
+
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle.light,
+      child: PopScope(
+        canPop: false,
+        child: Scaffold(
+          backgroundColor: context.backgroundPrimaryColor,
+          body: Column(
+            children: [
+              _BuildHeader(
+                title: state.assignment!.title,
+                progress: progress,
+                current: totalQuestions > 0 ? currentQuestionIndex + 1 : 1,
+                total: totalQuestions > 0 ? totalQuestions : 1,
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  padding: const EdgeInsets.fromLTRB(24, 32, 24, 120),
+                  child: totalQuestions > 0
+                      ? FadeInRight(
+                          key: ValueKey(
+                            'question_$currentQuestionIndex',
+                          ),
+                          duration: const Duration(milliseconds: 400),
+                          child: _QuestionCard(
+                            q: q!,
+                            current: (state.currentQuestionIndex + 1),
+                            total: state.questions.length,
+                            selectedAnswer: state.answers[q.id],
+                            onOptionSelected: onOptionSelected,
+                          ),
+                        )
+                      : Column(
+                          children: [
+                            FadeInUp(
+                              duration: const Duration(
+                                milliseconds: 600,
                               ),
-                              duration: const Duration(milliseconds: 400),
-                              child: _QuestionCard(
-                                q: q!,
-                                current: (state.currentQuestionIndex + 1),
-                                total: state.questions.length,
-                                selectedAnswer: state.answers[q.id],
+                              child: _EssayCard(
+                                initialValue: state.contentText ?? '',
+                                onChanged: onEssayChanged,
                               ),
-                            )
-                          : Column(
-                              children: [
-                                FadeInUp(
-                                  duration: const Duration(
-                                    milliseconds: 600,
-                                  ),
-                                  child: _EssayCard(
-                                    initialValue: state.contentText ?? '',
-                                    onChanged: (val) => context
-                                        .read<AssignmentSubmitBloc>()
-                                        .add(
-                                          AssignmentSubmitContentChanged(
-                                            val,
-                                          ),
-                                        ),
-                                  ),
-                                ),
-                                const Gap(32),
-                                FadeInUp(
-                                  duration: const Duration(
-                                    milliseconds: 600,
-                                  ),
-                                  delay: const Duration(milliseconds: 200),
-                                  child: _FileUploadCard(
-                                    filePaths: state.filePaths,
-                                    onAdd: () async {
-                                      final result = await FilePicker.platform
-                                          .pickFiles(allowMultiple: true);
-                                      if (!context.mounted) return;
-                                      if (result != null &&
-                                          result.files.isNotEmpty) {
-                                        for (final file in result.files) {
-                                          if (file.path != null) {
-                                            context
-                                                .read<
-                                                  AssignmentSubmitBloc
-                                                >()
-                                                .add(
-                                                  AssignmentSubmitFileAdded(
-                                                    file.path!,
-                                                  ),
-                                                );
-                                          }
-                                        }
-                                      }
-                                    },
-                                    onRemove: (path) => context
-                                        .read<AssignmentSubmitBloc>()
-                                        .add(
-                                          AssignmentSubmitFileRemoved(
-                                            path,
-                                          ),
-                                        ),
-                                  ),
-                                ),
-                              ],
                             ),
-                    ),
-                  ),
-                  _BuildNavigation(
-                    isFirst: totalQuestions > 0
-                        ? currentQuestionIndex == 0
-                        : true,
-                    isLast: totalQuestions > 0
-                        ? currentQuestionIndex == totalQuestions - 1
-                        : true,
-                    isSubmitting: state.isSubmitting,
-                  ),
-                ],
+                            const Gap(32),
+                            FadeInUp(
+                              duration: const Duration(
+                                milliseconds: 600,
+                              ),
+                              delay: const Duration(milliseconds: 200),
+                              child: _FileUploadCard(
+                                filePaths: state.filePaths,
+                                onAdd: onAddFile,
+                                onRemove: onRemoveFile,
+                              ),
+                            ),
+                          ],
+                        ),
+                ),
               ),
-            ),
+              _BuildNavigation(
+                isFirst: totalQuestions > 0
+                    ? currentQuestionIndex == 0
+                    : true,
+                isLast: totalQuestions > 0
+                    ? currentQuestionIndex == totalQuestions - 1
+                    : true,
+                isSubmitting: state.isSubmitting,
+                onPrevious: onPreviousQuestion,
+                onNext: onNextQuestion,
+                onSubmit: onSubmit,
+              ),
+            ],
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }
@@ -369,11 +341,17 @@ final class _BuildNavigation extends StatelessWidget {
   final bool isFirst;
   final bool isLast;
   final bool isSubmitting;
+  final VoidCallback onPrevious;
+  final VoidCallback onNext;
+  final VoidCallback onSubmit;
 
   const _BuildNavigation({
     required this.isFirst,
     required this.isLast,
     required this.isSubmitting,
+    required this.onPrevious,
+    required this.onNext,
+    required this.onSubmit,
   });
 
   @override
@@ -399,9 +377,7 @@ final class _BuildNavigation extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.only(right: 12),
                 child: MentorXButton(
-                  onPressed: () => context.read<AssignmentSubmitBloc>().add(
-                    const AssignmentSubmitPreviousQuestion(),
-                  ),
+                  onPressed: onPrevious,
                   label: context.t.assignments.previous,
                   variant: MentorXButtonVariant.outline,
                 ),
@@ -414,13 +390,9 @@ final class _BuildNavigation extends StatelessWidget {
                   ? null
                   : () {
                       if (isLast) {
-                        context.read<AssignmentSubmitBloc>().add(
-                          const AssignmentSubmitSubmit(),
-                        );
+                        onSubmit();
                       } else {
-                        context.read<AssignmentSubmitBloc>().add(
-                          const AssignmentSubmitNextQuestion(),
-                        );
+                        onNext();
                       }
                     },
               label: isLast
@@ -639,12 +611,14 @@ final class _QuestionCard extends StatelessWidget {
   final int current;
   final int total;
   final String? selectedAnswer;
+  final Function(String questionId, String selectedAnswer) onOptionSelected;
 
   const _QuestionCard({
     required this.q,
     required this.current,
     required this.total,
     required this.selectedAnswer,
+    required this.onOptionSelected,
   });
 
   @override
@@ -738,12 +712,7 @@ final class _QuestionCard extends StatelessWidget {
               label: label,
               text: optionText,
               isSelected: isSelected,
-              onTap: () => context.read<AssignmentSubmitBloc>().add(
-                AssignmentSubmitAnswerSelected(
-                  questionId: q.id,
-                  selectedAnswer: optionText,
-                ),
-              ),
+              onTap: () => onOptionSelected(q.id, optionText),
             ),
           );
         }),

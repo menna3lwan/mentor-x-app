@@ -21,6 +21,8 @@ final class AttendanceHistoryBloc
           AttendanceHistoryState,
           AttendanceHistoryPresentationEvent
         > {
+  static final MentorXLogger _logger = MentorXLogger('AttendanceHistoryBloc');
+
   AttendanceHistoryBloc({
     required this.attendanceRepository,
     required this.analyticsService,
@@ -35,6 +37,7 @@ final class AttendanceHistoryBloc
     AttendanceHistoryLoadEvent event,
     Emitter<AttendanceHistoryState> emit,
   ) async {
+    _logger.info('_onLoad entered');
     emit(
       state.copyWith(
         loadingState: LoadingState.loading,

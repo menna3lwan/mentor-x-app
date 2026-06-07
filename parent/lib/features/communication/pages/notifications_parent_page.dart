@@ -1,78 +1,79 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
-import 'package:parent/core/core.dart';
+import 'package:mentorx_core/mentorx_core.dart';
 import '../bloc/communication_bloc.dart';
 import 'package:intl/intl.dart';
 
-class NotificationsParentPage extends StatelessWidget {
-  final String childId;
+final class NotificationsParentPage extends StatelessWidget {
+  final CommunicationStatus status;
+  final String? errorMessage;
+  final List<NotificationEntity> notifications;
+  final VoidCallback onRefresh;
+  final VoidCallback onRetry;
 
   const NotificationsParentPage({
     super.key,
-    required this.childId,
+    required this.status,
+    required this.errorMessage,
+    required this.notifications,
+    required this.onRefresh,
+    required this.onRetry,
   });
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => CommunicationBloc(
-        analyticsService: context.read<AnalyticsService>(),
-        repository: context.read<ParentCommunicationRepository>(),
-      )..add(CommunicationStarted(childId)),
-      child: Scaffold(
-        backgroundColor: context.backgroundPrimaryColor,
-        body: Stack(
-          children: [
-            const _BackgroundDecorations(),
-            _NotificationsBody(childId: childId),
-          ],
-        ),
+    return Scaffold(
+      backgroundColor: context.backgroundPrimaryColor,
+      body: Stack(
+        children: [
+          const _BackgroundDecorations(),
+          _NotificationsBody(
+            status: status,
+            errorMessage: errorMessage,
+            notifications: notifications,
+            onRefresh: onRefresh,
+            onRetry: onRetry,
+          ),
+        ],
       ),
     );
   }
 }
 
 class _NotificationsBody extends StatelessWidget {
-  const _NotificationsBody({required this.childId});
+  final CommunicationStatus status;
+  final String? errorMessage;
+  final List<NotificationEntity> notifications;
+  final VoidCallback onRefresh;
+  final VoidCallback onRetry;
 
-  final String childId;
+  const _NotificationsBody({
+    required this.status,
+    required this.errorMessage,
+    required this.notifications,
+    required this.onRefresh,
+    required this.onRetry,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final status = context.select<CommunicationBloc, CommunicationStatus>(
-      (bloc) => bloc.state.status,
-    );
-
     if (status == CommunicationStatus.loading) {
       return const Center(child: CircularProgressIndicator());
     }
 
-    final errorMessage = context.select<CommunicationBloc, String?>(
-      (bloc) => bloc.state.errorMessage,
-    );
-
     if (status == CommunicationStatus.failure) {
       return AppErrorView(
         message: errorMessage ?? 'Failed to load notifications',
-        onRetry: () => context.read<CommunicationBloc>().add(
-          CommunicationStarted(childId),
-        ),
+        onRetry: onRetry,
       );
     }
-
-    final notifications = context.select<CommunicationBloc, List<NotificationEntity>>(
-      (bloc) => bloc.state.notifications,
-    );
 
     return RefreshIndicator(
       displacement: MediaQuery.paddingOf(context).top + 80,
       color: context.brandPrimaryColor,
-      onRefresh: () async {
-        context.read<CommunicationBloc>().add(CommunicationRefreshRequested(childId));
-      },
+      onRefresh: () async => onRefresh(),
       child: CustomScrollView(
         physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
         slivers: [
@@ -93,9 +94,7 @@ class _NotificationsBody extends StatelessWidget {
                         title: 'No Notifications',
                         message: 'All caught up! New notifications will appear here.',
                         icon: Icons.notifications_none_rounded,
-                        onAction: () => context.read<CommunicationBloc>().add(
-                          CommunicationRefreshRequested(childId),
-                        ),
+                        onAction: onRefresh,
                         actionLabel: 'Refresh',
                       ),
                     )
@@ -145,7 +144,7 @@ class _NotificationsBody extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
             ),
             child: IconButton(
-              onPressed: () => context.read<CommunicationBloc>().add(CommunicationRefreshRequested(childId)),
+              onPressed: onRefresh,
               icon: const Icon(Icons.refresh_rounded),
             ),
           ),

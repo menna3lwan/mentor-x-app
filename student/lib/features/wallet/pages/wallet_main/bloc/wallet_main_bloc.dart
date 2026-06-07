@@ -20,6 +20,8 @@ final class WalletMainBloc
           WalletMainState,
           WalletMainPresentationEvent
         > {
+  static final MentorXLogger _logger = MentorXLogger('WalletMainBloc');
+
   WalletMainBloc({
     required this.walletRepository,
     required this.analyticsService,
@@ -34,6 +36,7 @@ final class WalletMainBloc
     WalletMainLoadEvent event,
     Emitter<WalletMainState> emit,
   ) async {
+    _logger.info('Handling WalletMainLoadEvent');
     analyticsService.logEvent(name: AnalyticsEvents.transactionHistoryViewed);
     emit(
       state.copyWith(
@@ -55,14 +58,17 @@ final class WalletMainBloc
           transactions: transactions,
         ),
       );
-    } on MentorXException catch (e) {
+      _logger.info('Wallet main summary and recent transactions loaded successfully');
+    } on MentorXException catch (e, s) {
+      _logger.error('Failed to load wallet main details (MentorXException)', e, s);
       emit(
         state.copyWith(
           loadingState: LoadingState.error,
           errorMessage: MentorXNullableValue(e.message),
         ),
       );
-    } catch (e) {
+    } catch (e, s) {
+      _logger.error('Failed to load wallet main details', e, s);
       emit(
         state.copyWith(
           loadingState: LoadingState.error,

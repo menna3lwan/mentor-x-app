@@ -1,8 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:mentorx_core/mentorx_core.dart';
 
 import '../bloc/home_bloc.dart';
 import '../widgets/child_switcher.dart';
@@ -11,109 +11,127 @@ import '../widgets/parent_activity_feed.dart';
 import '../widgets/parent_quick_actions_grid.dart';
  
 final class HomePagePage extends StatelessWidget {
-  const HomePagePage({super.key});
+  final HomeStatus status;
+  final List<ParentChildEntity> children;
+  final ParentChildEntity? selectedChild;
+  final ParentHomeSummaryEntity? summary;
+  final List<ParentRecentActivityEntity> recentActivity;
+  final List<AnnouncementEntity> announcements;
+  final String? errorMessage;
+  final VoidCallback onRefresh;
+  final VoidCallback onRetry;
+  final ValueChanged<ParentChildEntity> onChildSwitched;
+
+  const HomePagePage({
+    super.key,
+    required this.status,
+    required this.children,
+    required this.selectedChild,
+    required this.summary,
+    required this.recentActivity,
+    required this.announcements,
+    required this.errorMessage,
+    required this.onRefresh,
+    required this.onRetry,
+    required this.onChildSwitched,
+  });
 
   @override
   Widget build(BuildContext context) {
     final t = Translations.of(context).parent;
 
-    return BlocBuilder<HomeBloc, HomeState>(
-      builder: (context, state) {
-        return Scaffold(
-          backgroundColor: context.backgroundPrimaryColor,
-          body: Stack(
-            children: [
-              const _BackgroundDecorations(),
-              RefreshIndicator(
-                displacement: MediaQuery.paddingOf(context).top + 80,
-                color: context.brandPrimaryColor,
-                onRefresh: () async {
-                  if (state.selectedChild != null) {
-                    context.read<HomeBloc>().add(HomeRefreshRequested());
-                  }
-                },
-                child: CustomScrollView(
-                  physics: const BouncingScrollPhysics(
-                    parent: AlwaysScrollableScrollPhysics(),
-                  ),
-                  slivers: [
-                    SliverToBoxAdapter(
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(24, 0, 24, 100),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Gap(MediaQuery.paddingOf(context).top + 12),
-                            _buildHeader(context, t),
-                            const Gap(32),
-                            const FadeInUp(
-                              duration: Duration(milliseconds: 600),
-                              child: ChildSwitcher(),
-                            ),
-                            const Gap(32),
-                            if (state.summary != null &&
-                                state.selectedChild != null) ...[
-                              ParentHeroCard(
-                                summary: state.summary!,
-                                selectedChildId: state.selectedChild!.id,
-                              ),
-                              const Gap(40),
-                            ],
-                            FadeInUp(
-                              duration: const Duration(milliseconds: 600),
-                              delay: const Duration(milliseconds: 200),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  AppSectionHeader(
-                                    title: t.services,
-                                  ),
-                                  const Gap(16),
-                                  const ParentQuickActionsGrid(),
-                                ],
-                              ),
-                            ),
-                            const Gap(40),
-                            FadeInUp(
-                              duration: const Duration(milliseconds: 600),
-                              delay: const Duration(milliseconds: 400),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  AppSectionHeader(
-                                    title: t.recentActivity,
-                                  ),
-                                  const Gap(16),
-                                  ParentActivityFeed(
-                                    activities: state.recentActivity,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+    return Scaffold(
+      backgroundColor: context.backgroundPrimaryColor,
+      body: Stack(
+        children: [
+          const _BackgroundDecorations(),
+          RefreshIndicator(
+            displacement: MediaQuery.paddingOf(context).top + 80,
+            color: context.brandPrimaryColor,
+            onRefresh: () async => onRefresh(),
+            child: CustomScrollView(
+              physics: const BouncingScrollPhysics(
+                parent: AlwaysScrollableScrollPhysics(),
               ),
-              if (state.status == HomeStatus.loading)
-                const Positioned.fill(
-                  child: Center(
-                    child: CircularProgressIndicator(),
+              slivers: [
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(24, 0, 24, 100),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Gap(MediaQuery.paddingOf(context).top + 12),
+                        _buildHeader(context, t),
+                        const Gap(32),
+                        FadeInUp(
+                          duration: const Duration(milliseconds: 600),
+                          child: ChildSwitcher(
+                            children: children,
+                            selectedChild: selectedChild,
+                            onChildSwitched: onChildSwitched,
+                          ),
+                        ),
+                        const Gap(32),
+                        if (summary != null && selectedChild != null) ...[
+                          ParentHeroCard(
+                            summary: summary!,
+                            selectedChildId: selectedChild!.id,
+                          ),
+                          const Gap(40),
+                        ],
+                        FadeInUp(
+                          duration: const Duration(milliseconds: 600),
+                          delay: const Duration(milliseconds: 200),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              AppSectionHeader(
+                                title: t.services,
+                              ),
+                              const Gap(16),
+                              const ParentQuickActionsGrid(),
+                            ],
+                          ),
+                        ),
+                        const Gap(40),
+                        FadeInUp(
+                          duration: const Duration(milliseconds: 600),
+                          delay: const Duration(milliseconds: 400),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              AppSectionHeader(
+                                title: t.recentActivity,
+                              ),
+                              const Gap(16),
+                              ParentActivityFeed(
+                                activities: recentActivity,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              if (state.status == HomeStatus.failure)
-                Positioned.fill(
-                  child: AppErrorView(
-                    message: state.errorMessage ?? t.unableToLoad,
-                    onRetry: () => context.read<HomeBloc>().add(HomeStarted()),
-                  ),
-                ),
-            ],
+              ],
+            ),
           ),
-        );
-      },
+          if (status == HomeStatus.loading)
+            const Positioned.fill(
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            ),
+          if (status == HomeStatus.failure)
+            Positioned.fill(
+              child: AppErrorView(
+                message: errorMessage ?? t.unableToLoad,
+                onRetry: onRetry,
+              ),
+            ),
+        ],
+      ),
     );
   }
 
@@ -238,4 +256,3 @@ class _BlurredBlob extends StatelessWidget {
     );
   }
 }
-

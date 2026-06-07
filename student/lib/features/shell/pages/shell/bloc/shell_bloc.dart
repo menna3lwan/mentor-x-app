@@ -15,6 +15,8 @@ final class ShellNavigateBack extends ShellPresentationEvent {
 
 final class ShellBloc extends Bloc<ShellEvent, ShellState>
     with BlocPresentationMixin<ShellState, ShellPresentationEvent> {
+  static final MentorXLogger _logger = MentorXLogger('ShellBloc');
+
   final AnalyticsService _analyticsService;
 
   ShellBloc({
@@ -29,6 +31,7 @@ final class ShellBloc extends Bloc<ShellEvent, ShellState>
     ShellLoadEvent event,
     Emitter<ShellState> emit,
   ) async {
+    _logger.info('_onLoad entered');
     emit(state.copyWith(loadingState: LoadingState.loading));
     emit(state.copyWith(loadingState: LoadingState.loaded));
   }

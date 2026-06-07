@@ -1,21 +1,34 @@
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mentorx_student/core/core.dart';
 
 import 'assignment_detail_page.dart';
 import 'bloc/assignment_detail_bloc.dart';
 
-final class AssignmentDetailPageWrapper extends StatefulWidget {
-  const AssignmentDetailPageWrapper({super.key});
+final class AssignmentDetailPageWrapper extends StatelessWidget {
+  final String assignmentId;
 
-  @override
-  State<AssignmentDetailPageWrapper> createState() =>
-      _AssignmentDetailPageWrapperState();
-}
+  const AssignmentDetailPageWrapper({
+    super.key,
+    required this.assignmentId,
+  });
 
-class _AssignmentDetailPageWrapperState
-    extends State<AssignmentDetailPageWrapper> {
   @override
   Widget build(BuildContext context) {
+    final loadingState = context.select<AssignmentDetailBloc, LoadingState>(
+      (bloc) => bloc.state.loadingState,
+    );
+    final errorMessage = context.select<AssignmentDetailBloc, String?>(
+      (bloc) => bloc.state.errorMessage,
+    );
+    final assignment = context.select<AssignmentDetailBloc, AssignmentEntity?>(
+      (bloc) => bloc.state.assignment,
+    );
+    final submission = context.select<AssignmentDetailBloc, AssignmentSubmissionEntity?>(
+      (bloc) => bloc.state.submission,
+    );
+
     return BlocPresentationListener<
       AssignmentDetailBloc,
       AssignmentDetailPresentationEvent
@@ -26,9 +39,14 @@ class _AssignmentDetailPageWrapperState
             Navigator.of(context).pop();
         }
       },
-      child: Builder(
-        builder: (context) {
-          return const AssignmentDetailPage();
+      child: AssignmentDetailPage(
+        loadingState: loadingState,
+        errorMessage: errorMessage,
+        assignment: assignment,
+        submission: submission,
+        onRefresh: () {
+          final bloc = context.read<AssignmentDetailBloc>();
+          bloc.add(AssignmentDetailLoadEvent(assignmentId: assignmentId));
         },
       ),
     );

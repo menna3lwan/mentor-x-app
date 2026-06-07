@@ -19,6 +19,7 @@ class RewardsCatalogFailurePresentationEvent extends RewardsCatalogPresentationE
 
 class RewardsCatalogBloc extends Bloc<RewardsCatalogEvent, RewardsCatalogState>
     with BlocPresentationMixin<RewardsCatalogState, RewardsCatalogPresentationEvent> {
+  static final MentorXLogger _logger = MentorXLogger('RewardsCatalogBloc');
   final RewardsRepository _rewardsRepository;
   final WalletRepository _walletRepository;
   final AnalyticsService _analyticsService;
@@ -41,6 +42,7 @@ class RewardsCatalogBloc extends Bloc<RewardsCatalogEvent, RewardsCatalogState>
     RewardsPageStartedEvent event,
     Emitter<RewardsCatalogState> emit,
   ) async {
+    _logger.info('Handling RewardsPageStartedEvent');
     await _loadAll(emit);
   }
 
@@ -48,6 +50,7 @@ class RewardsCatalogBloc extends Bloc<RewardsCatalogEvent, RewardsCatalogState>
     RewardsPageRefreshedEvent event,
     Emitter<RewardsCatalogState> emit,
   ) async {
+    _logger.info('Handling RewardsPageRefreshedEvent');
     await _loadAll(emit);
   }
 
@@ -55,10 +58,12 @@ class RewardsCatalogBloc extends Bloc<RewardsCatalogEvent, RewardsCatalogState>
     RewardsPageRetryEvent event,
     Emitter<RewardsCatalogState> emit,
   ) async {
+    _logger.info('Handling RewardsPageRetryEvent');
     await _loadAll(emit);
   }
 
   Future<void> _loadAll(Emitter<RewardsCatalogState> emit) async {
+    _logger.debug('Loading all rewards catalog data');
     emit(
       state.copyWith(
         pointsSection: const AsyncSection.loading(),
@@ -85,7 +90,9 @@ class RewardsCatalogBloc extends Bloc<RewardsCatalogEvent, RewardsCatalogState>
           historySection: AsyncSection.success(history),
         ),
       );
-    } catch (e) {
+      _logger.info('Rewards catalog loaded successfully');
+    } catch (e, s) {
+      _logger.error('Failed to load rewards catalog data', e, s);
       emit(
         state.copyWith(
           pointsSection: const AsyncSection.failure(),
@@ -101,6 +108,7 @@ class RewardsCatalogBloc extends Bloc<RewardsCatalogEvent, RewardsCatalogState>
     RewardsPageClaimRequestedEvent event,
     Emitter<RewardsCatalogState> emit,
   ) async {
+    _logger.info('Handling RewardsPageClaimRequestedEvent: rewardItemId=${event.rewardItemId}');
     if (state.isClaiming) return;
 
     emit(state.copyWith(isClaiming: true));
@@ -124,7 +132,9 @@ class RewardsCatalogBloc extends Bloc<RewardsCatalogEvent, RewardsCatalogState>
           isClaiming: false,
         ),
       );
-    } catch (e) {
+      _logger.info('Reward claimed successfully: ${claim.rewardTitle}');
+    } catch (e, s) {
+      _logger.error('Failed to claim reward: ${event.rewardItemId}', e, s);
       emit(state.copyWith(isClaiming: false));
       emitPresentation(RewardsCatalogFailurePresentationEvent(e.toString()));
     }

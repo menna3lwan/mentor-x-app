@@ -21,6 +21,8 @@ final class AttendanceQrBloc
           AttendanceQrState,
           AttendanceQrPresentationEvent
         > {
+  static final MentorXLogger _logger = MentorXLogger('AttendanceQrBloc');
+
   AttendanceQrBloc({
     required this.attendanceRepository,
     required this.analyticsService,
@@ -35,6 +37,7 @@ final class AttendanceQrBloc
     AttendanceQrLoadEvent event,
     Emitter<AttendanceQrState> emit,
   ) async {
+    _logger.info('_onLoad entered');
     emit(state.copyWith(loadingState: LoadingState.loading));
     analyticsService.logEvent(name: AnalyticsEvents.attendanceQrScanned);
     emit(state.copyWith(loadingState: LoadingState.loaded));

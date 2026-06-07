@@ -1,15 +1,15 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mentorx_core/mentorx_core.dart';
-import 'package:analytics_service/analytics_service.dart';
+import 'package:parent/core/core.dart';
 
 part 'courses_event.dart';
 part 'courses_state.dart';
 
-class CoursesBloc extends Bloc<CoursesEvent, CoursesState> {
+final class CoursesBloc extends Bloc<CoursesEvent, CoursesState> {
   final ParentCourseRepository _courseRepository;
   final ParentGradeRepository _gradeRepository;
   final AnalyticsService _analyticsService;
+  static final MentorXLogger _logger = MentorXLogger('CoursesBloc');
 
   CoursesBloc({
     required ParentCourseRepository courseRepository,
@@ -25,6 +25,7 @@ class CoursesBloc extends Bloc<CoursesEvent, CoursesState> {
 
   Future<void> _onStarted(
       CoursesStarted event, Emitter<CoursesState> emit) async {
+    _logger.info('Started loading courses for childId: ${event.childId}');
     emit(state.copyWith(status: CoursesStatus.loading));
     try {
       _analyticsService.logEvent(
@@ -37,13 +38,15 @@ class CoursesBloc extends Bloc<CoursesEvent, CoursesState> {
         _gradeRepository.getGradeTrend(event.childId),
       ]);
 
+      _logger.info('Successfully loaded courses for childId: ${event.childId}');
       emit(state.copyWith(
         status: CoursesStatus.success,
         courses: results[0] as List<CourseEntity>,
         gradeSummary: results[1] as ParentGradeSummaryEntity,
         gradeTrend: results[2] as ParentGradeTrendEntity,
       ));
-    } catch (e) {
+    } catch (e, s) {
+      _logger.error('Failed to load courses for childId: ${event.childId}', e, s);
       emit(state.copyWith(
         status: CoursesStatus.failure,
         errorMessage: e.toString(),
@@ -53,6 +56,7 @@ class CoursesBloc extends Bloc<CoursesEvent, CoursesState> {
 
   Future<void> _onRefreshRequested(
       CoursesRefreshRequested event, Emitter<CoursesState> emit) async {
+    _logger.info('Refresh requested for childId: ${event.childId}');
     add(CoursesStarted(event.childId));
   }
 }

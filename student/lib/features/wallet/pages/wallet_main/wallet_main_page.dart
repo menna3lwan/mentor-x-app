@@ -1,38 +1,30 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:mentorx_student/core/core.dart';
-import 'bloc/wallet_main_bloc.dart';
 
 final class WalletMainPage extends StatelessWidget {
+  final double balance;
+  final int points;
+  final List<WalletTransactionEntity> transactions;
+  final bool isLoading;
   final VoidCallback onRefresh;
 
   const WalletMainPage({
     super.key,
+    required this.balance,
+    required this.points,
+    required this.transactions,
+    required this.isLoading,
     required this.onRefresh,
   });
 
   @override
   Widget build(BuildContext context) {
     final t = context.t.wallet;
-
-    final balance = context.select(
-      (WalletMainBloc bloc) => bloc.state.summary?.walletBalance ?? 0.0,
-    );
-    final points = context.select(
-      (WalletMainBloc bloc) => bloc.state.summary?.points ?? 0,
-    );
-    final transactions = context.select(
-      (WalletMainBloc bloc) => bloc.state.transactions,
-    );
-    final loadingState = context.select(
-      (WalletMainBloc bloc) => bloc.state.loadingState,
-    );
-    final isLoading = loadingState == LoadingState.loading;
 
     return Scaffold(
       backgroundColor: context.backgroundPrimaryColor,

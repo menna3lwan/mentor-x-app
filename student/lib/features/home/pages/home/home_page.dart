@@ -1,24 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:mentorx_student/core/core.dart';
-import 'bloc/home_bloc.dart';
 import 'widgets/widgets.dart';
 
 final class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  final bool isRefreshing;
+  final DateTime? lastUpdatedAt;
+  final bool hasAnnouncements;
+  final VoidCallback onRefresh;
+
+  const HomePage({
+    super.key,
+    required this.isRefreshing,
+    required this.lastUpdatedAt,
+    required this.hasAnnouncements,
+    required this.onRefresh,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final bloc = context.read<HomeBloc>();
-
     return Scaffold(
       backgroundColor: context.backgroundPrimaryColor,
       body: RefreshIndicator(
         onRefresh: () async {
-          bloc.add(const HomeRefreshedEvent());
+          onRefresh();
         },
         displacement: MediaQuery.paddingOf(context).top + 80,
         color: context.brandPrimaryColor,
@@ -63,33 +70,22 @@ final class HomePage extends StatelessWidget {
   }
 
   Widget _buildUpdatedAt(BuildContext context) {
-    return Builder(
-      builder: (context) {
-        final isRefreshing = context.select<HomeBloc, bool>(
-          (bloc) => bloc.state.isRefreshing,
-        );
-        final lastUpdatedAt = context.select<HomeBloc, DateTime?>(
-          (bloc) => bloc.state.lastUpdatedAt,
-        );
-
-        if (isRefreshing && lastUpdatedAt != null) {
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 12, left: 4),
-            child: Text(
-              context.t.home.dashboard.updatedAt(
-                time: lastUpdatedAt,
-              ),
-              style: TextStyle(
-                color: context.textTertiaryColor,
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          );
-        }
-        return const SizedBox.shrink();
-      },
-    );
+    if (isRefreshing && lastUpdatedAt != null) {
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 12, left: 4),
+        child: Text(
+          context.t.home.dashboard.updatedAt(
+            time: lastUpdatedAt!,
+          ),
+          style: TextStyle(
+            color: context.textTertiaryColor,
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      );
+    }
+    return const SizedBox.shrink();
   }
 
   Widget _buildStatsHub(BuildContext context) {
@@ -192,33 +188,23 @@ final class HomePage extends StatelessWidget {
   }
 
   Widget _buildAnnouncements(BuildContext context) {
-    return Builder(
-      builder: (context) {
-        final announcementsSection = context.select<HomeBloc, dynamic>(
-          (bloc) => bloc.state.announcementsSection,
-        );
-
-        if ((announcementsSection.data?.isNotEmpty ?? false) ||
-            announcementsSection.isLoading ||
-            announcementsSection.isFailure) {
-          return FadeInUp(
-            duration: const Duration(milliseconds: 600),
-            delay: const Duration(milliseconds: 500),
-            child: Column(
-              children: [
-                SectionHeader(
-                  title: context.t.home.dashboard.announcements,
-                  onSeeAll: () => const AnnouncementsRoute().push(context),
-                ),
-                const Gap(16),
-                const AnnouncementsSectionWrapper(),
-                const Gap(32),
-              ],
+    if (hasAnnouncements) {
+      return FadeInUp(
+        duration: const Duration(milliseconds: 600),
+        delay: const Duration(milliseconds: 500),
+        child: Column(
+          children: [
+            SectionHeader(
+              title: context.t.home.dashboard.announcements,
+              onSeeAll: () => const AnnouncementsRoute().push(context),
             ),
-          );
-        }
-        return const SizedBox.shrink();
-      },
-    );
+            const Gap(16),
+            const AnnouncementsSectionWrapper(),
+            const Gap(32),
+          ],
+        ),
+      );
+    }
+    return const SizedBox.shrink();
   }
 }

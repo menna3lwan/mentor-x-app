@@ -21,6 +21,8 @@ final class MarketplaceDetailBloc
           MarketplaceDetailState,
           MarketplaceDetailPresentationEvent
         > {
+  static final MentorXLogger _logger = MentorXLogger('MarketplaceDetailBloc');
+
   MarketplaceDetailBloc({
     required this.marketplaceRepository,
     required this.analyticsService,
@@ -35,6 +37,7 @@ final class MarketplaceDetailBloc
     MarketplaceDetailLoadEvent event,
     Emitter<MarketplaceDetailState> emit,
   ) async {
+    _logger.info('Handling MarketplaceDetailLoadEvent for itemId: ${event.itemId}');
     emit(state.copyWith(loadingState: LoadingState.loading));
     try {
       final items = await marketplaceRepository.getItems();
@@ -47,7 +50,9 @@ final class MarketplaceDetailBloc
         },
       );
       emit(state.copyWith(loadingState: LoadingState.loaded, item: item));
-    } catch (e) {
+      _logger.info('Item details loaded successfully for itemId: ${event.itemId}');
+    } catch (e, s) {
+      _logger.error('Failed to load item details for itemId: ${event.itemId}', e, s);
       emit(state.copyWith(loadingState: LoadingState.error));
     }
   }

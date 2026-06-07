@@ -20,6 +20,8 @@ final class QuizIntroBloc
           QuizIntroState,
           QuizIntroPresentationEvent
         > {
+  static final MentorXLogger _logger = MentorXLogger('QuizIntroBloc');
+
   QuizIntroBloc({
     required this.quizRepository,
     required this.profileRepository,
@@ -37,6 +39,7 @@ final class QuizIntroBloc
     QuizIntroLoadEvent event,
     Emitter<QuizIntroState> emit,
   ) async {
+    _logger.info('_onLoad entered');
     emit(state.copyWith(loadingState: LoadingState.loading));
     try {
       final quiz = await quizRepository.getQuiz(state.quizId);
@@ -49,6 +52,7 @@ final class QuizIntroBloc
           state.quizId,
         );
       } catch (e) {
+        _logger.warning('Failed to fetch profile/activeAttempt', e);
         // Silently fail attempt fetch if it doesn't exist or profile fails
       }
 
@@ -62,6 +66,7 @@ final class QuizIntroBloc
         },
       );
 
+      _logger.info('_onLoad success: loaded quiz: ${quiz.title}');
       emit(
         state.copyWith(
           loadingState: LoadingState.loaded,
@@ -69,7 +74,8 @@ final class QuizIntroBloc
           activeAttempt: activeAttempt,
         ),
       );
-    } catch (e) {
+    } catch (e, s) {
+      _logger.error('_onLoad error', e, s);
       emit(
         state.copyWith(
           loadingState: LoadingState.error,

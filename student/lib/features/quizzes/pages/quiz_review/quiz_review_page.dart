@@ -5,129 +5,137 @@ import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:mentorx_student/core/core.dart';
 
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'bloc/quiz_review_bloc.dart';
-
 final class QuizReviewPage extends StatelessWidget {
-  const QuizReviewPage({super.key});
+  final bool isLoading;
+  final bool isSubmitting;
+  final String? errorMessage;
+  final List<QuizQuestionEntity> questions;
+  final Map<String, String> answers;
+  final VoidCallback onRetry;
+  final VoidCallback onSubmit;
+
+  const QuizReviewPage({
+    super.key,
+    required this.isLoading,
+    required this.isSubmitting,
+    required this.errorMessage,
+    required this.questions,
+    required this.answers,
+    required this.onRetry,
+    required this.onSubmit,
+  });
 
   @override
   Widget build(BuildContext context) {
     final t = context.t.quizzes;
 
+    if (isLoading) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    if (errorMessage != null) {
+      return Scaffold(
+        body: AppErrorView(
+          message: errorMessage!,
+          onRetry: onRetry,
+        ),
+      );
+    }
+
+    final total = questions.length;
+    final answeredCount = questions
+        .where((q) => answers[q.id]?.isNotEmpty == true)
+        .length;
+
     return Scaffold(
       backgroundColor: context.backgroundPrimaryColor,
-      body: BlocBuilder<QuizReviewBloc, QuizReviewState>(
-        builder: (context, state) {
-          if (state.loadingState == LoadingState.loading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (state.errorMessage != null) {
-            return AppErrorView(
-              message: state.errorMessage!,
-              onRetry: () => context
-                  .read<QuizReviewBloc>()
-                  .add(const QuizReviewLoadEvent()),
-            );
-          }
-
-          final total = state.questions.length;
-          final answeredCount = state.questions
-              .where((q) => state.answers[q.id]?.isNotEmpty == true)
-              .length;
-
-          return Column(
-            children: [
-              _BuildHeader(t: t, timerText: '--:--'),
-              Expanded(
-                child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  padding: const EdgeInsets.all(24),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      FadeInDown(
-                        child: _BuildProgressOverview(
-                          t: t,
-                          answeredCount: answeredCount,
-                          totalCount: total,
-                        ),
-                      ),
-                      const Gap(40),
-                      FadeInUp(
-                        delay: const Duration(milliseconds: 200),
-                        child: Text(
-                          t.review.jumpToQuestion,
-                          style: context.bodyPrimaryStyle.copyWith(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w900,
-                            letterSpacing: -0.5,
-                          ),
-                        ),
-                      ),
-                      const Gap(20),
-                      FadeInUp(
-                        delay: const Duration(milliseconds: 300),
-                        child: GridView.builder(
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 5,
-                                mainAxisSpacing: 12,
-                                crossAxisSpacing: 12,
-                                childAspectRatio: 1,
-                              ),
-                          itemCount: total,
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemBuilder: (context, i) {
-                            final question = state.questions[i];
-                            final isAnswered =
-                                state.answers[question.id]?.isNotEmpty == true;
-                            return GestureDetector(
-                              onTap: () => Navigator.of(context).pop(i),
-                              child: _QuestionStatusBox(
-                                index: i + 1,
-                                isAnswered: isAnswered,
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                      const Gap(48),
-                      FadeInUp(
-                        delay: const Duration(milliseconds: 400),
-                        child: MentorXButton(
-                          loading: state.loadingState == LoadingState.actionInProgress,
-                          onPressed: () {
-                            context.read<QuizReviewBloc>().add(
-                              const QuizReviewSubmitEvent(),
-                            );
-                          },
-                          label: t.review.submitQuiz,
-                          size: MentorXButtonSize.large,
-                        ),
-                      ),
-                      const Gap(16),
-                      FadeInUp(
-                        delay: const Duration(milliseconds: 500),
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: MentorXButton(
-                            onPressed: () => context.pop(),
-                            label: t.review.backToQuestions,
-                            variant: MentorXButtonVariant.outline,
-                            size: MentorXButtonSize.large,
-                          ),
-                        ),
-                      ),
-                    ],
+      body: Column(
+        children: [
+          _BuildHeader(t: t, timerText: '--:--'),
+          Expanded(
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  FadeInDown(
+                    child: _BuildProgressOverview(
+                      t: t,
+                      answeredCount: answeredCount,
+                      totalCount: total,
+                    ),
                   ),
-                ),
+                  const Gap(40),
+                  FadeInUp(
+                    delay: const Duration(milliseconds: 200),
+                    child: Text(
+                      t.review.jumpToQuestion,
+                      style: context.bodyPrimaryStyle.copyWith(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: -0.5,
+                      ),
+                    ),
+                  ),
+                  const Gap(20),
+                  FadeInUp(
+                    delay: const Duration(milliseconds: 300),
+                    child: GridView.builder(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 5,
+                            mainAxisSpacing: 12,
+                            crossAxisSpacing: 12,
+                            childAspectRatio: 1,
+                          ),
+                      itemCount: total,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, i) {
+                        final question = questions[i];
+                        final isAnswered =
+                            answers[question.id]?.isNotEmpty == true;
+                        return GestureDetector(
+                          onTap: () => Navigator.of(context).pop(i),
+                          child: _QuestionStatusBox(
+                            index: i + 1,
+                            isAnswered: isAnswered,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  const Gap(48),
+                  FadeInUp(
+                    delay: const Duration(milliseconds: 400),
+                    child: MentorXButton(
+                      loading: isSubmitting,
+                      onPressed: onSubmit,
+                      label: t.review.submitQuiz,
+                      size: MentorXButtonSize.large,
+                    ),
+                  ),
+                  const Gap(16),
+                  FadeInUp(
+                    delay: const Duration(milliseconds: 500),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: MentorXButton(
+                        onPressed: () => context.pop(),
+                        label: t.review.backToQuestions,
+                        variant: MentorXButtonVariant.outline,
+                        size: MentorXButtonSize.large,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          );
-        },
+            ),
+          ),
+        ],
       ),
     );
   }

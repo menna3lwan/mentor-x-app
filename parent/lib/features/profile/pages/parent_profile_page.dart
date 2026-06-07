@@ -1,212 +1,210 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
-import 'package:analytics_service/analytics_service.dart';
+import 'package:mentorx_core/mentorx_core.dart';
 import '../bloc/profile_bloc.dart';
 
-class ParentProfilePage extends StatelessWidget {
-  const ParentProfilePage({super.key});
+final class ParentProfilePage extends StatelessWidget {
+  final ProfileStatus status;
+  final ParentEntity? profileData;
+  final String? errorMessage;
+  final VoidCallback onRefresh;
+  final VoidCallback onRetry;
+  final VoidCallback onLogout;
+  final VoidCallback onSettingsTap;
+
+  const ParentProfilePage({
+    super.key,
+    required this.status,
+    required this.profileData,
+    required this.errorMessage,
+    required this.onRefresh,
+    required this.onRetry,
+    required this.onLogout,
+    required this.onSettingsTap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ProfileBloc(
-        analyticsService: context.read<AnalyticsService>(),
-      )..add(ProfileStarted()),
-      child: Scaffold(
-        backgroundColor: context.backgroundPrimaryColor,
-        body: Stack(
-          children: [
-            const _BackgroundDecorations(),
-            const ParentProfileView(),
-          ],
-        ),
+    return Scaffold(
+      backgroundColor: context.backgroundPrimaryColor,
+      body: Stack(
+        children: [
+          const _BackgroundDecorations(),
+          _buildContent(context),
+        ],
       ),
     );
   }
-}
 
-class ParentProfileView extends StatelessWidget {
-  const ParentProfileView({super.key});
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildContent(BuildContext context) {
     final t = Translations.of(context).parent;
 
-    return BlocBuilder<ProfileBloc, ProfileState>(
-      builder: (context, state) {
-        if (state.status == ProfileStatus.loading) {
-          return const Center(child: CircularProgressIndicator());
-        }
+    if (status == ProfileStatus.loading) {
+      return const Center(child: CircularProgressIndicator());
+    }
 
-        if (state.status == ProfileStatus.failure) {
-          return AppErrorView(
-            message: state.errorMessage ?? t.unableToLoad,
-            onRetry: () => context.read<ProfileBloc>().add(ProfileStarted()),
-          );
-        }
+    if (status == ProfileStatus.failure) {
+      return AppErrorView(
+        message: errorMessage ?? t.unableToLoad,
+        onRetry: onRetry,
+      );
+    }
 
-        final profile = state.profileData;
-        
-        return CustomScrollView(
-          physics: const BouncingScrollPhysics(),
-          slivers: [
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  children: [
-                    Gap(MediaQuery.paddingOf(context).top + 20),
-                    _buildHeader(context, t),
-                    const Gap(40),
-                    
-                    // Avatar and Name
-                    FadeInDown(
-                      duration: const Duration(milliseconds: 800),
-                      child: Column(
+    return CustomScrollView(
+      physics: const BouncingScrollPhysics(),
+      slivers: [
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              children: [
+                Gap(MediaQuery.paddingOf(context).top + 20),
+                _buildHeader(context, t),
+                const Gap(40),
+                
+                // Avatar and Name
+                FadeInDown(
+                  duration: const Duration(milliseconds: 800),
+                  child: Column(
+                    children: [
+                      Stack(
+                        alignment: Alignment.bottomRight,
                         children: [
-                          Stack(
-                            alignment: Alignment.bottomRight,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(4),
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: context.brandPrimaryColor.withValues(alpha: 0.1), 
-                                    width: 4,
-                                  ),
-                                ),
-                                child: CircleAvatar(
-                                  radius: 60,
-                                  backgroundColor: context.backgroundSecondaryColor.withValues(alpha: 0.6),
-                                  child: AppDynamicImage(
-                                    profile?.profileImageUrl ?? '',
-                                    width: 120,
-                                    height: 120,
-                                    borderRadius: BorderRadius.circular(60),
-                                    errorWidget: Icon(
-                                      Icons.person_rounded,
-                                      size: 70,
-                                      color: context.brandPrimaryColor,
-                                    ),
-                                  ),
-                                ),
+                          Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: context.brandPrimaryColor.withValues(alpha: 0.1), 
+                                width: 4,
                               ),
-                              Container(
-                                padding: const EdgeInsets.all(10),
-                                decoration: BoxDecoration(
+                            ),
+                            child: CircleAvatar(
+                              radius: 60,
+                              backgroundColor: context.backgroundSecondaryColor.withValues(alpha: 0.6),
+                              child: AppDynamicImage(
+                                profileData?.profileImageUrl ?? '',
+                                width: 120,
+                                height: 120,
+                                borderRadius: BorderRadius.circular(60),
+                                errorWidget: Icon(
+                                  Icons.person_rounded,
+                                  size: 70,
                                   color: context.brandPrimaryColor,
-                                  shape: BoxShape.circle,
-                                  border: Border.all(color: context.backgroundPrimaryColor, width: 3),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: context.brandPrimaryColor.withValues(alpha: 0.3),
-                                      blurRadius: 10,
-                                      offset: const Offset(0, 4),
-                                    ),
-                                  ],
                                 ),
-                                child: const Icon(Icons.camera_alt_rounded, size: 18, color: Colors.white),
                               ),
-                            ],
-                          ),
-                          const Gap(24),
-                          Text(
-                            profile?.fullName ?? 'Parent User',
-                            style: TextStyle(
-                              fontSize: 26,
-                              fontWeight: FontWeight.w900,
-                              color: context.textPrimaryColor,
-                              letterSpacing: -0.5,
                             ),
                           ),
-                          const Gap(6),
-                          StatusBadge(
-                            label: 'Verified Account',
-                            color: context.statusSuccessColor,
-                            isSmall: true,
+                          Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: context.brandPrimaryColor,
+                              shape: BoxShape.circle,
+                              border: Border.all(color: context.backgroundPrimaryColor, width: 3),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: context.brandPrimaryColor.withValues(alpha: 0.3),
+                                  blurRadius: 10,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
+                            ),
+                            child: const Icon(Icons.camera_alt_rounded, size: 18, color: Colors.white),
                           ),
                         ],
                       ),
-                    ),
-                    const Gap(48),
-
-                    FadeInUp(
-                      duration: const Duration(milliseconds: 600),
-                      delay: const Duration(milliseconds: 200),
-                      child: _ProfileSection(
-                        title: t.accountInfo,
-                        children: [
-                          _ProfileTile(
-                            icon: Icons.person_rounded,
-                            label: 'Full Name',
-                            value: profile?.fullName ?? '-',
-                          ),
-                          _ProfileTile(
-                            icon: Icons.phone_android_rounded,
-                            label: 'Phone Number',
-                            value: profile?.phoneNumber ?? '-',
-                          ),
-                          _ProfileTile(
-                            icon: Icons.email_rounded,
-                            label: 'Email Address',
-                            value: profile?.email ?? '-',
-                          ),
-                        ],
-                      ),
-                    ),
-                    const Gap(32),
-                    
-                    FadeInUp(
-                      duration: const Duration(milliseconds: 600),
-                      delay: const Duration(milliseconds: 400),
-                      child: _ProfileSection(
-                        title: t.appSettings,
-                        children: [
-                          _ProfileTile(
-                            icon: Icons.notifications_rounded,
-                            label: t.notifications,
-                            value: 'Enabled',
-                            onTap: () {},
-                          ),
-                          _ProfileTile(
-                            icon: Icons.security_rounded,
-                            label: t.security,
-                            value: 'Password & Biometrics',
-                            onTap: () {},
-                          ),
-                        ],
-                      ),
-                    ),
-                    const Gap(48),
-                    
-                    FadeInUp(
-                      duration: const Duration(milliseconds: 600),
-                      delay: const Duration(milliseconds: 600),
-                      child: MentorXButton(
-                        onPressed: () {
-                          // Logout logic
-                        },
-                        label: t.signOut,
-                        style: Style(
-                          $box.color(context.statusDangerColor.withValues(alpha: 0.1)),
-                          $text.color(context.statusDangerColor),
-                          $box.borderRadius(16),
-                          $box.padding.vertical(16),
+                      const Gap(24),
+                      Text(
+                        profileData?.fullName ?? 'Parent User',
+                        style: TextStyle(
+                          fontSize: 26,
+                          fontWeight: FontWeight.w900,
+                          color: context.textPrimaryColor,
+                          letterSpacing: -0.5,
                         ),
                       ),
-                    ),
-                    const Gap(100),
-                  ],
+                      const Gap(6),
+                      StatusBadge(
+                        label: 'Verified Account',
+                        color: context.statusSuccessColor,
+                        isSmall: true,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
+                const Gap(48),
+
+                FadeInUp(
+                  duration: const Duration(milliseconds: 600),
+                  delay: const Duration(milliseconds: 200),
+                  child: _ProfileSection(
+                    title: t.accountInfo,
+                    children: [
+                      _ProfileTile(
+                        icon: Icons.person_rounded,
+                        label: 'Full Name',
+                        value: profileData?.fullName ?? '-',
+                      ),
+                      _ProfileTile(
+                        icon: Icons.phone_android_rounded,
+                        label: 'Phone Number',
+                        value: profileData?.phoneNumber ?? '-',
+                      ),
+                      _ProfileTile(
+                        icon: Icons.email_rounded,
+                        label: 'Email Address',
+                        value: profileData?.email ?? '-',
+                      ),
+                    ],
+                  ),
+                ),
+                const Gap(32),
+                
+                FadeInUp(
+                  duration: const Duration(milliseconds: 600),
+                  delay: const Duration(milliseconds: 400),
+                  child: _ProfileSection(
+                    title: t.appSettings,
+                    children: [
+                      _ProfileTile(
+                        icon: Icons.notifications_rounded,
+                        label: t.notifications,
+                        value: 'Enabled',
+                        onTap: () {},
+                      ),
+                      _ProfileTile(
+                        icon: Icons.security_rounded,
+                        label: t.security,
+                        value: 'Password & Biometrics',
+                        onTap: () {},
+                      ),
+                    ],
+                  ),
+                ),
+                const Gap(48),
+                
+                FadeInUp(
+                  duration: const Duration(milliseconds: 600),
+                  delay: const Duration(milliseconds: 600),
+                  child: MentorXButton(
+                    onPressed: onLogout,
+                    label: t.signOut,
+                    style: Style(
+                      $box.color(context.statusDangerColor.withValues(alpha: 0.1)),
+                      $text.color(context.statusDangerColor),
+                      $box.borderRadius(16),
+                      $box.padding.vertical(16),
+                    ),
+                  ),
+                ),
+                const Gap(100),
+              ],
             ),
-          ],
-        );
-      },
+          ),
+        ),
+      ],
     );
   }
 
@@ -226,7 +224,7 @@ class ParentProfileView extends StatelessWidget {
             ),
           ),
           IconButton(
-            onPressed: () {},
+            onPressed: onSettingsTap,
             icon: const Icon(Icons.settings_suggest_rounded),
             style: IconButton.styleFrom(
               backgroundColor: context.backgroundSecondaryColor.withValues(alpha: 0.6),

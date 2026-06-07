@@ -3,11 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:mentorx_student/core/core.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'bloc/quiz_answers_review_bloc.dart';
 
 final class QuizAnswersReviewPage extends StatelessWidget {
-  const QuizAnswersReviewPage({super.key});
+  final bool isLoading;
+  final String? errorMessage;
+  final QuizAttemptEntity? attempt;
+  final List<QuizQuestionEntity> questions;
+  final VoidCallback onRetry;
+
+  const QuizAnswersReviewPage({
+    super.key,
+    required this.isLoading,
+    required this.errorMessage,
+    required this.attempt,
+    required this.questions,
+    required this.onRetry,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -28,23 +39,18 @@ final class QuizAnswersReviewPage extends StatelessWidget {
         children: [
           const _BuildHeader(),
           Expanded(
-            child: BlocBuilder<QuizAnswersReviewBloc, QuizAnswersReviewState>(
-              builder: (context, state) {
-                if (state.loadingState == LoadingState.loading) {
+            child: Builder(
+              builder: (context) {
+                if (isLoading) {
                   return const Center(child: CircularProgressIndicator());
                 }
 
-                if (state.errorMessage != null) {
+                if (errorMessage != null) {
                   return AppErrorView(
-                    message: state.errorMessage!,
-                    onRetry: () => context
-                        .read<QuizAnswersReviewBloc>()
-                        .add(const QuizAnswersReviewLoadEvent()),
+                    message: errorMessage!,
+                    onRetry: onRetry,
                   );
                 }
-
-                final attempt = state.attempt;
-                final questions = state.questions;
 
                 if (attempt == null || questions.isEmpty) {
                   return AppEmptyView(
@@ -59,7 +65,7 @@ final class QuizAnswersReviewPage extends StatelessWidget {
                   itemCount: questions.length,
                   itemBuilder: (context, i) {
                     final question = questions[i];
-                    final userAnswer = attempt.answers[question.id] ?? 'Unanswered';
+                    final userAnswer = attempt!.answers[question.id] ?? 'Unanswered';
                     final correctAnswer = mockCorrectAnswers[question.id] ?? 'N/A';
                     
                     // In mock/test mode, check correctness against mockCorrectAnswers.

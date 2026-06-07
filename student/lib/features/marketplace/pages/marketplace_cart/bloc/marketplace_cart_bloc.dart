@@ -31,6 +31,8 @@ final class MarketplaceCartBloc
           MarketplaceCartState,
           MarketplaceCartPresentationEvent
         > {
+  static final MentorXLogger _logger = MentorXLogger('MarketplaceCartBloc');
+
   MarketplaceCartBloc({
     required this.marketplaceRepository,
     required this.walletRepository,
@@ -48,6 +50,7 @@ final class MarketplaceCartBloc
     MarketplaceCartLoadEvent event,
     Emitter<MarketplaceCartState> emit,
   ) async {
+    _logger.info('Handling MarketplaceCartLoadEvent');
     analyticsService.logEvent(name: AnalyticsEvents.cartViewed);
     emit(state.copyWith(loadingState: LoadingState.loading));
     try {
@@ -62,7 +65,9 @@ final class MarketplaceCartBloc
           validCoupons: validCoupons as List<CouponEntity>,
         ),
       );
-    } catch (e) {
+      _logger.info('Marketplace cart successfully loaded');
+    } catch (e, s) {
+      _logger.error('Failed to load marketplace cart', e, s);
       emit(state.copyWith(loadingState: LoadingState.error));
     }
   }
@@ -71,6 +76,7 @@ final class MarketplaceCartBloc
     MarketplaceCartPlaceOrderEvent event,
     Emitter<MarketplaceCartState> emit,
   ) async {
+    _logger.info('Handling MarketplaceCartPlaceOrderEvent: address=${event.address}');
     emit(state.copyWith(loadingState: LoadingState.loading));
     try {
       await marketplaceRepository.placeOrder(
@@ -80,7 +86,9 @@ final class MarketplaceCartBloc
       );
       emit(state.copyWith(loadingState: LoadingState.loaded));
       emitPresentation(const MarketplaceCartOrderPlacedSuccess());
-    } catch (e) {
+      _logger.info('Order placed successfully');
+    } catch (e, s) {
+      _logger.error('Failed to place order', e, s);
       emit(state.copyWith(loadingState: LoadingState.error));
       emitPresentation(const MarketplaceCartOrderPlacedError());
     }

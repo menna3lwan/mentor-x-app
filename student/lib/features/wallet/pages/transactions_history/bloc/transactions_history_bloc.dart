@@ -21,6 +21,8 @@ final class TransactionsHistoryBloc
           TransactionsHistoryState,
           TransactionsHistoryPresentationEvent
         > {
+  static final MentorXLogger _logger = MentorXLogger('TransactionsHistoryBloc');
+
   TransactionsHistoryBloc({
     required this.walletRepository,
     required this.analyticsService,
@@ -36,6 +38,7 @@ final class TransactionsHistoryBloc
     TransactionsHistoryLoadEvent event,
     Emitter<TransactionsHistoryState> emit,
   ) async {
+    _logger.info('Handling TransactionsHistoryLoadEvent');
     emit(
       state.copyWith(
         loadingState: LoadingState.loading,
@@ -61,14 +64,17 @@ final class TransactionsHistoryBloc
           currentPage: 0,
         ),
       );
-    } on MentorXException catch (e) {
+      _logger.info('Transactions history loaded successfully: count=${transactions.length}');
+    } on MentorXException catch (e, s) {
+      _logger.error('Failed to load transactions history (MentorXException)', e, s);
       emit(
         state.copyWith(
           loadingState: LoadingState.error,
           errorMessage: MentorXNullableValue(e.message),
         ),
       );
-    } catch (e) {
+    } catch (e, s) {
+      _logger.error('Failed to load transactions history', e, s);
       emit(
         state.copyWith(
           loadingState: LoadingState.error,
@@ -82,6 +88,7 @@ final class TransactionsHistoryBloc
     TransactionsHistoryLoadMoreEvent event,
     Emitter<TransactionsHistoryState> emit,
   ) async {
+    _logger.info('Handling TransactionsHistoryLoadMoreEvent: currentPage=${state.currentPage}');
     if (!state.hasMore || state.loadingState == LoadingState.loading) return;
 
     final nextPage = state.currentPage + 1;
@@ -98,7 +105,9 @@ final class TransactionsHistoryBloc
           currentPage: nextPage,
         ),
       );
-    } catch (e) {
+      _logger.info('Loaded more transactions successfully: count=${moreTransactions.length}');
+    } catch (e, s) {
+      _logger.error('Failed to load more transactions', e, s);
       // Ignore pagination errors for now
     }
   }

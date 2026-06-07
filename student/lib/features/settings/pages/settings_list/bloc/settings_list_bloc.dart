@@ -21,11 +21,13 @@ final class SettingsListBloc
           SettingsListState,
           SettingsListPresentationEvent
         > {
+  static final MentorXLogger _logger = MentorXLogger('SettingsListBloc');
+
   SettingsListBloc({
     required this.settingsRepository,
     required AnalyticsService analyticsService,
   }) : _analyticsService = analyticsService,
-       super(SettingsListState.initial) {
+      super(SettingsListState.initial) {
     on<SettingsListLoadEvent>(_onLoad);
   }
 
@@ -36,8 +38,15 @@ final class SettingsListBloc
     SettingsListLoadEvent event,
     Emitter<SettingsListState> emit,
   ) async {
+    _logger.info('Handling SettingsListLoadEvent');
     emit(state.copyWith(loadingState: LoadingState.loading));
-    emit(state.copyWith(loadingState: LoadingState.loaded));
-    _analyticsService.logEvent(name: AnalyticsEvents.settingsViewed);
+    try {
+      emit(state.copyWith(loadingState: LoadingState.loaded));
+      _analyticsService.logEvent(name: AnalyticsEvents.settingsViewed);
+      _logger.info('SettingsListLoadEvent successfully handled');
+    } catch (e, s) {
+      _logger.error('Failed handling SettingsListLoadEvent', e, s);
+      emit(state.copyWith(loadingState: LoadingState.error));
+    }
   }
 }

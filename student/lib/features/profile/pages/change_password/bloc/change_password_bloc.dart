@@ -19,6 +19,8 @@ final class ChangePasswordSuccess extends ChangePasswordPresentationEvent {
 
 final class ChangePasswordBloc extends Bloc<ChangePasswordEvent, ChangePasswordState>
     with BlocPresentationMixin<ChangePasswordState, ChangePasswordPresentationEvent> {
+  static final MentorXLogger _logger = MentorXLogger('ChangePasswordBloc');
+
   ChangePasswordBloc({
     required this.profileRepository,
     required this.analyticsService,
@@ -34,6 +36,7 @@ final class ChangePasswordBloc extends Bloc<ChangePasswordEvent, ChangePasswordS
     ChangePasswordLoadEvent event,
     Emitter<ChangePasswordState> emit,
   ) async {
+    _logger.info('_onLoad entered');
     emit(state.copyWith(loadingState: LoadingState.loading));
     analyticsService.logEvent(name: AnalyticsEvents.changePasswordViewed);
     emit(state.copyWith(loadingState: LoadingState.loaded));
@@ -43,6 +46,7 @@ final class ChangePasswordBloc extends Bloc<ChangePasswordEvent, ChangePasswordS
     ChangePasswordSubmitEvent event,
     Emitter<ChangePasswordState> emit,
   ) async {
+    _logger.info('_onSubmit entered');
     emit(
       state.copyWith(
         loadingState: LoadingState.loading,

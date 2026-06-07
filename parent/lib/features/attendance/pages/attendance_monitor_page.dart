@@ -1,53 +1,43 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
-import 'package:parent/core/core.dart';
+import 'package:mentorx_core/mentorx_core.dart';
 import '../bloc/attendance_bloc.dart';
 
-class AttendanceMonitorPage extends StatelessWidget {
-  final String childId;
+final class AttendanceMonitorPage extends StatelessWidget {
+  final AttendanceBlocStatus status;
+  final String? errorMessage;
+  final List<AttendanceRecordEntity> attendanceRecords;
+  final AttendanceSummaryEntity? attendanceSummary;
+  final VoidCallback onRefresh;
+  final VoidCallback onRetry;
 
   const AttendanceMonitorPage({
     super.key,
-    required this.childId,
+    required this.status,
+    required this.errorMessage,
+    required this.attendanceRecords,
+    required this.attendanceSummary,
+    required this.onRefresh,
+    required this.onRetry,
   });
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => AttendanceBloc(
-        repository: context.read<ParentAttendanceRepository>(),
-        analyticsService: context.read<AnalyticsService>(),
-      )..add(AttendanceStarted(childId)),
-      child: Builder(
-        builder: (context) {
-          return AppDashboardScaffold(
-            title: 'Attendance Monitor',
-            onRefresh: () async {
-              context.read<AttendanceBloc>().add(AttendanceRefreshRequested(childId));
-            },
-            actions: [
-              IconButton(
-                onPressed: () => context.read<AttendanceBloc>().add(AttendanceRefreshRequested(childId)),
-                icon: const Icon(Icons.refresh_rounded),
-              ),
-            ],
-            body: _buildBody(context),
-          );
-        },
-      ),
+    return AppDashboardScaffold(
+      title: 'Attendance Monitor',
+      onRefresh: () async => onRefresh(),
+      actions: [
+        IconButton(
+          onPressed: onRefresh,
+          icon: const Icon(Icons.refresh_rounded),
+        ),
+      ],
+      body: _buildBody(context),
     );
   }
 
   Widget _buildBody(BuildContext context) {
-    final status = context.select<AttendanceBloc, AttendanceBlocStatus>(
-      (bloc) => bloc.state.status,
-    );
-    final errorMessage = context.select<AttendanceBloc, String?>(
-      (bloc) => bloc.state.errorMessage,
-    );
-
     if (status == AttendanceBlocStatus.loading) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -55,27 +45,19 @@ class AttendanceMonitorPage extends StatelessWidget {
     if (status == AttendanceBlocStatus.failure) {
       return AppErrorView(
         message: errorMessage ?? 'Failed to load attendance data',
-        onRetry: () => context.read<AttendanceBloc>().add(AttendanceStarted(childId)),
+        onRetry: onRetry,
       );
     }
-
-    final attendanceRecords = context.select<AttendanceBloc, List<AttendanceRecordEntity>>(
-      (bloc) => bloc.state.attendanceRecords,
-    );
 
     if (attendanceRecords.isEmpty) {
       return AppEmptyView(
         title: 'No Records',
         message: 'No attendance records found for this student.',
         icon: Icons.calendar_today_rounded,
-        onAction: () => context.read<AttendanceBloc>().add(AttendanceRefreshRequested(childId)),
+        onAction: onRefresh,
         actionLabel: 'Refresh',
       );
     }
-
-    final attendanceSummary = context.select<AttendanceBloc, AttendanceSummaryEntity?>(
-      (bloc) => bloc.state.attendanceSummary,
-    );
 
     return ListView(
       physics: const BouncingScrollPhysics(),
@@ -85,26 +67,26 @@ class AttendanceMonitorPage extends StatelessWidget {
           FadeInDown(
             duration: const Duration(milliseconds: 600),
             child: AttendanceRateCard(
-              rate: attendanceSummary.attendanceRate,
+              rate: attendanceSummary!.attendanceRate,
               stats: [
                 AttendanceSummaryStat(
                   label: 'Present',
-                  value: attendanceSummary.present.toString(),
+                  value: attendanceSummary!.present.toString(),
                   color: context.statusSuccessColor,
                 ),
                 AttendanceSummaryStat(
                   label: 'Absent',
-                  value: attendanceSummary.absent.toString(),
+                  value: attendanceSummary!.absent.toString(),
                   color: context.statusDangerColor,
                 ),
                 AttendanceSummaryStat(
                   label: 'Late',
-                  value: attendanceSummary.late.toString(),
+                  value: attendanceSummary!.late.toString(),
                   color: context.statusWarningColor,
                 ),
                 AttendanceSummaryStat(
                   label: 'Excused',
-                  value: attendanceSummary.excused.toString(),
+                  value: attendanceSummary!.excused.toString(),
                   color: context.brandPrimaryColor,
                 ),
               ],
@@ -132,8 +114,6 @@ class AttendanceMonitorPage extends StatelessWidget {
     );
   }
 }
-
-// Removed _BuildHeader, _BuildSummaryCard, and _StatMiniItem in favor of standardized components
 
 class _AttendanceRecordCard extends StatelessWidget {
   final AttendanceRecordEntity record;

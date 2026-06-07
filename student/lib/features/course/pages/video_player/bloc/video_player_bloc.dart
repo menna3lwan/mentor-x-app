@@ -24,6 +24,8 @@ final class VideoPlayerBloc
           VideoPlayerState,
           VideoPlayerPresentationEvent
         > {
+  static final MentorXLogger _logger = MentorXLogger('VideoPlayerBloc');
+
   final CourseRepository _courseRepository;
   final AnalyticsService _analyticsService;
 
@@ -55,6 +57,7 @@ final class VideoPlayerBloc
     VideoPlayerInitialized event,
     Emitter<VideoPlayerState> emit,
   ) async {
+    _logger.info('_onInitialized entered');
     _analyticsService.logEvent(
       name: AnalyticsEvents.videoPlayed,
       parameters: {
@@ -99,6 +102,7 @@ final class VideoPlayerBloc
     VideoPlayerProgressUpdated event,
     Emitter<VideoPlayerState> emit,
   ) async {
+    _logger.info('_onProgressUpdated entered');
     emit(
       state.copyWith(
         currentPositionSeconds: event.positionSeconds,
@@ -129,6 +133,7 @@ final class VideoPlayerBloc
     VideoPlayerCompleted event,
     Emitter<VideoPlayerState> emit,
   ) async {
+    _logger.info('_onCompleted entered');
     emit(state.copyWith(isCompleted: true));
 
     if (state.enrollmentId == null) return;

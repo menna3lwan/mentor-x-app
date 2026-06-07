@@ -21,6 +21,8 @@ final class NotificationsBloc
           NotificationsState,
           NotificationsPresentationEvent
         > {
+  static final MentorXLogger _logger = MentorXLogger('NotificationsBloc');
+
   NotificationsBloc({
     required this.notificationRepository,
     required this.analyticsService,
@@ -38,6 +40,7 @@ final class NotificationsBloc
     NotificationsLoadEvent event,
     Emitter<NotificationsState> emit,
   ) async {
+    _logger.info('_onLoad entered');
     emit(
       state.copyWith(
         loadingState: LoadingState.loading,
@@ -55,6 +58,7 @@ final class NotificationsBloc
 
       analyticsService.logEvent(name: AnalyticsEvents.notificationsViewed);
 
+      _logger.info('_onLoad success: loaded ${notifications.length} notifications');
       emit(
         state.copyWith(
           loadingState: LoadingState.loaded,
@@ -63,14 +67,16 @@ final class NotificationsBloc
           currentPage: 0,
         ),
       );
-    } on MentorXException catch (e) {
+    } on MentorXException catch (e, s) {
+      _logger.error('_onLoad MentorXException', e, s);
       emit(
         state.copyWith(
           loadingState: LoadingState.error,
           errorMessage: MentorXNullableValue(e.message),
         ),
       );
-    } catch (e) {
+    } catch (e, s) {
+      _logger.error('_onLoad unknown error', e, s);
       emit(
         state.copyWith(
           loadingState: LoadingState.error,
@@ -84,7 +90,11 @@ final class NotificationsBloc
     NotificationsLoadMoreEvent event,
     Emitter<NotificationsState> emit,
   ) async {
-    if (!state.hasMore || state.loadingState == LoadingState.loading) return;
+    _logger.info('_onLoadMore entered (hasMore: ${state.hasMore}, loadingState: ${state.loadingState})');
+    if (!state.hasMore || state.loadingState == LoadingState.loading) {
+      _logger.info('_onLoadMore early exit: no more data or currently loading');
+      return;
+    }
 
     final nextPage = state.currentPage + 1;
 
@@ -93,6 +103,7 @@ final class NotificationsBloc
         paginationInfo: MentorXPaginationInfo(page: nextPage, limit: 20),
       );
 
+      _logger.info('_onLoadMore success: loaded ${moreNotifications.length} more notifications');
       emit(
         state.copyWith(
           notifications: [...state.notifications, ...moreNotifications],
@@ -100,7 +111,8 @@ final class NotificationsBloc
           currentPage: nextPage,
         ),
       );
-    } catch (e) {
+    } catch (e, s) {
+      _logger.error('_onLoadMore error (suppressed)', e, s);
       // Ignore pagination errors
     }
   }
@@ -109,6 +121,7 @@ final class NotificationsBloc
     NotificationsMarkAsReadEvent event,
     Emitter<NotificationsState> emit,
   ) async {
+    _logger.info('_onMarkAsRead entered for id: ${event.notificationId}');
     try {
       await notificationRepository.markAsRead(event.notificationId);
 
@@ -119,8 +132,10 @@ final class NotificationsBloc
         return n;
       }).toList();
 
+      _logger.info('_onMarkAsRead success');
       emit(state.copyWith(notifications: updatedList));
-    } catch (e) {
+    } catch (e, s) {
+      _logger.error('_onMarkAsRead error (suppressed)', e, s);
       // Ignore read errors
     }
   }
@@ -129,6 +144,7 @@ final class NotificationsBloc
     NotificationsMarkAllAsReadEvent event,
     Emitter<NotificationsState> emit,
   ) async {
+    _logger.info('_onMarkAllAsRead entered');
     try {
       await notificationRepository.markAllAsRead();
 
@@ -136,8 +152,10 @@ final class NotificationsBloc
         return n.copyWith(isRead: true);
       }).toList();
 
+      _logger.info('_onMarkAllAsRead success');
       emit(state.copyWith(notifications: updatedList));
-    } catch (e) {
+    } catch (e, s) {
+      _logger.error('_onMarkAllAsRead error (suppressed)', e, s);
       // Ignore read errors
     }
   }

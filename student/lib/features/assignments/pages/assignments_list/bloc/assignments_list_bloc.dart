@@ -22,6 +22,8 @@ final class AssignmentsListBloc
           AssignmentsListState,
           AssignmentsListPresentationEvent
         > {
+  static final MentorXLogger _logger = MentorXLogger('AssignmentsListBloc');
+
   AssignmentsListBloc({
     required this.assignmentRepository,
     required this.analyticsService,
@@ -37,6 +39,7 @@ final class AssignmentsListBloc
     AssignmentsListLoadEvent event,
     Emitter<AssignmentsListState> emit,
   ) async {
+    _logger.info('Handling AssignmentsListLoadEvent');
     emit(
       state.copyWith(loadingState: LoadingState.loading, errorMessage: null),
     );
@@ -49,7 +52,9 @@ final class AssignmentsListBloc
           assignments: assignments,
         ),
       );
-    } catch (e) {
+      _logger.info('Successfully loaded ${assignments.length} assignments');
+    } catch (e, s) {
+      _logger.error('Failed to load assignments list', e, s);
       emit(
         state.copyWith(
           loadingState: LoadingState.error,
@@ -63,6 +68,7 @@ final class AssignmentsListBloc
     AssignmentsListRefreshEvent event,
     Emitter<AssignmentsListState> emit,
   ) async {
+    _logger.info('Handling AssignmentsListRefreshEvent');
     try {
       final assignments = await assignmentRepository.getAssignments();
       emit(
@@ -70,7 +76,9 @@ final class AssignmentsListBloc
           assignments: assignments,
         ),
       );
-    } catch (e) {
+      _logger.info('Successfully refreshed ${assignments.length} assignments');
+    } catch (e, s) {
+      _logger.error('Failed to refresh assignments list', e, s);
       // Keep existing data on refresh error
     }
   }

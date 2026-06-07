@@ -48,6 +48,8 @@ final class LoginFailurePresentationEvent extends LoginPresentationEvent {
 // ──── Bloc ────
 final class LoginBloc extends Bloc<LoginEvent, LoginState>
     with BlocPresentationMixin<LoginState, LoginPresentationEvent> {
+  static final MentorXLogger _logger = MentorXLogger('LoginBloc');
+
   static const int _maxFailedAttempts = 5;
   static const Duration _lockoutDuration = Duration(minutes: 15);
 
@@ -73,6 +75,7 @@ final class LoginBloc extends Bloc<LoginEvent, LoginState>
     LoginPhoneChanged event,
     Emitter<LoginState> emit,
   ) {
+    _logger.info('_onPhoneChanged entered');
     emit(
       state.copyWith(
         phoneNumber: event.phoneNumber,
@@ -86,6 +89,7 @@ final class LoginBloc extends Bloc<LoginEvent, LoginState>
     LoginPasswordChanged event,
     Emitter<LoginState> emit,
   ) {
+    _logger.info('_onPasswordChanged entered');
     emit(
       state.copyWith(
         password: event.password,
@@ -99,6 +103,7 @@ final class LoginBloc extends Bloc<LoginEvent, LoginState>
     LoginObscurePasswordToggled event,
     Emitter<LoginState> emit,
   ) {
+    _logger.info('_onObscurePasswordToggled entered');
     emit(state.copyWith(obscurePassword: !state.obscurePassword));
   }
 
@@ -106,6 +111,7 @@ final class LoginBloc extends Bloc<LoginEvent, LoginState>
     LoginSubmitted event,
     Emitter<LoginState> emit,
   ) async {
+    _logger.info('_onSubmitted entered');
     final phoneNumber = state.phoneNumber.trim();
     if (phoneNumber.isEmpty || state.password.trim().isEmpty) {
       return;

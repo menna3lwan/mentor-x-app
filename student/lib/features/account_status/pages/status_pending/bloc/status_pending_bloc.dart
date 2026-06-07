@@ -37,6 +37,8 @@ final class StatusPendingBloc
           StatusPendingState,
           StatusPendingPresentationEvent
         > {
+  static final MentorXLogger _logger = MentorXLogger('StatusPendingBloc');
+
   final StudentAuthenticationRepository _authRepository;
   final CacheRepository _cacheRepository;
   final AnalyticsService _analyticsService;
@@ -59,6 +61,7 @@ final class StatusPendingBloc
     StatusPendingInitialized event,
     Emitter<StatusPendingState> emit,
   ) async {
+    _logger.info('Initializing StatusPendingBloc');
     final cachedUser = await _authRepository.getCachedUser();
     final tenantWhatsApp = await _cacheRepository.get('tenant_whatsapp_number');
 
@@ -83,10 +86,12 @@ final class StatusPendingBloc
     StatusPendingRefreshRequested event,
     Emitter<StatusPendingState> emit,
   ) async {
+    _logger.info('Refresh requested');
     emit(state.copyWith(isRefreshing: true));
 
     try {
       final user = await _authRepository.getAccountStatus();
+      _logger.info('Refresh succeeded, status: ${user.status}');
       emit(
         state.copyWith(
           isRefreshing: false,
@@ -100,11 +105,13 @@ final class StatusPendingBloc
         );
       }
     } on MentorXException catch (exception) {
+      _logger.error('Refresh failed with exception', exception);
       emit(state.copyWith(isRefreshing: false));
       emitPresentation(
         StatusPendingFailurePresentationEvent(exception: exception),
       );
-    } catch (_) {
+    } catch (e, s) {
+      _logger.error('Refresh failed unexpectedly', e, s);
       emit(state.copyWith(isRefreshing: false));
     }
   }
@@ -113,12 +120,15 @@ final class StatusPendingBloc
     StatusPendingLogoutRequested event,
     Emitter<StatusPendingState> emit,
   ) async {
+    _logger.info('Logout requested');
     emit(state.copyWith(isRefreshing: true));
     try {
       await _authRepository.logout();
+      _logger.info('Logout succeeded');
       emit(state.copyWith(isRefreshing: false));
       emitPresentation(const StatusPendingLoggedOutPresentationEvent());
     } on MentorXException catch (exception) {
+      _logger.error('Logout failed with exception', exception);
       emit(state.copyWith(isRefreshing: false));
       emitPresentation(
         StatusPendingFailurePresentationEvent(exception: exception),

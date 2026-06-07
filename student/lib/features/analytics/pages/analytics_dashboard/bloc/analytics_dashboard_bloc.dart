@@ -7,6 +7,8 @@ part 'analytics_dashboard_state.dart';
 
 final class AnalyticsDashboardBloc
     extends Bloc<AnalyticsDashboardEvent, AnalyticsDashboardState> {
+  static final MentorXLogger _logger = MentorXLogger('AnalyticsDashboardBloc');
+
   final StudentAnalyticsRepository _analyticsRepository;
   final CourseRepository _courseRepository;
   final AnalyticsService _analyticsService;
@@ -28,6 +30,7 @@ final class AnalyticsDashboardBloc
     AnalyticsDashboardLoadRequested event,
     Emitter<AnalyticsDashboardState> emit,
   ) async {
+    _logger.info('_onLoadRequested entered');
     emit(state.copyWith(status: AnalyticsDashboardStatus.loading));
     _analyticsService.logEvent(name: AnalyticsEvents.analyticsDashboardViewed);
     await _fetchInitialData(emit);
@@ -37,6 +40,7 @@ final class AnalyticsDashboardBloc
     AnalyticsDashboardRefreshed event,
     Emitter<AnalyticsDashboardState> emit,
   ) async {
+    _logger.info('_onRefreshed entered');
     await _fetchData(emit);
   }
 
@@ -44,6 +48,7 @@ final class AnalyticsDashboardBloc
     AnalyticsDashboardCourseChanged event,
     Emitter<AnalyticsDashboardState> emit,
   ) async {
+    _logger.info('_onCourseChanged entered');
     emit(
       state.copyWith(
         status: AnalyticsDashboardStatus.loading,

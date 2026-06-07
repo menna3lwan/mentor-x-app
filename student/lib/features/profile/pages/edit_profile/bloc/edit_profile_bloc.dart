@@ -20,6 +20,8 @@ final class EditProfileSuccess extends EditProfilePresentationEvent {
 
 final class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState>
     with BlocPresentationMixin<EditProfileState, EditProfilePresentationEvent> {
+  static final MentorXLogger _logger = MentorXLogger('EditProfileBloc');
+
   EditProfileBloc({
     required this.profileRepository,
     required this.analyticsService,
@@ -36,6 +38,7 @@ final class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState>
     EditProfileLoadEvent event,
     Emitter<EditProfileState> emit,
   ) async {
+    _logger.info('_onLoad entered');
     emit(state.copyWith(loadingState: LoadingState.loading));
     emit(state.copyWith(loadingState: LoadingState.loaded));
   }
@@ -44,6 +47,7 @@ final class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState>
     EditProfileSubmitRequestEvent event,
     Emitter<EditProfileState> emit,
   ) async {
+    _logger.info('_onSubmitRequest entered');
     if (profileRepository is! StudentProfileRepository) {
       emit(
         state.copyWith(
@@ -109,6 +113,7 @@ final class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState>
     EditProfileUpdateProfileEvent event,
     Emitter<EditProfileState> emit,
   ) async {
+    _logger.info('_onUpdateProfile entered');
     emit(
       state.copyWith(
         loadingState: LoadingState.loading,

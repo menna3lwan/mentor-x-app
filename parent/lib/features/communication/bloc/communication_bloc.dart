@@ -1,13 +1,13 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mentorx_core/mentorx_core.dart';
-import 'package:analytics_service/analytics_service.dart';
+import 'package:parent/core/core.dart';
 
 part 'communication_event.dart';
 part 'communication_state.dart';
 
-class CommunicationBloc extends Bloc<CommunicationEvent, CommunicationState> {
+final class CommunicationBloc extends Bloc<CommunicationEvent, CommunicationState> {
   final ParentCommunicationRepository _repository;
   final AnalyticsService _analyticsService;
+  static final MentorXLogger _logger = MentorXLogger('CommunicationBloc');
 
   CommunicationBloc({
     required ParentCommunicationRepository repository,
@@ -23,6 +23,7 @@ class CommunicationBloc extends Bloc<CommunicationEvent, CommunicationState> {
     CommunicationStarted event,
     Emitter<CommunicationState> emit,
   ) async {
+    _logger.info('Started loading communication for childId: ${event.childId}');
     emit(state.copyWith(status: CommunicationStatus.loading));
     try {
       _analyticsService.logEvent(
@@ -35,13 +36,15 @@ class CommunicationBloc extends Bloc<CommunicationEvent, CommunicationState> {
         _repository.getWhatsAppGroups(event.childId),
       ]);
       
+      _logger.info('Successfully loaded communication data for childId: ${event.childId}');
       emit(state.copyWith(
         status: CommunicationStatus.success,
         notifications: results[0] as List<NotificationEntity>,
         announcements: results[1] as List<AnnouncementEntity>,
         whatsAppGroups: results[2] as List<WhatsAppGroupEntity>,
       ));
-    } catch (e) {
+    } catch (e, s) {
+      _logger.error('Failed to load communication data for childId: ${event.childId}', e, s);
       emit(state.copyWith(
         status: CommunicationStatus.failure,
         errorMessage: e.toString(),
@@ -53,6 +56,7 @@ class CommunicationBloc extends Bloc<CommunicationEvent, CommunicationState> {
     CommunicationRefreshRequested event,
     Emitter<CommunicationState> emit,
   ) async {
+    _logger.info('Refresh requested for childId: ${event.childId}');
     add(CommunicationStarted(event.childId));
   }
 }

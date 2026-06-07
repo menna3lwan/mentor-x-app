@@ -3,7 +3,7 @@ import 'package:mentorx_core/mentorx_core.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 
-class AssignmentGradeDetailParentViewPage extends StatelessWidget {
+final class AssignmentGradeDetailParentViewPage extends StatelessWidget {
   final QuizAttemptEntity attempt;
 
   const AssignmentGradeDetailParentViewPage({

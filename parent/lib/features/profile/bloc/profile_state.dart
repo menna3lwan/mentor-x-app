@@ -2,7 +2,7 @@ part of 'profile_bloc.dart';
 
 enum ProfileStatus { initial, loading, success, failure }
 
-class ProfileState extends Equatable {
+final class ProfileState extends Equatable {
   final ProfileStatus status;
   final ParentEntity? profileData;
   final String? errorMessage;

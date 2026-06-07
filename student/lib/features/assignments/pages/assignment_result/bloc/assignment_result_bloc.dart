@@ -21,6 +21,8 @@ final class AssignmentResultBloc
           AssignmentResultState,
           AssignmentResultPresentationEvent
         > {
+  static final MentorXLogger _logger = MentorXLogger('AssignmentResultBloc');
+
   AssignmentResultBloc({
     required this.assignmentRepository,
     required this.analyticsService,
@@ -36,6 +38,7 @@ final class AssignmentResultBloc
     AssignmentResultLoadEvent event,
     Emitter<AssignmentResultState> emit,
   ) async {
+    _logger.info('Handling AssignmentResultLoadEvent for assignment: ${state.assignmentId}');
     emit(state.copyWith(loadingState: LoadingState.loading));
     try {
       final submission = await assignmentRepository.getSubmission(
@@ -53,7 +56,9 @@ final class AssignmentResultBloc
           AnalyticsParams.assignmentId: state.assignmentId,
         },
       );
-    } catch (e) {
+      _logger.info('Successfully loaded assignment result');
+    } catch (e, s) {
+      _logger.error('Failed to load assignment result', e, s);
       emit(
         state.copyWith(
           loadingState: LoadingState.error,

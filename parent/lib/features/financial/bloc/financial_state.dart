@@ -2,7 +2,7 @@ part of 'financial_bloc.dart';
 
 enum FinancialStatus { initial, loading, success, failure }
 
-class FinancialState extends Equatable {
+final class FinancialState extends Equatable {
   final FinancialStatus status;
   final List<WalletTransactionEntity> transactions;
   final List<PaymentEntity> paymentMethods;

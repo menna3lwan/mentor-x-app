@@ -15,6 +15,8 @@ final class AiChatNavigateBack extends AiChatPresentationEvent {
 
 final class AiChatBloc extends Bloc<AiChatEvent, AiChatState>
     with BlocPresentationMixin<AiChatState, AiChatPresentationEvent> {
+  static final MentorXLogger _logger = MentorXLogger('AiChatBloc');
+
   AiChatBloc({
     required this.aiRepository,
     required this.analyticsService,
@@ -30,6 +32,7 @@ final class AiChatBloc extends Bloc<AiChatEvent, AiChatState>
     AiChatLoadEvent event,
     Emitter<AiChatState> emit,
   ) async {
+    _logger.info('_onLoad entered');
     emit(
       state.copyWith(loadingState: LoadingState.loading, errorMessage: null),
     );
@@ -39,6 +42,7 @@ final class AiChatBloc extends Bloc<AiChatEvent, AiChatState>
       final conversation = await aiRepository.createConversation();
       final messages = await aiRepository.getMessages(conversation.id);
 
+      _logger.info('_onLoad success: conversationId: ${conversation.id}, messages: ${messages.length}');
       emit(
         state.copyWith(
           loadingState: LoadingState.loaded,
@@ -46,7 +50,8 @@ final class AiChatBloc extends Bloc<AiChatEvent, AiChatState>
           messages: messages,
         ),
       );
-    } catch (e) {
+    } catch (e, s) {
+      _logger.error('_onLoad error', e, s);
       emit(
         state.copyWith(
           loadingState: LoadingState.error,
@@ -60,7 +65,11 @@ final class AiChatBloc extends Bloc<AiChatEvent, AiChatState>
     AiChatSendMessage event,
     Emitter<AiChatState> emit,
   ) async {
-    if (state.conversationId == null) return;
+    _logger.info('_onSendMessage entered: content length: ${event.content.length}');
+    if (state.conversationId == null) {
+      _logger.warning('_onSendMessage failed: conversationId is null');
+      return;
+    }
 
     final userMessage = AIMessageEntity(
       id: DateTime.now().toIso8601String(),
@@ -83,6 +92,7 @@ final class AiChatBloc extends Bloc<AiChatEvent, AiChatState>
         event.content,
       );
 
+      _logger.info('_onSendMessage success');
       emit(
         state.copyWith(
           messages: [...state.messages, responseMessage],
@@ -95,7 +105,8 @@ final class AiChatBloc extends Bloc<AiChatEvent, AiChatState>
           AnalyticsParams.conversationId: state.conversationId,
         },
       );
-    } catch (e) {
+    } catch (e, s) {
+      _logger.error('_onSendMessage error', e, s);
       emit(
         state.copyWith(
           isTyping: false,

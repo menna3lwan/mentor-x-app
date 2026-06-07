@@ -33,6 +33,8 @@ final class StudentRegistrationBloc
           StudentRegistrationState,
           StudentRegistrationPresentationEvent
         > {
+  static final MentorXLogger _logger = MentorXLogger('StudentRegistrationBloc');
+
   final StudentRegistrationRepository _registrationRepository;
   final AnalyticsService _analyticsService;
 
@@ -126,6 +128,7 @@ final class StudentRegistrationBloc
     StudentRegistrationPhoneChanged event,
     Emitter<StudentRegistrationState> emit,
   ) {
+    _logger.info('_onPhoneChanged entered');
     emit(state.copyWith(phone: event.value));
     if (_isValidEgyptPhone(event.value)) {
       add(StudentRegistrationCheckPhoneRequested(event.value));
@@ -136,6 +139,7 @@ final class StudentRegistrationBloc
     StudentRegistrationCheckPhoneRequested event,
     Emitter<StudentRegistrationState> emit,
   ) async {
+    _logger.info('_onCheckPhoneRequested entered');
     try {
       final isAvailable = await _registrationRepository.checkPhone(event.phone);
       emit(state.copyWith(isPhoneUnique: isAvailable));
@@ -149,6 +153,7 @@ final class StudentRegistrationBloc
     StudentRegistrationBootstrapRequested event,
     Emitter<StudentRegistrationState> emit,
   ) async {
+    _logger.info('_onBootstrapRequested entered');
     try {
       final governorates = await _registrationRepository.getGovernorates();
       final appInfo = await _registrationRepository.getApplicationInfo();
@@ -181,6 +186,7 @@ final class StudentRegistrationBloc
     StudentRegistrationStepChanged event,
     Emitter<StudentRegistrationState> emit,
   ) {
+    _logger.info('_onStepChanged entered');
     emit(state.copyWith(currentStep: event.step));
   }
 
@@ -188,6 +194,7 @@ final class StudentRegistrationBloc
     StudentRegistrationStartRequested event,
     Emitter<StudentRegistrationState> emit,
   ) async {
+    _logger.info('_onStartRequested entered');
     final validation = _validationMessageForStep(0);
     if (validation != null) {
       emitPresentation(StudentRegistrationFailurePresentationEvent(validation));
@@ -228,6 +235,7 @@ final class StudentRegistrationBloc
     StudentRegistrationResendOtpRequested event,
     Emitter<StudentRegistrationState> emit,
   ) async {
+    _logger.info('_onResendOtpRequested entered');
     try {
       await _registrationRepository.resendOtp(state.phone);
       emitPresentation(StudentRegistrationOtpSentPresentationEvent());
@@ -242,6 +250,7 @@ final class StudentRegistrationBloc
     StudentRegistrationVerifyOtpRequested event,
     Emitter<StudentRegistrationState> emit,
   ) async {
+    _logger.info('_onVerifyOtpRequested entered');
     emit(state.copyWith(loadingState: LoadingState.loading));
     try {
       await _registrationRepository.verifyOtp(
@@ -276,6 +285,7 @@ final class StudentRegistrationBloc
     StudentRegistrationNextStepRequested event,
     Emitter<StudentRegistrationState> emit,
   ) {
+    _logger.info('_onNextStepRequested entered');
     if (state.currentStep == 0 && !state.isRegistrationStarted) {
       add(const StudentRegistrationStartRequested());
       return;
@@ -311,6 +321,7 @@ final class StudentRegistrationBloc
     StudentRegistrationPreviousStepRequested event,
     Emitter<StudentRegistrationState> emit,
   ) {
+    _logger.info('_onPreviousStepRequested entered');
     if (state.currentStep > 0) {
       emit(state.copyWith(currentStep: state.currentStep - 1));
     }
@@ -320,6 +331,7 @@ final class StudentRegistrationBloc
     StudentRegistrationGradeChanged event,
     Emitter<StudentRegistrationState> emit,
   ) async {
+    _logger.info('_onGradeChanged entered');
     emit(state.copyWith(selectedGrade: MentorXNullableValue(event.value)));
   }
 
@@ -327,6 +339,7 @@ final class StudentRegistrationBloc
     StudentRegistrationGovernorateChanged event,
     Emitter<StudentRegistrationState> emit,
   ) async {
+    _logger.info('_onGovernorateChanged entered');
     emit(
       state.copyWith(
         selectedGovernorate: MentorXNullableValue(event.value),
@@ -345,6 +358,7 @@ final class StudentRegistrationBloc
     StudentRegistrationSubmitted event,
     Emitter<StudentRegistrationState> emit,
   ) async {
+    _logger.info('_onSubmitted entered');
     for (var step = 0; step <= 5; step++) {
       final validationMessage = _validationMessageForStep(step);
       if (validationMessage != null) {

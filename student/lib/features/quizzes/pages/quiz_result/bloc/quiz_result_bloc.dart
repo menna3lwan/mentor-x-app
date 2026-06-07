@@ -20,6 +20,8 @@ final class QuizResultBloc
           QuizResultState,
           QuizResultPresentationEvent
         > {
+  static final MentorXLogger _logger = MentorXLogger('QuizResultBloc');
+
   QuizResultBloc({
     required this.quizRepository,
     required this.leaderboardRepository,
@@ -36,6 +38,7 @@ final class QuizResultBloc
     QuizResultLoadEvent event,
     Emitter<QuizResultState> emit,
   ) async {
+    _logger.info('_onLoad entered with attemptId: ${event.attemptId}');
     emit(
       state.copyWith(loadingState: LoadingState.loading, errorMessage: null),
     );
@@ -49,6 +52,7 @@ final class QuizResultBloc
         leaderboardRepository.getQuizLeaderboard(result.quizId),
       ]);
 
+      _logger.info('_onLoad success: loaded attempt score: ${result.score}');
       emit(
         state.copyWith(
           loadingState: LoadingState.loaded,
@@ -57,7 +61,8 @@ final class QuizResultBloc
           leaderboard: leaderboard as List<LeaderboardEntryEntity>,
         ),
       );
-    } catch (e) {
+    } catch (e, s) {
+      _logger.error('_onLoad error', e, s);
       emit(
         state.copyWith(
           loadingState: LoadingState.error,

@@ -21,6 +21,8 @@ final class QuizRewardsBloc
           QuizRewardsState,
           QuizRewardsPresentationEvent
         > {
+  static final MentorXLogger _logger = MentorXLogger('QuizRewardsBloc');
+
   QuizRewardsBloc({
     required this.quizRepository,
     required this.leaderboardRepository,
@@ -37,17 +39,20 @@ final class QuizRewardsBloc
     QuizRewardsLoadEvent event,
     Emitter<QuizRewardsState> emit,
   ) async {
+    _logger.info('_onLoad entered');
     emit(state.copyWith(loadingState: LoadingState.loading));
     analyticsService.logEvent(name: AnalyticsEvents.quizRewardsViewed);
     try {
       final entries = await leaderboardRepository.getGlobalLeaderboard();
+      _logger.info('_onLoad success: loaded ${entries.length} leaderboard entries');
       emit(
         state.copyWith(
           loadingState: LoadingState.loaded,
           leaderboardEntries: entries,
         ),
       );
-    } catch (e) {
+    } catch (e, s) {
+      _logger.error('_onLoad error', e, s);
       emit(state.copyWith(loadingState: LoadingState.error));
     }
   }

@@ -19,6 +19,8 @@ final class ResetPasswordBloc
           ResetPasswordState,
           ResetPasswordPresentationEvent
         > {
+  static final MentorXLogger _logger = MentorXLogger('ResetPasswordBloc');
+
   final StudentAuthenticationRepository _authRepository;
   final AnalyticsService _analyticsService;
 
@@ -41,6 +43,7 @@ final class ResetPasswordBloc
     ResetPasswordOtpChanged event,
     Emitter<ResetPasswordState> emit,
   ) {
+    _logger.info('_onOtpChanged entered');
     emit(state.copyWith(otp: event.otp));
   }
 
@@ -48,6 +51,7 @@ final class ResetPasswordBloc
     ResetPasswordNewPasswordChanged event,
     Emitter<ResetPasswordState> emit,
   ) {
+    _logger.info('_onNewPasswordChanged entered');
     emit(state.copyWith(newPassword: event.password));
   }
 
@@ -55,6 +59,7 @@ final class ResetPasswordBloc
     ResetPasswordConfirmPasswordChanged event,
     Emitter<ResetPasswordState> emit,
   ) {
+    _logger.info('_onConfirmPasswordChanged entered');
     emit(state.copyWith(confirmPassword: event.password));
   }
 
@@ -62,6 +67,7 @@ final class ResetPasswordBloc
     ResetPasswordSubmitted event,
     Emitter<ResetPasswordState> emit,
   ) async {
+    _logger.info('_onSubmitted entered');
     if (state.otp.length != 6 ||
         state.newPassword.isEmpty ||
         state.newPassword != state.confirmPassword) {

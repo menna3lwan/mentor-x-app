@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
-import 'package:parent/core/core.dart';
-import '../bloc/home_bloc.dart';
+import 'package:mentorx_core/mentorx_core.dart';
 import '../../../../core/routing/app_routes.dart';
 
 class ChildSwitcher extends StatelessWidget {
-  const ChildSwitcher({super.key});
+  final List<ParentChildEntity> children;
+  final ParentChildEntity? selectedChild;
+  final ValueChanged<ParentChildEntity> onChildSwitched;
+
+  const ChildSwitcher({
+    super.key,
+    required this.children,
+    required this.selectedChild,
+    required this.onChildSwitched,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final children = context.select((HomeBloc bloc) => bloc.state.children);
-    final selectedChild = context.select((HomeBloc bloc) => bloc.state.selectedChild);
-
     if (children.isEmpty || selectedChild == null) {
       return const SizedBox.shrink();
     }
@@ -51,7 +55,7 @@ class ChildSwitcher extends StatelessWidget {
               }
 
               final child = children[index];
-              final isSelected = child.id == selectedChild.id;
+              final isSelected = child.id == selectedChild!.id;
 
               return FadeInRight(
                 duration: const Duration(milliseconds: 600),
@@ -60,9 +64,7 @@ class ChildSwitcher extends StatelessWidget {
                   name: child.name.split(' ').first,
                   imageUrl: child.profileImageUrl,
                   isSelected: isSelected,
-                  onTap: () {
-                    context.read<HomeBloc>().add(HomeChildSwitched(child));
-                  },
+                  onTap: () => onChildSwitched(child),
                 ),
               );
             },

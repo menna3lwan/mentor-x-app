@@ -1,14 +1,23 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:mentorx_student/core/core.dart';
-import 'bloc/wallet_orders_bloc.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:intl/intl.dart';
 
 final class WalletOrdersPage extends StatelessWidget {
-  const WalletOrdersPage({super.key});
+  final LoadingState loadingState;
+  final String? errorMessage;
+  final List<PaymentOrderEntity> orders;
+  final VoidCallback onRetry;
+
+  const WalletOrdersPage({
+    super.key,
+    required this.loadingState,
+    required this.errorMessage,
+    required this.orders,
+    required this.onRetry,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -27,19 +36,6 @@ final class WalletOrdersPage extends StatelessWidget {
         Expanded(
           child: Builder(
             builder: (context) {
-              final loadingState = context
-                  .select<WalletOrdersBloc, LoadingState>(
-                    (bloc) => bloc.state.loadingState,
-                  );
-              final errorMessage = context
-                  .select<WalletOrdersBloc, String?>(
-                    (bloc) => bloc.state.errorMessage,
-                  );
-              final orders = context
-                  .select<WalletOrdersBloc, List<PaymentOrderEntity>>(
-                    (bloc) => bloc.state.orders,
-                  );
-
               if (loadingState == LoadingState.loading) {
                 return ListView.separated(
                   padding: const EdgeInsets.all(20),
@@ -53,9 +49,7 @@ final class WalletOrdersPage extends StatelessWidget {
               if (loadingState == LoadingState.error) {
                 return AppErrorView(
                   message: errorMessage ?? 'Failed to load orders',
-                  onRetry: () => context.read<WalletOrdersBloc>().add(
-                    const WalletOrdersLoadEvent(),
-                  ),
+                  onRetry: onRetry,
                 );
               }
 

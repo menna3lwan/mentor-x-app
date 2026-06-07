@@ -6,33 +6,63 @@ import 'package:mentorx_student/core/core.dart';
 import 'bloc/rewards_catalog_bloc.dart';
 import 'rewards_catalog_page.dart';
 
-class RewardsCatalogPageWrapper extends StatelessWidget {
+final class RewardsCatalogPageWrapper extends StatelessWidget {
   const RewardsCatalogPageWrapper({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => RewardsCatalogBloc(
-        rewardsRepository: context.read<RewardsRepository>(),
-        walletRepository: context.read<WalletRepository>(),
-        analyticsService: context.read<AnalyticsService>(),
-      )..add(const RewardsPageStartedEvent()),
-      child:
-          BlocPresentationListener<
-            RewardsCatalogBloc,
-            RewardsCatalogPresentationEvent
-          >(
-            listener: (context, event) {
-              if (event is RewardsCatalogClaimSuccessPresentationEvent) {
-                MentorXUI.showToast(
-                  message: 'Successfully claimed: ${event.rewardTitle}',
-                );
-              } else if (event is RewardsCatalogFailurePresentationEvent) {
-                MentorXUI.showToast(message: event.message);
-              }
-            },
-            child: const RewardsCatalogPage(),
-          ),
+      create: (context) {
+        final rewardsRepo = context.read<RewardsRepository>();
+        final walletRepo = context.read<WalletRepository>();
+        final analyticsService = context.read<AnalyticsService>();
+        return RewardsCatalogBloc(
+          rewardsRepository: rewardsRepo,
+          walletRepository: walletRepo,
+          analyticsService: analyticsService,
+        )..add(const RewardsPageStartedEvent());
+      },
+      child: BlocPresentationListener<
+        RewardsCatalogBloc,
+        RewardsCatalogPresentationEvent
+      >(
+        listener: (context, event) {
+          if (event is RewardsCatalogClaimSuccessPresentationEvent) {
+            MentorXUI.showToast(
+              message: 'Successfully claimed: ${event.rewardTitle}',
+            );
+          } else if (event is RewardsCatalogFailurePresentationEvent) {
+            MentorXUI.showToast(message: event.message);
+          }
+        },
+        child: Builder(
+          builder: (context) {
+            final isFirstLoading = context.select(
+              (RewardsCatalogBloc bloc) => bloc.state.isFirstLoading,
+            );
+            final points = context.select(
+              (RewardsCatalogBloc bloc) => bloc.state.pointsSection.data ?? 0,
+            );
+            final items = context.select(
+              (RewardsCatalogBloc bloc) => bloc.state.itemsSection.data ?? <RewardItemEntity>[],
+            );
+
+            return RewardsCatalogPage(
+              isFirstLoading: isFirstLoading,
+              points: points,
+              items: items,
+              onRefresh: () {
+                final bloc = context.read<RewardsCatalogBloc>();
+                bloc.add(const RewardsPageRefreshedEvent());
+              },
+              onRedeem: (item) {
+                final bloc = context.read<RewardsCatalogBloc>();
+                bloc.add(RewardsPageClaimRequestedEvent(item.id));
+              },
+            );
+          },
+        ),
+      ),
     );
   }
 }

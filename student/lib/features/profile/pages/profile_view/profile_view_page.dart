@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mentorx_student/core/core.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
@@ -8,10 +7,12 @@ import 'package:animate_do/animate_do.dart';
 final class ProfileViewPage extends StatelessWidget {
   final AppSessionState session;
   final String? avatarUrl;
+  final VoidCallback onLogout;
 
   const ProfileViewPage({
     super.key,
     required this.session,
+    required this.onLogout,
     this.avatarUrl,
   });
 
@@ -41,7 +42,7 @@ final class ProfileViewPage extends StatelessWidget {
             FadeInUp(
               duration: const Duration(milliseconds: 600),
               delay: const Duration(milliseconds: 200),
-              child: const _ActionsSection(),
+              child: _ActionsSection(onLogout: onLogout),
             ),
           ],
         ),
@@ -265,7 +266,9 @@ final class _InfoTile extends StatelessWidget {
 }
 
 final class _ActionsSection extends StatelessWidget {
-  const _ActionsSection();
+  final VoidCallback onLogout;
+
+  const _ActionsSection({required this.onLogout});
 
   @override
   Widget build(BuildContext context) {
@@ -345,8 +348,7 @@ final class _ActionsSection extends StatelessWidget {
                 child: MentorXButton(
                   onPressed: () {
                     Navigator.pop(ctx);
-                    context.read<AppAuthenticationCubit>().logout();
-                    context.go('/login');
+                    onLogout();
                   },
                   label: t.logoutSetting,
                   color: context.statusDangerColor,

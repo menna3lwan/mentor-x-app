@@ -21,6 +21,8 @@ final class QuizAnswersReviewBloc
           QuizAnswersReviewState,
           QuizAnswersReviewPresentationEvent
         > {
+  static final MentorXLogger _logger = MentorXLogger('QuizAnswersReviewBloc');
+
   QuizAnswersReviewBloc({
     required this.quizRepository,
     required this.analyticsService,
@@ -36,23 +38,27 @@ final class QuizAnswersReviewBloc
     QuizAnswersReviewLoadEvent event,
     Emitter<QuizAnswersReviewState> emit,
   ) async {
+    _logger.info('_onLoad entered');
     emit(state.copyWith(loadingState: LoadingState.loading));
     analyticsService.logEvent(name: AnalyticsEvents.quizAnswersReviewViewed);
     
     if (state.attempt == null) {
+      _logger.info('_onLoad completed: no attempt provided in state');
       emit(state.copyWith(loadingState: LoadingState.loaded));
       return;
     }
 
     try {
       final questions = await quizRepository.getQuizQuestions(state.attempt!.quizId);
+      _logger.info('_onLoad success: loaded ${questions.length} questions for quizId: ${state.attempt!.quizId}');
       emit(
         state.copyWith(
           loadingState: LoadingState.loaded,
           questions: questions,
         ),
       );
-    } catch (e) {
+    } catch (e, s) {
+      _logger.error('_onLoad error', e, s);
       emit(
         state.copyWith(
           loadingState: LoadingState.error,

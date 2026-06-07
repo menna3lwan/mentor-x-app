@@ -20,7 +20,7 @@ final class QuizTakingBloc
           QuizTakingState,
           QuizTakingPresentationEvent
         > {
-  static final MentorXLogger _log = MentorXLogger('QuizTakingBloc');
+  static final MentorXLogger _logger = MentorXLogger('QuizTakingBloc');
 
   QuizTakingBloc({
     required this.quizRepository,
@@ -33,6 +33,7 @@ final class QuizTakingBloc
     on<QuizTakingPreviousQuestion>(_onPreviousQuestion);
     on<QuizTakingSubmit>(_onSubmit);
     on<QuizTakingJumpToQuestion>((event, emit) {
+      _logger.info('QuizTakingJumpToQuestion: jump to index ${event.index}');
       if (event.index >= 0 && event.index < state.questions.length) {
         emit(state.copyWith(currentQuestionIndex: event.index));
       }
@@ -46,6 +47,7 @@ final class QuizTakingBloc
     QuizTakingLoadEvent event,
     Emitter<QuizTakingState> emit,
   ) async {
+    _logger.info('_onLoad entered for quizId: ${state.quizId}');
     emit(state.copyWith(loadingState: LoadingState.loading));
     try {
       final quizEntity = await quizRepository.getQuiz(state.quizId);
@@ -58,8 +60,10 @@ final class QuizTakingBloc
         questions = startResult.$2;
       } on QuizRepositoryException catch (e) {
         if (e.code == QuizRepositoryExceptionCode.quizAlreadyStarted) {
+          _logger.info('_onLoad: quiz already started, fetching active attempt');
           final activeAttempt = await quizRepository.getStudentAttemptForQuiz('', state.quizId);
           if (activeAttempt == null) {
+            _logger.warning('_onLoad: quiz already attempted but active attempt not found');
             emit(
               state.copyWith(
                 loadingState: LoadingState.error,
@@ -98,6 +102,7 @@ final class QuizTakingBloc
         },
       );
 
+      _logger.info('_onLoad success: quiz loaded, attemptId: ${attempt.id}, questions: ${questions.length}');
       emit(
         state.copyWith(
           loadingState: LoadingState.loaded,
@@ -108,7 +113,8 @@ final class QuizTakingBloc
           remainingSeconds: remainingSeconds,
         ),
       );
-    } catch (e) {
+    } catch (e, s) {
+      _logger.error('_onLoad error', e, s);
       emit(
         state.copyWith(
           loadingState: LoadingState.error,
@@ -122,6 +128,7 @@ final class QuizTakingBloc
     QuizTakingAnswerSelected event,
     Emitter<QuizTakingState> emit,
   ) async {
+    _logger.info('_onAnswerSelected: question ${event.questionId} -> ${event.selectedAnswer}');
     final newAnswers = Map<String, String>.from(state.answers);
     newAnswers[event.questionId] = event.selectedAnswer;
     emit(state.copyWith(answers: newAnswers));
@@ -133,9 +140,10 @@ final class QuizTakingBloc
           questionId: event.questionId,
           selectedOptions: [event.selectedAnswer],
         );
-      } catch (e) {
+        _logger.info('_onAnswerSelected success: answer saved on server');
+      } catch (e, s) {
         // Optionally handle save error (e.g. show a toast)
-        _log.warning('Failed to save answer: $e');
+        _logger.error('Failed to save answer', e, s);
       }
     }
   }
@@ -144,6 +152,7 @@ final class QuizTakingBloc
     QuizTakingNextQuestion event,
     Emitter<QuizTakingState> emit,
   ) {
+    _logger.info('_onNextQuestion');
     if (state.currentQuestionIndex < state.questions.length - 1) {
       emit(
         state.copyWith(currentQuestionIndex: state.currentQuestionIndex + 1),
@@ -155,6 +164,7 @@ final class QuizTakingBloc
     QuizTakingPreviousQuestion event,
     Emitter<QuizTakingState> emit,
   ) {
+    _logger.info('_onPreviousQuestion');
     if (state.currentQuestionIndex > 0) {
       emit(
         state.copyWith(currentQuestionIndex: state.currentQuestionIndex - 1),
@@ -166,7 +176,11 @@ final class QuizTakingBloc
     QuizTakingSubmit event,
     Emitter<QuizTakingState> emit,
   ) async {
-    if (state.attemptId == null) return;
+    _logger.info('_onSubmit entered for attemptId: ${state.attemptId}');
+    if (state.attemptId == null) {
+      _logger.warning('_onSubmit: cannot submit, attemptId is null');
+      return;
+    }
 
     emit(state.copyWith(loadingState: LoadingState.actionInProgress));
     try {
@@ -183,13 +197,15 @@ final class QuizTakingBloc
           'score': result.score,
         },
       );
+      _logger.info('_onSubmit success: quiz submitted, score: ${result.score}');
       emit(
         state.copyWith(
           loadingState: LoadingState.success,
           result: result,
         ),
       );
-    } catch (e) {
+    } catch (e, s) {
+      _logger.error('_onSubmit error', e, s);
       emit(
         state.copyWith(
           loadingState: LoadingState.error,

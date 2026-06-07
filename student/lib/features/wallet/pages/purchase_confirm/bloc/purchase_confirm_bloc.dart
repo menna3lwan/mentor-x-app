@@ -21,6 +21,8 @@ final class PurchaseConfirmBloc
           PurchaseConfirmState,
           PurchaseConfirmPresentationEvent
         > {
+  static final MentorXLogger _logger = MentorXLogger('PurchaseConfirmBloc');
+
   PurchaseConfirmBloc({
     required this.walletRepository,
     required this.analyticsService,
@@ -35,6 +37,7 @@ final class PurchaseConfirmBloc
     PurchaseConfirmLoadEvent event,
     Emitter<PurchaseConfirmState> emit,
   ) async {
+    _logger.info('Handling PurchaseConfirmLoadEvent: paymentId=${event.paymentId}');
     emit(
       state.copyWith(
         loadingState: LoadingState.loading,
@@ -49,7 +52,9 @@ final class PurchaseConfirmBloc
         parameters: {AnalyticsParams.id: event.paymentId},
       );
       emit(state.copyWith(loadingState: LoadingState.loaded, payment: payment));
-    } catch (e) {
+      _logger.info('Payment status loaded successfully');
+    } catch (e, s) {
+      _logger.error('Failed to load payment status', e, s);
       emit(
         state.copyWith(
           loadingState: LoadingState.error,

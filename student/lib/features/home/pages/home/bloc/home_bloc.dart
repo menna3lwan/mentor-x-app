@@ -17,6 +17,7 @@ final class HomeFailurePresentationEvent extends HomePresentationEvent {
 
 final class HomeBloc extends Bloc<HomeEvent, HomeState>
     with BlocPresentationMixin<HomeState, HomePresentationEvent> {
+  static final MentorXLogger _logger = MentorXLogger('HomeBloc');
   final StudentHomeRepository _homeRepository;
   final AnalyticsService _analyticsService;
 
@@ -43,6 +44,7 @@ final class HomeBloc extends Bloc<HomeEvent, HomeState>
     HomeInitializedEvent event,
     Emitter<HomeState> emit,
   ) async {
+    _logger.info('Handling HomeInitializedEvent');
     if (state.isFirstLoading) {
       _analyticsService.logEvent(name: AnalyticsEvents.homeViewed);
       await _loadDashboard(emit: emit, isRefresh: false);
@@ -53,6 +55,7 @@ final class HomeBloc extends Bloc<HomeEvent, HomeState>
     HomeRefreshedEvent event,
     Emitter<HomeState> emit,
   ) async {
+    _logger.info('Handling HomeRefreshedEvent');
     await _loadDashboard(emit: emit, isRefresh: true);
   }
 
@@ -60,6 +63,7 @@ final class HomeBloc extends Bloc<HomeEvent, HomeState>
     HomeRetrySectionEvent event,
     Emitter<HomeState> emit,
   ) async {
+    _logger.info('Handling HomeRetrySectionEvent for section: ${event.section}');
     switch (event.section) {
       case HomeSection.wallet:
         emit(state.copyWith(walletSection: state.walletSection.toLoading()));
@@ -96,21 +100,26 @@ final class HomeBloc extends Bloc<HomeEvent, HomeState>
         );
         await _loadAnnouncements(emit);
     }
+    _logger.info('Finished retrying section: ${event.section}');
   }
 
   Future<void> _onBannerClicked(
     HomeBannerClickedEvent event,
     Emitter<HomeState> emit,
   ) async {
+    _logger.info('Handling HomeBannerClickedEvent for banner: ${event.bannerId}');
     try {
       await _homeRepository.trackBannerClick(event.bannerId);
-    } catch (_) {}
+    } catch (e, s) {
+      _logger.error('Failed to track banner click: ${event.bannerId}', e, s);
+    }
   }
 
   Future<void> _loadDashboard({
     required Emitter<HomeState> emit,
     required bool isRefresh,
   }) async {
+    _logger.debug('Loading Home dashboard. isRefresh: $isRefresh');
     emit(
       state.copyWith(
         isRefreshing: isRefresh,
@@ -123,14 +132,19 @@ final class HomeBloc extends Bloc<HomeEvent, HomeState>
       ),
     );
 
-    await Future.wait([
-      _loadWallet(emit),
-      _loadUnreadCount(emit),
-      _loadBanners(emit),
-      _loadContinueLearning(emit),
-      _loadFeaturedCourses(emit),
-      _loadAnnouncements(emit),
-    ]);
+    try {
+      await Future.wait([
+        _loadWallet(emit),
+        _loadUnreadCount(emit),
+        _loadBanners(emit),
+        _loadContinueLearning(emit),
+        _loadFeaturedCourses(emit),
+        _loadAnnouncements(emit),
+      ]);
+      _logger.info('Home dashboard successfully loaded');
+    } catch (e, s) {
+      _logger.error('Failed to load dashboard fully', e, s);
+    }
 
     emit(
       state.copyWith(

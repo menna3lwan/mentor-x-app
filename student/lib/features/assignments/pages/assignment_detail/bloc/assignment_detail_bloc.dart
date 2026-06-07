@@ -21,6 +21,8 @@ final class AssignmentDetailBloc
           AssignmentDetailState,
           AssignmentDetailPresentationEvent
         > {
+  static final MentorXLogger _logger = MentorXLogger('AssignmentDetailBloc');
+
   AssignmentDetailBloc({
     required this.assignmentRepository,
     required this.analyticsService,
@@ -35,6 +37,7 @@ final class AssignmentDetailBloc
     AssignmentDetailLoadEvent event,
     Emitter<AssignmentDetailState> emit,
   ) async {
+    _logger.info('Handling AssignmentDetailLoadEvent for assignment: ${event.assignmentId}');
     emit(
       state.copyWith(loadingState: LoadingState.loading, errorMessage: null),
     );
@@ -61,7 +64,9 @@ final class AssignmentDetailBloc
           submission: submission,
         ),
       );
-    } catch (e) {
+      _logger.info('Successfully loaded assignment detail');
+    } catch (e, s) {
+      _logger.error('Failed to load assignment detail', e, s);
       emit(
         state.copyWith(
           loadingState: LoadingState.error,

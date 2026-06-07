@@ -6,16 +6,27 @@ import 'package:mentorx_student/core/core.dart';
 import 'bloc/quiz_review_bloc.dart';
 import 'quiz_review_page.dart';
 
-final class QuizReviewPageWrapper extends StatefulWidget {
+final class QuizReviewPageWrapper extends StatelessWidget {
   const QuizReviewPageWrapper({super.key});
 
   @override
-  State<QuizReviewPageWrapper> createState() => _QuizReviewPageWrapperState();
-}
-
-class _QuizReviewPageWrapperState extends State<QuizReviewPageWrapper> {
-  @override
   Widget build(BuildContext context) {
+    final isLoading = context.select<QuizReviewBloc, bool>(
+      (bloc) => bloc.state.loadingState == LoadingState.loading,
+    );
+    final isSubmitting = context.select<QuizReviewBloc, bool>(
+      (bloc) => bloc.state.loadingState == LoadingState.actionInProgress,
+    );
+    final errorMessage = context.select<QuizReviewBloc, String?>(
+      (bloc) => bloc.state.errorMessage,
+    );
+    final questions = context.select<QuizReviewBloc, List<QuizQuestionEntity>>(
+      (bloc) => bloc.state.questions,
+    );
+    final answers = context.select<QuizReviewBloc, Map<String, String>>(
+      (bloc) => bloc.state.answers,
+    );
+
     return BlocPresentationListener<
       QuizReviewBloc,
       QuizReviewPresentationEvent
@@ -35,7 +46,21 @@ class _QuizReviewPageWrapperState extends State<QuizReviewPageWrapper> {
             QuizResultRoute(attemptId: state.result!.id).go(context);
           }
         },
-        child: const QuizReviewPage(),
+        child: QuizReviewPage(
+          isLoading: isLoading,
+          isSubmitting: isSubmitting,
+          errorMessage: errorMessage,
+          questions: questions,
+          answers: answers,
+          onRetry: () {
+            final bloc = context.read<QuizReviewBloc>();
+            bloc.add(const QuizReviewLoadEvent());
+          },
+          onSubmit: () {
+            final bloc = context.read<QuizReviewBloc>();
+            bloc.add(const QuizReviewSubmitEvent());
+          },
+        ),
       ),
     );
   }

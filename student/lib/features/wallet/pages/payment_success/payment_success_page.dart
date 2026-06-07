@@ -1,43 +1,23 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:mentorx_student/core/core.dart';
 
-final class PaymentSuccessPage extends StatefulWidget {
-  final String? amount;
-  const PaymentSuccessPage({super.key, this.amount});
-  @override
-  State<PaymentSuccessPage> createState() => _PaymentSuccessState();
-}
+final class PaymentSuccessPage extends StatelessWidget {
+  final double addedAmount;
+  final double walletBalance;
+  final VoidCallback onBackToWallet;
 
-final class _PaymentSuccessState extends State<PaymentSuccessPage> {
-  double _addedAmount = 200.0;
-  bool _balanceUpdated = false;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (_balanceUpdated) return;
-    _balanceUpdated = true;
-
-    // Use passed amount if available, otherwise fallback to query parameters
-    final state = GoRouterState.of(context);
-    final rawAmount = widget.amount ?? state.uri.queryParameters['amount'];
-    _addedAmount = double.tryParse(rawAmount ?? '') ?? 200.0;
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
-        context.read<AppSessionCubit>().updateBalance(_addedAmount);
-      }
-    });
-  }
+  const PaymentSuccessPage({
+    super.key,
+    required this.addedAmount,
+    required this.walletBalance,
+    required this.onBackToWallet,
+  });
 
   @override
   Widget build(BuildContext context) {
     final t = context.t.wallet;
-    final session = context.watch<AppSessionCubit>().state;
 
     return Scaffold(
       backgroundColor: context.backgroundPrimaryColor,
@@ -97,7 +77,7 @@ final class _PaymentSuccessState extends State<PaymentSuccessPage> {
                   child: Text(
                     t.balanceAdded.replaceAll(
                       '%s',
-                      _addedAmount.toStringAsFixed(0),
+                      addedAmount.toStringAsFixed(0),
                     ),
                     textAlign: TextAlign.center,
                     style: context.bodyPrimaryStyle.copyWith(
@@ -135,7 +115,7 @@ final class _PaymentSuccessState extends State<PaymentSuccessPage> {
                           textBaseline: TextBaseline.alphabetic,
                           children: [
                             Text(
-                              session.walletBalance.toStringAsFixed(2),
+                              walletBalance.toStringAsFixed(2),
                               style: context.titleH1Style.copyWith(
                                 fontSize: 40,
                                 fontWeight: FontWeight.w900,
@@ -167,7 +147,7 @@ final class _PaymentSuccessState extends State<PaymentSuccessPage> {
                   child: SizedBox(
                     width: double.infinity,
                     child: MentorXButton(
-                      onPressed: () => context.go('/'),
+                      onPressed: onBackToWallet,
                       label: t.backToWallet,
                       size: MentorXButtonSize.large,
                     ),

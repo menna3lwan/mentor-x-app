@@ -1,13 +1,13 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mentorx_core/mentorx_core.dart';
-import 'package:analytics_service/analytics_service.dart';
+import 'package:parent/core/core.dart';
 
 part 'assessments_event.dart';
 part 'assessments_state.dart';
 
-class AssessmentsBloc extends Bloc<AssessmentsEvent, AssessmentsState> {
+final class AssessmentsBloc extends Bloc<AssessmentsEvent, AssessmentsState> {
   final ParentGradeRepository _repository;
   final AnalyticsService _analyticsService;
+  static final MentorXLogger _logger = MentorXLogger('AssessmentsBloc');
 
   AssessmentsBloc({
     required ParentGradeRepository repository,
@@ -23,6 +23,7 @@ class AssessmentsBloc extends Bloc<AssessmentsEvent, AssessmentsState> {
     AssessmentsStarted event,
     Emitter<AssessmentsState> emit,
   ) async {
+    _logger.info('Started loading assessments for childId: ${event.childId}');
     emit(state.copyWith(status: AssessmentsStatus.loading));
     try {
       _analyticsService.logEvent(
@@ -35,13 +36,15 @@ class AssessmentsBloc extends Bloc<AssessmentsEvent, AssessmentsState> {
         _repository.getGradeTrend(event.childId),
       ]);
 
+      _logger.info('Successfully loaded assessments for childId: ${event.childId}');
       emit(state.copyWith(
         status: AssessmentsStatus.success,
         assessments: results[0] as List<QuizAttemptEntity>,
         gradeSummary: results[1] as ParentGradeSummaryEntity,
         gradeTrend: results[2] as ParentGradeTrendEntity,
       ));
-    } catch (e) {
+    } catch (e, s) {
+      _logger.error('Failed to load assessments for childId: ${event.childId}', e, s);
       emit(state.copyWith(
         status: AssessmentsStatus.failure,
         errorMessage: e.toString(),
@@ -53,6 +56,7 @@ class AssessmentsBloc extends Bloc<AssessmentsEvent, AssessmentsState> {
     AssessmentsRefreshRequested event,
     Emitter<AssessmentsState> emit,
   ) async {
+    _logger.info('Refresh requested for childId: ${event.childId}');
     add(AssessmentsStarted(event.childId));
   }
 }

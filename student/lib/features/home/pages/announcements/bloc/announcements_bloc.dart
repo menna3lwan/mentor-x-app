@@ -16,6 +16,7 @@ final class AnnouncementsLoadFailurePresentationEvent extends AnnouncementsPrese
 
 final class AnnouncementsBloc extends Bloc<AnnouncementsEvent, AnnouncementsState>
     with BlocPresentationMixin<AnnouncementsState, AnnouncementsPresentationEvent> {
+  static final MentorXLogger _logger = MentorXLogger('AnnouncementsBloc');
   final StudentHomeRepository _homeRepository;
 
   AnnouncementsBloc({required StudentHomeRepository homeRepository})
@@ -28,6 +29,7 @@ final class AnnouncementsBloc extends Bloc<AnnouncementsEvent, AnnouncementsStat
     AnnouncementsLoadRequested event,
     Emitter<AnnouncementsState> emit,
   ) async {
+    _logger.info('Handling AnnouncementsLoadRequested');
     emit(state.copyWith(loadingState: LoadingState.loading, errorMessage: null));
     try {
       final announcements = await _homeRepository.getRecentAnnouncements(size: 20);
@@ -35,7 +37,9 @@ final class AnnouncementsBloc extends Bloc<AnnouncementsEvent, AnnouncementsStat
         loadingState: LoadingState.loaded,
         announcements: announcements,
       ));
-    } catch (e) {
+      _logger.info('Successfully loaded ${announcements.length} announcements');
+    } catch (e, s) {
+      _logger.error('Failed to load announcements', e, s);
       final message = e.toString();
       emit(state.copyWith(
         loadingState: LoadingState.error,

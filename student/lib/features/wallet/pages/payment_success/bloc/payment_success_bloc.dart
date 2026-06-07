@@ -21,6 +21,8 @@ final class PaymentSuccessBloc
           PaymentSuccessState,
           PaymentSuccessPresentationEvent
         > {
+  static final MentorXLogger _logger = MentorXLogger('PaymentSuccessBloc');
+
   PaymentSuccessBloc({required this.analyticsService})
     : super(PaymentSuccessState.initial) {
     on<PaymentSuccessLoadEvent>(_onLoad);
@@ -32,6 +34,7 @@ final class PaymentSuccessBloc
     PaymentSuccessLoadEvent event,
     Emitter<PaymentSuccessState> emit,
   ) async {
+    _logger.info('Handling PaymentSuccessLoadEvent');
     emit(state.copyWith(loadingState: LoadingState.loading));
     analyticsService.logEvent(name: AnalyticsEvents.paymentSuccessViewed);
     emit(state.copyWith(loadingState: LoadingState.loaded));

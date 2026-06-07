@@ -1,372 +1,349 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:mentorx_student/core/core.dart';
-import 'bloc/assignment_detail_bloc.dart';
 
 final class AssignmentDetailPage extends StatelessWidget {
-  const AssignmentDetailPage({super.key});
+  final LoadingState loadingState;
+  final String? errorMessage;
+  final AssignmentEntity? assignment;
+  final AssignmentSubmissionEntity? submission;
+  final VoidCallback onRefresh;
+
+  const AssignmentDetailPage({
+    super.key,
+    required this.loadingState,
+    required this.errorMessage,
+    required this.assignment,
+    required this.submission,
+    required this.onRefresh,
+  });
 
   @override
   Widget build(BuildContext context) {
     final t = context.t.assignments;
+    final assignment = this.assignment;
+    final submission = this.submission;
 
-    return Builder(
-      builder: (context) {
-        final loadingState = context
-            .select<AssignmentDetailBloc, LoadingState>(
-              (bloc) => bloc.state.loadingState,
-            );
-        final errorMessage = context.select<AssignmentDetailBloc, String?>(
-          (bloc) => bloc.state.errorMessage,
-        );
-        final assignment = context
-            .select<AssignmentDetailBloc, AssignmentEntity?>(
-              (bloc) => bloc.state.assignment,
-            );
-        final submission = context
-            .select<AssignmentDetailBloc, AssignmentSubmissionEntity?>(
-              (bloc) => bloc.state.submission,
-            );
-
-        if (loadingState == LoadingState.loading) {
-          return Scaffold(
-            backgroundColor: context.backgroundPrimaryColor,
-            body: Column(
-              children: [
-                const MentorXSkeleton(height: 120, borderRadius: 32),
-                const Gap(32),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 24),
-                  child: MentorXSkeleton(height: 40, borderRadius: 12),
-                ),
-                const Gap(12),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 24),
-                  child: MentorXSkeleton(height: 60, borderRadius: 12),
-                ),
-                const Gap(40),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 24),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: MentorXSkeleton(height: 80, borderRadius: 24),
-                      ),
-                      Gap(16),
-                      Expanded(
-                        child: MentorXSkeleton(height: 80, borderRadius: 24),
-                      ),
-                    ],
-                  ),
-                ),
-                const Gap(48),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: MentorXSkeleton(height: 200, borderRadius: 32),
-                  ),
-                ),
-              ],
+    if (loadingState == LoadingState.loading) {
+      return Scaffold(
+        backgroundColor: context.backgroundPrimaryColor,
+        body: Column(
+          children: [
+            const MentorXSkeleton(height: 120, borderRadius: 32),
+            const Gap(32),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 24),
+              child: MentorXSkeleton(height: 40, borderRadius: 12),
             ),
-          );
-        }
+            const Gap(12),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 24),
+              child: MentorXSkeleton(height: 60, borderRadius: 12),
+            ),
+            const Gap(40),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 24),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: MentorXSkeleton(height: 80, borderRadius: 24),
+                  ),
+                  Gap(16),
+                  Expanded(
+                    child: MentorXSkeleton(height: 80, borderRadius: 24),
+                  ),
+                ],
+              ),
+            ),
+            const Gap(48),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: MentorXSkeleton(height: 200, borderRadius: 32),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
 
-        if (errorMessage != null) {
-          return Scaffold(
-            backgroundColor: context.backgroundPrimaryColor,
-            body: AppErrorView(
-              message: errorMessage,
-              onRetry: () {
-                final assignmentId = context
-                    .read<AssignmentDetailBloc>()
-                    .state
-                    .assignment
-                    ?.id;
-                if (assignmentId != null) {
-                  context.read<AssignmentDetailBloc>().add(
-                    AssignmentDetailLoadEvent(assignmentId: assignmentId),
-                  );
-                }
+    if (errorMessage != null) {
+      return Scaffold(
+        backgroundColor: context.backgroundPrimaryColor,
+        body: AppErrorView(
+          message: errorMessage!,
+          onRetry: onRefresh,
+        ),
+      );
+    }
+
+    if (assignment == null) {
+      return Scaffold(
+        backgroundColor: context.backgroundPrimaryColor,
+        body: AppEmptyView(
+          title: t.notFound,
+          message: 'Try again later',
+        ),
+      );
+    }
+
+    final deadlineStr = assignment.deadline != null
+        ? DateFormat.yMMMd(
+            context.languageCode,
+          ).format(assignment.deadline!)
+        : t.noDeadline;
+
+    return Scaffold(
+      backgroundColor: context.backgroundPrimaryColor,
+      body: Column(
+        children: [
+          const _BuildHeader(),
+          Expanded(
+            child: RefreshIndicator(
+              onRefresh: () async {
+                onRefresh();
               },
-            ),
-          );
-        }
-
-        if (assignment == null) {
-          return Scaffold(
-            backgroundColor: context.backgroundPrimaryColor,
-            body: AppEmptyView(
-              title: t.notFound,
-              message: 'Try again later',
-            ),
-          );
-        }
-
-        final isSubmitted = submission != null;
-        final deadlineStr = assignment.deadline != null
-            ? DateFormat.yMMMd(
-                context.languageCode,
-              ).format(assignment.deadline!)
-            : t.noDeadline;
-
-        return Scaffold(
-          backgroundColor: context.backgroundPrimaryColor,
-          body: Column(
-            children: [
-              const _BuildHeader(),
-              Expanded(
-                child: RefreshIndicator(
-                  onRefresh: () async {
-                    context.read<AssignmentDetailBloc>().add(
-                      AssignmentDetailLoadEvent(
-                        assignmentId: assignment.id,
-                      ),
-                    );
-                  },
-                  color: context.brandPrimaryColor,
-                  child: SingleChildScrollView(
-                    physics: const BouncingScrollPhysics(
-                      parent: AlwaysScrollableScrollPhysics(),
-                    ),
-                    padding: const EdgeInsets.fromLTRB(24, 32, 24, 120),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        FadeInDown(
-                          duration: const Duration(milliseconds: 600),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                assignment.title,
-                                style: context.titleH1Style.copyWith(
-                                  fontSize: 32,
-                                  fontWeight: FontWeight.w900,
-                                  letterSpacing: -1.2,
-                                ),
-                              ),
-                              const Gap(12),
-                              if ((assignment.description ?? '').isNotEmpty)
-                                Text(
-                                  assignment.description!,
-                                  style: context.bodyPrimaryStyle.copyWith(
-                                    color: context.textSecondaryColor,
-                                    height: 1.6,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                            ],
+              color: context.brandPrimaryColor,
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(
+                  parent: AlwaysScrollableScrollPhysics(),
+                ),
+                padding: const EdgeInsets.fromLTRB(24, 32, 24, 120),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    FadeInDown(
+                      duration: const Duration(milliseconds: 600),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            assignment.title,
+                            style: context.titleH1Style.copyWith(
+                              fontSize: 32,
+                              fontWeight: FontWeight.w900,
+                              letterSpacing: -1.2,
+                            ),
                           ),
-                        ),
-                        const Gap(40),
-                        FadeInUp(
-                          duration: const Duration(milliseconds: 600),
-                          delay: const Duration(milliseconds: 100),
-                          child: Row(
+                          const Gap(12),
+                          if ((assignment.description ?? '').isNotEmpty)
+                            Text(
+                              assignment.description!,
+                              style: context.bodyPrimaryStyle.copyWith(
+                                color: context.textSecondaryColor,
+                                height: 1.6,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                    const Gap(40),
+                    FadeInUp(
+                      duration: const Duration(milliseconds: 600),
+                      delay: const Duration(milliseconds: 100),
+                      child: Row(
+                        children: [
+                          _DetailChip(
+                            icon: Icons.timer_rounded,
+                            label: t.deadline,
+                            value: deadlineStr,
+                            color: context.brandSecondaryColor,
+                          ),
+                          const Gap(16),
+                          _DetailChip(
+                            icon: Icons.stars_rounded,
+                            label: t.maxScore,
+                            value: '${assignment.maxScore} ${t.points}',
+                            color: Colors.orange,
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Gap(48),
+                    FadeInUp(
+                      duration: const Duration(milliseconds: 600),
+                      delay: const Duration(milliseconds: 200),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
                             children: [
-                              _DetailChip(
-                                icon: Icons.timer_rounded,
-                                label: t.deadline,
-                                value: deadlineStr,
-                                color: context.brandSecondaryColor,
+                              Container(
+                                width: 8,
+                                height: 24,
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    colors: [
+                                      context.brandPrimaryColor,
+                                      context.brandSecondaryColor,
+                                    ],
+                                  ),
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
                               ),
                               const Gap(16),
-                              _DetailChip(
-                                icon: Icons.stars_rounded,
-                                label: t.maxScore,
-                                value: '${assignment.maxScore} ${t.points}',
-                                color: Colors.orange,
-                              ),
-                            ],
-                          ),
-                        ),
-                        const Gap(48),
-                        FadeInUp(
-                          duration: const Duration(milliseconds: 600),
-                          delay: const Duration(milliseconds: 200),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Container(
-                                    width: 8,
-                                    height: 24,
-                                    decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        begin: Alignment.topCenter,
-                                        end: Alignment.bottomCenter,
-                                        colors: [
-                                          context.brandPrimaryColor,
-                                          context.brandSecondaryColor,
-                                        ],
-                                      ),
-                                      borderRadius: BorderRadius.circular(4),
-                                    ),
-                                  ),
-                                  const Gap(16),
-                                  Text(
-                                    t.instructionsLabel,
-                                    style: context.titleH3Style.copyWith(
-                                      fontWeight: FontWeight.w900,
-                                      letterSpacing: -0.5,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const Gap(24),
-                              Container(
-                                width: double.infinity,
-                                padding: const EdgeInsets.all(28),
-                                decoration: BoxDecoration(
-                                  color: context.backgroundSecondaryColor
-                                      .withValues(alpha: 0.5),
-                                  borderRadius: BorderRadius.circular(32),
-                                  border: Border.all(
-                                    color: context.borderPrimaryColor
-                                        .withValues(alpha: 0.1),
-                                  ),
-                                ),
-                                child: Text(
-                                  (assignment.instructions ?? '').isNotEmpty
-                                      ? assignment.instructions!
-                                      : t.instructions,
-                                  style: context.bodyPrimaryStyle.copyWith(
-                                    color: context.textSecondaryColor,
-                                    height: 1.8,
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                              Text(
+                                t.instructionsLabel,
+                                style: context.titleH3Style.copyWith(
+                                  fontWeight: FontWeight.w900,
+                                  letterSpacing: -0.5,
                                 ),
                               ),
                             ],
                           ),
-                        ),
-                        if (assignment.fileUrl != null) ...[
-                          const Gap(32),
-                          FadeInUp(
-                            duration: const Duration(milliseconds: 600),
-                            delay: const Duration(milliseconds: 300),
-                            child: Container(
-                              padding: const EdgeInsets.all(20),
-                              decoration: BoxDecoration(
-                                color: context.backgroundSecondaryColor
-                                    .withValues(alpha: 0.5),
-                                borderRadius: BorderRadius.circular(28),
-                                border: Border.all(
-                                  color: context.borderPrimaryColor.withValues(
-                                    alpha: 0.1,
-                                  ),
-                                ),
+                          const Gap(24),
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(28),
+                            decoration: BoxDecoration(
+                              color: context.backgroundSecondaryColor
+                                  .withValues(alpha: 0.5),
+                              borderRadius: BorderRadius.circular(32),
+                              border: Border.all(
+                                color: context.borderPrimaryColor
+                                    .withValues(alpha: 0.1),
                               ),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.all(12),
-                                    decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        colors: [
-                                          context.brandPrimaryColor.withValues(
-                                            alpha: 0.2,
-                                          ),
-                                          context.brandPrimaryColor.withValues(
-                                            alpha: 0.05,
-                                          ),
-                                        ],
-                                      ),
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: Icon(
-                                      Icons.picture_as_pdf_rounded,
-                                      color: context.brandPrimaryColor,
-                                      size: 28,
-                                    ),
-                                  ),
-                                  const Gap(16),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          t.file,
-                                          style: context.bodyPrimaryStyle
-                                              .copyWith(
-                                                fontWeight: FontWeight.w900,
-                                              ),
-                                        ),
-                                        const Gap(4),
-                                        Text(
-                                          assignment.fileName ??
-                                              'attachment.pdf',
-                                          style: context.smallTextStyle
-                                              .copyWith(
-                                                color:
-                                                    context.textTertiaryColor,
-                                                fontWeight: FontWeight.w700,
-                                              ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  MentorXIconButton(
-                                    onPressed: () {},
-                                    icon: Icons.download_rounded,
-                                    variant: MentorXIconButtonVariant.outline,
-                                    size: MentorXIconButtonSize.medium,
-                                  ),
-                                ],
+                            ),
+                            child: Text(
+                              (assignment.instructions ?? '').isNotEmpty
+                                  ? assignment.instructions!
+                                  : t.instructions,
+                              style: context.bodyPrimaryStyle.copyWith(
+                                color: context.textSecondaryColor,
+                                height: 1.8,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
                           ),
                         ],
-                        const Gap(56),
-                        FadeInUp(
-                          duration: const Duration(milliseconds: 600),
-                          delay: const Duration(milliseconds: 400),
-                          child: isSubmitted
-                              ? Column(
-                                  children: [
-                                    StatusBadge(
-                                      message:
-                                          submission.status ==
-                                              SubmissionStatus.graded
-                                          ? t.graded
-                                          : t.alreadySubmitted,
-                                      status: StatusBadgeType.success,
-                                    ),
-                                    const Gap(24),
-                                    if (submission.status ==
-                                        SubmissionStatus.graded)
-                                      MentorXButton(
-                                        onPressed: () => context.push(
-                                          '/assignment-result/${assignment.id}',
-                                        ),
-                                        label: t.viewResult,
-                                        variant: MentorXButtonVariant.outline,
-                                      ),
-                                  ],
-                                )
-                              : MentorXButton(
-                                  onPressed: () => context.push(
-                                    '/assignment-submit/${assignment.id}',
-                                  ),
-                                  label: t.submit,
-                                  size: MentorXButtonSize.large,
-                                ),
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
+                    if (assignment.fileUrl != null) ...[
+                      const Gap(32),
+                      FadeInUp(
+                        duration: const Duration(milliseconds: 600),
+                        delay: const Duration(milliseconds: 300),
+                        child: Container(
+                          padding: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            color: context.backgroundSecondaryColor
+                                .withValues(alpha: 0.5),
+                            borderRadius: BorderRadius.circular(28),
+                            border: Border.all(
+                              color: context.borderPrimaryColor.withValues(
+                                alpha: 0.1,
+                              ),
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      context.brandPrimaryColor.withValues(
+                                        alpha: 0.2,
+                                      ),
+                                      context.brandPrimaryColor.withValues(
+                                        alpha: 0.05,
+                                      ),
+                                    ],
+                                  ),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  Icons.picture_as_pdf_rounded,
+                                  color: context.brandPrimaryColor,
+                                  size: 28,
+                                ),
+                              ),
+                              const Gap(16),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      t.file,
+                                      style: context.bodyPrimaryStyle
+                                          .copyWith(
+                                            fontWeight: FontWeight.w900,
+                                          ),
+                                    ),
+                                    const Gap(4),
+                                    Text(
+                                      assignment.fileName ??
+                                          'attachment.pdf',
+                                      style: context.smallTextStyle
+                                          .copyWith(
+                                            color:
+                                                context.textTertiaryColor,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              MentorXIconButton(
+                                onPressed: () {},
+                                icon: Icons.download_rounded,
+                                variant: MentorXIconButtonVariant.outline,
+                                size: MentorXIconButtonSize.medium,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                    const Gap(56),
+                    FadeInUp(
+                      duration: const Duration(milliseconds: 600),
+                      delay: const Duration(milliseconds: 400),
+                      child: submission != null
+                          ? Column(
+                              children: [
+                                StatusBadge(
+                                  message:
+                                      submission.status ==
+                                          SubmissionStatus.graded
+                                      ? t.graded
+                                      : t.alreadySubmitted,
+                                  status: StatusBadgeType.success,
+                                ),
+                                const Gap(24),
+                                if (submission.status ==
+                                    SubmissionStatus.graded)
+                                  MentorXButton(
+                                    onPressed: () => context.push(
+                                      '/assignment-result/${assignment.id}',
+                                    ),
+                                    label: t.viewResult,
+                                    variant: MentorXButtonVariant.outline,
+                                  ),
+                              ],
+                            )
+                          : MentorXButton(
+                              onPressed: () => context.push(
+                                '/assignment-submit/${assignment.id}',
+                              ),
+                              label: t.submit,
+                              size: MentorXButtonSize.large,
+                            ),
+                    ),
+                  ],
                 ),
               ),
-            ],
+            ),
           ),
-        );
-      },
+        ],
+      ),
     );
   }
 }

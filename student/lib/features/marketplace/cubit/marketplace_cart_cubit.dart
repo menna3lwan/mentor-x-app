@@ -1,23 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_student/core/core.dart';
 import 'dart:math';
-
-final class MarketplaceCartItem extends Equatable {
-  final MarketplaceItemEntity item;
-  final int quantity;
-
-  const MarketplaceCartItem({required this.item, required this.quantity});
-
-  @override
-  List<Object?> get props => [item, quantity];
-
-  MarketplaceCartItem copyWith({MarketplaceItemEntity? item, int? quantity}) {
-    return MarketplaceCartItem(
-      item: item ?? this.item,
-      quantity: quantity ?? this.quantity,
-    );
-  }
-}
+import '../models/marketplace_cart_item.dart';
 
 final class MarketplaceCartState extends Equatable {
   final List<MarketplaceCartItem> items;
@@ -53,12 +37,15 @@ final class MarketplaceCartState extends Equatable {
 }
 
 final class MarketplaceCartCubit extends Cubit<MarketplaceCartState> {
+  static final MentorXLogger _logger = MentorXLogger('MarketplaceCartCubit');
+
   MarketplaceCartCubit({required this.analyticsService})
     : super(const MarketplaceCartState());
 
   final AnalyticsService analyticsService;
 
   void addItem(MarketplaceItemEntity item) {
+    _logger.info('Adding item to cart: ${item.id}');
     final existingIndex = state.items.indexWhere((i) => i.item.id == item.id);
     if (existingIndex >= 0) {
       final updatedItems = List<MarketplaceCartItem>.from(state.items);
@@ -93,6 +80,7 @@ final class MarketplaceCartCubit extends Cubit<MarketplaceCartState> {
   }
 
   void removeItem(String itemId) {
+    _logger.info('Removing item from cart: $itemId');
     final updatedItems = state.items.where((i) => i.item.id != itemId).toList();
     emit(
       MarketplaceCartState(
@@ -107,6 +95,7 @@ final class MarketplaceCartCubit extends Cubit<MarketplaceCartState> {
   }
 
   void updateQuantity(String itemId, int quantity) {
+    _logger.info('Updating cart item quantity: item=$itemId, qty=$quantity');
     if (quantity <= 0) {
       removeItem(itemId);
       return;
@@ -127,6 +116,7 @@ final class MarketplaceCartCubit extends Cubit<MarketplaceCartState> {
   }
 
   void applyCoupon(CouponEntity coupon) {
+    _logger.info('Applying coupon: ${coupon.code}');
     emit(MarketplaceCartState(items: state.items, appliedCoupon: coupon));
     analyticsService.logEvent(
       name: AnalyticsEvents.couponApplied,
@@ -135,10 +125,12 @@ final class MarketplaceCartCubit extends Cubit<MarketplaceCartState> {
   }
 
   void removeCoupon() {
+    _logger.info('Removing coupon');
     emit(MarketplaceCartState(items: state.items, appliedCoupon: null));
   }
 
   void clear() {
+    _logger.info('Clearing cart');
     emit(const MarketplaceCartState());
   }
 }

@@ -1,52 +1,43 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
-import 'package:parent/core/core.dart';
+import 'package:mentorx_core/mentorx_core.dart';
 import '../bloc/courses_bloc.dart';
 
-class AcademicMonitorPage extends StatelessWidget {
-  final String childId;
+final class AcademicMonitorPage extends StatelessWidget {
+  final CoursesStatus status;
+  final String? errorMessage;
+  final List<CourseEntity> courses;
+  final ParentGradeSummaryEntity? gradeSummary;
+  final VoidCallback onRefresh;
+  final VoidCallback onRetry;
 
   const AcademicMonitorPage({
     super.key,
-    required this.childId,
+    required this.status,
+    required this.errorMessage,
+    required this.courses,
+    required this.gradeSummary,
+    required this.onRefresh,
+    required this.onRetry,
   });
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => CoursesBloc(
-        courseRepository: context.read<ParentCourseRepository>(),
-        gradeRepository: context.read<ParentGradeRepository>(),
-        analyticsService: context.read<AnalyticsService>(),
-      )..add(CoursesStarted(childId)),
-      child: Scaffold(
-        backgroundColor: context.backgroundPrimaryColor,
-        body: Stack(
-          children: [
-            const _BackgroundDecorations(),
-            _AcademicMonitorBody(childId: childId),
-          ],
-        ),
+    return Scaffold(
+      backgroundColor: context.backgroundPrimaryColor,
+      body: Stack(
+        children: [
+          const _BackgroundDecorations(),
+          _buildContent(context),
+        ],
       ),
     );
   }
-}
 
-class _AcademicMonitorBody extends StatelessWidget {
-  const _AcademicMonitorBody({required this.childId});
-
-  final String childId;
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildContent(BuildContext context) {
     final t = Translations.of(context).parent;
-    final status = context.select((CoursesBloc bloc) => bloc.state.status);
-    final errorMessage = context.select((CoursesBloc bloc) => bloc.state.errorMessage);
-    final courses = context.select((CoursesBloc bloc) => bloc.state.courses);
-    final gradeSummary = context.select((CoursesBloc bloc) => bloc.state.gradeSummary);
 
     if (status == CoursesStatus.loading) {
       return const Center(child: CircularProgressIndicator());
@@ -55,16 +46,14 @@ class _AcademicMonitorBody extends StatelessWidget {
     if (status == CoursesStatus.failure) {
       return AppErrorView(
         message: errorMessage ?? t.unableToLoad,
-        onRetry: () => context.read<CoursesBloc>().add(CoursesStarted(childId)),
+        onRetry: onRetry,
       );
     }
 
     return RefreshIndicator(
       displacement: MediaQuery.paddingOf(context).top + 80,
       color: context.brandPrimaryColor,
-      onRefresh: () async {
-        context.read<CoursesBloc>().add(CoursesRefreshRequested(childId));
-      },
+      onRefresh: () async => onRefresh(),
       child: CustomScrollView(
         physics: const BouncingScrollPhysics(
           parent: AlwaysScrollableScrollPhysics(),
@@ -88,17 +77,17 @@ class _AcademicMonitorBody extends StatelessWidget {
                         stats: [
                           AppHeroStatItem(
                             label: 'Average',
-                            value: '${gradeSummary.overallAverage.toStringAsFixed(1)}%',
+                            value: '${gradeSummary!.overallAverage.toStringAsFixed(1)}%',
                             onTap: () {},
                           ),
                           AppHeroStatItem(
                             label: 'Graded',
-                            value: gradeSummary.graded.toString(),
+                            value: gradeSummary!.graded.toString(),
                             onTap: () {},
                           ),
                           AppHeroStatItem(
                             label: 'Pending',
-                            value: gradeSummary.pending.toString(),
+                            value: gradeSummary!.pending.toString(),
                             onTap: () {},
                           ),
                         ],
@@ -114,7 +103,7 @@ class _AcademicMonitorBody extends StatelessWidget {
                         title: t.noData,
                         message: 'Academic data will appear here once available.',
                         icon: Icons.auto_stories_rounded,
-                        onAction: () => context.read<CoursesBloc>().add(CoursesRefreshRequested(childId)),
+                        onAction: onRefresh,
                         actionLabel: 'Refresh',
                       ),
                     ),
@@ -172,7 +161,7 @@ class _AcademicMonitorBody extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
             ),
             child: IconButton(
-              onPressed: () => context.read<CoursesBloc>().add(CoursesRefreshRequested(childId)),
+              onPressed: onRefresh,
               icon: const Icon(Icons.refresh_rounded),
             ),
           ),

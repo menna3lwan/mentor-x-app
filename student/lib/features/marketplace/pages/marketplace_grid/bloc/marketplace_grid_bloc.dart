@@ -21,6 +21,8 @@ final class MarketplaceGridBloc
           MarketplaceGridState,
           MarketplaceGridPresentationEvent
         > {
+  static final MentorXLogger _logger = MentorXLogger('MarketplaceGridBloc');
+
   MarketplaceGridBloc({
     required this.marketplaceRepository,
     required this.analyticsService,
@@ -37,6 +39,7 @@ final class MarketplaceGridBloc
     MarketplaceGridLoadEvent event,
     Emitter<MarketplaceGridState> emit,
   ) async {
+    _logger.info('Handling MarketplaceGridLoadEvent');
     emit(state.copyWith(loadingState: LoadingState.loading));
     try {
       final [
@@ -54,7 +57,9 @@ final class MarketplaceGridBloc
           items: items,
         ),
       );
-    } catch (e) {
+      _logger.info('Marketplace grid loaded successfully');
+    } catch (e, s) {
+      _logger.error('Failed to load marketplace grid data', e, s);
       emit(state.copyWith(loadingState: LoadingState.error));
     }
   }
@@ -63,6 +68,7 @@ final class MarketplaceGridBloc
     MarketplaceGridCategorySelectedEvent event,
     Emitter<MarketplaceGridState> emit,
   ) async {
+    _logger.info('Handling MarketplaceGridCategorySelectedEvent: id=${event.categoryId}');
     emit(
       state.copyWith(
         loadingState: LoadingState.loading,
@@ -79,7 +85,9 @@ final class MarketplaceGridBloc
         name: AnalyticsEvents.marketplaceCategoryViewed,
         parameters: {AnalyticsParams.categoryId: event.categoryId},
       );
-    } catch (e) {
+      _logger.info('Category selected and items loaded successfully');
+    } catch (e, s) {
+      _logger.error('Failed to load items for category: ${event.categoryId}', e, s);
       emit(state.copyWith(loadingState: LoadingState.error));
     }
   }
@@ -88,6 +96,7 @@ final class MarketplaceGridBloc
     MarketplaceGridSearchQueryChangedEvent event,
     Emitter<MarketplaceGridState> emit,
   ) async {
+    _logger.info('Handling MarketplaceGridSearchQueryChangedEvent: query=${event.searchQuery}');
     emit(
       state.copyWith(
         loadingState: LoadingState.loading,
@@ -104,7 +113,9 @@ final class MarketplaceGridBloc
         name: AnalyticsEvents.marketplaceSearched,
         parameters: {AnalyticsParams.query: event.searchQuery},
       );
-    } catch (e) {
+      _logger.info('Search query processed and items loaded successfully');
+    } catch (e, s) {
+      _logger.error('Failed to search marketplace items for: ${event.searchQuery}', e, s);
       emit(state.copyWith(loadingState: LoadingState.error));
     }
   }

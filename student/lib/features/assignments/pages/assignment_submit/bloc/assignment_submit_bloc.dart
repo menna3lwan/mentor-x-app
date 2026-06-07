@@ -21,6 +21,8 @@ final class AssignmentSubmitBloc
           AssignmentSubmitState,
           AssignmentSubmitPresentationEvent
         > {
+  static final MentorXLogger _logger = MentorXLogger('AssignmentSubmitBloc');
+
   AssignmentSubmitBloc({
     required this.assignmentRepository,
     required this.analyticsService,
@@ -43,6 +45,7 @@ final class AssignmentSubmitBloc
     AssignmentSubmitFileAdded event,
     Emitter<AssignmentSubmitState> emit,
   ) {
+    _logger.info('Handling AssignmentSubmitFileAdded: ${event.filePath}');
     final newPaths = List<String>.from(state.filePaths)..add(event.filePath);
     emit(state.copyWith(filePaths: newPaths));
   }
@@ -51,6 +54,7 @@ final class AssignmentSubmitBloc
     AssignmentSubmitFileRemoved event,
     Emitter<AssignmentSubmitState> emit,
   ) {
+    _logger.info('Handling AssignmentSubmitFileRemoved: ${event.filePath}');
     final newPaths = List<String>.from(state.filePaths)..remove(event.filePath);
     emit(state.copyWith(filePaths: newPaths));
   }
@@ -59,6 +63,7 @@ final class AssignmentSubmitBloc
     AssignmentSubmitContentChanged event,
     Emitter<AssignmentSubmitState> emit,
   ) {
+    _logger.debug('Handling AssignmentSubmitContentChanged');
     emit(state.copyWith(contentText: event.content));
   }
 
@@ -66,6 +71,7 @@ final class AssignmentSubmitBloc
     AssignmentSubmitLoadEvent event,
     Emitter<AssignmentSubmitState> emit,
   ) async {
+    _logger.info('Handling AssignmentSubmitLoadEvent for assignment: ${state.assignmentId}');
     emit(state.copyWith(loadingState: LoadingState.loading));
     try {
       final assignment = await assignmentRepository.getAssignment(
@@ -78,7 +84,9 @@ final class AssignmentSubmitBloc
           questions: assignment.questions,
         ),
       );
-    } catch (e) {
+      _logger.info('Successfully loaded assignment submit info');
+    } catch (e, s) {
+      _logger.error('Failed to load assignment submit info', e, s);
       emit(
         state.copyWith(
           loadingState: LoadingState.error,
@@ -92,6 +100,7 @@ final class AssignmentSubmitBloc
     AssignmentSubmitAnswerSelected event,
     Emitter<AssignmentSubmitState> emit,
   ) {
+    _logger.info('Handling AssignmentSubmitAnswerSelected for question: ${event.questionId}');
     final newAnswers = Map<String, String>.from(state.answers);
     newAnswers[event.questionId] = event.selectedAnswer;
     emit(state.copyWith(answers: newAnswers));
@@ -101,6 +110,7 @@ final class AssignmentSubmitBloc
     AssignmentSubmitNextQuestion event,
     Emitter<AssignmentSubmitState> emit,
   ) {
+    _logger.info('Handling AssignmentSubmitNextQuestion');
     if (state.currentQuestionIndex < state.questions.length - 1) {
       emit(
         state.copyWith(currentQuestionIndex: state.currentQuestionIndex + 1),
@@ -112,6 +122,7 @@ final class AssignmentSubmitBloc
     AssignmentSubmitPreviousQuestion event,
     Emitter<AssignmentSubmitState> emit,
   ) {
+    _logger.info('Handling AssignmentSubmitPreviousQuestion');
     if (state.currentQuestionIndex > 0) {
       emit(
         state.copyWith(currentQuestionIndex: state.currentQuestionIndex - 1),
@@ -123,6 +134,7 @@ final class AssignmentSubmitBloc
     AssignmentSubmitSubmit event,
     Emitter<AssignmentSubmitState> emit,
   ) async {
+    _logger.info('Handling AssignmentSubmitSubmit');
     emit(state.copyWith(loadingState: LoadingState.actionInProgress));
     try {
       final result = await assignmentRepository.submitAssignment(
@@ -143,7 +155,9 @@ final class AssignmentSubmitBloc
           AnalyticsParams.assignmentId: state.assignmentId,
         },
       );
-    } catch (e) {
+      _logger.info('Successfully submitted assignment: ${state.assignmentId}');
+    } catch (e, s) {
+      _logger.error('Failed to submit assignment', e, s);
       emit(
         state.copyWith(
           loadingState: LoadingState.error,

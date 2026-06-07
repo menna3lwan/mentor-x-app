@@ -15,6 +15,8 @@ final class ProfileViewNavigateBack extends ProfileViewPresentationEvent {
 
 final class ProfileViewBloc extends Bloc<ProfileViewEvent, ProfileViewState>
     with BlocPresentationMixin<ProfileViewState, ProfileViewPresentationEvent> {
+  static final MentorXLogger _logger = MentorXLogger('ProfileViewBloc');
+
   ProfileViewBloc({
     required this.profileRepository,
     required this.analyticsService,
@@ -29,6 +31,7 @@ final class ProfileViewBloc extends Bloc<ProfileViewEvent, ProfileViewState>
     ProfileViewLoadEvent event,
     Emitter<ProfileViewState> emit,
   ) async {
+    _logger.info('_onLoad entered');
     emit(state.copyWith(loadingState: LoadingState.loading));
     analyticsService.logEvent(name: AnalyticsEvents.profileViewed);
     emit(state.copyWith(loadingState: LoadingState.loaded));

@@ -33,6 +33,8 @@ final class CourseDetailBloc
           CourseDetailState,
           CourseDetailPresentationEvent
         > {
+  static final MentorXLogger _logger = MentorXLogger('CourseDetailBloc');
+
   final CourseRepository _courseRepository;
   final WalletRepository _walletRepository;
   final AnalyticsService _analyticsService;
@@ -58,6 +60,7 @@ final class CourseDetailBloc
     CourseDetailInitialized event,
     Emitter<CourseDetailState> emit,
   ) async {
+    _logger.info('_onInitialized entered');
     await _loadAll(emit: emit);
   }
 
@@ -65,6 +68,7 @@ final class CourseDetailBloc
     CourseDetailTabChanged event,
     Emitter<CourseDetailState> emit,
   ) {
+    _logger.info('_onTabChanged entered');
     emit(state.copyWith(selectedTab: event.tab));
     return Future.value();
   }
@@ -73,6 +77,7 @@ final class CourseDetailBloc
     CourseDetailEnrollRequested event,
     Emitter<CourseDetailState> emit,
   ) async {
+    _logger.info('_onEnrollRequested entered');
     emit(state.copyWith(enrollStatus: EnrollActionStatus.loading));
     try {
       final enrollment = await _courseRepository.enrollInCourse(
@@ -122,6 +127,7 @@ final class CourseDetailBloc
     CourseDetailRefreshed event,
     Emitter<CourseDetailState> emit,
   ) async {
+    _logger.info('_onRefreshed entered');
     await _loadAll(emit: emit);
   }
 
@@ -250,6 +256,7 @@ final class CourseDetailBloc
     CourseDetailApplyCouponRequested event,
     Emitter<CourseDetailState> emit,
   ) async {
+    _logger.info('_onApplyCouponRequested entered');
     if (event.code.trim().isEmpty) return;
     emit(state.copyWith(
       isCouponLoading: true,
@@ -292,6 +299,7 @@ final class CourseDetailBloc
     CourseDetailRemoveCouponRequested event,
     Emitter<CourseDetailState> emit,
   ) async {
+    _logger.info('_onRemoveCouponRequested entered');
     emit(state.copyWith(clearCoupon: true));
   }
 }

@@ -1,11 +1,9 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:mentorx_student/core/core.dart';
-import '../../cubit/marketplace_cart_cubit.dart';
 
 final class MarketplaceGridPage extends StatelessWidget {
   final LoadingState loadingState;
@@ -18,6 +16,8 @@ final class MarketplaceGridPage extends StatelessWidget {
   final VoidCallback onRetry;
   final VoidCallback onCartPressed;
   final VoidCallback onOrdersPressed;
+  final int cartTotalCount;
+  final Function(MarketplaceItemEntity) onAddToCart;
 
   const MarketplaceGridPage({
     super.key,
@@ -31,6 +31,8 @@ final class MarketplaceGridPage extends StatelessWidget {
     required this.onRetry,
     required this.onCartPressed,
     required this.onOrdersPressed,
+    required this.cartTotalCount,
+    required this.onAddToCart,
   });
 
   @override
@@ -42,6 +44,7 @@ final class MarketplaceGridPage extends StatelessWidget {
           _BuildHeader(
             onCartPressed: onCartPressed,
             onOrdersPressed: onOrdersPressed,
+            cartTotalCount: cartTotalCount,
           ),
           const Gap(16),
           FadeInDown(
@@ -170,6 +173,7 @@ final class MarketplaceGridPage extends StatelessWidget {
                         delay: Duration(milliseconds: 50 * index),
                         child: _ProductCard(
                           item: items[index],
+                          onAddToCart: onAddToCart,
                         ),
                       );
                     },
@@ -184,10 +188,12 @@ final class MarketplaceGridPage extends StatelessWidget {
 final class _BuildHeader extends StatelessWidget {
   final VoidCallback onCartPressed;
   final VoidCallback onOrdersPressed;
+  final int cartTotalCount;
 
   const _BuildHeader({
     required this.onCartPressed,
     required this.onOrdersPressed,
+    required this.cartTotalCount,
   });
 
   @override
@@ -254,7 +260,7 @@ final class _BuildHeader extends StatelessWidget {
                 variant: MentorXIconButtonVariant.ghost,
                 size: MentorXIconButtonSize.small,
               ),
-              _CartBadge(onPressed: onCartPressed),
+              _CartBadge(onPressed: onCartPressed, totalCount: cartTotalCount),
             ],
           ),
         ),
@@ -265,82 +271,77 @@ final class _BuildHeader extends StatelessWidget {
 
 final class _CartBadge extends StatelessWidget {
   final VoidCallback onPressed;
-  const _CartBadge({required this.onPressed});
+  final int totalCount;
+  const _CartBadge({required this.onPressed, required this.totalCount});
 
   @override
   Widget build(BuildContext context) {
-    return Builder(
-      builder: (context) {
-        final totalCount = context.select<MarketplaceCartCubit, int>(
-          (cubit) => cubit.state.totalCount,
-        );
-
-        return Stack(
-          alignment: Alignment.center,
-          children: [
-            MentorXIconButton(
-              icon: Icons.shopping_cart_outlined,
-              onPressed: onPressed,
-              variant: MentorXIconButtonVariant.ghost,
-              size: MentorXIconButtonSize.small,
-            ),
-            if (totalCount > 0)
-              Positioned(
-                right: 2,
-                top: 2,
-                child: FadeIn(
-                  child: Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          context.brandSecondaryColor,
-                          context.brandSecondaryColor.withValues(alpha: 0.8),
-                        ],
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        MentorXIconButton(
+          icon: Icons.shopping_cart_outlined,
+          onPressed: onPressed,
+          variant: MentorXIconButtonVariant.ghost,
+          size: MentorXIconButtonSize.small,
+        ),
+        if (totalCount > 0)
+          Positioned(
+            right: 2,
+            top: 2,
+            child: FadeIn(
+              child: Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      context.brandSecondaryColor,
+                      context.brandSecondaryColor.withValues(alpha: 0.8),
+                    ],
+                  ),
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: context.backgroundPrimaryColor,
+                    width: 2,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: context.brandSecondaryColor.withValues(
+                        alpha: 0.4,
                       ),
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: context.backgroundPrimaryColor,
-                        width: 2,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: context.brandSecondaryColor.withValues(
-                            alpha: 0.4,
-                          ),
-                          blurRadius: 6,
-                        ),
-                      ],
+                      blurRadius: 6,
                     ),
-                    constraints: const BoxConstraints(
-                      minWidth: 18,
-                      minHeight: 18,
-                    ),
-                    child: Center(
-                      child: Text(
-                        '$totalCount',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 9,
-                          fontWeight: FontWeight.w900,
-                        ),
-                      ),
+                  ],
+                ),
+                constraints: const BoxConstraints(
+                  minWidth: 18,
+                  minHeight: 18,
+                ),
+                child: Center(
+                  child: Text(
+                    '$totalCount',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 9,
+                      fontWeight: FontWeight.w900,
                     ),
                   ),
                 ),
               ),
-          ],
-        );
-      },
+            ),
+          ),
+      ],
     );
   }
 }
 
 final class _ProductCard extends StatelessWidget {
   final MarketplaceItemEntity item;
+  final Function(MarketplaceItemEntity) onAddToCart;
 
   const _ProductCard({
     required this.item,
+    required this.onAddToCart,
   });
 
   @override
@@ -425,7 +426,7 @@ final class _ProductCard extends StatelessWidget {
                   Positioned(
                     bottom: 10,
                     right: 10,
-                    child: _AddToCartButton(item: item),
+                    child: _AddToCartButton(item: item, onAddToCart: onAddToCart),
                   ),
                 ],
               ),
@@ -491,8 +492,9 @@ final class _ProductCard extends StatelessWidget {
 
 final class _AddToCartButton extends StatelessWidget {
   final MarketplaceItemEntity item;
+  final Function(MarketplaceItemEntity) onAddToCart;
 
-  const _AddToCartButton({required this.item});
+  const _AddToCartButton({required this.item, required this.onAddToCart});
 
   @override
   Widget build(BuildContext context) {
@@ -528,11 +530,7 @@ final class _AddToCartButton extends StatelessWidget {
           onTap: inStock
               ? () {
                   HapticFeedback.lightImpact();
-                  context.read<MarketplaceCartCubit>().addItem(item);
-                  MentorXUI.showToast(
-                    message:
-                        '${item.title} ${context.t.marketplace.addedToCart}',
-                  );
+                  onAddToCart(item);
                 }
               : null,
           borderRadius: BorderRadius.circular(14),

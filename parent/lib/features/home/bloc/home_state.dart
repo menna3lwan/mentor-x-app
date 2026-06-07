@@ -2,7 +2,7 @@ part of 'home_bloc.dart';
 
 enum HomeStatus { initial, loading, success, failure }
 
-class HomeState extends Equatable {
+final class HomeState extends Equatable {
   final HomeStatus status;
   final List<ParentChildEntity> children;
   final ParentChildEntity? selectedChild;

@@ -1,90 +1,82 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:parent/core/core.dart';
 import '../bloc/children_bloc.dart';
 
-class LinkedChildrenManagementPage extends StatelessWidget {
-  const LinkedChildrenManagementPage({super.key});
+final class LinkedChildrenManagementPage extends StatelessWidget {
+  final ChildrenStatus status;
+  final List<ParentChildEntity> children;
+
+  const LinkedChildrenManagementPage({
+    super.key,
+    required this.status,
+    required this.children,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ChildrenBloc(
-        childrenRepository: context.read<ParentChildrenRepository>(),
-        analyticsService: context.read<AnalyticsService>(),
-      )..add(ChildrenStarted()),
-      child: Builder(
-        builder: (context) {
-          return AppDashboardScaffold(
-            title: 'Linked Children',
-            body: const LinkedChildrenListView(),
-            floatingActionButton: Container(
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: context.brandPrimaryColor.withValues(alpha: 0.3),
-                    blurRadius: 12,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: FloatingActionButton.extended(
-                onPressed: () => const AddChildLinkRoute().go(context),
-                backgroundColor: context.brandPrimaryColor,
-                foregroundColor: Colors.white,
-                elevation: 0,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                icon: const Icon(Icons.person_add_rounded),
-                label: const Text('Link New Child', style: TextStyle(fontWeight: FontWeight.w700)),
-              ),
+    return AppDashboardScaffold(
+      title: 'Linked Children',
+      body: LinkedChildrenListView(
+        status: status,
+        children: children,
+      ),
+      floatingActionButton: Container(
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: context.brandPrimaryColor.withValues(alpha: 0.3),
+              blurRadius: 12,
+              offset: const Offset(0, 4),
             ),
-          );
-        },
+          ],
+        ),
+        child: FloatingActionButton.extended(
+          onPressed: () => const AddChildLinkRoute().go(context),
+          backgroundColor: context.brandPrimaryColor,
+          foregroundColor: Colors.white,
+          elevation: 0,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          icon: const Icon(Icons.person_add_rounded),
+          label: const Text('Link New Child', style: TextStyle(fontWeight: FontWeight.w700)),
+        ),
       ),
     );
   }
 }
 
-// Removed _BuildHeader in favor of AppDashboardScaffold
-
 class LinkedChildrenListView extends StatelessWidget {
-  const LinkedChildrenListView({super.key});
+  final ChildrenStatus status;
+  final List<ParentChildEntity> children;
+
+  const LinkedChildrenListView({
+    super.key,
+    required this.status,
+    required this.children,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Builder(
-      builder: (context) {
-        final status = context.select<ChildrenBloc, ChildrenStatus>(
-          (bloc) => bloc.state.status,
-        );
+    if (status == ChildrenStatus.loading) {
+      return const Center(child: CircularProgressIndicator());
+    }
 
-        if (status == ChildrenStatus.loading) {
-          return const Center(child: CircularProgressIndicator());
-        }
+    if (children.isEmpty) {
+      return AppEmptyView(
+        title: 'No Children Linked',
+        message: 'You haven\'t linked any children to your account yet.',
+        icon: Icons.people_outline_rounded,
+        onAction: () => const AddChildLinkRoute().go(context),
+        actionLabel: 'Link Child',
+      );
+    }
 
-        final children = context.select<ChildrenBloc, List<ParentChildEntity>>(
-          (bloc) => bloc.state.children,
-        );
-
-        if (children.isEmpty) {
-          return AppEmptyView(
-            title: 'No Children Linked',
-            message: 'You haven\'t linked any children to your account yet.',
-            icon: Icons.people_outline_rounded,
-            onAction: () => const AddChildLinkRoute().go(context),
-            actionLabel: 'Link Child',
-          );
-        }
-
-        return ListView.builder(
-          padding: const EdgeInsets.all(20),
-          itemCount: children.length,
-          itemBuilder: (context, index) {
-            final child = children[index];
-            return _ChildManagementCard(child: child);
-          },
-        );
+    return ListView.builder(
+      padding: const EdgeInsets.all(20),
+      itemCount: children.length,
+      itemBuilder: (context, index) {
+        final child = children[index];
+        return _ChildManagementCard(child: child);
       },
     );
   }

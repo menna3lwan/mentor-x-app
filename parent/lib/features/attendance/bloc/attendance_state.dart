@@ -2,7 +2,7 @@ part of 'attendance_bloc.dart';
 
 enum AttendanceBlocStatus { initial, loading, success, failure }
 
-class AttendanceState extends Equatable {
+final class AttendanceState extends Equatable {
   final AttendanceBlocStatus status;
   final List<AttendanceRecordEntity> attendanceRecords;
   final AttendanceSummaryEntity? attendanceSummary;

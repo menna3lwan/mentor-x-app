@@ -1,14 +1,23 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:mentorx_student/core/core.dart';
-import 'bloc/announcements_bloc.dart';
 import 'package:intl/intl.dart';
 
-class AnnouncementsPage extends StatelessWidget {
-  const AnnouncementsPage({super.key});
+final class AnnouncementsPage extends StatelessWidget {
+  final LoadingState loadingState;
+  final String? errorMessage;
+  final List<AnnouncementEntity> announcements;
+  final VoidCallback onRefresh;
+
+  const AnnouncementsPage({
+    super.key,
+    required this.loadingState,
+    required this.errorMessage,
+    required this.announcements,
+    required this.onRefresh,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +26,12 @@ class AnnouncementsPage extends StatelessWidget {
       body: Stack(
         children: [
           const _BackgroundDecorations(),
-          const _AnnouncementsBody(),
+          _AnnouncementsBody(
+            loadingState: loadingState,
+            errorMessage: errorMessage,
+            announcements: announcements,
+            onRefresh: onRefresh,
+          ),
         ],
       ),
     );
@@ -25,30 +39,36 @@ class AnnouncementsPage extends StatelessWidget {
 }
 
 class _AnnouncementsBody extends StatelessWidget {
-  const _AnnouncementsBody();
+  final LoadingState loadingState;
+  final String? errorMessage;
+  final List<AnnouncementEntity> announcements;
+  final VoidCallback onRefresh;
+
+  const _AnnouncementsBody({
+    required this.loadingState,
+    required this.errorMessage,
+    required this.announcements,
+    required this.onRefresh,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final state = context.watch<AnnouncementsBloc>().state;
-
-    if (state.loadingState.isLoading || state.loadingState == LoadingState.initial) {
+    if (loadingState.isLoading || loadingState == LoadingState.initial) {
       return const Center(child: CircularProgressIndicator());
     }
 
-    if (state.loadingState.isError) {
+    if (loadingState.isError) {
       return AppErrorView(
-        message: state.errorMessage ?? '',
-        onRetry: () => context.read<AnnouncementsBloc>().add(const AnnouncementsLoadRequested()),
+        message: errorMessage ?? '',
+        onRetry: onRefresh,
       );
     }
-
-    final announcements = state.announcements;
 
     return RefreshIndicator(
       displacement: MediaQuery.paddingOf(context).top + 80,
       color: context.brandPrimaryColor,
       onRefresh: () async {
-        context.read<AnnouncementsBloc>().add(const AnnouncementsLoadRequested());
+        onRefresh();
       },
       child: CustomScrollView(
         physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
@@ -70,7 +90,7 @@ class _AnnouncementsBody extends StatelessWidget {
                         title: 'No Announcements',
                         message: 'Stay tuned! School announcements will appear here.',
                         icon: Icons.campaign_rounded,
-                        onAction: () => context.read<AnnouncementsBloc>().add(const AnnouncementsLoadRequested()),
+                        onAction: onRefresh,
                         actionLabel: 'Refresh',
                       ),
                     )
@@ -120,7 +140,7 @@ class _AnnouncementsBody extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
             ),
             child: IconButton(
-              onPressed: () => context.read<AnnouncementsBloc>().add(const AnnouncementsLoadRequested()),
+              onPressed: onRefresh,
               icon: const Icon(Icons.refresh_rounded),
             ),
           ),

@@ -1,12 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mentorx_core/mentorx_core.dart';
-import 'package:analytics_service/analytics_service.dart';
+import 'package:parent/core/core.dart';
 
 part 'profile_event.dart';
 part 'profile_state.dart';
 
-class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
+final class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final AnalyticsService _analyticsService;
+  static final MentorXLogger _logger = MentorXLogger('ProfileBloc');
 
   ProfileBloc({required AnalyticsService analyticsService})
     : _analyticsService = analyticsService,
@@ -16,6 +16,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   }
 
   Future<void> _onStarted(ProfileStarted event, Emitter<ProfileState> emit) async {
+    _logger.info('ProfileStarted event received');
     emit(state.copyWith(status: ProfileStatus.loading));
     _analyticsService.logEvent(name: AnalyticsEvents.profileViewed);
     try {
@@ -31,13 +32,16 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         createdAt: DateTime(2023),
         updatedAt: DateTime(2023),
       );
+      _logger.info('Successfully loaded mock parent profile');
       emit(state.copyWith(status: ProfileStatus.success, profileData: mockParent));
-    } catch (e) {
+    } catch (e, s) {
+      _logger.error('Failed to load parent profile', e, s);
       emit(state.copyWith(status: ProfileStatus.failure, errorMessage: e.toString()));
     }
   }
 
   Future<void> _onSettingsUpdated(ProfileSettingsUpdated event, Emitter<ProfileState> emit) async {
+    _logger.info('ProfileSettingsUpdated event received: ${event.settings}');
     // Handle settings update
   }
 }

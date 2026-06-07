@@ -22,6 +22,8 @@ final class CourseCatalogBloc
           CourseCatalogState,
           CourseCatalogPresentationEvent
         > {
+  static final MentorXLogger _logger = MentorXLogger('CourseCatalogBloc');
+
   final CourseRepository _courseRepository;
   final StudentRegistrationRepository _registrationRepository;
   final AnalyticsService _analyticsService;
@@ -46,6 +48,7 @@ final class CourseCatalogBloc
     CourseCatalogInitialized event,
     Emitter<CourseCatalogState> emit,
   ) async {
+    _logger.info('_onInitialized entered');
     _analyticsService.logEvent(name: AnalyticsEvents.courseCatalogViewed);
     emit(
       state.copyWith(
@@ -73,6 +76,7 @@ final class CourseCatalogBloc
     CourseCatalogGradeChanged event,
     Emitter<CourseCatalogState> emit,
   ) async {
+    _logger.info('_onGradeChanged entered');
     emit(
       state.copyWith(
         selectedGradeId: event.gradeId,
@@ -107,6 +111,7 @@ final class CourseCatalogBloc
     CourseCatalogSearchChanged event,
     Emitter<CourseCatalogState> emit,
   ) async {
+    _logger.info('_onSearchChanged entered');
     emit(state.copyWith(searchQuery: event.query));
     await _loadCourses(emit: emit);
   }
@@ -115,6 +120,7 @@ final class CourseCatalogBloc
     CourseCatalogCategoryChanged event,
     Emitter<CourseCatalogState> emit,
   ) async {
+    _logger.info('_onCategoryChanged entered');
     emit(
       state.copyWith(
         selectedCategoryId: event.categoryId,
@@ -128,6 +134,7 @@ final class CourseCatalogBloc
     CourseCatalogSortChanged event,
     Emitter<CourseCatalogState> emit,
   ) async {
+    _logger.info('_onSortChanged entered');
     emit(state.copyWith(sortOption: event.sortOption));
     await _loadCourses(emit: emit);
   }
@@ -136,6 +143,7 @@ final class CourseCatalogBloc
     CourseCatalogRefreshed event,
     Emitter<CourseCatalogState> emit,
   ) async {
+    _logger.info('_onRefreshed entered');
     await _loadCourses(emit: emit);
   }
 

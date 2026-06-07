@@ -1,13 +1,13 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mentorx_core/mentorx_core.dart';
-import 'package:analytics_service/analytics_service.dart';
+import 'package:parent/core/core.dart';
 
 part 'attendance_event.dart';
 part 'attendance_state.dart';
 
-class AttendanceBloc extends Bloc<AttendanceEvent, AttendanceState> {
+final class AttendanceBloc extends Bloc<AttendanceEvent, AttendanceState> {
   final ParentAttendanceRepository _repository;
   final AnalyticsService _analyticsService;
+  static final MentorXLogger _logger = MentorXLogger('AttendanceBloc');
 
   AttendanceBloc({
     required ParentAttendanceRepository repository,
@@ -23,6 +23,7 @@ class AttendanceBloc extends Bloc<AttendanceEvent, AttendanceState> {
     AttendanceRefreshRequested event,
     Emitter<AttendanceState> emit,
   ) async {
+    _logger.info('Refresh requested for childId: ${event.childId}');
     add(AttendanceStarted(event.childId));
   }
 
@@ -30,6 +31,7 @@ class AttendanceBloc extends Bloc<AttendanceEvent, AttendanceState> {
     AttendanceStarted event,
     Emitter<AttendanceState> emit,
   ) async {
+    _logger.info('Started loading attendance for childId: ${event.childId}');
     emit(state.copyWith(status: AttendanceBlocStatus.loading));
     try {
       _analyticsService.logEvent(
@@ -41,12 +43,14 @@ class AttendanceBloc extends Bloc<AttendanceEvent, AttendanceState> {
         _repository.getAttendanceSummary(event.childId),
       ]);
 
+      _logger.info('Successfully loaded attendance for childId: ${event.childId}');
       emit(state.copyWith(
         status: AttendanceBlocStatus.success,
         attendanceRecords: results[0] as List<AttendanceRecordEntity>,
         attendanceSummary: results[1] as AttendanceSummaryEntity,
       ));
-    } catch (e) {
+    } catch (e, s) {
+      _logger.error('Failed to load attendance for childId: ${event.childId}', e, s);
       emit(state.copyWith(
         status: AttendanceBlocStatus.failure,
         errorMessage: e.toString(),

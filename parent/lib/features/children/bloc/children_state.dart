@@ -2,7 +2,7 @@ part of 'children_bloc.dart';
 
 enum ChildrenStatus { initial, loading, success, failure }
 
-class ChildrenState extends Equatable {
+final class ChildrenState extends Equatable {
   final ChildrenStatus status;
   final List<ParentChildEntity> children;
   final ParentStudentLookupEntity? lookedUpStudent;

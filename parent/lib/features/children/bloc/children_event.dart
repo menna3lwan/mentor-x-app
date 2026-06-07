@@ -1,15 +1,15 @@
 part of 'children_bloc.dart';
 
-abstract class ChildrenEvent extends Equatable {
+sealed class ChildrenEvent extends Equatable {
   const ChildrenEvent();
 
   @override
   List<Object?> get props => [];
 }
 
-class ChildrenStarted extends ChildrenEvent {}
+final class ChildrenStarted extends ChildrenEvent {}
 
-class ChildrenLookupRequested extends ChildrenEvent {
+final class ChildrenLookupRequested extends ChildrenEvent {
   final String query;
   const ChildrenLookupRequested(this.query);
 
@@ -17,7 +17,7 @@ class ChildrenLookupRequested extends ChildrenEvent {
   List<Object?> get props => [query];
 }
 
-class ChildLinkConfirmed extends ChildrenEvent {
+final class ChildLinkConfirmed extends ChildrenEvent {
   final String studentId;
   final String relationship;
   const ChildLinkConfirmed({

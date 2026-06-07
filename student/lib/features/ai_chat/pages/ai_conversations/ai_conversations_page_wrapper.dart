@@ -32,39 +32,34 @@ final class AiConversationsPageWrapper extends StatelessWidget {
               );
           return AiConversationsPage(
             state: state,
-            onRefresh: () {
-              context.read<AiConversationsBloc>().add(
-                const AiConversationsRefreshed(),
-              );
-            },
-            onConversationTapped: (conversationId) {
-              context.read<AiConversationsBloc>().add(
-                AiConversationsConversationTapped(
-                  conversationId: conversationId,
-                ),
-              );
-            },
-            onCreateConversationTapped: () {
-              context.read<AiConversationsBloc>().add(
-                const AiConversationsCreateConversationRequested(),
-              );
-            },
-            onDeleteConversationTapped: (conversationId) {
-              context.read<AiConversationsBloc>().add(
-                AiConversationsDeleteConversationRequested(
-                  conversationId: conversationId,
-                ),
-              );
-            },
-            onRenameConversationSubmitted: (conversationId, title) {
-              context.read<AiConversationsBloc>().add(
-                AiConversationsRenameConversationSubmitted(
-                  conversationId: conversationId,
-                  title: title,
-                ),
-              );
-            },
-          );
+          onRefresh: () {
+            final bloc = context.read<AiConversationsBloc>();
+            bloc.add(const AiConversationsRefreshed());
+          },
+          onConversationTapped: (conversationId) {
+            final bloc = context.read<AiConversationsBloc>();
+            bloc.add(AiConversationsConversationTapped(
+              conversationId: conversationId,
+            ));
+          },
+          onCreateConversationTapped: () {
+            final bloc = context.read<AiConversationsBloc>();
+            bloc.add(const AiConversationsCreateConversationRequested());
+          },
+          onDeleteConversationTapped: (conversationId) {
+            final bloc = context.read<AiConversationsBloc>();
+            bloc.add(AiConversationsDeleteConversationRequested(
+              conversationId: conversationId,
+            ));
+          },
+          onRenameConversationSubmitted: (conversationId, title) {
+            final bloc = context.read<AiConversationsBloc>();
+            bloc.add(AiConversationsRenameConversationSubmitted(
+              conversationId: conversationId,
+              title: title,
+            ));
+          },
+        );
         },
       ),
     );

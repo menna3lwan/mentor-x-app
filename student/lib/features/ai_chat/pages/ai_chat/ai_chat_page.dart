@@ -1,190 +1,167 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:mentorx_student/core/core.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:animate_do/animate_do.dart';
-import 'bloc/ai_chat_bloc.dart';
 
-final class AiChatPage extends StatefulWidget {
-  const AiChatPage({super.key});
-  @override
-  State<AiChatPage> createState() => _AiChatState();
-}
+final class AiChatPage extends StatelessWidget {
+  final TextEditingController controller;
+  final ScrollController scrollController;
+  final bool isLoading;
+  final bool isTyping;
+  final List<AIMessageEntity> messages;
+  final String? errorMessage;
+  final ValueChanged<String> onSendMessage;
 
-final class _AiChatState extends State<AiChatPage> {
-  final _controller = TextEditingController();
-  final _scrollController = ScrollController();
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    _scrollController.dispose();
-    super.dispose();
-  }
+  const AiChatPage({
+    super.key,
+    required this.controller,
+    required this.scrollController,
+    required this.isLoading,
+    required this.isTyping,
+    required this.messages,
+    this.errorMessage,
+    required this.onSendMessage,
+  });
 
   void _sendMessage() {
-    final text = _controller.text.trim();
+    final text = controller.text.trim();
     if (text.isEmpty) return;
-    context.read<AiChatBloc>().add(AiChatSendMessage(content: text));
-    _controller.clear();
-  }
-
-  void _scrollToBottom() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_scrollController.hasClients) {
-        _scrollController.animateTo(
-          _scrollController.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeOut,
-        );
-      }
-    });
+    onSendMessage(text);
+    controller.clear();
   }
 
   @override
   Widget build(BuildContext context) {
     final t = context.t.aichat;
 
-    return BlocConsumer<AiChatBloc, AiChatState>(
-      listener: (context, state) {
-        _scrollToBottom();
-      },
-      builder: (context, state) {
-        return Scaffold(
-          backgroundColor: context.backgroundPrimaryColor,
-          appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(70),
-            child: Container(
-              decoration: BoxDecoration(
-                color: context.backgroundSecondaryColor,
-                borderRadius: const BorderRadius.vertical(
-                  bottom: Radius.circular(24),
-                ),
-                border: Border(
-                  bottom: BorderSide(
-                    color: context.borderPrimaryColor.withValues(alpha: 0.05),
-                  ),
-                ),
-              ),
-              child: AppBar(
-                backgroundColor: Colors.transparent,
-                elevation: 0,
-                foregroundColor: context.textPrimaryColor,
-                centerTitle: false,
-                title: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      t.aiAssistant,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w900,
-                        letterSpacing: -0.5,
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        Container(
-                          width: 8,
-                          height: 8,
-                          decoration: BoxDecoration(
-                            color: state.isLoading || state.isTyping
-                                ? Colors.orangeAccent
-                                : Colors.greenAccent,
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color:
-                                    (state.isLoading || state.isTyping
-                                            ? Colors.orangeAccent
-                                            : Colors.greenAccent)
-                                        .withValues(alpha: 0.5),
-                                blurRadius: 4,
-                              ),
-                            ],
-                          ),
-                        ),
-                        const Gap(6),
-                        Text(
-                          state.isLoading || state.isTyping
-                              ? t.commonLoading
-                              : t.aiSubtitle,
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w800,
-                            color: context.textTertiaryColor,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+    return Scaffold(
+      backgroundColor: context.backgroundPrimaryColor,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(70),
+        child: Container(
+          decoration: BoxDecoration(
+            color: context.backgroundSecondaryColor,
+            borderRadius: const BorderRadius.vertical(
+              bottom: Radius.circular(24),
+            ),
+            border: Border(
+              bottom: BorderSide(
+                color: context.borderPrimaryColor.withValues(alpha: 0.05),
               ),
             ),
           ),
-          body: Column(
-            children: [
-              if (state.errorMessage != null)
-                StatusBadge(
-                  message: state.errorMessage!,
-                  status: StatusBadgeType.danger,
+          child: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            foregroundColor: context.textPrimaryColor,
+            centerTitle: false,
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  t.aiAssistant,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: -0.5,
+                  ),
                 ),
-              Expanded(
-                child: state.isLoading && state.messages.isEmpty
-                    ? ListView.builder(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 20,
-                        ),
-                        itemCount: 4,
-                        itemBuilder: (context, i) => Align(
-                          alignment: i.isEven
-                              ? Alignment.centerLeft
-                              : Alignment.centerRight,
-                          child: Padding(
-                            padding: const EdgeInsets.only(bottom: 16),
-                            child: MentorXSkeleton(
-                              width: MediaQuery.of(context).size.width * 0.7,
-                              height: 60,
-                              borderRadius: 24,
-                            ),
+                Row(
+                  children: [
+                    Container(
+                      width: 8,
+                      height: 8,
+                      decoration: BoxDecoration(
+                        color: isLoading || isTyping
+                            ? Colors.orangeAccent
+                            : Colors.greenAccent,
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: (isLoading || isTyping
+                                    ? Colors.orangeAccent
+                                    : Colors.greenAccent)
+                                .withValues(alpha: 0.5),
+                            blurRadius: 4,
                           ),
-                        ),
-                      )
-                    : ListView.builder(
-                        physics: const BouncingScrollPhysics(),
-                        controller: _scrollController,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 20,
-                        ),
-                        itemCount:
-                            state.messages.length + (state.isTyping ? 1 : 0),
-                        itemBuilder: (context, i) {
-                          if (i == state.messages.length && state.isTyping) {
-                            return const _TypingIndicator();
-                          }
-                          final msg = state.messages[i];
-                          return _ChatBubble(
-                            text: msg.content,
-                            isUser: msg.role == AIMessageRole.user,
-                          );
-                        },
+                        ],
                       ),
-              ),
-              _buildInputArea(context, t, state),
-            ],
+                    ),
+                    const Gap(6),
+                    Text(
+                      isLoading || isTyping ? t.commonLoading : t.aiSubtitle,
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w800,
+                        color: context.textTertiaryColor,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-        );
-      },
+        ),
+      ),
+      body: Column(
+        children: [
+          if (errorMessage != null)
+            StatusBadge(
+              message: errorMessage!,
+              status: StatusBadgeType.danger,
+            ),
+          Expanded(
+            child: isLoading && messages.isEmpty
+                ? ListView.builder(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 20,
+                    ),
+                    itemCount: 4,
+                    itemBuilder: (context, i) => Align(
+                      alignment: i.isEven
+                          ? Alignment.centerLeft
+                          : Alignment.centerRight,
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 16),
+                        child: MentorXSkeleton(
+                          width: MediaQuery.of(context).size.width * 0.7,
+                          height: 60,
+                          borderRadius: 24,
+                        ),
+                      ),
+                    ),
+                  )
+                : ListView.builder(
+                    physics: const BouncingScrollPhysics(),
+                    controller: scrollController,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 20,
+                    ),
+                    itemCount: messages.length + (isTyping ? 1 : 0),
+                    itemBuilder: (context, i) {
+                      if (i == messages.length && isTyping) {
+                        return const _TypingIndicator();
+                      }
+                      final msg = messages[i];
+                      return _ChatBubble(
+                        text: msg.content,
+                        isUser: msg.role == AIMessageRole.user,
+                      );
+                    },
+                  ),
+          ),
+          _buildInputArea(context, t),
+        ],
+      ),
     );
   }
 
   Widget _buildInputArea(
     BuildContext context,
     dynamic t,
-    AiChatState state,
   ) {
     return Container(
       padding: EdgeInsets.fromLTRB(
@@ -221,9 +198,9 @@ final class _AiChatState extends State<AiChatPage> {
                 ),
               ),
               child: TextField(
-                controller: _controller,
+                controller: controller,
                 onSubmitted: (_) => _sendMessage(),
-                enabled: !state.isLoading && !state.isTyping,
+                enabled: !isLoading && !isTyping,
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
@@ -261,7 +238,7 @@ final class _AiChatState extends State<AiChatPage> {
             child: Material(
               color: Colors.transparent,
               child: InkWell(
-                onTap: (state.isLoading || state.isTyping)
+                onTap: (isLoading || isTyping)
                     ? null
                     : _sendMessage,
                 borderRadius: BorderRadius.circular(20),

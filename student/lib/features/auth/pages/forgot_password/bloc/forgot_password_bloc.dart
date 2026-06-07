@@ -23,6 +23,8 @@ final class ForgotPasswordBloc
           ForgotPasswordState,
           ForgotPasswordPresentationEvent
         > {
+  static final MentorXLogger _logger = MentorXLogger('ForgotPasswordBloc');
+
   final StudentAuthenticationRepository _authRepository;
   final AnalyticsService _analyticsService;
 
@@ -43,6 +45,7 @@ final class ForgotPasswordBloc
     ForgotPasswordPhoneChanged event,
     Emitter<ForgotPasswordState> emit,
   ) {
+    _logger.info('_onPhoneChanged entered');
     emit(state.copyWith(phone: event.phone));
   }
 
@@ -50,6 +53,7 @@ final class ForgotPasswordBloc
     ForgotPasswordSubmitted event,
     Emitter<ForgotPasswordState> emit,
   ) async {
+    _logger.info('_onSubmitted entered');
     if (state.phone.isEmpty) return;
 
     emit(state.copyWith(loadingState: LoadingState.loading));

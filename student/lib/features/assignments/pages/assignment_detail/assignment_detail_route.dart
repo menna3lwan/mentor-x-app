@@ -16,7 +16,7 @@ final class AssignmentDetailRoute extends GoRouteData
         assignmentRepository: context.read<AssignmentRepository>(),
         analyticsService: context.read<AnalyticsService>(),
       )..add(AssignmentDetailLoadEvent(assignmentId: assignmentId)),
-      child: const AssignmentDetailPageWrapper(),
+      child: AssignmentDetailPageWrapper(assignmentId: assignmentId),
     );
   }
 }

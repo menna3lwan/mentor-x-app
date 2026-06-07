@@ -1,6 +1,5 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mentorx_ui/mentorx_ui.dart'
     hide LocaleSettings, TranslationProvider;
@@ -8,7 +7,9 @@ import 'package:animate_do/animate_do.dart';
 import 'package:mentorx_student/core/core.dart';
 
 final class SettingsListPage extends StatelessWidget {
-  const SettingsListPage({super.key});
+  final VoidCallback onLogout;
+
+  const SettingsListPage({super.key, required this.onLogout});
 
   @override
   Widget build(BuildContext context) {
@@ -133,7 +134,7 @@ final class SettingsListPage extends StatelessWidget {
                         duration: const Duration(milliseconds: 600),
                         delay: const Duration(milliseconds: 800),
                         child: MentorXButton(
-                          onPressed: () => _showLogoutDialog(context, t),
+                          onPressed: () => _showLogoutDialog(context, t, onLogout),
                           label: t.logoutSetting,
                           color: context.statusDangerColor,
                           variant: MentorXButtonVariant.outline,
@@ -223,7 +224,7 @@ final class _BuildHeader extends StatelessWidget {
   }
 }
 
-void _showLogoutDialog(BuildContext context, dynamic t) {
+void _showLogoutDialog(BuildContext context, dynamic t, VoidCallback onLogout) {
   showDialog(
     context: context,
     builder: (ctx) => ZoomIn(
@@ -269,8 +270,7 @@ void _showLogoutDialog(BuildContext context, dynamic t) {
                 child: MentorXButton(
                   onPressed: () {
                     Navigator.pop(ctx);
-                    context.read<AppAuthenticationCubit>().logout();
-                    context.go('/login');
+                    onLogout();
                   },
                   label: t.logoutSetting,
                   color: context.statusDangerColor,

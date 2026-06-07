@@ -21,6 +21,8 @@ final class AddBalanceBloc
           AddBalanceState,
           AddBalancePresentationEvent
         > {
+  static final MentorXLogger _logger = MentorXLogger('AddBalanceBloc');
+
   AddBalanceBloc({
     required this.walletRepository,
     required this.analyticsService,
@@ -36,6 +38,7 @@ final class AddBalanceBloc
     AddBalanceLoadEvent event,
     Emitter<AddBalanceState> emit,
   ) async {
+    _logger.info('Handling AddBalanceLoadEvent');
     analyticsService.logEvent(name: AnalyticsEvents.addBalanceStarted);
     emit(
       state.copyWith(loadingState: LoadingState.loading, errorMessage: null),
@@ -47,6 +50,7 @@ final class AddBalanceBloc
     AddBalanceSubmitEvent event,
     Emitter<AddBalanceState> emit,
   ) async {
+    _logger.info('Handling AddBalanceSubmitEvent: amount=${event.amount}, method=${event.method}');
     emit(
       state.copyWith(loadingState: LoadingState.loading, errorMessage: null),
     );
@@ -71,7 +75,9 @@ final class AddBalanceBloc
       );
 
       emitPresentation(AddBalanceSuccess(event.amount));
-    } catch (e) {
+      _logger.info('Deposit funds submitted successfully');
+    } catch (e, s) {
+      _logger.error('Failed to deposit funds', e, s);
       analyticsService.logEvent(
         name: AnalyticsEvents.addBalanceFailed,
         parameters: {

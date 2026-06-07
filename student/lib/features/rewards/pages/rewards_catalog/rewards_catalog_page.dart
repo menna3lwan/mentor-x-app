@@ -1,13 +1,24 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:mentorx_student/core/core.dart';
-import 'bloc/rewards_catalog_bloc.dart';
 
 final class RewardsCatalogPage extends StatelessWidget {
-  const RewardsCatalogPage({super.key});
+  final bool isFirstLoading;
+  final int points;
+  final List<RewardItemEntity> items;
+  final VoidCallback onRefresh;
+  final Function(RewardItemEntity) onRedeem;
+
+  const RewardsCatalogPage({
+    super.key,
+    required this.isFirstLoading,
+    required this.points,
+    required this.items,
+    required this.onRefresh,
+    required this.onRedeem,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -21,10 +32,6 @@ final class RewardsCatalogPage extends StatelessWidget {
           Expanded(
             child: Builder(
               builder: (context) {
-                final isFirstLoading = context.select(
-                  (RewardsCatalogBloc bloc) => bloc.state.isFirstLoading,
-                );
-
                 if (isFirstLoading) {
                   return Column(
                     children: [
@@ -55,35 +62,18 @@ final class RewardsCatalogPage extends StatelessWidget {
 
                 return RefreshIndicator(
                   color: context.brandPrimaryColor,
-                  onRefresh: () async {
-                    context.read<RewardsCatalogBloc>().add(
-                      RewardsPageStartedEvent(),
-                    );
-                  },
+                  onRefresh: () async => onRefresh(),
                   child: CustomScrollView(
                     physics: const BouncingScrollPhysics(),
                     slivers: [
                       SliverToBoxAdapter(
                         child: FadeInDown(
                           duration: const Duration(milliseconds: 600),
-                          child: Builder(
-                            builder: (context) {
-                              final points = context.select(
-                                (RewardsCatalogBloc bloc) =>
-                                    bloc.state.pointsSection.data ?? 0,
-                              );
-                              return _PointsHeader(points: points, t: t);
-                            },
-                          ),
+                          child: _PointsHeader(points: points, t: t),
                         ),
                       ),
                       Builder(
                         builder: (context) {
-                          final items = context.select(
-                            (RewardsCatalogBloc bloc) =>
-                                bloc.state.itemsSection.data ?? [],
-                          );
-
                           if (items.isEmpty) {
                             return SliverFillRemaining(
                               hasScrollBody: false,
@@ -113,13 +103,7 @@ final class RewardsCatalogPage extends StatelessWidget {
                                     child: _RewardItemCard(
                                       item: item,
                                       t: t,
-                                      onRedeem: () {
-                                        context.read<RewardsCatalogBloc>().add(
-                                          RewardsPageClaimRequestedEvent(
-                                            item.id,
-                                          ),
-                                        );
-                                      },
+                                      onRedeem: () => onRedeem(item),
                                     ),
                                   );
                                 },
@@ -346,7 +330,7 @@ final class _PointsHeader extends StatelessWidget {
 }
 
 final class _RewardItemCard extends StatelessWidget {
-  final dynamic item;
+  final RewardItemEntity item;
   final dynamic t;
   final VoidCallback onRedeem;
 

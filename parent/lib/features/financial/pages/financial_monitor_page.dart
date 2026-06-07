@@ -1,52 +1,44 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
-import 'package:parent/core/core.dart';
+import 'package:mentorx_core/mentorx_core.dart';
 import '../bloc/financial_bloc.dart';
 import 'package:intl/intl.dart';
 
-class FinancialMonitorPage extends StatelessWidget {
-  final String childId;
+final class FinancialMonitorPage extends StatelessWidget {
+  final FinancialStatus status;
+  final String? errorMessage;
+  final List<WalletTransactionEntity> transactions;
+  final WalletSummaryEntity? walletSummary;
+  final VoidCallback onRefresh;
+  final VoidCallback onRetry;
 
   const FinancialMonitorPage({
     super.key,
-    required this.childId,
+    required this.status,
+    required this.errorMessage,
+    required this.transactions,
+    required this.walletSummary,
+    required this.onRefresh,
+    required this.onRetry,
   });
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => FinancialBloc(
-        repository: context.read<ParentFinancialRepository>(),
-        analyticsService: context.read<AnalyticsService>(),
-      )..add(FinancialStarted(childId: childId)),
-      child: Scaffold(
-        backgroundColor: context.backgroundPrimaryColor,
-        body: Stack(
-          children: [
-            const _BackgroundDecorations(),
-            _FinancialMonitorBody(childId: childId),
-          ],
-        ),
+    return Scaffold(
+      backgroundColor: context.backgroundPrimaryColor,
+      body: Stack(
+        children: [
+          const _BackgroundDecorations(),
+          _buildContent(context),
+        ],
       ),
     );
   }
-}
 
-class _FinancialMonitorBody extends StatelessWidget {
-  const _FinancialMonitorBody({required this.childId});
-
-  final String childId;
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildContent(BuildContext context) {
     final t = Translations.of(context).parent;
-    final status = context.select((FinancialBloc bloc) => bloc.state.status);
-    final errorMessage = context.select((FinancialBloc bloc) => bloc.state.errorMessage);
-    final transactions = context.select((FinancialBloc bloc) => bloc.state.transactions);
-    final walletSummary = context.select((FinancialBloc bloc) => bloc.state.walletSummary);
 
     if (status == FinancialStatus.loading) {
       return const Center(child: CircularProgressIndicator());
@@ -55,16 +47,14 @@ class _FinancialMonitorBody extends StatelessWidget {
     if (status == FinancialStatus.failure) {
       return AppErrorView(
         message: errorMessage ?? t.unableToLoad,
-        onRetry: () => context.read<FinancialBloc>().add(FinancialStarted(childId: childId)),
+        onRetry: onRetry,
       );
     }
 
     return RefreshIndicator(
       displacement: MediaQuery.paddingOf(context).top + 80,
       color: context.brandPrimaryColor,
-      onRefresh: () async {
-        context.read<FinancialBloc>().add(FinancialRefreshRequested(childId: childId));
-      },
+      onRefresh: () async => onRefresh(),
       child: CustomScrollView(
         physics: const BouncingScrollPhysics(
           parent: AlwaysScrollableScrollPhysics(),
@@ -89,17 +79,17 @@ class _FinancialMonitorBody extends StatelessWidget {
                         stats: [
                           AppHeroStatItem(
                             label: 'Balance',
-                            value: '${Translations.of(context).core.currency} ${walletSummary.walletBalance.toStringAsFixed(0)}',
+                            value: '${Translations.of(context).core.currency} ${walletSummary!.walletBalance.toStringAsFixed(0)}',
                             onTap: () {},
                           ),
                           AppHeroStatItem(
                             label: 'Spent',
-                            value: '${Translations.of(context).core.currency} ${walletSummary.spentThisMonth.toStringAsFixed(0)}',
+                            value: '${Translations.of(context).core.currency} ${walletSummary!.spentThisMonth.toStringAsFixed(0)}',
                             onTap: () {},
                           ),
                           AppHeroStatItem(
                             label: 'Points',
-                            value: walletSummary.points.toString(),
+                            value: walletSummary!.points.toString(),
                             onTap: () {},
                           ),
                         ],
@@ -117,7 +107,7 @@ class _FinancialMonitorBody extends StatelessWidget {
                   if (transactions.isEmpty)
                     FadeInUp(
                       duration: const Duration(milliseconds: 600),
-                      child: AppEmptyView(
+                      child: const AppEmptyView(
                         title: 'No Transactions',
                         message: 'No transaction history found for this child.',
                         icon: Icons.receipt_long_rounded,
@@ -169,7 +159,7 @@ class _FinancialMonitorBody extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
             ),
             child: IconButton(
-              onPressed: () => context.read<FinancialBloc>().add(FinancialRefreshRequested(childId: childId)),
+              onPressed: onRefresh,
               icon: const Icon(Icons.refresh_rounded),
             ),
           ),

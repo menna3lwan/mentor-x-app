@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 
 import 'package:mentorx_student/core/core.dart';
-import '../../cubit/marketplace_cart_cubit.dart';
-import 'bloc/marketplace_cart_bloc.dart';
+import '../../models/marketplace_cart_item.dart';
 
 final class MarketplaceCartPage extends StatelessWidget {
   final List<MarketplaceCartItem> cartItems;
@@ -15,6 +13,8 @@ final class MarketplaceCartPage extends StatelessWidget {
   final double walletBalance;
   final LoadingState loadingState;
   final CouponEntity? appliedCoupon;
+  final String defaultAddress;
+  final String defaultPhone;
   final Function(String, int) onUpdateQuantity;
   final VoidCallback onViewCoupons;
   final VoidCallback onRemoveCoupon;
@@ -29,6 +29,8 @@ final class MarketplaceCartPage extends StatelessWidget {
     required this.walletBalance,
     required this.loadingState,
     this.appliedCoupon,
+    required this.defaultAddress,
+    required this.defaultPhone,
     required this.onUpdateQuantity,
     required this.onViewCoupons,
     required this.onRemoveCoupon,
@@ -130,102 +132,97 @@ final class MarketplaceCartPage extends StatelessWidget {
   void _showCheckoutSheet(
     BuildContext context,
   ) {
-    final user = context.read<AppAuthenticationCubit>().state;
-    final addressController = TextEditingController(text: user?.address ?? '');
-    final phoneController = TextEditingController(
-      text: user?.phoneNumber ?? '',
-    );
+    final t = context.t;
+    final addressController = TextEditingController(text: defaultAddress);
+    final phoneController = TextEditingController(text: defaultPhone);
     final notesController = TextEditingController();
 
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (_) => BlocProvider.value(
-        value: context.read<MarketplaceCartBloc>(),
-        child: Container(
-          decoration: BoxDecoration(
-            color: context.backgroundSecondaryColor,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
-            border: Border.all(
-              color: context.borderPrimaryColor.withValues(alpha: 0.05),
+      builder: (_) => Container(
+        decoration: BoxDecoration(
+          color: context.backgroundSecondaryColor,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+          border: Border.all(
+            color: context.borderPrimaryColor.withValues(alpha: 0.05),
+          ),
+        ),
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom + 32,
+          left: 24,
+          right: 24,
+          top: 12,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: context.textTertiaryColor.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
             ),
-          ),
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom + 32,
-            left: 24,
-            right: 24,
-            top: 12,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Container(
-                  width: 40,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: context.textTertiaryColor.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
+            const Gap(32),
+            Text(
+              t.marketplace.cart.deliveryDetails,
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w900,
+                color: context.textPrimaryColor,
+                letterSpacing: -0.5,
               ),
-              const Gap(32),
-              Text(
-                t.marketplace.cart.deliveryDetails,
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w900,
-                  color: context.textPrimaryColor,
-                  letterSpacing: -0.5,
-                ),
-              ),
-              const Gap(24),
-              MentorXTextFormField(
-                label: t.marketplace.deliveryAddress,
-                controller: addressController,
-                hintText: t.marketplace.deliveryAddress,
-                prefixIcon: Icons.location_on_rounded,
-              ),
-              const Gap(16),
-              MentorXTextFormField(
-                label: t.marketplace.phoneNumber,
-                controller: phoneController,
-                hintText: t.marketplace.phoneNumber,
-                prefixIcon: Icons.phone_rounded,
-                keyboardType: TextInputType.phone,
-              ),
-              const Gap(16),
-              MentorXTextFormField(
-                label: t.marketplace.deliveryNotes,
-                controller: notesController,
-                hintText: t.marketplace.deliveryNotes,
-                prefixIcon: Icons.note_rounded,
-                maxLines: 2,
-              ),
-              const Gap(32),
-              MentorXButton(
-                loading: loadingState == LoadingState.loading,
-                onPressed: () {
-                  if (addressController.text.isEmpty ||
-                      phoneController.text.isEmpty) {
-                    MentorXUI.showToast(
-                      message: 'Please fill all required fields',
-                    );
-                    return;
-                  }
-                  Navigator.pop(context);
-                  onPlaceOrder(
-                    addressController.text,
-                    phoneController.text,
-                    notesController.text,
+            ),
+            const Gap(24),
+            MentorXTextFormField(
+              label: t.marketplace.deliveryAddress,
+              controller: addressController,
+              hintText: t.marketplace.deliveryAddress,
+              prefixIcon: Icons.location_on_rounded,
+            ),
+            const Gap(16),
+            MentorXTextFormField(
+              label: t.marketplace.phoneNumber,
+              controller: phoneController,
+              hintText: t.marketplace.phoneNumber,
+              prefixIcon: Icons.phone_rounded,
+              keyboardType: TextInputType.phone,
+            ),
+            const Gap(16),
+            MentorXTextFormField(
+              label: t.marketplace.deliveryNotes,
+              controller: notesController,
+              hintText: t.marketplace.deliveryNotes,
+              prefixIcon: Icons.note_rounded,
+              maxLines: 2,
+            ),
+            const Gap(32),
+            MentorXButton(
+              loading: loadingState == LoadingState.loading,
+              onPressed: () {
+                if (addressController.text.isEmpty ||
+                    phoneController.text.isEmpty) {
+                  MentorXUI.showToast(
+                    message: 'Please fill all required fields',
                   );
-                },
-                label: t.marketplace.cart.confirmOrder,
-              ),
-            ],
-          ),
+                  return;
+                }
+                Navigator.pop(context);
+                onPlaceOrder(
+                  addressController.text,
+                  phoneController.text,
+                  notesController.text,
+                );
+              },
+              label: t.marketplace.cart.confirmOrder,
+            ),
+          ],
         ),
       ),
     );

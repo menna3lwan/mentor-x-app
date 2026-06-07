@@ -13,7 +13,7 @@ final class TransactionsHistoryPageWrapper extends StatefulWidget {
       _TransactionsHistoryPageWrapperState();
 }
 
-class _TransactionsHistoryPageWrapperState
+final class _TransactionsHistoryPageWrapperState
     extends State<TransactionsHistoryPageWrapper> {
   final _scrollController = ScrollController();
 
@@ -33,7 +33,8 @@ class _TransactionsHistoryPageWrapperState
   void _onScroll() {
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 200) {
-      context.read<TransactionsHistoryBloc>().add(
+      final bloc = context.read<TransactionsHistoryBloc>();
+      bloc.add(
         const TransactionsHistoryLoadMoreEvent(),
       );
     }
@@ -51,11 +52,29 @@ class _TransactionsHistoryPageWrapperState
             Navigator.of(context).pop();
         }
       },
-      child: TransactionsHistoryPage(
-        scrollController: _scrollController,
-        onRefresh: () async {
-          context.read<TransactionsHistoryBloc>().add(
-            const TransactionsHistoryLoadEvent(),
+      child: Builder(
+        builder: (context) {
+          final transactions = context.select(
+            (TransactionsHistoryBloc bloc) => bloc.state.transactions,
+          );
+          final hasMore = context.select(
+            (TransactionsHistoryBloc bloc) => bloc.state.hasMore,
+          );
+          final loadingState = context.select(
+            (TransactionsHistoryBloc bloc) => bloc.state.loadingState,
+          );
+
+          return TransactionsHistoryPage(
+            scrollController: _scrollController,
+            transactions: transactions,
+            hasMore: hasMore,
+            loadingState: loadingState,
+            onRefresh: () async {
+              final bloc = context.read<TransactionsHistoryBloc>();
+              bloc.add(
+                const TransactionsHistoryLoadEvent(),
+              );
+            },
           );
         },
       ),

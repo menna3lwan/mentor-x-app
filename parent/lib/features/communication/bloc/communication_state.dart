@@ -2,7 +2,7 @@ part of 'communication_bloc.dart';
 
 enum CommunicationStatus { initial, loading, success, failure }
 
-class CommunicationState extends Equatable {
+final class CommunicationState extends Equatable {
   final CommunicationStatus status;
   final List<NotificationEntity> notifications;
   final List<AnnouncementEntity> announcements;

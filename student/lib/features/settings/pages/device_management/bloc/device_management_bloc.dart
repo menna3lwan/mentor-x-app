@@ -24,6 +24,7 @@ final class DeviceManagementBloc
           DeviceManagementState,
           DeviceManagementPresentationEvent
         > {
+  static final MentorXLogger _logger = MentorXLogger('DeviceManagementBloc');
   final ProfileRepository _profileRepository;
 
   DeviceManagementBloc({
@@ -39,6 +40,7 @@ final class DeviceManagementBloc
     DeviceManagementInitialized event,
     Emitter<DeviceManagementState> emit,
   ) async {
+    _logger.info('Handling DeviceManagementInitialized');
     await _loadDevices(emit: emit);
   }
 
@@ -46,6 +48,7 @@ final class DeviceManagementBloc
     DeviceManagementRefreshed event,
     Emitter<DeviceManagementState> emit,
   ) async {
+    _logger.info('Handling DeviceManagementRefreshed');
     await _loadDevices(emit: emit);
   }
 
@@ -53,6 +56,7 @@ final class DeviceManagementBloc
     DeviceManagementDeactivateRequested event,
     Emitter<DeviceManagementState> emit,
   ) async {
+    _logger.info('Handling DeviceManagementDeactivateRequested for device: ${event.deviceId}');
     final ids = Set<String>.from(state.deactivatingDeviceIds)
       ..add(event.deviceId);
     emit(state.copyWith(deactivatingDeviceIds: ids));
@@ -60,12 +64,15 @@ final class DeviceManagementBloc
     try {
       await _profileRepository.deactivateDevice(event.deviceId);
       await _loadDevices(emit: emit, isSilent: true);
-    } on ProfileRepositoryException catch (e) {
+      _logger.info('Successfully deactivated device: ${event.deviceId}');
+    } on ProfileRepositoryException catch (e, s) {
+      _logger.error('Failed to deactivate device: ${event.deviceId}', e, s);
       final message = e.message ?? 'Failed to deactivate device.';
       emitPresentation(
         DeviceManagementFailurePresentationEvent(message: message),
       );
-    } catch (e) {
+    } catch (e, s) {
+      _logger.error('Unknown error deactivating device: ${event.deviceId}', e, s);
       emitPresentation(
         DeviceManagementFailurePresentationEvent(message: e.toString()),
       );
@@ -80,6 +87,7 @@ final class DeviceManagementBloc
     required Emitter<DeviceManagementState> emit,
     bool isSilent = false,
   }) async {
+    _logger.debug('Loading devices list. isSilent: $isSilent');
     if (!isSilent) {
       emit(
         state.copyWith(loadingState: LoadingState.loading, errorMessage: null),
@@ -97,7 +105,9 @@ final class DeviceManagementBloc
           errorMessage: null,
         ),
       );
-    } on ProfileRepositoryException catch (e) {
+      _logger.info('Successfully loaded ${devices.length} devices');
+    } on ProfileRepositoryException catch (e, s) {
+      _logger.error('ProfileRepositoryException loading devices', e, s);
       final message = e.message ?? 'Failed to load devices.';
       emit(
         state.copyWith(loadingState: LoadingState.error, errorMessage: message),
@@ -105,7 +115,8 @@ final class DeviceManagementBloc
       emitPresentation(
         DeviceManagementFailurePresentationEvent(message: message),
       );
-    } catch (e) {
+    } catch (e, s) {
+      _logger.error('Unknown error loading devices', e, s);
       final message = e.toString();
       emit(
         state.copyWith(loadingState: LoadingState.error, errorMessage: message),

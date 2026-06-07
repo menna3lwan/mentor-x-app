@@ -2,7 +2,7 @@ part of 'assessments_bloc.dart';
 
 enum AssessmentsStatus { initial, loading, success, failure }
 
-class AssessmentsState extends Equatable {
+final class AssessmentsState extends Equatable {
   final AssessmentsStatus status;
   final List<QuizAttemptEntity> assessments;
   final ParentGradeSummaryEntity? gradeSummary;

@@ -24,6 +24,7 @@ final class WhatsappGroupsBloc
           WhatsappGroupsState,
           WhatsappGroupsPresentationEvent
         > {
+  static final MentorXLogger _logger = MentorXLogger('WhatsappGroupsBloc');
   final StudentCommunicationRepository _repository;
   final AnalyticsService _analyticsService;
 
@@ -42,6 +43,7 @@ final class WhatsappGroupsBloc
     WhatsappGroupsInitialized event,
     Emitter<WhatsappGroupsState> emit,
   ) async {
+    _logger.info('Handling WhatsappGroupsInitialized');
     await _analyticsService.logEvent(
       name: AnalyticsEvents.whatsappGroupsViewed,
     );
@@ -52,6 +54,7 @@ final class WhatsappGroupsBloc
     WhatsappGroupsRefreshed event,
     Emitter<WhatsappGroupsState> emit,
   ) async {
+    _logger.info('Handling WhatsappGroupsRefreshed');
     await _load(emit);
   }
 
@@ -59,6 +62,7 @@ final class WhatsappGroupsBloc
     WhatsappGroupsJoinRequested event,
     Emitter<WhatsappGroupsState> emit,
   ) async {
+    _logger.info('Handling WhatsappGroupsJoinRequested for group: ${event.groupId}');
     final groupName = state.groups
         .firstWhere(
           (group) => group.id == event.groupId,
@@ -87,9 +91,11 @@ final class WhatsappGroupsBloc
             'Invite link copied. Open WhatsApp and paste the invite link to join.',
       ),
     );
+    _logger.info('Successfully handled join request for group: $groupName');
   }
 
   Future<void> _load(Emitter<WhatsappGroupsState> emit) async {
+    _logger.debug('Loading WhatsApp groups');
     emit(state.copyWith(loadingState: LoadingState.loading));
 
     try {
@@ -114,7 +120,9 @@ final class WhatsappGroupsBloc
           groups: groups,
         ),
       );
-    } catch (e) {
+      _logger.info('Successfully loaded ${groups.length} WhatsApp groups');
+    } catch (e, s) {
+      _logger.error('Failed to load WhatsApp groups', e, s);
       emit(state.copyWith(loadingState: LoadingState.error));
     }
   }
