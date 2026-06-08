@@ -55,19 +55,25 @@ final class ParentChildGradeComparisonModel
           json['content'],
     );
     return ParentChildGradeComparisonModel(
+      // Backend (Swagger StudentGradeComparisonDto):
+      //   { myAvgPercentage, classAvgPercentage, myRank, totalStudents }
       childOverallAverage: ModelParser.asDouble(
-        json['childOverallAverage'] ??
+        json['myAvgPercentage'] ??
+            json['my_avg_percentage'] ??
+            json['childOverallAverage'] ??
             json['child_overall_average'] ??
             json['studentAverage'] ??
             json['student_average'],
       ),
       classOverallAverage: ModelParser.asDouble(
-        json['classOverallAverage'] ??
+        json['classAvgPercentage'] ??
+            json['class_avg_percentage'] ??
+            json['classOverallAverage'] ??
             json['class_overall_average'] ??
             json['classAverage'] ??
             json['class_average'],
       ),
-      rank: ModelParser.asInt(json['rank']),
+      rank: ModelParser.asInt(json['myRank'] ?? json['my_rank'] ?? json['rank']),
       totalStudents: ModelParser.asInt(
         json['totalStudents'] ?? json['total_students'],
       ),
@@ -97,8 +103,14 @@ final class ParentCourseProgressRowModel extends ParentCourseProgressRow {
       courseId: ModelParser.asString(
         json['courseId'] ?? json['course_id'] ?? json['id'],
       ),
+      // Backend (Swagger ProgressSummaryDto) sends `courseTitle`.
       courseName: ModelParser.asString(
-        json['courseName'] ?? json['course_name'] ?? json['title'] ?? '',
+        json['courseTitle'] ??
+            json['course_title'] ??
+            json['courseName'] ??
+            json['course_name'] ??
+            json['title'] ??
+            '',
       ),
       progressPercent: ModelParser.asDouble(
         json['progressPercent'] ??
@@ -272,15 +284,28 @@ final class ParentChildStreakModel extends StreakEntity {
   });
 
   factory ParentChildStreakModel.fromJson(Map<String, dynamic> json) {
+    // Backend (Swagger StreakDto):
+    //   { currentStreakDays, longestStreakDays, lastActivityDate,
+    //     totalActiveDays, loginCount }
     return ParentChildStreakModel(
       currentStreak: ModelParser.asInt(
-        json['currentStreak'] ?? json['current_streak'] ?? json['current'],
+        json['currentStreakDays'] ??
+            json['current_streak_days'] ??
+            json['currentStreak'] ??
+            json['current_streak'] ??
+            json['current'],
       ),
       longestStreak: ModelParser.asInt(
-        json['longestStreak'] ?? json['longest_streak'] ?? json['longest'],
+        json['longestStreakDays'] ??
+            json['longest_streak_days'] ??
+            json['longestStreak'] ??
+            json['longest_streak'] ??
+            json['longest'],
       ),
       lastActivityAt: ModelParser.asDateTime(
-        json['lastActivityAt'] ??
+        json['lastActivityDate'] ??
+            json['last_activity_date'] ??
+            json['lastActivityAt'] ??
             json['last_activity_at'] ??
             json['lastActiveAt'] ??
             json['last_active_at'],
@@ -301,17 +326,26 @@ final class ParentQuizSpeedPointModel extends ParentQuizSpeedPoint {
   });
 
   factory ParentQuizSpeedPointModel.fromJson(Map<String, dynamic> json) {
+    // Backend (Swagger QuizSpeedDto):
+    //   { quizId, quizTitle, score, durationSeconds, submittedAt }
     return ParentQuizSpeedPointModel(
-      date:
-          ModelParser.asDateTime(json['date'] ?? json['day']) ?? DateTime.now(),
+      date: ModelParser.asDateTime(
+        json['submittedAt'] ??
+            json['submitted_at'] ??
+            json['date'] ??
+            json['day'],
+      ) ?? DateTime.now(),
       averageSecondsPerQuestion: ModelParser.asDouble(
-        json['averageSecondsPerQuestion'] ??
+        json['durationSeconds'] ??
+            json['duration_seconds'] ??
+            json['averageSecondsPerQuestion'] ??
             json['average_seconds_per_question'] ??
             json['avgSecondsPerQuestion'] ??
             json['avg_seconds_per_question'],
       ),
       quizCount: ModelParser.asInt(
         json['quizCount'] ?? json['quiz_count'] ?? json['count'],
+        // If coming from QuizSpeedDto, each row is one quiz → count = 1.
       ),
     );
   }

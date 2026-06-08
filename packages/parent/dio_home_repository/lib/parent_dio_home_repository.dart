@@ -24,17 +24,11 @@ final class DioParentHomeRepository
 
   @override
   Future<ParentHomeSummaryEntity> getSummary(String studentId) async {
-    // Backend contract (Postman): GET /api/parent/dashboard/summary.
-    // The collection does not expose a query-parameter contract. We pass
-    // student_id / studentId (snake + camel) for forward-compatibility
-    // without breaking the default no-arg signature used by Spring controllers.
+    // Backend contract (Swagger): GET /api/parent/dashboard/summary
+    // Returns the parent's dashboard with all children. No query parameters.
     try {
       final response = await _httpClient.get(
         '/api/parent/dashboard/summary',
-        queryParameters: {
-          'student_id': studentId,
-          'studentId': studentId,
-        },
       );
 
       final data = asMap(response.data)['data'] ?? asMap(response.data);

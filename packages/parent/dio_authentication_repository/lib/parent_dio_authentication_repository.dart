@@ -401,26 +401,23 @@ final class DioAuthenticationRepository
       );
     }
 
-    // Backend contract (Postman): the parent OTP send path is
-    //   POST /api/parent/start-login  body: { phone }
+    // Backend contract (Swagger): the parent OTP send path is
+    //   POST /api/parent/start-login  body: { parentPhone }
     // or the generic
     //   POST /api/auth/resend-otp     body: { phone }
     // The legacy /api/parent/register/start is kept as a last fallback only.
     try {
-      final payload = {'phone': phone};
       try {
-        await httpClient.post('/api/parent/start-login', data: payload);
+        await httpClient.post(
+          '/api/parent/start-login',
+          data: {'parentPhone': phone},
+        );
       } on HttpClientResponse catch (e) {
         if (e.statusCode != 404 && e.statusCode != 405) rethrow;
-        try {
-          await httpClient.post('/api/auth/resend-otp', data: payload);
-        } on HttpClientResponse catch (e2) {
-          if (e2.statusCode != 404 && e2.statusCode != 405) rethrow;
-          await httpClient.post(
-            '/api/parent/register/start',
-            data: payload,
-          );
-        }
+        await httpClient.post(
+          '/api/auth/resend-otp',
+          data: {'phone': phone},
+        );
       }
       AuthRateLimiter.recordSuccessfulAttempt(phone, 'send_otp');
     } on HttpClientResponse catch (e) {
@@ -444,31 +441,21 @@ final class DioAuthenticationRepository
       );
     }
 
-    // Backend contract (Postman): POST /api/auth/resend-otp body { phone }.
-    // Older builds may not support it; fall back to /api/parent/start-login,
-    // and as a last resort the legacy /api/parent/register/resend-otp.
+    // Backend contract (Swagger): POST /api/auth/resend-otp body { phone }.
+    // Fallback: POST /api/parent/start-login body { parentPhone }.
     try {
       HttpClientResponse response;
-      final payload = {'phone': phone};
       try {
         response = await httpClient.post(
           '/api/auth/resend-otp',
-          data: payload,
+          data: {'phone': phone},
         );
       } on HttpClientResponse catch (e) {
         if (e.statusCode != 404 && e.statusCode != 405) rethrow;
-        try {
-          response = await httpClient.post(
-            '/api/parent/start-login',
-            data: payload,
-          );
-        } on HttpClientResponse catch (e2) {
-          if (e2.statusCode != 404 && e2.statusCode != 405) rethrow;
-          response = await httpClient.post(
-            '/api/parent/register/resend-otp',
-            data: payload,
-          );
-        }
+        response = await httpClient.post(
+          '/api/parent/start-login',
+          data: {'parentPhone': phone},
+        );
       }
 
       AuthRateLimiter.recordSuccessfulAttempt(phone, 'resend_otp');
@@ -488,30 +475,22 @@ final class DioAuthenticationRepository
 
   @override
   Future<ParentEntity> verifyOtp(String phone, String code) async {
-    // Backend contract (Postman):
-    //   POST /api/auth/verify-otp        body: { phone, otp }
-    //   POST /api/parent/complete-login  body: { phone, otp }
-    // The legacy /api/parent/register/complete is kept as a last-resort
-    // fallback for older backend builds.
+    // Backend contract (Swagger):
+    //   POST /api/auth/verify-otp        body: { phone, otp (int) }
+    //   POST /api/parent/complete-login  body: { parentPhone, otp (string) }
     try {
       HttpClientResponse response;
-      final payload = {'phone': phone, 'otp': code};
       try {
-        response = await httpClient.post('/api/auth/verify-otp', data: payload);
+        response = await httpClient.post(
+          '/api/auth/verify-otp',
+          data: {'phone': phone, 'otp': int.tryParse(code) ?? code},
+        );
       } on HttpClientResponse catch (e) {
         if (e.statusCode != 404 && e.statusCode != 405) rethrow;
-        try {
-          response = await httpClient.post(
-            '/api/parent/complete-login',
-            data: payload,
-          );
-        } on HttpClientResponse catch (e2) {
-          if (e2.statusCode != 404 && e2.statusCode != 405) rethrow;
-          response = await httpClient.post(
-            '/api/parent/register/complete',
-            data: payload,
-          );
-        }
+        response = await httpClient.post(
+          '/api/parent/complete-login',
+          data: {'parentPhone': phone, 'otp': code},
+        );
       }
 
       final data = _extractDataMap(response.data);
@@ -529,16 +508,21 @@ final class DioAuthenticationRepository
   }
 
   void _setTokensIfPresent(Map<String, dynamic> data) {
-    final accessToken =
-        stringOrNull(data['accessToken'] ?? data['access_token']);
+    // Backend contract (Swagger): complete-login returns { token }, while
+    // verify-otp may return { accessToken } or { access_token }. Try all
+    // known key names.
+    final accessToken = stringOrNull(
+      data['accessToken'] ?? data['access_token'] ?? data['token'],
+    );
     if (accessToken == null) return;
 
-    final refreshToken =
-        stringOrNull(data['refreshToken'] ?? data['refresh_token']);
-    
+    final refreshToken = stringOrNull(
+      data['refreshToken'] ?? data['refresh_token'],
+    );
+
     httpClient.setAccessToken(accessToken).ignore();
     cacheRepository.put(CacheKeys.accessToken, accessToken).ignore();
-    
+
     if (refreshToken != null) {
       httpClient.setRefreshToken(refreshToken).ignore();
       cacheRepository.put(CacheKeys.refreshToken, refreshToken).ignore();

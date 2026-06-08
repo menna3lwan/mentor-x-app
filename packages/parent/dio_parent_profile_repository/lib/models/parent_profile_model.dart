@@ -55,9 +55,8 @@ final class ParentProfileModel extends ParentEntity {
             user['profile_image_url'],
       ),
       status: _parseStatus(user['status']),
-      childrenCount: ModelParser.asInt(
-        user['childrenCount'] ?? user['children_count'],
-      ),
+      // Backend (Swagger) returns `students[]` array, not a scalar count.
+      childrenCount: _resolveChildrenCount(user),
       walletBalance: ModelParser.asDouble(
         user['walletBalance'] ?? user['wallet_balance'],
       ),
@@ -74,6 +73,14 @@ final class ParentProfileModel extends ParentEntity {
           ModelParser.asDateTime(user['updatedAt'] ?? user['updated_at']) ??
           DateTime.now(),
     );
+  }
+
+  static int _resolveChildrenCount(Map<String, dynamic> user) {
+    final count = user['childrenCount'] ?? user['children_count'];
+    if (count is num) return count.toInt();
+    final students = user['students'] ?? user['children'];
+    if (students is List) return students.length;
+    return 0;
   }
 
   static String? _stringOrNull(dynamic value) {

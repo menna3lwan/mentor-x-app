@@ -25,11 +25,14 @@ final class CourseModel extends CourseEntity {
   });
 
   factory CourseModel.fromJson(Map<String, dynamic> json) {
+    // Backend (Swagger ChildEnrollmentInfo):
+    //   { enrollmentId, courseId, courseTitle, status, enrollmentType,
+    //     progress, enrolledAt, expiresAt, completedAt }
     return CourseModel(
-      id: json['id']?.toString() ?? '',
-      title: json['title'] ?? '',
+      id: (json['courseId'] ?? json['course_id'] ?? json['id'])?.toString() ?? '',
+      title: json['courseTitle'] ?? json['course_title'] ?? json['title'] ?? '',
       price: (json['price'] ?? 0.0).toDouble(),
-      enrolledCount: (json['enrolled_count'] ?? 0).toInt(),
+      enrolledCount: (json['enrolled_count'] ?? json['enrolledCount'] ?? 0).toInt(),
       subtitle: json['subtitle'],
       imageUrl: json['image_url'] ?? json['thumbnail_url'],
       oldPrice: (json['old_price'] ?? 0.0).toDouble(),
@@ -67,12 +70,18 @@ final class CourseSummaryModel extends CourseSummaryEntity {
   });
 
   factory CourseSummaryModel.fromJson(Map<String, dynamic> json) {
+    // Backend (Swagger ChildProgressInfo) is per-week progress:
+    //   { weekId, weekTitle, orderNumber, status, quizScore, quizPassed,
+    //     unlockedAt, startedAt, completedAt }
+    // The endpoint returns a List<ChildProgressInfo> wrapped in
+    // GlobalResponse. The repo extracts the first (or aggregated) entry
+    // and maps it here.
     return CourseSummaryModel(
-      id: json['id']?.toString() ?? '',
-      title: json['title'] ?? '',
+      id: (json['weekId'] ?? json['id'])?.toString() ?? '',
+      title: json['weekTitle'] ?? json['title'] ?? '',
       thumbnailUrl: json['thumbnail_url'] ?? json['image_url'] ?? '',
-      enrolledCount: (json['enrolled_count'] ?? 0).toInt(),
-      progressPercent: (json['progress_percent'] ?? 0.0).toDouble(),
+      enrolledCount: (json['enrolled_count'] ?? json['enrolledCount'] ?? 0).toInt(),
+      progressPercent: (json['progress_percent'] ?? json['progress'] ?? json['quizScore'] ?? 0.0).toDouble(),
       price: (json['price'] ?? 0.0).toDouble(),
     );
   }

@@ -58,8 +58,12 @@ final class ParentHomeSummaryModel extends ParentHomeSummaryEntity {
       latestAnnouncement: latestAnnouncementRaw != null
           ? AnnouncementModel.fromJson(ModelParser.asMap(latestAnnouncementRaw))
           : null,
+      // Backend (Swagger): field is `children` (ChildSummaryCard[]).
+      // Legacy builds may use `childrenSummaries` / `children_summaries`.
       childrenSummaries: ModelParser.asList(
-        json['childrenSummaries'] ?? json['children_summaries'],
+        json['children'] ??
+            json['childrenSummaries'] ??
+            json['children_summaries'],
       )
           .map((e) => ParentChildSummaryModel.fromJson(ModelParser.asMap(e)))
           .toList(),
@@ -129,13 +133,18 @@ final class ParentChildSummaryModel extends ParentChildSummaryEntity {
   factory ParentChildSummaryModel.fromJson(Map<String, dynamic> json) {
     final lastActivityRaw = json['last_activity'] ?? json['lastActivity'];
     return ParentChildSummaryModel(
+      // Backend (Swagger ChildSummaryCard) sends `studentId` (camelCase).
       childId: ModelParser.asString(
-        json['childId'] ??
+        json['studentId'] ??
+            json['childId'] ??
             json['child_id'] ??
             json['student_id'] ??
             json['id'],
       ),
-      name: ModelParser.asString(json['name']),
+      // Backend sends `studentName`; legacy sends `name`.
+      name: ModelParser.asString(
+        json['studentName'] ?? json['student_name'] ?? json['name'],
+      ),
       profileImageUrl: _firstNonEmptyString([
         json['profileImageUrl'],
         json['profile_image_url'],
@@ -144,11 +153,20 @@ final class ParentChildSummaryModel extends ParentChildSummaryEntity {
       grade: ModelParser.asString(
         json['grade'] ?? json['gradeName'] ?? json['grade_name'],
       ),
+      // Backend sends `totalAttendance` (count) rather than a rate.
+      // Use it as-is; the UI can adapt or the entity can be extended later.
       attendanceRate: ModelParser.asDouble(
-        json['attendanceRate'] ?? json['attendance_rate'],
+        json['attendanceRate'] ??
+            json['attendance_rate'] ??
+            json['totalAttendance'] ??
+            json['total_attendance'],
       ),
       averageGrade: ModelParser.asDouble(
-        json['averageGrade'] ?? json['average_grade'] ?? json['avg_grade'],
+        json['averageGrade'] ??
+            json['average_grade'] ??
+            json['avg_grade'] ??
+            json['completedLessons'] ??
+            json['completed_lessons'],
       ),
       lastActivity: lastActivityRaw != null
           ? ParentRecentActivityModel.fromJson(

@@ -160,9 +160,18 @@ final class DioParentAnalyticsRepository
 
   // ─────────────────────────── Helpers ─────────────────────────────────────
 
+  /// Unwraps the standard `{ success, data, ... }` envelope.
+  ///
+  /// When `data` is a Map → returns it directly.
+  /// When `data` is a List (e.g. `ListQuizSpeedDto`) → wraps it as
+  /// `{ 'content': [...] }` so the model's `fromJson` can find it
+  /// under a known key.
+  /// Otherwise falls through to the root Map.
   Map<String, dynamic> _extract(dynamic raw) {
     final root = asMap(raw);
-    if (root['data'] is Map) return asMap(root['data']);
+    final data = root['data'];
+    if (data is Map) return asMap(data);
+    if (data is List) return <String, dynamic>{'content': data};
     return root;
   }
 
