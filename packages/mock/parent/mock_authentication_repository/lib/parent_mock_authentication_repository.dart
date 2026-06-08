@@ -172,6 +172,22 @@ final class MockAuthenticationRepository implements AuthenticationRepository<Par
   }
 
   @override
+  Future<void> forceLogoutAll() async {
+    _cachedUser = null;
+  }
+
+  @override
+  Future<ParentEntity> getMe() async {
+    await Future.delayed(delay);
+    final user = _cachedUser;
+    if (user != null) return user;
+    throw const AuthenticationException(
+      code: AuthenticationExceptionCode.sessionExpired,
+      message: 'No active session',
+    );
+  }
+
+  @override
   Future<void> logout() async {
     _cachedUser = null;
   }

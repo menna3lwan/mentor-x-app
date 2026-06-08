@@ -54,6 +54,8 @@
     "signOut": "Sign Out",
     "myProfile": "My Profile",
     "viewAll": "View All",
+    "dashboardTitle": "Dashboard",
+    "retry": "Retry",
     "auth": {
       "appName": "MentorX",
       "loginTagline": "Stay connected with your child's education",
@@ -71,13 +73,13 @@
       "forgotPasswordTitle": "Forgot Password",
       "forgotPasswordSubtitle": "Enter your phone number to reset your password",
       "resetPasswordTitle": "Reset Password",
-      "resetPasswordSubtitle": "Create a new password for your account",
+      "resetPasswordSubtitle": "Create a new password for ${phone}",
       "passwordResetSuccess": "Password reset successfully",
       "newToMentorX": "New to MentorX?",
       "createAccount": "Create Account",
       "backToLogin": "Back to Login",
       "otpTitle": "Verify Your Number",
-      "otpSubtitle": "Enter the code sent to your phone",
+      "otpSubtitle": "Enter the code sent to ${phone}",
       "otpFieldLabel": "Verification Code",
       "otpFieldHint": "Enter verification code",
       "otpCodeLabel": "OTP Code",
@@ -134,7 +136,34 @@
       "regErrorRegistrationFailed": "Registration failed. Please try again"
     },
     "children": {
-      "lookupEmpty": "No children found"
+      "lookupEmpty": "No children found",
+      "title": "Linked Children",
+      "linkSuccess": "Child linked successfully",
+      "unlinkSuccess": "Child unlinked successfully",
+      "linkChildTitle": "Link a Child",
+      "linkChildHint": "Search for your child using their phone number or student code",
+      "searchLabel": "Search",
+      "searchHint": "Phone number or student code",
+      "specifyRelationship": "Specify your relationship to this student",
+      "gradeLabel": "Grade: ${grade}",
+      "confirmLink": "Confirm Link",
+      "errorAlreadyLinked": "This child is already linked to your account",
+      "errorStudentNotFound": "Student not found",
+      "errorNetwork": "Network error. Please try again",
+      "errorGeneric": "An error occurred. Please try again",
+      "linkNewChild": "Link New Child",
+      "unlink": "Unlink",
+      "unlinkConfirmTitle": "Unlink Child",
+      "unlinkConfirmMessage": "Remove ${name} from your account?",
+      "cancel": "Cancel",
+      "studentIdLabel": "ID: ${id}",
+      "centerLabel": "${center}",
+      "relationship": {
+        "father": "Father",
+        "mother": "Mother",
+        "guardian": "Guardian",
+        "other": "Other"
+      }
     },
     "notificationCenter": {
       "title": "Notifications",
@@ -164,7 +193,8 @@
     },
     "pushNotifications": {
       "bannerOpen": "Open",
-      "bannerDismiss": "Dismiss"
+      "bannerDismiss": "Dismiss",
+      "permissionDeniedMessage": "Push notification permission was denied. Enable it in your device settings."
     },
     "splash": {
       "appName": "MentorX",
@@ -442,7 +472,7 @@
       "pageSubtitle": "Manage devices with access to your account",
       "pageTitle": "Trusted Devices",
       "revokeAction": "Revoke",
-      "revokeConfirmMessage": "Remove access for this device?",
+      "revokeConfirmMessage": "Remove access for ${device}?",
       "revokeConfirmTitle": "Revoke Device",
       "revokeSuccess": "Device access revoked",
       "settingsSubtitle": "Manage trusted devices"
@@ -454,6 +484,10 @@
       "confirmationPhrase": "DELETE",
       "confirmationPrompt": "Type \"${phrase}\" to confirm",
       "consequence": "All your data including profile, history, and linked accounts will be permanently deleted",
+      "consequence1": "Your profile and personal information will be deleted",
+      "consequence2": "All linked children and their data will be unlinked",
+      "consequence3": "Transaction history and wallet balance will be lost",
+      "consequence4": "This action cannot be undone",
       "consequencesTitle": "What will be deleted",
       "dataExportHint": "You can request a copy of your data before deleting",
       "dataExportLabel": "Export My Data",

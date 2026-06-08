@@ -6,7 +6,7 @@ class ParentEntity extends Equatable {
   final String id;
   final String firstName;
   final String lastName;
-  final String email;
+  final String? email;
   final String phoneNumber;
   final String? profileImageUrl;
   final ParentStatus status;
@@ -21,7 +21,7 @@ class ParentEntity extends Equatable {
     required this.id,
     required this.firstName,
     required this.lastName,
-    required this.email,
+    this.email,
     required this.phoneNumber,
     required this.status,
     required this.createdAt,
@@ -39,7 +39,6 @@ class ParentEntity extends Equatable {
     id: '',
     firstName: '',
     lastName: '',
-    email: '',
     phoneNumber: '',
     status: ParentStatus.pending,
     createdAt: DateTime.fromMillisecondsSinceEpoch(0),
@@ -67,7 +66,7 @@ class ParentEntity extends Equatable {
     String? id,
     String? firstName,
     String? lastName,
-    String? email,
+    MentorXNullableValue<String?>? email,
     String? phoneNumber,
     String? profileImageUrl,
     ParentStatus? status,
@@ -82,7 +81,7 @@ class ParentEntity extends Equatable {
       id: id ?? this.id,
       firstName: firstName ?? this.firstName,
       lastName: lastName ?? this.lastName,
-      email: email ?? this.email,
+      email: email != null ? email.value : this.email,
       phoneNumber: phoneNumber ?? this.phoneNumber,
       profileImageUrl: profileImageUrl ?? this.profileImageUrl,
       status: status ?? this.status,

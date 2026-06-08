@@ -20,6 +20,8 @@ final class MentorXTextFormField extends StatefulWidget {
   final VoidCallback? onObscureTextToggled;
   final bool enabled;
   final bool readOnly;
+  final TextInputAction? textInputAction;
+  final Iterable<String>? autofillHints;
 
   const MentorXTextFormField({
     super.key,
@@ -42,6 +44,8 @@ final class MentorXTextFormField extends StatefulWidget {
     this.onObscureTextToggled,
     this.enabled = true,
     this.readOnly = false,
+    this.textInputAction,
+    this.autofillHints,
   });
 
   @override
@@ -66,6 +70,8 @@ class _MentorXTextFormFieldState extends State<MentorXTextFormField> {
       maxLines: widget.maxLines,
       enabled: widget.enabled,
       readOnly: widget.readOnly,
+      textInputAction: widget.textInputAction,
+      autofillHints: widget.autofillHints,
       obscureText: widget.isPassword ? effectiveObscure : false,
       cursorColor: context.brandPrimaryColor,
       style: context.bodyPrimaryStyle.copyWith(

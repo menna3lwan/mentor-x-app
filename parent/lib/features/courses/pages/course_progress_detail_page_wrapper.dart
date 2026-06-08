@@ -119,7 +119,7 @@ class _CourseProgressDetailView extends StatelessWidget {
         CourseProgressHeroCard(
           title: summary.title,
           description: summary.description,
-          thumbnailUrl: summary.thumbnailUrl,
+          thumbnailUrl: summary.thumbnailUrl ?? '',
           progressPercent: progress,
           progressLabel: t.courseDetail.progress,
           enrolledLabel: t.courseDetail.enrolledCount(

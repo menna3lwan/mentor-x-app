@@ -33,7 +33,7 @@ class TranslationsAr with BaseTranslations<AppLocale, Translations> implements T
 
 	late final TranslationsAr _root = this; // ignore: unused_field
 
-	@override
+	@override 
 	TranslationsAr $copyWith({TranslationMetadata<AppLocale, Translations>? meta}) => TranslationsAr(meta: meta ?? this.$meta);
 
 	// Translations
@@ -122,6 +122,8 @@ class _TranslationsParentAr implements TranslationsParentEn {
 	@override String get signOut => 'تسجيل الخروج';
 	@override String get myProfile => 'ملفي الشخصي';
 	@override String get viewAll => 'عرض الكل';
+	@override String get dashboardTitle => 'لوحة التحكم';
+	@override String get retry => 'إعادة المحاولة';
 	@override late final _TranslationsParentAuthAr auth = _TranslationsParentAuthAr._(_root);
 	@override late final _TranslationsParentChildrenAr children = _TranslationsParentChildrenAr._(_root);
 	@override late final _TranslationsParentNotificationCenterAr notificationCenter = _TranslationsParentNotificationCenterAr._(_root);
@@ -229,13 +231,13 @@ class _TranslationsParentAuthAr implements TranslationsParentAuthEn {
 	@override String get forgotPasswordTitle => 'نسيت كلمة المرور';
 	@override String get forgotPasswordSubtitle => 'أدخل رقم جوالك لإعادة تعيين كلمة المرور';
 	@override String get resetPasswordTitle => 'إعادة تعيين كلمة المرور';
-	@override String get resetPasswordSubtitle => 'أنشئ كلمة مرور جديدة لحسابك';
+	@override String resetPasswordSubtitle({required Object phone}) => 'أنشئ كلمة مرور جديدة لـ ${phone}';
 	@override String get passwordResetSuccess => 'تم إعادة تعيين كلمة المرور بنجاح';
 	@override String get newToMentorX => 'جديد على منتور إكس؟';
 	@override String get createAccount => 'إنشاء حساب';
 	@override String get backToLogin => 'العودة لتسجيل الدخول';
 	@override String get otpTitle => 'تحقق من رقمك';
-	@override String get otpSubtitle => 'أدخل الرمز المرسل إلى جوالك';
+	@override String otpSubtitle({required Object phone}) => 'أدخل الرمز المرسل إلى ${phone}';
 	@override String get otpFieldLabel => 'رمز التحقق';
 	@override String get otpFieldHint => 'أدخل رمز التحقق';
 	@override String get otpCodeLabel => 'رمز OTP';
@@ -300,6 +302,28 @@ class _TranslationsParentChildrenAr implements TranslationsParentChildrenEn {
 
 	// Translations
 	@override String get lookupEmpty => 'لا يوجد أطفال مسجلون';
+	@override String get title => 'الأطفال المرتبطون';
+	@override String get linkSuccess => 'تم ربط الطفل بنجاح';
+	@override String get unlinkSuccess => 'تم إلغاء ربط الطفل بنجاح';
+	@override String get linkChildTitle => 'ربط طفل';
+	@override String get linkChildHint => 'ابحث عن طفلك باستخدام رقم جواله أو رمز الطالب';
+	@override String get searchLabel => 'بحث';
+	@override String get searchHint => 'رقم الجوال أو رمز الطالب';
+	@override String get specifyRelationship => 'حدد علاقتك بهذا الطالب';
+	@override String gradeLabel({required Object grade}) => 'الصف: ${grade}';
+	@override String get confirmLink => 'تأكيد الربط';
+	@override String get errorAlreadyLinked => 'هذا الطفل مرتبط بحسابك بالفعل';
+	@override String get errorStudentNotFound => 'الطالب غير موجود';
+	@override String get errorNetwork => 'خطأ في الشبكة، يرجى المحاولة مرة أخرى';
+	@override String get errorGeneric => 'حدث خطأ، يرجى المحاولة مرة أخرى';
+	@override String get linkNewChild => 'ربط طفل جديد';
+	@override String get unlink => 'إلغاء الربط';
+	@override String get unlinkConfirmTitle => 'إلغاء ربط الطفل';
+	@override String unlinkConfirmMessage({required Object name}) => 'هل تريد إزالة ${name} من حسابك؟';
+	@override String get cancel => 'إلغاء';
+	@override String studentIdLabel({required Object id}) => 'الرقم: ${id}';
+	@override String centerLabel({required Object center}) => '${center}';
+	@override late final _TranslationsParentChildrenRelationshipAr relationship = _TranslationsParentChildrenRelationshipAr._(_root);
 }
 
 // Path: parent.notificationCenter
@@ -351,60 +375,73 @@ class _TranslationsParentPushNotificationsAr implements TranslationsParentPushNo
 	// Translations
 	@override String get bannerOpen => 'فتح';
 	@override String get bannerDismiss => 'تجاهل';
+	@override String get permissionDeniedMessage => 'تم رفض إذن الإشعارات. فعّله من إعدادات جهازك.';
 }
 
 // Path: parent.splash
 class _TranslationsParentSplashAr implements TranslationsParentSplashEn {
 	_TranslationsParentSplashAr._(this._root);
+
 	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
 	@override String get appName => 'منتور إكس';
-	@override String get tagline => 'نمكّن كل متعلم';
+	@override String get tagline => 'نُمكّن كل متعلم';
 }
 
 // Path: parent.home
 class _TranslationsParentHomeAr implements TranslationsParentHomeEn {
 	_TranslationsParentHomeAr._(this._root);
+
 	final TranslationsAr _root; // ignore: unused_field
-	@override String get academicStanding => 'الوضع الأكاديمي';
+
+	// Translations
+	@override String get academicStanding => 'المستوى الأكاديمي';
 	@override String get addChild => 'إضافة طفل';
 	@override String get attendance => 'الحضور';
 	@override String get avgGrade => 'متوسط الدرجات';
 	@override String get linkChild => 'ربط طفل';
-	@override String get noChildrenHint => 'قم بربط حساب طالب للبدء';
-	@override String get noChildrenTitle => 'لا يوجد أطفال بعد';
+	@override String get noChildrenHint => 'ربط حساب طالب للبدء';
+	@override String get noChildrenTitle => 'لا يوجد أطفال مضافون';
 	@override String get noRecentActivity => 'لا يوجد نشاط حديث';
-	@override String get noRecentActivityHint => 'ستظهر هنا أنشطة طفلك التعليمية';
+	@override String get noRecentActivityHint => 'سيظهر هنا نشاط طفلك في التعلم';
 	@override String get noRecentGrades => 'لا توجد درجات حديثة';
-	@override String get noUpcomingSessions => 'لا توجد جلسات قادمة';
+	@override String get noUpcomingSessions => 'لا توجد حصص قادمة';
 	@override String get parentAccount => 'حساب ولي الأمر';
 	@override String get recentGrades => 'الدرجات الأخيرة';
 	@override String get unpaidFees => 'رسوم غير مدفوعة';
-	@override String get upcomingSessions => 'الجلسات القادمة';
-	@override String updatedAt({required Object time}) => 'تم التحديث في ${time}';
+	@override String get upcomingSessions => 'الحصص القادمة';
+	@override String updatedAt({required Object time}) => 'آخر تحديث: ${time}';
 }
 
 // Path: parent.academic
 class _TranslationsParentAcademicAr implements TranslationsParentAcademicEn {
 	_TranslationsParentAcademicAr._(this._root);
+
 	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
 	@override String get averageLabel => 'المتوسط';
 	@override String get gradedLabel => 'تم التقييم';
-	@override String get noCoursesHint => 'لم يتم العثور على مواد مسجلة لهذا الطفل';
-	@override String get noCoursesTitle => 'لا توجد مواد';
+	@override String get noCoursesHint => 'لا توجد دورات مسجلة لهذا الطفل';
+	@override String get noCoursesTitle => 'لا توجد دورات';
 	@override String get overallAverageHeading => 'المعدل العام';
 	@override String get pageTitle => 'المراقب الأكاديمي';
 	@override String get pendingLabel => 'قيد الانتظار';
-	@override String sessionsCount({required int count}) => '${count} جلسات';
+	@override String sessionsCount({required int count}) => '${count} حصص';
 }
 
 // Path: parent.assessments
 class _TranslationsParentAssessmentsAr implements TranslationsParentAssessmentsEn {
 	_TranslationsParentAssessmentsAr._(this._root);
+
 	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
 	@override String get assessmentHistory => 'سجل التقييمات';
 	@override String get average => 'المتوسط';
 	@override String get graded => 'تم التقييم';
-	@override String get noAssessmentsHint => 'لم يتم إكمال أي تقييمات بعد';
+	@override String get noAssessmentsHint => 'لم تُكتمل أي تقييمات بعد';
 	@override String get noAssessmentsTitle => 'لا توجد تقييمات';
 	@override String get overallPerformance => 'الأداء العام';
 	@override String get pageTitle => 'مراقب الدرجات';
@@ -416,7 +453,10 @@ class _TranslationsParentAssessmentsAr implements TranslationsParentAssessmentsE
 // Path: parent.gradeDetail
 class _TranslationsParentGradeDetailAr implements TranslationsParentGradeDetailEn {
 	_TranslationsParentGradeDetailAr._(this._root);
+
 	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
 	@override String get additionalDetails => 'تفاصيل إضافية';
 	@override String get assessmentInfo => 'معلومات التقييم';
 	@override String get correctAnswer => 'الإجابة الصحيحة';
@@ -427,20 +467,23 @@ class _TranslationsParentGradeDetailAr implements TranslationsParentGradeDetailE
 	@override String get pass => 'ناجح';
 	@override String get passCriteria => 'معيار النجاح';
 	@override String get percentage => 'النسبة المئوية';
-	@override String get questionBreakdown => 'تفصيل الأسئلة';
+	@override String get questionBreakdown => 'تفاصيل الأسئلة';
 	@override String questionLabel({required Object number}) => 'السؤال ${number}';
 	@override String get quizDetail => 'تفاصيل الاختبار';
 	@override String get quizId => 'رقم الاختبار';
 	@override String get quizScore => 'درجة الاختبار';
 	@override String get result => 'النتيجة';
 	@override String get score => 'الدرجة';
-	@override String get submittedAt => 'وقت التسليم';
+	@override String get submittedAt => 'وقت التقديم';
 }
 
 // Path: parent.attendanceTracking
 class _TranslationsParentAttendanceTrackingAr implements TranslationsParentAttendanceTrackingEn {
 	_TranslationsParentAttendanceTrackingAr._(this._root);
+
 	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
 	@override String get absent => 'غائب';
 	@override String get attendanceLog => 'سجل الحضور';
 	@override String checkInTimeLabel({required Object time}) => 'وقت الحضور: ${time}';
@@ -451,100 +494,109 @@ class _TranslationsParentAttendanceTrackingAr implements TranslationsParentAtten
 	@override String get dayThursday => 'الخميس';
 	@override String get dayTuesday => 'الثلاثاء';
 	@override String get dayWednesday => 'الأربعاء';
-	@override String get excused => 'إذن';
+	@override String get excused => 'مُعذَر';
 	@override String get generalAcademic => 'أكاديمي عام';
 	@override String get groupActiveBadge => 'نشط';
 	@override String get groupAttendanceRatioLabel => 'نسبة الحضور';
 	@override String get groupAttendanceTitle => 'ملخص الحضور';
 	@override String groupAttendedSessions({required int count}) => '${count} حضر';
-	@override String get groupCourseLabel => 'المادة';
+	@override String get groupCourseLabel => 'الدورة';
 	@override String get groupDescriptionLabel => 'الوصف';
 	@override String get groupDetailTitle => 'تفاصيل المجموعة';
 	@override String groupEndDateLabel({required Object date}) => 'الانتهاء: ${date}';
 	@override String groupEnrolledLabel({required int count}) => '${count} مسجل';
 	@override String get groupFailureTitle => 'فشل تحميل المجموعة';
 	@override String get groupInactiveBadge => 'غير نشط';
-	@override String groupLateSessions({required int count}) => '${count} تأخر';
+	@override String groupLateSessions({required int count}) => '${count} متأخر';
 	@override String get groupLocationLabel => 'الموقع';
-	@override String groupMissedSessions({required int count}) => '${count} غياب';
-	@override String get groupNoSchedule => 'لا يوجد جدول';
+	@override String groupMissedSessions({required int count}) => '${count} غائب';
+	@override String get groupNoSchedule => 'لا يوجد جدول متاح';
 	@override String get groupNotFoundHint => 'تعذر العثور على مجموعة الحضور';
 	@override String get groupNotFoundTitle => 'المجموعة غير موجودة';
-	@override String get groupRecentSessionsTitle => 'الجلسات الأخيرة';
+	@override String get groupRecentSessionsTitle => 'الحصص الأخيرة';
 	@override String get groupScheduleTitle => 'الجدول';
 	@override String groupSessionRoomLabel({required Object room}) => 'القاعة: ${room}';
-	@override String groupStartDateLabel({required Object date}) => 'البداية: ${date}';
+	@override String groupStartDateLabel({required Object date}) => 'البدء: ${date}';
 	@override String get groupTeacherLabel => 'المعلم';
-	@override String groupTotalSessions({required int count}) => '${count} جلسات إجمالاً';
+	@override String groupTotalSessions({required int count}) => 'إجمالي ${count} حصص';
 	@override String get groupsAction => 'المجموعات';
-	@override String get groupsEmptyHint => 'لا توجد مجموعات حضور';
+	@override String get groupsEmptyHint => 'لم يتم العثور على مجموعات حضور';
 	@override String get groupsEmptyTitle => 'لا توجد مجموعات';
-	@override String get groupsHint => 'استعرض مجموعات حضور طفلك';
+	@override String get groupsHint => 'عرض مجموعات حضور طفلك';
 	@override String get groupsTitle => 'مجموعات الحضور';
 	@override String get late => 'متأخر';
 	@override String get noRecordsHint => 'لا توجد سجلات حضور لهذه الفترة';
 	@override String get noRecordsTitle => 'لا توجد سجلات';
-	@override String get onlineSession => 'أونلاين';
+	@override String get onlineSession => 'عبر الإنترنت';
 	@override String get pageTitle => 'مراقب الحضور';
 	@override String get present => 'حاضر';
-	@override String get regularSession => 'جلسة عادية';
+	@override String get regularSession => 'حصة عادية';
 }
 
 // Path: parent.financial
 class _TranslationsParentFinancialAr implements TranslationsParentFinancialEn {
 	_TranslationsParentFinancialAr._(this._root);
+
 	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
 	@override String get balance => 'الرصيد';
-	@override String get creditsThisMonth => 'الإيداعات هذا الشهر';
+	@override String get creditsThisMonth => 'إيرادات هذا الشهر';
 	@override String get currencySymbol => 'ج.م';
 	@override String get myWalletBalanceLabel => 'رصيد المحفظة';
 	@override String get myWalletTitle => 'محفظتي';
-	@override String get noTransactionsHint => 'لم تتم أي معاملات بعد';
+	@override String get noTransactionsHint => 'لم تُجرَ أي معاملات حتى الآن';
 	@override String get noTransactionsTitle => 'لا توجد معاملات';
 	@override String get points => 'النقاط';
 	@override String get spent => 'المصروف';
-	@override String get topUpAction => 'شحن الرصيد';
+	@override String get topUpAction => 'إضافة رصيد';
 	@override String get topUpAmountHint => 'أدخل المبلغ';
 	@override String get topUpAmountLabel => 'المبلغ';
 	@override String get topUpBelowMinimum => 'المبلغ أقل من الحد الأدنى';
-	@override String get topUpFailed => 'فشل شحن الرصيد، يرجى المحاولة مرة أخرى';
-	@override String get topUpHint => 'أضف أموالاً لمحفظة طفلك';
+	@override String get topUpFailed => 'فشل إضافة الرصيد، يرجى المحاولة مرة أخرى';
+	@override String get topUpHint => 'أضف رصيداً لمحفظة طفلك';
 	@override String get topUpInsufficientFunds => 'رصيد غير كافٍ';
 	@override String get topUpInvalidAmount => 'مبلغ غير صحيح';
-	@override String get topUpSuccess => 'تم شحن المحفظة بنجاح';
-	@override String get topUpTitle => 'شحن المحفظة';
+	@override String get topUpSuccess => 'تم إضافة الرصيد بنجاح';
+	@override String get topUpTitle => 'إضافة رصيد للمحفظة';
 	@override String get transactionsTitle => 'سجل المعاملات';
 }
 
 // Path: parent.courseDetail
 class _TranslationsParentCourseDetailAr implements TranslationsParentCourseDetailEn {
 	_TranslationsParentCourseDetailAr._(this._root);
+
 	final TranslationsAr _root; // ignore: unused_field
-	@override String get courseBreakdown => 'تفصيل المادة';
-	@override String get courseId => 'رقم المادة';
+
+	// Translations
+	@override String get courseBreakdown => 'تفاصيل الدورة';
+	@override String get courseId => 'رقم الدورة';
 	@override String get descriptionLabel => 'الوصف';
-	@override String get emptyHint => 'لا تتوفر بيانات للمادة';
-	@override String get emptyTitle => 'لا توجد مواد';
+	@override String get emptyHint => 'لا توجد بيانات للدورة';
+	@override String get emptyTitle => 'لا توجد دورات';
 	@override String enrolledCount({required int count}) => '${count} مسجل';
-	@override String get failureTitle => 'فشل تحميل المادة';
-	@override String get fullTitle => 'المادة الكاملة';
-	@override String get pageTitle => 'تفاصيل المادة';
+	@override String get failureTitle => 'فشل تحميل الدورة';
+	@override String get fullTitle => 'الدورة الكاملة';
+	@override String get pageTitle => 'تفاصيل الدورة';
 	@override String get progress => 'التقدم';
 	@override String get status => 'الحالة';
-	@override String get statusActive => 'نشطة';
-	@override String get statusCompleted => 'مكتملة';
-	@override String get statusInProgress => 'قيد التقدم';
-	@override String get statusLabel => 'حالة المادة';
+	@override String get statusActive => 'نشط';
+	@override String get statusCompleted => 'مكتمل';
+	@override String get statusInProgress => 'جارٍ';
+	@override String get statusLabel => 'حالة الدورة';
 }
 
 // Path: parent.communication
 class _TranslationsParentCommunicationAr implements TranslationsParentCommunicationEn {
 	_TranslationsParentCommunicationAr._(this._root);
+
 	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
 	@override String get announcementsTitle => 'الإعلانات';
-	@override String get groupSubtitle => 'انضم لمجموعة واتساب طفلك';
+	@override String get groupSubtitle => 'انضم لمجموعة واتساب الخاصة بطفلك';
 	@override String get joinGroup => 'انضم للمجموعة';
-	@override String get noAnnouncementsHint => 'لا توجد إعلانات في الوقت الحالي';
+	@override String get noAnnouncementsHint => 'لا توجد إعلانات حالياً';
 	@override String get noAnnouncementsTitle => 'لا توجد إعلانات';
 	@override String get noGroupsHint => 'لا توجد مجموعات واتساب متاحة';
 	@override String get noGroupsTitle => 'لا توجد مجموعات';
@@ -555,30 +607,33 @@ class _TranslationsParentCommunicationAr implements TranslationsParentCommunicat
 // Path: parent.analytics
 class _TranslationsParentAnalyticsAr implements TranslationsParentAnalyticsEn {
 	_TranslationsParentAnalyticsAr._(this._root);
+
 	final TranslationsAr _root; // ignore: unused_field
-	@override String averagePerDay({required Object minutes}) => '${minutes} دقيقة/يوم';
-	@override String averageQuizSpeed({required Object seconds}) => '${seconds} ث متوسط';
+
+	// Translations
+	@override String averagePerDay({required Object minutes}) => '${minutes} د/يوم';
+	@override String averageQuizSpeed({required Object seconds}) => 'متوسط ${seconds} ثانية';
 	@override String get childAverageLabel => 'متوسط الطفل';
 	@override String get classAverageLabel => 'متوسط الفصل';
-	@override String completedSessionsLabel({required int completed, required int total}) => '${completed}/${total} جلسات';
-	@override String get currentStreak => 'السلسلة الحالية';
-	@override String get emptySectionHint => 'لا تتوفر بيانات لهذا القسم';
+	@override String completedSessionsLabel({required int completed, required int total}) => '${completed}/${total} حصص';
+	@override String get currentStreak => 'التتابع الحالي';
+	@override String get emptySectionHint => 'لا توجد بيانات لهذا القسم';
 	@override String get emptySectionTitle => 'لا توجد بيانات';
 	@override String get errorRetry => 'إعادة المحاولة';
 	@override String lastActive({required Object time}) => 'آخر نشاط: ${time}';
 	@override String get loadFailed => 'فشل تحميل التحليلات';
-	@override String get longestStreak => 'أطول سلسلة';
+	@override String get longestStreak => 'أطول تتابع';
 	@override String get pageTitle => 'التحليلات';
 	@override String quizCountLabel({required int count}) => '${count} اختبارات';
 	@override String rankLabel({required int rank, required int total}) => '#${rank} من ${total}';
 	@override String get sectionAchievements => 'الإنجازات';
 	@override String get sectionActiveHours => 'ساعات النشاط';
-	@override String get sectionCourseProgress => 'تقدم المواد';
+	@override String get sectionCourseProgress => 'تقدم الدورات';
 	@override String get sectionGradeComparison => 'مقارنة الدرجات';
 	@override String get sectionQuizSpeed => 'سرعة الاختبارات';
-	@override String get sectionStreak => 'السلسلة';
+	@override String get sectionStreak => 'التتابع';
 	@override String streakDays({required int days}) => '${days} أيام';
-	@override String totalMinutes({required int minutes}) => '${minutes} دقيقة إجمالاً';
+	@override String totalMinutes({required int minutes}) => 'إجمالي ${minutes} دقيقة';
 	@override String get unauthorized => 'غير مصرح لك بعرض هذا';
 	@override String unlockedCount({required int unlocked}) => '${unlocked} مفتوح';
 }
@@ -586,10 +641,13 @@ class _TranslationsParentAnalyticsAr implements TranslationsParentAnalyticsEn {
 // Path: parent.quickActions
 class _TranslationsParentQuickActionsAr implements TranslationsParentQuickActionsEn {
 	_TranslationsParentQuickActionsAr._(this._root);
+
 	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
 	@override String get announcements => 'الإعلانات';
 	@override String get attendance => 'الحضور';
-	@override String get courses => 'المواد';
+	@override String get courses => 'الدورات';
 	@override String get fees => 'الرسوم';
 	@override String get grades => 'الدرجات';
 	@override String get messages => 'الرسائل';
@@ -598,9 +656,12 @@ class _TranslationsParentQuickActionsAr implements TranslationsParentQuickAction
 // Path: parent.profile
 class _TranslationsParentProfileAr implements TranslationsParentProfileEn {
 	_TranslationsParentProfileAr._(this._root);
+
 	final TranslationsAr _root; // ignore: unused_field
-	@override String get aboutTitle => 'حول';
-	@override String aboutVersion({required Object version}) => 'v${version}';
+
+	// Translations
+	@override String get aboutTitle => 'حول التطبيق';
+	@override String aboutVersion({required Object version}) => 'الإصدار ${version}';
 	@override String get appConfigurationSection => 'إعدادات التطبيق';
 	@override String get appLanguage => 'اللغة';
 	@override String get avatarChangeAction => 'تغيير الصورة';
@@ -614,8 +675,8 @@ class _TranslationsParentProfileAr implements TranslationsParentProfileEn {
 	@override String get changePasswordCurrentLabel => 'كلمة المرور الحالية';
 	@override String get changePasswordCurrentRequired => 'كلمة المرور الحالية مطلوبة';
 	@override String get changePasswordFailed => 'فشل تغيير كلمة المرور';
-	@override String get changePasswordHint => 'اختر كلمة مرور قوية للحفاظ على أمان حسابك';
-	@override String get changePasswordMismatch => 'كلمتا المرور الجديدتان غير متطابقتين';
+	@override String get changePasswordHint => 'اختر كلمة مرور قوية لحماية حسابك';
+	@override String get changePasswordMismatch => 'كلمتا المرور الجديدة غير متطابقتين';
 	@override String get changePasswordNewLabel => 'كلمة المرور الجديدة';
 	@override String get changePasswordSuccess => 'تم تغيير كلمة المرور بنجاح';
 	@override String get changePasswordTitle => 'تغيير كلمة المرور';
@@ -644,13 +705,13 @@ class _TranslationsParentProfileAr implements TranslationsParentProfileEn {
 	@override String get pushNotifications => 'الإشعارات الفورية';
 	@override String get securityChangePassword => 'تغيير كلمة المرور';
 	@override String get securityValue => 'كلمة المرور والأمان';
-	@override String settingsAboutBody({required Object version}) => 'تطبيق منتور إكس لولي الأمر v${version}\n\nراقب رحلة طفلك الأكاديمية في الوقت الفعلي.';
+	@override String settingsAboutBody({required Object version}) => 'تطبيق منتور إكس لأولياء الأمور الإصدار ${version}\n\nراقب رحلة طفلك التعليمية في الوقت الفعلي.';
 	@override String get settingsAboutTitle => 'حول منتور إكس';
 	@override String get settingsHelpUrl => 'https://mentorx.app/support';
 	@override String get settingsTitle => 'الإعدادات';
 	@override String get signOutAction => 'تسجيل الخروج';
 	@override String get signOutCancel => 'إلغاء';
-	@override String get signOutConfirmMessage => 'هل أنت متأكد من رغبتك في تسجيل الخروج؟';
+	@override String get signOutConfirmMessage => 'هل أنت متأكد من تسجيل الخروج؟';
 	@override String get signOutConfirmTitle => 'تسجيل الخروج';
 	@override String get supportSection => 'الدعم';
 	@override String get themeDark => 'داكن';
@@ -663,25 +724,28 @@ class _TranslationsParentProfileAr implements TranslationsParentProfileEn {
 // Path: parent.devices
 class _TranslationsParentDevicesAr implements TranslationsParentDevicesEn {
 	_TranslationsParentDevicesAr._(this._root);
+
 	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
 	@override String get activeBadge => 'نشط';
 	@override String get cancel => 'إلغاء';
 	@override String get currentBadge => 'هذا الجهاز';
-	@override String get emptyHint => 'لا توجد أجهزة مرتبطة بحسابك';
+	@override String get emptyHint => 'لم يتم ربط أجهزة بحسابك';
 	@override String get emptyTitle => 'لا توجد أجهزة';
 	@override String get forceLogoutAction => 'تسجيل خروج إجباري للكل';
 	@override String get forceLogoutConfirmMessage => 'سيتم تسجيل خروج جميع الأجهزة الأخرى. هل تريد المتابعة؟';
 	@override String get forceLogoutConfirmTitle => 'تسجيل خروج إجباري';
-	@override String get forceLogoutHint => 'تسجيل خروج جميع الأجهزة الأخرى النشطة';
+	@override String get forceLogoutHint => 'تسجيل خروج جميع الأجهزة النشطة الأخرى';
 	@override String get forceLogoutSuccess => 'تم تسجيل خروج جميع الأجهزة الأخرى';
 	@override String get forceLogoutTitle => 'تسجيل خروج إجباري';
 	@override String get inactiveBadge => 'غير نشط';
 	@override String lastUsedLabel({required Object time}) => 'آخر استخدام: ${time}';
-	@override String get pageSubtitle => 'إدارة الأجهزة التي يمكنها الوصول لحسابك';
+	@override String get pageSubtitle => 'إدارة الأجهزة التي لديها صلاحية الوصول لحسابك';
 	@override String get pageTitle => 'الأجهزة الموثوقة';
 	@override String get revokeAction => 'إلغاء الصلاحية';
-	@override String get revokeConfirmMessage => 'إزالة صلاحية الوصول لهذا الجهاز؟';
-	@override String get revokeConfirmTitle => 'إلغاء صلاحية الجهاز';
+	@override String revokeConfirmMessage({required Object device}) => 'هل تريد إلغاء صلاحية ${device}؟';
+	@override String get revokeConfirmTitle => 'إلغاء الجهاز';
 	@override String get revokeSuccess => 'تم إلغاء صلاحية الجهاز';
 	@override String get settingsSubtitle => 'إدارة الأجهزة الموثوقة';
 }
@@ -689,65 +753,88 @@ class _TranslationsParentDevicesAr implements TranslationsParentDevicesEn {
 // Path: parent.deleteAccount
 class _TranslationsParentDeleteAccountAr implements TranslationsParentDeleteAccountEn {
 	_TranslationsParentDeleteAccountAr._(this._root);
+
 	final TranslationsAr _root; // ignore: unused_field
-	@override String get acknowledgementLabel => 'أفهم أن هذا الإجراء دائم';
+
+	// Translations
+	@override String get acknowledgementLabel => 'أفهم أن هذا الإجراء نهائي ولا يمكن التراجع عنه';
 	@override String get cancel => 'إلغاء';
 	@override String get confirmAction => 'حذف حسابي';
-	@override String get confirmationPhrase => 'حذف';
+	@override String get confirmationPhrase => 'احذف';
 	@override String confirmationPrompt({required Object phrase}) => 'اكتب "${phrase}" للتأكيد';
-	@override String get consequence => 'سيتم حذف جميع بياناتك بما فيها الملف الشخصي والسجل والحسابات المرتبطة بشكل دائم';
-	@override String get consequencesTitle => 'ما سيتم حذفه';
+	@override String get consequence => 'سيتم حذف جميع بياناتك بما في ذلك الملف الشخصي والسجل والحسابات المرتبطة بشكل دائم';
+	@override String get consequence1 => 'سيتم حذف ملفك الشخصي ومعلوماتك الشخصية';
+	@override String get consequence2 => 'سيتم إلغاء ربط جميع الأطفال وبياناتهم';
+	@override String get consequence3 => 'سيفقد سجل المعاملات ورصيد المحفظة';
+	@override String get consequence4 => 'لا يمكن التراجع عن هذا الإجراء';
+	@override String get consequencesTitle => 'ما الذي سيُحذف';
 	@override String get dataExportHint => 'يمكنك طلب نسخة من بياناتك قبل الحذف';
 	@override String get dataExportLabel => 'تصدير بياناتي';
-	@override String get finalConfirmMessage => 'سيتم حذف حسابك نهائياً خلال 24 ساعة. لا يمكن التراجع عن هذا الإجراء.';
+	@override String get finalConfirmMessage => 'سيتم حذف حسابك نهائياً خلال 24 ساعة. لا يمكن التراجع عن هذا.';
 	@override String get finalConfirmTitle => 'التأكيد النهائي';
 	@override String get networkError => 'خطأ في الشبكة، يرجى المحاولة مرة أخرى';
 	@override String get pageTitle => 'حذف الحساب';
 	@override String get reasonHint => 'أخبرنا لماذا تغادر (اختياري)';
 	@override String get reasonLabel => 'سبب الحذف';
 	@override String get settingsTileLabel => 'حذف الحساب';
-	@override String get settingsTileSubtitle => 'إزالة حسابك بشكل دائم';
+	@override String get settingsTileSubtitle => 'إزالة حسابك نهائياً';
 	@override String get submitting => 'جاري معالجة طلبك...';
 	@override String get successMessage => 'تم تقديم طلب حذف حسابك';
 	@override String get unauthorizedError => 'غير مصرح لك بتنفيذ هذا الإجراء';
 	@override String get unknownError => 'حدث خطأ غير معروف';
-	@override String get validationError => 'يرجى إكمال جميع الحقول المطلوبة';
-	@override String get warningSubtitle => 'هذا الإجراء دائم ولا يمكن التراجع عنه';
+	@override String get validationError => 'يرجى استكمال جميع الحقول المطلوبة';
+	@override String get warningSubtitle => 'هذا الإجراء نهائي ولا يمكن التراجع عنه';
 	@override String get warningTitle => 'تحذير';
 }
 
 // Path: parent.pendingAccount
 class _TranslationsParentPendingAccountAr implements TranslationsParentPendingAccountEn {
 	_TranslationsParentPendingAccountAr._(this._root);
+
 	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
 	@override String get approvedToastMessage => 'تمت الموافقة على حسابك!';
 	@override String get cancel => 'إلغاء';
-	@override String get checkAgain => 'التحقق من الحالة';
+	@override String get checkAgain => 'تحقق من الحالة';
 	@override String get checking => 'جاري التحقق...';
 	@override String get contactSupport => 'التواصل مع الدعم';
-	@override String get contactSupportHint => 'إذا كان لديك أسئلة، تواصل مع فريق الدعم';
+	@override String get contactSupportHint => 'إذا كانت لديك أسئلة، تواصل مع فريق الدعم';
 	@override String estimatedReviewBy({required Object date}) => 'المراجعة المتوقعة بحلول: ${date}';
 	@override String get headlinePending => 'الحساب قيد المراجعة';
-	@override String get headlineRejected => 'لم يتم الموافقة على الحساب';
+	@override String get headlineRejected => 'لم تتم الموافقة على الحساب';
 	@override String get loadErrorMessage => 'فشل تحميل حالة الحساب';
 	@override String get loadErrorTitle => 'خطأ';
 	@override String get pageTitle => 'حالة الحساب';
 	@override String get rejectionReasonTitle => 'السبب';
 	@override String get signOut => 'تسجيل الخروج';
-	@override String get signOutConfirmMessage => 'هل أنت متأكد من رغبتك في تسجيل الخروج؟';
+	@override String get signOutConfirmMessage => 'هل أنت متأكد من تسجيل الخروج؟';
 	@override String get signOutConfirmTitle => 'تسجيل الخروج';
 	@override String get statusBadgePending => 'قيد الانتظار';
 	@override String get statusBadgeRejected => 'مرفوض';
 	@override String get stepApproved => 'تمت الموافقة';
 	@override String get stepApprovedHint => 'حسابك نشط';
 	@override String get stepReceived => 'تم استلام الطلب';
-	@override String get stepReceivedHint => 'لقد استلمنا طلب تسجيلك';
+	@override String get stepReceivedHint => 'استلمنا تسجيلك';
 	@override String get stepUnderReview => 'قيد المراجعة';
 	@override String get stepUnderReviewHint => 'فريقنا يراجع طلبك';
-	@override String submittedOn({required Object date}) => 'تم التقديم في: ${date}';
-	@override String get subtitlePending => 'فريقنا يراجع تسجيلك. ستتلقى إشعاراً عند الموافقة.';
+	@override String submittedOn({required Object date}) => 'تاريخ التقديم: ${date}';
+	@override String get subtitlePending => 'فريقنا يراجع تسجيلك. ستُخطَر عند الموافقة.';
 	@override String get subtitleRejected => 'لم تتم الموافقة على تسجيلك. يرجى التواصل مع الدعم للمساعدة.';
 	@override String get supportLabel => 'الدعم';
+}
+
+// Path: parent.children.relationship
+class _TranslationsParentChildrenRelationshipAr implements TranslationsParentChildrenRelationshipEn {
+	_TranslationsParentChildrenRelationshipAr._(this._root);
+
+	final TranslationsAr _root; // ignore: unused_field
+
+	// Translations
+	@override String get father => 'أب';
+	@override String get mother => 'أم';
+	@override String get guardian => 'ولي أمر';
+	@override String get other => 'أخرى';
 }
 
 /// The flat map containing all translations for locale <ar>.
@@ -800,6 +887,8 @@ extension on TranslationsAr {
 			'parent.signOut' => 'تسجيل الخروج',
 			'parent.myProfile' => 'ملفي الشخصي',
 			'parent.viewAll' => 'عرض الكل',
+			'parent.dashboardTitle' => 'لوحة التحكم',
+			'parent.retry' => 'إعادة المحاولة',
 			'parent.auth.appName' => 'منتور إكس',
 			'parent.auth.loginTagline' => 'ابقَ على تواصل مع تعليم طفلك',
 			'parent.auth.signInToDashboard' => 'سجّل الدخول إلى لوحة التحكم',
@@ -816,13 +905,13 @@ extension on TranslationsAr {
 			'parent.auth.forgotPasswordTitle' => 'نسيت كلمة المرور',
 			'parent.auth.forgotPasswordSubtitle' => 'أدخل رقم جوالك لإعادة تعيين كلمة المرور',
 			'parent.auth.resetPasswordTitle' => 'إعادة تعيين كلمة المرور',
-			'parent.auth.resetPasswordSubtitle' => 'أنشئ كلمة مرور جديدة لحسابك',
+			'parent.auth.resetPasswordSubtitle' => ({required Object phone}) => 'أنشئ كلمة مرور جديدة لـ ${phone}',
 			'parent.auth.passwordResetSuccess' => 'تم إعادة تعيين كلمة المرور بنجاح',
 			'parent.auth.newToMentorX' => 'جديد على منتور إكس؟',
 			'parent.auth.createAccount' => 'إنشاء حساب',
 			'parent.auth.backToLogin' => 'العودة لتسجيل الدخول',
 			'parent.auth.otpTitle' => 'تحقق من رقمك',
-			'parent.auth.otpSubtitle' => 'أدخل الرمز المرسل إلى جوالك',
+			'parent.auth.otpSubtitle' => ({required Object phone}) => 'أدخل الرمز المرسل إلى ${phone}',
 			'parent.auth.otpFieldLabel' => 'رمز التحقق',
 			'parent.auth.otpFieldHint' => 'أدخل رمز التحقق',
 			'parent.auth.otpCodeLabel' => 'رمز OTP',
@@ -878,6 +967,31 @@ extension on TranslationsAr {
 			'parent.auth.regErrorPhoneAlreadyExists' => 'رقم الجوال مسجل مسبقاً',
 			'parent.auth.regErrorRegistrationFailed' => 'فشل التسجيل، يرجى المحاولة مرة أخرى',
 			'parent.children.lookupEmpty' => 'لا يوجد أطفال مسجلون',
+			'parent.children.title' => 'الأطفال المرتبطون',
+			'parent.children.linkSuccess' => 'تم ربط الطفل بنجاح',
+			'parent.children.unlinkSuccess' => 'تم إلغاء ربط الطفل بنجاح',
+			'parent.children.linkChildTitle' => 'ربط طفل',
+			'parent.children.linkChildHint' => 'ابحث عن طفلك باستخدام رقم جواله أو رمز الطالب',
+			'parent.children.searchLabel' => 'بحث',
+			'parent.children.searchHint' => 'رقم الجوال أو رمز الطالب',
+			'parent.children.specifyRelationship' => 'حدد علاقتك بهذا الطالب',
+			'parent.children.gradeLabel' => ({required Object grade}) => 'الصف: ${grade}',
+			'parent.children.confirmLink' => 'تأكيد الربط',
+			'parent.children.errorAlreadyLinked' => 'هذا الطفل مرتبط بحسابك بالفعل',
+			'parent.children.errorStudentNotFound' => 'الطالب غير موجود',
+			'parent.children.errorNetwork' => 'خطأ في الشبكة، يرجى المحاولة مرة أخرى',
+			'parent.children.errorGeneric' => 'حدث خطأ، يرجى المحاولة مرة أخرى',
+			'parent.children.linkNewChild' => 'ربط طفل جديد',
+			'parent.children.unlink' => 'إلغاء الربط',
+			'parent.children.unlinkConfirmTitle' => 'إلغاء ربط الطفل',
+			'parent.children.unlinkConfirmMessage' => ({required Object name}) => 'هل تريد إزالة ${name} من حسابك؟',
+			'parent.children.cancel' => 'إلغاء',
+			'parent.children.studentIdLabel' => ({required Object id}) => 'الرقم: ${id}',
+			'parent.children.centerLabel' => ({required Object center}) => '${center}',
+			'parent.children.relationship.father' => 'أب',
+			'parent.children.relationship.mother' => 'أم',
+			'parent.children.relationship.guardian' => 'ولي أمر',
+			'parent.children.relationship.other' => 'أخرى',
 			'parent.notificationCenter.title' => 'الإشعارات',
 			'parent.notificationCenter.read' => 'مقروء',
 			'parent.notificationCenter.unread' => 'غير مقروء',
@@ -902,49 +1016,37 @@ extension on TranslationsAr {
 			'parent.onboarding.skip' => 'تخطي',
 			'parent.pushNotifications.bannerOpen' => 'فتح',
 			'parent.pushNotifications.bannerDismiss' => 'تجاهل',
-			'forms.required' => 'هذا الحقل مطلوب',
-			'forms.minLength' => ({required int length}) => 'يجب أن يحتوي على ${length} أحرف على الأقل',
-			'forms.maxLength' => ({required int length}) => 'الحد الأقصى هو ${length} أحرف',
-			'forms.minDigitsLength' => ({required int length}) => 'يجب أن يحتوي على ${length} أرقام على الأقل',
-			'forms.maxDigitsLength' => ({required int length}) => 'الحد الأقصى هو ${length} أرقام',
-			'forms.youMustEnterAValidEmail' => 'يجب إدخال بريد إلكتروني صحيح',
-			'exceptions.unknown' => 'خطأ غير معروف',
-			'exceptions.AuthenticationRepositoryExceptionCode.unknown' => 'خطأ غير معروف',
-			'exceptions.AuthenticationRepositoryExceptionCode.invalidPhoneNumber' => 'رقم الجوال غير صحيح',
-			'exceptions.AuthenticationRepositoryExceptionCode.invalidOTP' => 'رمز OTP غير صحيح',
-			'exceptions.AuthenticationRepositoryExceptionCode.failedToInitialize' => 'فشل التحميل',
-			'exceptions.AuthenticationRepositoryExceptionCode.failedToSendOtp' => 'فشل ارسال رمز ال OTP',
-			'exceptions.AuthenticationRepositoryExceptionCode.failedToVerifyOtp' => 'فشل التحقق من رمز ال OTP',
+			'parent.pushNotifications.permissionDeniedMessage' => 'تم رفض إذن الإشعارات. فعّله من إعدادات جهازك.',
 			'parent.splash.appName' => 'منتور إكس',
-			'parent.splash.tagline' => 'نمكّن كل متعلم',
-			'parent.home.academicStanding' => 'الوضع الأكاديمي',
+			'parent.splash.tagline' => 'نُمكّن كل متعلم',
+			'parent.home.academicStanding' => 'المستوى الأكاديمي',
 			'parent.home.addChild' => 'إضافة طفل',
 			'parent.home.attendance' => 'الحضور',
 			'parent.home.avgGrade' => 'متوسط الدرجات',
 			'parent.home.linkChild' => 'ربط طفل',
-			'parent.home.noChildrenHint' => 'قم بربط حساب طالب للبدء',
-			'parent.home.noChildrenTitle' => 'لا يوجد أطفال بعد',
+			'parent.home.noChildrenHint' => 'ربط حساب طالب للبدء',
+			'parent.home.noChildrenTitle' => 'لا يوجد أطفال مضافون',
 			'parent.home.noRecentActivity' => 'لا يوجد نشاط حديث',
-			'parent.home.noRecentActivityHint' => 'ستظهر هنا أنشطة طفلك التعليمية',
+			'parent.home.noRecentActivityHint' => 'سيظهر هنا نشاط طفلك في التعلم',
 			'parent.home.noRecentGrades' => 'لا توجد درجات حديثة',
-			'parent.home.noUpcomingSessions' => 'لا توجد جلسات قادمة',
+			'parent.home.noUpcomingSessions' => 'لا توجد حصص قادمة',
 			'parent.home.parentAccount' => 'حساب ولي الأمر',
 			'parent.home.recentGrades' => 'الدرجات الأخيرة',
 			'parent.home.unpaidFees' => 'رسوم غير مدفوعة',
-			'parent.home.upcomingSessions' => 'الجلسات القادمة',
-			'parent.home.updatedAt' => ({required Object time}) => 'تم التحديث في ${time}',
+			'parent.home.upcomingSessions' => 'الحصص القادمة',
+			'parent.home.updatedAt' => ({required Object time}) => 'آخر تحديث: ${time}',
 			'parent.academic.averageLabel' => 'المتوسط',
 			'parent.academic.gradedLabel' => 'تم التقييم',
-			'parent.academic.noCoursesHint' => 'لم يتم العثور على مواد مسجلة لهذا الطفل',
-			'parent.academic.noCoursesTitle' => 'لا توجد مواد',
+			'parent.academic.noCoursesHint' => 'لا توجد دورات مسجلة لهذا الطفل',
+			'parent.academic.noCoursesTitle' => 'لا توجد دورات',
 			'parent.academic.overallAverageHeading' => 'المعدل العام',
 			'parent.academic.pageTitle' => 'المراقب الأكاديمي',
 			'parent.academic.pendingLabel' => 'قيد الانتظار',
-			'parent.academic.sessionsCount' => ({required int count}) => '${count} جلسات',
+			'parent.academic.sessionsCount' => ({required int count}) => '${count} حصص',
 			'parent.assessments.assessmentHistory' => 'سجل التقييمات',
 			'parent.assessments.average' => 'المتوسط',
 			'parent.assessments.graded' => 'تم التقييم',
-			'parent.assessments.noAssessmentsHint' => 'لم يتم إكمال أي تقييمات بعد',
+			'parent.assessments.noAssessmentsHint' => 'لم تُكتمل أي تقييمات بعد',
 			'parent.assessments.noAssessmentsTitle' => 'لا توجد تقييمات',
 			'parent.assessments.overallPerformance' => 'الأداء العام',
 			'parent.assessments.pageTitle' => 'مراقب الدرجات',
@@ -961,14 +1063,14 @@ extension on TranslationsAr {
 			'parent.gradeDetail.pass' => 'ناجح',
 			'parent.gradeDetail.passCriteria' => 'معيار النجاح',
 			'parent.gradeDetail.percentage' => 'النسبة المئوية',
-			'parent.gradeDetail.questionBreakdown' => 'تفصيل الأسئلة',
+			'parent.gradeDetail.questionBreakdown' => 'تفاصيل الأسئلة',
 			'parent.gradeDetail.questionLabel' => ({required Object number}) => 'السؤال ${number}',
 			'parent.gradeDetail.quizDetail' => 'تفاصيل الاختبار',
 			'parent.gradeDetail.quizId' => 'رقم الاختبار',
 			'parent.gradeDetail.quizScore' => 'درجة الاختبار',
 			'parent.gradeDetail.result' => 'النتيجة',
 			'parent.gradeDetail.score' => 'الدرجة',
-			'parent.gradeDetail.submittedAt' => 'وقت التسليم',
+			'parent.gradeDetail.submittedAt' => 'وقت التقديم',
 			'parent.attendanceTracking.absent' => 'غائب',
 			'parent.attendanceTracking.attendanceLog' => 'سجل الحضور',
 			'parent.attendanceTracking.checkInTimeLabel' => ({required Object time}) => 'وقت الحضور: ${time}',
@@ -979,120 +1081,120 @@ extension on TranslationsAr {
 			'parent.attendanceTracking.dayThursday' => 'الخميس',
 			'parent.attendanceTracking.dayTuesday' => 'الثلاثاء',
 			'parent.attendanceTracking.dayWednesday' => 'الأربعاء',
-			'parent.attendanceTracking.excused' => 'إذن',
+			'parent.attendanceTracking.excused' => 'مُعذَر',
 			'parent.attendanceTracking.generalAcademic' => 'أكاديمي عام',
 			'parent.attendanceTracking.groupActiveBadge' => 'نشط',
 			'parent.attendanceTracking.groupAttendanceRatioLabel' => 'نسبة الحضور',
 			'parent.attendanceTracking.groupAttendanceTitle' => 'ملخص الحضور',
 			'parent.attendanceTracking.groupAttendedSessions' => ({required int count}) => '${count} حضر',
-			'parent.attendanceTracking.groupCourseLabel' => 'المادة',
+			'parent.attendanceTracking.groupCourseLabel' => 'الدورة',
 			'parent.attendanceTracking.groupDescriptionLabel' => 'الوصف',
 			'parent.attendanceTracking.groupDetailTitle' => 'تفاصيل المجموعة',
 			'parent.attendanceTracking.groupEndDateLabel' => ({required Object date}) => 'الانتهاء: ${date}',
 			'parent.attendanceTracking.groupEnrolledLabel' => ({required int count}) => '${count} مسجل',
 			'parent.attendanceTracking.groupFailureTitle' => 'فشل تحميل المجموعة',
 			'parent.attendanceTracking.groupInactiveBadge' => 'غير نشط',
-			'parent.attendanceTracking.groupLateSessions' => ({required int count}) => '${count} تأخر',
+			'parent.attendanceTracking.groupLateSessions' => ({required int count}) => '${count} متأخر',
 			'parent.attendanceTracking.groupLocationLabel' => 'الموقع',
-			'parent.attendanceTracking.groupMissedSessions' => ({required int count}) => '${count} غياب',
-			'parent.attendanceTracking.groupNoSchedule' => 'لا يوجد جدول',
+			'parent.attendanceTracking.groupMissedSessions' => ({required int count}) => '${count} غائب',
+			'parent.attendanceTracking.groupNoSchedule' => 'لا يوجد جدول متاح',
 			'parent.attendanceTracking.groupNotFoundHint' => 'تعذر العثور على مجموعة الحضور',
 			'parent.attendanceTracking.groupNotFoundTitle' => 'المجموعة غير موجودة',
-			'parent.attendanceTracking.groupRecentSessionsTitle' => 'الجلسات الأخيرة',
+			'parent.attendanceTracking.groupRecentSessionsTitle' => 'الحصص الأخيرة',
 			'parent.attendanceTracking.groupScheduleTitle' => 'الجدول',
 			'parent.attendanceTracking.groupSessionRoomLabel' => ({required Object room}) => 'القاعة: ${room}',
-			'parent.attendanceTracking.groupStartDateLabel' => ({required Object date}) => 'البداية: ${date}',
+			'parent.attendanceTracking.groupStartDateLabel' => ({required Object date}) => 'البدء: ${date}',
 			'parent.attendanceTracking.groupTeacherLabel' => 'المعلم',
-			'parent.attendanceTracking.groupTotalSessions' => ({required int count}) => '${count} جلسات إجمالاً',
+			'parent.attendanceTracking.groupTotalSessions' => ({required int count}) => 'إجمالي ${count} حصص',
 			'parent.attendanceTracking.groupsAction' => 'المجموعات',
-			'parent.attendanceTracking.groupsEmptyHint' => 'لا توجد مجموعات حضور',
+			'parent.attendanceTracking.groupsEmptyHint' => 'لم يتم العثور على مجموعات حضور',
 			'parent.attendanceTracking.groupsEmptyTitle' => 'لا توجد مجموعات',
-			'parent.attendanceTracking.groupsHint' => 'استعرض مجموعات حضور طفلك',
+			'parent.attendanceTracking.groupsHint' => 'عرض مجموعات حضور طفلك',
 			'parent.attendanceTracking.groupsTitle' => 'مجموعات الحضور',
 			'parent.attendanceTracking.late' => 'متأخر',
 			'parent.attendanceTracking.noRecordsHint' => 'لا توجد سجلات حضور لهذه الفترة',
 			'parent.attendanceTracking.noRecordsTitle' => 'لا توجد سجلات',
-			'parent.attendanceTracking.onlineSession' => 'أونلاين',
+			'parent.attendanceTracking.onlineSession' => 'عبر الإنترنت',
 			'parent.attendanceTracking.pageTitle' => 'مراقب الحضور',
 			'parent.attendanceTracking.present' => 'حاضر',
-			'parent.attendanceTracking.regularSession' => 'جلسة عادية',
+			'parent.attendanceTracking.regularSession' => 'حصة عادية',
 			'parent.financial.balance' => 'الرصيد',
-			'parent.financial.creditsThisMonth' => 'الإيداعات هذا الشهر',
+			'parent.financial.creditsThisMonth' => 'إيرادات هذا الشهر',
 			'parent.financial.currencySymbol' => 'ج.م',
 			'parent.financial.myWalletBalanceLabel' => 'رصيد المحفظة',
 			'parent.financial.myWalletTitle' => 'محفظتي',
-			'parent.financial.noTransactionsHint' => 'لم تتم أي معاملات بعد',
+			'parent.financial.noTransactionsHint' => 'لم تُجرَ أي معاملات حتى الآن',
 			'parent.financial.noTransactionsTitle' => 'لا توجد معاملات',
 			'parent.financial.points' => 'النقاط',
 			'parent.financial.spent' => 'المصروف',
-			'parent.financial.topUpAction' => 'شحن الرصيد',
+			'parent.financial.topUpAction' => 'إضافة رصيد',
 			'parent.financial.topUpAmountHint' => 'أدخل المبلغ',
 			'parent.financial.topUpAmountLabel' => 'المبلغ',
 			'parent.financial.topUpBelowMinimum' => 'المبلغ أقل من الحد الأدنى',
-			'parent.financial.topUpFailed' => 'فشل شحن الرصيد، يرجى المحاولة مرة أخرى',
-			'parent.financial.topUpHint' => 'أضف أموالاً لمحفظة طفلك',
+			'parent.financial.topUpFailed' => 'فشل إضافة الرصيد، يرجى المحاولة مرة أخرى',
+			'parent.financial.topUpHint' => 'أضف رصيداً لمحفظة طفلك',
 			'parent.financial.topUpInsufficientFunds' => 'رصيد غير كافٍ',
 			'parent.financial.topUpInvalidAmount' => 'مبلغ غير صحيح',
-			'parent.financial.topUpSuccess' => 'تم شحن المحفظة بنجاح',
-			'parent.financial.topUpTitle' => 'شحن المحفظة',
+			'parent.financial.topUpSuccess' => 'تم إضافة الرصيد بنجاح',
+			'parent.financial.topUpTitle' => 'إضافة رصيد للمحفظة',
 			'parent.financial.transactionsTitle' => 'سجل المعاملات',
-			'parent.courseDetail.courseBreakdown' => 'تفصيل المادة',
-			'parent.courseDetail.courseId' => 'رقم المادة',
+			'parent.courseDetail.courseBreakdown' => 'تفاصيل الدورة',
+			'parent.courseDetail.courseId' => 'رقم الدورة',
 			'parent.courseDetail.descriptionLabel' => 'الوصف',
-			'parent.courseDetail.emptyHint' => 'لا تتوفر بيانات للمادة',
-			'parent.courseDetail.emptyTitle' => 'لا توجد مواد',
+			'parent.courseDetail.emptyHint' => 'لا توجد بيانات للدورة',
+			'parent.courseDetail.emptyTitle' => 'لا توجد دورات',
 			'parent.courseDetail.enrolledCount' => ({required int count}) => '${count} مسجل',
-			'parent.courseDetail.failureTitle' => 'فشل تحميل المادة',
-			'parent.courseDetail.fullTitle' => 'المادة الكاملة',
-			'parent.courseDetail.pageTitle' => 'تفاصيل المادة',
+			'parent.courseDetail.failureTitle' => 'فشل تحميل الدورة',
+			'parent.courseDetail.fullTitle' => 'الدورة الكاملة',
+			'parent.courseDetail.pageTitle' => 'تفاصيل الدورة',
 			'parent.courseDetail.progress' => 'التقدم',
 			'parent.courseDetail.status' => 'الحالة',
-			'parent.courseDetail.statusActive' => 'نشطة',
-			'parent.courseDetail.statusCompleted' => 'مكتملة',
-			'parent.courseDetail.statusInProgress' => 'قيد التقدم',
-			'parent.courseDetail.statusLabel' => 'حالة المادة',
+			'parent.courseDetail.statusActive' => 'نشط',
+			'parent.courseDetail.statusCompleted' => 'مكتمل',
+			'parent.courseDetail.statusInProgress' => 'جارٍ',
+			'parent.courseDetail.statusLabel' => 'حالة الدورة',
 			'parent.communication.announcementsTitle' => 'الإعلانات',
-			'parent.communication.groupSubtitle' => 'انضم لمجموعة واتساب طفلك',
+			'parent.communication.groupSubtitle' => 'انضم لمجموعة واتساب الخاصة بطفلك',
 			'parent.communication.joinGroup' => 'انضم للمجموعة',
-			'parent.communication.noAnnouncementsHint' => 'لا توجد إعلانات في الوقت الحالي',
+			'parent.communication.noAnnouncementsHint' => 'لا توجد إعلانات حالياً',
 			'parent.communication.noAnnouncementsTitle' => 'لا توجد إعلانات',
 			'parent.communication.noGroupsHint' => 'لا توجد مجموعات واتساب متاحة',
 			'parent.communication.noGroupsTitle' => 'لا توجد مجموعات',
 			'parent.communication.readMore' => 'اقرأ المزيد',
 			'parent.communication.whatsAppTitle' => 'مجموعات واتساب',
-			'parent.analytics.averagePerDay' => ({required Object minutes}) => '${minutes} دقيقة/يوم',
-			'parent.analytics.averageQuizSpeed' => ({required Object seconds}) => '${seconds} ث متوسط',
+			'parent.analytics.averagePerDay' => ({required Object minutes}) => '${minutes} د/يوم',
+			'parent.analytics.averageQuizSpeed' => ({required Object seconds}) => 'متوسط ${seconds} ثانية',
 			'parent.analytics.childAverageLabel' => 'متوسط الطفل',
 			'parent.analytics.classAverageLabel' => 'متوسط الفصل',
-			'parent.analytics.completedSessionsLabel' => ({required int completed, required int total}) => '${completed}/${total} جلسات',
-			'parent.analytics.currentStreak' => 'السلسلة الحالية',
-			'parent.analytics.emptySectionHint' => 'لا تتوفر بيانات لهذا القسم',
+			'parent.analytics.completedSessionsLabel' => ({required int completed, required int total}) => '${completed}/${total} حصص',
+			'parent.analytics.currentStreak' => 'التتابع الحالي',
+			'parent.analytics.emptySectionHint' => 'لا توجد بيانات لهذا القسم',
 			'parent.analytics.emptySectionTitle' => 'لا توجد بيانات',
 			'parent.analytics.errorRetry' => 'إعادة المحاولة',
 			'parent.analytics.lastActive' => ({required Object time}) => 'آخر نشاط: ${time}',
 			'parent.analytics.loadFailed' => 'فشل تحميل التحليلات',
-			'parent.analytics.longestStreak' => 'أطول سلسلة',
+			'parent.analytics.longestStreak' => 'أطول تتابع',
 			'parent.analytics.pageTitle' => 'التحليلات',
 			'parent.analytics.quizCountLabel' => ({required int count}) => '${count} اختبارات',
 			'parent.analytics.rankLabel' => ({required int rank, required int total}) => '#${rank} من ${total}',
 			'parent.analytics.sectionAchievements' => 'الإنجازات',
 			'parent.analytics.sectionActiveHours' => 'ساعات النشاط',
-			'parent.analytics.sectionCourseProgress' => 'تقدم المواد',
+			'parent.analytics.sectionCourseProgress' => 'تقدم الدورات',
 			'parent.analytics.sectionGradeComparison' => 'مقارنة الدرجات',
 			'parent.analytics.sectionQuizSpeed' => 'سرعة الاختبارات',
-			'parent.analytics.sectionStreak' => 'السلسلة',
+			'parent.analytics.sectionStreak' => 'التتابع',
 			'parent.analytics.streakDays' => ({required int days}) => '${days} أيام',
-			'parent.analytics.totalMinutes' => ({required int minutes}) => '${minutes} دقيقة إجمالاً',
+			'parent.analytics.totalMinutes' => ({required int minutes}) => 'إجمالي ${minutes} دقيقة',
 			'parent.analytics.unauthorized' => 'غير مصرح لك بعرض هذا',
 			'parent.analytics.unlockedCount' => ({required int unlocked}) => '${unlocked} مفتوح',
 			'parent.quickActions.announcements' => 'الإعلانات',
 			'parent.quickActions.attendance' => 'الحضور',
-			'parent.quickActions.courses' => 'المواد',
+			'parent.quickActions.courses' => 'الدورات',
 			'parent.quickActions.fees' => 'الرسوم',
 			'parent.quickActions.grades' => 'الدرجات',
 			'parent.quickActions.messages' => 'الرسائل',
-			'parent.profile.aboutTitle' => 'حول',
-			'parent.profile.aboutVersion' => ({required Object version}) => 'v${version}',
+			'parent.profile.aboutTitle' => 'حول التطبيق',
+			'parent.profile.aboutVersion' => ({required Object version}) => 'الإصدار ${version}',
 			'parent.profile.appConfigurationSection' => 'إعدادات التطبيق',
 			'parent.profile.appLanguage' => 'اللغة',
 			'parent.profile.avatarChangeAction' => 'تغيير الصورة',
@@ -1106,8 +1208,8 @@ extension on TranslationsAr {
 			'parent.profile.changePasswordCurrentLabel' => 'كلمة المرور الحالية',
 			'parent.profile.changePasswordCurrentRequired' => 'كلمة المرور الحالية مطلوبة',
 			'parent.profile.changePasswordFailed' => 'فشل تغيير كلمة المرور',
-			'parent.profile.changePasswordHint' => 'اختر كلمة مرور قوية للحفاظ على أمان حسابك',
-			'parent.profile.changePasswordMismatch' => 'كلمتا المرور الجديدتان غير متطابقتين',
+			'parent.profile.changePasswordHint' => 'اختر كلمة مرور قوية لحماية حسابك',
+			'parent.profile.changePasswordMismatch' => 'كلمتا المرور الجديدة غير متطابقتين',
 			'parent.profile.changePasswordNewLabel' => 'كلمة المرور الجديدة',
 			'parent.profile.changePasswordSuccess' => 'تم تغيير كلمة المرور بنجاح',
 			'parent.profile.changePasswordTitle' => 'تغيير كلمة المرور',
@@ -1136,13 +1238,13 @@ extension on TranslationsAr {
 			'parent.profile.pushNotifications' => 'الإشعارات الفورية',
 			'parent.profile.securityChangePassword' => 'تغيير كلمة المرور',
 			'parent.profile.securityValue' => 'كلمة المرور والأمان',
-			'parent.profile.settingsAboutBody' => ({required Object version}) => 'تطبيق منتور إكس لولي الأمر v${version}\n\nراقب رحلة طفلك الأكاديمية في الوقت الفعلي.',
+			'parent.profile.settingsAboutBody' => ({required Object version}) => 'تطبيق منتور إكس لأولياء الأمور الإصدار ${version}\n\nراقب رحلة طفلك التعليمية في الوقت الفعلي.',
 			'parent.profile.settingsAboutTitle' => 'حول منتور إكس',
 			'parent.profile.settingsHelpUrl' => 'https://mentorx.app/support',
 			'parent.profile.settingsTitle' => 'الإعدادات',
 			'parent.profile.signOutAction' => 'تسجيل الخروج',
 			'parent.profile.signOutCancel' => 'إلغاء',
-			'parent.profile.signOutConfirmMessage' => 'هل أنت متأكد من رغبتك في تسجيل الخروج؟',
+			'parent.profile.signOutConfirmMessage' => 'هل أنت متأكد من تسجيل الخروج؟',
 			'parent.profile.signOutConfirmTitle' => 'تسجيل الخروج',
 			'parent.profile.supportSection' => 'الدعم',
 			'parent.profile.themeDark' => 'داكن',
@@ -1153,75 +1255,92 @@ extension on TranslationsAr {
 			'parent.devices.activeBadge' => 'نشط',
 			'parent.devices.cancel' => 'إلغاء',
 			'parent.devices.currentBadge' => 'هذا الجهاز',
-			'parent.devices.emptyHint' => 'لا توجد أجهزة مرتبطة بحسابك',
+			'parent.devices.emptyHint' => 'لم يتم ربط أجهزة بحسابك',
 			'parent.devices.emptyTitle' => 'لا توجد أجهزة',
 			'parent.devices.forceLogoutAction' => 'تسجيل خروج إجباري للكل',
 			'parent.devices.forceLogoutConfirmMessage' => 'سيتم تسجيل خروج جميع الأجهزة الأخرى. هل تريد المتابعة؟',
 			'parent.devices.forceLogoutConfirmTitle' => 'تسجيل خروج إجباري',
-			'parent.devices.forceLogoutHint' => 'تسجيل خروج جميع الأجهزة الأخرى النشطة',
+			'parent.devices.forceLogoutHint' => 'تسجيل خروج جميع الأجهزة النشطة الأخرى',
 			'parent.devices.forceLogoutSuccess' => 'تم تسجيل خروج جميع الأجهزة الأخرى',
 			'parent.devices.forceLogoutTitle' => 'تسجيل خروج إجباري',
 			'parent.devices.inactiveBadge' => 'غير نشط',
 			'parent.devices.lastUsedLabel' => ({required Object time}) => 'آخر استخدام: ${time}',
-			'parent.devices.pageSubtitle' => 'إدارة الأجهزة التي يمكنها الوصول لحسابك',
+			'parent.devices.pageSubtitle' => 'إدارة الأجهزة التي لديها صلاحية الوصول لحسابك',
 			'parent.devices.pageTitle' => 'الأجهزة الموثوقة',
 			'parent.devices.revokeAction' => 'إلغاء الصلاحية',
-			'parent.devices.revokeConfirmMessage' => 'إزالة صلاحية الوصول لهذا الجهاز؟',
-			'parent.devices.revokeConfirmTitle' => 'إلغاء صلاحية الجهاز',
+			'parent.devices.revokeConfirmMessage' => ({required Object device}) => 'هل تريد إلغاء صلاحية ${device}؟',
+			'parent.devices.revokeConfirmTitle' => 'إلغاء الجهاز',
 			'parent.devices.revokeSuccess' => 'تم إلغاء صلاحية الجهاز',
 			'parent.devices.settingsSubtitle' => 'إدارة الأجهزة الموثوقة',
-			'parent.deleteAccount.acknowledgementLabel' => 'أفهم أن هذا الإجراء دائم',
+			'parent.deleteAccount.acknowledgementLabel' => 'أفهم أن هذا الإجراء نهائي ولا يمكن التراجع عنه',
 			'parent.deleteAccount.cancel' => 'إلغاء',
 			'parent.deleteAccount.confirmAction' => 'حذف حسابي',
-			'parent.deleteAccount.confirmationPhrase' => 'حذف',
+			'parent.deleteAccount.confirmationPhrase' => 'احذف',
 			'parent.deleteAccount.confirmationPrompt' => ({required Object phrase}) => 'اكتب "${phrase}" للتأكيد',
-			'parent.deleteAccount.consequence' => 'سيتم حذف جميع بياناتك بما فيها الملف الشخصي والسجل والحسابات المرتبطة بشكل دائم',
-			'parent.deleteAccount.consequencesTitle' => 'ما سيتم حذفه',
+			'parent.deleteAccount.consequence' => 'سيتم حذف جميع بياناتك بما في ذلك الملف الشخصي والسجل والحسابات المرتبطة بشكل دائم',
+			'parent.deleteAccount.consequence1' => 'سيتم حذف ملفك الشخصي ومعلوماتك الشخصية',
+			'parent.deleteAccount.consequence2' => 'سيتم إلغاء ربط جميع الأطفال وبياناتهم',
+			'parent.deleteAccount.consequence3' => 'سيفقد سجل المعاملات ورصيد المحفظة',
+			'parent.deleteAccount.consequence4' => 'لا يمكن التراجع عن هذا الإجراء',
+			'parent.deleteAccount.consequencesTitle' => 'ما الذي سيُحذف',
 			'parent.deleteAccount.dataExportHint' => 'يمكنك طلب نسخة من بياناتك قبل الحذف',
 			'parent.deleteAccount.dataExportLabel' => 'تصدير بياناتي',
-			'parent.deleteAccount.finalConfirmMessage' => 'سيتم حذف حسابك نهائياً خلال 24 ساعة. لا يمكن التراجع عن هذا الإجراء.',
+			'parent.deleteAccount.finalConfirmMessage' => 'سيتم حذف حسابك نهائياً خلال 24 ساعة. لا يمكن التراجع عن هذا.',
 			'parent.deleteAccount.finalConfirmTitle' => 'التأكيد النهائي',
 			'parent.deleteAccount.networkError' => 'خطأ في الشبكة، يرجى المحاولة مرة أخرى',
 			'parent.deleteAccount.pageTitle' => 'حذف الحساب',
 			'parent.deleteAccount.reasonHint' => 'أخبرنا لماذا تغادر (اختياري)',
 			'parent.deleteAccount.reasonLabel' => 'سبب الحذف',
 			'parent.deleteAccount.settingsTileLabel' => 'حذف الحساب',
-			'parent.deleteAccount.settingsTileSubtitle' => 'إزالة حسابك بشكل دائم',
+			'parent.deleteAccount.settingsTileSubtitle' => 'إزالة حسابك نهائياً',
 			'parent.deleteAccount.submitting' => 'جاري معالجة طلبك...',
 			'parent.deleteAccount.successMessage' => 'تم تقديم طلب حذف حسابك',
 			'parent.deleteAccount.unauthorizedError' => 'غير مصرح لك بتنفيذ هذا الإجراء',
 			'parent.deleteAccount.unknownError' => 'حدث خطأ غير معروف',
-			'parent.deleteAccount.validationError' => 'يرجى إكمال جميع الحقول المطلوبة',
-			'parent.deleteAccount.warningSubtitle' => 'هذا الإجراء دائم ولا يمكن التراجع عنه',
+			'parent.deleteAccount.validationError' => 'يرجى استكمال جميع الحقول المطلوبة',
+			'parent.deleteAccount.warningSubtitle' => 'هذا الإجراء نهائي ولا يمكن التراجع عنه',
 			'parent.deleteAccount.warningTitle' => 'تحذير',
 			'parent.pendingAccount.approvedToastMessage' => 'تمت الموافقة على حسابك!',
 			'parent.pendingAccount.cancel' => 'إلغاء',
-			'parent.pendingAccount.checkAgain' => 'التحقق من الحالة',
+			'parent.pendingAccount.checkAgain' => 'تحقق من الحالة',
 			'parent.pendingAccount.checking' => 'جاري التحقق...',
 			'parent.pendingAccount.contactSupport' => 'التواصل مع الدعم',
-			'parent.pendingAccount.contactSupportHint' => 'إذا كان لديك أسئلة، تواصل مع فريق الدعم',
+			'parent.pendingAccount.contactSupportHint' => 'إذا كانت لديك أسئلة، تواصل مع فريق الدعم',
 			'parent.pendingAccount.estimatedReviewBy' => ({required Object date}) => 'المراجعة المتوقعة بحلول: ${date}',
 			'parent.pendingAccount.headlinePending' => 'الحساب قيد المراجعة',
-			'parent.pendingAccount.headlineRejected' => 'لم يتم الموافقة على الحساب',
+			'parent.pendingAccount.headlineRejected' => 'لم تتم الموافقة على الحساب',
 			'parent.pendingAccount.loadErrorMessage' => 'فشل تحميل حالة الحساب',
 			'parent.pendingAccount.loadErrorTitle' => 'خطأ',
 			'parent.pendingAccount.pageTitle' => 'حالة الحساب',
 			'parent.pendingAccount.rejectionReasonTitle' => 'السبب',
 			'parent.pendingAccount.signOut' => 'تسجيل الخروج',
-			'parent.pendingAccount.signOutConfirmMessage' => 'هل أنت متأكد من رغبتك في تسجيل الخروج؟',
+			'parent.pendingAccount.signOutConfirmMessage' => 'هل أنت متأكد من تسجيل الخروج؟',
 			'parent.pendingAccount.signOutConfirmTitle' => 'تسجيل الخروج',
 			'parent.pendingAccount.statusBadgePending' => 'قيد الانتظار',
 			'parent.pendingAccount.statusBadgeRejected' => 'مرفوض',
 			'parent.pendingAccount.stepApproved' => 'تمت الموافقة',
 			'parent.pendingAccount.stepApprovedHint' => 'حسابك نشط',
 			'parent.pendingAccount.stepReceived' => 'تم استلام الطلب',
-			'parent.pendingAccount.stepReceivedHint' => 'لقد استلمنا طلب تسجيلك',
+			'parent.pendingAccount.stepReceivedHint' => 'استلمنا تسجيلك',
 			'parent.pendingAccount.stepUnderReview' => 'قيد المراجعة',
 			'parent.pendingAccount.stepUnderReviewHint' => 'فريقنا يراجع طلبك',
-			'parent.pendingAccount.submittedOn' => ({required Object date}) => 'تم التقديم في: ${date}',
-			'parent.pendingAccount.subtitlePending' => 'فريقنا يراجع تسجيلك. ستتلقى إشعاراً عند الموافقة.',
+			'parent.pendingAccount.submittedOn' => ({required Object date}) => 'تاريخ التقديم: ${date}',
+			'parent.pendingAccount.subtitlePending' => 'فريقنا يراجع تسجيلك. ستُخطَر عند الموافقة.',
 			'parent.pendingAccount.subtitleRejected' => 'لم تتم الموافقة على تسجيلك. يرجى التواصل مع الدعم للمساعدة.',
 			'parent.pendingAccount.supportLabel' => 'الدعم',
+			'forms.required' => 'هذا الحقل مطلوب',
+			'forms.minLength' => ({required int length}) => 'يجب أن يحتوي على ${length} أحرف على الأقل',
+			'forms.maxLength' => ({required int length}) => 'الحد الأقصى هو ${length} أحرف',
+			'forms.minDigitsLength' => ({required int length}) => 'يجب أن يحتوي على ${length} أرقام على الأقل',
+			'forms.maxDigitsLength' => ({required int length}) => 'الحد الأقصى هو ${length} أرقام',
+			'forms.youMustEnterAValidEmail' => 'يجب إدخال بريد إلكتروني صحيح',
+			'exceptions.unknown' => 'خطأ غير معروف',
+			'exceptions.AuthenticationRepositoryExceptionCode.unknown' => 'خطأ غير معروف',
+			'exceptions.AuthenticationRepositoryExceptionCode.invalidPhoneNumber' => 'رقم الجوال غير صحيح',
+			'exceptions.AuthenticationRepositoryExceptionCode.invalidOTP' => 'رمز OTP غير صحيح',
+			'exceptions.AuthenticationRepositoryExceptionCode.failedToInitialize' => 'فشل التحميل',
+			'exceptions.AuthenticationRepositoryExceptionCode.failedToSendOtp' => 'فشل ارسال رمز ال OTP',
+			'exceptions.AuthenticationRepositoryExceptionCode.failedToVerifyOtp' => 'فشل التحقق من رمز ال OTP',
 			_ => null,
 		};
 	}

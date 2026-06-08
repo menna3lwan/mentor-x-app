@@ -54,6 +54,8 @@
     "signOut": "تسجيل الخروج",
     "myProfile": "ملفي الشخصي",
     "viewAll": "عرض الكل",
+    "dashboardTitle": "لوحة التحكم",
+    "retry": "إعادة المحاولة",
     "auth": {
       "appName": "منتور إكس",
       "loginTagline": "ابقَ على تواصل مع تعليم طفلك",
@@ -71,13 +73,13 @@
       "forgotPasswordTitle": "نسيت كلمة المرور",
       "forgotPasswordSubtitle": "أدخل رقم جوالك لإعادة تعيين كلمة المرور",
       "resetPasswordTitle": "إعادة تعيين كلمة المرور",
-      "resetPasswordSubtitle": "أنشئ كلمة مرور جديدة لحسابك",
+      "resetPasswordSubtitle": "أنشئ كلمة مرور جديدة لـ ${phone}",
       "passwordResetSuccess": "تم إعادة تعيين كلمة المرور بنجاح",
       "newToMentorX": "جديد على منتور إكس؟",
       "createAccount": "إنشاء حساب",
       "backToLogin": "العودة لتسجيل الدخول",
       "otpTitle": "تحقق من رقمك",
-      "otpSubtitle": "أدخل الرمز المرسل إلى جوالك",
+      "otpSubtitle": "أدخل الرمز المرسل إلى ${phone}",
       "otpFieldLabel": "رمز التحقق",
       "otpFieldHint": "أدخل رمز التحقق",
       "otpCodeLabel": "رمز OTP",
@@ -134,7 +136,34 @@
       "regErrorRegistrationFailed": "فشل التسجيل، يرجى المحاولة مرة أخرى"
     },
     "children": {
-      "lookupEmpty": "لا يوجد أطفال مسجلون"
+      "lookupEmpty": "لا يوجد أطفال مسجلون",
+      "title": "الأطفال المرتبطون",
+      "linkSuccess": "تم ربط الطفل بنجاح",
+      "unlinkSuccess": "تم إلغاء ربط الطفل بنجاح",
+      "linkChildTitle": "ربط طفل",
+      "linkChildHint": "ابحث عن طفلك باستخدام رقم جواله أو رمز الطالب",
+      "searchLabel": "بحث",
+      "searchHint": "رقم الجوال أو رمز الطالب",
+      "specifyRelationship": "حدد علاقتك بهذا الطالب",
+      "gradeLabel": "الصف: ${grade}",
+      "confirmLink": "تأكيد الربط",
+      "errorAlreadyLinked": "هذا الطفل مرتبط بحسابك بالفعل",
+      "errorStudentNotFound": "الطالب غير موجود",
+      "errorNetwork": "خطأ في الشبكة، يرجى المحاولة مرة أخرى",
+      "errorGeneric": "حدث خطأ، يرجى المحاولة مرة أخرى",
+      "linkNewChild": "ربط طفل جديد",
+      "unlink": "إلغاء الربط",
+      "unlinkConfirmTitle": "إلغاء ربط الطفل",
+      "unlinkConfirmMessage": "هل تريد إزالة ${name} من حسابك؟",
+      "cancel": "إلغاء",
+      "studentIdLabel": "الرقم: ${id}",
+      "centerLabel": "${center}",
+      "relationship": {
+        "father": "أب",
+        "mother": "أم",
+        "guardian": "ولي أمر",
+        "other": "أخرى"
+      }
     },
     "notificationCenter": {
       "title": "الإشعارات",
@@ -164,7 +193,8 @@
     },
     "pushNotifications": {
       "bannerOpen": "فتح",
-      "bannerDismiss": "تجاهل"
+      "bannerDismiss": "تجاهل",
+      "permissionDeniedMessage": "تم رفض إذن الإشعارات. فعّله من إعدادات جهازك."
     },
     "splash": {
       "appName": "منتور إكس",
@@ -442,7 +472,7 @@
       "pageSubtitle": "إدارة الأجهزة التي لديها صلاحية الوصول لحسابك",
       "pageTitle": "الأجهزة الموثوقة",
       "revokeAction": "إلغاء الصلاحية",
-      "revokeConfirmMessage": "هل تريد إلغاء صلاحية هذا الجهاز؟",
+      "revokeConfirmMessage": "هل تريد إلغاء صلاحية ${device}؟",
       "revokeConfirmTitle": "إلغاء الجهاز",
       "revokeSuccess": "تم إلغاء صلاحية الجهاز",
       "settingsSubtitle": "إدارة الأجهزة الموثوقة"
@@ -454,6 +484,10 @@
       "confirmationPhrase": "احذف",
       "confirmationPrompt": "اكتب \"${phrase}\" للتأكيد",
       "consequence": "سيتم حذف جميع بياناتك بما في ذلك الملف الشخصي والسجل والحسابات المرتبطة بشكل دائم",
+      "consequence1": "سيتم حذف ملفك الشخصي ومعلوماتك الشخصية",
+      "consequence2": "سيتم إلغاء ربط جميع الأطفال وبياناتهم",
+      "consequence3": "سيفقد سجل المعاملات ورصيد المحفظة",
+      "consequence4": "لا يمكن التراجع عن هذا الإجراء",
       "consequencesTitle": "ما الذي سيُحذف",
       "dataExportHint": "يمكنك طلب نسخة من بياناتك قبل الحذف",
       "dataExportLabel": "تصدير بياناتي",

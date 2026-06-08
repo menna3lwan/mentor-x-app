@@ -81,6 +81,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "9.2.0"
+  bloc_concurrency:
+    dependency: transitive
+    description:
+      name: bloc_concurrency
+      sha256: "86b7b17a0a78f77fca0d7c030632b59b593b22acea2d96972588f40d4ef53a94"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.0"
   bloc_presentation:
     dependency: transitive
     description:
@@ -393,27 +401,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.9.2"
-  dio_student_analytics_repository:
-    dependency: transitive
-    description:
-      path: "packages/student/dio_student_analytics_repository"
-      relative: true
-    source: path
-    version: "1.0.0"
-  dio_student_card_repository:
-    dependency: transitive
-    description:
-      path: "packages/student/dio_student_card_repository"
-      relative: true
-    source: path
-    version: "0.0.1"
-  dio_student_communication_repository:
-    dependency: transitive
-    description:
-      path: "packages/student/dio_student_communication_repository"
-      relative: true
-    source: path
-    version: "0.0.1"
   dio_web_adapter:
     dependency: transitive
     description:
@@ -1285,10 +1272,10 @@ packages:
     dependency: transitive
     description:
       name: meta
-      sha256: "23f08335362185a5ea2ad3a4e597f1375e78bce8a040df5c600c8d3552ef2394"
+      sha256: "1741988757a65eb6b36abe716829688cf01910bbf91c34354ff7ec1c3de2b349"
       url: "https://pub.dev"
     source: hosted
-    version: "1.17.0"
+    version: "1.18.0"
   mime:
     dependency: transitive
     description:
@@ -1313,34 +1300,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.7.0"
-  mock_analytics_repository:
-    dependency: transitive
-    description:
-      path: "packages/mock/parent/mock_analytics_repository"
-      relative: true
-    source: path
-    version: "1.0.0"
-  mock_student_analytics_repository:
-    dependency: transitive
-    description:
-      path: "packages/mock/student/mock_student_analytics_repository"
-      relative: true
-    source: path
-    version: "1.0.0"
-  mock_student_card_repository:
-    dependency: transitive
-    description:
-      path: "packages/mock/student/mock_student_card_repository"
-      relative: true
-    source: path
-    version: "0.0.1"
-  mock_student_communication_repository:
-    dependency: transitive
-    description:
-      path: "packages/mock/student/mock_student_communication_repository"
-      relative: true
-    source: path
-    version: "0.0.1"
   mocktail:
     dependency: transitive
     description:
@@ -1405,13 +1364,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.2.1"
-  parent_mock_profile_repository:
-    dependency: transitive
-    description:
-      path: "packages/mock/parent/mock_profile_repository"
-      relative: true
-    source: path
-    version: "1.0.0"
   path:
     dependency: transitive
     description:

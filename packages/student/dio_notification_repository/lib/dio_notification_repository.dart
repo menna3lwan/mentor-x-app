@@ -82,6 +82,19 @@ final class DioNotificationRepository
   }
 
   @override
+  Future<void> deleteNotification(String notificationId) async {
+    try {
+      await httpClient.delete('/api/notifications/$notificationId');
+    } on HttpClientResponse catch (error) {
+      if (error.statusCode == 404 || error.statusCode == 405) return;
+      handleHttpClientErrorResponse(
+        error,
+        defaultCode: NotificationRepositoryExceptionCode.failedToDelete,
+      );
+    }
+  }
+
+  @override
   Future<void> updateFCMToken(String token) async {
     try {
       await httpClient.post(

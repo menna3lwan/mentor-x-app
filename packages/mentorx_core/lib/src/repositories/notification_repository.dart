@@ -2,6 +2,7 @@ part of 'package:mentorx_core/mentorx_core.dart';
 
 enum NotificationRepositoryExceptionCode {
   unknown,
+  unauthorized,
   failedToLoadNotifications,
   failedToMarkAsRead,
   failedToMarkAllAsRead,
@@ -30,6 +31,9 @@ abstract interface class NotificationRepository {
 
   /// Get unread notifications count.
   Future<int> getUnreadCount();
+
+  /// Delete a notification.
+  Future<void> deleteNotification(String notificationId);
 
   /// Update FCM token.
   Future<void> updateFCMToken(String token);

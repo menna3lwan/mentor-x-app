@@ -280,6 +280,33 @@ final class DioAuthenticationRepository
   }
 
   @override
+  Future<void> forceLogoutAll() async {
+    try {
+      await httpClient.post('/api/parent/logout-all');
+    } catch (_) {
+    } finally {
+      await _deleteCachedUser();
+      await httpClient.clearTokens();
+    }
+  }
+
+  @override
+  Future<ParentEntity> getMe() async {
+    try {
+      final response = await httpClient.get('/api/parent/me');
+      final data = _extractDataMap(response.data);
+      final user = ParentModel.fromJson(data);
+      await _cacheUser(user);
+      return user;
+    } on HttpClientResponse catch (e) {
+      handleHttpClientErrorResponse(
+        e,
+        defaultCode: _ExceptionCode.sessionExpired,
+      );
+    }
+  }
+
+  @override
   Future<void> logout() async {
     // Backend contract (Postman): primary logout is POST /api/parent/logout.
     // Generic /api/auth/logout is the secondary fallback; the legacy

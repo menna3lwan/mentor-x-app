@@ -82,37 +82,68 @@ final class MonthlySpendingModel extends MonthlySpendingEntry {
 
 final class PaymentModel extends PaymentEntity {
   const PaymentModel({
-    required super.id,
-    required super.amount,
-    required super.method,
-    required super.paymentType,
-    required super.status,
-    required super.createdAt,
+    super.id,
+    super.success,
+    super.pending,
+    super.message,
+    super.orderNumber,
+    super.transactionId,
+    super.amount,
     super.currency,
+    super.method,
     super.reference,
-    super.expiresAt,
+    super.amountPaid,
+    super.enrollmentsCreated,
+    super.redirectUrl,
+    super.originalAmount,
+    super.finalAmount,
+    super.discountAmount,
   });
 
   factory PaymentModel.fromJson(Map<String, dynamic> json) {
+    final status = ModelParser.asString(json['status'], fallback: '');
     return PaymentModel(
       id: ModelParser.asString(json['id']),
+      success: status == 'success' ||
+          ModelParser.asBool(json['success'] ?? json['is_success']),
+      pending: status == 'pending' ||
+          ModelParser.asBool(json['pending'] ?? json['is_pending']),
+      message: ModelParser.asString(json['message']),
+      orderNumber: ModelParser.asString(json['order_number'] ?? json['orderNumber']),
+      transactionId: ModelParser.asString(
+          json['transaction_id'] ?? json['transactionId']),
       amount: ModelParser.asDouble(json['amount']),
       currency: ModelParser.asString(json['currency'], fallback: 'EGP'),
-      status: PaymentStatus.values.firstWhere(
-        (e) => e.name == ModelParser.asString(json['status'], fallback: 'pending'),
-        orElse: () => PaymentStatus.pending,
-      ),
       method: PaymentMethod.values.firstWhere(
-        (e) => e.name == ModelParser.asString(json['method'] ?? json['payment_method'], fallback: 'vodafoneCash'),
-        orElse: () => PaymentMethod.vodafoneCash,
+        (e) =>
+            e.name ==
+            ModelParser.asString(
+                json['method'] ?? json['payment_method'],
+                fallback: 'wallet'),
+        orElse: () => PaymentMethod.wallet,
       ),
-      paymentType: PaymentType.values.firstWhere(
-        (e) => e.name == ModelParser.asString(json['payment_type'] ?? json['paymentType'], fallback: 'walletTopup'),
-        orElse: () => PaymentType.walletTopup,
-      ),
-      createdAt: ModelParser.asDateTime(json['created_at'] ?? json['createdAt']) ?? DateTime.now(),
-      reference: ModelParser.asString(json['reference'] ?? json['transaction_id']),
-      expiresAt: ModelParser.asDateTime(json['expires_at'] ?? json['expiresAt']),
+      reference: ModelParser.asString(
+          json['reference'] ?? json['transaction_id']),
+      amountPaid: json['amount_paid'] != null || json['amountPaid'] != null
+          ? ModelParser.asDouble(json['amount_paid'] ?? json['amountPaid'])
+          : null,
+      enrollmentsCreated: ModelParser.asInt(
+          json['enrollments_created'] ?? json['enrollmentsCreated']),
+      redirectUrl: ModelParser.asString(
+          json['redirect_url'] ?? json['redirectUrl']),
+      originalAmount:
+          json['original_amount'] != null || json['originalAmount'] != null
+              ? ModelParser.asDouble(
+                  json['original_amount'] ?? json['originalAmount'])
+              : null,
+      finalAmount: json['final_amount'] != null || json['finalAmount'] != null
+          ? ModelParser.asDouble(json['final_amount'] ?? json['finalAmount'])
+          : null,
+      discountAmount:
+          json['discount_amount'] != null || json['discountAmount'] != null
+              ? ModelParser.asDouble(
+                  json['discount_amount'] ?? json['discountAmount'])
+              : null,
     );
   }
 }
