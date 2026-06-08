@@ -134,9 +134,9 @@ class _TopUpViewState extends State<_TopUpView> {
                         RegExp(r'^\d*\.?\d{0,2}'),
                       ),
                     ],
-                    onChanged: (value) => context
-                        .read<TopUpBloc>()
-                        .add(TopUpAmountChanged(value)),
+                    onChanged: (value) => context.read<TopUpBloc>().add(
+                      TopUpAmountChanged(value),
+                    ),
                     validator: (value) {
                       final amount = double.tryParse((value ?? '').trim());
                       if (amount == null || amount <= 0) {
@@ -152,9 +152,7 @@ class _TopUpViewState extends State<_TopUpView> {
                   _PresetRow(
                     onPick: (value) {
                       _controller.text = value.toStringAsFixed(0);
-                      context
-                          .read<TopUpBloc>()
-                          .add(TopUpPresetSelected(value));
+                      context.read<TopUpBloc>().add(TopUpPresetSelected(value));
                     },
                   ),
                   const Gap(32),
@@ -172,9 +170,9 @@ class _TopUpViewState extends State<_TopUpView> {
                                     false)) {
                                   return;
                                 }
-                                context
-                                    .read<TopUpBloc>()
-                                    .add(const TopUpSubmitted());
+                                context.read<TopUpBloc>().add(
+                                  const TopUpSubmitted(),
+                                );
                               },
                       );
                     },
@@ -193,8 +191,7 @@ class _TopUpViewState extends State<_TopUpView> {
     return switch (kind) {
       TopUpFailureKind.invalidAmount => t.financial.topUpInvalidAmount,
       TopUpFailureKind.belowMinimum => t.financial.topUpBelowMinimum,
-      TopUpFailureKind.insufficientFunds =>
-        t.financial.topUpInsufficientFunds,
+      TopUpFailureKind.insufficientFunds => t.financial.topUpInsufficientFunds,
       TopUpFailureKind.network => t.unableToLoad,
       TopUpFailureKind.unknown => t.financial.topUpFailed,
     };

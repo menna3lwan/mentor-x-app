@@ -26,14 +26,15 @@ class AttendanceGroupDetailPageWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => AttendanceGroupDetailBloc(
-        repository: context.read<ParentAttendanceGroupsRepository>(),
-      )..add(
-        AttendanceGroupDetailStarted(
-          childId: childId,
-          groupId: groupId,
-        ),
-      ),
+      create: (context) =>
+          AttendanceGroupDetailBloc(
+            repository: context.read<ParentAttendanceGroupsRepository>(),
+          )..add(
+            AttendanceGroupDetailStarted(
+              childId: childId,
+              groupId: groupId,
+            ),
+          ),
       child: _AttendanceGroupDetailView(childId: childId),
     );
   }
@@ -69,10 +70,7 @@ class _AttendanceGroupDetailView extends StatelessWidget {
             const LoginPageRoute().go(context);
         }
       },
-      child: BlocBuilder<
-        AttendanceGroupDetailBloc,
-        AttendanceGroupDetailState
-      >(
+      child: BlocBuilder<AttendanceGroupDetailBloc, AttendanceGroupDetailState>(
         builder: (context, state) {
           return Scaffold(
             backgroundColor: context.backgroundPrimaryColor,
@@ -713,8 +711,7 @@ class _MetadataCard extends StatelessWidget {
             ),
             const Gap(8),
           ],
-          if (detail.description != null &&
-              detail.description!.isNotEmpty)
+          if (detail.description != null && detail.description!.isNotEmpty)
             _MetaRow(
               label: t.attendanceTracking.groupDescriptionLabel,
               value: detail.description!,

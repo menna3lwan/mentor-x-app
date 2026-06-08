@@ -26,11 +26,12 @@ class CourseProgressDetailPageWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => CourseProgressBloc(
-        courseRepository: context.read<ParentCourseRepository>(),
-      )..add(
-        CourseProgressStarted(childId: childId, courseId: courseId),
-      ),
+      create: (context) =>
+          CourseProgressBloc(
+            courseRepository: context.read<ParentCourseRepository>(),
+          )..add(
+            CourseProgressStarted(childId: childId, courseId: courseId),
+          ),
       child: _CourseProgressDetailView(childId: childId),
     );
   }

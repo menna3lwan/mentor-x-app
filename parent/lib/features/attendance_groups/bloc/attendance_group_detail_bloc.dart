@@ -35,8 +35,7 @@ final class AttendanceGroupDetailUnauthorizedPresentationEvent
 // ──── Bloc ─────────────────────────────────────────────────────────────────
 
 final class AttendanceGroupDetailBloc
-    extends
-        Bloc<AttendanceGroupDetailEvent, AttendanceGroupDetailState>
+    extends Bloc<AttendanceGroupDetailEvent, AttendanceGroupDetailState>
     with
         BlocPresentationMixin<
           AttendanceGroupDetailState,

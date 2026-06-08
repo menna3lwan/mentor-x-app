@@ -70,8 +70,7 @@ class ParentQuickActionsWrapper extends StatelessWidget {
               label: t.analytics.pageTitle,
               enabled: hasChild,
               onTap: hasChild
-                  ? () =>
-                        AnalyticsMonitorRoute(childId: childId).go(context)
+                  ? () => AnalyticsMonitorRoute(childId: childId).go(context)
                   : null,
             ),
             ParentQuickAction(

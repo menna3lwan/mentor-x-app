@@ -57,8 +57,10 @@ class _DeleteAccountViewState extends State<_DeleteAccountView> {
   Widget build(BuildContext context) {
     final t = Translations.of(context).parent;
 
-    return BlocPresentationListener<AccountDeletionBloc,
-        AccountDeletionPresentationEvent>(
+    return BlocPresentationListener<
+      AccountDeletionBloc,
+      AccountDeletionPresentationEvent
+    >(
       listener: (context, event) => _onEvent(context, t, event),
       child: Scaffold(
         backgroundColor: context.backgroundPrimaryColor,
@@ -82,9 +84,9 @@ class _DeleteAccountViewState extends State<_DeleteAccountView> {
           title: Text(
             t.deleteAccount.pageTitle,
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.w800,
-                  color: context.statusDangerColor,
-                ),
+              fontWeight: FontWeight.w800,
+              color: context.statusDangerColor,
+            ),
           ),
         ),
         body: BlocBuilder<AccountDeletionBloc, AccountDeletionState>(
@@ -122,16 +124,16 @@ class _DeleteAccountViewState extends State<_DeleteAccountView> {
           label: t.deleteAccount.reasonLabel,
           hint: t.deleteAccount.reasonHint,
           controller: _reasonController,
-          onChanged: (v) => context
-              .read<AccountDeletionBloc>()
-              .add(AccountDeletionReasonChanged(v)),
+          onChanged: (v) => context.read<AccountDeletionBloc>().add(
+            AccountDeletionReasonChanged(v),
+          ),
         ),
         const Gap(20),
         CheckboxListTile(
           value: state.requestDataExport,
-          onChanged: (v) => context
-              .read<AccountDeletionBloc>()
-              .add(AccountDeletionDataExportToggled(v ?? false)),
+          onChanged: (v) => context.read<AccountDeletionBloc>().add(
+            AccountDeletionDataExportToggled(v ?? false),
+          ),
           activeColor: context.brandPrimaryColor,
           controlAffinity: ListTileControlAffinity.leading,
           contentPadding: EdgeInsets.zero,
@@ -153,9 +155,9 @@ class _DeleteAccountViewState extends State<_DeleteAccountView> {
         ),
         CheckboxListTile(
           value: state.acknowledgedPermanent,
-          onChanged: (v) => context
-              .read<AccountDeletionBloc>()
-              .add(AccountDeletionAcknowledgementToggled(v ?? false)),
+          onChanged: (v) => context.read<AccountDeletionBloc>().add(
+            AccountDeletionAcknowledgementToggled(v ?? false),
+          ),
           activeColor: danger,
           controlAffinity: ListTileControlAffinity.leading,
           contentPadding: EdgeInsets.zero,
@@ -181,9 +183,9 @@ class _DeleteAccountViewState extends State<_DeleteAccountView> {
         const Gap(8),
         TextField(
           controller: _confirmationController,
-          onChanged: (v) => context
-              .read<AccountDeletionBloc>()
-              .add(AccountDeletionConfirmationChanged(v)),
+          onChanged: (v) => context.read<AccountDeletionBloc>().add(
+            AccountDeletionConfirmationChanged(v),
+          ),
           decoration: InputDecoration(
             filled: true,
             fillColor: context.backgroundSecondaryColor,
@@ -283,9 +285,7 @@ class _DeleteAccountViewState extends State<_DeleteAccountView> {
       },
     );
     if (confirmed != true || !context.mounted) return;
-    context
-        .read<AccountDeletionBloc>()
-        .add(const AccountDeletionSubmitted());
+    context.read<AccountDeletionBloc>().add(const AccountDeletionSubmitted());
   }
 
   void _onEvent(
@@ -316,8 +316,7 @@ class _DeleteAccountViewState extends State<_DeleteAccountView> {
     String? message,
   ) {
     return switch (kind) {
-      AccountDeletionFailureKind.validation =>
-        t.deleteAccount.validationError,
+      AccountDeletionFailureKind.validation => t.deleteAccount.validationError,
       AccountDeletionFailureKind.network => t.deleteAccount.networkError,
       AccountDeletionFailureKind.unauthorized =>
         t.deleteAccount.unauthorizedError,

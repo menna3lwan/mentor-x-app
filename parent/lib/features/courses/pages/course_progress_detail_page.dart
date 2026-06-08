@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:mentorx_core/mentorx_core.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 
 /// Pure-layout view of a single course's progress. State + DI live in
@@ -130,8 +129,9 @@ class CourseProgressHeroCard extends StatelessWidget {
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          color:
-                              context.textForegroundColor.withValues(alpha: 0.8),
+                          color: context.textForegroundColor.withValues(
+                            alpha: 0.8,
+                          ),
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
                         ),

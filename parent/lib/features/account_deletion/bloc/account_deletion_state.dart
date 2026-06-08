@@ -45,9 +45,7 @@ final class AccountDeletionState extends Equatable {
       expectedPhrase.trim().toLowerCase();
 
   bool get canSubmit =>
-      status.isIdle &&
-      acknowledgedPermanent &&
-      isConfirmationPhraseValid;
+      status.isIdle && acknowledgedPermanent && isConfirmationPhraseValid;
 
   AccountDeletionState copyWith({
     AccountDeletionStatus? status,

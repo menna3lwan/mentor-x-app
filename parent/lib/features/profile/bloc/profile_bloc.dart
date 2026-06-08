@@ -269,6 +269,10 @@ final class ProfileBloc extends Bloc<ProfileEvent, ProfileState>
           ProfileFailureKind.saveFailed,
         ParentProfileRepositoryExceptionCode.failedToUploadAvatar =>
           ProfileFailureKind.uploadFailed,
+        ParentProfileRepositoryExceptionCode.failedToChangePassword ||
+        ParentProfileRepositoryExceptionCode.invalidPassword ||
+        ParentProfileRepositoryExceptionCode.wrongCurrentPassword =>
+          defaultKind,
         ParentProfileRepositoryExceptionCode.unknown => defaultKind,
       };
     }

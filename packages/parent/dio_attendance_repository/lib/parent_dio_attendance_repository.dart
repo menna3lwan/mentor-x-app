@@ -8,7 +8,7 @@ final class DioParentAttendanceRepository
   final HttpClient _httpClient;
 
   DioParentAttendanceRepository({required HttpClient httpClient})
-      : _httpClient = httpClient;
+    : _httpClient = httpClient;
 
   @override
   Future<void> initialize() async {}
@@ -17,8 +17,7 @@ final class DioParentAttendanceRepository
   Never throwException(
     ParentAttendanceRepositoryExceptionCode code, {
     String? message,
-  }) =>
-      throw ParentAttendanceRepositoryException(code: code, message: message);
+  }) => throw ParentAttendanceRepositoryException(code: code, message: message);
 
   // Backend contract (Postman):
   //   GET /api/parent/dashboard/child/{studentId}/attendance
@@ -44,9 +43,7 @@ final class DioParentAttendanceRepository
       final list = payload is Map
           ? asList(payload['content'])
           : asList(payload);
-      return list
-          .map((e) => AttendanceRecordModel.fromJson(asMap(e)))
-          .toList();
+      return list.map((e) => AttendanceRecordModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
       handleHttpClientErrorResponse(
         e,

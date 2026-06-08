@@ -79,7 +79,9 @@ final class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState>
     if (childId == null) return;
     switch (event.section) {
       case AnalyticsSection.gradeComparison:
-        emit(state.copyWith(gradeComparison: state.gradeComparison.toLoading()));
+        emit(
+          state.copyWith(gradeComparison: state.gradeComparison.toLoading()),
+        );
         await _loadGradeComparison(emit, childId);
       case AnalyticsSection.courseProgress:
         emit(state.copyWith(courseProgress: state.courseProgress.toLoading()));

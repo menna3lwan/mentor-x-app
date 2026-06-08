@@ -159,8 +159,7 @@ final class ChangePasswordBloc
       };
     }
     return switch (classifyHttpFailure(error)) {
-      GenericFailureKind.unauthorized =>
-        ChangePasswordFailureKind.unauthorized,
+      GenericFailureKind.unauthorized => ChangePasswordFailureKind.unauthorized,
       GenericFailureKind.network => ChangePasswordFailureKind.network,
       _ => ChangePasswordFailureKind.unknown,
     };

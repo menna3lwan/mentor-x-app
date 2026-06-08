@@ -44,8 +44,7 @@ final class AnalyticsAsyncSection<T> extends Equatable {
   bool get isLoaded => status == AnalyticsSectionStatus.loaded;
   bool get isFailure => status == AnalyticsSectionStatus.failure;
 
-  AnalyticsAsyncSection<T> toLoading() =>
-      AnalyticsAsyncSection.loading(data);
+  AnalyticsAsyncSection<T> toLoading() => AnalyticsAsyncSection.loading(data);
 
   @override
   List<Object?> get props => [status, data, errorMessage];

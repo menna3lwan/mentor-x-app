@@ -146,8 +146,9 @@ class _BalanceCard extends StatelessWidget {
                     child: Text(
                       t.financial.currencySymbol,
                       style: TextStyle(
-                        color:
-                            context.textForegroundColor.withValues(alpha: 0.7),
+                        color: context.textForegroundColor.withValues(
+                          alpha: 0.7,
+                        ),
                         fontSize: 14,
                         fontWeight: FontWeight.w800,
                       ),
@@ -434,8 +435,9 @@ class _TransactionRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = Translations.of(context).parent;
     final isCredit = transaction.amount >= 0;
-    final color =
-        isCredit ? context.statusSuccessColor : context.statusDangerColor;
+    final color = isCredit
+        ? context.statusSuccessColor
+        : context.statusDangerColor;
     final currency = NumberFormat.currency(symbol: '', decimalDigits: 2);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),

@@ -25,16 +25,20 @@ final class AttendanceRecordModel extends AttendanceRecordEntity {
       id: ModelParser.asString(json['id']),
       // Backend sends `type` (present/late/absent); legacy sends `status`.
       status: AttendanceStatus.values.firstWhere(
-        (e) => e.name == ModelParser.asString(
-          json['status'] ?? json['type'],
-          fallback: 'absent',
-        ),
+        (e) =>
+            e.name ==
+            ModelParser.asString(
+              json['status'] ?? json['type'],
+              fallback: 'absent',
+            ),
         orElse: () => AttendanceStatus.absent,
       ),
       // Backend sends `attendedAt`; legacy sends `date`.
-      date: ModelParser.asDateTime(
-        json['attendedAt'] ?? json['attended_at'] ?? json['date'],
-      ) ?? DateTime.now(),
+      date:
+          ModelParser.asDateTime(
+            json['attendedAt'] ?? json['attended_at'] ?? json['date'],
+          ) ??
+          DateTime.now(),
       courseId: ModelParser.asString(
         json['course_id'] ?? json['courseId'] ?? json['weekId'],
       ),
@@ -43,15 +47,21 @@ final class AttendanceRecordModel extends AttendanceRecordEntity {
       ),
       // Backend sends `weekTitle`; legacy sends `sessionTitle`.
       sessionTitle: ModelParser.asString(
-        json['weekTitle'] ?? json['week_title'] ??
-        json['session_title'] ?? json['sessionTitle'],
+        json['weekTitle'] ??
+            json['week_title'] ??
+            json['session_title'] ??
+            json['sessionTitle'],
       ),
       // Backend sends `source`; legacy sends `checkInMethod`.
       checkInMethod: CheckInMethod.values.firstWhere(
-        (e) => e.name == ModelParser.asString(
-          json['source'] ?? json['check_in_method'] ?? json['checkInMethod'],
-          fallback: 'manual',
-        ),
+        (e) =>
+            e.name ==
+            ModelParser.asString(
+              json['source'] ??
+                  json['check_in_method'] ??
+                  json['checkInMethod'],
+              fallback: 'manual',
+            ),
         orElse: () => CheckInMethod.manual,
       ),
       checkInTime: ModelParser.asDateTime(
@@ -90,15 +100,13 @@ final class AttendanceSummaryModel extends AttendanceSummaryEntity {
     //   { totalAttendance, centerAttendance, onlineAttendance, ... }
     // Legacy format uses present/late/absent/excused/attendanceRate.
     final total = ModelParser.asInt(
-      json['totalAttendance'] ?? json['total_attendance'] ??
-      json['total_sessions'] ?? json['totalSessions'],
-    );
-    final center = ModelParser.asInt(
-      json['centerAttendance'] ?? json['center_attendance'],
+      json['totalAttendance'] ??
+          json['total_attendance'] ??
+          json['total_sessions'] ??
+          json['totalSessions'],
     );
     final online = ModelParser.asInt(
-      json['onlineAttendance'] ?? json['online_attendance'] ??
-      json['online'],
+      json['onlineAttendance'] ?? json['online_attendance'] ?? json['online'],
     );
 
     return AttendanceSummaryModel(

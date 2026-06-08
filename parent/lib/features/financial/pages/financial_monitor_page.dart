@@ -59,8 +59,7 @@ class _FinancialMonitorView extends StatelessWidget {
         actions: [
           IconButton(
             tooltip: t.financial.topUpAction,
-            onPressed: () =>
-                TopUpRoute(studentId: childId).go(context),
+            onPressed: () => TopUpRoute(studentId: childId).go(context),
             icon: const Icon(Icons.add_circle_outline_rounded),
           ),
           IconButton(

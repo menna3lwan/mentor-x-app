@@ -23,9 +23,9 @@ final class AccountStatusState extends Equatable {
   });
 
   factory AccountStatusState.initial() => const AccountStatusState(
-        status: AccountStatusViewStatus.initial,
-        entity: ParentAccountStatusEntity.placeholder,
-      );
+    status: AccountStatusViewStatus.initial,
+    entity: ParentAccountStatusEntity.placeholder,
+  );
 
   bool get isPending => entity.isPending;
   bool get isActive => entity.isActive;

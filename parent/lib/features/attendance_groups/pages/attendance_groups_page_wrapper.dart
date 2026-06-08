@@ -83,7 +83,9 @@ class _AttendanceGroupsView extends StatelessWidget {
             }
             if (state.status.isFailure) {
               return AppErrorView(
-                message: state.errorMessage ?? t.attendanceTracking.groupFailureTitle,
+                message:
+                    state.errorMessage ??
+                    t.attendanceTracking.groupFailureTitle,
                 onRetry: () => context.read<AttendanceGroupsBloc>().add(
                   AttendanceGroupsRefreshRequested(childId),
                 ),
@@ -102,7 +104,7 @@ class _AttendanceGroupsView extends StatelessWidget {
               ),
               padding: const EdgeInsets.all(20),
               itemCount: state.groups.length + 1,
-              separatorBuilder: (_, __) => const Gap(12),
+              separatorBuilder: (_, _) => const Gap(12),
               itemBuilder: (context, index) {
                 if (index == 0) {
                   return Padding(

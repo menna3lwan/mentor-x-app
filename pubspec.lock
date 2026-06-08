@@ -376,13 +376,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.3"
-  device_info_service:
-    dependency: transitive
-    description:
-      path: "packages/services/device_info_service"
-      relative: true
-    source: path
-    version: "1.0.0"
   diff_match_patch:
     dependency: transitive
     description:
@@ -1256,48 +1249,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.7.0"
-  mock_parent_account_deletion_repository:
-    dependency: transitive
-    description:
-      path: "packages/mock/parent/mock_parent_account_deletion_repository"
-      relative: true
-    source: path
-    version: "0.0.1"
-  mock_parent_account_status_repository:
-    dependency: transitive
-    description:
-      path: "packages/mock/parent/mock_parent_account_status_repository"
-      relative: true
-    source: path
-    version: "0.0.1"
-  mock_parent_analytics_repository:
-    dependency: transitive
-    description:
-      path: "packages/mock/parent/mock_parent_analytics_repository"
-      relative: true
-    source: path
-    version: "0.0.1"
-  mock_parent_attendance_groups_repository:
-    dependency: transitive
-    description:
-      path: "packages/mock/parent/mock_parent_attendance_groups_repository"
-      relative: true
-    source: path
-    version: "0.0.1"
-  mock_parent_devices_repository:
-    dependency: transitive
-    description:
-      path: "packages/mock/parent/mock_parent_devices_repository"
-      relative: true
-    source: path
-    version: "0.0.1"
-  mock_parent_profile_repository:
-    dependency: transitive
-    description:
-      path: "packages/mock/parent/mock_parent_profile_repository"
-      relative: true
-    source: path
-    version: "0.0.1"
   mock_student_analytics_repository:
     dependency: transitive
     description:
@@ -1369,48 +1320,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.2.1"
-  parent_dio_account_deletion_repository:
-    dependency: transitive
-    description:
-      path: "packages/parent/dio_parent_account_deletion_repository"
-      relative: true
-    source: path
-    version: "0.0.1"
-  parent_dio_account_status_repository:
-    dependency: transitive
-    description:
-      path: "packages/parent/dio_parent_account_status_repository"
-      relative: true
-    source: path
-    version: "0.0.1"
-  parent_dio_analytics_repository:
-    dependency: transitive
-    description:
-      path: "packages/parent/dio_parent_analytics_repository"
-      relative: true
-    source: path
-    version: "0.0.1"
-  parent_dio_attendance_groups_repository:
-    dependency: transitive
-    description:
-      path: "packages/parent/dio_parent_attendance_groups_repository"
-      relative: true
-    source: path
-    version: "0.0.1"
-  parent_dio_devices_repository:
-    dependency: transitive
-    description:
-      path: "packages/parent/dio_parent_devices_repository"
-      relative: true
-    source: path
-    version: "0.0.1"
-  parent_dio_profile_repository:
-    dependency: transitive
-    description:
-      path: "packages/parent/dio_parent_profile_repository"
-      relative: true
-    source: path
-    version: "0.0.1"
   path:
     dependency: transitive
     description:
@@ -1659,13 +1568,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.5.0"
-  push_notification_service:
-    dependency: transitive
-    description:
-      path: "packages/services/push_notification_service"
-      relative: true
-    source: path
-    version: "0.0.1"
   qr:
     dependency: transitive
     description:

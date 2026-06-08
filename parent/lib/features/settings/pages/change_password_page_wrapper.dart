@@ -212,7 +212,8 @@ class _ChangePasswordViewState extends State<_ChangePasswordView> {
     return switch (kind) {
       ChangePasswordFailureKind.wrongCurrentPassword =>
         t.profile.changePasswordWrongCurrent,
-      ChangePasswordFailureKind.passwordTooWeak => t.profile.changePasswordTooWeak,
+      ChangePasswordFailureKind.passwordTooWeak =>
+        t.profile.changePasswordTooWeak,
       ChangePasswordFailureKind.passwordsMismatch =>
         t.profile.changePasswordMismatch,
       ChangePasswordFailureKind.network => t.profile.editNetworkError,

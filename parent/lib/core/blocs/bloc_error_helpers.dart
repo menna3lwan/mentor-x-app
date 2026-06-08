@@ -19,8 +19,7 @@ extension BlocErrorDescribe on Object {
       return error.message ?? error.toString();
     }
     if (error is HttpClientResponse) {
-      return error.exception?.message ??
-          'Request failed (${error.statusCode})';
+      return error.exception?.message ?? 'Request failed (${error.statusCode})';
     }
     return error.toString();
   }

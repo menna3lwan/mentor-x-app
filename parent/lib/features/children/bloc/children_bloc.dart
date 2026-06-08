@@ -278,6 +278,8 @@ final class ChildrenBloc extends Bloc<ChildrenEvent, ChildrenState>
       return switch (error.code) {
         ParentChildrenRepositoryExceptionCode.studentNotFound =>
           ChildrenFailureKind.studentNotFound,
+        ParentChildrenRepositoryExceptionCode.unauthorized =>
+          ChildrenFailureKind.unauthorized,
         ParentChildrenRepositoryExceptionCode.registrationFailed =>
           ChildrenFailureKind.unknown,
         ParentChildrenRepositoryExceptionCode.fetchError =>

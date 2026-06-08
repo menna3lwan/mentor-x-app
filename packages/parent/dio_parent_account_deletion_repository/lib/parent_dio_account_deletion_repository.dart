@@ -26,11 +26,10 @@ final class DioParentAccountDeletionRepository
   Never throwException(
     ParentAccountDeletionRepositoryExceptionCode code, {
     String? message,
-  }) =>
-      throw ParentAccountDeletionRepositoryException(
-        code: code,
-        message: message,
-      );
+  }) => throw ParentAccountDeletionRepositoryException(
+    code: code,
+    message: message,
+  );
 
   @override
   Future<void> submitDeletion(ParentAccountDeletionRequest request) async {
@@ -47,7 +46,7 @@ final class DioParentAccountDeletionRepository
           await _httpClient.delete('/api/auth/me');
           return;
         } on HttpClientResponse catch (deleteError) {
-          return handleHttpClientErrorResponse(
+          handleHttpClientErrorResponse(
             deleteError,
             defaultCode:
                 ParentAccountDeletionRepositoryExceptionCode.submitError,
@@ -55,7 +54,7 @@ final class DioParentAccountDeletionRepository
           );
         }
       }
-      return handleHttpClientErrorResponse(
+      handleHttpClientErrorResponse(
         e,
         defaultCode: ParentAccountDeletionRepositoryExceptionCode.submitError,
         codeFromStatusCode: _classifyStatus,
@@ -65,8 +64,7 @@ final class DioParentAccountDeletionRepository
 
   ParentAccountDeletionRepositoryExceptionCode _classifyStatus(int code) {
     return switch (code) {
-      401 || 403 =>
-        ParentAccountDeletionRepositoryExceptionCode.unauthorized,
+      401 || 403 => ParentAccountDeletionRepositoryExceptionCode.unauthorized,
       422 => ParentAccountDeletionRepositoryExceptionCode.validation,
       _ => ParentAccountDeletionRepositoryExceptionCode.unknown,
     };

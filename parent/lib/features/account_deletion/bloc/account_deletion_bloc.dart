@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
-import 'package:equatable/equatable.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 
 import '../../../core/blocs/bloc_error_helpers.dart';
@@ -61,15 +60,17 @@ enum AccountDeletionFailureKind {
 final class AccountDeletionBloc
     extends Bloc<AccountDeletionEvent, AccountDeletionState>
     with
-        BlocPresentationMixin<AccountDeletionState,
-            AccountDeletionPresentationEvent> {
+        BlocPresentationMixin<
+          AccountDeletionState,
+          AccountDeletionPresentationEvent
+        > {
   final ParentAccountDeletionRepository _repository;
 
   AccountDeletionBloc({
     required ParentAccountDeletionRepository repository,
     required String expectedPhrase,
-  })  : _repository = repository,
-        super(AccountDeletionState.initial(expectedPhrase: expectedPhrase)) {
+  }) : _repository = repository,
+       super(AccountDeletionState.initial(expectedPhrase: expectedPhrase)) {
     on<AccountDeletionReasonChanged>(_onReasonChanged);
     on<AccountDeletionConfirmationChanged>(_onConfirmationChanged);
     on<AccountDeletionAcknowledgementToggled>(_onAcknowledgementToggled);

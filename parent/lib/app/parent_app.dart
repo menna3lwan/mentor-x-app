@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:mentorx_core/mentorx_core.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:push_notification_service/push_notification_service.dart';
 
@@ -75,8 +74,7 @@ final class ParentApp extends StatelessWidget {
                         title: 'MentorX Parent',
                         debugShowCheckedModeBanner: false,
                         routerConfig: requirements.routerConfig,
-                        locale:
-                            TranslationProvider.of(context).flutterLocale,
+                        locale: TranslationProvider.of(context).flutterLocale,
                         supportedLocales:
                             LocaleSettings.instance.supportedLocales,
                         localizationsDelegates: const [

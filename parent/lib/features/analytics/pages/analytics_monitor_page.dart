@@ -52,10 +52,9 @@ class _AnalyticsView extends StatelessWidget {
       },
       child: AppDashboardScaffold(
         title: t.analytics.pageTitle,
-        onRefresh: () async =>
-            context.read<AnalyticsBloc>().add(
-              AnalyticsRefreshRequested(childId),
-            ),
+        onRefresh: () async => context.read<AnalyticsBloc>().add(
+          AnalyticsRefreshRequested(childId),
+        ),
         body: SingleChildScrollView(
           physics: const BouncingScrollPhysics(
             parent: AlwaysScrollableScrollPhysics(),
@@ -282,8 +281,7 @@ class _StreakCard extends StatelessWidget {
             onRetry: () => context.read<AnalyticsBloc>().add(
               const AnalyticsRetrySectionRequested(AnalyticsSection.streak),
             ),
-            isEmpty: (d) =>
-                d.currentStreak == 0 && d.longestStreak == 0,
+            isEmpty: (d) => d.currentStreak == 0 && d.longestStreak == 0,
             builder: (d) => Column(
               children: [
                 StreakStatsView(
@@ -393,14 +391,12 @@ class _QuizSpeedCard extends StatelessWidget {
               ),
             ),
             isEmpty: (d) =>
-                d.totalQuizzes == 0 &&
-                d.overallAverageSecondsPerQuestion == 0,
+                d.totalQuizzes == 0 && d.overallAverageSecondsPerQuestion == 0,
             builder: (d) => QuizSpeedSummaryView(
               averageSecondsPerQuestion: d.overallAverageSecondsPerQuestion,
               totalQuizzes: d.totalQuizzes,
               averageLabel: t.analytics.averageQuizSpeed(
-                seconds:
-                    d.overallAverageSecondsPerQuestion.toStringAsFixed(1),
+                seconds: d.overallAverageSecondsPerQuestion.toStringAsFixed(1),
               ),
               countLabel: t.analytics.quizCountLabel(count: d.totalQuizzes),
             ),
@@ -454,7 +450,13 @@ Widget _sectionChild<T>({
       onRetry: onRetry,
     );
   }
-  final data = section.data!;
+  final data = section.data;
+  if (data == null) {
+    return AnalyticsEmptyState(
+      title: t.analytics.emptySectionTitle,
+      hint: t.analytics.emptySectionHint,
+    );
+  }
   if (isEmpty(data)) {
     return AnalyticsEmptyState(
       title: t.analytics.emptySectionTitle,

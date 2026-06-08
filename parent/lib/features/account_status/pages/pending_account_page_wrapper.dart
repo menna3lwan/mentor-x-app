@@ -2,7 +2,6 @@ import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
@@ -39,8 +38,10 @@ class _PendingAccountView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = Translations.of(context).parent;
-    return BlocPresentationListener<AccountStatusCubit,
-        AccountStatusPresentationEvent>(
+    return BlocPresentationListener<
+      AccountStatusCubit,
+      AccountStatusPresentationEvent
+    >(
       listener: (context, event) {
         switch (event) {
           case AccountStatusApprovedPresentationEvent():
@@ -68,9 +69,9 @@ class _PendingAccountView extends StatelessWidget {
             title: Text(
               t.pendingAccount.pageTitle,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.w800,
-                    color: context.brandPrimaryColor,
-                  ),
+                fontWeight: FontWeight.w800,
+                color: context.brandPrimaryColor,
+              ),
             ),
             actions: [
               BlocBuilder<AccountStatusCubit, AccountStatusState>(
@@ -98,8 +99,7 @@ class _PendingAccountView extends StatelessWidget {
             ],
           ),
           body: RefreshIndicator(
-            onRefresh: () =>
-                context.read<AccountStatusCubit>().refresh(),
+            onRefresh: () => context.read<AccountStatusCubit>().refresh(),
             child: BlocBuilder<AccountStatusCubit, AccountStatusState>(
               builder: (context, state) => _body(context, state, t),
             ),
@@ -118,11 +118,23 @@ class _PendingAccountView extends StatelessWidget {
       return ListView(
         padding: const EdgeInsets.all(24),
         children: const [
-          MentorXSkeleton(width: double.infinity, height: 180, borderRadius: 20),
+          MentorXSkeleton(
+            width: double.infinity,
+            height: 180,
+            borderRadius: 20,
+          ),
           SizedBox(height: 20),
-          MentorXSkeleton(width: double.infinity, height: 120, borderRadius: 20),
+          MentorXSkeleton(
+            width: double.infinity,
+            height: 120,
+            borderRadius: 20,
+          ),
           SizedBox(height: 20),
-          MentorXSkeleton(width: double.infinity, height: 200, borderRadius: 20),
+          MentorXSkeleton(
+            width: double.infinity,
+            height: 200,
+            borderRadius: 20,
+          ),
         ],
       );
     }
@@ -146,14 +158,12 @@ class _PendingAccountView extends StatelessWidget {
         const Gap(20),
         _StepsCard(state: state, t: t),
         const Gap(20),
-        if (state.entity.rejectionReason != null &&
-            state.isRejectedOrSuspended)
+        if (state.entity.rejectionReason != null && state.isRejectedOrSuspended)
           _RejectionReasonCard(
             reason: state.entity.rejectionReason!,
             t: t,
           ),
-        if (state.entity.rejectionReason != null &&
-            state.isRejectedOrSuspended)
+        if (state.entity.rejectionReason != null && state.isRejectedOrSuspended)
           const Gap(20),
         _SupportCard(state: state, t: t),
         const Gap(20),
@@ -177,8 +187,9 @@ class _HeroCard extends StatelessWidget {
     final accentColor = isRejected
         ? context.statusDangerColor
         : context.brandPrimaryColor;
-    final iconData =
-        isRejected ? Icons.error_outline_rounded : Icons.hourglass_top_rounded;
+    final iconData = isRejected
+        ? Icons.error_outline_rounded
+        : Icons.hourglass_top_rounded;
     final headline = isRejected
         ? t.pendingAccount.headlineRejected
         : t.pendingAccount.headlinePending;
@@ -408,8 +419,8 @@ class _StepRow extends StatelessWidget {
     final dotColor = isCompleted
         ? brandColor
         : isActive
-            ? brandColor
-            : mutedColor;
+        ? brandColor
+        : mutedColor;
     return IntrinsicHeight(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -420,9 +431,7 @@ class _StepRow extends StatelessWidget {
                 width: 18,
                 height: 18,
                 decoration: BoxDecoration(
-                  color: isCompleted
-                      ? dotColor
-                      : Colors.transparent,
+                  color: isCompleted ? dotColor : Colors.transparent,
                   border: Border.all(color: dotColor, width: 2),
                   shape: BoxShape.circle,
                 ),
@@ -433,17 +442,17 @@ class _StepRow extends StatelessWidget {
                         color: context.backgroundSecondaryColor,
                       )
                     : isActive
-                        ? Center(
-                            child: Container(
-                              width: 8,
-                              height: 8,
-                              decoration: BoxDecoration(
-                                color: dotColor,
-                                shape: BoxShape.circle,
-                              ),
-                            ),
-                          )
-                        : null,
+                    ? Center(
+                        child: Container(
+                          width: 8,
+                          height: 8,
+                          decoration: BoxDecoration(
+                            color: dotColor,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                      )
+                    : null,
               ),
               if (!isLast)
                 Expanded(

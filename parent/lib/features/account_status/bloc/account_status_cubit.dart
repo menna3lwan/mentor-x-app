@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
-import 'package:equatable/equatable.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 
 import '../../../core/blocs/app_authentication_cubit/app_authentication_cubit.dart';
@@ -57,8 +56,10 @@ final class AccountStatusUnauthorizedPresentationEvent
 /// check immediately.
 final class AccountStatusCubit extends Cubit<AccountStatusState>
     with
-        BlocPresentationMixin<AccountStatusState,
-            AccountStatusPresentationEvent> {
+        BlocPresentationMixin<
+          AccountStatusState,
+          AccountStatusPresentationEvent
+        > {
   final ParentAccountStatusRepository _repository;
   final AppAuthenticationCubit _appAuthCubit;
   Timer? _pollTimer;
@@ -71,9 +72,9 @@ final class AccountStatusCubit extends Cubit<AccountStatusState>
   AccountStatusCubit({
     required ParentAccountStatusRepository repository,
     required AppAuthenticationCubit appAuthCubit,
-  })  : _repository = repository,
-        _appAuthCubit = appAuthCubit,
-        super(AccountStatusState.initial());
+  }) : _repository = repository,
+       _appAuthCubit = appAuthCubit,
+       super(AccountStatusState.initial());
 
   /// Called by the wrapper on first build. Performs an immediate load and
   /// starts the polling loop.
@@ -136,7 +137,8 @@ final class AccountStatusCubit extends Cubit<AccountStatusState>
       final message = e.describeError();
       emit(
         state.copyWith(
-          status: state.entity.status == ParentStatus.pending &&
+          status:
+              state.entity.status == ParentStatus.pending &&
                   state.status.isLoaded
               // Keep showing the last-known pending view; surface the error
               // as a transient banner instead of replacing the entire page.

@@ -19,7 +19,7 @@ final class MockParentAccountStatusRepository
 
   ParentStatus _status;
   DateTime? _firstPolledAt;
-  ParentEntity? _cachedUser;
+  final ParentEntity? _cachedUser;
 
   MockParentAccountStatusRepository({
     this.delay = const Duration(milliseconds: 600),

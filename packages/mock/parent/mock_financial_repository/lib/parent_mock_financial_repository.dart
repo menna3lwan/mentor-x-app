@@ -5,8 +5,8 @@ final class MockParentFinancialRepository implements ParentFinancialRepository {
 
   // In-memory parent-wallet state so `topUpWallet` can mutate it.
   double _myBalance = 230.0;
-  int _myPoints = 350;
-  double _mySpentThisMonth = 40.0;
+  final int _myPoints = 350;
+  final double _mySpentThisMonth = 40.0;
   double _myCreditsThisMonth = 100.0;
   int _myTotalTransactions = 6;
   final List<WalletTransactionEntity> _myTransactions = [

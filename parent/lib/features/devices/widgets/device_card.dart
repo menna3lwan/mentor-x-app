@@ -182,7 +182,8 @@ class DeviceCard extends StatelessWidget {
   IconData _iconFor(DeviceEntity d) {
     final type = (d.deviceType ?? '').toLowerCase();
     final model = d.deviceModel.toLowerCase();
-    if (type.contains('ios') || model.contains('iphone') ||
+    if (type.contains('ios') ||
+        model.contains('iphone') ||
         model.contains('apple')) {
       return Icons.phone_iphone_rounded;
     }

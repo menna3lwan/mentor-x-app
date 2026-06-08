@@ -35,8 +35,10 @@ final class CourseProgressUnauthorizedPresentationEvent
 final class CourseProgressBloc
     extends Bloc<CourseProgressEvent, CourseProgressState>
     with
-        BlocPresentationMixin<CourseProgressState,
-            CourseProgressPresentationEvent> {
+        BlocPresentationMixin<
+          CourseProgressState,
+          CourseProgressPresentationEvent
+        > {
   final ParentCourseRepository _courseRepository;
 
   CourseProgressBloc({required ParentCourseRepository courseRepository})
