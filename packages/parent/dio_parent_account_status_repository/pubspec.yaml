@@ -1,0 +1,22 @@
+name: parent_dio_account_status_repository
+description: Dio implementation of the parent account-status repository.
+version: 0.0.1
+publish_to: none
+
+environment:
+  sdk: ^3.11.4
+
+resolution: workspace
+
+dependencies:
+  mentorx_core:
+    path: ../../mentorx_core
+  dio_http_client:
+    path: ../../clients/dio_http_client
+  parent_dio_authentication_repository:
+    path: ../dio_authentication_repository
+
+dev_dependencies:
+  test: ^1.25.6
+  mocktail: ^1.0.4
+  lints: ^6.0.0
