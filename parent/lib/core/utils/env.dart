@@ -11,9 +11,9 @@ import 'package:mentorx_core/mentorx_core.dart';
 /// - Every repository defaults to `prod`. This guarantees the app talks to a
 ///   real backend even when no env file is provided, which is what we want
 ///   for release builds.
-/// - `MENTORX_API_BASE_URL` defaults to empty so the failure mode is loud:
-///   the app throws a clear `StateError` at startup instead of silently
-///   pointing to a placeholder URL.
+/// - `MENTORX_API_BASE_URL` defaults to the official production backend.
+///   Builds can still override it with `--dart-define` for staging or local
+///   contract testing.
 final class Env {
   Env._();
 
@@ -29,9 +29,11 @@ final class Env {
   );
 
   // ───────────────────────── Network ──────────────────────────────────────
+  static const String officialApiBaseUrl = 'https://api.foudz.store/';
+
   static const String mentorXBaseUrl = String.fromEnvironment(
     'MENTORX_API_BASE_URL',
-    defaultValue: '',
+    defaultValue: officialApiBaseUrl,
   );
 
   static bool get hasMentorXBaseUrl => mentorXBaseUrl.trim().isNotEmpty;
@@ -110,13 +112,12 @@ final class Env {
         ),
       );
 
-  static final RepositoryMode profileRepositoryMode =
-      RepositoryMode.fromString(
-        const String.fromEnvironment(
-          'PROFILE_REPOSITORY_MODE',
-          defaultValue: 'prod',
-        ),
-      );
+  static final RepositoryMode profileRepositoryMode = RepositoryMode.fromString(
+    const String.fromEnvironment(
+      'PROFILE_REPOSITORY_MODE',
+      defaultValue: 'prod',
+    ),
+  );
 
   static final RepositoryMode analyticsRepositoryMode =
       RepositoryMode.fromString(
@@ -134,13 +135,12 @@ final class Env {
         ),
       );
 
-  static final RepositoryMode devicesRepositoryMode =
-      RepositoryMode.fromString(
-        const String.fromEnvironment(
-          'DEVICES_REPOSITORY_MODE',
-          defaultValue: 'prod',
-        ),
-      );
+  static final RepositoryMode devicesRepositoryMode = RepositoryMode.fromString(
+    const String.fromEnvironment(
+      'DEVICES_REPOSITORY_MODE',
+      defaultValue: 'prod',
+    ),
+  );
 
   static final RepositoryMode accountStatusRepositoryMode =
       RepositoryMode.fromString(

@@ -8,7 +8,7 @@ final class DioParentFinancialRepository
   final HttpClient _httpClient;
 
   DioParentFinancialRepository({required HttpClient httpClient})
-      : _httpClient = httpClient;
+    : _httpClient = httpClient;
 
   @override
   Future<void> initialize() async {}
@@ -17,13 +17,16 @@ final class DioParentFinancialRepository
   Never throwException(
     ParentFinancialRepositoryExceptionCode code, {
     String? message,
-  }) =>
-      throw ParentFinancialRepositoryException(code: code, message: message);
+  }) => throw ParentFinancialRepositoryException(code: code, message: message);
 
   // ─────────────────────────────────────────────────────────────────────────
-  // Wallet endpoints (EduCore Postman):
+  // Wallet endpoints (EduCore OpenAPI):
   //   GET  /api/wallet/student/{studentId}
   //   GET  /api/wallet/student/{studentId}/transactions
+  //   POST /api/wallet/top-up requires { studentId:int, amount } for a
+  //        child-targeted top-up.
+  //   POST /api/payment/wallet/deposit requires { amount, paymentMethod } for
+  //        the caller's own wallet.
   // The previous /api/parent/children/{id}/wallet/* paths used by the app
   // are NOT declared on the backend; they are kept as last-resort fallbacks
   // for older builds only. /wallet/analytics and /payments are not declared
@@ -170,28 +173,24 @@ final class DioParentFinancialRepository
         message: 'Top-up amount must be positive.',
       );
     }
-    final payload = <String, dynamic>{
-      'amount': amount,
-      if (studentId != null && studentId.isNotEmpty) ...{
-        'studentId': studentId,
-        'student_id': studentId,
-      },
-    };
     try {
       HttpClientResponse response;
-      try {
+      if (studentId != null && studentId.isNotEmpty) {
+        final parsedStudentId = int.tryParse(studentId);
         response = await _httpClient.post(
           '/api/wallet/top-up',
-          data: payload,
+          data: {
+            'amount': amount,
+            'studentId': parsedStudentId ?? studentId,
+          },
         );
-      } on HttpClientResponse catch (e) {
-        if (e.statusCode != 404 && e.statusCode != 405) rethrow;
-        // Fallback to the generic deposit endpoint. Note this one cannot
-        // target a specific child; the backend deposits into the caller's
-        // own wallet.
+      } else {
         response = await _httpClient.post(
           '/api/payment/wallet/deposit',
-          data: {'amount': amount},
+          data: {
+            'amount': amount,
+            'paymentMethod': 'CASH',
+          },
         );
       }
       final data = asMap(response.data)['data'] ?? asMap(response.data);

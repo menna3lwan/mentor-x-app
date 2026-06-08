@@ -88,16 +88,7 @@ Each item is rated by:
   canonical shape.
 - **Owner**: when Backend ratifies the auth contract.
 
-## D9. `parent/.env.production` ships an HTTP (non-TLS) backend URL
-
-- **Where**: `parent/.env.production` points at `http://98.94.45.209:8081`.
-- **Impact**: High once shipping outside development. Android & iOS will
-  block cleartext HTTP without explicit network-security-config / NSAppTransport
-  declarations.
-- **Risk to fix**: External — backend should expose HTTPS.
-- **Owner**: backend / DevOps before production roll-out.
-
-## D10. `dart-define-from-file=.env` not invoked from `makefile`
+## D9. `dart-define-from-file=.env` not invoked from `makefile`
 
 - **Where**: `parent/makefile`.
 - **Impact**: Low. Developers must remember the flag manually.

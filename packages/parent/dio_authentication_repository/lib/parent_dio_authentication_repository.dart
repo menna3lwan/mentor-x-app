@@ -170,7 +170,10 @@ final class DioAuthenticationRepository
           'app_version': appVersion.trim(),
       };
 
-      final response = await httpClient.post('/api/parent/register', data: payload);
+      final response = await httpClient.post(
+        '/api/parent/register',
+        data: payload,
+      );
 
       final data = _extractDataMap(response.data);
       final userId = stringOrNull(data['user_id'] ?? data['id']) ?? '';
@@ -247,9 +250,14 @@ final class DioAuthenticationRepository
 
       return ParentStudentLookupEntity(
         studentId: studentId,
-        maskedName: '${stringOrNull(data['first_name_masked'] ?? data['firstNameMasked']) ?? '**'} ${stringOrNull(data['last_name_masked'] ?? data['lastNameMasked']) ?? '**'}',
-        gradeName: stringOrNull(data['grade_name'] ?? data['gradeName']) ?? 'Unknown Grade',
-        centerName: stringOrNull(data['tenant_name'] ?? data['tenantName']) ?? 'Unknown Tenant',
+        maskedName:
+            '${stringOrNull(data['first_name_masked'] ?? data['firstNameMasked']) ?? '**'} ${stringOrNull(data['last_name_masked'] ?? data['lastNameMasked']) ?? '**'}',
+        gradeName:
+            stringOrNull(data['grade_name'] ?? data['gradeName']) ??
+            'Unknown Grade',
+        centerName:
+            stringOrNull(data['tenant_name'] ?? data['tenantName']) ??
+            'Unknown Tenant',
         profilePhotoUrl: stringOrNull(
           data['profile_photo_url'] ?? data['profilePhotoUrl'],
         ),
@@ -332,7 +340,10 @@ final class DioAuthenticationRepository
   @override
   Future<void> requestPasswordReset(String phone) async {
     try {
-      await httpClient.post('/api/auth/forgot-password', data: {'phone': phone});
+      await httpClient.post(
+        '/api/auth/forgot-password',
+        data: {'phone': phone},
+      );
     } on HttpClientResponse catch (e) {
       handleHttpClientErrorResponse(
         e,
@@ -347,15 +358,19 @@ final class DioAuthenticationRepository
     required String otp,
     required String newPassword,
   }) async {
-    // Backend contract (Postman): /api/auth/reset-password body shape is
-    // { phone, otp, newPassword } (camelCase). Legacy snake_case payloads
-    // are kept as a fallback for older backend builds.
+    // Backend contract (OpenAPI): /api/auth/reset-password body shape is
+    // { phone, newPassword }. OTP is verified by /api/auth/verify-otp before
+    // this step; legacy payloads are kept as fallbacks for older builds.
     final primaryPayload = {
+      'phone': phone,
+      'newPassword': newPassword,
+    };
+    final legacyPayloadWithOtp = {
       'phone': phone,
       'otp': otp,
       'newPassword': newPassword,
     };
-    final legacyPayload = {
+    final legacySnakeCasePayload = {
       'phone': phone,
       'otp': otp,
       'new_password': newPassword,
@@ -370,7 +385,15 @@ final class DioAuthenticationRepository
         try {
           await httpClient.post(
             '/api/auth/reset-password',
-            data: legacyPayload,
+            data: legacyPayloadWithOtp,
+          );
+          await _clearLocalSession();
+          return;
+        } catch (_) {}
+        try {
+          await httpClient.post(
+            '/api/auth/reset-password',
+            data: legacySnakeCasePayload,
           );
           await _clearLocalSession();
           return;
