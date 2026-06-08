@@ -39,6 +39,7 @@ final class DioParentChildrenRepository
       handleHttpClientErrorResponse(
         e,
         defaultCode: ParentChildrenRepositoryExceptionCode.fetchError,
+        codeFromStatusCode: _classify,
       );
     }
   }
@@ -105,7 +106,16 @@ final class DioParentChildrenRepository
       handleHttpClientErrorResponse(
         e,
         defaultCode: ParentChildrenRepositoryExceptionCode.unknown,
+        codeFromStatusCode: _classify,
       );
     }
+  }
+
+  ParentChildrenRepositoryExceptionCode _classify(int statusCode) {
+    return switch (statusCode) {
+      401 || 403 => ParentChildrenRepositoryExceptionCode.unauthorized,
+      404 => ParentChildrenRepositoryExceptionCode.studentNotFound,
+      _ => ParentChildrenRepositoryExceptionCode.fetchError,
+    };
   }
 }

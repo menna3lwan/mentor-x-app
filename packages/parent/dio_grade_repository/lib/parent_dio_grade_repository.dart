@@ -103,7 +103,15 @@ final class DioParentGradeRepository
       handleHttpClientErrorResponse(
         e,
         defaultCode: ParentGradeRepositoryExceptionCode.fetchError,
+        codeFromStatusCode: _classify,
       );
     }
+  }
+
+  ParentGradeRepositoryExceptionCode _classify(int statusCode) {
+    return switch (statusCode) {
+      401 || 403 => ParentGradeRepositoryExceptionCode.unauthorized,
+      _ => ParentGradeRepositoryExceptionCode.fetchError,
+    };
   }
 }

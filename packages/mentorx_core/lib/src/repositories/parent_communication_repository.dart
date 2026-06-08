@@ -4,6 +4,7 @@ part of 'package:mentorx_core/mentorx_core.dart';
 
 enum ParentCommunicationRepositoryExceptionCode {
   unknown,
+  unauthorized,
   fetchError,
 }
 
