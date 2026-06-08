@@ -1,6 +1,7 @@
 export 'analytics/analytics.dart';
 export 'attendance_groups/attendance_groups.dart';
 export 'auth/auth.dart';
+export 'devices/devices.dart';
 export 'my_wallet/my_wallet.dart';
 export 'push_notifications/push_notifications.dart';
 export 'assessments/assessments.dart';

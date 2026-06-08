@@ -1014,6 +1014,7 @@ class _TranslationsParentAr implements TranslationsParentEn {
 	@override late final _TranslationsParentAuthAr auth = _TranslationsParentAuthAr._(_root);
 	@override late final _TranslationsParentProfileAr profile = _TranslationsParentProfileAr._(_root);
 	@override late final _TranslationsParentPushNotificationsAr pushNotifications = _TranslationsParentPushNotificationsAr._(_root);
+	@override late final _TranslationsParentDevicesAr devices = _TranslationsParentDevicesAr._(_root);
 	@override late final _TranslationsParentCommunicationAr communication = _TranslationsParentCommunicationAr._(_root);
 	@override late final _TranslationsParentAnalyticsAr analytics = _TranslationsParentAnalyticsAr._(_root);
 	@override late final _TranslationsParentAcademicAr academic = _TranslationsParentAcademicAr._(_root);
@@ -1595,6 +1596,41 @@ class _TranslationsParentAuthAr implements TranslationsParentAuthEn {
 	@override String get regErrorPasswordMismatch => 'كلمتا المرور غير متطابقتين.';
 	@override String get regErrorRegistrationFailed => 'فشل التسجيل. حاول مرة أخرى.';
 	@override String get regErrorPhoneAlreadyExists => 'يوجد حساب مسجّل بهذا الرقم بالفعل.';
+}
+
+// Path: parent.devices
+class _TranslationsParentDevicesAr implements TranslationsParentDevicesEn {
+	_TranslationsParentDevicesAr._(this._root);
+
+	final TranslationsAr _root; // ignore: unused_field
+
+	@override String get pageTitle => 'الأجهزة والجلسات';
+	@override String get pageSubtitle =>
+		'الأجهزة المسجَّلة حاليًا في حسابك على MentorX. قم بإنهاء جلسة أي جهاز لا تتعرّف عليه.';
+	@override String get settingsSubtitle => 'إدارة الأجهزة المسجَّلة';
+	@override String get currentBadge => 'هذا الجهاز';
+	@override String get activeBadge => 'نشط';
+	@override String get inactiveBadge => 'موقوف';
+	@override String lastUsedLabel({required Object time}) =>
+		'آخر استخدام ${time}';
+	@override String get revokeAction => 'تسجيل الخروج';
+	@override String get revokeConfirmTitle => 'إنهاء جلسة هذا الجهاز؟';
+	@override String revokeConfirmMessage({required Object device}) =>
+		'سيتم تسجيل خروج ${device} وسيحتاج إلى تسجيل الدخول من جديد.';
+	@override String get revokeSuccess => 'تم تسجيل خروج الجهاز.';
+	@override String get forceLogoutTitle => 'تسجيل الخروج من كل الأجهزة';
+	@override String get forceLogoutHint =>
+		'استخدم هذا الخيار إن فقدت جهازًا أو شككت في أن شخصًا آخر يستخدم حسابك. ستظل مسجَّلًا على هذا الجهاز.';
+	@override String get forceLogoutAction => 'تسجيل الخروج من باقي الأجهزة';
+	@override String get forceLogoutConfirmTitle =>
+		'تسجيل الخروج من باقي الأجهزة؟';
+	@override String get forceLogoutConfirmMessage =>
+		'سيتم تسجيل خروج كل الأجهزة الأخرى من حسابك فورًا.';
+	@override String get forceLogoutSuccess =>
+		'تم تسجيل الخروج من كل الأجهزة الأخرى.';
+	@override String get emptyTitle => 'لا توجد أجهزة';
+	@override String get emptyHint => 'لم نجد أي جلسات نشطة لهذا الحساب.';
+	@override String get cancel => 'إلغاء';
 }
 
 // Path: parent.pushNotifications

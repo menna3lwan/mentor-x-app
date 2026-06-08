@@ -12,6 +12,7 @@ import '../../features/assessments/pages/grade_monitor_page.dart';
 import '../../features/attendance_groups/pages/attendance_group_detail_page_wrapper.dart';
 import '../../features/attendance_groups/pages/attendance_groups_page_wrapper.dart';
 import '../../features/courses/pages/course_progress_detail_page_wrapper.dart';
+import '../../features/devices/pages/devices_page_wrapper.dart';
 import '../../features/notifications/pages/notifications_parent_page.dart';
 import '../../features/communication/pages/announcements_archive_page.dart';
 import '../../features/communication/pages/whatsapp_groups_parent_page.dart';
@@ -254,6 +255,14 @@ class ChangePasswordRoute extends GoRouteData with $ChangePasswordRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const ChangePasswordPageWrapper();
+}
+
+@TypedGoRoute<DevicesRoute>(path: '/profile/devices')
+class DevicesRoute extends GoRouteData with $DevicesRoute {
+  const DevicesRoute();
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const DevicesPageWrapper();
 }
 
 @TypedGoRoute<MyWalletRoute>(path: '/my-wallet')

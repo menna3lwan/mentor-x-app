@@ -1,0 +1,1385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>MentorX — Research Poster</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ──────────────────────────────────────────────────────────
+     MentorX Poster — Design System
+     A0 portrait, 841mm × 1189mm, 300 DPI print
+     ────────────────────────────────────────────────────────── */
+  :root {
+    --navy: #183764;
+    --navy-dark: #0F2347;
+    --orange: #F59239;
+    --orange-soft: #FDB873;
+    --sky: #E8F0FB;
+    --cream: #FAF8F4;
+    --body: #2C2F3A;
+    --muted: #6B7280;
+    --white: #FFFFFF;
+    --green: #10B981;
+    --red: #EF4444;
+
+    --r-card: 16px;
+    --r-chip: 8px;
+    --r-hero: 24px;
+
+    --shadow-card: 0 8px 24px rgba(24, 55, 100, 0.08);
+    --shadow-hero: 0 16px 48px rgba(24, 55, 100, 0.20);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: #2a2a2a;
+    font-family: 'Inter', sans-serif;
+    color: var(--body);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Poster canvas — A0 portrait at 96 dpi screen (3179 × 4494 px @ 300dpi).
+     We use mm directly so print is exact and browser scales for preview. */
+  .poster {
+    width: 841mm;
+    min-height: 1189mm;
+    margin: 20px auto;
+    background: var(--cream);
+    padding: 36mm 32mm;
+    box-shadow: 0 20px 80px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    gap: 18mm;
+  }
+
+  @media print {
+    @page { size: A0 portrait; margin: 0; }
+    body { background: white; }
+    .poster { margin: 0; box-shadow: none; }
+  }
+
+  /* ─── Typography ─── */
+  h1, h2, h3, h4 { font-family: 'Poppins', sans-serif; color: var(--navy); letter-spacing: -0.02em; }
+  h2 { font-size: 36pt; font-weight: 700; }
+  h3 { font-size: 22pt; font-weight: 600; }
+  h4 { font-size: 16pt; font-weight: 600; }
+  p, li { font-size: 13pt; line-height: 1.55; color: var(--body); }
+  .caption { font-size: 10pt; color: var(--muted); font-weight: 500; }
+  ul { padding-left: 0; list-style: none; }
+
+  /* ─── Section header chip ─── */
+  .section-bar {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    padding: 8px 18px;
+    background: linear-gradient(90deg, var(--orange), var(--orange-soft));
+    color: white;
+    border-radius: var(--r-chip);
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 16pt;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+  .section-bar .icon { font-size: 18pt; }
+
+  /* ─── Cards ─── */
+  .card {
+    background: var(--white);
+    border-radius: var(--r-card);
+    padding: 22pt;
+    box-shadow: var(--shadow-card);
+    border: 1px solid rgba(24, 55, 100, 0.06);
+  }
+  .card.sky { background: var(--sky); }
+  .card.navy { background: var(--navy); color: white; }
+  .card.navy h2, .card.navy h3, .card.navy h4 { color: white; }
+  .card.navy p, .card.navy li { color: rgba(255,255,255,0.92); }
+
+  /* ═══════════════════════════════════════════════════════════
+     BAND 1 — HERO HEADER
+     ═══════════════════════════════════════════════════════════ */
+  .hero {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-dark) 100%);
+    color: white;
+    border-radius: var(--r-hero);
+    padding: 28mm 26mm;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-hero);
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(245, 146, 57, 0.18) 1px, transparent 0);
+    background-size: 24px 24px;
+    opacity: 0.5;
+    pointer-events: none;
+  }
+  .hero::after {
+    content: "";
+    position: absolute;
+    top: -120px; right: -120px;
+    width: 480px; height: 480px;
+    background: radial-gradient(circle, rgba(245, 146, 57, 0.18), transparent 70%);
+    pointer-events: none;
+  }
+  .hero-inner {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    gap: 24pt;
+    align-items: center;
+  }
+  .hero-side { display: flex; flex-direction: column; gap: 16pt; }
+  .hero-side.right { align-items: flex-end; text-align: right; }
+  .hero-logo {
+    width: 80pt; height: 80pt;
+    background: rgba(255,255,255,0.12);
+    border: 2px solid rgba(255,255,255,0.25);
+    border-radius: 18px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 36pt;
+    backdrop-filter: blur(8px);
+  }
+  .hero-side h4 { color: white; font-size: 14pt; line-height: 1.4; margin-top: 8pt; }
+  .hero-side .caption { color: rgba(255,255,255,0.7); font-size: 10pt; }
+  .hero-side .badge {
+    background: var(--orange);
+    color: white;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 10pt;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .hero-center { text-align: center; }
+  .hero-center .pre-title {
+    color: rgba(255,255,255,0.7);
+    font-size: 11pt;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    margin-bottom: 16pt;
+    font-weight: 600;
+  }
+  .hero-center h1 {
+    font-family: 'Poppins', sans-serif;
+    color: white;
+    font-size: 96pt;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin-bottom: 16pt;
+  }
+  .hero-center h1 .accent { color: var(--orange); }
+  .hero-center .subtitle {
+    color: white;
+    font-size: 22pt;
+    font-weight: 500;
+    font-style: italic;
+    margin-bottom: 8pt;
+  }
+  .hero-center .tagline {
+    color: rgba(255,255,255,0.8);
+    font-size: 14pt;
+    font-weight: 400;
+  }
+  .hero-underline {
+    width: 200pt;
+    height: 4pt;
+    background: var(--orange);
+    margin: 18pt auto;
+    border-radius: 4px;
+  }
+  .hero-pills {
+    display: flex; justify-content: center; gap: 14pt;
+    margin-top: 14pt;
+  }
+  .hero-pill {
+    background: rgba(255,255,255,0.10);
+    border: 1px solid rgba(255,255,255,0.25);
+    padding: 8pt 16pt;
+    border-radius: 24px;
+    color: white;
+    font-size: 11pt;
+    font-weight: 600;
+    display: inline-flex; align-items: center; gap: 8pt;
+  }
+  .hero-supervisor {
+    margin-top: 28pt;
+    padding-top: 20pt;
+    border-top: 1px solid rgba(255,255,255,0.18);
+    display: flex; justify-content: center; gap: 32pt; flex-wrap: wrap;
+    color: rgba(255,255,255,0.92);
+    font-size: 13pt;
+  }
+  .hero-supervisor span { display: inline-flex; align-items: baseline; gap: 8pt; }
+  .hero-supervisor strong { color: var(--orange); font-weight: 700; font-size: 11pt; text-transform: uppercase; letter-spacing: 0.06em; }
+
+  /* ═══════════════════════════════════════════════════════════
+     BAND 2 — Abstract · Problem · Objectives
+     ═══════════════════════════════════════════════════════════ */
+  .band-2 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14mm; }
+
+  .objectives-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12pt; margin-top: 14pt;
+  }
+  .objective-item {
+    display: flex; gap: 10pt;
+    padding: 12pt; background: var(--sky); border-radius: 12px;
+    border-left: 4px solid var(--orange);
+  }
+  .objective-item .num {
+    font-family: 'Poppins'; font-weight: 800; color: var(--orange);
+    font-size: 22pt; line-height: 1; min-width: 28pt;
+  }
+  .objective-item h4 { font-size: 12pt; margin-bottom: 4pt; }
+  .objective-item p { font-size: 10pt; line-height: 1.35; }
+
+  .problem-list { display: flex; flex-direction: column; gap: 14pt; margin-top: 12pt; }
+  .problem-item {
+    display: flex; gap: 14pt;
+    padding-left: 14pt;
+    border-left: 4px solid var(--red);
+  }
+  .problem-item .ico {
+    font-size: 22pt; line-height: 1; min-width: 32pt; color: var(--red);
+  }
+  .problem-item h4 { font-size: 13pt; color: var(--navy); margin-bottom: 4pt; }
+  .problem-item p { font-size: 11pt; line-height: 1.4; }
+
+  .stat-chips { display: flex; gap: 8pt; flex-wrap: wrap; margin-top: 16pt; }
+  .stat-chip {
+    background: var(--navy); color: white;
+    padding: 6pt 12pt; border-radius: 16px;
+    font-size: 9pt; font-weight: 600;
+  }
+  .stat-chip.orange { background: var(--orange); }
+  .stat-chip.green { background: var(--green); }
+
+  /* ═══════════════════════════════════════════════════════════
+     BAND 3 — Architecture + Modules
+     ═══════════════════════════════════════════════════════════ */
+  .band-3 { display: grid; grid-template-columns: 1.2fr 1fr; gap: 14mm; }
+
+  .arch-svg-wrap {
+    background: var(--white); border-radius: var(--r-card);
+    padding: 22pt; box-shadow: var(--shadow-card);
+    border: 1px solid rgba(24, 55, 100, 0.06);
+  }
+  .arch-svg-wrap svg { width: 100%; height: auto; display: block; margin-top: 12pt; }
+
+  .modules-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10pt;
+  }
+  .module-tile {
+    background: var(--sky); border-radius: 14px; padding: 14pt;
+    border: 1px solid rgba(24, 55, 100, 0.08);
+    display: flex; flex-direction: column; gap: 8pt;
+  }
+  .module-tile .icon-circle {
+    width: 44pt; height: 44pt; border-radius: 50%;
+    background: var(--navy); color: white;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 20pt; margin-bottom: 4pt;
+  }
+  .module-tile h4 { font-size: 13pt; }
+  .module-tile ul li {
+    font-size: 9.5pt; line-height: 1.4; padding-left: 12pt;
+    position: relative; color: var(--body);
+  }
+  .module-tile ul li::before {
+    content: "▸"; position: absolute; left: 0; color: var(--orange); font-weight: bold;
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     BAND 4 — Deep modules + Diagrams
+     ═══════════════════════════════════════════════════════════ */
+  .triad { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12mm; }
+
+  .role-card {
+    background: var(--white); border-radius: var(--r-card);
+    overflow: hidden; box-shadow: var(--shadow-card);
+    border: 1px solid rgba(24, 55, 100, 0.06);
+    display: flex; flex-direction: column;
+  }
+  .role-card .role-header {
+    background: var(--navy); color: white;
+    padding: 14pt 18pt;
+    display: flex; align-items: center; gap: 12pt;
+  }
+  .role-card .role-header .ico {
+    font-size: 26pt; width: 50pt; height: 50pt; border-radius: 12px;
+    background: rgba(255,255,255,0.12); display: flex; align-items: center; justify-content: center;
+  }
+  .role-card .role-header h3 { color: white; font-size: 18pt; margin: 0; }
+  .role-card .role-header .caption { color: rgba(255,255,255,0.7); font-style: italic; }
+  .role-card .role-body { padding: 16pt 18pt; flex: 1; }
+  .role-card .role-body li {
+    font-size: 11pt; line-height: 1.5; margin-bottom: 8pt;
+    padding-left: 22pt; position: relative;
+  }
+  .role-card .role-body li::before {
+    content: ""; position: absolute; left: 0; top: 8pt;
+    width: 12pt; height: 12pt; border-radius: 50%;
+    background: var(--orange);
+  }
+
+  /* AI Banner */
+  .ai-banner {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--orange) 100%);
+    border-radius: var(--r-card);
+    padding: 24pt 28pt;
+    color: white;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 24pt;
+    position: relative; overflow: hidden;
+  }
+  .ai-banner::before {
+    content: ""; position: absolute; top: -80px; right: -80px;
+    width: 300px; height: 300px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,0.15), transparent 70%);
+  }
+  .ai-left h3 { color: white; font-size: 28pt; margin-bottom: 8pt; }
+  .ai-left p { color: rgba(255,255,255,0.92); font-size: 14pt; font-style: italic; }
+  .ai-engines { display: grid; grid-template-columns: 1fr 1fr; gap: 14pt; position: relative; }
+  .ai-engine {
+    background: rgba(255,255,255,0.10);
+    border: 1px solid rgba(255,255,255,0.20);
+    border-radius: 12px; padding: 14pt;
+    backdrop-filter: blur(8px);
+  }
+  .ai-engine h4 { color: white; font-size: 13pt; margin-bottom: 6pt; }
+  .ai-engine p { color: rgba(255,255,255,0.88); font-size: 10pt; line-height: 1.45; margin-bottom: 8pt; }
+  .ai-engine .stack {
+    font-size: 9pt; color: var(--orange-soft); font-weight: 600;
+  }
+
+  /* Diagram row */
+  .diagrams-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14mm; }
+  .diagram-card {
+    background: var(--white); border-radius: var(--r-card);
+    padding: 22pt; box-shadow: var(--shadow-card);
+    border: 1px solid rgba(24, 55, 100, 0.06);
+  }
+  .diagram-card svg { width: 100%; height: auto; display: block; margin-top: 12pt; }
+  .diagram-card .desc { font-size: 11pt; line-height: 1.5; color: var(--body); margin-bottom: 8pt; }
+
+  /* ═══════════════════════════════════════════════════════════
+     BAND 5 — Tech / Features / Results / Future
+     ═══════════════════════════════════════════════════════════ */
+  .band-5 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 12mm; }
+
+  .tech-layer { margin-bottom: 14pt; }
+  .tech-layer h4 {
+    font-size: 11pt; color: var(--orange); text-transform: uppercase;
+    letter-spacing: 0.08em; margin-bottom: 6pt; font-weight: 700;
+  }
+  .tech-pills { display: flex; flex-wrap: wrap; gap: 6pt; }
+  .tech-pill {
+    background: var(--sky); color: var(--navy); border: 1px solid rgba(24,55,100,0.12);
+    padding: 5pt 10pt; border-radius: 10px; font-size: 10pt; font-weight: 600;
+  }
+
+  .feature-row {
+    display: flex; gap: 10pt; padding: 8pt 0;
+    border-bottom: 1px dashed rgba(24,55,100,0.10);
+  }
+  .feature-row:last-child { border-bottom: none; }
+  .feature-row .ico {
+    width: 30pt; height: 30pt; border-radius: 8px; background: var(--orange);
+    color: white; display: flex; align-items: center; justify-content: center;
+    font-size: 14pt; flex-shrink: 0;
+  }
+  .feature-row h4 { font-size: 12pt; margin-bottom: 2pt; }
+  .feature-row p { font-size: 9.5pt; line-height: 1.35; color: var(--muted); }
+
+  .stat-card {
+    background: linear-gradient(135deg, var(--white) 0%, var(--sky) 100%);
+    border-left: 4px solid var(--orange);
+    border-radius: 12px;
+    padding: 12pt 14pt;
+    margin-bottom: 10pt;
+    display: flex; align-items: baseline; gap: 14pt;
+  }
+  .stat-card .number {
+    font-family: 'Poppins'; font-weight: 900;
+    color: var(--navy); font-size: 32pt; line-height: 1;
+    min-width: 80pt;
+  }
+  .stat-card .label {
+    font-size: 10pt; color: var(--body); line-height: 1.35;
+  }
+
+  .future-timeline { position: relative; padding-left: 22pt; }
+  .future-timeline::before {
+    content: ""; position: absolute; left: 8pt; top: 4pt; bottom: 4pt;
+    width: 2px; background: var(--orange);
+  }
+  .future-item {
+    position: relative; margin-bottom: 14pt; padding-left: 6pt;
+  }
+  .future-item::before {
+    content: ""; position: absolute; left: -19pt; top: 4pt;
+    width: 14pt; height: 14pt; border-radius: 50%;
+    background: var(--navy); border: 3px solid var(--orange);
+  }
+  .future-item .phase {
+    font-size: 9pt; color: var(--orange); font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  .future-item h4 { font-size: 11pt; margin-top: 2pt; line-height: 1.35; }
+
+  /* ═══════════════════════════════════════════════════════════
+     BAND 6 — Footer
+     ═══════════════════════════════════════════════════════════ */
+  .footer-grid { display: grid; grid-template-columns: 1.5fr 2fr 1fr; gap: 14mm; }
+
+  .conclusion-card { background: var(--navy); color: white; }
+  .conclusion-card h2 { color: white; }
+  .conclusion-card p { color: rgba(255,255,255,0.92); font-size: 12pt; }
+
+  .team-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 14pt;
+    margin-top: 14pt;
+  }
+  .team-member { text-align: center; }
+  .team-avatar {
+    width: 64pt; height: 64pt; border-radius: 50%;
+    background: linear-gradient(135deg, var(--sky), var(--orange-soft));
+    margin: 0 auto 8pt; border: 3px solid var(--navy);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28pt; color: var(--navy);
+  }
+  .team-member .name { font-size: 11pt; font-weight: 700; color: var(--navy); }
+  .team-member .role { font-size: 9pt; color: var(--muted); margin-top: 2pt; }
+
+  .refs ol { padding-left: 18pt; }
+  .refs li { font-size: 8.5pt; line-height: 1.45; color: var(--body); margin-bottom: 4pt; }
+  .uni-block {
+    margin-top: 16pt; padding-top: 14pt;
+    border-top: 2px solid var(--orange);
+    text-align: center;
+  }
+  .uni-block h4 { font-size: 12pt; color: var(--navy); margin-bottom: 4pt; }
+  .uni-block .caption { font-size: 10pt; color: var(--muted); }
+
+  /* ═══════════════════════════════════════════════════════════
+     SVG helpers
+     ═══════════════════════════════════════════════════════════ */
+  .svg-arrow { stroke: #F59239; stroke-width: 2; fill: none; marker-end: url(#arr); }
+  .svg-block { fill: #E8F0FB; stroke: #183764; stroke-width: 1.5; }
+  .svg-block-dark { fill: #183764; stroke: #183764; stroke-width: 1.5; }
+  .svg-label { font-family: 'Poppins'; font-size: 11px; font-weight: 600; fill: #183764; text-anchor: middle; }
+  .svg-label-w { font-family: 'Poppins'; font-size: 11px; font-weight: 600; fill: white; text-anchor: middle; }
+  .svg-label-sm { font-family: 'Inter'; font-size: 9px; fill: #6B7280; text-anchor: middle; }
+  .svg-layer-title { font-family: 'Poppins'; font-size: 10px; font-weight: 700; fill: #F59239; text-transform: uppercase; letter-spacing: 0.08em; }
+
+</style>
+</head>
+<body>
+
+<div class="poster">
+
+  <!-- ════════════════════════════════════════════════════════
+       BAND 1 — HERO HEADER
+       ════════════════════════════════════════════════════════ -->
+  <header class="hero">
+    <div class="hero-inner">
+      <!-- LEFT: University -->
+      <div class="hero-side">
+        <div class="hero-logo">🎓</div>
+        <div>
+          <h4>Faculty of Computers &amp; Artificial Intelligence</h4>
+          <div class="caption">Department of Computer Science</div>
+        </div>
+        <div class="badge">Graduation Project 2026</div>
+      </div>
+
+      <!-- CENTER: Title -->
+      <div class="hero-center">
+        <div class="pre-title">AI-Powered Educational Ecosystem</div>
+        <h1>Mentor<span class="accent">X</span></h1>
+        <div class="hero-underline"></div>
+        <div class="subtitle">One platform. Three roles. Endless learning.</div>
+        <div class="tagline">Connecting Students · Parents · Teachers in one smart learning experience</div>
+        <div class="hero-pills">
+          <span class="hero-pill">🎓 Students</span>
+          <span class="hero-pill">👨‍👩‍👧 Parents</span>
+          <span class="hero-pill">👨‍🏫 Teachers</span>
+          <span class="hero-pill">🤖 AI Assistant</span>
+        </div>
+      </div>
+
+      <!-- RIGHT: Project Logo + meta -->
+      <div class="hero-side right">
+        <div class="hero-logo">🧠</div>
+        <div>
+          <h4>MentorX</h4>
+          <div class="caption">v1.0 · Multi-Tenant SaaS</div>
+        </div>
+        <div class="badge" style="background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3);">Class of 2026</div>
+      </div>
+    </div>
+
+    <div class="hero-supervisor">
+      <span><strong>Supervisor</strong>&nbsp;[Supervisor Name]</span>
+      <span><strong>Co-Supervisor</strong>&nbsp;[Co-Supervisor Name]</span>
+      <span><strong>Team Leader</strong>&nbsp;[Team Leader Name]</span>
+    </div>
+  </header>
+
+  <!-- ════════════════════════════════════════════════════════
+       BAND 2 — Abstract · Problem · Objectives
+       ════════════════════════════════════════════════════════ -->
+  <section class="band-2">
+
+    <!-- Abstract -->
+    <div class="card">
+      <div class="section-bar"><span class="icon">📄</span>Abstract</div>
+      <p>The rapid digitization of education has exposed clear gaps in how learning is delivered, monitored, and supported. Existing platforms remain fragmented — focusing on either content delivery or basic LMS features — while leaving parents, teachers, and analytics disconnected.</p>
+      <p style="margin-top:10pt;"><strong>MentorX</strong> is a unified, AI-powered educational ecosystem that brings <strong>students, parents, and teachers</strong> into a single intelligent platform. It integrates course management, automated attendance, secure assessments, gamified learning, real-time analytics, a Retrieval-Augmented Generation (RAG) chatbot, and an OCR-based National ID verification system.</p>
+      <p style="margin-top:10pt;">By combining a multi-tenant SaaS architecture with mobile-first design, data-driven insights, and modern security practices, MentorX transforms isolated digital tools into one connected learning experience — making education <strong>smarter, fairer, and more transparent</strong>.</p>
+      <div class="stat-chips">
+        <span class="stat-chip">120+ Functional Requirements</span>
+        <span class="stat-chip orange">8 Core Modules</span>
+        <span class="stat-chip green">3 User Roles</span>
+      </div>
+    </div>
+
+    <!-- Problem -->
+    <div class="card">
+      <div class="section-bar" style="background:linear-gradient(90deg,#EF4444,#F59239);"><span class="icon">⚠️</span>Problem Statement</div>
+      <p style="margin-bottom:6pt;">Traditional and existing e-learning platforms suffer from critical limitations:</p>
+      <div class="problem-list">
+        <div class="problem-item">
+          <div class="ico">🔻</div>
+          <div>
+            <h4>Fragmented Ecosystems</h4>
+            <p>Students, parents, and teachers operate in disconnected silos with no unified data layer.</p>
+          </div>
+        </div>
+        <div class="problem-item">
+          <div class="ico">🔻</div>
+          <div>
+            <h4>Weak Parental Involvement</h4>
+            <p>No real-time visibility into attendance, grades, or learning progress.</p>
+          </div>
+        </div>
+        <div class="problem-item">
+          <div class="ico">🔻</div>
+          <div>
+            <h4>Manual Attendance &amp; Grading</h4>
+            <p>Error-prone, time-consuming, and unscalable for centers and online classes.</p>
+          </div>
+        </div>
+        <div class="problem-item">
+          <div class="ico">🔻</div>
+          <div>
+            <h4>Limited Intelligence</h4>
+            <p>Minimal AI for personalized guidance, predictions, or content recommendations.</p>
+          </div>
+        </div>
+        <div class="problem-item">
+          <div class="ico">🔻</div>
+          <div>
+            <h4>Compromised Academic Integrity</h4>
+            <p>Account sharing, impersonation, and unverified identities in online assessments.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Objectives -->
+    <div class="card">
+      <div class="section-bar"><span class="icon">🎯</span>Objectives</div>
+      <p>Six interconnected goals shape the MentorX vision:</p>
+      <div class="objectives-grid">
+        <div class="objective-item">
+          <div class="num">01</div>
+          <div>
+            <h4>🌐 Unified Ecosystem</h4>
+            <p>Centralize content, attendance, grading &amp; analytics.</p>
+          </div>
+        </div>
+        <div class="objective-item">
+          <div class="num">02</div>
+          <div>
+            <h4>👨‍👩‍👧 Empower Parents</h4>
+            <p>Real-time, read-only access to academic &amp; financial activity.</p>
+          </div>
+        </div>
+        <div class="objective-item">
+          <div class="num">03</div>
+          <div>
+            <h4>📍 Automate Attendance</h4>
+            <p>QR-based for centers + auto-tracking for online sessions.</p>
+          </div>
+        </div>
+        <div class="objective-item">
+          <div class="num">04</div>
+          <div>
+            <h4>🤖 AI-Driven Support</h4>
+            <p>RAG chatbot grounded in teacher-uploaded materials.</p>
+          </div>
+        </div>
+        <div class="objective-item">
+          <div class="num">05</div>
+          <div>
+            <h4>🔐 Academic Integrity</h4>
+            <p>National ID OCR verification + device binding.</p>
+          </div>
+        </div>
+        <div class="objective-item">
+          <div class="num">06</div>
+          <div>
+            <h4>📊 Data-Driven Insights</h4>
+            <p>Predictive analytics for early intervention.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════
+       BAND 3 — System Architecture + 8 Modules
+       ════════════════════════════════════════════════════════ -->
+  <section class="band-3">
+
+    <!-- Architecture diagram -->
+    <div class="arch-svg-wrap">
+      <div class="section-bar"><span class="icon">🏗️</span>System Architecture</div>
+      <p class="caption" style="margin-bottom:8pt;">4-layer architecture with clean separation of clients, gateway, services, and data — designed for multi-tenant SaaS at scale.</p>
+      <svg viewBox="0 0 700 540" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 Z" fill="#F59239"/>
+          </marker>
+          <linearGradient id="layerGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#E8F0FB"/>
+            <stop offset="100%" stop-color="#F4F8FD"/>
+          </linearGradient>
+        </defs>
+
+        <!-- Layer 1: CLIENTS -->
+        <rect x="20" y="10" width="660" height="100" rx="10" fill="url(#layerGrad)" stroke="#183764" stroke-width="1.5"/>
+        <text x="36" y="32" class="svg-layer-title">Client Layer</text>
+        <rect x="60" y="42" width="170" height="56" rx="8" class="svg-block-dark"/>
+        <text x="145" y="64" class="svg-label-w">🎓 Student App</text>
+        <text x="145" y="82" class="svg-label-w" font-size="9">Flutter · iOS · Android</text>
+        <rect x="265" y="42" width="170" height="56" rx="8" class="svg-block-dark"/>
+        <text x="350" y="64" class="svg-label-w">👨‍👩‍👧 Parent App</text>
+        <text x="350" y="82" class="svg-label-w" font-size="9">Flutter · Multi-Child</text>
+        <rect x="470" y="42" width="170" height="56" rx="8" class="svg-block-dark"/>
+        <text x="555" y="64" class="svg-label-w">👨‍🏫 Admin Web</text>
+        <text x="555" y="82" class="svg-label-w" font-size="9">React · TypeScript</text>
+
+        <!-- arrows -->
+        <line x1="145" y1="110" x2="350" y2="155" class="svg-arrow"/>
+        <line x1="350" y1="110" x2="350" y2="155" class="svg-arrow"/>
+        <line x1="555" y1="110" x2="350" y2="155" class="svg-arrow"/>
+
+        <!-- Layer 2: API GATEWAY -->
+        <rect x="20" y="160" width="660" height="70" rx="10" fill="#183764" stroke="#183764"/>
+        <text x="36" y="182" class="svg-layer-title" fill="#F59239">API Gateway · Cloudflare CDN · WAF</text>
+        <text x="350" y="208" class="svg-label-w" font-size="12">🔒 JWT Auth   ·   🚦 Rate Limit   ·   🛡️ TLS 1.3   ·   ⚖️ Load Balancer</text>
+
+        <line x1="200" y1="230" x2="200" y2="265" class="svg-arrow"/>
+        <line x1="350" y1="230" x2="350" y2="265" class="svg-arrow"/>
+        <line x1="500" y1="230" x2="500" y2="265" class="svg-arrow"/>
+
+        <!-- Layer 3: BACKEND SERVICES -->
+        <rect x="20" y="270" width="660" height="155" rx="10" fill="url(#layerGrad)" stroke="#183764" stroke-width="1.5"/>
+        <text x="36" y="292" class="svg-layer-title">Backend Services · Spring Boot · NestJS</text>
+
+        <!-- service tiles row 1 -->
+        <rect x="40" y="306" width="100" height="46" rx="8" class="svg-block"/>
+        <text x="90" y="328" class="svg-label">🔐 Auth</text>
+        <text x="90" y="342" class="svg-label-sm">JWT · OTP</text>
+
+        <rect x="150" y="306" width="100" height="46" rx="8" class="svg-block"/>
+        <text x="200" y="328" class="svg-label">📚 Courses</text>
+        <text x="200" y="342" class="svg-label-sm">Sessions · Materials</text>
+
+        <rect x="260" y="306" width="100" height="46" rx="8" class="svg-block"/>
+        <text x="310" y="328" class="svg-label">📍 Attendance</text>
+        <text x="310" y="342" class="svg-label-sm">QR · Auto-track</text>
+
+        <rect x="370" y="306" width="100" height="46" rx="8" class="svg-block"/>
+        <text x="420" y="328" class="svg-label">💳 Payments</text>
+        <text x="420" y="342" class="svg-label-sm">Wallet · Vodafone</text>
+
+        <rect x="480" y="306" width="100" height="46" rx="8" class="svg-block"/>
+        <text x="530" y="328" class="svg-label">📊 Analytics</text>
+        <text x="530" y="342" class="svg-label-sm">Dashboards · KPIs</text>
+
+        <rect x="590" y="306" width="90" height="46" rx="8" class="svg-block"/>
+        <text x="635" y="328" class="svg-label">🔔 FCM</text>
+        <text x="635" y="342" class="svg-label-sm">Push notif.</text>
+
+        <!-- service tiles row 2 -->
+        <rect x="100" y="362" width="160" height="46" rx="8" fill="#F59239" stroke="#183764" stroke-width="1.5"/>
+        <text x="180" y="384" class="svg-label-w">🤖 AI Service (FastAPI)</text>
+        <text x="180" y="398" class="svg-label-w" font-size="9">RAG Chatbot · OCR Pipeline</text>
+
+        <rect x="280" y="362" width="160" height="46" rx="8" class="svg-block"/>
+        <text x="360" y="384" class="svg-label">💬 Communications</text>
+        <text x="360" y="398" class="svg-label-sm">WhatsApp · Email</text>
+
+        <rect x="460" y="362" width="160" height="46" rx="8" class="svg-block"/>
+        <text x="540" y="384" class="svg-label">🏢 Multi-Tenancy</text>
+        <text x="540" y="398" class="svg-label-sm">Isolation · RBAC</text>
+
+        <!-- arrows to data layer -->
+        <line x1="120" y1="425" x2="120" y2="460" class="svg-arrow"/>
+        <line x1="350" y1="425" x2="350" y2="460" class="svg-arrow"/>
+        <line x1="580" y1="425" x2="580" y2="460" class="svg-arrow"/>
+
+        <!-- Layer 4: DATA -->
+        <rect x="20" y="465" width="660" height="65" rx="10" fill="url(#layerGrad)" stroke="#183764" stroke-width="1.5"/>
+        <text x="36" y="487" class="svg-layer-title">Data &amp; Infrastructure</text>
+
+        <rect x="60" y="495" width="140" height="28" rx="6" class="svg-block-dark"/>
+        <text x="130" y="514" class="svg-label-w" font-size="10">🗄️ PostgreSQL 15</text>
+
+        <rect x="220" y="495" width="140" height="28" rx="6" class="svg-block-dark"/>
+        <text x="290" y="514" class="svg-label-w" font-size="10">⚡ Redis 7 (Cache)</text>
+
+        <rect x="380" y="495" width="140" height="28" rx="6" class="svg-block-dark"/>
+        <text x="450" y="514" class="svg-label-w" font-size="10">🧬 Vector DB (RAG)</text>
+
+        <rect x="540" y="495" width="120" height="28" rx="6" class="svg-block-dark"/>
+        <text x="600" y="514" class="svg-label-w" font-size="10">☁️ S3 Storage</text>
+      </svg>
+    </div>
+
+    <!-- 8 Modules grid -->
+    <div>
+      <div class="section-bar"><span class="icon">🧱</span>8 Interconnected Modules</div>
+      <div class="modules-grid">
+        <div class="module-tile">
+          <div class="icon-circle">🎓</div>
+          <h4>Student Module</h4>
+          <ul>
+            <li>Course enrollment &amp; quizzes</li>
+            <li>Wallet &amp; attendance</li>
+            <li>Leaderboard &amp; AI tutor</li>
+          </ul>
+        </div>
+        <div class="module-tile">
+          <div class="icon-circle">👨‍👩‍👧</div>
+          <h4>Parent Module</h4>
+          <ul>
+            <li>Multi-child monitoring</li>
+            <li>Live alerts &amp; payments</li>
+            <li>6 analytics dashboards</li>
+          </ul>
+        </div>
+        <div class="module-tile">
+          <div class="icon-circle">👨‍🏫</div>
+          <h4>Teacher / Admin</h4>
+          <ul>
+            <li>Course &amp; content mgmt</li>
+            <li>Auto-grading workflows</li>
+            <li>Reports &amp; broadcasts</li>
+          </ul>
+        </div>
+        <div class="module-tile">
+          <div class="icon-circle">✅</div>
+          <h4>Assessment Module</h4>
+          <ul>
+            <li>MCQ, fill-blank, true/false</li>
+            <li>Randomization &amp; scoring</li>
+            <li>Auto-grading + reviews</li>
+          </ul>
+        </div>
+        <div class="module-tile">
+          <div class="icon-circle">💳</div>
+          <h4>Financial Module</h4>
+          <ul>
+            <li>Wallet &amp; transactions</li>
+            <li>Vodafone Cash · InstaPay · Fawry</li>
+            <li>Promo codes &amp; refunds</li>
+          </ul>
+        </div>
+        <div class="module-tile">
+          <div class="icon-circle">🤖</div>
+          <h4>AI &amp; Analytics</h4>
+          <ul>
+            <li>RAG chatbot</li>
+            <li>Performance prediction</li>
+            <li>Content personalization</li>
+          </ul>
+        </div>
+        <div class="module-tile">
+          <div class="icon-circle">📨</div>
+          <h4>Communication</h4>
+          <ul>
+            <li>FCM push notifications</li>
+            <li>WhatsApp Business API</li>
+            <li>In-app announcements</li>
+          </ul>
+        </div>
+        <div class="module-tile">
+          <div class="icon-circle">🔐</div>
+          <h4>Security &amp; Auth</h4>
+          <ul>
+            <li>Phone OTP + JWT</li>
+            <li>Device binding · RBAC</li>
+            <li>National ID OCR verification</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════
+       BAND 4 — Triad + AI Banner + Diagrams
+       ════════════════════════════════════════════════════════ -->
+  <section style="display:flex; flex-direction:column; gap:12mm;">
+
+    <!-- Triad: Student / Parent / Teacher -->
+    <div class="triad">
+      <div class="role-card">
+        <div class="role-header">
+          <div class="ico">🎓</div>
+          <div>
+            <h3>Student</h3>
+            <div class="caption">Learn · Engage · Grow</div>
+          </div>
+        </div>
+        <div class="role-body">
+          <ul>
+            <li>📚 Browse courses &amp; enroll using digital wallet</li>
+            <li>🎯 Take adaptive quizzes &amp; assignments with auto-grading</li>
+            <li>📲 QR-scan attendance at physical centers</li>
+            <li>🏆 Earn points, badges &amp; climb the leaderboard</li>
+            <li>💬 Chat with the AI tutor for 24/7 academic support</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="role-card">
+        <div class="role-header">
+          <div class="ico">👨‍👩‍👧</div>
+          <div>
+            <h3>Parent</h3>
+            <div class="caption">Monitor · Trust · Stay Informed</div>
+          </div>
+        </div>
+        <div class="role-body">
+          <ul>
+            <li>👶 Link multiple children under one account</li>
+            <li>📊 Track grades, attendance &amp; progress in real time</li>
+            <li>💰 Manage wallet, top-up balance &amp; view transactions</li>
+            <li>🔔 Receive instant alerts (absences, exam results)</li>
+            <li>📈 Six analytics dashboards (streak, grades, hours, achievements)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="role-card">
+        <div class="role-header">
+          <div class="ico">👨‍🏫</div>
+          <div>
+            <h3>Teacher / Admin</h3>
+            <div class="caption">Manage · Analyze · Decide</div>
+          </div>
+        </div>
+        <div class="role-body">
+          <ul>
+            <li>📝 Build courses, sessions &amp; uploadable materials</li>
+            <li>🧪 Generate randomized quizzes with AI question generator</li>
+            <li>📍 Track attendance via QR codes &amp; manual override</li>
+            <li>💸 Monitor revenue, top-ups &amp; overdue payments</li>
+            <li>📣 Broadcast announcements via FCM &amp; WhatsApp</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Banner -->
+    <div class="ai-banner">
+      <div class="ai-left">
+        <div class="section-bar" style="background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); color:white;"><span class="icon">🧠</span>Intelligent AI Assistant</div>
+        <h3>Two AI engines built for the Egyptian educational context.</h3>
+        <p>RAG-grounded answers from teacher-uploaded materials and an OCR pipeline that authenticates Arabic National IDs at registration — combining accuracy, trust, and language fluency.</p>
+        <div style="margin-top:14pt; display:flex; gap:10pt;">
+          <span class="stat-chip orange">OpenAI GPT-4</span>
+          <span class="stat-chip orange">LangChain</span>
+          <span class="stat-chip orange">YOLOv8</span>
+          <span class="stat-chip orange">EasyOCR</span>
+        </div>
+      </div>
+      <div class="ai-engines">
+        <div class="ai-engine">
+          <h4>🎓 RAG-Powered Chatbot</h4>
+          <p>Retrieval-Augmented Generation grounded <strong>only</strong> in teacher-uploaded content. Produces curriculum-aligned answers, smart summaries, and practice question generation.</p>
+          <div class="stack">Stack: GPT-4 · LangChain · Vector DB · Embedding Models</div>
+        </div>
+        <div class="ai-engine">
+          <h4>🆔 National ID Verification</h4>
+          <p>YOLOv8 + EasyOCR pipeline authenticating Arabic National IDs at registration with an 85%+ similarity threshold for auto-approval; manual review fallback.</p>
+          <div class="stack">Stack: Python · OpenCV · YOLOv8 · EasyOCR · RapidFuzz</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Diagrams row: Use Case + System Flow -->
+    <div class="diagrams-row">
+
+      <!-- Use Case Diagram -->
+      <div class="diagram-card">
+        <div class="section-bar"><span class="icon">🗺️</span>Use Case Diagram</div>
+        <p class="desc">How Students, Parents, Teachers, and Admins interact with MentorX core capabilities — from authentication and enrollment to payments and analytics.</p>
+        <svg viewBox="0 0 700 460" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="arr2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 Z" fill="#183764"/>
+            </marker>
+          </defs>
+
+          <!-- system boundary -->
+          <rect x="170" y="20" width="360" height="420" rx="20" fill="#FAF8F4" stroke="#183764" stroke-width="2" stroke-dasharray="6,4"/>
+          <text x="350" y="42" class="svg-label" font-size="13" font-weight="700">MentorX System</text>
+
+          <!-- Actors LEFT -->
+          <g transform="translate(60,80)">
+            <circle cx="0" cy="0" r="14" fill="#183764"/>
+            <line x1="0" y1="14" x2="0" y2="40" stroke="#183764" stroke-width="2"/>
+            <line x1="-15" y1="22" x2="15" y2="22" stroke="#183764" stroke-width="2"/>
+            <line x1="0" y1="40" x2="-12" y2="55" stroke="#183764" stroke-width="2"/>
+            <line x1="0" y1="40" x2="12" y2="55" stroke="#183764" stroke-width="2"/>
+            <text x="0" y="74" class="svg-label" font-size="11">🎓 Student</text>
+          </g>
+
+          <g transform="translate(60,220)">
+            <circle cx="0" cy="0" r="14" fill="#183764"/>
+            <line x1="0" y1="14" x2="0" y2="40" stroke="#183764" stroke-width="2"/>
+            <line x1="-15" y1="22" x2="15" y2="22" stroke="#183764" stroke-width="2"/>
+            <line x1="0" y1="40" x2="-12" y2="55" stroke="#183764" stroke-width="2"/>
+            <line x1="0" y1="40" x2="12" y2="55" stroke="#183764" stroke-width="2"/>
+            <text x="0" y="74" class="svg-label" font-size="11">👨‍👩‍👧 Parent</text>
+          </g>
+
+          <g transform="translate(60,360)">
+            <circle cx="0" cy="0" r="14" fill="#F59239"/>
+            <line x1="0" y1="14" x2="0" y2="40" stroke="#F59239" stroke-width="2"/>
+            <line x1="-15" y1="22" x2="15" y2="22" stroke="#F59239" stroke-width="2"/>
+            <line x1="0" y1="40" x2="-12" y2="55" stroke="#F59239" stroke-width="2"/>
+            <line x1="0" y1="40" x2="12" y2="55" stroke="#F59239" stroke-width="2"/>
+            <text x="0" y="74" class="svg-label" font-size="11" fill="#F59239">💳 Payment Gateway</text>
+          </g>
+
+          <!-- Actors RIGHT -->
+          <g transform="translate(640,80)">
+            <circle cx="0" cy="0" r="14" fill="#183764"/>
+            <line x1="0" y1="14" x2="0" y2="40" stroke="#183764" stroke-width="2"/>
+            <line x1="-15" y1="22" x2="15" y2="22" stroke="#183764" stroke-width="2"/>
+            <line x1="0" y1="40" x2="-12" y2="55" stroke="#183764" stroke-width="2"/>
+            <line x1="0" y1="40" x2="12" y2="55" stroke="#183764" stroke-width="2"/>
+            <text x="0" y="74" class="svg-label" font-size="11">👨‍🏫 Teacher</text>
+          </g>
+
+          <g transform="translate(640,220)">
+            <circle cx="0" cy="0" r="14" fill="#183764"/>
+            <line x1="0" y1="14" x2="0" y2="40" stroke="#183764" stroke-width="2"/>
+            <line x1="-15" y1="22" x2="15" y2="22" stroke="#183764" stroke-width="2"/>
+            <line x1="0" y1="40" x2="-12" y2="55" stroke="#183764" stroke-width="2"/>
+            <line x1="0" y1="40" x2="12" y2="55" stroke="#183764" stroke-width="2"/>
+            <text x="0" y="74" class="svg-label" font-size="11">🛠️ Admin</text>
+          </g>
+
+          <g transform="translate(640,360)">
+            <circle cx="0" cy="0" r="14" fill="#F59239"/>
+            <line x1="0" y1="14" x2="0" y2="40" stroke="#F59239" stroke-width="2"/>
+            <line x1="-15" y1="22" x2="15" y2="22" stroke="#F59239" stroke-width="2"/>
+            <line x1="0" y1="40" x2="-12" y2="55" stroke="#F59239" stroke-width="2"/>
+            <line x1="0" y1="40" x2="12" y2="55" stroke="#F59239" stroke-width="2"/>
+            <text x="0" y="74" class="svg-label" font-size="11" fill="#F59239">🤖 AI Assistant</text>
+          </g>
+
+          <!-- Use cases ellipses -->
+          <ellipse cx="270" cy="80"  rx="68" ry="20" fill="#E8F0FB" stroke="#183764"/>
+          <text x="270" y="84" class="svg-label" font-size="10">Register &amp; Authenticate</text>
+
+          <ellipse cx="430" cy="80"  rx="68" ry="20" fill="#E8F0FB" stroke="#183764"/>
+          <text x="430" y="84" class="svg-label" font-size="10">Create Course</text>
+
+          <ellipse cx="270" cy="140" rx="68" ry="20" fill="#E8F0FB" stroke="#183764"/>
+          <text x="270" y="144" class="svg-label" font-size="10">Browse &amp; Enroll</text>
+
+          <ellipse cx="430" cy="140" rx="68" ry="20" fill="#E8F0FB" stroke="#183764"/>
+          <text x="430" y="144" class="svg-label" font-size="10">Grade Assessments</text>
+
+          <ellipse cx="270" cy="200" rx="68" ry="20" fill="#E8F0FB" stroke="#183764"/>
+          <text x="270" y="204" class="svg-label" font-size="10">Take Quiz / Submit</text>
+
+          <ellipse cx="430" cy="200" rx="68" ry="20" fill="#E8F0FB" stroke="#183764"/>
+          <text x="430" y="204" class="svg-label" font-size="10">Send Announcements</text>
+
+          <ellipse cx="270" cy="260" rx="68" ry="20" fill="#E8F0FB" stroke="#183764"/>
+          <text x="270" y="264" class="svg-label" font-size="10">View Grades / Reports</text>
+
+          <ellipse cx="430" cy="260" rx="68" ry="20" fill="#E8F0FB" stroke="#183764"/>
+          <text x="430" y="264" class="svg-label" font-size="10">Monitor Child</text>
+
+          <ellipse cx="270" cy="320" rx="68" ry="20" fill="#E8F0FB" stroke="#183764"/>
+          <text x="270" y="324" class="svg-label" font-size="10">Track Attendance</text>
+
+          <ellipse cx="430" cy="320" rx="68" ry="20" fill="#E8F0FB" stroke="#183764"/>
+          <text x="430" y="324" class="svg-label" font-size="10">Manage Wallet</text>
+
+          <ellipse cx="350" cy="380" rx="88" ry="22" fill="#FDB873" stroke="#F59239" stroke-width="2"/>
+          <text x="350" y="384" class="svg-label" font-size="11" fill="#183764" font-weight="700">Chat with AI Tutor</text>
+
+          <!-- Actor lines (Student) -->
+          <line x1="76" y1="100" x2="200" y2="80"  stroke="#183764" stroke-width="1"/>
+          <line x1="76" y1="100" x2="200" y2="140" stroke="#183764" stroke-width="1"/>
+          <line x1="76" y1="110" x2="200" y2="200" stroke="#183764" stroke-width="1"/>
+          <line x1="76" y1="120" x2="200" y2="320" stroke="#183764" stroke-width="1"/>
+          <line x1="76" y1="120" x2="270" y2="380" stroke="#F59239" stroke-width="1.5" stroke-dasharray="4,3"/>
+
+          <!-- Actor lines (Parent) -->
+          <line x1="76" y1="240" x2="200" y2="260" stroke="#183764" stroke-width="1"/>
+          <line x1="76" y1="240" x2="200" y2="320" stroke="#183764" stroke-width="1"/>
+          <line x1="76" y1="245" x2="362" y2="260" stroke="#183764" stroke-width="1"/>
+
+          <!-- Actor lines (Teacher) -->
+          <line x1="624" y1="100" x2="500" y2="80"  stroke="#183764" stroke-width="1"/>
+          <line x1="624" y1="100" x2="500" y2="140" stroke="#183764" stroke-width="1"/>
+          <line x1="624" y1="110" x2="500" y2="200" stroke="#183764" stroke-width="1"/>
+
+          <!-- Actor lines (Admin) -->
+          <line x1="624" y1="240" x2="500" y2="200" stroke="#183764" stroke-width="1"/>
+          <line x1="624" y1="245" x2="500" y2="260" stroke="#183764" stroke-width="1"/>
+
+          <!-- Actor lines (Payment Gateway) -->
+          <line x1="76" y1="380" x2="362" y2="320" stroke="#F59239" stroke-width="1.5" stroke-dasharray="4,3"/>
+
+          <!-- Actor lines (AI Assistant) -->
+          <line x1="624" y1="380" x2="438" y2="380" stroke="#F59239" stroke-width="1.5" stroke-dasharray="4,3"/>
+        </svg>
+      </div>
+
+      <!-- System Flow Diagram -->
+      <div class="diagram-card">
+        <div class="section-bar"><span class="icon">🔄</span>System Flow (DFD)</div>
+        <p class="desc">End-to-end data flow showing how user actions are processed across the API gateway, business logic, AI services, and persistence layers.</p>
+        <svg viewBox="0 0 700 460" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="arr3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 Z" fill="#F59239"/>
+            </marker>
+          </defs>
+
+          <!-- 1. User Action -->
+          <rect x="250" y="10" width="200" height="58" rx="12" class="svg-block-dark"/>
+          <text x="350" y="34" class="svg-label-w">👤 User Action</text>
+          <text x="350" y="52" class="svg-label-w" font-size="9">Login · Enroll · Submit Quiz · Pay</text>
+
+          <line x1="350" y1="68" x2="350" y2="100" stroke="#F59239" stroke-width="2" marker-end="url(#arr3)"/>
+
+          <!-- 2. API Gateway -->
+          <rect x="220" y="100" width="260" height="58" rx="12" fill="#F59239" stroke="#183764" stroke-width="1.5"/>
+          <text x="350" y="124" class="svg-label-w">🛡️ API Gateway + WAF</text>
+          <text x="350" y="142" class="svg-label-w" font-size="9">JWT Validation · Rate Limit · TLS</text>
+
+          <line x1="350" y1="158" x2="350" y2="190" stroke="#F59239" stroke-width="2" marker-end="url(#arr3)"/>
+
+          <!-- 3. Business Logic -->
+          <rect x="180" y="190" width="340" height="62" rx="12" class="svg-block"/>
+          <text x="350" y="214" class="svg-label" font-weight="700">⚙️ Business Logic Services</text>
+          <text x="350" y="232" class="svg-label-sm">Auth · Courses · Attendance · Payments · Analytics</text>
+          <text x="350" y="247" class="svg-label-sm">(Spring Boot + NestJS)</text>
+
+          <!-- Branches to DB / AI -->
+          <line x1="240" y1="252" x2="170" y2="295" stroke="#F59239" stroke-width="2" marker-end="url(#arr3)"/>
+          <line x1="350" y1="252" x2="350" y2="295" stroke="#F59239" stroke-width="2" marker-end="url(#arr3)"/>
+          <line x1="460" y1="252" x2="530" y2="295" stroke="#F59239" stroke-width="2" marker-end="url(#arr3)"/>
+
+          <!-- DB -->
+          <rect x="60" y="295" width="180" height="60" rx="12" class="svg-block"/>
+          <text x="150" y="319" class="svg-label">🗄️ PostgreSQL + Redis</text>
+          <text x="150" y="337" class="svg-label-sm">Persistent + cached state</text>
+
+          <!-- AI -->
+          <rect x="260" y="295" width="180" height="60" rx="12" fill="#FDB873" stroke="#F59239" stroke-width="1.5"/>
+          <text x="350" y="319" class="svg-label" font-weight="700">🤖 AI Services</text>
+          <text x="350" y="337" class="svg-label-sm">RAG · OCR · Embeddings</text>
+
+          <!-- Notifications -->
+          <rect x="460" y="295" width="180" height="60" rx="12" class="svg-block"/>
+          <text x="550" y="319" class="svg-label">🔔 FCM &amp; WhatsApp</text>
+          <text x="550" y="337" class="svg-label-sm">Real-time alerts</text>
+
+          <!-- Converge back -->
+          <line x1="150" y1="355" x2="350" y2="400" stroke="#F59239" stroke-width="2" marker-end="url(#arr3)"/>
+          <line x1="350" y1="355" x2="350" y2="400" stroke="#F59239" stroke-width="2" marker-end="url(#arr3)"/>
+          <line x1="550" y1="355" x2="350" y2="400" stroke="#F59239" stroke-width="2" marker-end="url(#arr3)"/>
+
+          <!-- Response -->
+          <rect x="250" y="400" width="200" height="50" rx="12" class="svg-block-dark"/>
+          <text x="350" y="424" class="svg-label-w">📲 Response to Client</text>
+          <text x="350" y="440" class="svg-label-w" font-size="9">JSON · Cache headers · Toast events</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════
+       BAND 5 — Tech · Features · Results · Future
+       ════════════════════════════════════════════════════════ -->
+  <section class="band-5">
+
+    <!-- Tech Stack -->
+    <div class="card">
+      <div class="section-bar"><span class="icon">💻</span>Tech Stack</div>
+
+      <div class="tech-layer">
+        <h4>Frontend Web</h4>
+        <div class="tech-pills">
+          <span class="tech-pill">React 18</span>
+          <span class="tech-pill">TypeScript</span>
+          <span class="tech-pill">TailwindCSS</span>
+          <span class="tech-pill">Recharts</span>
+          <span class="tech-pill">Zustand</span>
+        </div>
+      </div>
+
+      <div class="tech-layer">
+        <h4>Mobile</h4>
+        <div class="tech-pills">
+          <span class="tech-pill">Flutter 3.x</span>
+          <span class="tech-pill">Dart</span>
+          <span class="tech-pill">BLoC</span>
+          <span class="tech-pill">Dio</span>
+          <span class="tech-pill">Firebase</span>
+        </div>
+      </div>
+
+      <div class="tech-layer">
+        <h4>Backend</h4>
+        <div class="tech-pills">
+          <span class="tech-pill">Spring Boot 3</span>
+          <span class="tech-pill">Node.js</span>
+          <span class="tech-pill">NestJS</span>
+          <span class="tech-pill">JWT</span>
+          <span class="tech-pill">OpenAPI</span>
+        </div>
+      </div>
+
+      <div class="tech-layer">
+        <h4>Data Layer</h4>
+        <div class="tech-pills">
+          <span class="tech-pill">PostgreSQL 15</span>
+          <span class="tech-pill">Redis 7</span>
+          <span class="tech-pill">Vector DB</span>
+          <span class="tech-pill">S3 Storage</span>
+        </div>
+      </div>
+
+      <div class="tech-layer">
+        <h4>AI / ML</h4>
+        <div class="tech-pills">
+          <span class="tech-pill">Python</span>
+          <span class="tech-pill">GPT-4</span>
+          <span class="tech-pill">LangChain</span>
+          <span class="tech-pill">YOLOv8</span>
+          <span class="tech-pill">EasyOCR</span>
+          <span class="tech-pill">FastAPI</span>
+        </div>
+      </div>
+
+      <div class="tech-layer">
+        <h4>DevOps</h4>
+        <div class="tech-pills">
+          <span class="tech-pill">Docker</span>
+          <span class="tech-pill">Kubernetes</span>
+          <span class="tech-pill">GitHub Actions</span>
+          <span class="tech-pill">Cloudflare</span>
+          <span class="tech-pill">Grafana</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Key Features -->
+    <div class="card">
+      <div class="section-bar"><span class="icon">⭐</span>Key Features</div>
+
+      <div class="feature-row">
+        <div class="ico">🌐</div>
+        <div><h4>Multi-Tenant SaaS</h4><p>Independent tenants per teacher / academy</p></div>
+      </div>
+      <div class="feature-row">
+        <div class="ico">🤖</div>
+        <div><h4>AI Tutor (RAG)</h4><p>Grounded in teacher-uploaded content</p></div>
+      </div>
+      <div class="feature-row">
+        <div class="ico">🆔</div>
+        <div><h4>OCR ID Verification</h4><p>Auto-approval with 85%+ similarity</p></div>
+      </div>
+      <div class="feature-row">
+        <div class="ico">📍</div>
+        <div><h4>Hybrid Attendance</h4><p>QR for centers + auto for online sessions</p></div>
+      </div>
+      <div class="feature-row">
+        <div class="ico">💳</div>
+        <div><h4>Local Payment Gateways</h4><p>Vodafone Cash · InstaPay · Fawry</p></div>
+      </div>
+      <div class="feature-row">
+        <div class="ico">🏆</div>
+        <div><h4>Gamification</h4><p>Points · Badges · Leaderboards</p></div>
+      </div>
+      <div class="feature-row">
+        <div class="ico">📊</div>
+        <div><h4>6 Analytics Dashboards</h4><p>Grades · Hours · Streak · Achievements</p></div>
+      </div>
+      <div class="feature-row">
+        <div class="ico">🔐</div>
+        <div><h4>Device Binding</h4><p>Anti-sharing — single device per student</p></div>
+      </div>
+      <div class="feature-row">
+        <div class="ico">🌍</div>
+        <div><h4>Arabic + RTL Native</h4><p>Full i18n with EG-specific UX</p></div>
+      </div>
+      <div class="feature-row">
+        <div class="ico">📱</div>
+        <div><h4>Cross-Platform</h4><p>iOS · Android · Web — single codebase</p></div>
+      </div>
+    </div>
+
+    <!-- Results / Stats -->
+    <div class="card">
+      <div class="section-bar"><span class="icon">📈</span>Results &amp; Impact</div>
+
+      <div class="stat-card">
+        <div class="number">8</div>
+        <div class="label">Integrated modules in <strong>one ecosystem</strong></div>
+      </div>
+      <div class="stat-card">
+        <div class="number">51+</div>
+        <div class="label">Backend endpoints powering <strong>3 apps</strong></div>
+      </div>
+      <div class="stat-card">
+        <div class="number">120+</div>
+        <div class="label">Functional requirements <strong>implemented</strong></div>
+      </div>
+      <div class="stat-card">
+        <div class="number">99.5%</div>
+        <div class="label">Target <strong>SLA availability</strong></div>
+      </div>
+      <div class="stat-card">
+        <div class="number">≤2s</div>
+        <div class="label">95th-percentile <strong>API response time</strong></div>
+      </div>
+      <div class="stat-card">
+        <div class="number">85%</div>
+        <div class="label">OCR ID verification <strong>accuracy threshold</strong></div>
+      </div>
+      <div class="stat-card">
+        <div class="number">10K+</div>
+        <div class="label">Concurrent users <strong>supported</strong></div>
+      </div>
+
+      <div style="margin-top:14pt; padding-top:12pt; border-top:1px dashed rgba(24,55,100,0.15);">
+        <p style="font-size:10pt;"><strong style="color:var(--orange);">✓</strong> Eliminates fragmentation across 3 user groups</p>
+        <p style="font-size:10pt;"><strong style="color:var(--orange);">✓</strong> Reduces teacher administrative load through automation</p>
+        <p style="font-size:10pt;"><strong style="color:var(--orange);">✓</strong> Empowers parents with read-only real-time insights</p>
+        <p style="font-size:10pt;"><strong style="color:var(--orange);">✓</strong> Establishes academic integrity through AI verification</p>
+      </div>
+    </div>
+
+    <!-- Future Work -->
+    <div class="card">
+      <div class="section-bar"><span class="icon">🚀</span>Future Work</div>
+      <div class="future-timeline">
+
+        <div class="future-item">
+          <div class="phase">Phase 1 · Q3 2026</div>
+          <h4>Live video streaming with AI proctoring</h4>
+        </div>
+        <div class="future-item">
+          <div class="phase">Phase 2 · Q4 2026</div>
+          <h4>Multilingual support (EN/FR/IT) + advanced accessibility</h4>
+        </div>
+        <div class="future-item">
+          <div class="phase">Phase 3 · Q1 2027</div>
+          <h4>Certification &amp; credential blockchain</h4>
+        </div>
+        <div class="future-item">
+          <div class="phase">Phase 4 · Q2 2027</div>
+          <h4>Adaptive AI-tutored learning paths per student</h4>
+        </div>
+        <div class="future-item">
+          <div class="phase">Phase 5 · Q3 2027</div>
+          <h4>Wearable integration for attention &amp; engagement analytics</h4>
+        </div>
+        <div class="future-item">
+          <div class="phase">Phase 6 · Q4 2027</div>
+          <h4>Open marketplace for third-party educational add-ons</h4>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════
+       BAND 6 — Conclusion · Team · References
+       ════════════════════════════════════════════════════════ -->
+  <section class="footer-grid">
+
+    <!-- Conclusion -->
+    <div class="card conclusion-card">
+      <div class="section-bar" style="background:rgba(255,255,255,0.15); color:white; border:1px solid rgba(255,255,255,0.3);"><span class="icon">🎯</span>Conclusion</div>
+      <p>MentorX redefines what an educational platform can be by uniting <strong>students, parents, and teachers</strong> in a single AI-augmented ecosystem.</p>
+      <p style="margin-top:10pt;">Through its multi-tenant SaaS architecture, mobile-first design, RAG-grounded chatbot, OCR-based authentication, and comprehensive analytics, MentorX moves beyond traditional LMSs into a truly <strong>data-driven, transparent, and intelligent learning experience</strong>.</p>
+      <p style="margin-top:10pt;">The result is a platform that not only delivers content — but <strong style="color:var(--orange);">empowers communities of learners</strong>.</p>
+    </div>
+
+    <!-- Team -->
+    <div class="card">
+      <div class="section-bar"><span class="icon">👥</span>Our Team</div>
+      <div class="team-grid">
+        <div class="team-member"><div class="team-avatar">👤</div><div class="name">[Team Lead]</div><div class="role">Project Manager · Backend</div></div>
+        <div class="team-member"><div class="team-avatar">👤</div><div class="name">[Name]</div><div class="role">Frontend · React Admin</div></div>
+        <div class="team-member"><div class="team-avatar">👤</div><div class="name">[Name]</div><div class="role">Flutter · Student App</div></div>
+        <div class="team-member"><div class="team-avatar">👤</div><div class="name">[Name]</div><div class="role">Flutter · Parent App</div></div>
+        <div class="team-member"><div class="team-avatar">👤</div><div class="name">[Name]</div><div class="role">AI · RAG Engineer</div></div>
+        <div class="team-member"><div class="team-avatar">👤</div><div class="name">[Name]</div><div class="role">AI · OCR Engineer</div></div>
+        <div class="team-member"><div class="team-avatar">👤</div><div class="name">[Name]</div><div class="role">UI / UX Designer</div></div>
+        <div class="team-member"><div class="team-avatar">👤</div><div class="name">[Name]</div><div class="role">QA &amp; DevOps</div></div>
+      </div>
+    </div>
+
+    <!-- References + University -->
+    <div class="card refs">
+      <div class="section-bar"><span class="icon">📚</span>References</div>
+      <ol>
+        <li>Spring Boot Documentation, <em>Spring.io</em>, 2024.</li>
+        <li>Flutter — Beautiful Native Apps, <em>flutter.dev</em>, 2024.</li>
+        <li>OpenAI Platform, <em>platform.openai.com</em>, 2024.</li>
+        <li>Lewis et al., <em>Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks</em>, 2020.</li>
+        <li>Ultralytics, <em>YOLOv8: A New State-of-the-Art Real-Time Object Detection</em>, 2023.</li>
+        <li>JaidedAI, <em>EasyOCR Multilingual OCR Toolkit</em>, 2022.</li>
+        <li>PostgreSQL 15 Documentation, <em>postgresql.org</em>, 2024.</li>
+        <li>WhatsApp Business API, <em>developers.facebook.com</em>, 2024.</li>
+      </ol>
+
+      <div class="uni-block">
+        <h4>🎓 Faculty of Computers &amp; Artificial Intelligence</h4>
+        <div class="caption">[University Name]   ·   Class of 2026</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+</body>
+</html>

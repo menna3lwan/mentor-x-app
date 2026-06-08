@@ -31,6 +31,7 @@ List<RouteBase> get $appRoutes => [
   $editProfileRoute,
   $settingsRoute,
   $changePasswordRoute,
+  $devicesRoute,
   $myWalletRoute,
   $topUpRoute,
 ];
@@ -663,6 +664,31 @@ mixin $ChangePasswordRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/profile/change-password');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $devicesRoute => GoRouteData.$route(
+  path: '/profile/devices',
+  factory: $DevicesRoute._fromState,
+);
+
+mixin $DevicesRoute on GoRouteData {
+  static DevicesRoute _fromState(GoRouterState state) => const DevicesRoute();
+
+  @override
+  String get location => GoRouteData.$location('/profile/devices');
 
   @override
   void go(BuildContext context) => context.go(location);

@@ -1196,6 +1196,28 @@
             "regErrorRegistrationFailed": "Registration failed. Please try again.",
             "regErrorPhoneAlreadyExists": "An account with this phone number already exists."
         },
+        "devices": {
+            "pageTitle": "Devices & Sessions",
+            "pageSubtitle": "Devices currently signed in to your MentorX account. Revoke any device you don't recognise.",
+            "settingsSubtitle": "Manage signed-in devices",
+            "currentBadge": "This device",
+            "activeBadge": "Active",
+            "inactiveBadge": "Inactive",
+            "lastUsedLabel": "Last used ${time}",
+            "revokeAction": "Sign out",
+            "revokeConfirmTitle": "Sign out this device?",
+            "revokeConfirmMessage": "${device} will be signed out and need to log in again.",
+            "revokeSuccess": "Device signed out.",
+            "forceLogoutTitle": "Sign out from everywhere",
+            "forceLogoutHint": "Use this if you've lost a device or suspect someone else is signed in. You'll stay logged in on this device.",
+            "forceLogoutAction": "Sign out from all other devices",
+            "forceLogoutConfirmTitle": "Sign out from all other devices?",
+            "forceLogoutConfirmMessage": "Every other device signed into your account will be logged out immediately.",
+            "forceLogoutSuccess": "All other devices have been signed out.",
+            "emptyTitle": "No devices",
+            "emptyHint": "We couldn't find any active sessions for this account.",
+            "cancel": "Cancel"
+        },
         "pushNotifications": {
             "bannerOpen": "Open",
             "bannerDismiss": "Dismiss",

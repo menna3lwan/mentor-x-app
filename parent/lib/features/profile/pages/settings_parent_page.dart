@@ -126,6 +126,12 @@ class _SettingsViewState extends State<_SettingsView> {
                 value: t.profile.securityChangePassword,
                 onTap: () => const ChangePasswordRoute().go(context),
               ),
+              ProfileTileWidget(
+                icon: Icons.devices_rounded,
+                label: t.devices.pageTitle,
+                value: t.devices.settingsSubtitle,
+                onTap: () => const DevicesRoute().go(context),
+              ),
             ],
           ),
           const Gap(24),

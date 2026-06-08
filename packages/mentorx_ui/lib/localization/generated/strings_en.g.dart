@@ -1279,6 +1279,7 @@ class TranslationsParentEn {
 	late final TranslationsParentAuthEn auth = TranslationsParentAuthEn._(_root);
 	late final TranslationsParentProfileEn profile = TranslationsParentProfileEn._(_root);
 	late final TranslationsParentPushNotificationsEn pushNotifications = TranslationsParentPushNotificationsEn._(_root);
+	late final TranslationsParentDevicesEn devices = TranslationsParentDevicesEn._(_root);
 	late final TranslationsParentCommunicationEn communication = TranslationsParentCommunicationEn._(_root);
 	late final TranslationsParentAnalyticsEn analytics = TranslationsParentAnalyticsEn._(_root);
 	late final TranslationsParentAcademicEn academic = TranslationsParentAcademicEn._(_root);
@@ -2474,6 +2475,79 @@ class TranslationsParentAuthEn {
 
 	/// en: 'An account with this phone number already exists.'
 	String get regErrorPhoneAlreadyExists => 'An account with this phone number already exists.';
+}
+
+// Path: parent.devices
+class TranslationsParentDevicesEn {
+	TranslationsParentDevicesEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	/// en: 'Devices & Sessions'
+	String get pageTitle => 'Devices & Sessions';
+
+	/// en: 'Devices currently signed in to your MentorX account. ...'
+	String get pageSubtitle =>
+		'Devices currently signed in to your MentorX account. Revoke any device you don\'t recognise.';
+
+	/// en: 'Manage signed-in devices'
+	String get settingsSubtitle => 'Manage signed-in devices';
+
+	/// en: 'This device'
+	String get currentBadge => 'This device';
+
+	/// en: 'Active'
+	String get activeBadge => 'Active';
+
+	/// en: 'Inactive'
+	String get inactiveBadge => 'Inactive';
+
+	/// en: 'Last used ${time}'
+	String lastUsedLabel({required Object time}) => 'Last used ${time}';
+
+	/// en: 'Sign out'
+	String get revokeAction => 'Sign out';
+
+	/// en: 'Sign out this device?'
+	String get revokeConfirmTitle => 'Sign out this device?';
+
+	/// en: '${device} will be signed out and need to log in again.'
+	String revokeConfirmMessage({required Object device}) =>
+		'${device} will be signed out and need to log in again.';
+
+	/// en: 'Device signed out.'
+	String get revokeSuccess => 'Device signed out.';
+
+	/// en: 'Sign out from everywhere'
+	String get forceLogoutTitle => 'Sign out from everywhere';
+
+	/// en: 'Use this if you've lost a device or suspect someone else is signed in. ...'
+	String get forceLogoutHint =>
+		'Use this if you\'ve lost a device or suspect someone else is signed in. You\'ll stay logged in on this device.';
+
+	/// en: 'Sign out from all other devices'
+	String get forceLogoutAction => 'Sign out from all other devices';
+
+	/// en: 'Sign out from all other devices?'
+	String get forceLogoutConfirmTitle => 'Sign out from all other devices?';
+
+	/// en: 'Every other device signed into your account will be logged out immediately.'
+	String get forceLogoutConfirmMessage =>
+		'Every other device signed into your account will be logged out immediately.';
+
+	/// en: 'All other devices have been signed out.'
+	String get forceLogoutSuccess =>
+		'All other devices have been signed out.';
+
+	/// en: 'No devices'
+	String get emptyTitle => 'No devices';
+
+	/// en: 'We couldn't find any active sessions for this account.'
+	String get emptyHint =>
+		'We couldn\'t find any active sessions for this account.';
+
+	/// en: 'Cancel'
+	String get cancel => 'Cancel';
 }
 
 // Path: parent.pushNotifications

@@ -1153,6 +1153,28 @@
             "regErrorRegistrationFailed": "فشل التسجيل. حاول مرة أخرى.",
             "regErrorPhoneAlreadyExists": "يوجد حساب مسجّل بهذا الرقم بالفعل."
         },
+        "devices": {
+            "pageTitle": "الأجهزة والجلسات",
+            "pageSubtitle": "الأجهزة المسجَّلة حاليًا في حسابك على MentorX. قم بإنهاء جلسة أي جهاز لا تتعرّف عليه.",
+            "settingsSubtitle": "إدارة الأجهزة المسجَّلة",
+            "currentBadge": "هذا الجهاز",
+            "activeBadge": "نشط",
+            "inactiveBadge": "موقوف",
+            "lastUsedLabel": "آخر استخدام ${time}",
+            "revokeAction": "تسجيل الخروج",
+            "revokeConfirmTitle": "إنهاء جلسة هذا الجهاز؟",
+            "revokeConfirmMessage": "سيتم تسجيل خروج ${device} وسيحتاج إلى تسجيل الدخول من جديد.",
+            "revokeSuccess": "تم تسجيل خروج الجهاز.",
+            "forceLogoutTitle": "تسجيل الخروج من كل الأجهزة",
+            "forceLogoutHint": "استخدم هذا الخيار إن فقدت جهازًا أو شككت في أن شخصًا آخر يستخدم حسابك. ستظل مسجَّلًا على هذا الجهاز.",
+            "forceLogoutAction": "تسجيل الخروج من باقي الأجهزة",
+            "forceLogoutConfirmTitle": "تسجيل الخروج من باقي الأجهزة؟",
+            "forceLogoutConfirmMessage": "سيتم تسجيل خروج كل الأجهزة الأخرى من حسابك فورًا.",
+            "forceLogoutSuccess": "تم تسجيل الخروج من كل الأجهزة الأخرى.",
+            "emptyTitle": "لا توجد أجهزة",
+            "emptyHint": "لم نجد أي جلسات نشطة لهذا الحساب.",
+            "cancel": "إلغاء"
+        },
         "pushNotifications": {
             "bannerOpen": "فتح",
             "bannerDismiss": "تجاهل",

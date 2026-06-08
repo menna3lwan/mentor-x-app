@@ -43,6 +43,8 @@ dependencies:
     path: ../packages/parent/dio_parent_analytics_repository
   parent_dio_attendance_groups_repository:
     path: ../packages/parent/dio_parent_attendance_groups_repository
+  parent_dio_devices_repository:
+    path: ../packages/parent/dio_parent_devices_repository
   parent_mock_authentication_repository:
     path: ../packages/mock/parent/mock_authentication_repository
   parent_mock_home_repository:
@@ -65,6 +67,8 @@ dependencies:
     path: ../packages/mock/parent/mock_parent_analytics_repository
   mock_parent_attendance_groups_repository:
     path: ../packages/mock/parent/mock_parent_attendance_groups_repository
+  mock_parent_devices_repository:
+    path: ../packages/mock/parent/mock_parent_devices_repository
   mock_notification_repository:
     path: ../packages/mock/student/mock_notification_repository
   flutter_secure_storage_cache_repository:
