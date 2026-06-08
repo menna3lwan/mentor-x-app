@@ -149,7 +149,7 @@ final class DioHttpClient implements HttpClient {
     if (accessToken != null && _isJwtToken(accessToken)) {
       if (_isJwtTokenExpired(accessToken)) {
         _logger.warning('Found expired token in response from $path, clearing tokens');
-        clearTokens();
+        await clearTokens();
         return;
       }
       

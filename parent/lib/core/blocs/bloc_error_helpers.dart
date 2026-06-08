@@ -35,6 +35,10 @@ bool isUnauthorizedError(Object error) {
   if (error is AuthenticationException) {
     return error.code == AuthenticationExceptionCode.sessionExpired;
   }
+  // Catch domain exceptions whose repo mapped 401/403 → unauthorized code.
+  if (error is MentorXException) {
+    return error.code.name == 'unauthorized';
+  }
   return false;
 }
 
@@ -55,7 +59,15 @@ GenericFailureKind classifyHttpFailure(Object error) {
       _ => GenericFailureKind.unknown,
     };
   }
+  // Detect domain exceptions whose enum code signals an auth or not-found
+  // failure — this covers repos that map HTTP status → typed enum before
+  // the error reaches the BLoC layer.
   if (error is MentorXException) {
+    final name = error.code.name;
+    if (name == 'unauthorized') return GenericFailureKind.unauthorized;
+    if (name == 'notFound' || name == 'courseNotFound') {
+      return GenericFailureKind.notFound;
+    }
     return GenericFailureKind.unknown;
   }
   return GenericFailureKind.unknown;

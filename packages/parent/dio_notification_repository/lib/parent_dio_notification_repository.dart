@@ -47,6 +47,7 @@ final class DioParentNotificationRepository
         error,
         defaultCode:
             NotificationRepositoryExceptionCode.failedToLoadNotifications,
+        codeFromStatusCode: _classify,
       );
     }
   }
@@ -102,6 +103,7 @@ final class DioParentNotificationRepository
       return handleHttpClientErrorResponse(
         error,
         defaultCode: NotificationRepositoryExceptionCode.failedToGetUnreadCount,
+        codeFromStatusCode: _classify,
       );
     }
   }
@@ -138,5 +140,13 @@ final class DioParentNotificationRepository
         defaultCode: NotificationRepositoryExceptionCode.unknown,
       );
     }
+  }
+
+  NotificationRepositoryExceptionCode _classify(int statusCode) {
+    return switch (statusCode) {
+      401 || 403 => NotificationRepositoryExceptionCode.unauthorized,
+      404 => NotificationRepositoryExceptionCode.failedToLoadNotifications,
+      _ => NotificationRepositoryExceptionCode.unknown,
+    };
   }
 }

@@ -2,6 +2,7 @@ part of 'package:mentorx_core/mentorx_core.dart';
 
 enum NotificationRepositoryExceptionCode {
   unknown,
+  unauthorized,
   failedToLoadNotifications,
   failedToMarkAsRead,
   failedToMarkAllAsRead,

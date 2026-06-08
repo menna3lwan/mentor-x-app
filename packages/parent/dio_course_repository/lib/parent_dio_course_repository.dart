@@ -46,6 +46,7 @@ final class DioParentCourseRepository
       handleHttpClientErrorResponse(
         e,
         defaultCode: ParentCourseRepositoryExceptionCode.fetchError,
+        codeFromStatusCode: _classify,
       );
     }
   }
@@ -72,10 +73,16 @@ final class DioParentCourseRepository
       handleHttpClientErrorResponse(
         e,
         defaultCode: ParentCourseRepositoryExceptionCode.fetchError,
-        codeFromStatusCode: (status) => status == 404
-            ? ParentCourseRepositoryExceptionCode.courseNotFound
-            : ParentCourseRepositoryExceptionCode.fetchError,
+        codeFromStatusCode: _classify,
       );
     }
+  }
+
+  ParentCourseRepositoryExceptionCode _classify(int statusCode) {
+    return switch (statusCode) {
+      401 || 403 => ParentCourseRepositoryExceptionCode.unauthorized,
+      404 => ParentCourseRepositoryExceptionCode.courseNotFound,
+      _ => ParentCourseRepositoryExceptionCode.fetchError,
+    };
   }
 }

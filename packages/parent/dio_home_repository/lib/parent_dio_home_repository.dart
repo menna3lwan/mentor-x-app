@@ -37,6 +37,7 @@ final class DioParentHomeRepository
       handleHttpClientErrorResponse(
         e,
         defaultCode: ParentHomeRepositoryExceptionCode.fetchError,
+        codeFromStatusCode: _classify,
       );
     }
   }
@@ -76,6 +77,7 @@ final class DioParentHomeRepository
       handleHttpClientErrorResponse(
         e,
         defaultCode: ParentHomeRepositoryExceptionCode.fetchError,
+        codeFromStatusCode: _classify,
       );
     }
   }
@@ -103,7 +105,15 @@ final class DioParentHomeRepository
       handleHttpClientErrorResponse(
         e,
         defaultCode: ParentHomeRepositoryExceptionCode.fetchError,
+        codeFromStatusCode: _classify,
       );
     }
+  }
+
+  ParentHomeRepositoryExceptionCode _classify(int statusCode) {
+    return switch (statusCode) {
+      401 || 403 => ParentHomeRepositoryExceptionCode.unauthorized,
+      _ => ParentHomeRepositoryExceptionCode.fetchError,
+    };
   }
 }

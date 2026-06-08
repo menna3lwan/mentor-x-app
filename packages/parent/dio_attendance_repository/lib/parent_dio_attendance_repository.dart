@@ -51,6 +51,7 @@ final class DioParentAttendanceRepository
       handleHttpClientErrorResponse(
         e,
         defaultCode: ParentAttendanceRepositoryExceptionCode.fetchError,
+        codeFromStatusCode: _classify,
       );
     }
   }
@@ -76,7 +77,15 @@ final class DioParentAttendanceRepository
       handleHttpClientErrorResponse(
         e,
         defaultCode: ParentAttendanceRepositoryExceptionCode.fetchError,
+        codeFromStatusCode: _classify,
       );
     }
+  }
+
+  ParentAttendanceRepositoryExceptionCode _classify(int statusCode) {
+    return switch (statusCode) {
+      401 || 403 => ParentAttendanceRepositoryExceptionCode.unauthorized,
+      _ => ParentAttendanceRepositoryExceptionCode.fetchError,
+    };
   }
 }
