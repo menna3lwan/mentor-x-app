@@ -1,9 +1,9 @@
 import 'dart:async';
 
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_core/mentorx_core.dart';
-import 'package:analytics_service/analytics_service.dart';
 
 part 'otp_event.dart';
 part 'otp_state.dart';
@@ -27,24 +27,21 @@ final class OtpFailurePresentationEvent extends OtpPresentationEvent {
 final class OtpBloc extends Bloc<OtpEvent, OtpState>
     with BlocPresentationMixin<OtpState, OtpPresentationEvent> {
   final AuthenticationRepository _authenticationRepository;
-  final AnalyticsService _analyticsService;
   final MentorXLogger _logger = MentorXLogger('OtpBloc');
   Timer? _countdownTimer;
 
   OtpBloc({
     required AuthenticationRepository authenticationRepository,
-    required AnalyticsService analyticsService,
     int initialResendCountdown = 60,
   }) : _authenticationRepository = authenticationRepository,
-       _analyticsService = analyticsService,
        super(
          OtpState(
            resendCountdown: initialResendCountdown,
            loadingState: OtpLoadingState.initial,
          ),
        ) {
-    on<OtpSubmittedEvent>(_onOtpSubmitted);
-    on<OtpResendRequested>(_onResendRequested);
+    on<OtpSubmittedEvent>(_onOtpSubmitted, transformer: droppable());
+    on<OtpResendRequested>(_onResendRequested, transformer: droppable());
     on<OtpCountdownTicked>(_onCountdownTicked);
 
     _startCountdown();
@@ -60,7 +57,6 @@ final class OtpBloc extends Bloc<OtpEvent, OtpState>
         event.phone,
         event.code,
       );
-      unawaited(_analyticsService.logEvent(name: 'otp_verified'));
       emit(state.copyWith(loadingState: OtpLoadingState.success));
       emitPresentation(OtpSuccessPresentationEvent(user: user));
     } on AuthenticationException catch (e) {
@@ -105,7 +101,6 @@ final class OtpBloc extends Bloc<OtpEvent, OtpState>
           resendCountdown: duration?.inSeconds ?? 60,
         ),
       );
-      unawaited(_analyticsService.logEvent(name: 'otp_resend_requested'));
       _startCountdown();
     } on AuthenticationException catch (e) {
       emit(state.copyWith(isResending: false));

@@ -45,21 +45,21 @@ final class ParentRequirements {
   static Future<ParentRequirements> initialize() async {
     MentorXLogger.enabled = kDebugMode;
     await _initSystemUIStyle();
-    
+
     final services = await ServicesFactory.initServices();
 
     final (:repositories, :localizedClients) =
         await RepositoriesFactory.initRepositories();
-    
+
     final languageCode = RepositoriesFactory.initialLanguageCode;
     final initalBrightness = await _initBrightness(
       repositories.cacheRepository,
     );
-    
+
     _logger.info(
       'Initializing the application with language $languageCode, brightness $initalBrightness',
     );
-    
+
     await LocaleSettings.setLocaleRaw(languageCode);
 
     ParentEntity? user;
@@ -79,8 +79,9 @@ final class ParentRequirements {
     final AppRouter appRouter = AppRouter(
       navigatorKey: rootNavigatorKey,
       initialLocation: '/',
+      authenticationCubit: blocs.appAuthenticationCubit,
     );
-    
+
     return ParentRequirements(
       blocs: blocs,
       repositories: repositories,
@@ -124,7 +125,7 @@ final class ParentRequirements {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]).ignore();
-    
+
     if (MentorXPlatformChecker.isIOS) {
       SystemChrome.setEnabledSystemUIMode(
         SystemUiMode.manual,

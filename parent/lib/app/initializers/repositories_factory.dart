@@ -1,5 +1,5 @@
-
 import 'package:dio_http_client/dio_http_client.dart';
+import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage_cache_repository/flutter_secure_storage_cache_repository.dart';
 import 'package:mentorx_core/mentorx_core.dart';
@@ -12,10 +12,14 @@ import 'package:parent_dio_course_repository/parent_dio_course_repository.dart';
 import 'package:parent_dio_financial_repository/parent_dio_financial_repository.dart';
 import 'package:parent_dio_grade_repository/parent_dio_grade_repository.dart';
 import 'package:parent_dio_communication_repository/parent_dio_communication_repository.dart';
-import 'package:dio_parent_analytics_repository/dio_parent_analytics_repository.dart';
-import 'package:parent_dio_profile_repository/parent_dio_profile_repository.dart' as dio_profile;
+import 'package:parent_dio_notification_repository/parent_dio_notification_repository.dart';
+import 'package:parent_dio_profile_repository/parent_dio_profile_repository.dart';
+import 'package:parent_dio_attendance_groups_repository/parent_dio_attendance_groups_repository.dart';
+import 'package:parent_dio_devices_repository/parent_dio_devices_repository.dart';
+import 'package:parent_dio_account_status_repository/parent_dio_account_status_repository.dart';
+import 'package:parent_dio_account_deletion_repository/parent_dio_account_deletion_repository.dart';
+import 'package:parent_dio_analytics_repository/parent_dio_analytics_repository.dart';
 import 'package:device_info_service/device_info_service.dart';
-import 'package:analytics_service/analytics_service.dart';
 
 import 'package:parent_mock_authentication_repository/parent_mock_authentication_repository.dart';
 import 'package:parent_mock_home_repository/parent_mock_home_repository.dart';
@@ -25,8 +29,13 @@ import 'package:parent_mock_course_repository/parent_mock_course_repository.dart
 import 'package:parent_mock_attendance_repository/parent_mock_attendance_repository.dart';
 import 'package:parent_mock_grade_repository/parent_mock_grade_repository.dart';
 import 'package:parent_mock_communication_repository/parent_mock_communication_repository.dart';
-import 'package:mock_analytics_repository/mock_analytics_repository.dart';
-import 'package:parent_mock_profile_repository/parent_mock_profile_repository.dart' as mock_profile;
+import 'package:mock_parent_profile_repository/mock_parent_profile_repository.dart';
+import 'package:mock_parent_analytics_repository/mock_parent_analytics_repository.dart';
+import 'package:mock_parent_attendance_groups_repository/mock_parent_attendance_groups_repository.dart';
+import 'package:mock_parent_devices_repository/mock_parent_devices_repository.dart';
+import 'package:mock_parent_account_status_repository/mock_parent_account_status_repository.dart';
+import 'package:mock_parent_account_deletion_repository/mock_parent_account_deletion_repository.dart';
+import 'package:mock_notification_repository/mock_notification_repository.dart';
 
 import '../../core/utils/env.dart';
 
@@ -40,9 +49,13 @@ final class AppRepositories {
   final ParentAttendanceRepository attendanceRepository;
   final ParentGradeRepository gradeRepository;
   final ParentCommunicationRepository communicationRepository;
-  final ParentAnalyticsRepository analyticsRepository;
+  final NotificationRepository notificationRepository;
   final ParentProfileRepository profileRepository;
-  final AnalyticsService analyticsService;
+  final ParentAnalyticsRepository analyticsRepository;
+  final ParentAttendanceGroupsRepository attendanceGroupsRepository;
+  final ParentDevicesRepository devicesRepository;
+  final ParentAccountStatusRepository accountStatusRepository;
+  final ParentAccountDeletionRepository accountDeletionRepository;
 
   const AppRepositories._({
     required this.cacheRepository,
@@ -54,9 +67,13 @@ final class AppRepositories {
     required this.attendanceRepository,
     required this.gradeRepository,
     required this.communicationRepository,
-    required this.analyticsRepository,
+    required this.notificationRepository,
     required this.profileRepository,
-    required this.analyticsService,
+    required this.analyticsRepository,
+    required this.attendanceGroupsRepository,
+    required this.devicesRepository,
+    required this.accountStatusRepository,
+    required this.accountDeletionRepository,
   });
 
   List<Object> toList() {
@@ -70,9 +87,13 @@ final class AppRepositories {
       attendanceRepository,
       gradeRepository,
       communicationRepository,
-      analyticsRepository,
+      notificationRepository,
       profileRepository,
-      analyticsService,
+      analyticsRepository,
+      attendanceGroupsRepository,
+      devicesRepository,
+      accountStatusRepository,
+      accountDeletionRepository,
     ];
   }
 
@@ -89,7 +110,9 @@ final class AppRepositories {
       RepositoryProvider<ParentFinancialRepository>(
         create: (_) => financialRepository,
       ),
-      RepositoryProvider<ParentCourseRepository>(create: (_) => courseRepository),
+      RepositoryProvider<ParentCourseRepository>(
+        create: (_) => courseRepository,
+      ),
       RepositoryProvider<ParentAttendanceRepository>(
         create: (_) => attendanceRepository,
       ),
@@ -97,13 +120,27 @@ final class AppRepositories {
       RepositoryProvider<ParentCommunicationRepository>(
         create: (_) => communicationRepository,
       ),
-      RepositoryProvider<ParentAnalyticsRepository>(
-        create: (_) => analyticsRepository,
+      RepositoryProvider<NotificationRepository>(
+        create: (_) => notificationRepository,
       ),
       RepositoryProvider<ParentProfileRepository>(
         create: (_) => profileRepository,
       ),
-      RepositoryProvider<AnalyticsService>(create: (_) => analyticsService),
+      RepositoryProvider<ParentAnalyticsRepository>(
+        create: (_) => analyticsRepository,
+      ),
+      RepositoryProvider<ParentAttendanceGroupsRepository>(
+        create: (_) => attendanceGroupsRepository,
+      ),
+      RepositoryProvider<ParentDevicesRepository>(
+        create: (_) => devicesRepository,
+      ),
+      RepositoryProvider<ParentAccountStatusRepository>(
+        create: (_) => accountStatusRepository,
+      ),
+      RepositoryProvider<ParentAccountDeletionRepository>(
+        create: (_) => accountDeletionRepository,
+      ),
     ];
   }
 }
@@ -111,32 +148,55 @@ final class AppRepositories {
 final class RepositoriesFactory {
   RepositoriesFactory._();
 
+  // Each lazy resource is memoized by *future* — not by boolean — so any
+  // number of concurrent callers (e.g. inside `Future.wait`) share a single
+  // initialization. This eliminates the previous race where two callers
+  // could see `isHttpClientInitialized == false`, both create a `DioHttpClient`,
+  // and one would silently overwrite the other.
+  static Future<HttpClient>? _httpClientFuture;
+  static Future<CacheRepository>? _cacheRepositoryFuture;
+
   static HttpClient? _httpClient;
-  static bool isHttpClientInitialized = false;
 
   static late final String initialLanguageCode;
 
-  static CacheRepository? _cacheRepository;
   static DeviceInfoService? _deviceInfoService;
+
+  /// Visible to tests so they can reset the singleton state between runs.
+  /// Production code never calls this.
+  @visibleForTesting
+  static void resetForTests() {
+    _httpClientFuture = null;
+    _cacheRepositoryFuture = null;
+    _httpClient = null;
+    _deviceInfoService = null;
+  }
 
   static DeviceInfoService _initDeviceInfoService() {
     return _deviceInfoService ??= DeviceInfoServiceImpl();
   }
 
-  static Future<CacheRepository> _initCacheRepository() async {
-    if (_cacheRepository != null) return _cacheRepository!;
+  static Future<CacheRepository> _initCacheRepository() {
+    return _cacheRepositoryFuture ??= _createCacheRepository();
+  }
+
+  static Future<CacheRepository> _createCacheRepository() async {
     final CacheRepository cacheRepository =
         FlutterSecureStorageCacheRepository();
     await cacheRepository.initialize();
-    _cacheRepository = cacheRepository;
     return cacheRepository;
   }
 
-  static Future<HttpClient> _initHttpClient() async {
-    if (isHttpClientInitialized && _httpClient != null) return _httpClient!;
+  static Future<HttpClient> _initHttpClient() {
+    return _httpClientFuture ??= _createHttpClient();
+  }
+
+  static Future<HttpClient> _createHttpClient() async {
     if (!Env.hasMentorXBaseUrl) {
       throw StateError(
-        'MENTORX_API_BASE_URL is required when any repository mode is PROD.',
+        'MENTORX_API_BASE_URL is required when any repository mode is PROD. '
+        'Pass it via --dart-define-from-file=.env or '
+        '--dart-define=MENTORX_API_BASE_URL=...',
       );
     }
     final cacheRepository = await _initCacheRepository();
@@ -144,24 +204,24 @@ final class RepositoriesFactory {
       baseUrl: Env.mentorXBaseUrl,
       cacheRepository: cacheRepository,
     );
-    _httpClient = httpClient;
     await httpClient.initialize();
 
     // Use DeviceInfoService to get the hardware identifier as a fallback.
     final deviceInfoService = _initDeviceInfoService();
     final hardwareId = await deviceInfoService.getDeviceHash();
-    
-    // Only set the hardware ID as default if we don't already have a cached one 
-    // (e.g., a server-generated hash from a previous session).
+
+    // Only set the hardware ID as default if we don't already have a cached
+    // one (e.g. a server-generated hash from a previous session).
     if (httpClient.deviceId == null || httpClient.deviceId!.isEmpty) {
       httpClient.setDefaultHeader(NetworkConstants.deviceIdHeader, hardwareId);
     }
 
-    isHttpClientInitialized = true;
+    _httpClient = httpClient;
     return httpClient;
   }
 
-  static Future<AuthenticationRepository<ParentEntity>> _initAuthenticationRepository() async {
+  static Future<AuthenticationRepository<ParentEntity>>
+  _initAuthenticationRepository() async {
     late final AuthenticationRepository<ParentEntity> repo;
     switch (Env.authenticationRepositoryMode) {
       case RepositoryMode.mock:
@@ -185,11 +245,7 @@ final class RepositoriesFactory {
         repo = MockParentHomeRepository();
       case RepositoryMode.prod:
         final httpClient = await _initHttpClient();
-        final cacheRepository = await _initCacheRepository();
-        repo = DioParentHomeRepository(
-          httpClient: httpClient,
-          cacheRepository: cacheRepository,
-        );
+        repo = DioParentHomeRepository(httpClient: httpClient);
     }
     await repo.initialize();
     return repo;
@@ -202,11 +258,7 @@ final class RepositoriesFactory {
         repo = MockChildrenRepository(delay: Env.mockDelayDuration);
       case RepositoryMode.prod:
         final httpClient = await _initHttpClient();
-        final cacheRepository = await _initCacheRepository();
-        repo = DioParentChildrenRepository(
-          httpClient: httpClient,
-          cacheRepository: cacheRepository,
-        );
+        repo = DioParentChildrenRepository(httpClient: httpClient);
     }
     await repo.initialize();
     return repo;
@@ -252,7 +304,8 @@ final class RepositoriesFactory {
     }
   }
 
-  static Future<ParentCommunicationRepository> _initCommunicationRepository() async {
+  static Future<ParentCommunicationRepository>
+  _initCommunicationRepository() async {
     switch (Env.communicationRepositoryMode) {
       case RepositoryMode.mock:
         return MockParentCommunicationRepository(delay: Env.mockDelayDuration);
@@ -262,38 +315,104 @@ final class RepositoriesFactory {
     }
   }
 
-  static Future<ParentAnalyticsRepository> _initAnalyticsRepository() async {
-    switch (Env.analyticsRepositoryMode) {
-      case RepositoryMode.mock:
-        return MockAnalyticsRepository(delay: Env.mockDelayDuration);
-      case RepositoryMode.prod:
-        final httpClient = await _initHttpClient();
-        return DioParentAnalyticsRepository(httpClient: httpClient);
-    }
-  }
-
-  static AnalyticsService? _analyticsService;
-
-  static Future<AnalyticsService> _initAnalyticsService() async {
-    if (_analyticsService != null) return _analyticsService!;
-    final AnalyticsService analyticsService = FirebaseAnalyticsService();
-    await analyticsService.initialize();
-    _analyticsService = analyticsService;
-    return analyticsService;
-  }
-
   static Future<ParentProfileRepository> _initProfileRepository() async {
+    late final ParentProfileRepository repo;
     switch (Env.profileRepositoryMode) {
       case RepositoryMode.mock:
-        return mock_profile.MockProfileRepository(delay: Env.mockDelayDuration);
+        repo = MockParentProfileRepository(delay: Env.mockDelayDuration);
       case RepositoryMode.prod:
         final httpClient = await _initHttpClient();
-        final cacheRepository = await _initCacheRepository();
-        return dio_profile.DioProfileRepository(
-          httpClient: httpClient,
-          cacheRepository: cacheRepository,
-        );
+        repo = DioParentProfileRepository(httpClient: httpClient);
     }
+    await repo.initialize();
+    return repo;
+  }
+
+  static Future<ParentAnalyticsRepository> _initAnalyticsRepository() async {
+    late final ParentAnalyticsRepository repo;
+    switch (Env.analyticsRepositoryMode) {
+      case RepositoryMode.mock:
+        repo = MockParentAnalyticsRepository(delay: Env.mockDelayDuration);
+      case RepositoryMode.prod:
+        final httpClient = await _initHttpClient();
+        repo = DioParentAnalyticsRepository(httpClient: httpClient);
+    }
+    await repo.initialize();
+    return repo;
+  }
+
+  static Future<ParentAttendanceGroupsRepository>
+  _initAttendanceGroupsRepository() async {
+    late final ParentAttendanceGroupsRepository repo;
+    switch (Env.attendanceGroupsRepositoryMode) {
+      case RepositoryMode.mock:
+        repo = MockParentAttendanceGroupsRepository(
+          delay: Env.mockDelayDuration,
+        );
+      case RepositoryMode.prod:
+        final httpClient = await _initHttpClient();
+        repo = DioParentAttendanceGroupsRepository(httpClient: httpClient);
+    }
+    await repo.initialize();
+    return repo;
+  }
+
+  static Future<ParentDevicesRepository> _initDevicesRepository() async {
+    late final ParentDevicesRepository repo;
+    switch (Env.devicesRepositoryMode) {
+      case RepositoryMode.mock:
+        repo = MockParentDevicesRepository(delay: Env.mockDelayDuration);
+      case RepositoryMode.prod:
+        final httpClient = await _initHttpClient();
+        repo = DioParentDevicesRepository(httpClient: httpClient);
+    }
+    await repo.initialize();
+    return repo;
+  }
+
+  static Future<ParentAccountStatusRepository>
+  _initAccountStatusRepository() async {
+    late final ParentAccountStatusRepository repo;
+    switch (Env.accountStatusRepositoryMode) {
+      case RepositoryMode.mock:
+        repo = MockParentAccountStatusRepository(
+          delay: Env.mockDelayDuration,
+        );
+      case RepositoryMode.prod:
+        final httpClient = await _initHttpClient();
+        repo = DioParentAccountStatusRepository(httpClient: httpClient);
+    }
+    await repo.initialize();
+    return repo;
+  }
+
+  static Future<ParentAccountDeletionRepository>
+  _initAccountDeletionRepository() async {
+    late final ParentAccountDeletionRepository repo;
+    switch (Env.accountDeletionRepositoryMode) {
+      case RepositoryMode.mock:
+        repo = MockParentAccountDeletionRepository(
+          delay: Env.mockDelayDuration,
+        );
+      case RepositoryMode.prod:
+        final httpClient = await _initHttpClient();
+        repo = DioParentAccountDeletionRepository(httpClient: httpClient);
+    }
+    await repo.initialize();
+    return repo;
+  }
+
+  static Future<NotificationRepository> _initNotificationRepository() async {
+    late final NotificationRepository repo;
+    switch (Env.notificationRepositoryMode) {
+      case RepositoryMode.mock:
+        repo = MockNotificationRepository(delay: Env.mockDelayDuration);
+      case RepositoryMode.prod:
+        final httpClient = await _initHttpClient();
+        repo = DioParentNotificationRepository(httpClient: httpClient);
+    }
+    await repo.initialize();
+    return repo;
   }
 
   static String _defaultLanguageCode() {
@@ -303,21 +422,29 @@ final class RepositoriesFactory {
   }
 
   static Future<
-      ({AppRepositories repositories, List<LocalizedClient> localizedClients})>
-      initRepositories() async {
+    ({AppRepositories repositories, List<LocalizedClient> localizedClients})
+  >
+  initRepositories() async {
     if (Env.usesAnyProdRepository && !Env.hasMentorXBaseUrl) {
       throw StateError(
-        'MENTORX_API_BASE_URL must be provided when any repository mode is PROD.',
+        'MENTORX_API_BASE_URL must be provided when any repository mode is '
+        'PROD. Pass it via --dart-define-from-file=.env or '
+        '--dart-define=MENTORX_API_BASE_URL=...',
       );
     }
 
     final CacheRepository cacheRepository = await _initCacheRepository();
-    // Pre-initialize HttpClient to avoid race conditions during concurrent repository initialization
-    await _initHttpClient();
+    // Pre-initialize HttpClient (only if any repository needs it) to avoid
+    // race conditions inside the Future.wait below. Memoization in
+    // `_initHttpClient` itself guarantees idempotency, so calling it twice
+    // is safe; pre-warming just makes the first call sequential.
+    if (Env.usesAnyProdRepository) {
+      await _initHttpClient();
+    }
 
     initialLanguageCode =
         await cacheRepository.get(CacheKeys.languageCode) ??
-            _defaultLanguageCode();
+        _defaultLanguageCode();
 
     final [
       authenticationRepository as AuthenticationRepository<ParentEntity>,
@@ -328,9 +455,13 @@ final class RepositoriesFactory {
       attendanceRepository as ParentAttendanceRepository,
       gradeRepository as ParentGradeRepository,
       communicationRepository as ParentCommunicationRepository,
-      analyticsRepository as ParentAnalyticsRepository,
+      notificationRepository as NotificationRepository,
       profileRepository as ParentProfileRepository,
-      analyticsService as AnalyticsService,
+      analyticsRepository as ParentAnalyticsRepository,
+      attendanceGroupsRepository as ParentAttendanceGroupsRepository,
+      devicesRepository as ParentDevicesRepository,
+      accountStatusRepository as ParentAccountStatusRepository,
+      accountDeletionRepository as ParentAccountDeletionRepository,
     ] = await Future.wait(
       [
         _initAuthenticationRepository(),
@@ -341,9 +472,13 @@ final class RepositoriesFactory {
         _initAttendanceRepository(),
         _initGradeRepository(),
         _initCommunicationRepository(),
-        _initAnalyticsRepository(),
+        _initNotificationRepository(),
         _initProfileRepository(),
-        _initAnalyticsService(),
+        _initAnalyticsRepository(),
+        _initAttendanceGroupsRepository(),
+        _initDevicesRepository(),
+        _initAccountStatusRepository(),
+        _initAccountDeletionRepository(),
       ],
     );
 
@@ -357,9 +492,13 @@ final class RepositoriesFactory {
       attendanceRepository: attendanceRepository,
       gradeRepository: gradeRepository,
       communicationRepository: communicationRepository,
-      analyticsRepository: analyticsRepository,
+      notificationRepository: notificationRepository,
       profileRepository: profileRepository,
-      analyticsService: analyticsService,
+      analyticsRepository: analyticsRepository,
+      attendanceGroupsRepository: attendanceGroupsRepository,
+      devicesRepository: devicesRepository,
+      accountStatusRepository: accountStatusRepository,
+      accountDeletionRepository: accountDeletionRepository,
     );
 
     final localizedClients = <LocalizedClient>[];

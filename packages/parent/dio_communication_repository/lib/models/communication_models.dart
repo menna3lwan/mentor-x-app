@@ -10,24 +10,20 @@ final class NotificationModel extends NotificationEntity {
     super.isRead,
     super.deepLink,
     super.data,
-    // Note: Parent app specific fields like studentId/studentName can be put in 'data'
+    // Note: Parent app specific fields like studentId/studentName can be put in 'data' 
     // or we can add them to the core entity if they are universally useful.
   });
 
   factory NotificationModel.fromJson(Map<String, dynamic> json) {
     return NotificationModel(
-      id: json['id']?.toString() ?? '',
-      title: json['title'] ?? '',
-      message: json['message'] ?? json['body'] ?? '',
+      id: ModelParser.asString(json['id']),
+      title: ModelParser.asString(json['title']),
+      message: ModelParser.asString(json['message'] ?? json['body']),
       type: _parseType(json['type']),
-      createdAt:
-          DateTime.tryParse(json['created_at'] ?? json['createdAt'] ?? '') ??
-          DateTime.now(),
-      isRead: json['is_read'] ?? json['read'] ?? false,
-      deepLink: json['deepLink'] ?? json['action_url'] ?? json['url'],
-      data:
-          json['action_data'] as Map<String, dynamic>? ??
-          (json['data'] as Map<String, dynamic>?),
+      createdAt: ModelParser.asDateTime(json['created_at'] ?? json['createdAt']) ?? DateTime.now(),
+      isRead: ModelParser.asBool(json['is_read'] ?? json['read']),
+      deepLink: ModelParser.asString(json['deepLink'] ?? json['action_url'] ?? json['url']),
+      data: json['action_data'] as Map<String, dynamic>? ?? (json['data'] as Map<String, dynamic>?),
     );
   }
 
@@ -50,24 +46,28 @@ final class AnnouncementModel extends AnnouncementEntity {
     super.actionUrl,
     super.actionText,
     super.isFeatured = false,
+    super.isPinned = false,
+    super.priority = 'normal',
+    super.expireAt,
+    super.tenantName,
+    super.preview,
   });
 
   factory AnnouncementModel.fromJson(Map<String, dynamic> json) {
     return AnnouncementModel(
-      id: json['id']?.toString() ?? '',
-      title: json['title'] ?? '',
-      content: json['content'] ?? json['preview'] ?? json['body'] ?? '',
-      createdAt:
-          DateTime.tryParse(json['created_at'] ?? json['createdAt'] ?? '') ??
-          DateTime.now(),
-      imageUrl: json['image_url'] ?? json['imageUrl'],
-      actionUrl: json['action_url'] ?? json['actionUrl'] ?? json['url'],
-      actionText: json['action_text'] ?? json['actionText'],
-      isFeatured:
-          json['is_featured'] ??
-          json['isFeatured'] ??
-          json['is_pinned'] ??
-          false,
+      id: ModelParser.asString(json['id']),
+      title: ModelParser.asString(json['title']),
+      content: ModelParser.asString(json['content'] ?? json['preview'] ?? json['body']),
+      createdAt: ModelParser.asDateTime(json['created_at'] ?? json['createdAt']) ?? DateTime.now(),
+      imageUrl: ModelParser.asString(json['image_url'] ?? json['imageUrl']),
+      actionUrl: ModelParser.asString(json['action_url'] ?? json['actionUrl'] ?? json['url']),
+      actionText: ModelParser.asString(json['action_text'] ?? json['actionText']),
+      isFeatured: ModelParser.asBool(json['is_featured'] ?? json['isFeatured'] ?? json['is_pinned']),
+      isPinned: ModelParser.asBool(json['is_pinned'] ?? json['isPinned'] ?? json['pinned']),
+      priority: ModelParser.asString(json['priority'], fallback: 'normal'),
+      expireAt: ModelParser.asDateTime(json['expire_at'] ?? json['expireAt']),
+      tenantName: ModelParser.asString(json['tenant_name'] ?? json['tenantName']),
+      preview: ModelParser.asString(json['preview'] ?? json['summary']),
     );
   }
 }
@@ -82,10 +82,10 @@ final class WhatsAppGroupModel extends WhatsAppGroupEntity {
 
   factory WhatsAppGroupModel.fromJson(Map<String, dynamic> json) {
     return WhatsAppGroupModel(
-      id: json['id']?.toString() ?? '',
-      name: json['name'] ?? '',
-      url: json['url'] ?? json['invite_link'] ?? json['inviteLink'] ?? '',
-      description: json['description'],
+      id: ModelParser.asString(json['id']),
+      name: ModelParser.asString(json['name']),
+      url: ModelParser.asString(json['url'] ?? json['invite_link'] ?? json['inviteLink']),
+      description: ModelParser.asString(json['description']),
     );
   }
 }

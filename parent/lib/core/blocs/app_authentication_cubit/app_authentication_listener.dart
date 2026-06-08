@@ -7,7 +7,7 @@ import 'app_authentication_cubit.dart';
 /// [AppAuthenticationCubit] emits a new state.
 final class AppAuthenticationListener extends StatelessWidget {
   final Widget Function(BuildContext context, AppAuthenticationState state)
-      builder;
+  builder;
 
   const AppAuthenticationListener({super.key, required this.builder});
 

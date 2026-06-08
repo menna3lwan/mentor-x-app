@@ -35,10 +35,20 @@ dependencies:
     path: ../packages/parent/dio_grade_repository
   parent_dio_communication_repository:
     path: ../packages/parent/dio_communication_repository
-  dio_parent_analytics_repository:
-    path: ../packages/parent/dio_parent_analytics_repository
+  parent_dio_notification_repository:
+    path: ../packages/parent/dio_notification_repository
   parent_dio_profile_repository:
-    path: ../packages/parent/dio_profile_repository
+    path: ../packages/parent/dio_parent_profile_repository
+  parent_dio_analytics_repository:
+    path: ../packages/parent/dio_parent_analytics_repository
+  parent_dio_attendance_groups_repository:
+    path: ../packages/parent/dio_parent_attendance_groups_repository
+  parent_dio_devices_repository:
+    path: ../packages/parent/dio_parent_devices_repository
+  parent_dio_account_status_repository:
+    path: ../packages/parent/dio_parent_account_status_repository
+  parent_dio_account_deletion_repository:
+    path: ../packages/parent/dio_parent_account_deletion_repository
   parent_mock_authentication_repository:
     path: ../packages/mock/parent/mock_authentication_repository
   parent_mock_home_repository:
@@ -55,10 +65,20 @@ dependencies:
     path: ../packages/mock/parent/mock_grade_repository
   parent_mock_communication_repository:
     path: ../packages/mock/parent/mock_communication_repository
-  mock_analytics_repository:
-    path: ../packages/mock/parent/mock_analytics_repository
-  parent_mock_profile_repository:
-    path: ../packages/mock/parent/mock_profile_repository
+  mock_parent_profile_repository:
+    path: ../packages/mock/parent/mock_parent_profile_repository
+  mock_parent_analytics_repository:
+    path: ../packages/mock/parent/mock_parent_analytics_repository
+  mock_parent_attendance_groups_repository:
+    path: ../packages/mock/parent/mock_parent_attendance_groups_repository
+  mock_parent_devices_repository:
+    path: ../packages/mock/parent/mock_parent_devices_repository
+  mock_parent_account_status_repository:
+    path: ../packages/mock/parent/mock_parent_account_status_repository
+  mock_parent_account_deletion_repository:
+    path: ../packages/mock/parent/mock_parent_account_deletion_repository
+  mock_notification_repository:
+    path: ../packages/mock/student/mock_notification_repository
   flutter_secure_storage_cache_repository:
     path: ../packages/common/flutter_secure_storage_cache_repository
   dio_http_client:
@@ -68,6 +88,7 @@ dependencies:
   bloc: ^9.2.0
   flutter_bloc: ^9.1.1
   bloc_presentation: ^1.1.2
+  bloc_concurrency: ^0.3.0
   event_bus: ^2.0.1
 
   # Routing
@@ -82,11 +103,12 @@ dependencies:
   mix: ^1.7.0
   animate_do: ^5.1.0
   gap: ^3.0.1
+  image_picker: ^1.2.1
   # Services
   device_info_service:
     path: ../packages/services/device_info_service
-  analytics_service:
-    path: ../packages/services/analytics_service
+  push_notification_service:
+    path: ../packages/services/push_notification_service
 
 dev_dependencies:
   flutter_test:

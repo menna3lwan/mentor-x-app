@@ -1,286 +1,118 @@
-import 'dart:ui';
+import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mentorx_core/mentorx_core.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
-import 'package:mentorx_core/mentorx_core.dart';
+
 import '../bloc/communication_bloc.dart';
-import 'package:intl/intl.dart';
+import '../widgets/widgets.dart';
 
-final class AnnouncementsArchivePage extends StatelessWidget {
-  final CommunicationStatus status;
-  final String? errorMessage;
-  final List<AnnouncementEntity> announcements;
-  final VoidCallback onRefresh;
-  final VoidCallback onRetry;
+class AnnouncementsArchivePage extends StatelessWidget {
+  final String childId;
 
-  const AnnouncementsArchivePage({
-    super.key,
-    required this.status,
-    required this.errorMessage,
-    required this.announcements,
-    required this.onRefresh,
-    required this.onRetry,
-  });
+  const AnnouncementsArchivePage({super.key, required this.childId});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => CommunicationBloc(
+        repository: context.read<ParentCommunicationRepository>(),
+      )..add(CommunicationStarted(childId)),
+      child: _AnnouncementsArchiveView(childId: childId),
+    );
+  }
+}
+
+class _AnnouncementsArchiveView extends StatelessWidget {
+  final String childId;
+  const _AnnouncementsArchiveView({required this.childId});
 
   @override
   Widget build(BuildContext context) {
     final t = Translations.of(context).parent;
 
-    return Scaffold(
-      backgroundColor: context.backgroundPrimaryColor,
-      body: Stack(
-        children: [
-          const _BackgroundDecorations(),
-          _buildContent(context, t),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildContent(BuildContext context, dynamic t) {
-    if (status == CommunicationStatus.loading) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
-    if (status == CommunicationStatus.failure) {
-      return AppErrorView(
-        message: errorMessage ?? t.unableToLoad,
-        onRetry: onRetry,
-      );
-    }
-
-    return RefreshIndicator(
-      displacement: MediaQuery.paddingOf(context).top + 80,
-      color: context.brandPrimaryColor,
-      onRefresh: () async => onRefresh(),
-      child: CustomScrollView(
-        physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-        slivers: [
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Gap(MediaQuery.paddingOf(context).top + 12),
-                  _buildHeader(context, t),
-                  const Gap(32),
-
-                  if (announcements.isEmpty)
-                    FadeInUp(
-                      duration: const Duration(milliseconds: 600),
-                      child: AppEmptyView(
-                        title: 'No Announcements',
-                        message: 'Stay tuned! School announcements will appear here.',
-                        icon: Icons.campaign_rounded,
-                        onAction: onRefresh,
-                        actionLabel: 'Refresh',
-                      ),
-                    )
-                  else
-                    ...announcements.asMap().entries.map(
-                      (entry) => _AnnouncementCard(announcement: entry.value, index: entry.key),
-                    ),
-
-                  const Gap(100),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildHeader(BuildContext context, dynamic t) {
-    return FadeInDown(
-      duration: const Duration(milliseconds: 600),
-      child: Row(
-        children: [
-          IconButton(
-            onPressed: () => Navigator.pop(context),
-            icon: const Icon(Icons.arrow_back_ios_new_rounded),
-            style: IconButton.styleFrom(
-              backgroundColor: context.backgroundSecondaryColor.withValues(alpha: 0.6),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            ),
-          ),
-          const Gap(16),
-          Expanded(
-            child: Text(
-              t.announcements,
-              style: TextStyle(
-                color: context.textPrimaryColor,
-                fontSize: 24,
-                fontWeight: FontWeight.w900,
-                letterSpacing: -1.0,
-              ),
-            ),
-          ),
-          Container(
-            decoration: BoxDecoration(
-              color: context.backgroundSecondaryColor.withValues(alpha: 0.6),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: IconButton(
-              onPressed: onRefresh,
-              icon: const Icon(Icons.refresh_rounded),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _AnnouncementCard extends StatelessWidget {
-  final AnnouncementEntity announcement;
-  final int index;
-
-  const _AnnouncementCard({required this.announcement, required this.index});
-
-  @override
-  Widget build(BuildContext context) {
-    final date = DateFormat('dd MMM yyyy').format(announcement.createdAt);
-
-    return FadeInUp(
-      duration: const Duration(milliseconds: 500),
-      delay: Duration(milliseconds: 100 * index),
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 16),
-        decoration: BoxDecoration(
-          color: context.backgroundSecondaryColor.withValues(alpha: 0.4),
-          borderRadius: BorderRadius.circular(28),
-          border: Border.all(color: context.borderPrimaryColor.withValues(alpha: 0.1)),
+    return BlocPresentationListener<
+      CommunicationBloc,
+      CommunicationPresentationEvent
+    >(
+      listener: (context, event) {
+        switch (event) {
+          case CommunicationFailurePresentationEvent(:final message):
+            MentorXUI.showToast(message: message, isError: true);
+        }
+      },
+      child: AppDashboardScaffold(
+        title: t.communication.announcementsTitle,
+        onRefresh: () async => context.read<CommunicationBloc>().add(
+          CommunicationRefreshRequested(childId),
         ),
-        child: InkWell(
-          onTap: () {
-            // Navigate to details
-          },
-          borderRadius: BorderRadius.circular(28),
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: context.brandPrimaryColor.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                      child: Icon(Icons.campaign_rounded, color: context.brandPrimaryColor, size: 22),
-                    ),
-                    const Gap(16),
-                    Expanded(
-                      child: Text(
-                        announcement.title,
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w900,
-                          color: context.textPrimaryColor,
-                          letterSpacing: -0.2,
-                        ),
-                      ),
-                    ),
-                  ],
+        actions: [
+          IconButton(
+            tooltip: t.retry,
+            onPressed: () => context.read<CommunicationBloc>().add(
+              CommunicationRefreshRequested(childId),
+            ),
+            icon: const Icon(Icons.refresh_rounded),
+          ),
+        ],
+        body: BlocBuilder<CommunicationBloc, CommunicationState>(
+          buildWhen: (a, b) => a.announcementsSection != b.announcementsSection,
+          builder: (context, state) {
+            final section = state.announcementsSection;
+
+            if (section.isLoading && state.announcements.isEmpty) {
+              return ListView.builder(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 20,
                 ),
-                const Gap(16),
-                Text(
-                  announcement.preview ?? '',
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: context.textSecondaryColor,
-                    height: 1.5,
-                    fontWeight: FontWeight.w500,
+                itemCount: 3,
+                itemBuilder: (_, _) => const AnnouncementArchiveCardSkeleton(),
+              );
+            }
+
+            if (section.isFailure && state.announcements.isEmpty) {
+              return AppErrorView(
+                message: section.errorMessage ?? t.unableToLoad,
+                onRetry: () => context.read<CommunicationBloc>().add(
+                  const CommunicationRetrySectionRequested(
+                    CommunicationSection.announcements,
                   ),
                 ),
-                const Gap(20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      date,
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w700,
-                        color: context.textTertiaryColor,
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          'Read More',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w900,
-                            color: context.brandPrimaryColor,
-                          ),
-                        ),
-                        const Gap(4),
-                        Icon(Icons.arrow_forward_rounded, color: context.brandPrimaryColor, size: 14),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
+              );
+            }
 
-class _BackgroundDecorations extends StatelessWidget {
-  const _BackgroundDecorations();
+            if (state.announcements.isEmpty) {
+              return AppEmptyView(
+                title: t.communication.noAnnouncementsTitle,
+                message: t.communication.noAnnouncementsHint,
+                icon: Icons.campaign_rounded,
+              );
+            }
 
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Positioned(
-          top: -150,
-          left: -100,
-          child: _BlurredBlob(
-            color: context.brandPrimaryColor.withValues(alpha: 0.1),
-            size: 400,
-          ),
-        ),
-        Positioned(
-          bottom: -100,
-          right: -50,
-          child: _BlurredBlob(
-            color: context.brandSecondaryColor.withValues(alpha: 0.08),
-            size: 350,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _BlurredBlob extends StatelessWidget {
-  final Color color;
-  final double size;
-
-  const _BlurredBlob({required this.color, required this.size});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        color: color,
-        shape: BoxShape.circle,
-      ),
-      child: ClipOval(
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 80, sigmaY: 80),
-          child: const SizedBox.expand(),
+            return ListView.builder(
+              physics: const BouncingScrollPhysics(
+                parent: AlwaysScrollableScrollPhysics(),
+              ),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20,
+                vertical: 20,
+              ),
+              itemCount: state.announcements.length,
+              itemBuilder: (context, index) {
+                final announcement = state.announcements[index];
+                return FadeInUp(
+                  duration: const Duration(milliseconds: 400),
+                  delay: Duration(milliseconds: 50 * index),
+                  child: AnnouncementArchiveCardWidget(
+                    announcement: announcement,
+                    readMoreLabel: t.communication.readMore,
+                  ),
+                );
+              },
+            );
+          },
         ),
       ),
     );

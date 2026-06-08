@@ -1,227 +1,342 @@
 part of 'package:mentorx_core/mentorx_core.dart';
 
 class ParentHomeSummaryEntity extends Equatable {
-  final String parentId;
-  final String parentName;
-  final int childrenCount;
-  final int totalUnreadNotifications;
-  final List<ParentChildSummaryEntity> children;
+  final ParentHomeOverviewEntity overview;
+  final List<ParentUpcomingSessionEntity> upcomingSessions;
+  final List<ParentRecentGradeEntity> recentGrades;
+  final AnnouncementEntity? latestAnnouncement;
+  final List<ParentChildSummaryEntity> childrenSummaries;
 
   const ParentHomeSummaryEntity({
-    required this.parentId,
-    required this.parentName,
-    required this.childrenCount,
-    required this.totalUnreadNotifications,
-    required this.children,
+    required this.overview,
+    required this.upcomingSessions,
+    required this.recentGrades,
+    this.latestAnnouncement,
+    required this.childrenSummaries,
   });
 
   static final placeholder = ParentHomeSummaryEntity(
-    parentId: '',
-    parentName: '',
-    childrenCount: 0,
-    totalUnreadNotifications: 0,
-    children: const [],
+    overview: ParentHomeOverviewEntity.placeholder,
+    upcomingSessions: const [],
+    recentGrades: const [],
+    latestAnnouncement: null,
+    childrenSummaries: const [],
   );
 
   @override
   List<Object?> get props => [
-        parentId,
-        parentName,
-        childrenCount,
-        totalUnreadNotifications,
-        children,
-      ];
+    overview,
+    upcomingSessions,
+    recentGrades,
+    latestAnnouncement,
+    childrenSummaries,
+  ];
 
   ParentHomeSummaryEntity copyWith({
-    String? parentId,
-    String? parentName,
-    int? childrenCount,
-    int? totalUnreadNotifications,
-    List<ParentChildSummaryEntity>? children,
+    ParentHomeOverviewEntity? overview,
+    List<ParentUpcomingSessionEntity>? upcomingSessions,
+    List<ParentRecentGradeEntity>? recentGrades,
+    AnnouncementEntity? latestAnnouncement,
+    List<ParentChildSummaryEntity>? childrenSummaries,
   }) {
     return ParentHomeSummaryEntity(
-      parentId: parentId ?? this.parentId,
-      parentName: parentName ?? this.parentName,
-      childrenCount: childrenCount ?? this.childrenCount,
-      totalUnreadNotifications:
-          totalUnreadNotifications ?? this.totalUnreadNotifications,
-      children: children ?? this.children,
+      overview: overview ?? this.overview,
+      upcomingSessions: upcomingSessions ?? this.upcomingSessions,
+      recentGrades: recentGrades ?? this.recentGrades,
+      latestAnnouncement: latestAnnouncement ?? this.latestAnnouncement,
+      childrenSummaries: childrenSummaries ?? this.childrenSummaries,
+    );
+  }
+}
+
+class ParentHomeOverviewEntity extends Equatable {
+  final int unpaidInvoicesCount;
+  final double avgAttendanceRate;
+  final double avgGrade;
+  final int totalPoints;
+
+  const ParentHomeOverviewEntity({
+    required this.unpaidInvoicesCount,
+    required this.avgAttendanceRate,
+    required this.avgGrade,
+    required this.totalPoints,
+  });
+
+  static const placeholder = ParentHomeOverviewEntity(
+    unpaidInvoicesCount: 0,
+    avgAttendanceRate: 0.0,
+    avgGrade: 0.0,
+    totalPoints: 0,
+  );
+
+  @override
+  List<Object?> get props => [
+    unpaidInvoicesCount,
+    avgAttendanceRate,
+    avgGrade,
+    totalPoints,
+  ];
+
+  ParentHomeOverviewEntity copyWith({
+    int? unpaidInvoicesCount,
+    double? avgAttendanceRate,
+    double? avgGrade,
+    int? totalPoints,
+  }) {
+    return ParentHomeOverviewEntity(
+      unpaidInvoicesCount: unpaidInvoicesCount ?? this.unpaidInvoicesCount,
+      avgAttendanceRate: avgAttendanceRate ?? this.avgAttendanceRate,
+      avgGrade: avgGrade ?? this.avgGrade,
+      totalPoints: totalPoints ?? this.totalPoints,
     );
   }
 }
 
 class ParentChildSummaryEntity extends Equatable {
-  final String studentId;
-  final String studentName;
-  final String? studentCode;
-  final String grade;
-  final String? studyType;
+  final String childId;
+  final String name;
   final String? profileImageUrl;
-  final int activeEnrollments;
-  final int completedLessons;
-  final int totalAttendance;
-  final int unreadNotifications;
+  final String grade;
+  final double attendanceRate;
+  final double averageGrade;
+  final ParentRecentActivityEntity? lastActivity;
 
   const ParentChildSummaryEntity({
-    required this.studentId,
-    required this.studentName,
-    this.studentCode,
-    required this.grade,
-    this.studyType,
+    required this.childId,
+    required this.name,
     this.profileImageUrl,
-    this.activeEnrollments = 0,
-    this.completedLessons = 0,
-    this.totalAttendance = 0,
-    this.unreadNotifications = 0,
+    required this.grade,
+    required this.attendanceRate,
+    required this.averageGrade,
+    this.lastActivity,
   });
 
   static const placeholder = ParentChildSummaryEntity(
-    studentId: '',
-    studentName: '',
+    childId: '',
+    name: '',
     grade: '',
+    attendanceRate: 0.0,
+    averageGrade: 0.0,
   );
 
   @override
   List<Object?> get props => [
-        studentId,
-        studentName,
-        studentCode,
-        grade,
-        studyType,
-        profileImageUrl,
-        activeEnrollments,
-        completedLessons,
-        totalAttendance,
-        unreadNotifications,
-      ];
+    childId,
+    name,
+    profileImageUrl,
+    grade,
+    attendanceRate,
+    averageGrade,
+    lastActivity,
+  ];
 
   ParentChildSummaryEntity copyWith({
-    String? studentId,
-    String? studentName,
-    String? studentCode,
-    String? grade,
-    String? studyType,
+    String? childId,
+    String? name,
     String? profileImageUrl,
-    int? activeEnrollments,
-    int? completedLessons,
-    int? totalAttendance,
-    int? unreadNotifications,
+    String? grade,
+    double? attendanceRate,
+    double? averageGrade,
+    ParentRecentActivityEntity? lastActivity,
   }) {
     return ParentChildSummaryEntity(
-      studentId: studentId ?? this.studentId,
-      studentName: studentName ?? this.studentName,
-      studentCode: studentCode ?? this.studentCode,
-      grade: grade ?? this.grade,
-      studyType: studyType ?? this.studyType,
+      childId: childId ?? this.childId,
+      name: name ?? this.name,
       profileImageUrl: profileImageUrl ?? this.profileImageUrl,
-      activeEnrollments: activeEnrollments ?? this.activeEnrollments,
-      completedLessons: completedLessons ?? this.completedLessons,
-      totalAttendance: totalAttendance ?? this.totalAttendance,
-      unreadNotifications: unreadNotifications ?? this.unreadNotifications,
+      grade: grade ?? this.grade,
+      attendanceRate: attendanceRate ?? this.attendanceRate,
+      averageGrade: averageGrade ?? this.averageGrade,
+      lastActivity: lastActivity ?? this.lastActivity,
     );
   }
 }
 
 class ParentChildDashboardSummaryEntity extends Equatable {
-  final String studentId;
-  final String studentName;
-  final String? studentCode;
-  final String grade;
-  final String? governorate;
-  final String? schoolName;
-  final String? studyType;
-  final String? centerName;
-  final String? profileImageUrl;
-
-  final int totalAttendance;
-  final int centerAttendance;
-  final int onlineAttendance;
-
-  final int activeEnrollments;
-  final int completedLessons;
-  final int inProgressLessons;
-  final int lockedLessons;
+  final ParentChildEntity child;
+  final ParentHomeAttendanceSummary attendance;
+  final ParentHomeAcademicSummary academics;
+  final ParentHomeFinancialSummary financial;
+  final List<ParentRecentActivityEntity> recentActivity;
 
   const ParentChildDashboardSummaryEntity({
-    required this.studentId,
-    required this.studentName,
-    this.studentCode,
-    required this.grade,
-    this.governorate,
-    this.schoolName,
-    this.studyType,
-    this.centerName,
-    this.profileImageUrl,
-    this.totalAttendance = 0,
-    this.centerAttendance = 0,
-    this.onlineAttendance = 0,
-    this.activeEnrollments = 0,
-    this.completedLessons = 0,
-    this.inProgressLessons = 0,
-    this.lockedLessons = 0,
+    required this.child,
+    required this.attendance,
+    required this.academics,
+    required this.financial,
+    required this.recentActivity,
   });
 
+  String get childId => child.id;
+
   static final placeholder = ParentChildDashboardSummaryEntity(
-    studentId: '',
-    studentName: '',
-    grade: '',
+    child: ParentChildEntity.placeholder,
+    attendance: ParentHomeAttendanceSummary.placeholder,
+    academics: ParentHomeAcademicSummary.placeholder,
+    financial: ParentHomeFinancialSummary.placeholder,
+    recentActivity: const [],
   );
 
   @override
   List<Object?> get props => [
-        studentId,
-        studentName,
-        studentCode,
-        grade,
-        governorate,
-        schoolName,
-        studyType,
-        centerName,
-        profileImageUrl,
-        totalAttendance,
-        centerAttendance,
-        onlineAttendance,
-        activeEnrollments,
-        completedLessons,
-        inProgressLessons,
-        lockedLessons,
-      ];
+    child,
+    attendance,
+    academics,
+    financial,
+    recentActivity,
+  ];
 
   ParentChildDashboardSummaryEntity copyWith({
-    String? studentId,
-    String? studentName,
-    String? studentCode,
-    String? grade,
-    String? governorate,
-    String? schoolName,
-    String? studyType,
-    String? centerName,
-    String? profileImageUrl,
-    int? totalAttendance,
-    int? centerAttendance,
-    int? onlineAttendance,
-    int? activeEnrollments,
-    int? completedLessons,
-    int? inProgressLessons,
-    int? lockedLessons,
+    ParentChildEntity? child,
+    ParentHomeAttendanceSummary? attendance,
+    ParentHomeAcademicSummary? academics,
+    ParentHomeFinancialSummary? financial,
+    List<ParentRecentActivityEntity>? recentActivity,
   }) {
     return ParentChildDashboardSummaryEntity(
-      studentId: studentId ?? this.studentId,
-      studentName: studentName ?? this.studentName,
-      studentCode: studentCode ?? this.studentCode,
-      grade: grade ?? this.grade,
-      governorate: governorate ?? this.governorate,
-      schoolName: schoolName ?? this.schoolName,
-      studyType: studyType ?? this.studyType,
-      centerName: centerName ?? this.centerName,
-      profileImageUrl: profileImageUrl ?? this.profileImageUrl,
-      totalAttendance: totalAttendance ?? this.totalAttendance,
-      centerAttendance: centerAttendance ?? this.centerAttendance,
-      onlineAttendance: onlineAttendance ?? this.onlineAttendance,
-      activeEnrollments: activeEnrollments ?? this.activeEnrollments,
-      completedLessons: completedLessons ?? this.completedLessons,
-      inProgressLessons: inProgressLessons ?? this.inProgressLessons,
-      lockedLessons: lockedLessons ?? this.lockedLessons,
+      child: child ?? this.child,
+      attendance: attendance ?? this.attendance,
+      academics: academics ?? this.academics,
+      financial: financial ?? this.financial,
+      recentActivity: recentActivity ?? this.recentActivity,
+    );
+  }
+}
+
+class ParentHomeAttendanceSummary extends Equatable {
+  final double attendanceRate;
+  final int totalDays;
+  final int attendedDays;
+  final int absentDays;
+  final DateTime? lastAttendanceDate;
+
+  const ParentHomeAttendanceSummary({
+    required this.attendanceRate,
+    required this.totalDays,
+    required this.attendedDays,
+    required this.absentDays,
+    this.lastAttendanceDate,
+  });
+
+  static const placeholder = ParentHomeAttendanceSummary(
+    attendanceRate: 0.0,
+    totalDays: 0,
+    attendedDays: 0,
+    absentDays: 0,
+  );
+
+  @override
+  List<Object?> get props => [
+    attendanceRate,
+    totalDays,
+    attendedDays,
+    absentDays,
+    lastAttendanceDate,
+  ];
+
+  ParentHomeAttendanceSummary copyWith({
+    double? attendanceRate,
+    int? totalDays,
+    int? attendedDays,
+    int? absentDays,
+    DateTime? lastAttendanceDate,
+  }) {
+    return ParentHomeAttendanceSummary(
+      attendanceRate: attendanceRate ?? this.attendanceRate,
+      totalDays: totalDays ?? this.totalDays,
+      attendedDays: attendedDays ?? this.attendedDays,
+      absentDays: absentDays ?? this.absentDays,
+      lastAttendanceDate: lastAttendanceDate ?? this.lastAttendanceDate,
+    );
+  }
+}
+
+class ParentHomeAcademicSummary extends Equatable {
+  final double averageGrade;
+  final double gradeTrend;
+  final int enrolledCoursesCount;
+  final int activeAssignmentsCount;
+  final DateTime? nextDeadline;
+
+  const ParentHomeAcademicSummary({
+    required this.averageGrade,
+    required this.gradeTrend,
+    required this.enrolledCoursesCount,
+    required this.activeAssignmentsCount,
+    this.nextDeadline,
+  });
+
+  static const placeholder = ParentHomeAcademicSummary(
+    averageGrade: 0.0,
+    gradeTrend: 0.0,
+    enrolledCoursesCount: 0,
+    activeAssignmentsCount: 0,
+  );
+
+  @override
+  List<Object?> get props => [
+    averageGrade,
+    gradeTrend,
+    enrolledCoursesCount,
+    activeAssignmentsCount,
+    nextDeadline,
+  ];
+
+  ParentHomeAcademicSummary copyWith({
+    double? averageGrade,
+    double? gradeTrend,
+    int? enrolledCoursesCount,
+    int? activeAssignmentsCount,
+    DateTime? nextDeadline,
+  }) {
+    return ParentHomeAcademicSummary(
+      averageGrade: averageGrade ?? this.averageGrade,
+      gradeTrend: gradeTrend ?? this.gradeTrend,
+      enrolledCoursesCount: enrolledCoursesCount ?? this.enrolledCoursesCount,
+      activeAssignmentsCount:
+          activeAssignmentsCount ?? this.activeAssignmentsCount,
+      nextDeadline: nextDeadline ?? this.nextDeadline,
+    );
+  }
+}
+
+class ParentHomeFinancialSummary extends Equatable {
+  final double walletBalance;
+  final double spentThisMonth;
+  final String currency;
+  final DateTime? lastTransactionDate;
+
+  const ParentHomeFinancialSummary({
+    required this.walletBalance,
+    required this.spentThisMonth,
+    required this.currency,
+    this.lastTransactionDate,
+  });
+
+  static const placeholder = ParentHomeFinancialSummary(
+    walletBalance: 0.0,
+    spentThisMonth: 0.0,
+    currency: 'EGP',
+  );
+
+  @override
+  List<Object?> get props => [
+    walletBalance,
+    spentThisMonth,
+    currency,
+    lastTransactionDate,
+  ];
+
+  ParentHomeFinancialSummary copyWith({
+    double? walletBalance,
+    double? spentThisMonth,
+    String? currency,
+    DateTime? lastTransactionDate,
+  }) {
+    return ParentHomeFinancialSummary(
+      walletBalance: walletBalance ?? this.walletBalance,
+      spentThisMonth: spentThisMonth ?? this.spentThisMonth,
+      currency: currency ?? this.currency,
+      lastTransactionDate: lastTransactionDate ?? this.lastTransactionDate,
     );
   }
 }

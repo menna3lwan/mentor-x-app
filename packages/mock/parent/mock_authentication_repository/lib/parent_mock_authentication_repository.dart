@@ -177,23 +177,6 @@ final class MockAuthenticationRepository implements AuthenticationRepository<Par
   }
 
   @override
-  Future<void> forceLogoutAll() async {
-    _cachedUser = null;
-  }
-
-  @override
-  Future<ParentEntity> getMe() async {
-    await Future.delayed(delay);
-    if (_cachedUser != null) {
-      return _cachedUser!;
-    }
-    throw const AuthenticationException(
-      code: AuthenticationExceptionCode.unknown,
-      message: 'User not found',
-    );
-  }
-
-  @override
   Future<ParentEntity?> getCachedUser() async {
     return _cachedUser;
   }

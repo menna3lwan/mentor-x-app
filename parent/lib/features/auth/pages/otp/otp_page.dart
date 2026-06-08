@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:gap/gap.dart';
 
 final class OtpPage extends StatelessWidget {
   final Widget? backButton;
@@ -42,7 +43,7 @@ final class OtpPage extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.all(24),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: context.backgroundSecondaryColor,
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
@@ -60,7 +61,7 @@ final class OtpPage extends StatelessWidget {
                 ),
               ),
               const Gap(40),
-              if (title != null) 
+              if (title != null)
                 FadeInDown(
                   duration: const Duration(milliseconds: 500),
                   delay: const Duration(milliseconds: 200),

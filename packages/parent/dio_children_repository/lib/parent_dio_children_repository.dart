@@ -3,40 +3,56 @@ import 'models/children_models.dart';
 export 'models/children_models.dart';
 
 final class DioParentChildrenRepository
-    extends HttpClientRepository<AuthenticationExceptionCode>
+    extends HttpClientRepository<ParentChildrenRepositoryExceptionCode>
     implements ParentChildrenRepository {
-  DioParentChildrenRepository({
-    required HttpClient httpClient,
-    required CacheRepository cacheRepository,
-  }) : _httpClient = httpClient;
+  final HttpClient _httpClient;
+
+  DioParentChildrenRepository({required HttpClient httpClient})
+      : _httpClient = httpClient;
 
   @override
   Future<void> initialize() async {}
 
   @override
   Never throwException(
-    AuthenticationExceptionCode code, {
+    ParentChildrenRepositoryExceptionCode code, {
     String? message,
-  }) => throw AuthenticationException(code: code, message: message);
-
-  final HttpClient _httpClient;
+  }) =>
+      throw ParentChildrenRepositoryException(code: code, message: message);
 
   @override
   Future<List<ParentChildEntity>> getChildren() async {
+    // Backend contract (Postman): GET /api/parent/children — envelope shape
+    // is {success, data:[...]} or {success, data:{content:[...]}}.
     try {
       final response = await _httpClient.get('/api/parent/children');
-      final list = response.asList();
+
+      final root = asMap(response.data);
+      final payload = root['data'] ?? response.data;
+      final list = payload is Map
+          ? asList(payload['content'])
+          : asList(payload);
       return list
           .map((json) => ParentChildModel.fromJson(asMap(json)))
           .toList();
     } on HttpClientResponse catch (e) {
-      return handleHttpClientErrorResponse(
+      handleHttpClientErrorResponse(
         e,
-        defaultCode: AuthenticationExceptionCode.unknown,
+        defaultCode: ParentChildrenRepositoryExceptionCode.fetchError,
+        codeFromStatusCode: _classify,
       );
     }
   }
 
+  // ─────────────────────────────────────────────────────────────────────────
+  // API-CONTRACT (KNOWN MISMATCH):
+  // /api/parent/find-student, /api/parent/link-child, and
+  // DELETE /api/parent/children/{id} are NOT declared in the EduCore Postman
+  // collection. They are kept as-is so the existing UI flow keeps compiling
+  // and exercising the Mock repository in development. Any 404/405 from a
+  // real backend is surfaced as a typed exception so the UI can display a
+  // localized "service unavailable" toast instead of crashing.
+  // ─────────────────────────────────────────────────────────────────────────
   @override
   Future<ParentStudentLookupEntity> findStudentByChildQuery({
     required String query,
@@ -44,18 +60,15 @@ final class DioParentChildrenRepository
     try {
       final response = await _httpClient.post(
         '/api/parent/find-student',
-        data: {
-          'lookupType': query.contains('01') ? 'PHONE' : 'STUDENT_CODE',
-          'value': query,
-        },
+        data: {'value': query},
       );
 
-      final data = response.asMap();
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
       return ParentStudentLookupModel.fromJson(data);
     } on HttpClientResponse catch (e) {
-      return handleHttpClientErrorResponse(
+      handleHttpClientErrorResponse(
         e,
-        defaultCode: AuthenticationExceptionCode.studentNotFound,
+        defaultCode: ParentChildrenRepositoryExceptionCode.studentNotFound,
       );
     }
   }
@@ -70,16 +83,17 @@ final class DioParentChildrenRepository
         '/api/parent/link-child',
         data: {
           'studentId': studentId,
+          'student_id': studentId,
           'relationship': relationship,
         },
       );
 
-      final data = response.asMap();
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
       return ParentChildModel.fromJson(data);
     } on HttpClientResponse catch (e) {
-      return handleHttpClientErrorResponse(
+      handleHttpClientErrorResponse(
         e,
-        defaultCode: AuthenticationExceptionCode.registrationFailed,
+        defaultCode: ParentChildrenRepositoryExceptionCode.fetchError,
       );
     }
   }
@@ -91,8 +105,17 @@ final class DioParentChildrenRepository
     } on HttpClientResponse catch (e) {
       handleHttpClientErrorResponse(
         e,
-        defaultCode: AuthenticationExceptionCode.unknown,
+        defaultCode: ParentChildrenRepositoryExceptionCode.unknown,
+        codeFromStatusCode: _classify,
       );
     }
+  }
+
+  ParentChildrenRepositoryExceptionCode _classify(int statusCode) {
+    return switch (statusCode) {
+      401 || 403 => ParentChildrenRepositoryExceptionCode.unauthorized,
+      404 => ParentChildrenRepositoryExceptionCode.studentNotFound,
+      _ => ParentChildrenRepositoryExceptionCode.fetchError,
+    };
   }
 }

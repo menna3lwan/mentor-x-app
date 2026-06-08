@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
-import 'package:parent/core/core.dart';
-import 'package:parent/features/features.dart';
+import 'package:gap/gap.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
+import '../../../../core/core.dart';
+import '../../../features.dart';
 
 final class ForgetPasswordPageWrapper extends StatefulWidget {
   const ForgetPasswordPageWrapper({super.key});
@@ -32,21 +33,21 @@ class _ForgetPasswordPageWrapperState extends State<ForgetPasswordPageWrapper> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ForgetPasswordBloc(
-        authenticationRepository: context.read<AuthenticationRepository<ParentEntity>>(),
-        analyticsService: context.read<AnalyticsService>(),
-      ),
-      child: BlocPresentationListener<
-        ForgetPasswordBloc,
-        ForgetPasswordPresentationEvent
-      >(
+    final t = Translations.of(context).parent;
+
+    return BlocPresentationListener<
+      ForgetPasswordBloc,
+      ForgetPasswordPresentationEvent
+    >(
       listener: (context, event) {
         switch (event) {
           case ForgetPasswordSuccessPresentationEvent(:final phone):
             _openResetPasswordBottomSheet(phone);
           case ForgetPasswordFailurePresentationEvent(:final exception):
-            MentorXUI.showToast(message: exception.message ?? 'Failed to send code', isError: true);
+            MentorXUI.showToast(
+              message: _failureMessage(exception, t),
+              isError: true,
+            );
         }
       },
       child: Builder(
@@ -57,17 +58,19 @@ class _ForgetPasswordPageWrapperState extends State<ForgetPasswordPageWrapper> {
           return Form(
             key: _formKey,
             child: ForgetPasswordPage(
-              title: 'Forgot Password?',
-              subtitle: "Don't worry! Enter your registered phone number and we'll send you a verification code to reset your account safely.",
+              title: t.auth.forgotPasswordTitle,
+              subtitle: t.auth.forgotPasswordSubtitle,
               phoneField: MentorXTextFormField(
-                label: 'Phone Number',
-                hintText: 'Enter your phone number',
+                label: t.auth.phoneNumberLabel,
+                hintText: t.auth.phoneNumberHint,
                 icon: Icons.phone_android_rounded,
                 controller: _phoneController,
                 keyboardType: TextInputType.phone,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 validator: (value) {
-                  if (value == null || value.isEmpty) return 'Phone number is required';
+                  if (value == null || value.isEmpty) {
+                    return t.auth.phoneRequired;
+                  }
                   return null;
                 },
               ),
@@ -83,13 +86,13 @@ class _ForgetPasswordPageWrapperState extends State<ForgetPasswordPageWrapper> {
                           );
                         }
                       },
-                label: 'Send Verification Code',
+                label: t.auth.sendVerificationCode,
                 loading: isLoading,
               ),
               backToLoginButton: TextButton(
                 onPressed: () => const LoginPageRoute().go(context),
                 child: Text(
-                  'Back to Login',
+                  t.auth.backToLogin,
                   style: TextStyle(
                     color: context.brandPrimaryColor,
                     fontWeight: FontWeight.w800,
@@ -101,11 +104,29 @@ class _ForgetPasswordPageWrapperState extends State<ForgetPasswordPageWrapper> {
           );
         },
       ),
-    ),
-  );
-}
+    );
+  }
+
+  /// Maps backend exception codes to localized user-facing copy so the toast
+  /// always says something meaningful regardless of upstream wording.
+  String _failureMessage(
+    MentorXException exception,
+    TranslationsParentEn t,
+  ) {
+    if (exception is AuthenticationException) {
+      return switch (exception.code) {
+        AuthenticationExceptionCode.networkError => t.unableToLoad,
+        AuthenticationExceptionCode.failedToSendOtp ||
+        AuthenticationExceptionCode.failedToRequestPasswordReset =>
+          t.auth.sendCodeFailed,
+        _ => exception.message ?? t.auth.sendCodeFailed,
+      };
+    }
+    return exception.message ?? t.auth.sendCodeFailed;
+  }
 
   Future<void> _openResetPasswordBottomSheet(String phone) async {
+    final t = Translations.of(context).parent;
     final otpController = TextEditingController();
     final newPasswordController = TextEditingController();
     final confirmPasswordController = TextEditingController();
@@ -115,16 +136,18 @@ class _ForgetPasswordPageWrapperState extends State<ForgetPasswordPageWrapper> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) {
+      builder: (sheetContext) {
         return StatefulBuilder(
-          builder: (context, setModalState) {
+          builder: (sheetContext, setModalState) {
             return Container(
               padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom,
+                bottom: MediaQuery.of(sheetContext).viewInsets.bottom,
               ),
               decoration: BoxDecoration(
-                color: context.backgroundPrimaryColor,
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+                color: sheetContext.backgroundPrimaryColor,
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(32),
+                ),
               ),
               child: Padding(
                 padding: const EdgeInsets.all(32.0),
@@ -135,35 +158,37 @@ class _ForgetPasswordPageWrapperState extends State<ForgetPasswordPageWrapper> {
                       width: 48,
                       height: 5,
                       decoration: BoxDecoration(
-                        color: context.textTertiaryColor.withValues(alpha: 0.2),
+                        color: sheetContext.textTertiaryColor.withValues(
+                          alpha: 0.2,
+                        ),
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
                     const Gap(32),
                     Text(
-                      'Reset Your Password',
+                      t.auth.resetPasswordTitle,
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.w900,
-                        color: context.textPrimaryColor,
+                        color: sheetContext.textPrimaryColor,
                         letterSpacing: -0.5,
                       ),
                     ),
                     const Gap(12),
                     Text(
-                      'Enter the 6-digit code sent to\n$phone',
+                      t.auth.resetPasswordSubtitle(phone: phone),
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontSize: 14, 
-                        color: context.textSecondaryColor,
+                        fontSize: 14,
+                        color: sheetContext.textSecondaryColor,
                         fontWeight: FontWeight.w500,
                         height: 1.5,
                       ),
                     ),
                     const Gap(40),
                     MentorXTextFormField(
-                      label: 'OTP Code',
-                      hintText: '000000',
+                      label: t.auth.otpCodeLabel,
+                      hintText: t.auth.otpFieldHint,
                       icon: Icons.verified_rounded,
                       controller: otpController,
                       keyboardType: TextInputType.number,
@@ -171,48 +196,61 @@ class _ForgetPasswordPageWrapperState extends State<ForgetPasswordPageWrapper> {
                     ),
                     const Gap(20),
                     MentorXTextFormField(
-                      label: 'New Password',
-                      hintText: '••••••••',
+                      label: t.auth.newPasswordLabel,
+                      hintText: t.auth.passwordPlaceholder,
                       icon: Icons.lock_rounded,
                       controller: newPasswordController,
                       isPassword: true,
                     ),
                     const Gap(20),
                     MentorXTextFormField(
-                      label: 'Confirm New Password',
-                      hintText: '••••••••',
+                      label: t.auth.confirmPasswordLabel,
+                      hintText: t.auth.passwordPlaceholder,
                       icon: Icons.lock_reset_rounded,
                       controller: confirmPasswordController,
                       isPassword: true,
                     ),
                     const Gap(40),
                     MentorXButton(
-                      onPressed: isSubmitting ? null : () async {
-                        final otp = otpController.text.trim();
-                        final newPassword = newPasswordController.text;
-                        final confirmPassword = confirmPasswordController.text;
+                      onPressed: isSubmitting
+                          ? null
+                          : () async {
+                              final otp = otpController.text.trim();
+                              final newPassword = newPasswordController.text;
+                              final confirmPassword =
+                                  confirmPasswordController.text;
 
-                        if (otp.length < 4 || newPassword.length < 8 || newPassword != confirmPassword) {
-                          MentorXUI.showToast(message: 'Please check your inputs and try again', isError: true);
-                          return;
-                        }
+                              if (otp.length < 4 ||
+                                  newPassword.length < 8 ||
+                                  newPassword != confirmPassword) {
+                                MentorXUI.showToast(
+                                  message: t.auth.validationCheckInputs,
+                                  isError: true,
+                                );
+                                return;
+                              }
 
-                        setModalState(() => isSubmitting = true);
-                        try {
-                          await this.context.read<AuthenticationRepository>().resetPassword(
-                            phone: phone,
-                            otp: otp,
-                            newPassword: newPassword,
-                          );
-                          if (!context.mounted) return;
-                          Navigator.pop(context, true);
-                        } catch (e) {
-                          MentorXUI.showToast(message: e.toString(), isError: true);
-                        } finally {
-                          setModalState(() => isSubmitting = false);
-                        }
-                      },
-                      label: 'Update Password Now',
+                              setModalState(() => isSubmitting = true);
+                              try {
+                                await context
+                                    .read<AuthenticationRepository>()
+                                    .resetPassword(
+                                      phone: phone,
+                                      otp: otp,
+                                      newPassword: newPassword,
+                                    );
+                                if (!sheetContext.mounted) return;
+                                Navigator.pop(sheetContext, true);
+                              } catch (e) {
+                                MentorXUI.showToast(
+                                  message: e.toString(),
+                                  isError: true,
+                                );
+                              } finally {
+                                setModalState(() => isSubmitting = false);
+                              }
+                            },
+                      label: t.auth.updatePasswordNow,
                       loading: isSubmitting,
                     ),
                     const Gap(16),
@@ -226,7 +264,7 @@ class _ForgetPasswordPageWrapperState extends State<ForgetPasswordPageWrapper> {
     );
 
     if (result == true) {
-      MentorXUI.showToast(message: 'Password reset successfully');
+      MentorXUI.showToast(message: t.auth.passwordResetSuccess);
       if (!mounted) return;
       const LoginPageRoute().go(context);
     }

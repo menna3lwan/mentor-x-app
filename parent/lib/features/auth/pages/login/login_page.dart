@@ -1,29 +1,54 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:gap/gap.dart';
+import '../../../../core/core.dart';
+import 'bloc/login_bloc.dart';
+import '../../../../core/routing/app_routes.dart';
+import '../../utils/auth_validators.dart';
 
-final class LoginPage extends StatelessWidget {
-  final GlobalKey<FormState> formKey;
-  final TextEditingController phoneController;
-  final TextEditingController passwordController;
-  final bool isLoading;
-  final VoidCallback onLogin;
-  final VoidCallback onForgotPassword;
-  final VoidCallback onCreateAccount;
+final class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
-  const LoginPage({
-    super.key,
-    required this.formKey,
-    required this.phoneController,
-    required this.passwordController,
-    required this.isLoading,
-    required this.onLogin,
-    required this.onForgotPassword,
-    required this.onCreateAccount,
-  });
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final _formKey = GlobalKey<FormState>();
+  final _phoneController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _phoneController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  void _onLoginSubmitted() async {
+    if (_formKey.currentState?.validate() ?? false) {
+      context.read<LoginBloc>().add(
+        LoginSubmittedEvent(
+          phoneNumber: _phoneController.text,
+          password: _passwordController.text,
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final t = Translations.of(context).parent;
+    // Responsive sizing: scale down the hero title on small phones so it
+    // doesn't dominate the viewport (iPhone SE 320px etc).
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    final titleSize = screenWidth < 360 ? 26.0 : 32.0;
+
+    // Navigation + toast on success/failure/OTP-required are handled by the
+    // wrapper via `BlocPresentationListener`. This page is purely visual.
     return Scaffold(
       backgroundColor: context.backgroundPrimaryColor,
       body: Stack(
@@ -69,7 +94,7 @@ final class LoginPage extends StatelessWidget {
               ),
             ),
           ),
-          
+
           SafeArea(
             child: Center(
               child: SingleChildScrollView(
@@ -87,17 +112,23 @@ final class LoginPage extends StatelessWidget {
                         child: Container(
                           padding: const EdgeInsets.all(24),
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: context.backgroundSecondaryColor,
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
-                                color: context.brandPrimaryColor.withValues(alpha: 0.12),
+                                color: context.brandPrimaryColor.withValues(
+                                  alpha: 0.12,
+                                ),
                                 blurRadius: 30,
                                 offset: const Offset(0, 15),
                               ),
                             ],
                           ),
-                          child: Icon(Icons.family_restroom_rounded, color: context.brandPrimaryColor, size: 56),
+                          child: Icon(
+                            Icons.family_restroom_rounded,
+                            color: context.brandPrimaryColor,
+                            size: 56,
+                          ),
                         ),
                       ),
                       const Gap(32),
@@ -107,9 +138,10 @@ final class LoginPage extends StatelessWidget {
                         child: Column(
                           children: [
                             Text(
-                              'MentorX Parent',
+                              t.auth.appName,
+                              textAlign: TextAlign.center,
                               style: TextStyle(
-                                fontSize: 32,
+                                fontSize: titleSize,
                                 fontWeight: FontWeight.w900,
                                 color: context.textPrimaryColor,
                                 letterSpacing: -1.0,
@@ -117,7 +149,7 @@ final class LoginPage extends StatelessWidget {
                             ),
                             const Gap(10),
                             Text(
-                              'Monitor your child\'s academic journey with confidence',
+                              t.auth.loginTagline,
                               style: TextStyle(
                                 fontSize: 15,
                                 color: context.textSecondaryColor,
@@ -130,105 +162,126 @@ final class LoginPage extends StatelessWidget {
                         ),
                       ),
                       const Gap(56),
-                      
-                      Form(
-                        key: formKey,
-                        child: Column(
-                          children: [
-                            FadeInUp(
-                              duration: const Duration(milliseconds: 500),
-                              delay: const Duration(milliseconds: 300),
-                              child: MentorXTextFormField(
-                                label: 'Phone Number',
-                                controller: phoneController,
-                                keyboardType: TextInputType.phone,
-                                icon: Icons.phone_android_rounded,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter your phone number';
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ),
-                            const Gap(20),
-                            FadeInUp(
-                              duration: const Duration(milliseconds: 500),
-                              delay: const Duration(milliseconds: 400),
-                              child: MentorXTextFormField(
-                                label: 'Password',
-                                controller: passwordController,
-                                isPassword: true,
-                                icon: Icons.lock_rounded,
-                                onFieldSubmitted: (_) => onLogin(),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter your password';
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ),
-                            const Gap(8),
-                            FadeInUp(
-                              duration: const Duration(milliseconds: 500),
-                              delay: const Duration(milliseconds: 450),
-                              child: Align(
-                                alignment: Alignment.centerRight,
-                                child: TextButton(
-                                  onPressed: onForgotPassword,
-                                  child: Text(
-                                    'Forgot Password?',
-                                    style: TextStyle(
-                                      color: context.brandPrimaryColor,
-                                      fontWeight: FontWeight.w800,
-                                      fontSize: 14,
+
+                      AutofillGroup(
+                        child: Form(
+                          key: _formKey,
+                          child: Column(
+                            children: [
+                              FadeInUp(
+                                duration: const Duration(milliseconds: 500),
+                                delay: const Duration(milliseconds: 300),
+                                child: MentorXTextFormField(
+                                  label: t.auth.phoneNumberLabel,
+                                  controller: _phoneController,
+                                  keyboardType: TextInputType.phone,
+                                  icon: Icons.phone_android_rounded,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.allow(
+                                      RegExp(r'[\d\+\-\s()]'),
                                     ),
-                                  ),
+                                  ],
+                                  autofillHints: const [
+                                    AutofillHints.telephoneNumber,
+                                  ],
+                                  textInputAction: TextInputAction.next,
+                                  validator: (value) =>
+                                      AuthValidators.phone(value, t),
                                 ),
                               ),
-                            ),
-                            const Gap(40),
-                            FadeInUp(
-                              duration: const Duration(milliseconds: 500),
-                              delay: const Duration(milliseconds: 500),
-                              child: MentorXButton(
-                                onPressed: onLogin,
-                                loading: isLoading,
-                                label: 'Sign In to Dashboard',
+                              const Gap(20),
+                              FadeInUp(
+                                duration: const Duration(milliseconds: 500),
+                                delay: const Duration(milliseconds: 400),
+                                child: MentorXTextFormField(
+                                  label: t.auth.passwordLabel,
+                                  controller: _passwordController,
+                                  isPassword: true,
+                                  icon: Icons.lock_rounded,
+                                  autofillHints: const [
+                                    AutofillHints.password,
+                                  ],
+                                  textInputAction: TextInputAction.done,
+                                  onFieldSubmitted: (_) => _onLoginSubmitted(),
+                                  validator: (value) =>
+                                      AuthValidators.password(value, t),
+                                ),
                               ),
-                            ),
-                            const Gap(32),
-                            FadeInUp(
-                              duration: const Duration(milliseconds: 500),
-                              delay: const Duration(milliseconds: 600),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    "New to MentorX?",
-                                    style: TextStyle(
-                                      color: context.textSecondaryColor,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  TextButton(
-                                    onPressed: onCreateAccount,
+                              const Gap(8),
+                              FadeInUp(
+                                duration: const Duration(milliseconds: 500),
+                                delay: const Duration(milliseconds: 450),
+                                child: Align(
+                                  alignment: Alignment.centerRight,
+                                  child: TextButton(
+                                    onPressed: () {
+                                      const ForgetPasswordPageRoute().go(
+                                        context,
+                                      );
+                                    },
                                     child: Text(
-                                      'Create Account',
+                                      t.auth.forgotPassword,
                                       style: TextStyle(
                                         color: context.brandPrimaryColor,
-                                        fontWeight: FontWeight.w900,
+                                        fontWeight: FontWeight.w800,
                                         fontSize: 14,
                                       ),
                                     ),
                                   ),
-                                ],
+                                ),
                               ),
-                            ),
-                            const Gap(40),
-                          ],
+                              const Gap(40),
+                              FadeInUp(
+                                duration: const Duration(milliseconds: 500),
+                                delay: const Duration(milliseconds: 500),
+                                child: BlocBuilder<LoginBloc, LoginState>(
+                                  builder: (context, state) {
+                                    return MentorXButton(
+                                      onPressed: _onLoginSubmitted,
+                                      loading:
+                                          state.loadingState ==
+                                          LoginLoadingState.loading,
+                                      label: t.auth.signInToDashboard,
+                                    );
+                                  },
+                                ),
+                              ),
+                              const Gap(32),
+                              FadeInUp(
+                                duration: const Duration(milliseconds: 500),
+                                delay: const Duration(milliseconds: 600),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      t.auth.newToMentorX,
+                                      style: TextStyle(
+                                        color: context.textSecondaryColor,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        const ParentRegistrationPageRoute().go(
+                                          context,
+                                        );
+                                      },
+                                      child: Text(
+                                        t.auth.createAccount,
+                                        style: TextStyle(
+                                          color: context.brandPrimaryColor,
+                                          fontWeight: FontWeight.w900,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const Gap(40),
+                            ],
+                          ),
                         ),
                       ),
                     ],

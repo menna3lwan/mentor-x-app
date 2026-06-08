@@ -1,4 +1,9 @@
+export 'analytics/analytics.dart';
+export 'attendance_groups/attendance_groups.dart';
 export 'auth/auth.dart';
+export 'devices/devices.dart';
+export 'my_wallet/my_wallet.dart';
+export 'push_notifications/push_notifications.dart';
 export 'assessments/assessments.dart';
 export 'attendance/attendance.dart';
 export 'children/children.dart';
@@ -6,5 +11,6 @@ export 'communication/communication.dart';
 export 'courses/courses.dart';
 export 'financial/financial.dart';
 export 'home/home.dart';
+export 'notifications/notifications.dart';
 export 'onboarding/onboarding.dart';
 export 'profile/profile.dart';

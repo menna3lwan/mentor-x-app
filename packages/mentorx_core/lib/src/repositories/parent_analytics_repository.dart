@@ -1,5 +1,7 @@
 part of 'package:mentorx_core/mentorx_core.dart';
 
+// ——— Exception ———
+
 enum ParentAnalyticsRepositoryExceptionCode {
   unknown,
   failedToLoadGradeComparison,
@@ -8,39 +10,35 @@ enum ParentAnalyticsRepositoryExceptionCode {
   failedToLoadAchievements,
   failedToLoadStreak,
   failedToLoadQuizSpeed,
+  unauthorized,
+  notFound,
 }
 
 final class ParentAnalyticsRepositoryException
     extends MentorXException<ParentAnalyticsRepositoryExceptionCode> {
-  const ParentAnalyticsRepositoryException({required super.code, super.message});
+  const ParentAnalyticsRepositoryException({
+    required super.code,
+    super.message,
+  });
 }
 
+// ——— Repository ———
+
+/// Backs the Parent Analytics dashboard. Each method maps 1:1 to a backend
+/// endpoint under `/api/analytics/parent/child/{studentId}/*`. The six
+/// surfaces are independent — failure in one does not block the others.
 abstract interface class ParentAnalyticsRepository {
   Future<void> initialize();
 
-  /// Fetch grade comparison for a child.
-  Future<List<PerformanceSnapshotEntity>> getChildGradeComparison(
-    String childId, {
-    String? courseId,
-  });
+  Future<ParentChildGradeComparisonEntity> getGradeComparison(String childId);
 
-  /// Fetch course progress for a child.
-  Future<List<PerformanceSnapshotEntity>> getChildCourseProgress(
-    String childId,
-  );
+  Future<ParentChildCourseProgressEntity> getCourseProgress(String childId);
 
-  /// Fetch active hours heatmap for a child.
-  Future<List<ActivityHeatmapEntity>> getChildActiveHours(String childId);
+  Future<ParentChildActiveHoursEntity> getActiveHours(String childId);
 
-  /// Fetch achievements for a child.
-  Future<List<AchievementEntity>> getChildAchievements(String childId);
+  Future<ParentChildAchievementsEntity> getAchievements(String childId);
 
-  /// Fetch activity streak for a child.
-  Future<StreakEntity> getChildStreak(String childId);
+  Future<StreakEntity> getStreak(String childId);
 
-  /// Fetch quiz speed metrics for a child.
-  Future<List<QuizSpeedMetricEntity>> getChildQuizSpeed(
-    String childId, {
-    String? courseId,
-  });
+  Future<ParentChildQuizSpeedEntity> getQuizSpeed(String childId);
 }

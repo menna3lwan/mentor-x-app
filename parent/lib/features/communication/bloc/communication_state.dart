@@ -1,46 +1,96 @@
 part of 'communication_bloc.dart';
 
-enum CommunicationStatus { initial, loading, success, failure }
+enum CommunicationSectionStatus { initial, loading, loaded, failure }
 
-final class CommunicationState extends Equatable {
-  final CommunicationStatus status;
-  final List<NotificationEntity> notifications;
-  final List<AnnouncementEntity> announcements;
-  final List<WhatsAppGroupEntity> whatsAppGroups;
+enum CommunicationSection { announcements, whatsAppGroups }
+
+final class CommunicationAsyncSection<T> extends Equatable {
+  final CommunicationSectionStatus status;
+  final T? data;
   final String? errorMessage;
 
-  const CommunicationState({
-    this.status = CommunicationStatus.initial,
-    this.notifications = const [],
-    this.announcements = const [],
-    this.whatsAppGroups = const [],
+  const CommunicationAsyncSection._({
+    required this.status,
+    this.data,
     this.errorMessage,
   });
 
-  bool get isLoading => status == CommunicationStatus.loading;
+  const CommunicationAsyncSection.initial()
+    : this._(status: CommunicationSectionStatus.initial);
+  const CommunicationAsyncSection.loading({T? data})
+    : this._(status: CommunicationSectionStatus.loading, data: data);
+  const CommunicationAsyncSection.loaded(T data)
+    : this._(status: CommunicationSectionStatus.loaded, data: data);
+  const CommunicationAsyncSection.failure(String message, {T? data})
+    : this._(
+        status: CommunicationSectionStatus.failure,
+        data: data,
+        errorMessage: message,
+      );
+
+  bool get isInitial => status == CommunicationSectionStatus.initial;
+  bool get isLoading => status == CommunicationSectionStatus.loading;
+  bool get isLoaded => status == CommunicationSectionStatus.loaded;
+  bool get isFailure => status == CommunicationSectionStatus.failure;
+
+  CommunicationAsyncSection<T> toLoading() =>
+      CommunicationAsyncSection.loading(data: data);
+
+  @override
+  List<Object?> get props => [status, data, errorMessage];
+}
+
+final class CommunicationState extends Equatable {
+  final String? childId;
+  final bool isRefreshing;
+
+  final CommunicationAsyncSection<List<AnnouncementEntity>>
+  announcementsSection;
+  final CommunicationAsyncSection<List<WhatsAppGroupEntity>>
+  whatsAppGroupsSection;
+
+  const CommunicationState({
+    required this.childId,
+    required this.isRefreshing,
+    required this.announcementsSection,
+    required this.whatsAppGroupsSection,
+  });
+
+  factory CommunicationState.initial() {
+    return const CommunicationState(
+      childId: null,
+      isRefreshing: false,
+      announcementsSection: CommunicationAsyncSection.initial(),
+      whatsAppGroupsSection: CommunicationAsyncSection.initial(),
+    );
+  }
+
+  List<AnnouncementEntity> get announcements =>
+      announcementsSection.data ?? const <AnnouncementEntity>[];
+
+  List<WhatsAppGroupEntity> get whatsAppGroups =>
+      whatsAppGroupsSection.data ?? const <WhatsAppGroupEntity>[];
 
   CommunicationState copyWith({
-    CommunicationStatus? status,
-    List<NotificationEntity>? notifications,
-    List<AnnouncementEntity>? announcements,
-    List<WhatsAppGroupEntity>? whatsAppGroups,
-    String? errorMessage,
+    String? childId,
+    bool? isRefreshing,
+    CommunicationAsyncSection<List<AnnouncementEntity>>? announcementsSection,
+    CommunicationAsyncSection<List<WhatsAppGroupEntity>>? whatsAppGroupsSection,
   }) {
     return CommunicationState(
-      status: status ?? this.status,
-      notifications: notifications ?? this.notifications,
-      announcements: announcements ?? this.announcements,
-      whatsAppGroups: whatsAppGroups ?? this.whatsAppGroups,
-      errorMessage: errorMessage ?? this.errorMessage,
+      childId: childId ?? this.childId,
+      isRefreshing: isRefreshing ?? this.isRefreshing,
+      announcementsSection: announcementsSection ?? this.announcementsSection,
+      whatsAppGroupsSection:
+          whatsAppGroupsSection ?? this.whatsAppGroupsSection,
     );
   }
 
   @override
   List<Object?> get props => [
-        status,
-        notifications,
-        announcements,
-        whatsAppGroups,
-        errorMessage,
-      ];
+    childId,
+    isRefreshing,
+    announcementsSection,
+    whatsAppGroupsSection,
+  ];
 }

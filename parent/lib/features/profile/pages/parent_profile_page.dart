@@ -1,393 +1,168 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:mentorx_ui/mentorx_ui.dart';
-import 'package:animate_do/animate_do.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gap/gap.dart';
 import 'package:mentorx_core/mentorx_core.dart';
-import '../bloc/profile_bloc.dart';
+import 'package:mentorx_ui/mentorx_ui.dart';
+import 'package:mix/mix.dart';
 
-final class ParentProfilePage extends StatelessWidget {
-  final ProfileStatus status;
-  final ParentEntity? profileData;
-  final String? errorMessage;
-  final VoidCallback onRefresh;
-  final VoidCallback onRetry;
-  final VoidCallback onLogout;
-  final VoidCallback onSettingsTap;
+import '../../../core/blocs/app_authentication_cubit/app_authentication_cubit.dart';
+import '../../../core/routing/app_routes.dart';
+import '../widgets/widgets.dart';
 
-  const ParentProfilePage({
-    super.key,
-    required this.status,
-    required this.profileData,
-    required this.errorMessage,
-    required this.onRefresh,
-    required this.onRetry,
-    required this.onLogout,
-    required this.onSettingsTap,
-  });
+/// Read-only profile surface for the currently authenticated parent. Pulls
+/// user data straight from [AppAuthenticationCubit] — no separate fetch
+/// needed because the cubit is already the source of truth.
+class ParentProfilePage extends StatelessWidget {
+  const ParentProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: context.backgroundPrimaryColor,
-      body: Stack(
-        children: [
-          const _BackgroundDecorations(),
-          _buildContent(context),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildContent(BuildContext context) {
     final t = Translations.of(context).parent;
 
-    if (status == ProfileStatus.loading) {
-      return const Center(child: CircularProgressIndicator());
-    }
+    return AppDashboardScaffold(
+      title: t.myProfile,
+      body: BlocBuilder<AppAuthenticationCubit, AppAuthenticationState>(
+        buildWhen: (a, b) => a.user != b.user,
+        builder: (context, authState) {
+          final profile = authState.user;
 
-    if (status == ProfileStatus.failure) {
-      return AppErrorView(
-        message: errorMessage ?? t.unableToLoad,
-        onRetry: onRetry,
-      );
-    }
+          if (profile == null) {
+            return const Center(child: ProfileHeaderSkeleton());
+          }
 
-    return CustomScrollView(
-      physics: const BouncingScrollPhysics(),
-      slivers: [
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              children: [
-                Gap(MediaQuery.paddingOf(context).top + 20),
-                _buildHeader(context, t),
-                const Gap(40),
-                
-                // Avatar and Name
-                FadeInDown(
-                  duration: const Duration(milliseconds: 800),
-                  child: Column(
-                    children: [
-                      Stack(
-                        alignment: Alignment.bottomRight,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(4),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                color: context.brandPrimaryColor.withValues(alpha: 0.1), 
-                                width: 4,
-                              ),
-                            ),
-                            child: CircleAvatar(
-                              radius: 60,
-                              backgroundColor: context.backgroundSecondaryColor.withValues(alpha: 0.6),
-                              child: AppDynamicImage(
-                                profileData?.profileImageUrl ?? '',
-                                width: 120,
-                                height: 120,
-                                borderRadius: BorderRadius.circular(60),
-                                errorWidget: Icon(
-                                  Icons.person_rounded,
-                                  size: 70,
-                                  color: context.brandPrimaryColor,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: context.brandPrimaryColor,
-                              shape: BoxShape.circle,
-                              border: Border.all(color: context.backgroundPrimaryColor, width: 3),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: context.brandPrimaryColor.withValues(alpha: 0.3),
-                                  blurRadius: 10,
-                                  offset: const Offset(0, 4),
-                                ),
-                              ],
-                            ),
-                            child: const Icon(Icons.camera_alt_rounded, size: 18, color: Colors.white),
-                          ),
-                        ],
-                      ),
-                      const Gap(24),
-                      Text(
-                        profileData?.fullName ?? 'Parent User',
-                        style: TextStyle(
-                          fontSize: 26,
-                          fontWeight: FontWeight.w900,
-                          color: context.textPrimaryColor,
-                          letterSpacing: -0.5,
-                        ),
-                      ),
-                      const Gap(6),
-                      StatusBadge(
-                        label: 'Verified Account',
-                        color: context.statusSuccessColor,
-                        isSmall: true,
-                      ),
-                    ],
-                  ),
-                ),
-                const Gap(48),
-
-                FadeInUp(
-                  duration: const Duration(milliseconds: 600),
-                  delay: const Duration(milliseconds: 200),
-                  child: _ProfileSection(
-                    title: t.accountInfo,
-                    children: [
-                      _ProfileTile(
-                        icon: Icons.person_rounded,
-                        label: 'Full Name',
-                        value: profileData?.fullName ?? '-',
-                      ),
-                      _ProfileTile(
-                        icon: Icons.phone_android_rounded,
-                        label: 'Phone Number',
-                        value: profileData?.phoneNumber ?? '-',
-                      ),
-                      _ProfileTile(
-                        icon: Icons.email_rounded,
-                        label: 'Email Address',
-                        value: profileData?.email ?? '-',
-                      ),
-                    ],
-                  ),
-                ),
-                const Gap(32),
-                
-                FadeInUp(
-                  duration: const Duration(milliseconds: 600),
-                  delay: const Duration(milliseconds: 400),
-                  child: _ProfileSection(
-                    title: t.appSettings,
-                    children: [
-                      _ProfileTile(
-                        icon: Icons.notifications_rounded,
-                        label: t.notifications,
-                        value: 'Enabled',
-                        onTap: () {},
-                      ),
-                      _ProfileTile(
-                        icon: Icons.security_rounded,
-                        label: t.security,
-                        value: 'Password & Biometrics',
-                        onTap: () {},
-                      ),
-                    ],
-                  ),
-                ),
-                const Gap(48),
-                
-                FadeInUp(
-                  duration: const Duration(milliseconds: 600),
-                  delay: const Duration(milliseconds: 600),
-                  child: MentorXButton(
-                    onPressed: onLogout,
-                    label: t.signOut,
-                    style: Style(
-                      $box.color(context.statusDangerColor.withValues(alpha: 0.1)),
-                      $text.color(context.statusDangerColor),
-                      $box.borderRadius(16),
-                      $box.padding.vertical(16),
-                    ),
-                  ),
-                ),
-                const Gap(100),
-              ],
+          return ListView(
+            physics: const BouncingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics(),
             ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildHeader(BuildContext context, dynamic t) {
-    return FadeInDown(
-      duration: const Duration(milliseconds: 600),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            t.myProfile,
-            style: TextStyle(
-              color: context.textPrimaryColor,
-              fontSize: 28,
-              fontWeight: FontWeight.w900,
-              letterSpacing: -1.0,
-            ),
-          ),
-          IconButton(
-            onPressed: onSettingsTap,
-            icon: const Icon(Icons.settings_suggest_rounded),
-            style: IconButton.styleFrom(
-              backgroundColor: context.backgroundSecondaryColor.withValues(alpha: 0.6),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _ProfileSection extends StatelessWidget {
-  final String title;
-  final List<Widget> children;
-
-  const _ProfileSection({required this.title, required this.children});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 8, bottom: 12),
-          child: Text(
-            title.toUpperCase(),
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w900,
-              color: context.textTertiaryColor,
-              letterSpacing: 1.2,
-            ),
-          ),
-        ),
-        Container(
-          decoration: BoxDecoration(
-            color: context.backgroundSecondaryColor.withValues(alpha: 0.4),
-            borderRadius: BorderRadius.circular(28),
-            border: Border.all(color: context.borderPrimaryColor.withValues(alpha: 0.1)),
-          ),
-          child: Column(
-            children: children,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _ProfileTile extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final String value;
-  final VoidCallback? onTap;
-
-  const _ProfileTile({
-    required this.icon,
-    required this.label,
-    required this.value,
-    this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(28),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: context.brandPrimaryColor.withValues(alpha: 0.08),
-                borderRadius: BorderRadius.circular(18),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            children: [
+              ProfileHeaderWidget(
+                name: profile.fullName.isEmpty
+                    ? t.profile.fallbackName
+                    : profile.fullName,
+                avatarUrl: profile.profileImageUrl,
+                verifiedLabel: t.profile.verifiedAccount,
+                isVerified: profile.status == ParentStatus.active,
+                onChangeAvatarPressed: () =>
+                    const EditProfileRoute().go(context),
               ),
-              child: Icon(icon, color: context.brandPrimaryColor, size: 22),
-            ),
-            const Gap(16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              const Gap(40),
+              ProfileSection(
+                title: t.accountInfo,
                 children: [
-                  Text(
-                    label,
-                    style: TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w800,
-                      color: context.textTertiaryColor,
-                    ),
+                  ProfileTileWidget(
+                    icon: Icons.person_rounded,
+                    label: t.profile.fullNameLabel,
+                    value: profile.fullName.isEmpty ? '—' : profile.fullName,
+                    onTap: () => const EditProfileRoute().go(context),
                   ),
-                  const Gap(4),
-                  Text(
-                    value,
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w900,
-                      color: context.textPrimaryColor,
-                      letterSpacing: -0.2,
-                    ),
+                  ProfileTileWidget(
+                    icon: Icons.phone_android_rounded,
+                    label: t.profile.phoneNumberLabel,
+                    value: profile.phoneNumber.isEmpty
+                        ? '—'
+                        : profile.phoneNumber,
+                  ),
+                  ProfileTileWidget(
+                    icon: Icons.email_rounded,
+                    label: t.profile.emailLabel,
+                    value: (profile.email?.isNotEmpty == true)
+                        ? profile.email!
+                        : '—',
                   ),
                 ],
               ),
+              const Gap(32),
+              ProfileSection(
+                title: t.appSettings,
+                children: [
+                  ProfileTileWidget(
+                    icon: Icons.notifications_rounded,
+                    label: t.notifications,
+                    value: t.profile.notificationsEnabled,
+                    onTap: () => const SettingsRoute().go(context),
+                  ),
+                  ProfileTileWidget(
+                    icon: Icons.security_rounded,
+                    label: t.security,
+                    value: t.profile.securityValue,
+                    onTap: () => const SettingsRoute().go(context),
+                  ),
+                ],
+              ),
+              const Gap(48),
+              _SignOutButton(
+                label: t.profile.signOutAction,
+                onPressed: () => _confirmSignOut(context, t),
+              ),
+              const Gap(40),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  Future<void> _confirmSignOut(
+    BuildContext context,
+    TranslationsParentEn t,
+  ) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+          ),
+          backgroundColor: dialogContext.backgroundSecondaryColor,
+          title: Text(t.profile.signOutConfirmTitle),
+          content: Text(t.profile.signOutConfirmMessage),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(false),
+              child: Text(t.profile.signOutCancel),
             ),
-            if (onTap != null)
-              Icon(Icons.arrow_forward_ios_rounded, color: context.textTertiaryColor, size: 14),
+            TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: dialogContext.statusDangerColor,
+              ),
+              onPressed: () => Navigator.of(dialogContext).pop(true),
+              child: Text(t.profile.signOutAction),
+            ),
           ],
-        ),
-      ),
+        );
+      },
     );
+
+    if (confirmed != true || !context.mounted) return;
+
+    try {
+      await context.read<AuthenticationRepository<ParentEntity>>().logout();
+    } catch (_) {
+      // Even if the network call fails, drop the local session.
+    }
+    if (!context.mounted) return;
+    context.read<AppAuthenticationCubit>().logout();
+    if (!context.mounted) return;
+    const LoginPageRoute().go(context);
   }
 }
 
-class _BackgroundDecorations extends StatelessWidget {
-  const _BackgroundDecorations();
+class _SignOutButton extends StatelessWidget {
+  final String label;
+  final VoidCallback onPressed;
+
+  const _SignOutButton({required this.label, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Positioned(
-          top: -100,
-          left: -100,
-          child: _BlurredBlob(
-            color: context.brandPrimaryColor.withValues(alpha: 0.1),
-            size: 400,
-          ),
-        ),
-        Positioned(
-          bottom: 100,
-          right: -150,
-          child: _BlurredBlob(
-            color: context.brandSecondaryColor.withValues(alpha: 0.08),
-            size: 450,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _BlurredBlob extends StatelessWidget {
-  final Color color;
-  final double size;
-
-  const _BlurredBlob({required this.color, required this.size});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        color: color,
-        shape: BoxShape.circle,
-      ),
-      child: ClipOval(
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 80, sigmaY: 80),
-          child: const SizedBox.expand(),
-        ),
+    return MentorXButton(
+      onPressed: onPressed,
+      label: label,
+      icon: Icons.logout_rounded,
+      style: Style(
+        $box.color(context.statusDangerColor.withValues(alpha: 0.1)),
+        $text.style.color(context.statusDangerColor),
       ),
     );
   }

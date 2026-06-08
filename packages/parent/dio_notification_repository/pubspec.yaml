@@ -1,0 +1,16 @@
+name: parent_dio_notification_repository
+description: Dio implementation of NotificationRepository for the parent app.
+version: 1.0.0
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ^3.11.4
+
+dependencies:
+  mentorx_core:
+    path: ../../mentorx_core
+
+dev_dependencies:
+  lints: ^6.0.0
+  test: ^1.25.6

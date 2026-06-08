@@ -4,4 +4,3 @@ export 'blocs/blocs.dart';
 export 'events/events.dart';
 export 'widgets/widgets.dart';
 export 'package:mentorx_core/mentorx_core.dart';
-export 'package:analytics_service/analytics_service.dart';

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:gap/gap.dart';
 
 final class ParentRegistrationPage extends StatelessWidget {
   final Widget? appBarLeading;
@@ -32,18 +33,25 @@ final class ParentRegistrationPage extends StatelessWidget {
             currentStep: currentStep,
             leading: appBarLeading,
           ),
-          
+
           Expanded(
             child: Container(
               decoration: BoxDecoration(
                 color: context.backgroundSecondaryColor.withValues(alpha: 0.5),
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(32),
+                ),
               ),
               child: ClipRRect(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(32),
+                ),
                 child: SingleChildScrollView(
                   physics: const BouncingScrollPhysics(),
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 32,
+                  ),
                   child: FadeInUp(
                     key: ValueKey('step_$currentStep'),
                     duration: const Duration(milliseconds: 500),
@@ -53,7 +61,7 @@ final class ParentRegistrationPage extends StatelessWidget {
               ),
             ),
           ),
-          
+
           // Bottom Actions with glassmorphism effect
           Container(
             padding: EdgeInsets.only(
@@ -124,10 +132,7 @@ class _BuildHeader extends StatelessWidget {
         children: [
           Row(
             children: [
-              if (leading != null) 
-                leading! 
-              else 
-                const SizedBox(width: 48),
+              if (leading != null) leading! else const SizedBox(width: 48),
               Expanded(
                 child: FadeInDown(
                   duration: const Duration(milliseconds: 500),
@@ -160,17 +165,21 @@ class _BuildHeader extends StatelessWidget {
                     height: isCurrent ? 8 : 6,
                     margin: const EdgeInsets.symmetric(horizontal: 4),
                     decoration: BoxDecoration(
-                      color: isActive 
-                          ? context.brandPrimaryColor 
+                      color: isActive
+                          ? context.brandPrimaryColor
                           : context.brandPrimaryColor.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(10),
-                      boxShadow: isCurrent ? [
-                        BoxShadow(
-                          color: context.brandPrimaryColor.withValues(alpha: 0.3),
-                          blurRadius: 8,
-                          offset: const Offset(0, 2),
-                        ),
-                      ] : null,
+                      boxShadow: isCurrent
+                          ? [
+                              BoxShadow(
+                                color: context.brandPrimaryColor.withValues(
+                                  alpha: 0.3,
+                                ),
+                                blurRadius: 8,
+                                offset: const Offset(0, 2),
+                              ),
+                            ]
+                          : null,
                     ),
                   ),
                 );

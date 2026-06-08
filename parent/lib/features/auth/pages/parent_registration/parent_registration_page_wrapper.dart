@@ -3,11 +3,11 @@ import 'package:device_info_service/device_info_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
-import 'package:parent/core/core.dart';
+import '../../../../core/core.dart';
 
+import 'package:gap/gap.dart';
 import 'bloc/parent_registration_bloc.dart';
 import 'parent_registration_page.dart';
-
 
 final class ParentRegistrationPageWrapper extends StatelessWidget {
   const ParentRegistrationPageWrapper({super.key});
@@ -16,9 +16,9 @@ final class ParentRegistrationPageWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => ParentRegistrationBloc(
-        authenticationRepository: context.read<AuthenticationRepository<ParentEntity>>(),
+        authenticationRepository: context
+            .read<AuthenticationRepository<ParentEntity>>(),
         deviceInfoService: context.read<DeviceInfoService>(),
-        analyticsService: context.read<AnalyticsService>(),
       ),
       child: const _ParentRegistrationPageContent(),
     );
@@ -86,7 +86,9 @@ class __ParentRegistrationPageContentState
     _confirmPasswordController.addListener(() {
       if (!mounted) return;
       context.read<ParentRegistrationBloc>().add(
-        ParentRegistrationConfirmPasswordChanged(value: _confirmPasswordController.text),
+        ParentRegistrationConfirmPasswordChanged(
+          value: _confirmPasswordController.text,
+        ),
       );
     });
   }
@@ -111,14 +113,25 @@ class __ParentRegistrationPageContentState
     >(
       listener: (context, event) {
         switch (event) {
-          case ParentRegistrationFailurePresentationEvent(:final message):
-            MentorXUI.showToast(message: message, isError: true);
+          case ParentRegistrationFailurePresentationEvent(
+            :final kind,
+            :final rawMessage,
+          ):
+            MentorXUI.showToast(
+              message: _messageFor(
+                Translations.of(context).parent,
+                kind,
+                rawMessage,
+              ),
+              isError: true,
+            );
           case ParentRegistrationSuccessPresentationEvent(:final phone):
             OtpPageRoute(phoneNumber: phone).go(context);
         }
       },
       child: Builder(
         builder: (context) {
+          final t = Translations.of(context).parent;
           final state = context.watch<ParentRegistrationBloc>().state;
           final bloc = context.read<ParentRegistrationBloc>();
 
@@ -139,9 +152,13 @@ class __ParentRegistrationPageContentState
                 }
                 bloc.add(const ParentRegistrationBackStepRequested());
               },
-              icon: Icon(Icons.arrow_back_ios_new_rounded, color: context.textPrimaryColor, size: 20),
+              icon: Icon(
+                Icons.arrow_back_ios_new_rounded,
+                color: context.textPrimaryColor,
+                size: 20,
+              ),
             ),
-            title: _titleForStep(state.currentStep),
+            title: _titleForStep(state.currentStep, t),
             currentStep: state.currentStep,
             body: _StepBody(
               state: state,
@@ -159,7 +176,9 @@ class __ParentRegistrationPageContentState
                   : () {
                       if (state.currentStep == 0) {
                         if (state.foundStudent == null) {
-                          bloc.add(const ParentRegistrationFindStudentSubmitted());
+                          bloc.add(
+                            const ParentRegistrationFindStudentSubmitted(),
+                          );
                           return;
                         }
                         if (!state.isStudentConfirmed) {
@@ -178,13 +197,13 @@ class __ParentRegistrationPageContentState
                       bloc.add(const ParentRegistrationSubmitted());
                     },
               label: state.loadingState.isLoading
-                  ? 'Please wait...'
-                  : _primaryButtonLabel(state),
+                  ? t.auth.regPleaseWait
+                  : _primaryButtonLabel(state, t),
             ),
             secondaryButton: TextButton(
               onPressed: () => const LoginPageRoute().go(context),
               child: Text(
-                'Already have an account? Login',
+                t.auth.regAlreadyHaveAccount,
                 style: TextStyle(
                   color: context.brandPrimaryColor,
                   fontWeight: FontWeight.w800,
@@ -207,20 +226,67 @@ class __ParentRegistrationPageContentState
     );
   }
 
-  String _titleForStep(int step) {
+  /// Maps a typed registration failure to localized copy.
+  String _messageFor(
+    TranslationsParentEn t,
+    ParentRegistrationFailureKind kind,
+    String? rawMessage,
+  ) {
+    return switch (kind) {
+      ParentRegistrationFailureKind.lookupEmpty => t.auth.regErrorLookupEmpty,
+      ParentRegistrationFailureKind.studentNotFound =>
+        t.auth.regErrorStudentNotFound,
+      ParentRegistrationFailureKind.findFailed => t.auth.regErrorFindFailed,
+      ParentRegistrationFailureKind.findChildFirst =>
+        t.auth.regErrorFindChildFirst,
+      ParentRegistrationFailureKind.confirmChild => t.auth.regErrorConfirmChild,
+      ParentRegistrationFailureKind.firstNameShort =>
+        t.auth.regErrorFirstNameShort,
+      ParentRegistrationFailureKind.lastNameShort =>
+        t.auth.regErrorLastNameShort,
+      ParentRegistrationFailureKind.invalidPhone => t.auth.regErrorInvalidPhone,
+      ParentRegistrationFailureKind.invalidEmail => t.auth.regErrorInvalidEmail,
+      ParentRegistrationFailureKind.relationshipRequired =>
+        t.auth.regErrorRelationshipRequired,
+      ParentRegistrationFailureKind.passwordWeak => t.auth.regErrorPasswordWeak,
+      ParentRegistrationFailureKind.passwordMismatch =>
+        t.auth.regErrorPasswordMismatch,
+      ParentRegistrationFailureKind.phoneAlreadyExists =>
+        t.auth.regErrorPhoneAlreadyExists,
+      ParentRegistrationFailureKind.network => t.unableToLoad,
+      ParentRegistrationFailureKind.registrationFailed =>
+        t.auth.regErrorRegistrationFailed,
+      ParentRegistrationFailureKind.unauthorized => t.auth.loginFailed,
+      ParentRegistrationFailureKind.unknown =>
+        rawMessage ?? t.auth.regErrorRegistrationFailed,
+    };
+  }
+
+  String _titleForStep(int step, TranslationsParentEn t) {
     switch (step) {
-      case 0: return 'Link Your Child';
-      case 1: return 'Personal Info';
-      case 2: return 'Security';
-      default: return 'Register';
+      case 0:
+        return t.auth.regStep1Title;
+      case 1:
+        return t.auth.regStep2Title;
+      case 2:
+        return t.auth.regStep3Title;
+      default:
+        return t.auth.regDefaultTitle;
     }
   }
 
-  String _primaryButtonLabel(ParentRegistrationState state) {
-    if (state.currentStep == 0 && state.foundStudent == null) return 'Find Student';
-    if (state.currentStep == 0 && !state.isStudentConfirmed) return 'Confirm Child';
-    if (state.currentStep < 2) return 'Continue';
-    return 'Create Account';
+  String _primaryButtonLabel(
+    ParentRegistrationState state,
+    TranslationsParentEn t,
+  ) {
+    if (state.currentStep == 0 && state.foundStudent == null) {
+      return t.auth.regFindStudent;
+    }
+    if (state.currentStep == 0 && !state.isStudentConfirmed) {
+      return t.auth.regConfirmChild;
+    }
+    if (state.currentStep < 2) return t.auth.regContinue;
+    return t.auth.regCreateAccount;
   }
 }
 
@@ -247,6 +313,7 @@ final class _StepBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = Translations.of(context).parent;
     final bloc = context.read<ParentRegistrationBloc>();
 
     switch (state.currentStep) {
@@ -257,7 +324,7 @@ final class _StepBody extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: context.backgroundSecondaryColor,
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
@@ -271,18 +338,27 @@ final class _StepBody extends StatelessWidget {
                 children: [
                   Expanded(
                     child: _TabButton(
-                      label: 'Phone',
+                      label: t.auth.regLookupPhoneTab,
                       icon: Icons.phone_rounded,
                       isActive: state.lookupType == ParentLookupType.phone,
-                      onTap: () => bloc.add(const ParentRegistrationLookupTypeChanged(lookupType: ParentLookupType.phone)),
+                      onTap: () => bloc.add(
+                        const ParentRegistrationLookupTypeChanged(
+                          lookupType: ParentLookupType.phone,
+                        ),
+                      ),
                     ),
                   ),
                   Expanded(
                     child: _TabButton(
-                      label: 'Student Code',
+                      label: t.auth.regLookupCodeTab,
                       icon: Icons.badge_rounded,
-                      isActive: state.lookupType == ParentLookupType.studentCode,
-                      onTap: () => bloc.add(const ParentRegistrationLookupTypeChanged(lookupType: ParentLookupType.studentCode)),
+                      isActive:
+                          state.lookupType == ParentLookupType.studentCode,
+                      onTap: () => bloc.add(
+                        const ParentRegistrationLookupTypeChanged(
+                          lookupType: ParentLookupType.studentCode,
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -290,11 +366,19 @@ final class _StepBody extends StatelessWidget {
             ),
             const Gap(32),
             MentorXTextFormField(
-              label: state.lookupType == ParentLookupType.phone ? 'Child Phone' : 'Student Code',
-              hintText: state.lookupType == ParentLookupType.phone ? 'Enter registered phone' : 'Enter unique code',
-              icon: state.lookupType == ParentLookupType.phone ? Icons.phone_android_rounded : Icons.numbers_rounded,
+              label: state.lookupType == ParentLookupType.phone
+                  ? t.auth.regChildPhoneLabel
+                  : t.auth.regStudentCodeLabel,
+              hintText: state.lookupType == ParentLookupType.phone
+                  ? t.auth.regChildPhoneHint
+                  : t.auth.regStudentCodeHint,
+              icon: state.lookupType == ParentLookupType.phone
+                  ? Icons.phone_android_rounded
+                  : Icons.numbers_rounded,
               controller: lookupController,
-              keyboardType: state.lookupType == ParentLookupType.phone ? TextInputType.phone : TextInputType.text,
+              keyboardType: state.lookupType == ParentLookupType.phone
+                  ? TextInputType.phone
+                  : TextInputType.text,
             ),
             const Gap(24),
             if (state.foundStudent != null)
@@ -310,32 +394,32 @@ final class _StepBody extends StatelessWidget {
         return Column(
           children: [
             MentorXTextFormField(
-              label: 'First Name', 
-              hintText: 'e.g. John', 
-              icon: Icons.person_rounded, 
+              label: t.auth.regFirstNameLabel,
+              hintText: t.auth.regFirstNameHint,
+              icon: Icons.person_rounded,
               controller: firstNameController,
             ),
             const Gap(20),
             MentorXTextFormField(
-              label: 'Last Name', 
-              hintText: 'e.g. Doe', 
-              icon: Icons.person_rounded, 
+              label: t.auth.regLastNameLabel,
+              hintText: t.auth.regLastNameHint,
+              icon: Icons.person_rounded,
               controller: lastNameController,
             ),
             const Gap(20),
             MentorXTextFormField(
-              label: 'Phone Number', 
-              hintText: 'Your phone number', 
-              icon: Icons.phone_android_rounded, 
-              controller: phoneController, 
+              label: t.auth.phoneNumberLabel,
+              hintText: t.auth.regYourPhoneHint,
+              icon: Icons.phone_android_rounded,
+              controller: phoneController,
               keyboardType: TextInputType.phone,
             ),
             const Gap(20),
             MentorXTextFormField(
-              label: 'Email', 
-              hintText: 'Optional email', 
-              icon: Icons.email_rounded, 
-              controller: emailController, 
+              label: t.auth.regEmailLabel,
+              hintText: t.auth.regEmailHint,
+              icon: Icons.email_rounded,
+              controller: emailController,
               keyboardType: TextInputType.emailAddress,
             ),
             const Gap(20),
@@ -347,7 +431,7 @@ final class _StepBody extends StatelessWidget {
         return Column(
           children: [
             Text(
-              'Set a secure password to protect your account access.',
+              t.auth.regSecurityHint,
               style: TextStyle(
                 fontSize: 14,
                 color: context.textSecondaryColor,
@@ -357,18 +441,18 @@ final class _StepBody extends StatelessWidget {
             ),
             const Gap(32),
             MentorXTextFormField(
-              label: 'Password', 
-              hintText: '••••••••', 
-              icon: Icons.lock_rounded, 
-              isPassword: true, 
+              label: t.auth.passwordLabel,
+              hintText: t.auth.passwordPlaceholder,
+              icon: Icons.lock_rounded,
+              isPassword: true,
               controller: passwordController,
             ),
             const Gap(20),
             MentorXTextFormField(
-              label: 'Confirm Password', 
-              hintText: '••••••••', 
-              icon: Icons.lock_reset_rounded, 
-              isPassword: true, 
+              label: t.auth.confirmPasswordLabel,
+              hintText: t.auth.passwordPlaceholder,
+              icon: Icons.lock_reset_rounded,
+              isPassword: true,
               controller: confirmPasswordController,
             ),
           ],
@@ -388,12 +472,16 @@ class _RelationshipDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = Translations.of(context).parent;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.backgroundSecondaryColor,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: context.borderPrimaryColor.withValues(alpha: 0.5)),
+        border: Border.all(
+          color: context.borderPrimaryColor.withValues(alpha: 0.5),
+        ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.02),
@@ -411,23 +499,41 @@ class _RelationshipDropdown extends StatelessWidget {
             fontWeight: FontWeight.w600,
           ),
           decoration: InputDecoration(
-            labelText: 'Relationship to Child',
+            labelText: t.auth.regRelationshipLabel,
             labelStyle: TextStyle(
               color: context.textTertiaryColor,
               fontSize: 14,
               fontWeight: FontWeight.w500,
             ),
             border: InputBorder.none,
-            prefixIcon: Icon(Icons.people_alt_rounded, color: context.brandPrimaryColor, size: 20),
+            prefixIcon: Icon(
+              Icons.people_alt_rounded,
+              color: context.brandPrimaryColor,
+              size: 20,
+            ),
           ),
-          items: const [
-            DropdownMenuItem(value: 'father', child: Text('Father')),
-            DropdownMenuItem(value: 'mother', child: Text('Mother')),
-            DropdownMenuItem(value: 'guardian', child: Text('Guardian')),
-            DropdownMenuItem(value: 'other', child: Text('Other')),
+          items: [
+            DropdownMenuItem(
+              value: 'father',
+              child: Text(t.children.relationship.father),
+            ),
+            DropdownMenuItem(
+              value: 'mother',
+              child: Text(t.children.relationship.mother),
+            ),
+            DropdownMenuItem(
+              value: 'guardian',
+              child: Text(t.children.relationship.guardian),
+            ),
+            DropdownMenuItem(
+              value: 'other',
+              child: Text(t.children.relationship.other),
+            ),
           ],
           onChanged: (value) {
-            if (value != null) bloc.add(ParentRegistrationRelationshipChanged(value: value));
+            if (value != null) {
+              bloc.add(ParentRegistrationRelationshipChanged(value: value));
+            }
           },
         ),
       ),
@@ -441,7 +547,12 @@ class _TabButton extends StatelessWidget {
   final bool isActive;
   final VoidCallback onTap;
 
-  const _TabButton({required this.label, required this.icon, required this.isActive, required this.onTap});
+  const _TabButton({
+    required this.label,
+    required this.icon,
+    required this.isActive,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -454,20 +565,22 @@ class _TabButton extends StatelessWidget {
         decoration: BoxDecoration(
           color: isActive ? context.brandPrimaryColor : Colors.transparent,
           borderRadius: BorderRadius.circular(16),
-          boxShadow: isActive ? [
-            BoxShadow(
-              color: context.brandPrimaryColor.withValues(alpha: 0.2),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
-            ),
-          ] : null,
+          boxShadow: isActive
+              ? [
+                  BoxShadow(
+                    color: context.brandPrimaryColor.withValues(alpha: 0.2),
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
+                  ),
+                ]
+              : null,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              icon, 
-              color: isActive ? Colors.white : context.textTertiaryColor, 
+              icon,
+              color: isActive ? Colors.white : context.textTertiaryColor,
               size: 18,
             ),
             const Gap(10),
@@ -499,7 +612,7 @@ class _StudentPreviewCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.backgroundSecondaryColor,
         borderRadius: BorderRadius.circular(28),
         boxShadow: [
           BoxShadow(
@@ -520,7 +633,11 @@ class _StudentPreviewCard extends StatelessWidget {
                   color: context.brandPrimaryColor.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(Icons.person_rounded, color: context.brandPrimaryColor, size: 28),
+                child: Icon(
+                  Icons.person_rounded,
+                  color: context.brandPrimaryColor,
+                  size: 28,
+                ),
               ),
               const Gap(16),
               Expanded(
@@ -530,8 +647,8 @@ class _StudentPreviewCard extends StatelessWidget {
                     Text(
                       student.maskedName,
                       style: TextStyle(
-                        fontWeight: FontWeight.w900, 
-                        fontSize: 18, 
+                        fontWeight: FontWeight.w900,
+                        fontSize: 18,
                         color: context.textPrimaryColor,
                         letterSpacing: -0.5,
                       ),
@@ -540,7 +657,7 @@ class _StudentPreviewCard extends StatelessWidget {
                     Text(
                       '${student.gradeName} • ${student.centerName}',
                       style: TextStyle(
-                        fontSize: 13, 
+                        fontSize: 13,
                         color: context.textSecondaryColor,
                         fontWeight: FontWeight.w500,
                       ),
@@ -555,29 +672,39 @@ class _StudentPreviewCard extends StatelessWidget {
             duration: const Duration(milliseconds: 400),
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: BoxDecoration(
-              color: isConfirmed 
-                  ? context.statusSuccessColor.withValues(alpha: 0.1) 
+              color: isConfirmed
+                  ? context.statusSuccessColor.withValues(alpha: 0.1)
                   : context.statusWarningColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: isConfirmed 
-                    ? context.statusSuccessColor.withValues(alpha: 0.2) 
+                color: isConfirmed
+                    ? context.statusSuccessColor.withValues(alpha: 0.2)
                     : context.statusWarningColor.withValues(alpha: 0.2),
               ),
             ),
             child: Row(
               children: [
                 Icon(
-                  isConfirmed ? Icons.check_circle_rounded : Icons.info_outline_rounded,
-                  color: isConfirmed ? context.statusSuccessColor : context.statusWarningColor,
+                  isConfirmed
+                      ? Icons.check_circle_rounded
+                      : Icons.info_outline_rounded,
+                  color: isConfirmed
+                      ? context.statusSuccessColor
+                      : context.statusWarningColor,
                   size: 20,
                 ),
                 const Gap(12),
                 Expanded(
                   child: Text(
-                    isConfirmed ? 'Child confirmed successfully' : 'Confirm if this is your child',
+                    isConfirmed
+                        ? Translations.of(context).parent.auth.regChildConfirmed
+                        : Translations.of(
+                            context,
+                          ).parent.auth.regConfirmIsYourChild,
                     style: TextStyle(
-                      color: isConfirmed ? context.statusSuccessColor : context.statusWarningColor,
+                      color: isConfirmed
+                          ? context.statusSuccessColor
+                          : context.statusWarningColor,
                       fontWeight: FontWeight.w800,
                       fontSize: 13,
                     ),
@@ -600,7 +727,8 @@ class FadeInScale extends StatefulWidget {
   State<FadeInScale> createState() => _FadeInScaleState();
 }
 
-class _FadeInScaleState extends State<FadeInScale> with SingleTickerProviderStateMixin {
+class _FadeInScaleState extends State<FadeInScale>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _fadeAnimation;
   late Animation<double> _scaleAnimation;

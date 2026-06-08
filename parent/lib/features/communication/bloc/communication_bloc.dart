@@ -1,62 +1,149 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:parent/core/core.dart';
+import 'package:bloc/bloc.dart';
+import 'package:bloc_presentation/bloc_presentation.dart';
+import 'package:mentorx_core/mentorx_core.dart';
 
 part 'communication_event.dart';
 part 'communication_state.dart';
 
-final class CommunicationBloc extends Bloc<CommunicationEvent, CommunicationState> {
-  final ParentCommunicationRepository _repository;
-  final AnalyticsService _analyticsService;
-  static final MentorXLogger _logger = MentorXLogger('CommunicationBloc');
+sealed class CommunicationPresentationEvent {
+  const CommunicationPresentationEvent();
+}
 
-  CommunicationBloc({
-    required ParentCommunicationRepository repository,
-    required AnalyticsService analyticsService,
-  })  : _repository = repository,
-        _analyticsService = analyticsService,
-        super(const CommunicationState()) {
+final class CommunicationFailurePresentationEvent
+    extends CommunicationPresentationEvent {
+  final String message;
+  const CommunicationFailurePresentationEvent({required this.message});
+}
+
+/// Drives the communication surfaces: announcements archive and WhatsApp group
+/// list. Each section loads independently so
+/// individual pages can avoid blocking on unrelated data.
+final class CommunicationBloc
+    extends Bloc<CommunicationEvent, CommunicationState>
+    with
+        BlocPresentationMixin<
+          CommunicationState,
+          CommunicationPresentationEvent
+        > {
+  final ParentCommunicationRepository _repository;
+
+  CommunicationBloc({required ParentCommunicationRepository repository})
+    : _repository = repository,
+      super(CommunicationState.initial()) {
     on<CommunicationStarted>(_onStarted);
     on<CommunicationRefreshRequested>(_onRefreshRequested);
+    on<CommunicationRetrySectionRequested>(_onRetrySection);
   }
 
   Future<void> _onStarted(
     CommunicationStarted event,
     Emitter<CommunicationState> emit,
   ) async {
-    _logger.info('Started loading communication for childId: ${event.childId}');
-    emit(state.copyWith(status: CommunicationStatus.loading));
-    try {
-      _analyticsService.logEvent(
-        name: AnalyticsEvents.communicationViewed,
-        parameters: {AnalyticsParams.id: event.childId},
-      );
-      final results = await Future.wait([
-        _repository.getNotifications(event.childId),
-        _repository.getAnnouncements(event.childId),
-        _repository.getWhatsAppGroups(event.childId),
-      ]);
-      
-      _logger.info('Successfully loaded communication data for childId: ${event.childId}');
-      emit(state.copyWith(
-        status: CommunicationStatus.success,
-        notifications: results[0] as List<NotificationEntity>,
-        announcements: results[1] as List<AnnouncementEntity>,
-        whatsAppGroups: results[2] as List<WhatsAppGroupEntity>,
-      ));
-    } catch (e, s) {
-      _logger.error('Failed to load communication data for childId: ${event.childId}', e, s);
-      emit(state.copyWith(
-        status: CommunicationStatus.failure,
-        errorMessage: e.toString(),
-      ));
+    if (state.childId == event.childId &&
+        (state.announcementsSection.isLoaded ||
+            state.announcementsSection.isLoading)) {
+      return;
     }
+    emit(state.copyWith(childId: event.childId));
+    await _loadAll(emit, event.childId);
   }
 
   Future<void> _onRefreshRequested(
     CommunicationRefreshRequested event,
     Emitter<CommunicationState> emit,
   ) async {
-    _logger.info('Refresh requested for childId: ${event.childId}');
-    add(CommunicationStarted(event.childId));
+    emit(state.copyWith(isRefreshing: true, childId: event.childId));
+    await _loadAll(emit, event.childId);
+    emit(state.copyWith(isRefreshing: false));
+  }
+
+  Future<void> _onRetrySection(
+    CommunicationRetrySectionRequested event,
+    Emitter<CommunicationState> emit,
+  ) async {
+    final childId = state.childId;
+    if (childId == null) return;
+
+    switch (event.section) {
+      case CommunicationSection.announcements:
+        emit(
+          state.copyWith(
+            announcementsSection: state.announcementsSection.toLoading(),
+          ),
+        );
+        await _loadAnnouncements(emit, childId);
+      case CommunicationSection.whatsAppGroups:
+        emit(
+          state.copyWith(
+            whatsAppGroupsSection: state.whatsAppGroupsSection.toLoading(),
+          ),
+        );
+        await _loadWhatsAppGroups(emit, childId);
+    }
+  }
+
+  Future<void> _loadAll(
+    Emitter<CommunicationState> emit,
+    String childId,
+  ) async {
+    emit(
+      state.copyWith(
+        announcementsSection: state.announcementsSection.toLoading(),
+        whatsAppGroupsSection: state.whatsAppGroupsSection.toLoading(),
+      ),
+    );
+
+    await Future.wait([
+      _loadAnnouncements(emit, childId),
+      _loadWhatsAppGroups(emit, childId),
+    ]);
+  }
+
+  Future<void> _loadAnnouncements(
+    Emitter<CommunicationState> emit,
+    String childId,
+  ) async {
+    try {
+      final list = await _repository.getAnnouncements(childId);
+      emit(
+        state.copyWith(
+          announcementsSection: CommunicationAsyncSection.loaded(list),
+        ),
+      );
+    } catch (e) {
+      emit(
+        state.copyWith(
+          announcementsSection: CommunicationAsyncSection.failure(e.toString()),
+        ),
+      );
+      emitPresentation(
+        CommunicationFailurePresentationEvent(message: e.toString()),
+      );
+    }
+  }
+
+  Future<void> _loadWhatsAppGroups(
+    Emitter<CommunicationState> emit,
+    String childId,
+  ) async {
+    try {
+      final list = await _repository.getWhatsAppGroups(childId);
+      emit(
+        state.copyWith(
+          whatsAppGroupsSection: CommunicationAsyncSection.loaded(list),
+        ),
+      );
+    } catch (e) {
+      emit(
+        state.copyWith(
+          whatsAppGroupsSection: CommunicationAsyncSection.failure(
+            e.toString(),
+          ),
+        ),
+      );
+      emitPresentation(
+        CommunicationFailurePresentationEvent(message: e.toString()),
+      );
+    }
   }
 }

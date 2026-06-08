@@ -10,6 +10,8 @@ typedef _ExceptionCode = AuthenticationExceptionCode;
 final class DioAuthenticationRepository
     extends HttpClientRepository<AuthenticationExceptionCode>
     implements AuthenticationRepository<ParentEntity> {
+  static const String _hasLinkedChildrenCacheKey = 'parent_has_linked_children';
+
   @override
   Never throwException(
     AuthenticationExceptionCode code, {
@@ -52,27 +54,89 @@ final class DioAuthenticationRepository
     String? fcmToken,
     String? appVersion,
   }) async {
+    // ─────────────────────────────────────────────────────────────────────
+    // API-CONTRACT (KNOWN MISMATCH):
+    // The EduCore Postman collection ONLY documents an OTP-based parent
+    // login flow:
+    //   POST /api/parent/start-login    body: { phone }
+    //   POST /api/parent/complete-login body: { phone, otp }
+    // A password-based parent login endpoint is NOT documented.
+    //
+    // This implementation still posts the password to the legacy
+    // /api/parent/login (and /api/auth/parent/login) for backward
+    // compatibility with builds that supported it. If the backend rejects
+    // it with 404/405, the call escalates as `otpRequired` so the UI
+    // switches to the OTP flow (sendOtp + verifyOtp).
+    // ─────────────────────────────────────────────────────────────────────
     try {
-      final response = await httpClient.post(
-        '/api/parent/start-login',
-        data: {'phone': phone, 'password': password},
+      final payload = {
+        'phone': phone,
+        'password': password,
+        if (deviceHash != null) 'device_hash': deviceHash,
+        if (deviceName != null) 'device_name': deviceName,
+        if (fcmToken != null) 'fcm_token': fcmToken,
+        if (appVersion != null) 'app_version': appVersion,
+      };
+
+      HttpClientResponse response;
+      try {
+        response = await httpClient.post('/api/parent/login', data: payload);
+      } on HttpClientResponse catch (e) {
+        if (e.statusCode != 404 && e.statusCode != 405) rethrow;
+        try {
+          response = await httpClient.post(
+            '/api/auth/parent/login',
+            data: payload,
+          );
+        } on HttpClientResponse catch (e2) {
+          if (e2.statusCode != 404 && e2.statusCode != 405) rethrow;
+          // Neither password path exists on this backend — trigger the OTP
+          // flow now so the user actually receives the SMS by the time the
+          // UI lands on the OTP page, then surface `otpRequired` to the
+          // caller so it switches screens.
+          try {
+            await sendOtp(phone);
+          } catch (sendOtpError, sendOtpStack) {
+            _logger.error(
+              'Auto-sendOtp during login escalation failed: $sendOtpError',
+              sendOtpError,
+              sendOtpStack,
+            );
+          }
+          throw const _Exception(code: _ExceptionCode.otpRequired);
+        }
+      }
+
+      final data = _extractDataMap(response.data);
+      _setTokensIfPresent(data);
+
+      final hasLinkedChildren = _extractHasLinkedChildren(data);
+      await cacheRepository.put(
+        _hasLinkedChildrenCacheKey,
+        hasLinkedChildren.toString(),
       );
 
-      final data = response.asMap();
-      throw AuthenticationRequiresOtpException(
-        message: ModelParser.asString(data['message'], fallback: 'OTP Sent'),
-        otpDuration: Duration(
-          seconds: ModelParser.asInt(data['otpExpiresInSeconds']),
-        ),
-      );
+      final user = ParentModel.fromJson(data);
+      await _cacheUser(user);
+      return user;
     } on HttpClientResponse catch (e) {
-      return handleHttpClientErrorResponse(
+      handleHttpClientErrorResponse(
         e,
         defaultCode: _ExceptionCode.invalidCredentials,
       );
     }
   }
 
+  // ─────────────────────────────────────────────────────────────────────────
+  // API-CONTRACT (KNOWN MISMATCH):
+  // The EduCore Postman collection does NOT declare a parent self-registration
+  // endpoint. The methods below (registerParent / findStudentForParentRegistration)
+  // continue to call the legacy paths /api/parent/register and
+  // /api/parent/find-student so the UI flow does not regress; on a 404/405
+  // they surface AuthenticationException with the appropriate code so the
+  // caller can present a localized "feature unavailable" message.
+  // Coordinate with backend before re-enabling this flow in production.
+  // ─────────────────────────────────────────────────────────────────────────
   @override
   Future<ParentRegistrationResult> registerParent({
     required String firstName,
@@ -89,26 +153,57 @@ final class DioAuthenticationRepository
   }) async {
     try {
       final payload = {
-        'firstName': firstName,
-        'lastName': lastName,
+        'first_name': firstName,
+        'last_name': lastName,
         'phone': phone,
         'password': password,
         'relationship': relationship,
-        'studentId': studentId,
-        if (email != null) 'email': email,
+        'student_id': studentId,
+        if (email != null && email.trim().isNotEmpty) 'email': email.trim(),
+        if (deviceHash != null && deviceHash.trim().isNotEmpty)
+          'device_hash': deviceHash.trim(),
+        if (deviceName != null && deviceName.trim().isNotEmpty)
+          'device_name': deviceName.trim(),
+        if (fcmToken != null && fcmToken.trim().isNotEmpty)
+          'fcm_token': fcmToken.trim(),
+        if (appVersion != null && appVersion.trim().isNotEmpty)
+          'app_version': appVersion.trim(),
       };
 
       final response = await httpClient.post(
         '/api/parent/register',
         data: payload,
       );
-      final data = response.asMap();
+
+      final data = _extractDataMap(response.data);
+      final userId = stringOrNull(data['user_id'] ?? data['id']) ?? '';
+      if (userId.isEmpty) {
+        throw _Exception(
+          code: _ExceptionCode.registrationFailed,
+          message: 'Registration response did not include user id.',
+        );
+      }
+
+      final rawChildLinkStatus =
+          stringOrNull(data['child_link_status'] ?? data['childLinkStatus']) ??
+          'pending';
+      final childLinkStatus = rawChildLinkStatus.toLowerCase() == 'verified'
+          ? ParentChildLinkStatus.linked
+          : ParentChildLinkStatus.pending;
+
+      await cacheRepository.put(
+        _hasLinkedChildrenCacheKey,
+        (childLinkStatus == ParentChildLinkStatus.linked).toString(),
+      );
 
       return ParentRegistrationResult(
-        userId: ModelParser.asString(data['id'] ?? data['parentId']),
-        status: ModelParser.asString(data['status'], fallback: 'active'),
-        childLinkStatus: ParentChildLinkStatus.linked,
-        phone: phone,
+        userId: userId,
+        status: stringOrNull(data['status']) ?? 'active',
+        childLinkStatus: childLinkStatus,
+        otpExpiresInSeconds: intOrNull(
+          data['otp_expires_in_seconds'] ?? data['otpExpiresInSeconds'],
+        ),
+        phone: stringOrNull(data['phone']) ?? phone,
       );
     } on HttpClientResponse catch (e) {
       if (e.statusCode == 409) {
@@ -117,7 +212,7 @@ final class DioAuthenticationRepository
           message: 'This phone number is already registered.',
         );
       }
-      return handleHttpClientErrorResponse(
+      handleHttpClientErrorResponse(
         e,
         defaultCode: _ExceptionCode.registrationFailed,
       );
@@ -130,10 +225,12 @@ final class DioAuthenticationRepository
     required String value,
   }) async {
     try {
+      final lookupTypeWire = switch (lookupType) {
+        ParentLookupType.phone => 'phone',
+        ParentLookupType.studentCode => 'student_code',
+      };
       final payload = {
-        'lookupType': lookupType == ParentLookupType.phone
-            ? 'PHONE'
-            : 'STUDENT_CODE',
+        'lookup_type': lookupTypeWire,
         'value': value.trim(),
       };
 
@@ -141,15 +238,32 @@ final class DioAuthenticationRepository
         '/api/parent/find-student',
         data: payload,
       );
-      final data = response.asMap();
+
+      final data = _extractDataMap(response.data);
+      final studentId = stringOrNull(data['student_id'] ?? data['id']);
+      if (studentId == null) {
+        throw _Exception(
+          code: _ExceptionCode.studentNotFound,
+          message: 'No student was found for the provided lookup value.',
+        );
+      }
 
       return ParentStudentLookupEntity(
-        studentId: ModelParser.asString(data['studentId']),
-        maskedName: ModelParser.asString(data['studentName']),
-        gradeName: ModelParser.asString(data['grade']),
-        centerName: ModelParser.asString(data['centerName']),
-        profilePhotoUrl: ModelParser.asString(data['profileImageUrl']),
-        canAutoVerify: true,
+        studentId: studentId,
+        maskedName:
+            '${stringOrNull(data['first_name_masked'] ?? data['firstNameMasked']) ?? '**'} ${stringOrNull(data['last_name_masked'] ?? data['lastNameMasked']) ?? '**'}',
+        gradeName:
+            stringOrNull(data['grade_name'] ?? data['gradeName']) ??
+            'Unknown Grade',
+        centerName:
+            stringOrNull(data['tenant_name'] ?? data['tenantName']) ??
+            'Unknown Tenant',
+        profilePhotoUrl: stringOrNull(
+          data['profile_photo_url'] ?? data['profilePhotoUrl'],
+        ),
+        canAutoVerify: boolOrFalse(
+          data['can_auto_verify'] ?? data['canAutoVerify'],
+        ),
       );
     } on HttpClientResponse catch (e) {
       if (e.statusCode == 404) {
@@ -158,7 +272,7 @@ final class DioAuthenticationRepository
           message: 'No student found with this phone number or student code.',
         );
       }
-      return handleHttpClientErrorResponse(
+      handleHttpClientErrorResponse(
         e,
         defaultCode: _ExceptionCode.studentNotFound,
       );
@@ -167,38 +281,27 @@ final class DioAuthenticationRepository
 
   @override
   Future<void> logout() async {
+    // Backend contract (Postman): primary logout is POST /api/parent/logout.
+    // Generic /api/auth/logout is the secondary fallback; the legacy
+    // /api/auth/parent/logout path is kept last for backward compatibility
+    // with older backend builds. Local session is always cleared.
     try {
-      await httpClient.post('/api/parent/logout');
+      try {
+        await httpClient.post('/api/parent/logout');
+      } on HttpClientResponse catch (e) {
+        if (e.statusCode != 404 && e.statusCode != 405) rethrow;
+        try {
+          await httpClient.post('/api/auth/logout');
+        } on HttpClientResponse catch (e2) {
+          if (e2.statusCode != 404 && e2.statusCode != 405) rethrow;
+          await httpClient.post('/api/auth/parent/logout');
+        }
+      }
     } catch (_) {
+      // Network or unknown error — drop local session regardless.
     } finally {
       await _deleteCachedUser();
       await httpClient.clearTokens();
-    }
-  }
-
-  @override
-  Future<void> forceLogoutAll() async {
-    try {
-      await httpClient.post('/api/parent/logout-all');
-    } catch (_) {
-    } finally {
-      await _deleteCachedUser();
-      await httpClient.clearTokens();
-    }
-  }
-
-  @override
-  Future<ParentEntity> getMe() async {
-    try {
-      final response = await httpClient.get('/api/parent/me');
-      final user = ParentModel.fromJson(response.asMap());
-      await _cacheUser(user);
-      return user;
-    } on HttpClientResponse catch (e) {
-      return handleHttpClientErrorResponse(
-        e,
-        defaultCode: _ExceptionCode.unknown,
-      );
     }
   }
 
@@ -255,17 +358,48 @@ final class DioAuthenticationRepository
     required String otp,
     required String newPassword,
   }) async {
+    // Backend contract (OpenAPI): /api/auth/reset-password body shape is
+    // { phone, newPassword }. OTP is verified by /api/auth/verify-otp before
+    // this step; legacy payloads are kept as fallbacks for older builds.
+    final primaryPayload = {
+      'phone': phone,
+      'newPassword': newPassword,
+    };
+    final legacyPayloadWithOtp = {
+      'phone': phone,
+      'otp': otp,
+      'newPassword': newPassword,
+    };
+    final legacySnakeCasePayload = {
+      'phone': phone,
+      'otp': otp,
+      'new_password': newPassword,
+    };
+
     try {
-      await httpClient.post(
-        '/api/auth/reset-password',
-        data: {
-          'phone': phone,
-          'otp': otp,
-          'newPassword': newPassword,
-        },
-      );
+      await httpClient.post('/api/auth/reset-password', data: primaryPayload);
       await _clearLocalSession();
     } on HttpClientResponse catch (e) {
+      // If the primary payload shape was rejected, try the legacy shape.
+      if (e.statusCode == 400 || e.statusCode == 422) {
+        try {
+          await httpClient.post(
+            '/api/auth/reset-password',
+            data: legacyPayloadWithOtp,
+          );
+          await _clearLocalSession();
+          return;
+        } catch (_) {}
+        try {
+          await httpClient.post(
+            '/api/auth/reset-password',
+            data: legacySnakeCasePayload,
+          );
+          await _clearLocalSession();
+          return;
+        } catch (_) {}
+      }
+
       handleHttpClientErrorResponse(
         e,
         defaultCode: _ExceptionCode.failedToResetPassword,
@@ -280,12 +414,37 @@ final class DioAuthenticationRepository
 
   @override
   Future<void> sendOtp(String phone) async {
-    try {
-      await httpClient.post(
-        '/api/parent/register/start',
-        data: {'phone': phone},
+    final result = AuthRateLimiter.canAttempt(phone, 'send_otp');
+    if (!result.canAttempt) {
+      throw RateLimitExceededException(
+        message: 'Too many OTP requests. Please wait.',
+        remainingCooldown: result.remainingCooldown,
+        identifier: phone,
+        endpoint: 'send_otp',
       );
+    }
+
+    // Backend contract (Swagger): the parent OTP send path is
+    //   POST /api/parent/start-login  body: { parentPhone }
+    // or the generic
+    //   POST /api/auth/resend-otp     body: { phone }
+    // The legacy /api/parent/register/start is kept as a last fallback only.
+    try {
+      try {
+        await httpClient.post(
+          '/api/parent/start-login',
+          data: {'parentPhone': phone},
+        );
+      } on HttpClientResponse catch (e) {
+        if (e.statusCode != 404 && e.statusCode != 405) rethrow;
+        await httpClient.post(
+          '/api/auth/resend-otp',
+          data: {'phone': phone},
+        );
+      }
+      AuthRateLimiter.recordSuccessfulAttempt(phone, 'send_otp');
     } on HttpClientResponse catch (e) {
+      AuthRateLimiter.recordFailedAttempt(phone, 'send_otp');
       handleHttpClientErrorResponse(
         e,
         defaultCode: _ExceptionCode.failedToSendOtp,
@@ -295,16 +454,42 @@ final class DioAuthenticationRepository
 
   @override
   Future<Duration?> resendOtp(String phone) async {
-    try {
-      final response = await httpClient.post(
-        '/api/auth/resend-otp',
-        data: {'phone': phone},
+    final result = AuthRateLimiter.canAttempt(phone, 'resend_otp');
+    if (!result.canAttempt) {
+      throw RateLimitExceededException(
+        message: 'Too many OTP requests. Please wait.',
+        remainingCooldown: result.remainingCooldown,
+        identifier: phone,
+        endpoint: 'resend_otp',
       );
-      final data = response.asMap();
-      final seconds = ModelParser.asInt(data['otpExpiresInSeconds']);
-      return seconds > 0 ? Duration(seconds: seconds) : null;
+    }
+
+    // Backend contract (Swagger): POST /api/auth/resend-otp body { phone }.
+    // Fallback: POST /api/parent/start-login body { parentPhone }.
+    try {
+      HttpClientResponse response;
+      try {
+        response = await httpClient.post(
+          '/api/auth/resend-otp',
+          data: {'phone': phone},
+        );
+      } on HttpClientResponse catch (e) {
+        if (e.statusCode != 404 && e.statusCode != 405) rethrow;
+        response = await httpClient.post(
+          '/api/parent/start-login',
+          data: {'parentPhone': phone},
+        );
+      }
+
+      AuthRateLimiter.recordSuccessfulAttempt(phone, 'resend_otp');
+      final data = _extractDataMap(response.data);
+      final seconds = intOrNull(
+        data['otp_expires_in_seconds'] ?? data['otpExpiresInSeconds'],
+      );
+      return seconds != null && seconds > 0 ? Duration(seconds: seconds) : null;
     } on HttpClientResponse catch (e) {
-      return handleHttpClientErrorResponse(
+      AuthRateLimiter.recordFailedAttempt(phone, 'resend_otp');
+      handleHttpClientErrorResponse(
         e,
         defaultCode: _ExceptionCode.failedToResendOtp,
       );
@@ -313,23 +498,32 @@ final class DioAuthenticationRepository
 
   @override
   Future<ParentEntity> verifyOtp(String phone, String code) async {
+    // Backend contract (Swagger):
+    //   POST /api/auth/verify-otp        body: { phone, otp (int) }
+    //   POST /api/parent/complete-login  body: { parentPhone, otp (string) }
     try {
-      final response = await httpClient.post(
-        '/api/parent/complete-login',
-        data: {
-          'phone': phone,
-          'otp': code,
-        },
-      );
+      HttpClientResponse response;
+      try {
+        response = await httpClient.post(
+          '/api/auth/verify-otp',
+          data: {'phone': phone, 'otp': int.tryParse(code) ?? code},
+        );
+      } on HttpClientResponse catch (e) {
+        if (e.statusCode != 404 && e.statusCode != 405) rethrow;
+        response = await httpClient.post(
+          '/api/parent/complete-login',
+          data: {'parentPhone': phone, 'otp': code},
+        );
+      }
 
-      final data = response.asMap();
+      final data = _extractDataMap(response.data);
       _setTokensIfPresent(data);
 
       final user = ParentModel.fromJson(data);
       await _cacheUser(user);
       return user;
     } on HttpClientResponse catch (e) {
-      return handleHttpClientErrorResponse(
+      handleHttpClientErrorResponse(
         e,
         defaultCode: _ExceptionCode.invalidOtp,
       );
@@ -337,8 +531,11 @@ final class DioAuthenticationRepository
   }
 
   void _setTokensIfPresent(Map<String, dynamic> data) {
+    // Backend contract (Swagger): complete-login returns { token }, while
+    // verify-otp may return { accessToken } or { access_token }. Try all
+    // known key names.
     final accessToken = stringOrNull(
-      data['accessToken'] ?? data['access_token'],
+      data['accessToken'] ?? data['access_token'] ?? data['token'],
     );
     if (accessToken == null) return;
 
@@ -355,4 +552,31 @@ final class DioAuthenticationRepository
     }
   }
 
+  Map<String, dynamic> _extractDataMap(dynamic rawResponse) {
+    final root = asMap(rawResponse);
+    final dynamic dataCandidate = root['data'];
+
+    if (dataCandidate is Map) {
+      return {
+        ...root,
+        ...asMap(dataCandidate),
+      };
+    }
+
+    return root;
+  }
+
+  bool _extractHasLinkedChildren(Map<String, dynamic> data) {
+    final children = data['children'];
+    if (children is List) {
+      return children.isNotEmpty;
+    }
+
+    final count = intOrNull(data['children_count'] ?? data['childrenCount']);
+    if (count != null) {
+      return count > 0;
+    }
+
+    return boolOrFalse(data['has_children'] ?? data['hasChildren']);
+  }
 }

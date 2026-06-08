@@ -5,9 +5,10 @@ export 'models/attendance_models.dart';
 final class DioParentAttendanceRepository
     extends HttpClientRepository<ParentAttendanceRepositoryExceptionCode>
     implements ParentAttendanceRepository {
-  final HttpClient httpClient;
+  final HttpClient _httpClient;
 
-  DioParentAttendanceRepository({required this.httpClient});
+  DioParentAttendanceRepository({required HttpClient httpClient})
+    : _httpClient = httpClient;
 
   @override
   Future<void> initialize() async {}
@@ -16,33 +17,38 @@ final class DioParentAttendanceRepository
   Never throwException(
     ParentAttendanceRepositoryExceptionCode code, {
     String? message,
-  }) {
-    throw ParentAttendanceRepositoryException(code: code, message: message);
-  }
+  }) => throw ParentAttendanceRepositoryException(code: code, message: message);
 
+  // Backend contract (Postman):
+  //   GET /api/parent/dashboard/child/{studentId}/attendance
+  //   GET /api/parent/dashboard/child/{studentId}/overview
+  // Both wrap their payload in the standard {success, data, error} envelope.
   @override
   Future<List<AttendanceRecordEntity>> getAttendance(
     String childId, {
     DateTime? from,
     DateTime? to,
-    MentorXPaginationInfo? paginationInfo,
   }) async {
     try {
-      final response = await httpClient.get(
+      final response = await _httpClient.get(
         '/api/parent/dashboard/child/$childId/attendance',
         queryParameters: {
           if (from != null) 'from': from.toIso8601String(),
           if (to != null) 'to': to.toIso8601String(),
-          if (paginationInfo != null) ...paginationInfo.toJson(),
         },
       );
 
-      final list = response.asList();
+      final root = asMap(response.data);
+      final payload = root['data'] ?? response.data;
+      final list = payload is Map
+          ? asList(payload['content'])
+          : asList(payload);
       return list.map((e) => AttendanceRecordModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
-      return handleHttpClientErrorResponse(
+      handleHttpClientErrorResponse(
         e,
         defaultCode: ParentAttendanceRepositoryExceptionCode.fetchError,
+        codeFromStatusCode: _classify,
       );
     }
   }
@@ -54,67 +60,29 @@ final class DioParentAttendanceRepository
     DateTime? to,
   }) async {
     try {
-      final response = await httpClient.get(
+      final response = await _httpClient.get(
         '/api/parent/dashboard/child/$childId/overview',
+        queryParameters: {
+          if (from != null) 'from': from.toIso8601String(),
+          if (to != null) 'to': to.toIso8601String(),
+        },
       );
 
-      final data = response.asMap();
-      // Backend returns ChildOverview, we map what we can to summary
-      return AttendanceSummaryModel(
-        totalSessions: ModelParser.asInt(data['totalAttendance']),
-        present: ModelParser.asInt(data['totalAttendance']),
-        late: 0,
-        absent: 0,
-        excused: 0,
-        attendanceRate: 100.0,
-      );
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
+      return AttendanceSummaryModel.fromJson(data);
     } on HttpClientResponse catch (e) {
-      return handleHttpClientErrorResponse(
+      handleHttpClientErrorResponse(
         e,
         defaultCode: ParentAttendanceRepositoryExceptionCode.fetchError,
+        codeFromStatusCode: _classify,
       );
     }
   }
 
-  @override
-  Future<List<GroupEntity>> getChildGroups(String childId) async {
-    try {
-      final response = await httpClient.get(
-        '/api/attendance/parent/students/$childId/groups',
-      );
-
-      final list = response.asList();
-
-      return list.map((e) {
-        final map = asMap(e);
-        return GroupEntity(
-          id: asString(map['groupId'] ?? map['id']),
-          name: asString(map['groupTitle'] ?? map['groupName'] ?? map['name']),
-        );
-      }).toList();
-    } on HttpClientResponse catch (e) {
-      return handleHttpClientErrorResponse(
-        e,
-        defaultCode: ParentAttendanceRepositoryExceptionCode.fetchError,
-      );
-    }
-  }
-
-  @override
-  Future<Map<String, dynamic>> getGroupBrief(
-    String childId,
-    String groupId,
-  ) async {
-    try {
-      final response = await httpClient.get(
-        '/api/attendance/parent/students/$childId/groups/$groupId',
-      );
-      return response.asMap();
-    } on HttpClientResponse catch (e) {
-      return handleHttpClientErrorResponse(
-        e,
-        defaultCode: ParentAttendanceRepositoryExceptionCode.fetchError,
-      );
-    }
+  ParentAttendanceRepositoryExceptionCode _classify(int statusCode) {
+    return switch (statusCode) {
+      401 || 403 => ParentAttendanceRepositoryExceptionCode.unauthorized,
+      _ => ParentAttendanceRepositoryExceptionCode.fetchError,
+    };
   }
 }

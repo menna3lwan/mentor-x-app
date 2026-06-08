@@ -4,7 +4,8 @@ enum OtpLoadingState {
   initial,
   loading,
   success,
-  failure;
+  failure
+  ;
 
   bool get isLoading => this == OtpLoadingState.loading;
   bool get isSuccess => this == OtpLoadingState.success;

@@ -7,10 +7,10 @@ export 'models/home_models.dart';
 final class DioParentHomeRepository
     extends HttpClientRepository<ParentHomeRepositoryExceptionCode>
     implements ParentHomeRepository {
-  DioParentHomeRepository({
-    required HttpClient httpClient,
-    required CacheRepository cacheRepository,
-  }) : _httpClient = httpClient;
+  final HttpClient _httpClient;
+
+  DioParentHomeRepository({required HttpClient httpClient})
+      : _httpClient = httpClient;
 
   @override
   Future<void> initialize() async {}
@@ -19,42 +19,25 @@ final class DioParentHomeRepository
   Never throwException(
     ParentHomeRepositoryExceptionCode code, {
     String? message,
-  }) => throw ParentHomeRepositoryException(code: code, message: message);
-
-  final HttpClient _httpClient;
+  }) =>
+      throw ParentHomeRepositoryException(code: code, message: message);
 
   @override
   Future<ParentHomeSummaryEntity> getSummary(String studentId) async {
+    // Backend contract (Swagger): GET /api/parent/dashboard/summary
+    // Returns the parent's dashboard with all children. No query parameters.
     try {
       final response = await _httpClient.get(
         '/api/parent/dashboard/summary',
       );
 
-      final data = response.asMap();
+      final data = asMap(response.data)['data'] ?? asMap(response.data);
       return ParentHomeSummaryModel.fromJson(data);
     } on HttpClientResponse catch (e) {
-      return handleHttpClientErrorResponse(
+      handleHttpClientErrorResponse(
         e,
         defaultCode: ParentHomeRepositoryExceptionCode.fetchError,
-      );
-    }
-  }
-
-  @override
-  Future<ParentChildDashboardSummaryEntity> getChildOverview(
-    String studentId,
-  ) async {
-    try {
-      final response = await _httpClient.get(
-        '/api/parent/dashboard/child/$studentId/overview',
-      );
-
-      final data = response.asMap();
-      return ParentChildDashboardSummaryModel.fromJson(data);
-    } on HttpClientResponse catch (e) {
-      return handleHttpClientErrorResponse(
-        e,
-        defaultCode: ParentHomeRepositoryExceptionCode.fetchError,
+        codeFromStatusCode: _classify,
       );
     }
   }
@@ -65,26 +48,36 @@ final class DioParentHomeRepository
     int limit = 10,
     int page = 1,
   }) async {
+    // API-CONTRACT (KNOWN MISMATCH):
+    // /api/parent/dashboard/recent-activity is NOT declared in the EduCore
+    // Postman collection. We probe it once and silently return an empty
+    // list on 404/405 so the dashboard does not surface an error banner
+    // for a non-existent backend endpoint. Coordinate with backend before
+    // wiring this section to a real source.
     try {
-      final queryParams = {
-        'student_id': studentId,
-        'size': limit,
-        'page': page - 1,
-      };
-
       final response = await _httpClient.get(
-        '/api/parent/dashboard/child/$studentId/attendance', // Using attendance as activity for now
-        queryParameters: queryParams,
+        '/api/parent/dashboard/recent-activity',
+        queryParameters: {
+          'student_id': studentId,
+          'studentId': studentId,
+          'limit': limit,
+          'page': page,
+        },
       );
 
-      final list = response.asList();
+      final data = asMap(response.data)['data'] ?? asList(response.data);
+      final list = asList(data is Map ? data['content'] : data);
       return list
           .map((json) => ParentRecentActivityModel.fromJson(asMap(json)))
           .toList();
     } on HttpClientResponse catch (e) {
-      return handleHttpClientErrorResponse(
+      if (e.statusCode == 404 || e.statusCode == 405) {
+        return const <ParentRecentActivityEntity>[];
+      }
+      handleHttpClientErrorResponse(
         e,
         defaultCode: ParentHomeRepositoryExceptionCode.fetchError,
+        codeFromStatusCode: _classify,
       );
     }
   }
@@ -95,24 +88,32 @@ final class DioParentHomeRepository
     int limit = 3,
   }) async {
     try {
-      final queryParams = {
-        'student_id': studentId,
-        'size': limit,
-      };
       final response = await _httpClient.get(
         '/api/announcements/active',
-        queryParameters: queryParams,
+        queryParameters: {
+          'student_id': studentId,
+          'limit': limit,
+        },
       );
 
-      final list = response.asList();
+      final data = asMap(response.data)['data'] ?? asList(response.data);
+      final list = asList(data is Map ? data['content'] : data);
       return list
           .map((json) => AnnouncementModel.fromJson(asMap(json)))
           .toList();
     } on HttpClientResponse catch (e) {
-      return handleHttpClientErrorResponse(
+      handleHttpClientErrorResponse(
         e,
         defaultCode: ParentHomeRepositoryExceptionCode.fetchError,
+        codeFromStatusCode: _classify,
       );
     }
+  }
+
+  ParentHomeRepositoryExceptionCode _classify(int statusCode) {
+    return switch (statusCode) {
+      401 || 403 => ParentHomeRepositoryExceptionCode.unauthorized,
+      _ => ParentHomeRepositoryExceptionCode.fetchError,
+    };
   }
 }

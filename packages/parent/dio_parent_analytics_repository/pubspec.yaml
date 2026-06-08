@@ -1,12 +1,12 @@
-name: dio_parent_analytics_repository
-description: "Dio implementation of ParentAnalyticsRepository for parent app."
-version: 1.0.0
+name: parent_dio_analytics_repository
+description: A Dio implementation of the parent analytics repository.
+version: 0.0.1
 publish_to: none
-
-resolution: workspace
 
 environment:
   sdk: ^3.11.4
+
+resolution: workspace
 
 dependencies:
   mentorx_core:
@@ -15,8 +15,6 @@ dependencies:
     path: ../../clients/dio_http_client
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
-  lints: ^6.0.0
   test: ^1.25.6
   mocktail: ^1.0.4
+  lints: ^6.0.0

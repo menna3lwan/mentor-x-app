@@ -4,6 +4,7 @@ part of 'package:mentorx_core/mentorx_core.dart';
 
 enum ParentAttendanceRepositoryExceptionCode {
   unknown,
+  unauthorized,
   fetchError,
 }
 
@@ -26,6 +27,4 @@ abstract interface class ParentAttendanceRepository {
     DateTime? from,
     DateTime? to,
   });
-  Future<List<GroupEntity>> getChildGroups(String childId);
-  Future<Map<String, dynamic>> getGroupBrief(String childId, String groupId);
 }

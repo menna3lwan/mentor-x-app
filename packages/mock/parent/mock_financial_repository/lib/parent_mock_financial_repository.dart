@@ -3,6 +3,34 @@ import 'package:mentorx_core/mentorx_core.dart';
 final class MockParentFinancialRepository implements ParentFinancialRepository {
   final Duration delay;
 
+  // In-memory parent-wallet state so `topUpWallet` can mutate it.
+  double _myBalance = 230.0;
+  final int _myPoints = 350;
+  final double _mySpentThisMonth = 40.0;
+  double _myCreditsThisMonth = 100.0;
+  int _myTotalTransactions = 6;
+  final List<WalletTransactionEntity> _myTransactions = [
+    WalletTransactionEntity(
+      id: 'my_tx_1',
+      amount: 100.0,
+      balanceAfter: 230.0,
+      transactionType: WalletTransactionType.deposit,
+      description: 'Wallet Top-Up',
+      createdAt: DateTime.now().subtract(const Duration(days: 1)),
+      typeBadge: 'Top Up',
+      paymentMethod: 'Vodafone Cash',
+    ),
+    WalletTransactionEntity(
+      id: 'my_tx_2',
+      amount: -40.0,
+      balanceAfter: 130.0,
+      transactionType: WalletTransactionType.payment,
+      description: 'Transfer to Khalid',
+      createdAt: DateTime.now().subtract(const Duration(days: 3)),
+      typeBadge: 'Transfer',
+    ),
+  ];
+
   MockParentFinancialRepository({
     this.delay = const Duration(milliseconds: 800),
   });
@@ -74,5 +102,64 @@ final class MockParentFinancialRepository implements ParentFinancialRepository {
   Future<List<PaymentEntity>> getPayments(String childId) async {
     await Future.delayed(delay);
     return [];
+  }
+
+  @override
+  Future<WalletSummaryEntity> getMyWallet() async {
+    await Future.delayed(delay);
+    return WalletSummaryEntity(
+      walletBalance: _myBalance,
+      points: _myPoints,
+      spentThisMonth: _mySpentThisMonth,
+      totalCreditsThisMonth: _myCreditsThisMonth,
+      totalTransactions: _myTotalTransactions,
+    );
+  }
+
+  @override
+  Future<List<WalletTransactionEntity>> getMyTransactions({
+    MentorXPaginationInfo? paginationInfo,
+  }) async {
+    await Future.delayed(delay);
+    return List<WalletTransactionEntity>.from(_myTransactions);
+  }
+
+  @override
+  Future<WalletSummaryEntity> topUpWallet({
+    required double amount,
+    String? studentId,
+  }) async {
+    await Future.delayed(delay);
+    if (amount <= 0) {
+      throw const ParentFinancialRepositoryException(
+        code: ParentFinancialRepositoryExceptionCode.invalidAmount,
+        message: 'Top-up amount must be positive.',
+      );
+    }
+    _myBalance += amount;
+    _myCreditsThisMonth += amount;
+    _myTotalTransactions += 1;
+    _myTransactions.insert(
+      0,
+      WalletTransactionEntity(
+        id: 'my_tx_${DateTime.now().millisecondsSinceEpoch}',
+        amount: amount,
+        balanceAfter: _myBalance,
+        transactionType: WalletTransactionType.deposit,
+        description: studentId == null || studentId.isEmpty
+            ? 'Wallet Top-Up'
+            : 'Top-Up to Child $studentId',
+        createdAt: DateTime.now(),
+        typeBadge: 'Top Up',
+        paymentMethod: 'Mock',
+      ),
+    );
+    return WalletSummaryEntity(
+      walletBalance: _myBalance,
+      points: _myPoints,
+      spentThisMonth: _mySpentThisMonth,
+      totalCreditsThisMonth: _myCreditsThisMonth,
+      totalTransactions: _myTotalTransactions,
+    );
   }
 }

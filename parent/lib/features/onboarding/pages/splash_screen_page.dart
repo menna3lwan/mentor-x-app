@@ -1,11 +1,52 @@
 import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:device_info_service/device_info_service.dart';
+import '../../../core/blocs/app_authentication_cubit/app_authentication_cubit.dart';
+import '../../../core/routing/app_routes.dart';
 
-final class SplashScreenPage extends StatelessWidget {
+class SplashScreenPage extends StatefulWidget {
   const SplashScreenPage({super.key});
 
   @override
+  State<SplashScreenPage> createState() => _SplashScreenPageState();
+}
+
+class _SplashScreenPageState extends State<SplashScreenPage> {
+  static const Duration _minimumSplashVisible = Duration(milliseconds: 900);
+
+  @override
+  void initState() {
+    super.initState();
+    _checkStatus();
+  }
+
+  /// Holds the splash visible for [_minimumSplashVisible] (so the brand frame
+  /// isn't a flash) but no longer; once that timer elapses we read the *live*
+  /// authentication state and route, instead of trusting whatever the state
+  /// was at frame-1.
+  Future<void> _checkStatus() async {
+    // Wait one frame so [BlocProvider] has finished injecting cubits before
+    // we read them — without this, hot-reloading the splash on cold start can
+    // call `context.read` before the parent widget completes its mount.
+    await Future<void>.delayed(Duration.zero);
+    if (!mounted) return;
+
+    await Future<void>.delayed(_minimumSplashVisible);
+    if (!mounted) return;
+
+    final authState = context.read<AppAuthenticationCubit>().state;
+    if (authState.isAuthenticated) {
+      const HomePageRoute().go(context);
+    } else {
+      const OnboardingRoute().go(context);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final t = Translations.of(context).parent;
+
     return Scaffold(
       body: Container(
         width: double.infinity,
@@ -13,7 +54,7 @@ final class SplashScreenPage extends StatelessWidget {
           gradient: LinearGradient(
             colors: [
               context.brandPrimaryColor,
-              context.brandPrimaryColor.withValues(alpha: 0.8)
+              context.brandPrimaryColor.withValues(alpha: 0.8),
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -29,12 +70,16 @@ final class SplashScreenPage extends StatelessWidget {
                 shape: BoxShape.circle,
                 border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
               ),
-              child: const Icon(Icons.family_restroom_rounded, size: 80, color: Colors.white),
+              child: const Icon(
+                Icons.family_restroom_rounded,
+                size: 80,
+                color: Colors.white,
+              ),
             ),
             const SizedBox(height: 32),
-            const Text(
-              'MENTORX',
-              style: TextStyle(
+            Text(
+              t.splash.appName,
+              style: const TextStyle(
                 fontSize: 32,
                 fontWeight: FontWeight.w900,
                 color: Colors.white,
@@ -43,7 +88,7 @@ final class SplashScreenPage extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'PARENT PORTAL',
+              t.splash.tagline,
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w700,
@@ -59,6 +104,21 @@ final class SplashScreenPage extends StatelessWidget {
                 color: Colors.white.withValues(alpha: 0.5),
                 strokeWidth: 3,
               ),
+            ),
+            const SizedBox(height: 24),
+            FutureBuilder<String>(
+              future: context.read<DeviceInfoService>().getAppVersion(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) return const SizedBox.shrink();
+                return Text(
+                  'v${snapshot.data}',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.white.withValues(alpha: 0.4),
+                  ),
+                );
+              },
             ),
           ],
         ),

@@ -1,42 +1,27 @@
 part of 'onboarding_bloc.dart';
 
 enum OnboardingStep {
-  initial,
   loading,
   needsOnboarding,
   needsLogin,
-  authenticated;
-
-  bool get isInitial => this == OnboardingStep.initial;
-  bool get isLoading => this == OnboardingStep.loading;
-  bool get isNeedsOnboarding => this == OnboardingStep.needsOnboarding;
-  bool get isNeedsLogin => this == OnboardingStep.needsLogin;
-  bool get isAuthenticated => this == OnboardingStep.authenticated;
+  authenticated,
 }
 
 final class OnboardingState extends Equatable {
   final OnboardingStep step;
-  final String? errorMessage;
 
-  const OnboardingState({
-    required this.step,
-    this.errorMessage,
-  });
+  const OnboardingState._({required this.step});
 
-  static const OnboardingState initial = OnboardingState(
-    step: OnboardingStep.initial,
-  );
+  const OnboardingState.loading() : this._(step: OnboardingStep.loading);
 
-  OnboardingState copyWith({
-    OnboardingStep? step,
-    MentorXNullableValue<String?>? errorMessage,
-  }) {
-    return OnboardingState(
-      step: step ?? this.step,
-      errorMessage: errorMessage != null ? errorMessage.value : this.errorMessage,
-    );
-  }
+  const OnboardingState.needsOnboarding()
+    : this._(step: OnboardingStep.needsOnboarding);
+
+  const OnboardingState.needsLogin() : this._(step: OnboardingStep.needsLogin);
+
+  const OnboardingState.authenticated()
+    : this._(step: OnboardingStep.authenticated);
 
   @override
-  List<Object?> get props => [step, errorMessage];
+  List<Object?> get props => [step];
 }

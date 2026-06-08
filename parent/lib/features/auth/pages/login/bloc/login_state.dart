@@ -4,7 +4,8 @@ enum LoginLoadingState {
   initial,
   loading,
   success,
-  failure;
+  failure
+  ;
 
   bool get isLoading => this == LoginLoadingState.loading;
   bool get isSuccess => this == LoginLoadingState.success;

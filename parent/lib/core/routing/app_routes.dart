@@ -1,25 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../features/onboarding/pages/splash_screen_page_wrapper.dart';
-import '../../features/onboarding/pages/onboarding_page_wrapper.dart';
-import '../../features/auth/pages/login/login_page_wrapper.dart';
+import '../../features/onboarding/pages/splash_screen_page.dart';
+import '../../features/onboarding/pages/onboarding_page.dart';
+import '../../features/auth/pages/login/pages/login_page_wrapper.dart';
 import '../../features/home/pages/home_page_wrapper.dart';
-import '../../features/attendance/pages/attendance_monitor_page_wrapper.dart';
-import '../../features/financial/pages/financial_monitor_page_wrapper.dart';
-import '../../features/courses/pages/academic_monitor_page_wrapper.dart';
-import '../../features/assessments/pages/grade_monitor_page_wrapper.dart';
-import '../../features/communication/pages/notifications_parent_page_wrapper.dart';
-import '../../features/communication/pages/announcements_archive_page_wrapper.dart';
-import '../../features/communication/pages/whatsapp_groups_parent_page_wrapper.dart';
+import '../../features/attendance/pages/attendance_monitor_page.dart';
+import '../../features/financial/pages/financial_monitor_page.dart';
+import '../../features/courses/pages/academic_monitor_page.dart';
+import '../../features/analytics/pages/analytics_monitor_page.dart';
+import '../../features/assessments/pages/grade_monitor_page.dart';
+import '../../features/attendance_groups/pages/attendance_group_detail_page_wrapper.dart';
+import '../../features/attendance_groups/pages/attendance_groups_page_wrapper.dart';
+import '../../features/courses/pages/course_progress_detail_page_wrapper.dart';
+import '../../features/devices/pages/devices_page_wrapper.dart';
+import '../../features/account_status/pages/pending_account_page_wrapper.dart';
+import '../../features/account_deletion/pages/delete_account_page_wrapper.dart';
+import '../../features/notifications/pages/notifications_parent_page.dart';
+import '../../features/communication/pages/announcements_archive_page.dart';
+import '../../features/communication/pages/whatsapp_groups_parent_page.dart';
 
 import '../../features/auth/pages/forget_password/forget_password_page_wrapper.dart';
 import '../../features/auth/pages/otp/otp_page_wrapper.dart';
 import '../../features/auth/pages/parent_registration/parent_registration_page_wrapper.dart';
 
-import '../../features/children/pages/linked_children_management_page_wrapper.dart';
-import '../../features/children/pages/add_child_link_page_wrapper.dart';
-import '../../features/profile/pages/parent_profile_page_wrapper.dart';
-import '../../features/profile/pages/settings_parent_page_wrapper.dart';
+import '../../features/children/pages/linked_children_management_page.dart';
+import '../../features/children/pages/add_child_link_page.dart';
+import '../../features/profile/pages/edit_profile_page_wrapper.dart';
+import '../../features/profile/pages/parent_profile_page.dart';
+import '../../features/profile/pages/settings_parent_page.dart';
+import '../../features/my_wallet/pages/my_wallet_page_wrapper.dart';
+import '../../features/my_wallet/pages/top_up_page_wrapper.dart';
+import '../../features/settings/pages/change_password_page_wrapper.dart';
 
 part 'app_routes.g.dart';
 
@@ -27,7 +38,8 @@ part 'app_routes.g.dart';
 class SplashRoute extends GoRouteData with $SplashRoute {
   const SplashRoute();
   @override
-  Widget build(BuildContext context, GoRouterState state) => const SplashScreenPageWrapper();
+  Widget build(BuildContext context, GoRouterState state) =>
+      const SplashScreenPage();
 }
 
 @TypedGoRoute<OnboardingRoute>(path: '/onboarding')
@@ -35,7 +47,7 @@ class OnboardingRoute extends GoRouteData with $OnboardingRoute {
   const OnboardingRoute();
   @override
   Widget build(BuildContext context, GoRouterState state) =>
-      const OnboardingPageWrapper();
+      const OnboardingPage();
 }
 
 @TypedGoRoute<LoginPageRoute>(path: '/login')
@@ -87,7 +99,35 @@ class AttendanceMonitorRoute extends GoRouteData with $AttendanceMonitorRoute {
   const AttendanceMonitorRoute({required this.childId});
   @override
   Widget build(BuildContext context, GoRouterState state) =>
-      AttendanceMonitorPageWrapper(childId: childId);
+      AttendanceMonitorPage(childId: childId);
+}
+
+@TypedGoRoute<AttendanceGroupsRoute>(path: '/attendance/:childId/groups')
+class AttendanceGroupsRoute extends GoRouteData with $AttendanceGroupsRoute {
+  final String childId;
+  const AttendanceGroupsRoute({required this.childId});
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      AttendanceGroupsPageWrapper(childId: childId);
+}
+
+@TypedGoRoute<AttendanceGroupDetailRoute>(
+  path: '/attendance/:childId/groups/:groupId',
+)
+class AttendanceGroupDetailRoute extends GoRouteData
+    with $AttendanceGroupDetailRoute {
+  final String childId;
+  final String groupId;
+  const AttendanceGroupDetailRoute({
+    required this.childId,
+    required this.groupId,
+  });
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      AttendanceGroupDetailPageWrapper(
+        childId: childId,
+        groupId: groupId,
+      );
 }
 
 @TypedGoRoute<FinancialMonitorRoute>(path: '/financial/:childId')
@@ -96,7 +136,7 @@ class FinancialMonitorRoute extends GoRouteData with $FinancialMonitorRoute {
   const FinancialMonitorRoute({required this.childId});
   @override
   Widget build(BuildContext context, GoRouterState state) =>
-      FinancialMonitorPageWrapper(childId: childId);
+      FinancialMonitorPage(childId: childId);
 }
 
 @TypedGoRoute<AcademicMonitorRoute>(path: '/academic/:childId')
@@ -105,7 +145,25 @@ class AcademicMonitorRoute extends GoRouteData with $AcademicMonitorRoute {
   const AcademicMonitorRoute({required this.childId});
   @override
   Widget build(BuildContext context, GoRouterState state) =>
-      AcademicMonitorPageWrapper(childId: childId);
+      AcademicMonitorPage(childId: childId);
+}
+
+@TypedGoRoute<CourseProgressRoute>(
+  path: '/academic/:childId/progress/:courseId',
+)
+class CourseProgressRoute extends GoRouteData with $CourseProgressRoute {
+  final String childId;
+  final String courseId;
+  const CourseProgressRoute({
+    required this.childId,
+    required this.courseId,
+  });
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      CourseProgressDetailPageWrapper(
+        childId: childId,
+        courseId: courseId,
+      );
 }
 
 @TypedGoRoute<GradeMonitorRoute>(path: '/grades/:childId')
@@ -114,7 +172,16 @@ class GradeMonitorRoute extends GoRouteData with $GradeMonitorRoute {
   const GradeMonitorRoute({required this.childId});
   @override
   Widget build(BuildContext context, GoRouterState state) =>
-      GradeMonitorPageWrapper(childId: childId);
+      GradeMonitorPage(childId: childId);
+}
+
+@TypedGoRoute<AnalyticsMonitorRoute>(path: '/analytics/:childId')
+class AnalyticsMonitorRoute extends GoRouteData with $AnalyticsMonitorRoute {
+  final String childId;
+  const AnalyticsMonitorRoute({required this.childId});
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      AnalyticsMonitorPage(childId: childId);
 }
 
 @TypedGoRoute<NotificationsRoute>(path: '/notifications/:childId')
@@ -123,7 +190,7 @@ class NotificationsRoute extends GoRouteData with $NotificationsRoute {
   const NotificationsRoute({required this.childId});
   @override
   Widget build(BuildContext context, GoRouterState state) =>
-      NotificationsParentPageWrapper(childId: childId);
+      NotificationsParentPage(childId: childId);
 }
 
 @TypedGoRoute<AnnouncementsRoute>(path: '/announcements/:childId')
@@ -132,7 +199,7 @@ class AnnouncementsRoute extends GoRouteData with $AnnouncementsRoute {
   const AnnouncementsRoute({required this.childId});
   @override
   Widget build(BuildContext context, GoRouterState state) =>
-      AnnouncementsArchivePageWrapper(childId: childId);
+      AnnouncementsArchivePage(childId: childId);
 }
 
 @TypedGoRoute<WhatsAppGroupsRoute>(path: '/whatsapp-groups/:childId')
@@ -141,7 +208,7 @@ class WhatsAppGroupsRoute extends GoRouteData with $WhatsAppGroupsRoute {
   const WhatsAppGroupsRoute({required this.childId});
   @override
   Widget build(BuildContext context, GoRouterState state) =>
-      WhatsAppGroupsParentPageWrapper(childId: childId);
+      WhatsAppGroupsParentPage(childId: childId);
 }
 
 @TypedGoRoute<LinkedChildrenRoute>(path: '/children')
@@ -149,7 +216,7 @@ class LinkedChildrenRoute extends GoRouteData with $LinkedChildrenRoute {
   const LinkedChildrenRoute();
   @override
   Widget build(BuildContext context, GoRouterState state) =>
-      const LinkedChildrenManagementPageWrapper();
+      const LinkedChildrenManagementPage();
 }
 
 @TypedGoRoute<AddChildLinkRoute>(path: '/children/add')
@@ -157,7 +224,7 @@ class AddChildLinkRoute extends GoRouteData with $AddChildLinkRoute {
   const AddChildLinkRoute();
   @override
   Widget build(BuildContext context, GoRouterState state) =>
-      const AddChildLinkPageWrapper();
+      const AddChildLinkPage();
 }
 
 @TypedGoRoute<ProfileRoute>(path: '/profile')
@@ -165,7 +232,15 @@ class ProfileRoute extends GoRouteData with $ProfileRoute {
   const ProfileRoute();
   @override
   Widget build(BuildContext context, GoRouterState state) =>
-      const ParentProfilePageWrapper();
+      const ParentProfilePage();
+}
+
+@TypedGoRoute<EditProfileRoute>(path: '/profile/edit')
+class EditProfileRoute extends GoRouteData with $EditProfileRoute {
+  const EditProfileRoute();
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const EditProfilePageWrapper();
 }
 
 @TypedGoRoute<SettingsRoute>(path: '/settings')
@@ -173,10 +248,58 @@ class SettingsRoute extends GoRouteData with $SettingsRoute {
   const SettingsRoute();
   @override
   Widget build(BuildContext context, GoRouterState state) =>
-      const SettingsParentPageWrapper();
+      const SettingsParentPage();
 }
 
-final router = GoRouter(
-  initialLocation: '/',
-  routes: $appRoutes,
-);
+@TypedGoRoute<ChangePasswordRoute>(path: '/profile/change-password')
+class ChangePasswordRoute extends GoRouteData with $ChangePasswordRoute {
+  const ChangePasswordRoute();
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const ChangePasswordPageWrapper();
+}
+
+@TypedGoRoute<DevicesRoute>(path: '/profile/devices')
+class DevicesRoute extends GoRouteData with $DevicesRoute {
+  const DevicesRoute();
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const DevicesPageWrapper();
+}
+
+@TypedGoRoute<PendingAccountRoute>(path: '/pending-account')
+class PendingAccountRoute extends GoRouteData with $PendingAccountRoute {
+  const PendingAccountRoute();
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const PendingAccountPageWrapper();
+}
+
+@TypedGoRoute<DeleteAccountRoute>(path: '/profile/delete-account')
+class DeleteAccountRoute extends GoRouteData with $DeleteAccountRoute {
+  const DeleteAccountRoute();
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const DeleteAccountPageWrapper();
+}
+
+@TypedGoRoute<MyWalletRoute>(path: '/my-wallet')
+class MyWalletRoute extends GoRouteData with $MyWalletRoute {
+  const MyWalletRoute();
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const MyWalletPageWrapper();
+}
+
+@TypedGoRoute<TopUpRoute>(path: '/my-wallet/top-up')
+class TopUpRoute extends GoRouteData with $TopUpRoute {
+  final String? studentId;
+  const TopUpRoute({this.studentId});
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      TopUpPageWrapper(studentId: studentId);
+}
+
+// Note: the GoRouter instance is constructed inside `AppRouter` (see
+// app_router.dart) which wires it up with the authentication redirect.
+// Importers of this file only use the typed route classes above.

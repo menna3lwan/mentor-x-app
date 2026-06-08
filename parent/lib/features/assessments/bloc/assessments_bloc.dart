@@ -1,62 +1,231 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:parent/core/core.dart';
+import 'package:bloc/bloc.dart';
+import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'package:bloc_presentation/bloc_presentation.dart';
+import 'package:mentorx_core/mentorx_core.dart';
+
+import '../../../core/blocs/bloc_error_helpers.dart';
 
 part 'assessments_event.dart';
 part 'assessments_state.dart';
 
-final class AssessmentsBloc extends Bloc<AssessmentsEvent, AssessmentsState> {
-  final ParentGradeRepository _repository;
-  final AnalyticsService _analyticsService;
-  static final MentorXLogger _logger = MentorXLogger('AssessmentsBloc');
+sealed class AssessmentsPresentationEvent {
+  const AssessmentsPresentationEvent();
+}
 
-  AssessmentsBloc({
-    required ParentGradeRepository repository,
-    required AnalyticsService analyticsService,
-  })  : _repository = repository,
-        _analyticsService = analyticsService,
-        super(const AssessmentsState()) {
+/// Classifies failures so the UI can show contextual copy.
+enum AssessmentsFailureKind {
+  unknown,
+  network,
+  notFound,
+  unauthorized,
+}
+
+final class AssessmentsFailurePresentationEvent
+    extends AssessmentsPresentationEvent {
+  final AssessmentsFailureKind kind;
+  final String? rawMessage;
+  const AssessmentsFailurePresentationEvent({
+    required this.kind,
+    this.rawMessage,
+  });
+}
+
+/// Fired on auth failures so the wrapper can redirect to login.
+final class AssessmentsUnauthorizedPresentationEvent
+    extends AssessmentsPresentationEvent {
+  const AssessmentsUnauthorizedPresentationEvent();
+}
+
+/// Drives the parent grade-monitor screen. Loads three independent sections
+/// (assessment history, overall summary, monthly trend) so a partial failure
+/// doesn't blank the whole page.
+final class AssessmentsBloc extends Bloc<AssessmentsEvent, AssessmentsState>
+    with BlocPresentationMixin<AssessmentsState, AssessmentsPresentationEvent> {
+  final ParentGradeRepository _repository;
+
+  AssessmentsBloc({required ParentGradeRepository repository})
+    : _repository = repository,
+      super(AssessmentsState.initial()) {
     on<AssessmentsStarted>(_onStarted);
-    on<AssessmentsRefreshRequested>(_onRefreshRequested);
+    // Drop rapid refresh taps — only one full reload at a time.
+    on<AssessmentsRefreshRequested>(
+      _onRefreshRequested,
+      transformer: droppable(),
+    );
+    on<AssessmentsRetrySectionRequested>(_onRetrySection);
   }
 
   Future<void> _onStarted(
     AssessmentsStarted event,
     Emitter<AssessmentsState> emit,
   ) async {
-    _logger.info('Started loading assessments for childId: ${event.childId}');
-    emit(state.copyWith(status: AssessmentsStatus.loading));
-    try {
-      _analyticsService.logEvent(
-        name: AnalyticsEvents.assessmentsViewed,
-        parameters: {AnalyticsParams.id: event.childId},
-      );
-      final results = await Future.wait([
-        _repository.getAssessments(event.childId),
-        _repository.getGradeSummary(event.childId),
-        _repository.getGradeTrend(event.childId),
-      ]);
-
-      _logger.info('Successfully loaded assessments for childId: ${event.childId}');
-      emit(state.copyWith(
-        status: AssessmentsStatus.success,
-        assessments: results[0] as List<QuizAttemptEntity>,
-        gradeSummary: results[1] as ParentGradeSummaryEntity,
-        gradeTrend: results[2] as ParentGradeTrendEntity,
-      ));
-    } catch (e, s) {
-      _logger.error('Failed to load assessments for childId: ${event.childId}', e, s);
-      emit(state.copyWith(
-        status: AssessmentsStatus.failure,
-        errorMessage: e.toString(),
-      ));
+    if (state.childId == event.childId &&
+        (state.assessmentsSection.isLoaded ||
+            state.assessmentsSection.isLoading)) {
+      return;
     }
+    emit(state.copyWith(childId: event.childId));
+    await _loadAll(emit, event.childId);
   }
 
   Future<void> _onRefreshRequested(
     AssessmentsRefreshRequested event,
     Emitter<AssessmentsState> emit,
   ) async {
-    _logger.info('Refresh requested for childId: ${event.childId}');
-    add(AssessmentsStarted(event.childId));
+    if (state.isRefreshing) return;
+    emit(state.copyWith(isRefreshing: true, childId: event.childId));
+    try {
+      await _loadAll(emit, event.childId);
+    } finally {
+      if (!emit.isDone) {
+        emit(state.copyWith(isRefreshing: false));
+      }
+    }
+  }
+
+  Future<void> _onRetrySection(
+    AssessmentsRetrySectionRequested event,
+    Emitter<AssessmentsState> emit,
+  ) async {
+    final childId = state.childId;
+    if (childId == null) return;
+
+    switch (event.section) {
+      case AssessmentsSection.history:
+        emit(
+          state.copyWith(
+            assessmentsSection: state.assessmentsSection.toLoading(),
+          ),
+        );
+        await _loadHistory(emit, childId);
+      case AssessmentsSection.summary:
+        emit(
+          state.copyWith(
+            summarySection: state.summarySection.toLoading(),
+          ),
+        );
+        await _loadSummary(emit, childId);
+      case AssessmentsSection.trend:
+        emit(state.copyWith(trendSection: state.trendSection.toLoading()));
+        await _loadTrend(emit, childId);
+    }
+  }
+
+  Future<void> _loadAll(Emitter<AssessmentsState> emit, String childId) async {
+    emit(
+      state.copyWith(
+        assessmentsSection: state.assessmentsSection.toLoading(),
+        summarySection: state.summarySection.toLoading(),
+        trendSection: state.trendSection.toLoading(),
+      ),
+    );
+
+    await Future.wait([
+      _loadHistory(emit, childId),
+      _loadSummary(emit, childId),
+      _loadTrend(emit, childId),
+    ]);
+  }
+
+  Future<void> _loadHistory(
+    Emitter<AssessmentsState> emit,
+    String childId,
+  ) async {
+    try {
+      final list = await _repository.getAssessments(childId);
+      if (emit.isDone) return;
+      emit(
+        state.copyWith(
+          assessmentsSection: AssessmentsAsyncSection.loaded(list),
+        ),
+      );
+    } catch (e) {
+      if (emit.isDone) return;
+      emit(
+        state.copyWith(
+          assessmentsSection: AssessmentsAsyncSection.failure(_describe(e)),
+        ),
+      );
+      _emitFailure(e);
+    }
+  }
+
+  Future<void> _loadSummary(
+    Emitter<AssessmentsState> emit,
+    String childId,
+  ) async {
+    try {
+      final summary = await _repository.getGradeSummary(childId);
+      if (emit.isDone) return;
+      emit(
+        state.copyWith(
+          summarySection: AssessmentsAsyncSection.loaded(summary),
+        ),
+      );
+    } catch (e) {
+      if (emit.isDone) return;
+      emit(
+        state.copyWith(
+          summarySection: AssessmentsAsyncSection.failure(_describe(e)),
+        ),
+      );
+      // Summary failure is non-critical — don't toast.
+      _maybeEmitUnauthorized(e);
+    }
+  }
+
+  Future<void> _loadTrend(
+    Emitter<AssessmentsState> emit,
+    String childId,
+  ) async {
+    try {
+      final trend = await _repository.getGradeTrend(childId);
+      if (emit.isDone) return;
+      emit(
+        state.copyWith(
+          trendSection: AssessmentsAsyncSection.loaded(trend),
+        ),
+      );
+    } catch (e) {
+      if (emit.isDone) return;
+      emit(
+        state.copyWith(
+          trendSection: AssessmentsAsyncSection.failure(_describe(e)),
+        ),
+      );
+      // Trend is non-critical — don't toast.
+      _maybeEmitUnauthorized(e);
+    }
+  }
+
+  // ───────────────────────────────────────────────────────────────────────
+  // Helpers
+  // ───────────────────────────────────────────────────────────────────────
+
+  void _emitFailure(Object error) {
+    _maybeEmitUnauthorized(error);
+    emitPresentation(
+      AssessmentsFailurePresentationEvent(
+        kind: _classifyFailure(error),
+        rawMessage: _describe(error),
+      ),
+    );
+  }
+
+  String _describe(Object error) => error.describeError();
+
+  AssessmentsFailureKind _classifyFailure(Object error) {
+    return switch (classifyHttpFailure(error)) {
+      GenericFailureKind.unauthorized => AssessmentsFailureKind.unauthorized,
+      GenericFailureKind.notFound => AssessmentsFailureKind.notFound,
+      GenericFailureKind.network => AssessmentsFailureKind.network,
+      GenericFailureKind.unknown => AssessmentsFailureKind.unknown,
+    };
+  }
+
+  void _maybeEmitUnauthorized(Object error) {
+    if (isUnauthorizedError(error)) {
+      emitPresentation(const AssessmentsUnauthorizedPresentationEvent());
+    }
   }
 }

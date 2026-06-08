@@ -4,6 +4,7 @@ part of 'package:mentorx_core/mentorx_core.dart';
 
 enum ParentHomeRepositoryExceptionCode {
   unknown,
+  unauthorized,
   fetchError,
 }
 
@@ -16,8 +17,6 @@ abstract interface class ParentHomeRepository {
   Future<void> initialize();
 
   Future<ParentHomeSummaryEntity> getSummary(String studentId);
-
-  Future<ParentChildDashboardSummaryEntity> getChildOverview(String studentId);
 
   Future<List<ParentRecentActivityEntity>> getRecentActivity(
     String studentId, {

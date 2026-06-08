@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:gap/gap.dart';
 
-final class AssignmentGradeDetailParentViewPage extends StatelessWidget {
+class AssignmentGradeDetailParentViewPage extends StatelessWidget {
   final QuizAttemptEntity attempt;
 
   const AssignmentGradeDetailParentViewPage({
@@ -13,8 +14,10 @@ final class AssignmentGradeDetailParentViewPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = Translations.of(context).parent;
+
     return AppDashboardScaffold(
-      title: 'Grade Details',
+      title: t.gradeDetail.pageTitle,
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(
@@ -23,21 +26,21 @@ final class AssignmentGradeDetailParentViewPage extends StatelessWidget {
             FadeInDown(
               duration: const Duration(milliseconds: 600),
               child: AppHeroCard(
-                title: 'ASSESSMENT INFO',
+                title: t.gradeDetail.assessmentInfo.toUpperCase(),
                 icon: Icons.assignment_turned_in_rounded,
                 stats: [
                   AppHeroStatItem(
-                    label: 'Score',
+                    label: t.gradeDetail.score,
                     value: '${attempt.score}/${attempt.totalMarks}',
                     onTap: () {},
                   ),
                   AppHeroStatItem(
-                    label: 'Percentage',
+                    label: t.gradeDetail.percentage,
                     value: '${attempt.percentage.toInt()}%',
                     onTap: () {},
                   ),
                   AppHeroStatItem(
-                    label: 'Status',
+                    label: t.courseDetail.status,
                     value: attempt.status.name.toUpperCase(),
                     onTap: () {},
                   ),
@@ -45,13 +48,13 @@ final class AssignmentGradeDetailParentViewPage extends StatelessWidget {
               ),
             ),
             const Gap(32),
-            
+
             FadeInLeft(
               duration: const Duration(milliseconds: 500),
-              child: const AppSectionHeader(title: 'Additional Details'),
+              child: AppSectionHeader(title: t.gradeDetail.additionalDetails),
             ),
             const Gap(16),
-            
+
             FadeInUp(
               duration: const Duration(milliseconds: 500),
               child: Container(
@@ -59,28 +62,36 @@ final class AssignmentGradeDetailParentViewPage extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: context.backgroundSecondaryColor,
                   borderRadius: BorderRadius.circular(24),
-                  border: Border.all(color: context.textTertiaryColor.withValues(alpha: 0.1)),
+                  border: Border.all(
+                    color: context.textTertiaryColor.withValues(alpha: 0.1),
+                  ),
                 ),
                 child: Column(
                   children: [
-                    _InfoRow(label: 'Quiz ID', value: attempt.quizId),
+                    _InfoRow(
+                      label: t.gradeDetail.quizId,
+                      value: attempt.quizId,
+                    ),
                     const Padding(
                       padding: EdgeInsets.symmetric(vertical: 16),
                       child: Divider(),
                     ),
                     if (attempt.submittedAt != null) ...[
-                      _InfoRow(label: 'Submitted At', value: _formatDate(attempt.submittedAt!)),
+                      _InfoRow(
+                        label: t.gradeDetail.submittedAt,
+                        value: _formatDate(attempt.submittedAt!),
+                      ),
                       const Padding(
                         padding: EdgeInsets.symmetric(vertical: 16),
                         child: Divider(),
                       ),
                     ],
-                    _InfoRow(label: 'Pass Criteria', value: '50%'),
+                    _InfoRow(label: t.gradeDetail.passCriteria, value: '50%'),
                   ],
                 ),
               ),
             ),
-            
+
             const Gap(40),
           ],
         ),

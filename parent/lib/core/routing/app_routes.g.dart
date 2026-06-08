@@ -15,16 +15,27 @@ List<RouteBase> get $appRoutes => [
   $parentRegistrationPageRoute,
   $homePageRoute,
   $attendanceMonitorRoute,
+  $attendanceGroupsRoute,
+  $attendanceGroupDetailRoute,
   $financialMonitorRoute,
   $academicMonitorRoute,
+  $courseProgressRoute,
   $gradeMonitorRoute,
+  $analyticsMonitorRoute,
   $notificationsRoute,
   $announcementsRoute,
   $whatsAppGroupsRoute,
   $linkedChildrenRoute,
   $addChildLinkRoute,
   $profileRoute,
+  $editProfileRoute,
   $settingsRoute,
+  $changePasswordRoute,
+  $devicesRoute,
+  $pendingAccountRoute,
+  $deleteAccountRoute,
+  $myWalletRoute,
+  $topUpRoute,
 ];
 
 RouteBase get $splashRoute =>
@@ -236,6 +247,69 @@ mixin $AttendanceMonitorRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
+RouteBase get $attendanceGroupsRoute => GoRouteData.$route(
+  path: '/attendance/:childId/groups',
+  factory: $AttendanceGroupsRoute._fromState,
+);
+
+mixin $AttendanceGroupsRoute on GoRouteData {
+  static AttendanceGroupsRoute _fromState(GoRouterState state) =>
+      AttendanceGroupsRoute(childId: state.pathParameters['childId']!);
+
+  AttendanceGroupsRoute get _self => this as AttendanceGroupsRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/attendance/${Uri.encodeComponent(_self.childId)}/groups',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $attendanceGroupDetailRoute => GoRouteData.$route(
+  path: '/attendance/:childId/groups/:groupId',
+  factory: $AttendanceGroupDetailRoute._fromState,
+);
+
+mixin $AttendanceGroupDetailRoute on GoRouteData {
+  static AttendanceGroupDetailRoute _fromState(GoRouterState state) =>
+      AttendanceGroupDetailRoute(
+        childId: state.pathParameters['childId']!,
+        groupId: state.pathParameters['groupId']!,
+      );
+
+  AttendanceGroupDetailRoute get _self => this as AttendanceGroupDetailRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/attendance/${Uri.encodeComponent(_self.childId)}/groups/${Uri.encodeComponent(_self.groupId)}',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
 RouteBase get $financialMonitorRoute => GoRouteData.$route(
   path: '/financial/:childId',
   factory: $FinancialMonitorRoute._fromState,
@@ -294,6 +368,39 @@ mixin $AcademicMonitorRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
+RouteBase get $courseProgressRoute => GoRouteData.$route(
+  path: '/academic/:childId/progress/:courseId',
+  factory: $CourseProgressRoute._fromState,
+);
+
+mixin $CourseProgressRoute on GoRouteData {
+  static CourseProgressRoute _fromState(GoRouterState state) =>
+      CourseProgressRoute(
+        childId: state.pathParameters['childId']!,
+        courseId: state.pathParameters['courseId']!,
+      );
+
+  CourseProgressRoute get _self => this as CourseProgressRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/academic/${Uri.encodeComponent(_self.childId)}/progress/${Uri.encodeComponent(_self.courseId)}',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
 RouteBase get $gradeMonitorRoute => GoRouteData.$route(
   path: '/grades/:childId',
   factory: $GradeMonitorRoute._fromState,
@@ -308,6 +415,35 @@ mixin $GradeMonitorRoute on GoRouteData {
   @override
   String get location =>
       GoRouteData.$location('/grades/${Uri.encodeComponent(_self.childId)}');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $analyticsMonitorRoute => GoRouteData.$route(
+  path: '/analytics/:childId',
+  factory: $AnalyticsMonitorRoute._fromState,
+);
+
+mixin $AnalyticsMonitorRoute on GoRouteData {
+  static AnalyticsMonitorRoute _fromState(GoRouterState state) =>
+      AnalyticsMonitorRoute(childId: state.pathParameters['childId']!);
+
+  AnalyticsMonitorRoute get _self => this as AnalyticsMonitorRoute;
+
+  @override
+  String get location =>
+      GoRouteData.$location('/analytics/${Uri.encodeComponent(_self.childId)}');
 
   @override
   void go(BuildContext context) => context.go(location);
@@ -488,6 +624,32 @@ mixin $ProfileRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
+RouteBase get $editProfileRoute => GoRouteData.$route(
+  path: '/profile/edit',
+  factory: $EditProfileRoute._fromState,
+);
+
+mixin $EditProfileRoute on GoRouteData {
+  static EditProfileRoute _fromState(GoRouterState state) =>
+      const EditProfileRoute();
+
+  @override
+  String get location => GoRouteData.$location('/profile/edit');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
 RouteBase get $settingsRoute =>
     GoRouteData.$route(path: '/settings', factory: $SettingsRoute._fromState);
 
@@ -496,6 +658,163 @@ mixin $SettingsRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/settings');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $changePasswordRoute => GoRouteData.$route(
+  path: '/profile/change-password',
+  factory: $ChangePasswordRoute._fromState,
+);
+
+mixin $ChangePasswordRoute on GoRouteData {
+  static ChangePasswordRoute _fromState(GoRouterState state) =>
+      const ChangePasswordRoute();
+
+  @override
+  String get location => GoRouteData.$location('/profile/change-password');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $devicesRoute => GoRouteData.$route(
+  path: '/profile/devices',
+  factory: $DevicesRoute._fromState,
+);
+
+mixin $DevicesRoute on GoRouteData {
+  static DevicesRoute _fromState(GoRouterState state) => const DevicesRoute();
+
+  @override
+  String get location => GoRouteData.$location('/profile/devices');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $pendingAccountRoute => GoRouteData.$route(
+  path: '/pending-account',
+  factory: $PendingAccountRoute._fromState,
+);
+
+mixin $PendingAccountRoute on GoRouteData {
+  static PendingAccountRoute _fromState(GoRouterState state) =>
+      const PendingAccountRoute();
+
+  @override
+  String get location => GoRouteData.$location('/pending-account');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $deleteAccountRoute => GoRouteData.$route(
+  path: '/profile/delete-account',
+  factory: $DeleteAccountRoute._fromState,
+);
+
+mixin $DeleteAccountRoute on GoRouteData {
+  static DeleteAccountRoute _fromState(GoRouterState state) =>
+      const DeleteAccountRoute();
+
+  @override
+  String get location => GoRouteData.$location('/profile/delete-account');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $myWalletRoute =>
+    GoRouteData.$route(path: '/my-wallet', factory: $MyWalletRoute._fromState);
+
+mixin $MyWalletRoute on GoRouteData {
+  static MyWalletRoute _fromState(GoRouterState state) => const MyWalletRoute();
+
+  @override
+  String get location => GoRouteData.$location('/my-wallet');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $topUpRoute => GoRouteData.$route(
+  path: '/my-wallet/top-up',
+  factory: $TopUpRoute._fromState,
+);
+
+mixin $TopUpRoute on GoRouteData {
+  static TopUpRoute _fromState(GoRouterState state) =>
+      TopUpRoute(studentId: state.uri.queryParameters['student-id']);
+
+  TopUpRoute get _self => this as TopUpRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/my-wallet/top-up',
+    queryParams: {if (_self.studentId != null) 'student-id': _self.studentId},
+  );
 
   @override
   void go(BuildContext context) => context.go(location);
