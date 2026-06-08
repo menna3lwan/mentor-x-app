@@ -55,7 +55,7 @@ final class MockParentAccountStatusRepository
   Future<ParentEntity?> refreshAuthenticatedUser() async {
     await Future<void>.delayed(delay);
     if (_cachedUser == null) return null;
-    return _cachedUser!.copyWith(status: _status);
+    return _cachedUser.copyWith(status: _status);
   }
 
   /// Test/dev hook to nudge the mock state without waiting for the auto
