@@ -2,13 +2,13 @@ name: dio_student_communication_repository
 description: A Dio implementation of the StudentCommunicationRepository for MentorX.
 version: 0.0.1
 publish_to: none
+resolution: workspace
 
 environment:
-  sdk: ^3.0.0
+  sdk: ^3.11.4
 
 dependencies:
-  flutter:
-    sdk: flutter
   mentorx_core:
     path: ../../mentorx_core
-  dio: ^5.4.0
+  dio_http_client:
+    path: ../../clients/dio_http_client

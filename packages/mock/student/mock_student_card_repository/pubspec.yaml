@@ -2,9 +2,10 @@ name: mock_student_card_repository
 description: A mock implementation of the Student Card repository.
 version: 0.0.1
 publish_to: none
+resolution: workspace
 
 environment:
-  sdk: ^3.6.0
+  sdk: ^3.11.4
 
 dependencies:
   mentorx_core:

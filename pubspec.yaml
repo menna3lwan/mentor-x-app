@@ -22,7 +22,7 @@ workspace:
   # Mock data
   - packages/mock_data
 
-  # Dio repositories
+  # Dio repositories (student)
   - packages/student/dio_authentication_repository
   - packages/student/dio_home_repository
   - packages/student/dio_course_repository
@@ -40,8 +40,11 @@ workspace:
   - packages/student/dio_settings_repository
   - packages/student/dio_student_registration_repository
   - packages/student/dio_leaderboard_repository
+  - packages/student/dio_student_analytics_repository
+  - packages/student/dio_student_card_repository
+  - packages/student/dio_student_communication_repository
 
-  # Mock repositories
+  # Mock repositories (student)
   - packages/mock/student/mock_authentication_repository
   - packages/mock/student/mock_home_repository
   - packages/mock/student/mock_course_repository
@@ -59,8 +62,11 @@ workspace:
   - packages/mock/student/mock_announcement_repository
   - packages/mock/student/mock_student_registration_repository
   - packages/mock/student/mock_leaderboard_repository
+  - packages/mock/student/mock_student_analytics_repository
+  - packages/mock/student/mock_student_card_repository
+  - packages/mock/student/mock_student_communication_repository
 
-  # Dio repositories
+  # Dio repositories (parent)
   - packages/parent/dio_authentication_repository
   - packages/parent/dio_home_repository
   - packages/parent/dio_children_repository
@@ -69,13 +75,19 @@ workspace:
   - packages/parent/dio_attendance_repository
   - packages/parent/dio_grade_repository
   - packages/parent/dio_communication_repository
-  - packages/parent/dio_profile_repository
+  - packages/parent/dio_notification_repository
+  - packages/parent/dio_parent_profile_repository
   - packages/parent/dio_parent_analytics_repository
+  - packages/parent/dio_parent_attendance_groups_repository
+  - packages/parent/dio_parent_devices_repository
+  - packages/parent/dio_parent_account_status_repository
+  - packages/parent/dio_parent_account_deletion_repository
 
   # Services
   - packages/services/analytics_service
   - packages/services/device_info_service
   - packages/services/error_tracking_service
+  - packages/services/push_notification_service
 
   # Common
   - packages/common/onboarding_repository
@@ -89,6 +101,12 @@ workspace:
   - packages/mock/parent/mock_attendance_repository
   - packages/mock/parent/mock_grade_repository
   - packages/mock/parent/mock_communication_repository
+  - packages/mock/parent/mock_parent_profile_repository
+  - packages/mock/parent/mock_parent_analytics_repository
+  - packages/mock/parent/mock_parent_attendance_groups_repository
+  - packages/mock/parent/mock_parent_devices_repository
+  - packages/mock/parent/mock_parent_account_status_repository
+  - packages/mock/parent/mock_parent_account_deletion_repository
 
 dependency_overrides:
   test_api: ^0.7.7
