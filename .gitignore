@@ -93,6 +93,7 @@ migrate_working_dir/
 **/ios/GoogleMapsApiKey.xcconfig
 
 # User specific
+**/.agents/**
 *.env
 **/instructions/**
 **/documentation/**
@@ -103,7 +104,12 @@ mentorx/ios/Runner/GoogleService-Info.plist
 mentorx/android/app/google-services.json
 mentorx/firebase.json
 mentorx/lib/firebase_options.dart
-
+api_tests
+scratch
 google-services.json
 GoogleService-Info.plist
 firebase_options.dart
+
+mentor-x-backend
+CLAUDE.md
+greeno
