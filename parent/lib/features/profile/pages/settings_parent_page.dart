@@ -132,6 +132,12 @@ class _SettingsViewState extends State<_SettingsView> {
                 value: t.devices.settingsSubtitle,
                 onTap: () => const DevicesRoute().go(context),
               ),
+              ProfileTileWidget(
+                icon: Icons.delete_forever_rounded,
+                label: t.deleteAccount.settingsTileLabel,
+                value: t.deleteAccount.settingsTileSubtitle,
+                onTap: () => const DeleteAccountRoute().go(context),
+              ),
             ],
           ),
           const Gap(24),

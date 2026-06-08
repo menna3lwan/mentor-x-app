@@ -1015,6 +1015,8 @@ class _TranslationsParentAr implements TranslationsParentEn {
 	@override late final _TranslationsParentProfileAr profile = _TranslationsParentProfileAr._(_root);
 	@override late final _TranslationsParentPushNotificationsAr pushNotifications = _TranslationsParentPushNotificationsAr._(_root);
 	@override late final _TranslationsParentDevicesAr devices = _TranslationsParentDevicesAr._(_root);
+	@override late final _TranslationsParentPendingAccountAr pendingAccount = _TranslationsParentPendingAccountAr._(_root);
+	@override late final _TranslationsParentDeleteAccountAr deleteAccount = _TranslationsParentDeleteAccountAr._(_root);
 	@override late final _TranslationsParentCommunicationAr communication = _TranslationsParentCommunicationAr._(_root);
 	@override late final _TranslationsParentAnalyticsAr analytics = _TranslationsParentAnalyticsAr._(_root);
 	@override late final _TranslationsParentAcademicAr academic = _TranslationsParentAcademicAr._(_root);
@@ -1643,6 +1645,100 @@ class _TranslationsParentPushNotificationsAr implements TranslationsParentPushNo
 	@override String get bannerDismiss => 'تجاهل';
 	@override String get permissionDeniedMessage =>
 		'تم رفض إذن الإشعارات. يمكنك تفعيله من إعدادات جهازك.';
+}
+
+// Path: parent.deleteAccount
+class _TranslationsParentDeleteAccountAr implements TranslationsParentDeleteAccountEn {
+	_TranslationsParentDeleteAccountAr._(this._root);
+
+	final TranslationsAr _root; // ignore: unused_field
+
+	@override String get settingsTileLabel => 'حذف حسابي';
+	@override String get settingsTileSubtitle => 'إزالة حسابك بشكل دائم';
+	@override String get pageTitle => 'حذف الحساب';
+	@override String get warningTitle => 'هذا الإجراء نهائي';
+	@override String get warningSubtitle =>
+		'حذف حسابك لا يمكن التراجع عنه. يرجى مراجعة العواقب أدناه قبل المتابعة.';
+	@override String get consequencesTitle => 'ما الذي سيتم حذفه';
+	@override String get consequence1 =>
+		'ملفك الشخصي وبيانات تسجيل الدخول.';
+	@override String get consequence2 =>
+		'الأبناء المرتبطون بحسابك وسجل الحضور والدرجات.';
+	@override String get consequence3 =>
+		'رصيد المحفظة والمعاملات وطرق الدفع.';
+	@override String get consequence4 =>
+		'جميع الإشعارات والإعلانات والتفضيلات المحفوظة.';
+	@override String get reasonLabel => 'لماذا تغادر؟ (اختياري)';
+	@override String get reasonHint => 'أخبرنا كيف كان بإمكاننا تقديم أفضل.';
+	@override String get dataExportLabel => 'أرسل لي نسخة من بياناتي أولاً';
+	@override String get dataExportHint =>
+		'سنرسل لك نسخة من بياناتك بالبريد الإلكتروني قبل الحذف. اختياري ويمكن طلبه لاحقًا.';
+	@override String get acknowledgementLabel =>
+		'أنا أفهم أن هذا الإجراء نهائي ولا يمكن التراجع عنه.';
+	@override String get confirmationPhrase => 'حذف';
+	@override String confirmationPrompt({required Object phrase}) =>
+		'اكتب ${phrase} للتأكيد';
+	@override String get confirmAction => 'حذف حسابي';
+	@override String get submitting => 'جاري الإرسال...';
+	@override String get cancel => 'إلغاء';
+	@override String get finalConfirmTitle => 'حذف الحساب؟';
+	@override String get finalConfirmMessage =>
+		'ستتم جدولة بياناتك للحذف الدائم فورًا.';
+	@override String get successMessage => 'تم إرسال طلب الحذف الخاص بك.';
+	@override String get validationError =>
+		'يرجى التأكيد بتحديد المربع وكتابة العبارة بدقة.';
+	@override String get networkError =>
+		'تعذر الوصول إلى الخادم. يرجى التحقق من الاتصال والمحاولة مرة أخرى.';
+	@override String get unauthorizedError =>
+		'انتهت جلستك. يرجى تسجيل الدخول مرة أخرى.';
+	@override String get unknownError => 'حدث خطأ ما. يرجى المحاولة مرة أخرى.';
+}
+
+// Path: parent.pendingAccount
+class _TranslationsParentPendingAccountAr implements TranslationsParentPendingAccountEn {
+	_TranslationsParentPendingAccountAr._(this._root);
+
+	final TranslationsAr _root; // ignore: unused_field
+
+	@override String get pageTitle => 'الحساب قيد المراجعة';
+	@override String get headline => 'حسابك قيد المراجعة';
+	@override String get headlinePending => 'حسابك قيد المراجعة';
+	@override String get headlineRejected => 'حسابك يحتاج إلى مراجعتك';
+	@override String get subtitle =>
+		'تم استلام طلب التسجيل. فريقنا يقوم بمراجعة بياناتك وسيتم تفعيل حسابك قريبًا.';
+	@override String get subtitlePending =>
+		'فريقنا يقوم بمراجعة بياناتك وسيتم تفعيل حسابك قريبًا.';
+	@override String get subtitleRejected =>
+		'تعذرت الموافقة على حسابك في الوقت الحالي. يرجى التواصل مع الدعم لحل المشكلة.';
+	@override String get statusBadgePending => 'قيد المراجعة';
+	@override String get statusBadgeRejected => 'يتطلب إجراءً';
+	@override String submittedOn({required Object date}) => 'تم الإرسال في ${date}';
+	@override String estimatedReviewBy({required Object date}) =>
+		'موعد المراجعة المتوقع ${date}';
+	@override String get rejectionReasonTitle => 'السبب';
+	@override String get checkAgain => 'تحقق مرة أخرى';
+	@override String get checking => 'جاري التحقق...';
+	@override String get contactSupport => 'تواصل مع الدعم';
+	@override String get contactSupportHint =>
+		'إذا كانت لديك استفسارات حول التسجيل، يرجى التواصل مع فريق الدعم.';
+	@override String get signOut => 'تسجيل الخروج';
+	@override String get signOutConfirmTitle => 'تسجيل الخروج؟';
+	@override String get signOutConfirmMessage =>
+		'سيتم تسجيل خروجك والعودة إلى شاشة تسجيل الدخول.';
+	@override String get approvedToastTitle => 'تمت الموافقة!';
+	@override String get approvedToastMessage =>
+		'مرحبًا بك في MentorX. تم تفعيل حسابك.';
+	@override String get loadErrorTitle => 'تعذر التحقق من حالة حسابك';
+	@override String get loadErrorMessage =>
+		'لم نتمكن من جلب حالة حسابك الحالية. يرجى التحقق من اتصالك والمحاولة مرة أخرى.';
+	@override String get stepReceived => 'تم استلام الطلب';
+	@override String get stepReceivedHint => 'تم تسجيل طلبك في نظامنا.';
+	@override String get stepUnderReview => 'قيد المراجعة';
+	@override String get stepUnderReviewHint => 'فريقنا يقوم بمراجعة بياناتك.';
+	@override String get stepApproved => 'تمت الموافقة';
+	@override String get stepApprovedHint => 'حسابك نشط وجاهز للاستخدام.';
+	@override String get supportLabel => 'الدعم';
+	@override String get cancel => 'إلغاء';
 }
 
 // Path: parent.profile

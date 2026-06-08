@@ -13,6 +13,8 @@ import '../../features/attendance_groups/pages/attendance_group_detail_page_wrap
 import '../../features/attendance_groups/pages/attendance_groups_page_wrapper.dart';
 import '../../features/courses/pages/course_progress_detail_page_wrapper.dart';
 import '../../features/devices/pages/devices_page_wrapper.dart';
+import '../../features/account_status/pages/pending_account_page_wrapper.dart';
+import '../../features/account_deletion/pages/delete_account_page_wrapper.dart';
 import '../../features/notifications/pages/notifications_parent_page.dart';
 import '../../features/communication/pages/announcements_archive_page.dart';
 import '../../features/communication/pages/whatsapp_groups_parent_page.dart';
@@ -263,6 +265,22 @@ class DevicesRoute extends GoRouteData with $DevicesRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const DevicesPageWrapper();
+}
+
+@TypedGoRoute<PendingAccountRoute>(path: '/pending-account')
+class PendingAccountRoute extends GoRouteData with $PendingAccountRoute {
+  const PendingAccountRoute();
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const PendingAccountPageWrapper();
+}
+
+@TypedGoRoute<DeleteAccountRoute>(path: '/profile/delete-account')
+class DeleteAccountRoute extends GoRouteData with $DeleteAccountRoute {
+  const DeleteAccountRoute();
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const DeleteAccountPageWrapper();
 }
 
 @TypedGoRoute<MyWalletRoute>(path: '/my-wallet')

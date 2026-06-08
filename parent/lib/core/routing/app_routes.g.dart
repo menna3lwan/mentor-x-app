@@ -32,6 +32,8 @@ List<RouteBase> get $appRoutes => [
   $settingsRoute,
   $changePasswordRoute,
   $devicesRoute,
+  $pendingAccountRoute,
+  $deleteAccountRoute,
   $myWalletRoute,
   $topUpRoute,
 ];
@@ -689,6 +691,58 @@ mixin $DevicesRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/profile/devices');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $pendingAccountRoute => GoRouteData.$route(
+  path: '/pending-account',
+  factory: $PendingAccountRoute._fromState,
+);
+
+mixin $PendingAccountRoute on GoRouteData {
+  static PendingAccountRoute _fromState(GoRouterState state) =>
+      const PendingAccountRoute();
+
+  @override
+  String get location => GoRouteData.$location('/pending-account');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $deleteAccountRoute => GoRouteData.$route(
+  path: '/profile/delete-account',
+  factory: $DeleteAccountRoute._fromState,
+);
+
+mixin $DeleteAccountRoute on GoRouteData {
+  static DeleteAccountRoute _fromState(GoRouterState state) =>
+      const DeleteAccountRoute();
+
+  @override
+  String get location => GoRouteData.$location('/profile/delete-account');
 
   @override
   void go(BuildContext context) => context.go(location);

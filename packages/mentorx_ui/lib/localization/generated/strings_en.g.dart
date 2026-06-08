@@ -1280,6 +1280,8 @@ class TranslationsParentEn {
 	late final TranslationsParentProfileEn profile = TranslationsParentProfileEn._(_root);
 	late final TranslationsParentPushNotificationsEn pushNotifications = TranslationsParentPushNotificationsEn._(_root);
 	late final TranslationsParentDevicesEn devices = TranslationsParentDevicesEn._(_root);
+	late final TranslationsParentPendingAccountEn pendingAccount = TranslationsParentPendingAccountEn._(_root);
+	late final TranslationsParentDeleteAccountEn deleteAccount = TranslationsParentDeleteAccountEn._(_root);
 	late final TranslationsParentCommunicationEn communication = TranslationsParentCommunicationEn._(_root);
 	late final TranslationsParentAnalyticsEn analytics = TranslationsParentAnalyticsEn._(_root);
 	late final TranslationsParentAcademicEn academic = TranslationsParentAcademicEn._(_root);
@@ -2565,6 +2567,99 @@ class TranslationsParentPushNotificationsEn {
 	/// en: 'Push permission was denied. You can enable it from your device settings.'
 	String get permissionDeniedMessage =>
 		'Push permission was denied. You can enable it from your device settings.';
+}
+
+// Path: parent.deleteAccount
+class TranslationsParentDeleteAccountEn {
+	TranslationsParentDeleteAccountEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	String get settingsTileLabel => 'Delete my account';
+	String get settingsTileSubtitle => 'Permanently remove your account';
+	String get pageTitle => 'Delete account';
+	String get warningTitle => 'This action is permanent';
+	String get warningSubtitle =>
+		'Deleting your account cannot be undone. Please review the consequences below before proceeding.';
+	String get consequencesTitle => 'What gets deleted';
+	String get consequence1 => 'Your parent profile and login credentials.';
+	String get consequence2 =>
+		'Your linked children, attendance history, and grades.';
+	String get consequence3 =>
+		'Your wallet balance, transactions, and payment methods.';
+	String get consequence4 =>
+		'All notifications, announcements, and saved preferences.';
+	String get reasonLabel => 'Why are you leaving? (Optional)';
+	String get reasonHint => 'Tell us how we could have done better.';
+	String get dataExportLabel => 'Send me a copy of my data first';
+	String get dataExportHint =>
+		'We\'ll email you an export before deletion. Optional and can be requested separately later.';
+	String get acknowledgementLabel =>
+		'I understand this action is permanent and irreversible.';
+	String get confirmationPhrase => 'DELETE';
+	String confirmationPrompt({required Object phrase}) =>
+		'Type ${phrase} to confirm';
+	String get confirmAction => 'Delete my account';
+	String get submitting => 'Submitting...';
+	String get cancel => 'Cancel';
+	String get finalConfirmTitle => 'Delete account?';
+	String get finalConfirmMessage =>
+		'Your data will be queued for permanent deletion immediately.';
+	String get successMessage => 'Your deletion request has been submitted.';
+	String get validationError =>
+		'Please confirm by ticking the box and typing the phrase exactly.';
+	String get networkError =>
+		'We couldn\'t reach the server. Please check your connection and try again.';
+	String get unauthorizedError =>
+		'Your session expired. Please sign in again.';
+	String get unknownError => 'Something went wrong. Please try again.';
+}
+
+// Path: parent.pendingAccount
+class TranslationsParentPendingAccountEn {
+	TranslationsParentPendingAccountEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	String get pageTitle => 'Account Pending';
+	String get headline => 'Your account is under review';
+	String get headlinePending => 'Your account is under review';
+	String get headlineRejected => 'Your account needs attention';
+	String get subtitle =>
+		'Your registration has been received. Our team is verifying your details and will activate your account shortly.';
+	String get subtitlePending =>
+		'Our team is verifying your details and will activate your account shortly.';
+	String get subtitleRejected =>
+		'Your account couldn\'t be approved at this time. Please contact support to resolve this.';
+	String get statusBadgePending => 'Pending review';
+	String get statusBadgeRejected => 'Action required';
+	String submittedOn({required Object date}) => 'Submitted on ${date}';
+	String estimatedReviewBy({required Object date}) =>
+		'Estimated review by ${date}';
+	String get rejectionReasonTitle => 'Reason';
+	String get checkAgain => 'Check again';
+	String get checking => 'Checking...';
+	String get contactSupport => 'Contact support';
+	String get contactSupportHint =>
+		'If you have questions about your registration, please reach out to our support team.';
+	String get signOut => 'Sign out';
+	String get signOutConfirmTitle => 'Sign out?';
+	String get signOutConfirmMessage =>
+		'You will be signed out and returned to the login screen.';
+	String get approvedToastTitle => 'You\'re approved!';
+	String get approvedToastMessage =>
+		'Welcome to MentorX. Your account has been activated.';
+	String get loadErrorTitle => 'Couldn\'t check your status';
+	String get loadErrorMessage =>
+		'We couldn\'t fetch your current account status. Please check your connection and try again.';
+	String get stepReceived => 'Application received';
+	String get stepReceivedHint => 'Your registration is in our system.';
+	String get stepUnderReview => 'Under review';
+	String get stepUnderReviewHint => 'Our team is verifying your details.';
+	String get stepApproved => 'Approved';
+	String get stepApprovedHint => 'Your account is active and ready to use.';
+	String get supportLabel => 'Support';
+	String get cancel => 'Cancel';
 }
 
 // Path: parent.profile

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mentorx_core/mentorx_core.dart';
 
 import '../blocs/app_authentication_cubit/app_authentication_cubit.dart';
 import 'app_routes.dart';
@@ -67,6 +68,8 @@ final class AppRouter {
     final isAuthenticated = authenticationCubit.isAuthenticated;
     final location = state.matchedLocation;
     final isPublic = _isPublicLocation(location);
+    final user = authenticationCubit.state.user;
+    final isPending = user?.status == ParentStatus.pending;
 
     // Splash (`/`) handles its own redirect logic — let it through.
     if (location == '/') return null;
@@ -75,13 +78,26 @@ final class AppRouter {
       return '/login';
     }
 
+    // Gating: a parent whose account is still in `pending` review is
+    // confined to `/pending-account`. The page itself owns the polling +
+    // promotion flow; once the [AppAuthenticationCubit] receives the
+    // refreshed user the redirect re-evaluates and routes them onward.
+    if (isAuthenticated && isPending && location != '/pending-account') {
+      return '/pending-account';
+    }
+
+    // Conversely, an already-active user should never see the pending gate.
+    if (isAuthenticated && !isPending && location == '/pending-account') {
+      return '/home';
+    }
+
     // Block authenticated users from re-entering auth screens (apart from
     // splash which they may have refreshed into).
     if (isAuthenticated &&
         (location == '/login' ||
             location == '/onboarding' ||
             location == '/register')) {
-      return '/home';
+      return isPending ? '/pending-account' : '/home';
     }
 
     return null;

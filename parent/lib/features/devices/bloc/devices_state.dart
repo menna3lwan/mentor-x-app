@@ -9,6 +9,7 @@ extension DevicesStatusX on DevicesStatus {
   bool get isFailure => this == DevicesStatus.failure;
 }
 
+
 final class DevicesState extends Equatable {
   final DevicesStatus status;
   final List<DeviceEntity> devices;

@@ -86,7 +86,7 @@ class ParentProfilePage extends StatelessWidget {
                     icon: Icons.security_rounded,
                     label: t.security,
                     value: t.profile.securityValue,
-                    onTap: () {},
+                    onTap: () => const SettingsRoute().go(context),
                   ),
                 ],
               ),
