@@ -54,6 +54,7 @@ final class CourseCatalogBloc
       state.copyWith(
         gradesStatus: CatalogSectionStatus.loading,
         categoriesStatus: CatalogSectionStatus.loading,
+        coursesStatus: CatalogSectionStatus.loading,
       ),
     );
     try {
@@ -82,6 +83,7 @@ final class CourseCatalogBloc
         selectedGradeId: event.gradeId,
         clearGrade: event.gradeId == null,
         clearCategory: true,
+        coursesStatus: CatalogSectionStatus.loading,
       ),
     );
     await _loadCategories(emit: emit);

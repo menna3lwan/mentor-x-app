@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
+import 'package:mentorx_student/app/student_app.dart';
 import 'package:mentorx_student/core/core.dart';
 
 part 'profile_view_event.dart';
@@ -34,6 +35,13 @@ final class ProfileViewBloc extends Bloc<ProfileViewEvent, ProfileViewState>
     _logger.info('_onLoad entered');
     emit(state.copyWith(loadingState: LoadingState.loading));
     analyticsService.logEvent(name: AnalyticsEvents.profileViewed);
-    emit(state.copyWith(loadingState: LoadingState.loaded));
+    try {
+      final updatedUser = await profileRepository.getProfile();
+      appEventBus.fire(AppAuthenticationUpdateEvent(user: updatedUser));
+      emit(state.copyWith(loadingState: LoadingState.loaded));
+    } catch (e, s) {
+      _logger.error('Failed to load profile', e, s);
+      emit(state.copyWith(loadingState: LoadingState.error));
+    }
   }
 }

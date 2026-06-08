@@ -28,13 +28,18 @@ final class ProfileViewPageWrapper extends StatelessWidget {
             Navigator.of(context).pop();
         }
       },
-      child: ProfileViewPage(
-        session: session,
-        avatarUrl: user?.profileImageUrl,
-        onLogout: () {
-          final authCubit = context.read<AppAuthenticationCubit>();
-          authCubit.logout();
-          const LoginRoute().go(context);
+      child: BlocBuilder<ProfileViewBloc, ProfileViewState>(
+        builder: (context, state) {
+          return ProfileViewPage(
+            session: session,
+            avatarUrl: user?.profileImageUrl,
+            isLoading: state.loadingState == LoadingState.loading,
+            onLogout: () {
+              final authCubit = context.read<AppAuthenticationCubit>();
+              authCubit.logout();
+              const LoginRoute().go(context);
+            },
+          );
         },
       ),
     );

@@ -8,6 +8,15 @@ class SentryErrorTrackingService implements ErrorTrackingService {
     // This method can be used for any post-initialization setup if needed.
   }
 
+  Hint? _toSentryHint(dynamic hint) {
+    if (hint == null) return null;
+    if (hint is Hint) return hint;
+    if (hint is Map<String, dynamic>) {
+      return Hint.withMap(hint);
+    }
+    return Hint.withMap({'message': hint});
+  }
+
   @override
   Future<void> captureException(
     dynamic exception, {
@@ -17,7 +26,7 @@ class SentryErrorTrackingService implements ErrorTrackingService {
     await Sentry.captureException(
       exception,
       stackTrace: stackTrace,
-      hint: hint,
+      hint: _toSentryHint(hint),
     );
   }
 
@@ -28,7 +37,7 @@ class SentryErrorTrackingService implements ErrorTrackingService {
   }) async {
     await Sentry.captureMessage(
       message,
-      hint: hint,
+      hint: _toSentryHint(hint),
     );
   }
 

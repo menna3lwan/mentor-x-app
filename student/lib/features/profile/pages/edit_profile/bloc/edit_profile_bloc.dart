@@ -131,7 +131,7 @@ final class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState>
       analyticsService.logEvent(
         name: AnalyticsEvents.profileEditRequested,
         parameters: {
-          'batch_update': true,
+          'batch_update': 'true',
         },
       );
       emitPresentation(const EditProfileSuccess());

@@ -8,11 +8,13 @@ final class ProfileViewPage extends StatelessWidget {
   final AppSessionState session;
   final String? avatarUrl;
   final VoidCallback onLogout;
+  final bool isLoading;
 
   const ProfileViewPage({
     super.key,
     required this.session,
     required this.onLogout,
+    this.isLoading = false,
     this.avatarUrl,
   });
 
@@ -20,33 +22,42 @@ final class ProfileViewPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppDashboardScaffold(
       title: context.t.profile.title,
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.fromLTRB(24, 8, 24, 120),
-        child: Column(
-          children: [
-            FadeInDown(
-              duration: const Duration(milliseconds: 600),
-              child: _ProfileSummary(
-                session: session,
-                avatarUrl: avatarUrl,
+      body: isLoading
+          ? Center(
+              child: CircularProgressIndicator(
+                strokeWidth: 2.5,
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  context.brandPrimaryColor,
+                ),
+              ),
+            )
+          : SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              padding: const EdgeInsets.fromLTRB(24, 8, 24, 120),
+              child: Column(
+                children: [
+                  FadeInDown(
+                    duration: const Duration(milliseconds: 600),
+                    child: _ProfileSummary(
+                      session: session,
+                      avatarUrl: avatarUrl,
+                    ),
+                  ),
+                  const Gap(32),
+                  FadeInUp(
+                    duration: const Duration(milliseconds: 600),
+                    delay: const Duration(milliseconds: 100),
+                    child: _InfoSection(session: session),
+                  ),
+                  const Gap(32),
+                  FadeInUp(
+                    duration: const Duration(milliseconds: 600),
+                    delay: const Duration(milliseconds: 200),
+                    child: _ActionsSection(onLogout: onLogout),
+                  ),
+                ],
               ),
             ),
-            const Gap(32),
-            FadeInUp(
-              duration: const Duration(milliseconds: 600),
-              delay: const Duration(milliseconds: 100),
-              child: _InfoSection(session: session),
-            ),
-            const Gap(32),
-            FadeInUp(
-              duration: const Duration(milliseconds: 600),
-              delay: const Duration(milliseconds: 200),
-              child: _ActionsSection(onLogout: onLogout),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
