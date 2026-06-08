@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 
 /// Pure-layout edit-profile screen. All state and side effects live in the

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
-import 'package:gap/gap.dart';
 
 /// Shown on the parent home when the parent hasn't linked any children yet.
 class NoChildrenLinkedState extends StatelessWidget {

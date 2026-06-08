@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
-import 'package:gap/gap.dart';
 import '../../../../core/core.dart';
 import 'bloc/login_bloc.dart';
 import '../../../../core/routing/app_routes.dart';

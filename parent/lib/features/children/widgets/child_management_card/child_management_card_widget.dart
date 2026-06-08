@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
-import 'package:gap/gap.dart';
 
 /// Single row in the linked-children list. Shows the child avatar, name,
 /// student id, optional grade/center info, and an unlink trailing button.

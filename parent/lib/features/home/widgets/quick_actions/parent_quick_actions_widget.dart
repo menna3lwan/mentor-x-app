@@ -1,7 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
-import 'package:gap/gap.dart';
 
 /// One entry in the quick-actions grid.
 class ParentQuickAction {

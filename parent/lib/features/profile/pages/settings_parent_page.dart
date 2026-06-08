@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
-import 'package:push_notification_service/push_notification_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/blocs/app_brightness_cubit/app_brightness_cubit.dart';

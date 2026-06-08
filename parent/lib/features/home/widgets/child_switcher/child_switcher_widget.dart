@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
-import 'package:gap/gap.dart';
 
 /// Horizontal avatar carousel that lets a parent swap between their linked
 /// children. Purely presentational — the wrapper provides the data and

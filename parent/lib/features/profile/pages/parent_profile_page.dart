@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gap/gap.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
-import 'package:mix/mix.dart';
 
 import '../../../core/blocs/app_authentication_cubit/app_authentication_cubit.dart';
 import '../../../core/routing/app_routes.dart';

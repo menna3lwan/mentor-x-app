@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
-import 'package:gap/gap.dart';
 
 /// Reusable row inside a [ProfileSection]: icon + label + value + optional
 /// chevron when tappable.

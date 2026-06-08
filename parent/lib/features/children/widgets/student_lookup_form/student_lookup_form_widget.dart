@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
-import 'package:gap/gap.dart';
 
 /// A search row (text field + submit button) used to look up a child by
 /// admission code or phone number.

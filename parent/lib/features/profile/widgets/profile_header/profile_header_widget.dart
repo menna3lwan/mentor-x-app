@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
-import 'package:gap/gap.dart';
 
 /// Top portion of the profile screen — avatar + name + verified badge.
 class ProfileHeaderWidget extends StatelessWidget {

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 
 /// Card frame used for every analytics section. Provides title + body slot

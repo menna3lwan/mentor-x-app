@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 
 /// Pure-layout view of a single course's progress. State + DI live in
