@@ -55,70 +55,18 @@ final class DioAuthenticationRepository
     String? appVersion,
   }) async {
     // ─────────────────────────────────────────────────────────────────────
-    // API-CONTRACT (KNOWN MISMATCH):
-    // The EduCore Postman collection ONLY documents an OTP-based parent
-    // login flow:
-    //   POST /api/parent/start-login    body: { phone }
-    //   POST /api/parent/complete-login body: { phone, otp }
-    // A password-based parent login endpoint is NOT documented.
+    // API-CONTRACT (Swagger): parent login is OTP-based.
     //
-    // This implementation still posts the password to the legacy
-    // /api/parent/login (and /api/auth/parent/login) for backward
-    // compatibility with builds that supported it. If the backend rejects
-    // it with 404/405, the call escalates as `otpRequired` so the UI
-    // switches to the OTP flow (sendOtp + verifyOtp).
+    //   POST /api/parent/start-login    body: { parentPhone }
+    //   POST /api/parent/complete-login body: { parentPhone, otp }
+    //
+    // The login form still collects a password for backward compatibility
+    // with older UI builds, but the backend flow now starts by sending the
+    // login code and then switching the UI to the OTP screen.
     // ─────────────────────────────────────────────────────────────────────
     try {
-      final payload = {
-        'phone': phone,
-        'password': password,
-        if (deviceHash != null) 'device_hash': deviceHash,
-        if (deviceName != null) 'device_name': deviceName,
-        if (fcmToken != null) 'fcm_token': fcmToken,
-        if (appVersion != null) 'app_version': appVersion,
-      };
-
-      HttpClientResponse response;
-      try {
-        response = await httpClient.post('/api/parent/login', data: payload);
-      } on HttpClientResponse catch (e) {
-        if (e.statusCode != 404 && e.statusCode != 405) rethrow;
-        try {
-          response = await httpClient.post(
-            '/api/auth/parent/login',
-            data: payload,
-          );
-        } on HttpClientResponse catch (e2) {
-          if (e2.statusCode != 404 && e2.statusCode != 405) rethrow;
-          // Neither password path exists on this backend — trigger the OTP
-          // flow now so the user actually receives the SMS by the time the
-          // UI lands on the OTP page, then surface `otpRequired` to the
-          // caller so it switches screens.
-          try {
-            await sendOtp(phone);
-          } catch (sendOtpError, sendOtpStack) {
-            _logger.error(
-              'Auto-sendOtp during login escalation failed: $sendOtpError',
-              sendOtpError,
-              sendOtpStack,
-            );
-          }
-          throw const _Exception(code: _ExceptionCode.otpRequired);
-        }
-      }
-
-      final data = _extractDataMap(response.data);
-      _setTokensIfPresent(data);
-
-      final hasLinkedChildren = _extractHasLinkedChildren(data);
-      await cacheRepository.put(
-        _hasLinkedChildrenCacheKey,
-        hasLinkedChildren.toString(),
-      );
-
-      final user = ParentModel.fromJson(data);
-      await _cacheUser(user);
-      return user;
+      await sendOtp(phone);
+      throw const _Exception(code: _ExceptionCode.otpRequired);
     } on HttpClientResponse catch (e) {
       handleHttpClientErrorResponse(
         e,
@@ -591,19 +539,5 @@ final class DioAuthenticationRepository
     }
 
     return root;
-  }
-
-  bool _extractHasLinkedChildren(Map<String, dynamic> data) {
-    final children = data['children'];
-    if (children is List) {
-      return children.isNotEmpty;
-    }
-
-    final count = intOrNull(data['children_count'] ?? data['childrenCount']);
-    if (count != null) {
-      return count > 0;
-    }
-
-    return boolOrFalse(data['has_children'] ?? data['hasChildren']);
   }
 }
