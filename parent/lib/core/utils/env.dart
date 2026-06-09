@@ -44,119 +44,37 @@ final class Env {
   // network stack. Override per-repository to `mock` via `.env` to develop
   // against fixtures.
   static final RepositoryMode authenticationRepositoryMode =
-      RepositoryMode.fromString(
-        const String.fromEnvironment(
-          'AUTHENTICATION_REPOSITORY_MODE',
-          defaultValue: 'prod',
-        ),
-      );
+      RepositoryMode.prod;
 
-  static final RepositoryMode homeRepositoryMode = RepositoryMode.fromString(
-    const String.fromEnvironment(
-      'HOME_REPOSITORY_MODE',
-      defaultValue: 'prod',
-    ),
-  );
+  static final RepositoryMode homeRepositoryMode = RepositoryMode.prod;
 
-  static final RepositoryMode childrenRepositoryMode =
-      RepositoryMode.fromString(
-        const String.fromEnvironment(
-          'CHILDREN_REPOSITORY_MODE',
-          defaultValue: 'prod',
-        ),
-      );
+  static final RepositoryMode childrenRepositoryMode = RepositoryMode.prod;
 
-  static final RepositoryMode financialRepositoryMode =
-      RepositoryMode.fromString(
-        const String.fromEnvironment(
-          'FINANCIAL_REPOSITORY_MODE',
-          defaultValue: 'prod',
-        ),
-      );
+  static final RepositoryMode financialRepositoryMode = RepositoryMode.prod;
 
-  static final RepositoryMode courseRepositoryMode = RepositoryMode.fromString(
-    const String.fromEnvironment(
-      'COURSE_REPOSITORY_MODE',
-      defaultValue: 'prod',
-    ),
-  );
+  static final RepositoryMode courseRepositoryMode = RepositoryMode.prod;
 
-  static final RepositoryMode attendanceRepositoryMode =
-      RepositoryMode.fromString(
-        const String.fromEnvironment(
-          'ATTENDANCE_REPOSITORY_MODE',
-          defaultValue: 'prod',
-        ),
-      );
+  static final RepositoryMode attendanceRepositoryMode = RepositoryMode.prod;
 
-  static final RepositoryMode gradeRepositoryMode = RepositoryMode.fromString(
-    const String.fromEnvironment(
-      'GRADE_REPOSITORY_MODE',
-      defaultValue: 'prod',
-    ),
-  );
+  static final RepositoryMode gradeRepositoryMode = RepositoryMode.prod;
 
-  static final RepositoryMode communicationRepositoryMode =
-      RepositoryMode.fromString(
-        const String.fromEnvironment(
-          'COMMUNICATION_REPOSITORY_MODE',
-          defaultValue: 'prod',
-        ),
-      );
+  static final RepositoryMode communicationRepositoryMode = RepositoryMode.prod;
 
-  static final RepositoryMode notificationRepositoryMode =
-      RepositoryMode.fromString(
-        const String.fromEnvironment(
-          'NOTIFICATION_REPOSITORY_MODE',
-          defaultValue: 'prod',
-        ),
-      );
+  static final RepositoryMode notificationRepositoryMode = RepositoryMode.prod;
 
-  static final RepositoryMode profileRepositoryMode = RepositoryMode.fromString(
-    const String.fromEnvironment(
-      'PROFILE_REPOSITORY_MODE',
-      defaultValue: 'prod',
-    ),
-  );
+  static final RepositoryMode profileRepositoryMode = RepositoryMode.prod;
 
-  static final RepositoryMode analyticsRepositoryMode =
-      RepositoryMode.fromString(
-        const String.fromEnvironment(
-          'ANALYTICS_REPOSITORY_MODE',
-          defaultValue: 'prod',
-        ),
-      );
+  static final RepositoryMode analyticsRepositoryMode = RepositoryMode.prod;
 
   static final RepositoryMode attendanceGroupsRepositoryMode =
-      RepositoryMode.fromString(
-        const String.fromEnvironment(
-          'ATTENDANCE_GROUPS_REPOSITORY_MODE',
-          defaultValue: 'prod',
-        ),
-      );
+      RepositoryMode.prod;
 
-  static final RepositoryMode devicesRepositoryMode = RepositoryMode.fromString(
-    const String.fromEnvironment(
-      'DEVICES_REPOSITORY_MODE',
-      defaultValue: 'prod',
-    ),
-  );
+  static final RepositoryMode devicesRepositoryMode = RepositoryMode.prod;
 
-  static final RepositoryMode accountStatusRepositoryMode =
-      RepositoryMode.fromString(
-        const String.fromEnvironment(
-          'ACCOUNT_STATUS_REPOSITORY_MODE',
-          defaultValue: 'prod',
-        ),
-      );
+  static final RepositoryMode accountStatusRepositoryMode = RepositoryMode.prod;
 
   static final RepositoryMode accountDeletionRepositoryMode =
-      RepositoryMode.fromString(
-        const String.fromEnvironment(
-          'ACCOUNT_DELETION_REPOSITORY_MODE',
-          defaultValue: 'prod',
-        ),
-      );
+      RepositoryMode.prod;
 
   // ──────────────────────── Mock-only knobs ───────────────────────────────
   static const int _mockDelayDurationInSeconds = int.fromEnvironment(
