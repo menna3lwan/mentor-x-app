@@ -1,8 +1,9 @@
+import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
+
 import '../../../../core/core.dart';
 import '../../../features.dart';
 
@@ -39,86 +40,23 @@ class _ForgetPasswordPageWrapperState extends State<ForgetPasswordPageWrapper> {
         authenticationRepository: context
             .read<AuthenticationRepository<ParentEntity>>(),
       ),
-      child:
-          BlocPresentationListener<
-            ForgetPasswordBloc,
-            ForgetPasswordPresentationEvent
-          >(
-            listener: (context, event) {
-              switch (event) {
-                case ForgetPasswordSuccessPresentationEvent(:final phone):
-                  _openResetPasswordBottomSheet(phone);
-                case ForgetPasswordFailurePresentationEvent(:final exception):
-                  MentorXUI.showToast(
-                    message: _failureMessage(exception, t),
-                    isError: true,
-                  );
-              }
-            },
-            child: Builder(
-              builder: (context) {
-                final isLoading = context.select<ForgetPasswordBloc, bool>(
-                  (bloc) => bloc.state.loadingState.isLoading,
-                );
-                return Form(
-                  key: _formKey,
-                  child: ForgetPasswordPage(
-                    title: t.auth.forgotPasswordTitle,
-                    subtitle: t.auth.forgotPasswordSubtitle,
-                    phoneField: MentorXTextFormField(
-                      label: t.auth.phoneNumberLabel,
-                      hintText: t.auth.phoneNumberHint,
-                      icon: Icons.phone_android_rounded,
-                      controller: _phoneController,
-                      keyboardType: TextInputType.phone,
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return t.auth.phoneRequired;
-                        }
-                        return null;
-                      },
-                    ),
-                    sendCodeButton: MentorXButton(
-                      onPressed: isLoading
-                          ? null
-                          : () {
-                              if (_formKey.currentState?.validate() ?? false) {
-                                context.read<ForgetPasswordBloc>().add(
-                                  ForgetPasswordSubmittedEvent(
-                                    phoneNumber: _phoneController.text,
-                                  ),
-                                );
-                              }
-                            },
-                      label: t.auth.sendVerificationCode,
-                      loading: isLoading,
-                    ),
-                    backToLoginButton: TextButton(
-                      onPressed: () => const LoginPageRoute().go(context),
-                      child: Text(
-                        t.auth.backToLogin,
-                        style: TextStyle(
-                          color: context.brandPrimaryColor,
-                          fontWeight: FontWeight.w800,
-                          fontSize: 14,
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
+      child: _ForgetPasswordPageView(
+        formKey: _formKey,
+        phoneController: _phoneController,
+        title: t.auth.forgotPasswordTitle,
+        subtitle: t.auth.forgotPasswordSubtitle,
+        onSuccess: _openResetPasswordBottomSheet,
+        onFailure: (exception) {
+          MentorXUI.showToast(
+            message: _failureMessage(exception, t),
+            isError: true,
+          );
+        },
+      ),
     );
   }
 
-  /// Maps backend exception codes to localized user-facing copy so the toast
-  /// always says something meaningful regardless of upstream wording.
-  String _failureMessage(
-    MentorXException exception,
-    TranslationsParentEn t,
-  ) {
+  String _failureMessage(MentorXException exception, TranslationsParentEn t) {
     if (exception is AuthenticationException) {
       return switch (exception.code) {
         AuthenticationExceptionCode.networkError => t.unableToLoad,
@@ -239,7 +177,9 @@ class _ForgetPasswordPageWrapperState extends State<ForgetPasswordPageWrapper> {
                               setModalState(() => isSubmitting = true);
                               try {
                                 await context
-                                    .read<AuthenticationRepository>()
+                                    .read<
+                                      AuthenticationRepository<ParentEntity>
+                                    >()
                                     .resetPassword(
                                       phone: phone,
                                       otp: otp,
@@ -274,5 +214,97 @@ class _ForgetPasswordPageWrapperState extends State<ForgetPasswordPageWrapper> {
       if (!mounted) return;
       const LoginPageRoute().go(context);
     }
+  }
+}
+
+final class _ForgetPasswordPageView extends StatelessWidget {
+  final GlobalKey<FormState> formKey;
+  final TextEditingController phoneController;
+  final String title;
+  final String subtitle;
+  final Future<void> Function(String phone) onSuccess;
+  final void Function(MentorXException exception) onFailure;
+
+  const _ForgetPasswordPageView({
+    required this.formKey,
+    required this.phoneController,
+    required this.title,
+    required this.subtitle,
+    required this.onSuccess,
+    required this.onFailure,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final t = Translations.of(context).parent;
+
+    return BlocPresentationListener<
+      ForgetPasswordBloc,
+      ForgetPasswordPresentationEvent
+    >(
+      listener: (context, event) {
+        switch (event) {
+          case ForgetPasswordSuccessPresentationEvent(:final phone):
+            onSuccess(phone);
+          case ForgetPasswordFailurePresentationEvent(:final exception):
+            onFailure(exception);
+        }
+      },
+      child: Builder(
+        builder: (context) {
+          final isLoading = context.select<ForgetPasswordBloc, bool>(
+            (bloc) => bloc.state.loadingState.isLoading,
+          );
+
+          return Form(
+            key: formKey,
+            child: ForgetPasswordPage(
+              title: title,
+              subtitle: subtitle,
+              phoneField: MentorXTextFormField(
+                label: t.auth.phoneNumberLabel,
+                hintText: t.auth.phoneNumberHint,
+                icon: Icons.phone_android_rounded,
+                controller: phoneController,
+                keyboardType: TextInputType.phone,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return t.auth.phoneRequired;
+                  }
+                  return null;
+                },
+              ),
+              sendCodeButton: MentorXButton(
+                onPressed: isLoading
+                    ? null
+                    : () {
+                        if (formKey.currentState?.validate() ?? false) {
+                          context.read<ForgetPasswordBloc>().add(
+                            ForgetPasswordSubmittedEvent(
+                              phoneNumber: phoneController.text,
+                            ),
+                          );
+                        }
+                      },
+                label: t.auth.sendVerificationCode,
+                loading: isLoading,
+              ),
+              backToLoginButton: TextButton(
+                onPressed: () => const LoginPageRoute().go(context),
+                child: Text(
+                  t.auth.backToLogin,
+                  style: TextStyle(
+                    color: context.brandPrimaryColor,
+                    fontWeight: FontWeight.w800,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
   }
 }
