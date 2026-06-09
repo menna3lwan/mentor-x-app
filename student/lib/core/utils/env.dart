@@ -15,8 +15,11 @@ final class Env {
   );
 
   // MentorX Configuration
+  static const String officialApiBaseUrl = 'https://api.foudz.store/';
+
   static const String mentorXBaseUrl = String.fromEnvironment(
     'MENTORX_API_BASE_URL',
+    defaultValue: officialApiBaseUrl,
   );
 
   static bool get hasMentorXBaseUrl => mentorXBaseUrl.trim().isNotEmpty;
@@ -28,137 +31,137 @@ final class Env {
   static final authenticationRepositoryMode = RepositoryMode.fromString(
     const String.fromEnvironment(
       'AUTHENTICATION_REPOSITORY_MODE',
-      defaultValue: 'mock',
+      defaultValue: 'prod',
     ),
   );
 
   static final homeRepositoryMode = RepositoryMode.fromString(
-    const String.fromEnvironment('HOME_REPOSITORY_MODE', defaultValue: 'mock'),
+    const String.fromEnvironment('HOME_REPOSITORY_MODE', defaultValue: 'prod'),
   );
 
   static final courseRepositoryMode = RepositoryMode.fromString(
     const String.fromEnvironment(
       'COURSE_REPOSITORY_MODE',
-      defaultValue: 'mock',
+      defaultValue: 'prod',
     ),
   );
 
   static final attendanceRepositoryMode = RepositoryMode.fromString(
     const String.fromEnvironment(
       'ATTENDANCE_REPOSITORY_MODE',
-      defaultValue: 'mock',
+      defaultValue: 'prod',
     ),
   );
 
   static final walletRepositoryMode = RepositoryMode.fromString(
     const String.fromEnvironment(
       'WALLET_REPOSITORY_MODE',
-      defaultValue: 'mock',
+      defaultValue: 'prod',
     ),
   );
 
   static final notificationRepositoryMode = RepositoryMode.fromString(
     const String.fromEnvironment(
       'NOTIFICATION_REPOSITORY_MODE',
-      defaultValue: 'mock',
+      defaultValue: 'prod',
     ),
   );
 
   static final settingsRepositoryMode = RepositoryMode.fromString(
     const String.fromEnvironment(
       'SETTINGS_REPOSITORY_MODE',
-      defaultValue: 'mock',
+      defaultValue: 'prod',
     ),
   );
 
   static final profileRepositoryMode = RepositoryMode.fromString(
     const String.fromEnvironment(
       'PROFILE_REPOSITORY_MODE',
-      defaultValue: 'mock',
+      defaultValue: 'prod',
     ),
   );
 
   static final quizRepositoryMode = RepositoryMode.fromString(
     const String.fromEnvironment(
       'QUIZ_REPOSITORY_MODE',
-      defaultValue: 'mock',
+      defaultValue: 'prod',
     ),
   );
 
   static final assignmentRepositoryMode = RepositoryMode.fromString(
     const String.fromEnvironment(
       'ASSIGNMENT_REPOSITORY_MODE',
-      defaultValue: 'mock',
+      defaultValue: 'prod',
     ),
   );
 
   static final aiRepositoryMode = RepositoryMode.fromString(
     const String.fromEnvironment(
       'AI_REPOSITORY_MODE',
-      defaultValue: 'mock',
+      defaultValue: 'prod',
     ),
   );
 
   static final marketplaceRepositoryMode = RepositoryMode.fromString(
     const String.fromEnvironment(
       'MARKETPLACE_REPOSITORY_MODE',
-      defaultValue: 'mock',
+      defaultValue: 'prod',
     ),
   );
 
   static final announcementRepositoryMode = RepositoryMode.fromString(
     const String.fromEnvironment(
       'ANNOUNCEMENT_REPOSITORY_MODE',
-      defaultValue: 'mock',
+      defaultValue: 'prod',
     ),
   );
 
   static final rewardsRepositoryMode = RepositoryMode.fromString(
     const String.fromEnvironment(
       'REWARDS_REPOSITORY_MODE',
-      defaultValue: 'mock',
+      defaultValue: 'prod',
     ),
   );
 
   static final gradeRepositoryMode = RepositoryMode.fromString(
     const String.fromEnvironment(
       'GRADE_REPOSITORY_MODE',
-      defaultValue: 'mock',
+      defaultValue: 'prod',
     ),
   );
 
   static final registrationRepositoryMode = RepositoryMode.fromString(
     const String.fromEnvironment(
       'REGISTRATION_REPOSITORY_MODE',
-      defaultValue: 'mock',
+      defaultValue: 'prod',
     ),
   );
 
   static final analyticsRepositoryMode = RepositoryMode.fromString(
     const String.fromEnvironment(
       'ANALYTICS_REPOSITORY_MODE',
-      defaultValue: 'mock',
+      defaultValue: 'prod',
     ),
   );
 
   static final leaderboardRepositoryMode = RepositoryMode.fromString(
     const String.fromEnvironment(
       'LEADERBOARD_REPOSITORY_MODE',
-      defaultValue: 'mock',
+      defaultValue: 'prod',
     ),
   );
 
   static final studentCardRepositoryMode = RepositoryMode.fromString(
     const String.fromEnvironment(
       'STUDENT_CARD_REPOSITORY_MODE',
-      defaultValue: 'mock',
+      defaultValue: 'prod',
     ),
   );
 
   static final communicationRepositoryMode = RepositoryMode.fromString(
     const String.fromEnvironment(
       'COMMUNICATION_REPOSITORY_MODE',
-      defaultValue: 'mock',
+      defaultValue: 'prod',
     ),
   );
 
