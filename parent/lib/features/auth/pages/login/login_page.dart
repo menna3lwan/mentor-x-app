@@ -18,12 +18,10 @@ final class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _phoneController = TextEditingController();
-  final _passwordController = TextEditingController();
 
   @override
   void dispose() {
     _phoneController.dispose();
-    _passwordController.dispose();
     super.dispose();
   }
 
@@ -32,7 +30,7 @@ class _LoginPageState extends State<LoginPage> {
       context.read<LoginBloc>().add(
         LoginSubmittedEvent(
           phoneNumber: _phoneController.text,
-          password: _passwordController.text,
+          password: '',
         ),
       );
     }
@@ -183,29 +181,16 @@ class _LoginPageState extends State<LoginPage> {
                                   autofillHints: const [
                                     AutofillHints.telephoneNumber,
                                   ],
-                                  textInputAction: TextInputAction.next,
+                                  textInputAction: TextInputAction.done,
+                                  onFieldSubmitted: (_) => _onLoginSubmitted(),
                                   validator: (value) =>
                                       AuthValidators.phone(value, t),
                                 ),
                               ),
                               const Gap(20),
-                              FadeInUp(
-                                duration: const Duration(milliseconds: 500),
-                                delay: const Duration(milliseconds: 400),
-                                child: MentorXTextFormField(
-                                  label: t.auth.passwordLabel,
-                                  controller: _passwordController,
-                                  isPassword: true,
-                                  icon: Icons.lock_rounded,
-                                  autofillHints: const [
-                                    AutofillHints.password,
-                                  ],
-                                  textInputAction: TextInputAction.done,
-                                  onFieldSubmitted: (_) => _onLoginSubmitted(),
-                                  validator: (value) =>
-                                      AuthValidators.password(value, t),
-                                ),
-                              ),
+                              // Password removed — OTP-first flow: pressing the
+                              // primary action sends an OTP for the provided
+                              // phone number.
                               const Gap(8),
                               FadeInUp(
                                 duration: const Duration(milliseconds: 500),

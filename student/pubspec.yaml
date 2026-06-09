@@ -143,7 +143,7 @@ dev_dependencies:
     sdk: flutter
   integration_test:
     sdk: flutter
-  patrol: ^4.5.0
+  patrol: 4.6.1
   bloc_test: ^10.0.0
   bloc_presentation_test: ^1.2.0
   mocktail: ^1.0.4
