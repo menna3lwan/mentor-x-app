@@ -1,0 +1,652 @@
+{
+  "info": {
+    "name": "EduCore - Parent APIs",
+    "_postman_id": "parent-api-collection-001",
+    "description": "جميع endpoints الخاصة بولي الأمر في EduCore API\nBase URL: http://api.foudz.store",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://api.foudz.store",
+      "type": "string"
+    },
+    {
+      "key": "parentToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "studentId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "sessionId",
+      "value": "1",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Parent Login",
+      "description": "تسجيل دخول ولي الأمر عبر OTP",
+      "item": [
+        {
+          "name": "1. Start Login (إرسال OTP)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/parent/start-login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "parent",
+                "start-login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"parentPhone\": \"01041864622\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "إرسال رقم جوال ولي الأمر لاستلام كود OTP"
+          }
+        },
+        {
+          "name": "2. Complete Login (التحقق من OTP)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/parent/complete-login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "parent",
+                "complete-login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"parentPhone\": \"01041864622\",\n  \"otp\": \"123456\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "إدخال رقم الجوال وكود OTP لإتمام تسجيل الدخول والحصول على الـ token"
+          }
+        },
+        {
+          "name": "3. Logout (تسجيل الخروج)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{parentToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/parent/logout",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "parent",
+                "logout"
+              ]
+            },
+            "description": "تسجيل خروج ولي الأمر"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Parent - Children",
+      "description": "إدارة قائمة الأبناء",
+      "item": [
+        {
+          "name": "Get Children (قائمة الأبناء)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{parentToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/parent/children",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "parent",
+                "children"
+              ]
+            },
+            "description": "جلب قائمة أبناء ولي الأمر — يظهر بعد تسجيل الدخول لاختيار الابن المطلوب"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Parent Profile",
+      "description": "بروفايل ولي الأمر — عرض وتعديل",
+      "item": [
+        {
+          "name": "Get Profile (عرض البروفايل)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{parentToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/parent/profile",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "parent",
+                "profile"
+              ]
+            },
+            "description": "عرض بروفايل ولي الأمر مع قائمة أبنائه"
+          }
+        },
+        {
+          "name": "Update Profile (تعديل البروفايل)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{parentToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/parent/profile",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "parent",
+                "profile"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"اسم ولي الأمر\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "تعديل بروفايل ولي الأمر"
+          }
+        },
+        {
+          "name": "Upload Profile Image (رفع صورة البروفايل)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{parentToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/parent/profile/image",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "parent",
+                "profile",
+                "image"
+              ]
+            },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "image",
+                  "type": "file",
+                  "description": "صورة البروفايل (JPEG/PNG)"
+                }
+              ]
+            },
+            "description": "رفع صورة البروفايل لولي الأمر"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Parent Dashboard",
+      "description": "لوحة تحكم ولي الأمر — متابعة أبنائه",
+      "item": [
+        {
+          "name": "Dashboard Summary (ملخص عام)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{parentToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/parent/dashboard/summary",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "parent",
+                "dashboard",
+                "summary"
+              ]
+            },
+            "description": "ملخص Dashboard ولي الأمر — قائمة أبنائه وإجماليات سريعة"
+          }
+        },
+        {
+          "name": "Child Overview (نظرة عامة على ابن)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{parentToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/parent/dashboard/child/{{studentId}}/overview",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "parent",
+                "dashboard",
+                "child",
+                "{{studentId}}",
+                "overview"
+              ]
+            },
+            "description": "نظرة عامة تفصيلية على ابن محدد (حضور + تقدم + اشتراكات)"
+          }
+        },
+        {
+          "name": "Child Progress in Session (تقدم ابن في سيشن)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{parentToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/parent/dashboard/child/{{studentId}}/progress/{{sessionId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "parent",
+                "dashboard",
+                "child",
+                "{{studentId}}",
+                "progress",
+                "{{sessionId}}"
+              ]
+            },
+            "description": "تقدم ابن محدد في سيشن معين (حصة حصة)"
+          }
+        },
+        {
+          "name": "Child Enrollments (اشتراكات الابن)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{parentToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/parent/dashboard/child/{{studentId}}/enrollments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "parent",
+                "dashboard",
+                "child",
+                "{{studentId}}",
+                "enrollments"
+              ]
+            },
+            "description": "كورسات (اشتراكات) ابن محدد"
+          }
+        },
+        {
+          "name": "Child Attendance (سجل حضور الابن)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{parentToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/parent/dashboard/child/{{studentId}}/attendance?page=0&size=20",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "parent",
+                "dashboard",
+                "child",
+                "{{studentId}}",
+                "attendance"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0",
+                  "description": "رقم الصفحة (يبدأ من 0)"
+                },
+                {
+                  "key": "size",
+                  "value": "20",
+                  "description": "عدد العناصر في الصفحة"
+                }
+              ]
+            },
+            "description": "سجل حضور ابن محدد (مرقّم صفحات)"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Parent Analytics",
+      "description": "تحليلات ولي الأمر لمتابعة أبنائه",
+      "item": [
+        {
+          "name": "Child Streak (سلسلة التعلم)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{parentToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/analytics/parent/child/{{studentId}}/streak",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "analytics",
+                "parent",
+                "child",
+                "{{studentId}}",
+                "streak"
+              ]
+            },
+            "description": "سلسلة التعلم المتواصل للابن"
+          }
+        },
+        {
+          "name": "Child Quiz Speed (سرعة الإجابة)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{parentToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/analytics/parent/child/{{studentId}}/quiz-speed",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "analytics",
+                "parent",
+                "child",
+                "{{studentId}}",
+                "quiz-speed"
+              ]
+            },
+            "description": "سرعة الابن في حل الاختبارات"
+          }
+        },
+        {
+          "name": "Child Grade Comparison (مقارنة الدرجات)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{parentToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/analytics/parent/child/{{studentId}}/grade-comparison",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "analytics",
+                "parent",
+                "child",
+                "{{studentId}}",
+                "grade-comparison"
+              ]
+            },
+            "description": "مقارنة درجات الابن بالمتوسط العام"
+          }
+        },
+        {
+          "name": "Child Course Progress (تقدم الكورسات)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{parentToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/analytics/parent/child/{{studentId}}/course-progress",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "analytics",
+                "parent",
+                "child",
+                "{{studentId}}",
+                "course-progress"
+              ]
+            },
+            "description": "تقدم الابن في الكورسات المختلفة"
+          }
+        },
+        {
+          "name": "Child Active Hours (ساعات النشاط)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{parentToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/analytics/parent/child/{{studentId}}/active-hours",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "analytics",
+                "parent",
+                "child",
+                "{{studentId}}",
+                "active-hours"
+              ]
+            },
+            "description": "الساعات التي يكون فيها الابن نشطاً على المنصة"
+          }
+        },
+        {
+          "name": "Child Achievements (إنجازات الابن)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{parentToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/analytics/parent/child/{{studentId}}/achievements",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "analytics",
+                "parent",
+                "child",
+                "{{studentId}}",
+                "achievements"
+              ]
+            },
+            "description": "إنجازات وشارات الابن"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Parent - Attendance Groups",
+      "description": "متابعة مجموعات الحضور للأبناء",
+      "item": [
+        {
+          "name": "Child Attendance Groups (مجموعات الابن)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{parentToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/attendance/parent/students/{{studentId}}/groups",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "attendance",
+                "parent",
+                "students",
+                "{{studentId}}",
+                "groups"
+              ]
+            },
+            "description": "مجموعات الحضور الخاصة بابن محدد"
+          }
+        },
+        {
+          "name": "Child Attendance Group Details (تفاصيل مجموعة)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{parentToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/attendance/parent/students/{{studentId}}/groups/{{groupId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "attendance",
+                "parent",
+                "students",
+                "{{studentId}}",
+                "groups",
+                "{{groupId}}"
+              ],
+              "variable": [
+                {
+                  "key": "groupId",
+                  "value": "1",
+                  "description": "ID المجموعة"
+                }
+              ]
+            },
+            "description": "تفاصيل مجموعة حضور محددة للابن"
+          }
+        }
+      ]
+    }
+  ]
+}
