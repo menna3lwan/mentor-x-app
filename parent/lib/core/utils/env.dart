@@ -201,5 +201,4 @@ final class Env {
       devicesRepositoryMode == RepositoryMode.prod ||
       accountStatusRepositoryMode == RepositoryMode.prod ||
       accountDeletionRepositoryMode == RepositoryMode.prod;
-
 }
