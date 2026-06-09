@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
+import '../../../../core/routing/app_routes.dart';
 
 final class ForgetPasswordPage extends StatelessWidget {
   final String title;
@@ -20,83 +21,92 @@ final class ForgetPasswordPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: context.backgroundPrimaryColor,
-      body: Column(
-        children: [
-          // Premium Header
-          _BuildHeader(title: title),
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) return;
+        const LoginPageRoute().go(context);
+      },
+      child: Scaffold(
+        backgroundColor: context.backgroundPrimaryColor,
+        body: Column(
+          children: [
+            // Premium Header
+            _BuildHeader(title: title),
 
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                color: context.backgroundSecondaryColor.withValues(alpha: 0.5),
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(32),
-                ),
-              ),
-              child: ClipRRect(
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(32),
-                ),
-                child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 32,
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: context.backgroundSecondaryColor.withValues(
+                    alpha: 0.5,
                   ),
-                  child: Column(
-                    children: [
-                      FadeInDown(
-                        duration: const Duration(milliseconds: 500),
-                        delay: const Duration(milliseconds: 200),
-                        child: Text(
-                          subtitle,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 15,
-                            color: context.textSecondaryColor,
-                            height: 1.6,
-                            fontWeight: FontWeight.w500,
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(32),
+                  ),
+                ),
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(32),
+                  ),
+                  child: SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 32,
+                    ),
+                    child: Column(
+                      children: [
+                        FadeInDown(
+                          duration: const Duration(milliseconds: 500),
+                          delay: const Duration(milliseconds: 200),
+                          child: Text(
+                            subtitle,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 15,
+                              color: context.textSecondaryColor,
+                              height: 1.6,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ),
-                      ),
-                      const Gap(48),
-                      if (phoneField != null)
-                        FadeInUp(
-                          duration: const Duration(milliseconds: 500),
-                          delay: const Duration(milliseconds: 300),
-                          child: phoneField!,
-                        ),
-                      const Gap(40),
-                      if (sendCodeButton != null)
-                        FadeInUp(
-                          duration: const Duration(milliseconds: 500),
-                          delay: const Duration(milliseconds: 400),
-                          child: sendCodeButton!,
-                        ),
-                    ],
+                        const Gap(48),
+                        if (phoneField != null)
+                          FadeInUp(
+                            duration: const Duration(milliseconds: 500),
+                            delay: const Duration(milliseconds: 300),
+                            child: phoneField!,
+                          ),
+                        const Gap(40),
+                        if (sendCodeButton != null)
+                          FadeInUp(
+                            duration: const Duration(milliseconds: 500),
+                            delay: const Duration(milliseconds: 400),
+                            child: sendCodeButton!,
+                          ),
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
 
-          if (backToLoginButton != null)
-            Container(
-              padding: EdgeInsets.only(
-                left: 24,
-                right: 24,
-                top: 16,
-                bottom: MediaQuery.of(context).padding.bottom + 16,
+            if (backToLoginButton != null)
+              Container(
+                padding: EdgeInsets.only(
+                  left: 24,
+                  right: 24,
+                  top: 16,
+                  bottom: MediaQuery.of(context).padding.bottom + 16,
+                ),
+                child: FadeInUp(
+                  duration: const Duration(milliseconds: 500),
+                  delay: const Duration(milliseconds: 500),
+                  child: backToLoginButton!,
+                ),
               ),
-              child: FadeInUp(
-                duration: const Duration(milliseconds: 500),
-                delay: const Duration(milliseconds: 500),
-                child: backToLoginButton!,
-              ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -125,7 +135,9 @@ class _BuildHeader extends StatelessWidget {
           Row(
             children: [
               IconButton(
-                onPressed: () => Navigator.pop(context),
+                onPressed: () {
+                  const LoginPageRoute().go(context);
+                },
                 icon: Icon(
                   Icons.arrow_back_ios_new_rounded,
                   color: context.textPrimaryColor,
