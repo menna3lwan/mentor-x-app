@@ -74,6 +74,10 @@ dependencies:
   animate_do: ^5.1.0
   gap: ^3.0.1
   image_picker: ^1.2.1
+  # Firebase
+  firebase_core: any
+  firebase_messaging: any
+
   # Services
   device_info_service:
     path: ../packages/services/device_info_service

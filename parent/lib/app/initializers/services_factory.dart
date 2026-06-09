@@ -29,10 +29,7 @@ final class ServicesFactory {
   static Future<AppServices> initServices() async {
     final deviceInfoService = DeviceInfoServiceImpl();
 
-    // Push notifications: we expose the abstract [PushNotificationService]
-    // and bind it to [MockPushNotificationService] today. When the real
-    // Firebase implementation lands, only this line changes.
-    final pushNotificationService = MockPushNotificationService();
+    final pushNotificationService = FirebasePushNotificationService();
     await pushNotificationService.initialize();
 
     return AppServices._(

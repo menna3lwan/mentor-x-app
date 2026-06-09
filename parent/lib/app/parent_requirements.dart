@@ -1,11 +1,13 @@
 import 'dart:ui';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../core/core.dart';
+import '../firebase_options.dart';
 import 'initializers/initializers.dart';
 
 final class ParentRequirements {
@@ -45,6 +47,9 @@ final class ParentRequirements {
   static Future<ParentRequirements> initialize() async {
     MentorXLogger.enabled = kDebugMode;
     await _initSystemUIStyle();
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
 
     final services = await ServicesFactory.initServices();
 

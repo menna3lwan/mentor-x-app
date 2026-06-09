@@ -33,6 +33,8 @@ final class DioParentAttendanceRepository
       final response = await _httpClient.get(
         '/api/parent/dashboard/child/$childId/attendance',
         queryParameters: {
+          'page': 0,
+          'size': 20,
           if (from != null) 'from': from.toIso8601String(),
           if (to != null) 'to': to.toIso8601String(),
         },
@@ -62,10 +64,6 @@ final class DioParentAttendanceRepository
     try {
       final response = await _httpClient.get(
         '/api/parent/dashboard/child/$childId/overview',
-        queryParameters: {
-          if (from != null) 'from': from.toIso8601String(),
-          if (to != null) 'to': to.toIso8601String(),
-        },
       );
 
       final data = asMap(response.data)['data'] ?? asMap(response.data);

@@ -1,5 +1,5 @@
 name: push_notification_service
-description: Abstraction and mock implementation of push notification handling for MentorX.
+description: Abstraction, mock, and Firebase implementations of push notification handling for MentorX.
 version: 1.0.0
 publish_to: none
 resolution: workspace
@@ -10,6 +10,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  firebase_core: any
+  firebase_messaging: any
 
 dev_dependencies:
   flutter_test:
