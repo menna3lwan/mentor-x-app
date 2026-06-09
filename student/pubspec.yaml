@@ -79,48 +79,6 @@ dependencies:
   flutter_secure_storage_cache_repository:
     path: ../packages/common/flutter_secure_storage_cache_repository
 
-  # Mock Repositories
-  mock_authentication_repository:
-    path: ../packages/mock/student/mock_authentication_repository
-  mock_home_repository:
-    path: ../packages/mock/student/mock_home_repository
-  mock_course_repository:
-    path: ../packages/mock/student/mock_course_repository
-  mock_attendance_repository:
-    path: ../packages/mock/student/mock_attendance_repository
-  mock_wallet_repository:
-    path: ../packages/mock/student/mock_wallet_repository
-  mock_notification_repository:
-    path: ../packages/mock/student/mock_notification_repository
-  mock_settings_repository:
-    path: ../packages/mock/student/mock_settings_repository
-  mock_profile_repository:
-    path: ../packages/mock/student/mock_profile_repository
-  mock_quiz_repository:
-    path: ../packages/mock/student/mock_quiz_repository
-  mock_assignment_repository:
-    path: ../packages/mock/student/mock_assignment_repository
-  mock_ai_repository:
-    path: ../packages/mock/student/mock_ai_repository
-  mock_marketplace_repository:
-    path: ../packages/mock/student/mock_marketplace_repository
-  mock_announcement_repository:
-    path: ../packages/mock/student/mock_announcement_repository
-  mock_rewards_repository:
-    path: ../packages/mock/student/mock_rewards_repository
-  mock_grade_repository:
-    path: ../packages/mock/student/mock_grade_repository
-  mock_student_registration_repository:
-    path: ../packages/mock/student/mock_student_registration_repository
-  mock_leaderboard_repository:
-    path: ../packages/mock/student/mock_leaderboard_repository
-  mock_student_analytics_repository:
-    path: ../packages/mock/student/mock_student_analytics_repository
-  mock_student_communication_repository:
-    path: ../packages/mock/student/mock_student_communication_repository
-  mock_student_card_repository:
-    path: ../packages/mock/student/mock_student_card_repository
-
   # Clients
   dio_http_client:
     path: ../packages/clients/dio_http_client
@@ -189,6 +147,48 @@ dev_dependencies:
   bloc_test: ^10.0.0
   bloc_presentation_test: ^1.2.0
   mocktail: ^1.0.4
+
+  # Mock Repositories (tests only)
+  mock_authentication_repository:
+    path: ../packages/mock/student/mock_authentication_repository
+  mock_home_repository:
+    path: ../packages/mock/student/mock_home_repository
+  mock_course_repository:
+    path: ../packages/mock/student/mock_course_repository
+  mock_attendance_repository:
+    path: ../packages/mock/student/mock_attendance_repository
+  mock_wallet_repository:
+    path: ../packages/mock/student/mock_wallet_repository
+  mock_notification_repository:
+    path: ../packages/mock/student/mock_notification_repository
+  mock_settings_repository:
+    path: ../packages/mock/student/mock_settings_repository
+  mock_profile_repository:
+    path: ../packages/mock/student/mock_profile_repository
+  mock_quiz_repository:
+    path: ../packages/mock/student/mock_quiz_repository
+  mock_assignment_repository:
+    path: ../packages/mock/student/mock_assignment_repository
+  mock_ai_repository:
+    path: ../packages/mock/student/mock_ai_repository
+  mock_marketplace_repository:
+    path: ../packages/mock/student/mock_marketplace_repository
+  mock_announcement_repository:
+    path: ../packages/mock/student/mock_announcement_repository
+  mock_rewards_repository:
+    path: ../packages/mock/student/mock_rewards_repository
+  mock_grade_repository:
+    path: ../packages/mock/student/mock_grade_repository
+  mock_student_registration_repository:
+    path: ../packages/mock/student/mock_student_registration_repository
+  mock_leaderboard_repository:
+    path: ../packages/mock/student/mock_leaderboard_repository
+  mock_student_analytics_repository:
+    path: ../packages/mock/student/mock_student_analytics_repository
+  mock_student_communication_repository:
+    path: ../packages/mock/student/mock_student_communication_repository
+  mock_student_card_repository:
+    path: ../packages/mock/student/mock_student_card_repository
 
   # Linting
   flutter_lints: ^6.0.0

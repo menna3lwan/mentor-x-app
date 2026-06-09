@@ -202,22 +202,4 @@ final class Env {
       accountStatusRepositoryMode == RepositoryMode.prod ||
       accountDeletionRepositoryMode == RepositoryMode.prod;
 
-  /// `true` when every repository is in mock mode. Useful for CI / widget
-  /// tests that want to assert "no network is touched".
-  static bool get isFullyMocked =>
-      authenticationRepositoryMode == RepositoryMode.mock &&
-      homeRepositoryMode == RepositoryMode.mock &&
-      childrenRepositoryMode == RepositoryMode.mock &&
-      financialRepositoryMode == RepositoryMode.mock &&
-      courseRepositoryMode == RepositoryMode.mock &&
-      attendanceRepositoryMode == RepositoryMode.mock &&
-      gradeRepositoryMode == RepositoryMode.mock &&
-      communicationRepositoryMode == RepositoryMode.mock &&
-      notificationRepositoryMode == RepositoryMode.mock &&
-      profileRepositoryMode == RepositoryMode.mock &&
-      analyticsRepositoryMode == RepositoryMode.mock &&
-      attendanceGroupsRepositoryMode == RepositoryMode.mock &&
-      devicesRepositoryMode == RepositoryMode.mock &&
-      accountStatusRepositoryMode == RepositoryMode.mock &&
-      accountDeletionRepositoryMode == RepositoryMode.mock;
 }

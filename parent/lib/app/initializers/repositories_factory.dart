@@ -21,22 +21,6 @@ import 'package:parent_dio_account_deletion_repository/parent_dio_account_deleti
 import 'package:parent_dio_analytics_repository/parent_dio_analytics_repository.dart';
 import 'package:device_info_service/device_info_service.dart';
 
-import 'package:parent_mock_authentication_repository/parent_mock_authentication_repository.dart';
-import 'package:parent_mock_home_repository/parent_mock_home_repository.dart';
-import 'package:parent_mock_children_repository/parent_mock_children_repository.dart';
-import 'package:parent_mock_financial_repository/parent_mock_financial_repository.dart';
-import 'package:parent_mock_course_repository/parent_mock_course_repository.dart';
-import 'package:parent_mock_attendance_repository/parent_mock_attendance_repository.dart';
-import 'package:parent_mock_grade_repository/parent_mock_grade_repository.dart';
-import 'package:parent_mock_communication_repository/parent_mock_communication_repository.dart';
-import 'package:mock_parent_profile_repository/mock_parent_profile_repository.dart';
-import 'package:mock_parent_analytics_repository/mock_parent_analytics_repository.dart';
-import 'package:mock_parent_attendance_groups_repository/mock_parent_attendance_groups_repository.dart';
-import 'package:mock_parent_devices_repository/mock_parent_devices_repository.dart';
-import 'package:mock_parent_account_status_repository/mock_parent_account_status_repository.dart';
-import 'package:mock_parent_account_deletion_repository/mock_parent_account_deletion_repository.dart';
-import 'package:mock_notification_repository/mock_notification_repository.dart';
-
 import '../../core/utils/env.dart';
 
 final class AppRepositories {
@@ -222,195 +206,104 @@ final class RepositoriesFactory {
 
   static Future<AuthenticationRepository<ParentEntity>>
   _initAuthenticationRepository() async {
-    late final AuthenticationRepository<ParentEntity> repo;
-    switch (Env.authenticationRepositoryMode) {
-      case RepositoryMode.mock:
-        repo = MockAuthenticationRepository(delay: Env.mockDelayDuration);
-      case RepositoryMode.prod:
-        final httpClient = await _initHttpClient();
-        final cacheRepository = await _initCacheRepository();
-        repo = DioAuthenticationRepository(
-          httpClient: httpClient,
-          cacheRepository: cacheRepository,
-        );
-    }
+    final httpClient = await _initHttpClient();
+    final cacheRepository = await _initCacheRepository();
+    final repo = DioAuthenticationRepository(
+      httpClient: httpClient,
+      cacheRepository: cacheRepository,
+    );
     await repo.initialize();
     return repo;
   }
 
   static Future<ParentHomeRepository> _initHomeRepository() async {
-    late final ParentHomeRepository repo;
-    switch (Env.homeRepositoryMode) {
-      case RepositoryMode.mock:
-        repo = MockParentHomeRepository();
-      case RepositoryMode.prod:
-        final httpClient = await _initHttpClient();
-        repo = DioParentHomeRepository(httpClient: httpClient);
-    }
+    final httpClient = await _initHttpClient();
+    final repo = DioParentHomeRepository(httpClient: httpClient);
     await repo.initialize();
     return repo;
   }
 
   static Future<ParentChildrenRepository> _initChildrenRepository() async {
-    late final ParentChildrenRepository repo;
-    switch (Env.childrenRepositoryMode) {
-      case RepositoryMode.mock:
-        repo = MockChildrenRepository(delay: Env.mockDelayDuration);
-      case RepositoryMode.prod:
-        final httpClient = await _initHttpClient();
-        repo = DioParentChildrenRepository(httpClient: httpClient);
-    }
+    final httpClient = await _initHttpClient();
+    final repo = DioParentChildrenRepository(httpClient: httpClient);
     await repo.initialize();
     return repo;
   }
 
   static Future<ParentFinancialRepository> _initFinancialRepository() async {
-    switch (Env.financialRepositoryMode) {
-      case RepositoryMode.mock:
-        return MockParentFinancialRepository(delay: Env.mockDelayDuration);
-      case RepositoryMode.prod:
-        final httpClient = await _initHttpClient();
-        return DioParentFinancialRepository(httpClient: httpClient);
-    }
+    final httpClient = await _initHttpClient();
+    return DioParentFinancialRepository(httpClient: httpClient);
   }
 
   static Future<ParentCourseRepository> _initCourseRepository() async {
-    switch (Env.courseRepositoryMode) {
-      case RepositoryMode.mock:
-        return MockParentCourseRepository(delay: Env.mockDelayDuration);
-      case RepositoryMode.prod:
-        final httpClient = await _initHttpClient();
-        return DioParentCourseRepository(httpClient: httpClient);
-    }
+    final httpClient = await _initHttpClient();
+    return DioParentCourseRepository(httpClient: httpClient);
   }
 
   static Future<ParentAttendanceRepository> _initAttendanceRepository() async {
-    switch (Env.attendanceRepositoryMode) {
-      case RepositoryMode.mock:
-        return MockParentAttendanceRepository(delay: Env.mockDelayDuration);
-      case RepositoryMode.prod:
-        final httpClient = await _initHttpClient();
-        return DioParentAttendanceRepository(httpClient: httpClient);
-    }
+    final httpClient = await _initHttpClient();
+    return DioParentAttendanceRepository(httpClient: httpClient);
   }
 
   static Future<ParentGradeRepository> _initGradeRepository() async {
-    switch (Env.gradeRepositoryMode) {
-      case RepositoryMode.mock:
-        return MockParentGradeRepository(delay: Env.mockDelayDuration);
-      case RepositoryMode.prod:
-        final httpClient = await _initHttpClient();
-        return DioParentGradeRepository(httpClient: httpClient);
-    }
+    final httpClient = await _initHttpClient();
+    return DioParentGradeRepository(httpClient: httpClient);
   }
 
   static Future<ParentCommunicationRepository>
   _initCommunicationRepository() async {
-    switch (Env.communicationRepositoryMode) {
-      case RepositoryMode.mock:
-        return MockParentCommunicationRepository(delay: Env.mockDelayDuration);
-      case RepositoryMode.prod:
-        final httpClient = await _initHttpClient();
-        return DioParentCommunicationRepository(httpClient: httpClient);
-    }
+    final httpClient = await _initHttpClient();
+    return DioParentCommunicationRepository(httpClient: httpClient);
   }
 
   static Future<ParentProfileRepository> _initProfileRepository() async {
-    late final ParentProfileRepository repo;
-    switch (Env.profileRepositoryMode) {
-      case RepositoryMode.mock:
-        repo = MockParentProfileRepository(delay: Env.mockDelayDuration);
-      case RepositoryMode.prod:
-        final httpClient = await _initHttpClient();
-        repo = DioParentProfileRepository(httpClient: httpClient);
-    }
+    final httpClient = await _initHttpClient();
+    final repo = DioParentProfileRepository(httpClient: httpClient);
     await repo.initialize();
     return repo;
   }
 
   static Future<ParentAnalyticsRepository> _initAnalyticsRepository() async {
-    late final ParentAnalyticsRepository repo;
-    switch (Env.analyticsRepositoryMode) {
-      case RepositoryMode.mock:
-        repo = MockParentAnalyticsRepository(delay: Env.mockDelayDuration);
-      case RepositoryMode.prod:
-        final httpClient = await _initHttpClient();
-        repo = DioParentAnalyticsRepository(httpClient: httpClient);
-    }
+    final httpClient = await _initHttpClient();
+    final repo = DioParentAnalyticsRepository(httpClient: httpClient);
     await repo.initialize();
     return repo;
   }
 
   static Future<ParentAttendanceGroupsRepository>
   _initAttendanceGroupsRepository() async {
-    late final ParentAttendanceGroupsRepository repo;
-    switch (Env.attendanceGroupsRepositoryMode) {
-      case RepositoryMode.mock:
-        repo = MockParentAttendanceGroupsRepository(
-          delay: Env.mockDelayDuration,
-        );
-      case RepositoryMode.prod:
-        final httpClient = await _initHttpClient();
-        repo = DioParentAttendanceGroupsRepository(httpClient: httpClient);
-    }
+    final httpClient = await _initHttpClient();
+    final repo = DioParentAttendanceGroupsRepository(httpClient: httpClient);
     await repo.initialize();
     return repo;
   }
 
   static Future<ParentDevicesRepository> _initDevicesRepository() async {
-    late final ParentDevicesRepository repo;
-    switch (Env.devicesRepositoryMode) {
-      case RepositoryMode.mock:
-        repo = MockParentDevicesRepository(delay: Env.mockDelayDuration);
-      case RepositoryMode.prod:
-        final httpClient = await _initHttpClient();
-        repo = DioParentDevicesRepository(httpClient: httpClient);
-    }
+    final httpClient = await _initHttpClient();
+    final repo = DioParentDevicesRepository(httpClient: httpClient);
     await repo.initialize();
     return repo;
   }
 
   static Future<ParentAccountStatusRepository>
   _initAccountStatusRepository() async {
-    late final ParentAccountStatusRepository repo;
-    switch (Env.accountStatusRepositoryMode) {
-      case RepositoryMode.mock:
-        repo = MockParentAccountStatusRepository(
-          delay: Env.mockDelayDuration,
-        );
-      case RepositoryMode.prod:
-        final httpClient = await _initHttpClient();
-        repo = DioParentAccountStatusRepository(httpClient: httpClient);
-    }
+    final httpClient = await _initHttpClient();
+    final repo = DioParentAccountStatusRepository(httpClient: httpClient);
     await repo.initialize();
     return repo;
   }
 
   static Future<ParentAccountDeletionRepository>
   _initAccountDeletionRepository() async {
-    late final ParentAccountDeletionRepository repo;
-    switch (Env.accountDeletionRepositoryMode) {
-      case RepositoryMode.mock:
-        repo = MockParentAccountDeletionRepository(
-          delay: Env.mockDelayDuration,
-        );
-      case RepositoryMode.prod:
-        final httpClient = await _initHttpClient();
-        repo = DioParentAccountDeletionRepository(httpClient: httpClient);
-    }
+    final httpClient = await _initHttpClient();
+    final repo = DioParentAccountDeletionRepository(httpClient: httpClient);
     await repo.initialize();
     return repo;
   }
 
   static Future<NotificationRepository> _initNotificationRepository() async {
-    late final NotificationRepository repo;
-    switch (Env.notificationRepositoryMode) {
-      case RepositoryMode.mock:
-        repo = MockNotificationRepository(delay: Env.mockDelayDuration);
-      case RepositoryMode.prod:
-        final httpClient = await _initHttpClient();
-        repo = DioParentNotificationRepository(httpClient: httpClient);
-    }
+    final httpClient = await _initHttpClient();
+    final repo = DioParentNotificationRepository(httpClient: httpClient);
     await repo.initialize();
     return repo;
   }
