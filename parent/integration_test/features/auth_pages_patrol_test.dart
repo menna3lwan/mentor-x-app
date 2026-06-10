@@ -46,6 +46,17 @@ void main() {
     expect(currentParentLocation(), '/otp');
   });
 
+  patrolTest('Parent OTP success continues to the next screen', ($) async {
+    await launchParentApp($);
+    await goToParentRoute($, const OtpPageRoute(phoneNumber: '01011111111'));
+
+    await $(TextFormField).enterText('123456');
+    await $('تحقق وتابع').tap();
+    await $.pumpAndSettle();
+
+    expect(currentParentLocation(), isNot('/otp'));
+  });
+
   patrolTest('Parent forgot-password opens reset dialog after sending code', (
     $,
   ) async {

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -19,6 +21,7 @@ class OtpPageWrapper extends StatefulWidget {
 
 class _OtpPageWrapperState extends State<OtpPageWrapper> {
   final _otpController = TextEditingController();
+  final _logger = MentorXLogger('OtpPageWrapper');
 
   @override
   void dispose() {
@@ -41,18 +44,17 @@ class _OtpPageWrapperState extends State<OtpPageWrapper> {
             case OtpSuccessPresentationEvent(:final user):
               // Persist the authenticated user before navigating so the rest
               // of the app sees the new session.
-              final logger = MentorXLogger('OtpPageWrapper');
-              logger.info(
+              _logger.info(
                 '🟢 [OTP_PAGE_WRAPPER] OtpSuccessPresentationEvent received: user=${user.fullName}, id=${user.id}',
               );
-              logger.info(
+              _logger.info(
                 '🟢 [OTP_PAGE_WRAPPER] Calling AppAuthenticationCubit.login(user)...',
               );
               context.read<AppAuthenticationCubit>().login(user);
-              logger.info(
+              _logger.info(
                 '🟢 [OTP_PAGE_WRAPPER] AppAuthenticationCubit.login() completed. Now calling _handleSuccessNavigation()...',
               );
-              _handleSuccessNavigation(context);
+              unawaited(_handleSuccessNavigation(context));
             case OtpFailurePresentationEvent(:final exception):
               // Clear the bad code on invalid-OTP so the user can retry
               // without re-tapping the field.
@@ -115,7 +117,13 @@ class _OtpPageWrapperState extends State<OtpPageWrapper> {
                   LengthLimitingTextInputFormatter(6),
                 ],
                 onChanged: (value) {
+                  _logger.info(
+                    '🟣 [OTP_PAGE_WRAPPER] OTP field changed; length=${value.length}, loading=${state.loadingState.isLoading}',
+                  );
                   if (value.length == 6 && !state.loadingState.isLoading) {
+                    _logger.info(
+                      '🟢 [OTP_PAGE_WRAPPER] Auto-submit triggered from OTP field change',
+                    );
                     bloc.add(
                       OtpSubmittedEvent(
                         phone: widget.phoneNumber,
@@ -132,6 +140,9 @@ class _OtpPageWrapperState extends State<OtpPageWrapper> {
                         _otpController.text.length < 6
                     ? null
                     : () {
+                        _logger.info(
+                          '🟢 [OTP_PAGE_WRAPPER] Verify button clicked; submitting OTP length=${_otpController.text.length}',
+                        );
                         bloc.add(
                           OtpSubmittedEvent(
                             phone: widget.phoneNumber,
@@ -189,39 +200,39 @@ class _OtpPageWrapperState extends State<OtpPageWrapper> {
   }
 
   Future<void> _handleSuccessNavigation(BuildContext context) async {
-    final logger = MentorXLogger('OtpPageWrapper');
-    logger.info('🟢 [OTP_PAGE_WRAPPER] _handleSuccessNavigation START');
+    _logger.info('🟢 [OTP_PAGE_WRAPPER] _handleSuccessNavigation START');
     final childrenRepo = context.read<ParentChildrenRepository>();
     try {
-      logger.info('🟢 [OTP_PAGE_WRAPPER] Fetching children list...');
+      _logger.info('🟢 [OTP_PAGE_WRAPPER] Fetching children list...');
       final children = await childrenRepo.getChildren();
-      logger.info(
+      _logger.info(
         '🟢 [OTP_PAGE_WRAPPER] Children fetched: ${children.length} children',
       );
       if (!context.mounted) {
-        logger.warning(
+        _logger.warning(
           '🟡 [OTP_PAGE_WRAPPER] Context not mounted after children fetch',
         );
         return;
       }
       if (children.isEmpty) {
-        logger.info(
+        _logger.info(
           '🟢 [OTP_PAGE_WRAPPER] No children linked, navigating to AddChildLinkRoute',
         );
         const AddChildLinkRoute().go(context);
       } else {
-        logger.info(
+        _logger.info(
           '🟢 [OTP_PAGE_WRAPPER] Children exist, navigating to HomePageRoute',
         );
         const HomePageRoute().go(context);
       }
     } catch (e) {
-      logger.error(
+      _logger.error(
         '🔴 [OTP_PAGE_WRAPPER] Error fetching children: $e, navigating to HomePageRoute anyway',
       );
       if (context.mounted) {
         const HomePageRoute().go(context);
       }
     }
+    _logger.info('🟢 [OTP_PAGE_WRAPPER] _handleSuccessNavigation END');
   }
 }

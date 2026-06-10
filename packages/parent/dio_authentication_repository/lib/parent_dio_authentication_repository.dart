@@ -496,12 +496,18 @@ final class DioAuthenticationRepository
     try {
       HttpClientResponse response;
       try {
+        _logger.info(
+          '[verifyOtp] request start: endpoint=/api/parent/complete-login phone=$phone codeLength=${code.length}',
+        );
         response = await httpClient.post(
           '/api/parent/complete-login',
           data: {'parentPhone': phone, 'otp': code},
         );
       } on HttpClientResponse catch (e) {
         if (e.statusCode != 404 && e.statusCode != 405) rethrow;
+        _logger.info(
+          '[verifyOtp] fallback request start: endpoint=/api/auth/verify-otp phone=$phone codeLength=${code.length}',
+        );
         response = await httpClient.post(
           '/api/auth/verify-otp',
           data: {'phone': phone, 'otp': code},
@@ -512,6 +518,7 @@ final class DioAuthenticationRepository
         '[verifyOtp] status=${response.statusCode} raw response: ${response.data}',
       );
 
+      _logger.info('[verifyOtp] parsing response payload...');
       final data = _extractDataMap(response.data);
       _logger.info('[verifyOtp] extracted data keys: ${data.keys.toList()}');
       _logger.info('[verifyOtp] extracted data payload: $data');
