@@ -50,13 +50,27 @@ final class DeviceModel extends DeviceEntity {
         json['isActive'] ?? json['is_active'] ?? json['active'],
         fallback: true,
       ),
-      lastUsedAt: ModelParser.asDateTime(
+      lastUsedAt:
+          ModelParser.asDateTime(
             json['lastUsedAt'] ??
                 json['last_used_at'] ??
                 json['lastSeenAt'] ??
                 json['last_seen_at'],
           ) ??
           DateTime.now(),
+    );
+  }
+
+  DeviceEntity toEntity() {
+    return DeviceEntity(
+      id: id,
+      deviceName: deviceName,
+      deviceModel: deviceModel,
+      isActive: isActive,
+      lastUsedAt: lastUsedAt,
+      deviceType: deviceType,
+      osVersion: osVersion,
+      appVersion: appVersion,
     );
   }
 

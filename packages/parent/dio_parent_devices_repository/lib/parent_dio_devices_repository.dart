@@ -58,8 +58,7 @@ final class DioParentDevicesRepository
     } on HttpClientResponse catch (e) {
       return handleHttpClientErrorResponse(
         e,
-        defaultCode:
-            ParentDevicesRepositoryExceptionCode.forceLogoutFailed,
+        defaultCode: ParentDevicesRepositoryExceptionCode.forceLogoutFailed,
         codeFromStatusCode: _classifyStatus,
       );
     }
@@ -76,8 +75,7 @@ final class DioParentDevicesRepository
       if (e.statusCode == 404 || e.statusCode == 405) return;
       handleHttpClientErrorResponse(
         e,
-        defaultCode:
-            ParentDevicesRepositoryExceptionCode.deactivateFailed,
+        defaultCode: ParentDevicesRepositoryExceptionCode.deactivateFailed,
         codeFromStatusCode: _classifyStatus,
       );
     }
@@ -115,6 +113,7 @@ final class DioParentDevicesRepository
     return items
         .map(asMap)
         .map(DeviceModel.fromJson)
+        .map((device) => device.toEntity())
         .toList(growable: false);
   }
 

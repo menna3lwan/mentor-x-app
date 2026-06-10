@@ -8,7 +8,7 @@ final class DioParentChildrenRepository
   final HttpClient _httpClient;
 
   DioParentChildrenRepository({required HttpClient httpClient})
-      : _httpClient = httpClient;
+    : _httpClient = httpClient;
 
   @override
   Future<void> initialize() async {}
@@ -17,8 +17,7 @@ final class DioParentChildrenRepository
   Never throwException(
     ParentChildrenRepositoryExceptionCode code, {
     String? message,
-  }) =>
-      throw ParentChildrenRepositoryException(code: code, message: message);
+  }) => throw ParentChildrenRepositoryException(code: code, message: message);
 
   @override
   Future<List<ParentChildEntity>> getChildren() async {
@@ -33,7 +32,7 @@ final class DioParentChildrenRepository
           ? asList(payload['content'])
           : asList(payload);
       return list
-          .map((json) => ParentChildModel.fromJson(asMap(json)))
+          .map((json) => ParentChildModel.fromJson(asMap(json)).toEntity())
           .toList();
     } on HttpClientResponse catch (e) {
       handleHttpClientErrorResponse(
@@ -64,7 +63,7 @@ final class DioParentChildrenRepository
       );
 
       final data = asMap(response.data)['data'] ?? asMap(response.data);
-      return ParentStudentLookupModel.fromJson(data);
+      return ParentStudentLookupModel.fromJson(data).toEntity();
     } on HttpClientResponse catch (e) {
       handleHttpClientErrorResponse(
         e,
@@ -89,7 +88,7 @@ final class DioParentChildrenRepository
       );
 
       final data = asMap(response.data)['data'] ?? asMap(response.data);
-      return ParentChildModel.fromJson(data);
+      return ParentChildModel.fromJson(data).toEntity();
     } on HttpClientResponse catch (e) {
       handleHttpClientErrorResponse(
         e,
