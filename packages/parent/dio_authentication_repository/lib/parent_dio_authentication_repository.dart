@@ -251,6 +251,16 @@ final class DioAuthenticationRepository
         e,
         defaultCode: _ExceptionCode.sessionExpired,
       );
+    } catch (e, s) {
+      _logger.error(
+        '[getMe] Unexpected error parsing user data: $e',
+        e,
+        s,
+      );
+      throw _Exception(
+        code: _ExceptionCode.unknown,
+        message: 'Failed to parse user profile: ${e.toString()}',
+      );
     }
   }
 
@@ -563,6 +573,23 @@ final class DioAuthenticationRepository
       handleHttpClientErrorResponse(
         e,
         defaultCode: _ExceptionCode.invalidOtp,
+      );
+    } on AuthenticationException catch (e) {
+      // Re-throw authentication exceptions (e.g., missing token)
+      _logger.error(
+        '[verifyOtp] Authentication error: ${e.code} — ${e.message}',
+      );
+      rethrow;
+    } catch (e, s) {
+      // Catch any other exception (parsing, token extraction, etc.)
+      _logger.error(
+        '[verifyOtp] CRITICAL: Unexpected error during OTP verification — $e',
+        e,
+        s,
+      );
+      throw _Exception(
+        code: _ExceptionCode.unknown,
+        message: 'Failed to process OTP verification response: ${e.toString()}',
       );
     }
   }
