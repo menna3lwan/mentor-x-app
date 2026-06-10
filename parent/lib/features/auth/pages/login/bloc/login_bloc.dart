@@ -48,11 +48,18 @@ final class LoginBloc extends Bloc<LoginEvent, LoginState>
     LoginSubmittedEvent event,
     Emitter<LoginState> emit,
   ) async {
+    _logger.info(
+      '🔵 [LOGIN_BLOC] Login submitted: phone=${event.phoneNumber}, fcmToken=${event.fcmToken != null}',
+    );
     emit(state.copyWith(loadingState: LoginLoadingState.loading));
     try {
       final deviceName = await _deviceInfoService.getDeviceName();
       final deviceHash = await _deviceInfoService.getDeviceHash();
       final appVersion = await _deviceInfoService.getAppVersion();
+
+      _logger.info(
+        '🔵 [LOGIN_BLOC] Calling repository.login with deviceName=$deviceName deviceHash=$deviceHash appVersion=$appVersion',
+      );
 
       final user = await _authenticationRepository.login(
         phone: event.phoneNumber,
@@ -62,10 +69,16 @@ final class LoginBloc extends Bloc<LoginEvent, LoginState>
         fcmToken: event.fcmToken,
         appVersion: appVersion,
       );
+      _logger.info(
+        '🟢 [LOGIN_BLOC] Repository login completed successfully for user=${user.fullName}, id=${user.id}, status=${user.status.name}',
+      );
       emit(state.copyWith(loadingState: LoginLoadingState.success));
       emitPresentation(LoginSuccessPresentationEvent(user: user));
     } on AuthenticationException catch (e) {
       if (e.code == AuthenticationExceptionCode.otpRequired) {
+        _logger.info(
+          '🟡 [LOGIN_BLOC] OTP required — transitioning to OTP screen',
+        );
         emit(state.copyWith(loadingState: LoginLoadingState.initial));
         emitPresentation(
           LoginOtpRequiredPresentationEvent(phoneNumber: event.phoneNumber),

@@ -18,7 +18,11 @@ final class ParentModel extends ParentEntity {
   });
 
   factory ParentModel.fromJson(Map<String, dynamic> json) {
-    final user = json['user'] as Map<String, dynamic>? ?? json;
+    // Backend may wrap the user object under 'user' or 'parent'. Fall back
+    // to the root map if neither key is present (flat response).
+    final user = json['user'] as Map<String, dynamic>?
+        ?? json['parent'] as Map<String, dynamic>?
+        ?? json;
 
     final String name = user['name'] as String? ?? '';
     final nameParts = name.trim().split(' ');

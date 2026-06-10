@@ -474,34 +474,87 @@ final class DioAuthenticationRepository
   @override
   Future<ParentEntity> verifyOtp(String phone, String code) async {
     // Backend contract (Swagger):
-    //   POST /api/auth/verify-otp        body: { phone, otp (string) }
     //   POST /api/parent/complete-login  body: { parentPhone, otp (string) }
+    //   POST /api/auth/verify-otp        body: { phone, otp (string) }
+    //
+    // IMPORTANT: The parent-specific endpoint (/api/parent/complete-login) is
+    // tried FIRST because it matches the flow started by /api/parent/start-login
+    // and returns the full authentication response (tokens + user data).
+    // The generic /api/auth/verify-otp only confirms the OTP is valid but may
+    // NOT return session tokens, leaving the client unauthenticated.
     // OTP is always sent as a string — some backends reject integer payloads.
     try {
       HttpClientResponse response;
       try {
         response = await httpClient.post(
-          '/api/auth/verify-otp',
-          data: {'phone': phone, 'otp': code},
+          '/api/parent/complete-login',
+          data: {'parentPhone': phone, 'otp': code},
         );
       } on HttpClientResponse catch (e) {
         if (e.statusCode != 404 && e.statusCode != 405) rethrow;
         response = await httpClient.post(
-          '/api/parent/complete-login',
-          data: {'parentPhone': phone, 'otp': code},
+          '/api/auth/verify-otp',
+          data: {'phone': phone, 'otp': code},
         );
       }
 
-      _logger.info('[verifyOtp] raw response: ${response.data}');
+      _logger.info(
+        '[verifyOtp] status=${response.statusCode} raw response: ${response.data}',
+      );
 
       final data = _extractDataMap(response.data);
       _logger.info('[verifyOtp] extracted data keys: ${data.keys.toList()}');
+      _logger.info('[verifyOtp] extracted data payload: $data');
 
       await _setTokensIfPresent(data);
       _logger.info('[verifyOtp] token set: ${httpClient.accessToken != null}');
+      _logger.info('[verifyOtp] token after save: ${httpClient.accessToken}');
+
+      // Safety net: if the first endpoint succeeded but did NOT return a token,
+      // attempt the alternative endpoint which may issue one.
+      if (httpClient.accessToken == null) {
+        _logger.warning(
+          '[verifyOtp] No token after first endpoint — trying alternative',
+        );
+        try {
+          final fallback = await httpClient.post(
+            '/api/auth/verify-otp',
+            data: {'phone': phone, 'otp': code},
+          );
+          final fallbackData = _extractDataMap(fallback.data);
+          await _setTokensIfPresent(fallbackData);
+          _logger.info(
+            '[verifyOtp] fallback token set: ${httpClient.accessToken != null}',
+          );
+          _logger.info(
+            '[verifyOtp] fallback token after save: ${httpClient.accessToken}',
+          );
+          // Merge any extra data from the fallback response (tokens, etc.)
+          // while keeping the original user data as authoritative.
+          data.addAll({
+            for (final entry in fallbackData.entries)
+              if (!data.containsKey(entry.key)) entry.key: entry.value,
+          });
+        } catch (e) {
+          _logger.warning('[verifyOtp] alternative endpoint also failed: $e');
+        }
+      }
+
+      if (httpClient.accessToken == null) {
+        _logger.error(
+          '[verifyOtp] CRITICAL: No access token obtained from either endpoint',
+        );
+        throw const _Exception(
+          code: _ExceptionCode.unknown,
+          message:
+              'OTP verified but no session token was returned. Please try again.',
+        );
+      }
 
       final user = ParentModel.fromJson(data);
-      _logger.info('[verifyOtp] user parsed: id=${user.id} status=${user.status.name}');
+      _logger.info(
+        '[verifyOtp] user parsed: id=${user.id} status=${user.status.name}',
+      );
 
       await _cacheUser(user);
       return user;
@@ -515,20 +568,35 @@ final class DioAuthenticationRepository
   }
 
   Future<void> _setTokensIfPresent(Map<String, dynamic> data) async {
-    // Backend contract (Swagger): complete-login returns { token }, while
-    // verify-otp may return { accessToken } or { access_token }. Try all
-    // known key names.
     _logger.info('[_setTokensIfPresent] checking keys: ${data.keys.toList()}');
-    final accessToken = stringOrNull(
-      data['accessToken'] ?? data['access_token'] ?? data['token'],
+
+    // Check nested objects (parent/user) for token in case the backend
+    // wraps it inside the entity rather than at the root level.
+    final accessToken = _findTokenValue(
+      data,
+      const [
+        'accessToken',
+        'access_token',
+        'token',
+        'jwtToken',
+        'jwt_token',
+        'bearer',
+      ],
     );
     if (accessToken == null) {
-      _logger.warning('[_setTokensIfPresent] NO token found in response — user will be unauthenticated');
+      _logger.warning(
+        '[_setTokensIfPresent] NO token found in response — user will be unauthenticated',
+      );
       return;
     }
 
-    final refreshToken = stringOrNull(
-      data['refreshToken'] ?? data['refresh_token'],
+    final refreshToken = _findTokenValue(
+      data,
+      const ['refreshToken', 'refresh_token'],
+    );
+
+    _logger.info(
+      '[_setTokensIfPresent] saving access token (len=${accessToken.length}) and refresh token present=${refreshToken != null}',
     );
 
     // Ensure tokens and cached copies are written before proceeding so
@@ -536,7 +604,9 @@ final class DioAuthenticationRepository
     // a valid auth header.
     await httpClient.setAccessToken(accessToken);
     await cacheRepository.put(CacheKeys.accessToken, accessToken);
-    _logger.info('[_setTokensIfPresent] access token saved (length=${accessToken.length})');
+    _logger.info(
+      '[_setTokensIfPresent] access token saved (length=${accessToken.length})',
+    );
 
     if (refreshToken != null) {
       await httpClient.setRefreshToken(refreshToken);
@@ -547,8 +617,38 @@ final class DioAuthenticationRepository
       // An old refresh token that the backend has blacklisted would otherwise
       // trigger a failed /api/auth/refresh call and a spurious logout.
       await cacheRepository.remove(CacheKeys.refreshToken);
-      _logger.info('[_setTokensIfPresent] no refresh token in response — cleared stale cache entry');
+      _logger.info(
+        '[_setTokensIfPresent] no refresh token in response — cleared stale cache entry',
+      );
     }
+  }
+
+  String? _findTokenValue(dynamic source, List<String> candidateKeys) {
+    if (source is Map) {
+      final map = asMap(source);
+      for (final key in candidateKeys) {
+        final parsed = stringOrNull(map[key]);
+        if (parsed != null) {
+          return parsed;
+        }
+      }
+
+      for (final value in map.values) {
+        final nested = _findTokenValue(value, candidateKeys);
+        if (nested != null) {
+          return nested;
+        }
+      }
+    } else if (source is List) {
+      for (final value in source) {
+        final nested = _findTokenValue(value, candidateKeys);
+        if (nested != null) {
+          return nested;
+        }
+      }
+    }
+
+    return null;
   }
 
   Map<String, dynamic> _extractDataMap(dynamic rawResponse) {

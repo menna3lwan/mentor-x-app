@@ -36,13 +36,23 @@ class _LoginPageView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocPresentationListener<LoginBloc, LoginPresentationEvent>(
       listener: (context, event) {
+        final logger = MentorXLogger('LoginPageWrapper');
         switch (event) {
           case LoginSuccessPresentationEvent(:final user):
+            logger.info(
+              '🟢 [LOGIN_PAGE_WRAPPER] LoginSuccessPresentationEvent received for user=${user.fullName}, id=${user.id}; navigating to HomePageRoute',
+            );
             context.read<AppAuthenticationCubit>().login(user);
             const HomePageRoute().go(context);
           case LoginOtpRequiredPresentationEvent(:final phoneNumber):
+            logger.info(
+              '🟡 [LOGIN_PAGE_WRAPPER] OTP required for $phoneNumber; navigating to OtpPageRoute',
+            );
             OtpPageRoute(phoneNumber: phoneNumber).go(context);
           case LoginFailurePresentationEvent(:final exception):
+            logger.error(
+              '🔴 [LOGIN_PAGE_WRAPPER] LoginFailurePresentationEvent received: ${exception.code} ${exception.message}',
+            );
             MentorXUI.showToast(
               message: _messageFor(context, exception),
               isError: true,

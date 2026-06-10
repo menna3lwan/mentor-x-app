@@ -11,13 +11,12 @@ final class DioHttpClient implements HttpClient {
   final Dio _dio;
   final CacheRepository _cacheRepository;
   final Map<String, String> _defaultHeaders = {};
-  
+
   String? _accessToken;
   String? _refreshToken;
   String? _userId;
   String _languageCode = 'ar';
   final Future<void> Function()? _onSessionExpired;
-
 
   DioHttpClient({
     required String baseUrl,
@@ -39,7 +38,7 @@ final class DioHttpClient implements HttpClient {
   void _registerInterceptors(String baseUrl) {
     // 1. Header Injection (Token, Device ID, Locale)
     addInterceptor(HeaderInterceptor(httpClient: this));
-    
+
     // 2. Token Refresh Logic
     addInterceptor(
       RefreshTokenInterceptor(
@@ -53,7 +52,9 @@ final class DioHttpClient implements HttpClient {
           });
         },
         onSessionExpired: () async {
-          _logger.warning('Session expired signal received from RefreshTokenInterceptor');
+          _logger.warning(
+            'Session expired signal received from RefreshTokenInterceptor',
+          );
           if (_onSessionExpired != null) {
             await _onSessionExpired.call();
           }
@@ -84,7 +85,7 @@ final class DioHttpClient implements HttpClient {
   /// Only loads the token if it's still valid (not expired)
   Future<void> _loadCachedToken() async {
     _logger.debug('Attempting to load cached authentication state...');
-    
+
     final cachedToken = await _cacheRepository.get(CacheKeys.accessToken);
     final cachedRefreshToken = await _cacheRepository.get(
       CacheKeys.refreshToken,
@@ -99,7 +100,7 @@ final class DioHttpClient implements HttpClient {
     if (cachedToken != null && cachedToken.isNotEmpty) {
       final isExpired = _isJwtTokenExpired(cachedToken);
       _logger.debug('Found cached access token (Expired: $isExpired)');
-      
+
       if (isExpired) {
         _logger.warning('Cached token is expired, clearing session');
         await clearTokens();
@@ -109,12 +110,16 @@ final class DioHttpClient implements HttpClient {
           _logger.debug('Restored refresh token from cache');
           await setRefreshToken(cachedRefreshToken);
         }
-        _logger.info('Authentication state successfully restored from cache');
+        _logger.info(
+          'Authentication state successfully restored from cache (token len=${cachedToken.length})',
+        );
       }
       return;
     }
-    
-    _logger.info('No valid cached token found, starting unauthenticated session');
+
+    _logger.info(
+      'No valid cached token found, starting unauthenticated session',
+    );
   }
 
   /// Processes response and caches token if present
@@ -129,13 +134,17 @@ final class DioHttpClient implements HttpClient {
         ? _asStringKeyedMap(dataCandidate)
         : const <String, dynamic>{};
 
-    final accessToken = _stringOrNull(
-      data['token'] ??
-          data['accessToken'] ??
-          data['access_token'] ??
-          root['token'] ??
-          root['accessToken'] ??
-          root['access_token'],
+    final accessToken = _findTokenValue(
+      <String>[path],
+      responseData,
+      const [
+        'token',
+        'accessToken',
+        'access_token',
+        'jwtToken',
+        'jwt_token',
+        'bearer',
+      ],
     );
     final deviceId = _stringOrNull(
       data['deviceId'] ??
@@ -154,35 +163,51 @@ final class DioHttpClient implements HttpClient {
       setDefaultHeader(NetworkConstants.deviceIdHeader, deviceId);
       _cacheRepository.put(CacheKeys.deviceId, deviceId).ignore();
     }
-    final refreshToken = _stringOrNull(
-      data['refreshToken'] ??
-          data['refresh_token'] ??
-          root['refreshToken'] ??
-          root['refresh_token'],
+    final refreshToken = _findTokenValue(
+      <String>[path],
+      responseData,
+      const ['refreshToken', 'refresh_token'],
     );
 
     // Only update tokens if they are valid JWTs.
     // We are also more selective: we only update if we are on an auth endpoint
     // OR if the response contains both a token and user data (typical for login/refresh).
-    final bool isAuthPath = path.contains('/auth/') || path.contains('/login') || path.contains('/register');
+    final bool isAuthPath =
+        path.contains('/auth/') ||
+        path.contains('/login') ||
+        path.contains('/register');
 
     if (accessToken != null && _isJwtToken(accessToken)) {
       if (_isJwtTokenExpired(accessToken)) {
-        _logger.warning('Found expired token in response from $path, clearing tokens');
-        clearTokens();
+        _logger.warning(
+          'Found expired token in response from $path, clearing tokens',
+        );
+        await clearTokens();
         return;
       }
-      
+
       final bool isNewToken = accessToken != _accessToken;
-      
+
       if (isNewToken || isAuthPath) {
-        _logger.info('Updating access token from response: $path (isNewToken: $isNewToken, isAuthPath: $isAuthPath)');
+        _logger.info(
+          'Updating access token from response: $path (isNewToken: $isNewToken, isAuthPath: $isAuthPath)',
+        );
         await setAccessToken(accessToken);
         if (refreshToken != null) await setRefreshToken(refreshToken);
       } else {
-        _logger.debug('Token in response from $path is identical to current token, skipping update');
+        _logger.debug(
+          'Token in response from $path is identical to current token, skipping update',
+        );
       }
-    } else if (refreshToken != null && (isAuthPath || refreshToken != _refreshToken)) {
+    } else if (accessToken != null) {
+      // Non-JWT opaque token — _processResponse skips auto-save.
+      // The repository's _setTokensIfPresent handles saving it explicitly.
+      _logger.info(
+        '[_processResponse] Non-JWT token found in $path (len=${accessToken.length}) — skipping auto-save, repository will handle it',
+      );
+    }
+
+    if (refreshToken != null && (isAuthPath || refreshToken != _refreshToken)) {
       // NOTE: We relaxed the check here to allow non-JWT refresh tokens.
       _logger.info('Updating refresh token from response: $path');
       await setRefreshToken(refreshToken);
@@ -237,7 +262,9 @@ final class DioHttpClient implements HttpClient {
     try {
       final parts = token.split('.');
       if (parts.length != 3) {
-        return true;
+        // Not a JWT — opaque/custom token. Treat as valid; let the backend
+        // decide via 401. Returning true here incorrectly clears valid sessions.
+        return false;
       }
 
       final payload = json.decode(
@@ -265,7 +292,9 @@ final class DioHttpClient implements HttpClient {
       );
 
       // Buffer of 30 seconds to be safe and match RefreshTokenInterceptor
-      return DateTime.now().isAfter(expiresAt.subtract(const Duration(seconds: 30)));
+      return DateTime.now().isAfter(
+        expiresAt.subtract(const Duration(seconds: 30)),
+      );
     } catch (_) {
       return true;
     }
@@ -392,7 +421,8 @@ final class DioHttpClient implements HttpClient {
   String? get refreshToken => _refreshToken;
 
   @override
-  bool get isAuthenticated => _accessToken != null && !(_isJwtTokenExpired(_accessToken!));
+  bool get isAuthenticated =>
+      _accessToken != null && !(_isJwtTokenExpired(_accessToken!));
 
   @override
   String? get deviceId => _defaultHeaders[NetworkConstants.deviceIdHeader];
@@ -409,7 +439,10 @@ final class DioHttpClient implements HttpClient {
     // For custom baseUrl requests, we inject it manually in the request methods.
 
     await _cacheRepository.put(CacheKeys.accessToken, token);
-    _logger.info('Access token updated in memory and cache');
+    final cachedToken = await _cacheRepository.get(CacheKeys.accessToken);
+    _logger.info(
+      'Access token updated in memory and cache (read-back ok=${cachedToken == token}, token len=${token.length})',
+    );
   }
 
   @override
@@ -424,23 +457,22 @@ final class DioHttpClient implements HttpClient {
     _accessToken = null;
     _refreshToken = null;
     _userId = null;
-    
+
     // Clear any potentially lingering Authorization headers
     _defaultHeaders.remove('Authorization');
     _dio.options.headers.remove('Authorization');
-    
+
     // Perform cache removals in parallel for efficiency
     await Future.wait([
       _cacheRepository.remove(CacheKeys.accessToken),
       _cacheRepository.remove(CacheKeys.refreshToken),
-      // Crucial: Clear the user object to prevent SplashPage from attempting 
+      // Crucial: Clear the user object to prevent SplashPage from attempting
       // authenticated calls with a cleared session.
       _cacheRepository.remove(CacheKeys.user),
     ]);
-    
+
     _logger.debug('Tokens and user session cleared from memory and cache');
   }
-
 
   Future<bool> tryRestoreSession() async {
     if (_accessToken != null && !(_isJwtTokenExpired(_accessToken!))) {
@@ -457,11 +489,11 @@ final class DioHttpClient implements HttpClient {
       final cachedRefreshToken = await _cacheRepository.get(
         CacheKeys.refreshToken,
       );
-      
+
       _accessToken = cachedToken;
       _refreshToken = cachedRefreshToken;
       _userId = _extractUserIdFromJwt(cachedToken);
-      
+
       return true;
     }
     return false;
@@ -470,9 +502,7 @@ final class DioHttpClient implements HttpClient {
   /// Returns the core headers required for every request:
   /// Authorization, Device ID, and Accept-Language.
   Map<String, String> _getCoreHeaders() {
-    final headers = <String, String>{
-      'Accept-Language': _languageCode,
-    };
+    final headers = <String, String>{'Accept-Language': _languageCode};
 
     if (_accessToken != null && _accessToken!.isNotEmpty) {
       headers['Authorization'] = 'Bearer $_accessToken';
@@ -483,8 +513,46 @@ final class DioHttpClient implements HttpClient {
       headers[NetworkConstants.deviceIdHeader] = deviceId;
     }
 
-    _logger.debug('Generated core headers: ${headers.keys.toList()} (Token present: ${_accessToken != null})');
+    _logger.debug(
+      'Generated core headers: ${headers.keys.toList()} (Token present: ${_accessToken != null}, token len: ${_accessToken?.length ?? 0})',
+    );
     return headers;
+  }
+
+  String? _findTokenValue(
+    List<String> pathHints,
+    dynamic source,
+    List<String> candidateKeys,
+  ) {
+    if (source is Map) {
+      final map = _asStringKeyedMap(source);
+
+      for (final key in candidateKeys) {
+        final parsed = _stringOrNull(map[key]);
+        if (parsed != null) {
+          _logger.info(
+            'Token discovered from response key "$key" for ${pathHints.join(', ')}',
+          );
+          return parsed;
+        }
+      }
+
+      for (final value in map.values) {
+        final nested = _findTokenValue(pathHints, value, candidateKeys);
+        if (nested != null) {
+          return nested;
+        }
+      }
+    } else if (source is List) {
+      for (final value in source) {
+        final nested = _findTokenValue(pathHints, value, candidateKeys);
+        if (nested != null) {
+          return nested;
+        }
+      }
+    }
+
+    return null;
   }
 
   /// Merges default headers with core headers and request-specific headers.
@@ -550,7 +618,9 @@ final class DioHttpClient implements HttpClient {
           ? FormData.fromMap(data.map((k, v) => MapEntry(k, v ?? '')))
           : data;
 
-      final mergedHeaders = mergeHeaders ? _buildMergedHeaders(headers) : (headers ?? {});
+      final mergedHeaders = mergeHeaders
+          ? _buildMergedHeaders(headers)
+          : (headers ?? {});
 
       final Dio dioInstance = baseUrl != null
           ? _createDioInstanceWithBaseUrl(baseUrl, mergedHeaders)
@@ -560,9 +630,7 @@ final class DioHttpClient implements HttpClient {
         _resolvePath(path),
         data: requestData,
         queryParameters: queryParameters,
-        options: Options(
-          headers: mergedHeaders,
-        ),
+        options: Options(headers: mergedHeaders),
       );
 
       // Process response for token caching

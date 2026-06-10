@@ -134,14 +134,27 @@ class RefreshTokenInterceptor extends Interceptor {
     return handler.next(err);
   }
 
-  /// Returns true if the cached access token differs from the one that was
-  /// sent with [requestOptions]. This indicates the user re-authenticated
-  /// while the refresh was in-flight, so we must NOT clear the new session.
+  /// Returns true if a newer/fresh session token exists compared to what was
+  /// sent with [requestOptions]. This guards against clearing a valid new
+  /// session when a stale 401 (from before login) arrives late.
+  ///
+  /// Two cases are covered:
+  /// 1. Original request had a token → a different token is now cached
+  ///    (user re-authenticated while refresh was in-flight).
+  /// 2. Original request had NO token → a fresh token now exists
+  ///    (e.g. background notification fired before login, OTP completed
+  ///    before the 401 response arrived).
   Future<bool> _hasTokenChangedSince(RequestOptions requestOptions) async {
-    final authHeader = requestOptions.headers['Authorization'] as String?;
-    if (authHeader == null || !authHeader.startsWith('Bearer ')) return false;
-    final sentToken = authHeader.substring(7);
     final currentToken = await _cacheRepository.get(_accessTokenKey);
+    final authHeader = requestOptions.headers['Authorization'] as String?;
+
+    if (authHeader == null || !authHeader.startsWith('Bearer ')) {
+      // Original request was unauthenticated. If we now have a fresh token,
+      // a new login happened while this 401 was in-flight — protect it.
+      return currentToken != null && currentToken.isNotEmpty;
+    }
+
+    final sentToken = authHeader.substring(7);
     return currentToken != null && currentToken != sentToken;
   }
 

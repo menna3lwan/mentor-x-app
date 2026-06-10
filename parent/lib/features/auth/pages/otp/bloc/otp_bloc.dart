@@ -51,16 +51,26 @@ final class OtpBloc extends Bloc<OtpEvent, OtpState>
     OtpSubmittedEvent event,
     Emitter<OtpState> emit,
   ) async {
+    _logger.info(
+      '🔵 [OTP_BLOC] _onOtpSubmitted START: phone=${event.phone}, code=${event.code}',
+    );
     emit(state.copyWith(loadingState: OtpLoadingState.loading));
     try {
+      _logger.info('🔵 [OTP_BLOC] Calling verifyOtp on repository...');
       final user = await _authenticationRepository.verifyOtp(
         event.phone,
         event.code,
       );
+      _logger.info(
+        '🟢 [OTP_BLOC] OTP Verification SUCCESS: user=${user.fullName}, id=${user.id}, status=${user.status.name}',
+      );
       emit(state.copyWith(loadingState: OtpLoadingState.success));
+      _logger.info('🟢 [OTP_BLOC] Emitting OtpSuccessPresentationEvent...');
       emitPresentation(OtpSuccessPresentationEvent(user: user));
     } on AuthenticationException catch (e) {
-      _logger.error('OTP verification failed: ${e.message}');
+      _logger.error(
+        '🔴 [OTP_BLOC] OTP Verification FAILED: code=${e.code}, message=${e.message}',
+      );
       emit(
         state.copyWith(
           loadingState: OtpLoadingState.failure,
@@ -69,7 +79,7 @@ final class OtpBloc extends Bloc<OtpEvent, OtpState>
       );
       emitPresentation(OtpFailurePresentationEvent(exception: e));
     } catch (e) {
-      _logger.error('Unexpected OTP error: $e');
+      _logger.error('🔴 [OTP_BLOC] Unexpected OTP error: $e');
       const exception = AuthenticationException(
         code: AuthenticationExceptionCode.unknown,
       );

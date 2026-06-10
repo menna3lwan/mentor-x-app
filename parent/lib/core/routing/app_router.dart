@@ -74,14 +74,16 @@ final class AppRouter {
     final isPending = user?.status == ParentStatus.pending;
 
     _routerLogger.info(
-      '[redirect] loc=$location auth=$isAuthenticated status=${user?.status.name}',
+      '🔵 [ROUTER_REDIRECT] START: loc=$location auth=$isAuthenticated user=${user?.fullName} status=${user?.status.name}',
     );
 
     // Splash (`/`) handles its own redirect logic — let it through.
     if (location == '/') return null;
 
     if (!isAuthenticated && !isPublic) {
-      _routerLogger.warning('[redirect] → /login (unauthenticated on protected route)');
+      _routerLogger.warning(
+        '🔴 [ROUTER_REDIRECT] Redirecting to /login: unauthenticated on protected route',
+      );
       return '/login';
     }
 
@@ -90,13 +92,17 @@ final class AppRouter {
     // promotion flow; once the [AppAuthenticationCubit] receives the
     // refreshed user the redirect re-evaluates and routes them onward.
     if (isAuthenticated && isPending && location != '/pending-account') {
-      _routerLogger.warning('[redirect] → /pending-account (status=pending, loc=$location)');
+      _routerLogger.warning(
+        '🟡 [ROUTER_REDIRECT] Redirecting to /pending-account: status=pending',
+      );
       return '/pending-account';
     }
 
     // Conversely, an already-active user should never see the pending gate.
     if (isAuthenticated && !isPending && location == '/pending-account') {
-      _routerLogger.info('[redirect] → /home (status no longer pending)');
+      _routerLogger.info(
+        '🟢 [ROUTER_REDIRECT] Redirecting to /home: status no longer pending',
+      );
       return '/home';
     }
 
@@ -106,9 +112,16 @@ final class AppRouter {
         (location == '/login' ||
             location == '/onboarding' ||
             location == '/register')) {
-      return isPending ? '/pending-account' : '/home';
+      final redirect = isPending ? '/pending-account' : '/home';
+      _routerLogger.info(
+        '🟢 [ROUTER_REDIRECT] Blocking authenticated user from auth screen, redirecting to $redirect',
+      );
+      return redirect;
     }
 
+    _routerLogger.debug(
+      '🟢 [ROUTER_REDIRECT] No redirect needed for $location',
+    );
     return null;
   }
 }
