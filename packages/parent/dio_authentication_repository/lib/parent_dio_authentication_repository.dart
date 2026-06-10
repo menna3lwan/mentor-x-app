@@ -492,9 +492,12 @@ final class DioAuthenticationRepository
       }
 
       final data = _extractDataMap(response.data);
-      _setTokensIfPresent(data);
+      await _setTokensIfPresent(data);
 
       final user = ParentModel.fromJson(data);
+      // Cache the user object synchronously to avoid race with other
+      // components (e.g. HomeBloc) that may read the cached user or call
+      // authenticated endpoints immediately after navigation.
       await _cacheUser(user);
       return user;
     } on HttpClientResponse catch (e) {
@@ -505,7 +508,7 @@ final class DioAuthenticationRepository
     }
   }
 
-  void _setTokensIfPresent(Map<String, dynamic> data) {
+  Future<void> _setTokensIfPresent(Map<String, dynamic> data) async {
     // Backend contract (Swagger): complete-login returns { token }, while
     // verify-otp may return { accessToken } or { access_token }. Try all
     // known key names.
@@ -518,12 +521,17 @@ final class DioAuthenticationRepository
       data['refreshToken'] ?? data['refresh_token'],
     );
 
-    httpClient.setAccessToken(accessToken).ignore();
-    cacheRepository.put(CacheKeys.accessToken, accessToken).ignore();
+    // Ensure tokens and cached copies are written before proceeding so
+    // subsequent requests (immediately following OTP verification) use
+    // a valid auth header. Previous implementation used fire-and-forget
+    // which could race with the next network call and produce an
+    // unauthorized error that logs the user out.
+    await httpClient.setAccessToken(accessToken);
+    await cacheRepository.put(CacheKeys.accessToken, accessToken);
 
     if (refreshToken != null) {
-      httpClient.setRefreshToken(refreshToken).ignore();
-      cacheRepository.put(CacheKeys.refreshToken, refreshToken).ignore();
+      await httpClient.setRefreshToken(refreshToken);
+      await cacheRepository.put(CacheKeys.refreshToken, refreshToken);
     }
   }
 
