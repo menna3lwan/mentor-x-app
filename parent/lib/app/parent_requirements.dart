@@ -47,14 +47,55 @@ final class ParentRequirements {
   static Future<ParentRequirements> initialize() async {
     MentorXLogger.enabled = kDebugMode;
     await _initSystemUIStyle();
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
+    // Initialize Firebase safely. The generated `DefaultFirebaseOptions`
+    // may contain placeholder values (e.g. when `flutterfire configure`
+    // hasn't been run or a `GoogleService-Info.plist` wasn't added).
+    // Avoid passing invalid options to the native SDK which can throw
+    // and terminate the app. Prefer options when they look valid, else
+    // fall back to plist-based auto-configuration on Apple platforms.
+    try {
+      _logger.info('Starting Firebase initialization');
+      final options = DefaultFirebaseOptions.currentPlatform;
+      final apiKey = options.apiKey;
 
+      final bool hasPlaceholderApiKey =
+          apiKey.startsWith('PLACEHOLDER') || apiKey.isEmpty;
+
+      if (hasPlaceholderApiKey &&
+          (MentorXPlatformChecker.isIOS || MentorXPlatformChecker.isMacOS)) {
+        _logger.info('Using plist-based Firebase init (placeholder API key)');
+        await Firebase.initializeApp(); // let iOS/macOS read GoogleService-Info.plist
+      } else {
+        _logger.info('Using code-based Firebase init with provided options');
+        await Firebase.initializeApp(options: options);
+      }
+      _logger.info('Firebase initialization completed');
+    } catch (e, s) {
+      MentorXLogger(
+        'ParentRequirements',
+      ).error('Firebase initialization failed', e, s);
+      // Attempt a best-effort fallback: try plist-based init on Apple platforms.
+      try {
+        if (MentorXPlatformChecker.isIOS || MentorXPlatformChecker.isMacOS) {
+          _logger.info('Attempting plist-based Firebase init fallback');
+          await Firebase.initializeApp();
+          _logger.info('Fallback plist-based Firebase init succeeded');
+        }
+      } catch (_) {
+        _logger.warning(
+          'Fallback plist-based Firebase init also failed; continuing without Firebase',
+        );
+      }
+    }
+
+    _logger.info('Initializing services');
     final services = await ServicesFactory.initServices();
+    _logger.info('Services initialized');
 
+    _logger.info('Initializing repositories');
     final (:repositories, :localizedClients) =
         await RepositoriesFactory.initRepositories();
+    _logger.info('Repositories initialized');
 
     final languageCode = RepositoriesFactory.initialLanguageCode;
     final initalBrightness = await _initBrightness(
@@ -74,12 +115,14 @@ final class ParentRequirements {
       _logger.error('Failed to get cached user: ', e, s);
     }
 
+    _logger.info('Initializing blocs');
     final blocs = await BlocsFactory.initBlocs(
       user: user,
       languageCode: languageCode,
       cacheRepository: repositories.cacheRepository,
       localizedClients: localizedClients,
     );
+    _logger.info('Blocs initialized');
 
     final AppRouter appRouter = AppRouter(
       navigatorKey: rootNavigatorKey,

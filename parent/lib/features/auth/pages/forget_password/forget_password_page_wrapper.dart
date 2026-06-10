@@ -164,7 +164,7 @@ class _ForgetPasswordPageWrapperState extends State<ForgetPasswordPageWrapper> {
                               final confirmPassword =
                                   confirmPasswordController.text;
 
-                              if (otp.length < 4 ||
+                              if (otp.length != 6 ||
                                   newPassword.length < 8 ||
                                   newPassword != confirmPassword) {
                                 MentorXUI.showToast(
