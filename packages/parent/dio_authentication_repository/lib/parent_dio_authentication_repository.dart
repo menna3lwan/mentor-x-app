@@ -474,14 +474,15 @@ final class DioAuthenticationRepository
   @override
   Future<ParentEntity> verifyOtp(String phone, String code) async {
     // Backend contract (Swagger):
-    //   POST /api/auth/verify-otp        body: { phone, otp (int) }
+    //   POST /api/auth/verify-otp        body: { phone, otp (string) }
     //   POST /api/parent/complete-login  body: { parentPhone, otp (string) }
+    // OTP is always sent as a string — some backends reject integer payloads.
     try {
       HttpClientResponse response;
       try {
         response = await httpClient.post(
           '/api/auth/verify-otp',
-          data: {'phone': phone, 'otp': int.tryParse(code) ?? code},
+          data: {'phone': phone, 'otp': code},
         );
       } on HttpClientResponse catch (e) {
         if (e.statusCode != 404 && e.statusCode != 405) rethrow;
@@ -491,16 +492,21 @@ final class DioAuthenticationRepository
         );
       }
 
+      _logger.info('[verifyOtp] raw response: ${response.data}');
+
       final data = _extractDataMap(response.data);
+      _logger.info('[verifyOtp] extracted data keys: ${data.keys.toList()}');
+
       await _setTokensIfPresent(data);
+      _logger.info('[verifyOtp] token set: ${httpClient.accessToken != null}');
 
       final user = ParentModel.fromJson(data);
-      // Cache the user object synchronously to avoid race with other
-      // components (e.g. HomeBloc) that may read the cached user or call
-      // authenticated endpoints immediately after navigation.
+      _logger.info('[verifyOtp] user parsed: id=${user.id} status=${user.status.name}');
+
       await _cacheUser(user);
       return user;
     } on HttpClientResponse catch (e) {
+      _logger.error('[verifyOtp] HTTP error: ${e.statusCode} — ${e.data}');
       handleHttpClientErrorResponse(
         e,
         defaultCode: _ExceptionCode.invalidOtp,
@@ -512,10 +518,14 @@ final class DioAuthenticationRepository
     // Backend contract (Swagger): complete-login returns { token }, while
     // verify-otp may return { accessToken } or { access_token }. Try all
     // known key names.
+    _logger.info('[_setTokensIfPresent] checking keys: ${data.keys.toList()}');
     final accessToken = stringOrNull(
       data['accessToken'] ?? data['access_token'] ?? data['token'],
     );
-    if (accessToken == null) return;
+    if (accessToken == null) {
+      _logger.warning('[_setTokensIfPresent] NO token found in response — user will be unauthenticated');
+      return;
+    }
 
     final refreshToken = stringOrNull(
       data['refreshToken'] ?? data['refresh_token'],

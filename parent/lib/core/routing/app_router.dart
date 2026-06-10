@@ -7,6 +7,8 @@ import 'package:mentorx_core/mentorx_core.dart';
 import '../blocs/app_authentication_cubit/app_authentication_cubit.dart';
 import 'app_routes.dart';
 
+final _routerLogger = MentorXLogger('AppRouter');
+
 /// Global navigator key — used by [AppRouter] and shell widgets.
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>(
   debugLabel: 'root',
@@ -71,10 +73,15 @@ final class AppRouter {
     final user = authenticationCubit.state.user;
     final isPending = user?.status == ParentStatus.pending;
 
+    _routerLogger.info(
+      '[redirect] loc=$location auth=$isAuthenticated status=${user?.status.name}',
+    );
+
     // Splash (`/`) handles its own redirect logic — let it through.
     if (location == '/') return null;
 
     if (!isAuthenticated && !isPublic) {
+      _routerLogger.warning('[redirect] → /login (unauthenticated on protected route)');
       return '/login';
     }
 
@@ -83,11 +90,13 @@ final class AppRouter {
     // promotion flow; once the [AppAuthenticationCubit] receives the
     // refreshed user the redirect re-evaluates and routes them onward.
     if (isAuthenticated && isPending && location != '/pending-account') {
+      _routerLogger.warning('[redirect] → /pending-account (status=pending, loc=$location)');
       return '/pending-account';
     }
 
     // Conversely, an already-active user should never see the pending gate.
     if (isAuthenticated && !isPending && location == '/pending-account') {
+      _routerLogger.info('[redirect] → /home (status no longer pending)');
       return '/home';
     }
 

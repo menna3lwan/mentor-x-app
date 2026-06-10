@@ -46,9 +46,8 @@ final class ParentModel extends ParentEntity {
       // Backend (Swagger ParentProfileResponse) returns `students[]` array
       // instead of a scalar count. Fall through from int field to array length.
       childrenCount: _resolveChildrenCount(user),
-      walletBalance: (user['walletBalance'] ?? user['wallet_balance'] ?? 0.0)
-          .toDouble(),
-      totalPoints: (user['totalPoints'] ?? user['total_points'] ?? 0).toInt(),
+      walletBalance: _parseDouble(user['walletBalance'] ?? user['wallet_balance']),
+      totalPoints: _parseInt(user['totalPoints'] ?? user['total_points']),
       metadata: user['metadata'] as Map<String, dynamic>?,
       createdAt: DateTime.tryParse(
               (user['createdAt'] ?? user['created_at'])?.toString() ?? '') ??
@@ -67,12 +66,26 @@ final class ParentModel extends ParentEntity {
     return 0;
   }
 
+  static double _parseDouble(dynamic value) {
+    if (value == null) return 0.0;
+    if (value is num) return value.toDouble();
+    return double.tryParse(value.toString()) ?? 0.0;
+  }
+
+  static int _parseInt(dynamic value) {
+    if (value == null) return 0;
+    if (value is num) return value.toInt();
+    return int.tryParse(value.toString()) ?? 0;
+  }
+
   static ParentStatus _parseStatus(dynamic value) {
-    if (value == null) return ParentStatus.pending;
+    // Absent status means the login endpoint didn't include it — assume active.
+    // Only treat as pending when the backend explicitly says so.
+    if (value == null) return ParentStatus.active;
     final str = value.toString().toLowerCase();
     return ParentStatus.values.firstWhere(
       (e) => e.name == str,
-      orElse: () => ParentStatus.pending,
+      orElse: () => ParentStatus.active,
     );
   }
 
