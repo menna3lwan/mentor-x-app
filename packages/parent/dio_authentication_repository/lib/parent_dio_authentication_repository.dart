@@ -533,15 +533,21 @@ final class DioAuthenticationRepository
 
     // Ensure tokens and cached copies are written before proceeding so
     // subsequent requests (immediately following OTP verification) use
-    // a valid auth header. Previous implementation used fire-and-forget
-    // which could race with the next network call and produce an
-    // unauthorized error that logs the user out.
+    // a valid auth header.
     await httpClient.setAccessToken(accessToken);
     await cacheRepository.put(CacheKeys.accessToken, accessToken);
+    _logger.info('[_setTokensIfPresent] access token saved (length=${accessToken.length})');
 
     if (refreshToken != null) {
       await httpClient.setRefreshToken(refreshToken);
       await cacheRepository.put(CacheKeys.refreshToken, refreshToken);
+      _logger.info('[_setTokensIfPresent] refresh token saved');
+    } else {
+      // No refresh token returned — clear any stale one from a previous session.
+      // An old refresh token that the backend has blacklisted would otherwise
+      // trigger a failed /api/auth/refresh call and a spurious logout.
+      await cacheRepository.remove(CacheKeys.refreshToken);
+      _logger.info('[_setTokensIfPresent] no refresh token in response — cleared stale cache entry');
     }
   }
 

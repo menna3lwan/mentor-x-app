@@ -54,7 +54,8 @@ class RefreshTokenInterceptor extends Interceptor {
         // If it was already a retry and still failed with 401, the session is dead
         if (isRetry) {
           _logger.warning('Retry request failed with 401 again, triggering session expiry');
-          if (_onSessionExpired != null) {
+          final didChange = await _hasTokenChangedSince(err.requestOptions);
+          if (!didChange && _onSessionExpired != null) {
             await _onSessionExpired();
           }
         }
@@ -100,12 +101,25 @@ class RefreshTokenInterceptor extends Interceptor {
           // Refresh failed
           _isRefreshing = false;
           _refreshCompleter?.completeError(err);
-          
+
+          // Guard: only expire the session if the token that caused the 401 is
+          // still the current one. A newer login (e.g. OTP just completed) may
+          // have already replaced it — wiping that fresh token would log the
+          // user out immediately after a successful login.
+          final didTokenChange = await _hasTokenChangedSince(err.requestOptions);
+          if (didTokenChange) {
+            _logger.info(
+              'Skipping session expiry — token changed since the failed request '
+              '(user re-authenticated while refresh was in flight)',
+            );
+            return handler.next(err);
+          }
+
           _logger.warning('Token refresh failed, triggering session expiry');
           if (_onSessionExpired != null) {
             await _onSessionExpired();
           }
-          
+
           return handler.next(err);
         }
       } catch (e, s) {
@@ -118,6 +132,17 @@ class RefreshTokenInterceptor extends Interceptor {
 
     // Not a 401 error, pass through
     return handler.next(err);
+  }
+
+  /// Returns true if the cached access token differs from the one that was
+  /// sent with [requestOptions]. This indicates the user re-authenticated
+  /// while the refresh was in-flight, so we must NOT clear the new session.
+  Future<bool> _hasTokenChangedSince(RequestOptions requestOptions) async {
+    final authHeader = requestOptions.headers['Authorization'] as String?;
+    if (authHeader == null || !authHeader.startsWith('Bearer ')) return false;
+    final sentToken = authHeader.substring(7);
+    final currentToken = await _cacheRepository.get(_accessTokenKey);
+    return currentToken != null && currentToken != sentToken;
   }
 
   /// Refreshes the access token using the refresh token
