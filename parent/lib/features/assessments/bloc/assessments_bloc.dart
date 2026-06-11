@@ -204,10 +204,14 @@ final class AssessmentsBloc extends Bloc<AssessmentsEvent, AssessmentsState>
 
   void _emitFailure(Object error) {
     _maybeEmitUnauthorized(error);
+    final kind = _classifyFailure(error);
     emitPresentation(
       AssessmentsFailurePresentationEvent(
-        kind: _classifyFailure(error),
-        rawMessage: _describe(error),
+        kind: kind,
+        // Only pass rawMessage for classified failures (notFound, network).
+        // unknown failures come from unexpected backend errors — never show
+        // raw exception strings to the end user.
+        rawMessage: kind != AssessmentsFailureKind.unknown ? _describe(error) : null,
       ),
     );
   }

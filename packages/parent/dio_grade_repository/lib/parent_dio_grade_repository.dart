@@ -40,13 +40,15 @@ final class DioParentGradeRepository
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return ParentGradeSummaryModel.fromJson(data);
     } on HttpClientResponse catch (e) {
-      if (e.statusCode == 404 || e.statusCode == 405) {
-        return ParentGradeSummaryModel.fromJson(const <String, dynamic>{});
+      if (e.statusCode == 401 || e.statusCode == 403) {
+        handleHttpClientErrorResponse(
+          e,
+          defaultCode: ParentGradeRepositoryExceptionCode.fetchError,
+        );
       }
-      handleHttpClientErrorResponse(
-        e,
-        defaultCode: ParentGradeRepositoryExceptionCode.fetchError,
-      );
+      // All other HTTP errors (404, 405, 500 NoResourceFoundException, …) degrade
+      // gracefully — these endpoints are not yet in the backend API contract.
+      return ParentGradeSummaryModel.fromJson(const <String, dynamic>{});
     }
   }
 
@@ -64,13 +66,13 @@ final class DioParentGradeRepository
       final data = asMap(response.data)['data'] ?? asMap(response.data);
       return ParentGradeTrendModel.fromJson(data);
     } on HttpClientResponse catch (e) {
-      if (e.statusCode == 404 || e.statusCode == 405) {
-        return ParentGradeTrendModel.fromJson(const <String, dynamic>{});
+      if (e.statusCode == 401 || e.statusCode == 403) {
+        handleHttpClientErrorResponse(
+          e,
+          defaultCode: ParentGradeRepositoryExceptionCode.fetchError,
+        );
       }
-      handleHttpClientErrorResponse(
-        e,
-        defaultCode: ParentGradeRepositoryExceptionCode.fetchError,
-      );
+      return ParentGradeTrendModel.fromJson(const <String, dynamic>{});
     }
   }
 
@@ -97,14 +99,14 @@ final class DioParentGradeRepository
           : asList(payload);
       return items.map((e) => QuizAttemptModel.fromJson(asMap(e))).toList();
     } on HttpClientResponse catch (e) {
-      if (e.statusCode == 404 || e.statusCode == 405) {
-        return const <QuizAttemptEntity>[];
+      if (e.statusCode == 401 || e.statusCode == 403) {
+        handleHttpClientErrorResponse(
+          e,
+          defaultCode: ParentGradeRepositoryExceptionCode.fetchError,
+          codeFromStatusCode: _classify,
+        );
       }
-      handleHttpClientErrorResponse(
-        e,
-        defaultCode: ParentGradeRepositoryExceptionCode.fetchError,
-        codeFromStatusCode: _classify,
-      );
+      return const <QuizAttemptEntity>[];
     }
   }
 

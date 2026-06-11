@@ -20,39 +20,38 @@ final class ParentModel extends ParentEntity {
   factory ParentModel.fromJson(Map<String, dynamic> json) {
     // Backend may wrap the user object under 'user' or 'parent'. Fall back
     // to the root map if neither key is present (flat response).
-    final user = json['user'] as Map<String, dynamic>?
-        ?? json['parent'] as Map<String, dynamic>?
-        ?? json;
+    // Use `is` check instead of `as` cast to avoid TypeError when the
+    // backend returns an unexpected type (e.g. String or int) for these keys.
+    final dynamic rawUser = json['user'] ?? json['parent'];
+    final Map<String, dynamic> user =
+        rawUser is Map<String, dynamic> ? rawUser : json;
 
-    final String name = user['name'] as String? ?? '';
+    final String name = _safeString(user['name']);
     final nameParts = name.trim().split(' ');
     final String fallbackFirst = nameParts.first;
     final String fallbackLast = nameParts.length > 1 ? nameParts.sublist(1).join(' ') : '';
 
     return ParentModel(
       id: (user['id'] ?? user['userId'])?.toString() ?? '',
-      firstName: user['firstName'] as String? ??
-          user['first_name'] as String? ??
-          fallbackFirst,
-      lastName: user['lastName'] as String? ??
-          user['last_name'] as String? ??
-          fallbackLast,
-      email: (user['email'] as String?)?.isNotEmpty == true ? user['email'] as String : null,
-      phoneNumber: (user['phone'] ?? user['phoneNumber'] ?? user['phone_number'])
-              ?.toString() ??
-          '',
-      profileImageUrl: (user['profileImageUrl'] ??
-              user['profileImage'] ??
-              user['avatarUrl'] ??
-              user['profile_photo_url'])
-          ?.toString(),
+      firstName: _safeString(user['firstName'] ?? user['first_name'], fallback: fallbackFirst),
+      lastName: _safeString(user['lastName'] ?? user['last_name'], fallback: fallbackLast),
+      email: _safeNullableString(user['email']),
+      phoneNumber: _safeString(user['phone'] ?? user['phoneNumber'] ?? user['phone_number']),
+      profileImageUrl: _safeNullableString(
+        user['profileImageUrl'] ??
+            user['profileImage'] ??
+            user['avatarUrl'] ??
+            user['profile_photo_url'],
+      ),
       status: _parseStatus(user['status']),
       // Backend (Swagger ParentProfileResponse) returns `students[]` array
       // instead of a scalar count. Fall through from int field to array length.
       childrenCount: _resolveChildrenCount(user),
       walletBalance: _parseDouble(user['walletBalance'] ?? user['wallet_balance']),
       totalPoints: _parseInt(user['totalPoints'] ?? user['total_points']),
-      metadata: user['metadata'] as Map<String, dynamic>?,
+      metadata: user['metadata'] is Map<String, dynamic>
+          ? user['metadata'] as Map<String, dynamic>
+          : null,
       createdAt: DateTime.tryParse(
               (user['createdAt'] ?? user['created_at'])?.toString() ?? '') ??
           DateTime.now(),
@@ -60,6 +59,20 @@ final class ParentModel extends ParentEntity {
               (user['updatedAt'] ?? user['updated_at'])?.toString() ?? '') ??
           DateTime.now(),
     );
+  }
+
+  /// Returns the string value of [value], or [fallback] if null/empty.
+  static String _safeString(dynamic value, {String fallback = ''}) {
+    if (value == null) return fallback;
+    final s = value.toString().trim();
+    return s.isEmpty ? fallback : s;
+  }
+
+  /// Returns a non-empty string or null; never throws on unexpected types.
+  static String? _safeNullableString(dynamic value) {
+    if (value == null) return null;
+    final s = value.toString().trim();
+    return s.isEmpty ? null : s;
   }
 
   static int _resolveChildrenCount(Map<String, dynamic> user) {

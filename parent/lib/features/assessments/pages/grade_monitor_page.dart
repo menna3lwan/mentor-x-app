@@ -99,7 +99,7 @@ class _GradeMonitorView extends StatelessWidget {
       AssessmentsFailureKind.network => t.unableToLoad,
       AssessmentsFailureKind.notFound => t.assessments.noAssessmentsTitle,
       AssessmentsFailureKind.unauthorized => t.unableToLoad,
-      AssessmentsFailureKind.unknown => rawMessage ?? t.unableToLoad,
+      AssessmentsFailureKind.unknown => t.unableToLoad,
     };
   }
 }

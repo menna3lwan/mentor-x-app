@@ -80,8 +80,11 @@ final class OtpBloc extends Bloc<OtpEvent, OtpState>
       emitPresentation(OtpFailurePresentationEvent(exception: e));
     } catch (e, s) {
       _logger.error('🔴 [OTP_BLOC] Unexpected OTP error: $e', e, s);
-      const exception = AuthenticationException(
+      // Preserve the original error message so the UI can display what went
+      // wrong instead of the generic "verification failed" fallback.
+      final exception = AuthenticationException(
         code: AuthenticationExceptionCode.unknown,
+        message: e.toString(),
       );
       emit(
         state.copyWith(
@@ -89,7 +92,7 @@ final class OtpBloc extends Bloc<OtpEvent, OtpState>
           exception: exception,
         ),
       );
-      emitPresentation(const OtpFailurePresentationEvent(exception: exception));
+      emitPresentation(OtpFailurePresentationEvent(exception: exception));
     }
   }
 

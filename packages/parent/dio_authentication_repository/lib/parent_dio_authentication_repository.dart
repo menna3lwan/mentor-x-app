@@ -495,6 +495,12 @@ final class DioAuthenticationRepository
     // OTP is always sent as a string — some backends reject integer payloads.
     try {
       HttpClientResponse response;
+      // Track whether we already consumed the OTP on /api/auth/verify-otp so
+      // the safety-net block below doesn't call that endpoint a second time —
+      // backends that treat OTPs as single-use would reject the duplicate call
+      // and leave the user with a verified but token-less session.
+      var usedVerifyOtpFallback = false;
+
       try {
         _logger.info(
           '[verifyOtp] request start: endpoint=/api/parent/complete-login phone=$phone codeLength=${code.length}',
@@ -503,15 +509,41 @@ final class DioAuthenticationRepository
           '/api/parent/complete-login',
           data: {'parentPhone': phone, 'otp': code},
         );
-      } on HttpClientResponse catch (e) {
-        if (e.statusCode != 404 && e.statusCode != 405) rethrow;
+        _logger.info(
+          '[verifyOtp] complete-login succeeded: status=${response.statusCode}',
+        );
+      } on HttpClientResponse catch (primaryError) {
+        _logger.warning(
+          '[verifyOtp] complete-login failed: status=${primaryError.statusCode} body=${primaryError.data}',
+        );
+        if (primaryError.statusCode != 404 && primaryError.statusCode != 405) {
+          _logger.error(
+            '[verifyOtp] complete-login returned non-fallback error ${primaryError.statusCode} — rethrowing',
+          );
+          rethrow;
+        }
+        // complete-login endpoint doesn't exist — try the generic verify-otp.
+        // CRITICAL: wrap this fallback in its own try/catch so that its HTTP
+        // errors are NOT silently re-mapped to invalidOtp by the outer catch.
         _logger.info(
           '[verifyOtp] fallback request start: endpoint=/api/auth/verify-otp phone=$phone codeLength=${code.length}',
         );
-        response = await httpClient.post(
-          '/api/auth/verify-otp',
-          data: {'phone': phone, 'otp': code},
-        );
+        try {
+          response = await httpClient.post(
+            '/api/auth/verify-otp',
+            data: {'phone': phone, 'otp': code},
+          );
+          usedVerifyOtpFallback = true;
+          _logger.info(
+            '[verifyOtp] verify-otp fallback succeeded: status=${response.statusCode}',
+          );
+        } on HttpClientResponse catch (fallbackError) {
+          _logger.error(
+            '[verifyOtp] verify-otp fallback also failed: status=${fallbackError.statusCode} body=${fallbackError.data}',
+          );
+          // Surface the fallback error as-is — callers map it to invalidOtp.
+          rethrow;
+        }
       }
 
       _logger.info(
@@ -527,11 +559,13 @@ final class DioAuthenticationRepository
       _logger.info('[verifyOtp] token set: ${httpClient.accessToken != null}');
       _logger.info('[verifyOtp] token after save: ${httpClient.accessToken}');
 
-      // Safety net: if the first endpoint succeeded but did NOT return a token,
-      // attempt the alternative endpoint which may issue one.
-      if (httpClient.accessToken == null) {
+      // Safety net: if /api/parent/complete-login succeeded but returned no
+      // token, try /api/auth/verify-otp as an alternative token issuer.
+      // Skip entirely when the fallback was already /api/auth/verify-otp —
+      // reusing a single-use OTP would burn the code and fail.
+      if (httpClient.accessToken == null && !usedVerifyOtpFallback) {
         _logger.warning(
-          '[verifyOtp] No token after first endpoint — trying alternative',
+          '[verifyOtp] No token after complete-login — trying verify-otp alternative',
         );
         try {
           final fallback = await httpClient.post(
@@ -568,9 +602,20 @@ final class DioAuthenticationRepository
         );
       }
 
-      final user = ParentModel.fromJson(data);
+      _logger.info('[verifyOtp] parsing ParentModel from data...');
+      final ParentEntity user;
+      try {
+        user = ParentModel.fromJson(data);
+      } catch (parseError, parseStack) {
+        _logger.error(
+          '[verifyOtp] PARSE FAILURE — ParentModel.fromJson threw: $parseError\ndata keys: ${data.keys.toList()}\ndata: $data',
+          parseError,
+          parseStack,
+        );
+        rethrow;
+      }
       _logger.info(
-        '[verifyOtp] user parsed: id=${user.id} status=${user.status.name}',
+        '[verifyOtp] user parsed: id=${user.id} firstName=${user.firstName} status=${user.status.name}',
       );
 
       await _cacheUser(user);

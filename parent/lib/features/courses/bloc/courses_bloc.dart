@@ -125,10 +125,9 @@ final class CoursesBloc extends Bloc<CoursesEvent, CoursesState>
       emit(state.copyWith(summarySection: CoursesAsyncSection.loaded(summary)));
     } catch (e) {
       if (emit.isDone) return;
-      final message = e.describeError();
-      emit(state.copyWith(summarySection: CoursesAsyncSection.failure(message)));
+      emit(state.copyWith(summarySection: CoursesAsyncSection.failure(e.describeError())));
       _maybeEmitUnauthorized(e);
-      emitPresentation(CoursesFailurePresentationEvent(message: message));
+      // Grade summary is non-critical — don't toast.
     }
   }
 
