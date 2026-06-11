@@ -84,10 +84,7 @@ class ParentQuickActionsWrapper extends StatelessWidget {
             ParentQuickAction(
               icon: Icons.notifications_active_rounded,
               label: t.notifications,
-              enabled: hasChild,
-              onTap: hasChild
-                  ? () => NotificationsRoute(childId: childId).go(context)
-                  : null,
+              onTap: () => const NotificationsRoute().go(context),
             ),
             ParentQuickAction(
               icon: Icons.account_balance_wallet_outlined,

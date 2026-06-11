@@ -2,6 +2,8 @@ import 'package:bloc/bloc.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 
+import '../../../core/blocs/bloc_error_helpers.dart';
+
 part 'communication_event.dart';
 part 'communication_state.dart';
 
@@ -13,6 +15,11 @@ final class CommunicationFailurePresentationEvent
     extends CommunicationPresentationEvent {
   final String message;
   const CommunicationFailurePresentationEvent({required this.message});
+}
+
+final class CommunicationUnauthorizedPresentationEvent
+    extends CommunicationPresentationEvent {
+  const CommunicationUnauthorizedPresentationEvent();
 }
 
 /// Drives the communication surfaces: announcements archive and WhatsApp group
@@ -53,8 +60,11 @@ final class CommunicationBloc
     Emitter<CommunicationState> emit,
   ) async {
     emit(state.copyWith(isRefreshing: true, childId: event.childId));
-    await _loadAll(emit, event.childId);
-    emit(state.copyWith(isRefreshing: false));
+    try {
+      await _loadAll(emit, event.childId);
+    } finally {
+      if (!emit.isDone) emit(state.copyWith(isRefreshing: false));
+    }
   }
 
   Future<void> _onRetrySection(
@@ -105,20 +115,22 @@ final class CommunicationBloc
   ) async {
     try {
       final list = await _repository.getAnnouncements(childId);
+      if (emit.isDone) return;
       emit(
         state.copyWith(
           announcementsSection: CommunicationAsyncSection.loaded(list),
         ),
       );
     } catch (e) {
+      if (emit.isDone) return;
+      final message = e.describeError();
       emit(
         state.copyWith(
-          announcementsSection: CommunicationAsyncSection.failure(e.toString()),
+          announcementsSection: CommunicationAsyncSection.failure(message),
         ),
       );
-      emitPresentation(
-        CommunicationFailurePresentationEvent(message: e.toString()),
-      );
+      _maybeEmitUnauthorized(e);
+      emitPresentation(CommunicationFailurePresentationEvent(message: message));
     }
   }
 
@@ -128,22 +140,28 @@ final class CommunicationBloc
   ) async {
     try {
       final list = await _repository.getWhatsAppGroups(childId);
+      if (emit.isDone) return;
       emit(
         state.copyWith(
           whatsAppGroupsSection: CommunicationAsyncSection.loaded(list),
         ),
       );
     } catch (e) {
+      if (emit.isDone) return;
+      final message = e.describeError();
       emit(
         state.copyWith(
-          whatsAppGroupsSection: CommunicationAsyncSection.failure(
-            e.toString(),
-          ),
+          whatsAppGroupsSection: CommunicationAsyncSection.failure(message),
         ),
       );
-      emitPresentation(
-        CommunicationFailurePresentationEvent(message: e.toString()),
-      );
+      _maybeEmitUnauthorized(e);
+      emitPresentation(CommunicationFailurePresentationEvent(message: message));
+    }
+  }
+
+  void _maybeEmitUnauthorized(Object error) {
+    if (isUnauthorizedError(error)) {
+      emitPresentation(const CommunicationUnauthorizedPresentationEvent());
     }
   }
 }

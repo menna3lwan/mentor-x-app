@@ -184,13 +184,12 @@ class AnalyticsMonitorRoute extends GoRouteData with $AnalyticsMonitorRoute {
       AnalyticsMonitorPage(childId: childId);
 }
 
-@TypedGoRoute<NotificationsRoute>(path: '/notifications/:childId')
+@TypedGoRoute<NotificationsRoute>(path: '/notifications')
 class NotificationsRoute extends GoRouteData with $NotificationsRoute {
-  final String childId;
-  const NotificationsRoute({required this.childId});
+  const NotificationsRoute();
   @override
   Widget build(BuildContext context, GoRouterState state) =>
-      NotificationsParentPage(childId: childId);
+      const NotificationsParentPage();
 }
 
 @TypedGoRoute<AnnouncementsRoute>(path: '/announcements/:childId')

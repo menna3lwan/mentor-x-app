@@ -10,9 +10,7 @@ import '../bloc/notifications_bloc.dart';
 import '../domain/usecases/notification_usecases.dart';
 
 final class NotificationsParentPage extends StatelessWidget {
-  final String childId;
-
-  const NotificationsParentPage({super.key, required this.childId});
+  const NotificationsParentPage({super.key});
 
   @override
   Widget build(BuildContext context) {

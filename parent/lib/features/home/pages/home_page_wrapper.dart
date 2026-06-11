@@ -55,17 +55,9 @@ class _HomePageView extends StatelessWidget {
           onRefresh: () async =>
               context.read<HomeBloc>().add(const HomeRefreshRequested()),
           actions: [
-            BlocBuilder<HomeBloc, HomeState>(
-              buildWhen: (a, b) => a.selectedChild?.id != b.selectedChild?.id,
-              builder: (context, state) {
-                final childId = state.selectedChild?.id;
-                return _NotificationActionButton(
-                  tooltip: t.notifications,
-                  onPressed: childId == null
-                      ? null
-                      : () => NotificationsRoute(childId: childId).go(context),
-                );
-              },
+            _NotificationActionButton(
+              tooltip: t.notifications,
+              onPressed: () => const NotificationsRoute().go(context),
             ),
             const Gap(8),
           ],

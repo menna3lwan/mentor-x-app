@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 import 'package:mentorx_ui/mentorx_ui.dart';
 
+import '../../../core/blocs/app_authentication_cubit/app_authentication_cubit.dart';
 import '../../../core/routing/app_routes.dart';
 import '../bloc/courses_bloc.dart';
 import '../widgets/widgets.dart';
@@ -38,6 +39,9 @@ class _AcademicMonitorView extends StatelessWidget {
         switch (event) {
           case CoursesFailurePresentationEvent(:final message):
             MentorXUI.showToast(message: message, isError: true);
+          case CoursesUnauthorizedPresentationEvent():
+            context.read<AppAuthenticationCubit>().logout();
+            const LoginPageRoute().go(context);
         }
       },
       child: AppDashboardScaffold(

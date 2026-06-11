@@ -6,6 +6,8 @@ import 'package:mentorx_ui/mentorx_ui.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../core/blocs/app_authentication_cubit/app_authentication_cubit.dart';
+import '../../../core/routing/app_routes.dart';
 import '../bloc/communication_bloc.dart';
 import '../widgets/widgets.dart';
 
@@ -41,6 +43,9 @@ class _WhatsAppGroupsView extends StatelessWidget {
         switch (event) {
           case CommunicationFailurePresentationEvent(:final message):
             MentorXUI.showToast(message: message, isError: true);
+          case CommunicationUnauthorizedPresentationEvent():
+            context.read<AppAuthenticationCubit>().logout();
+            const LoginPageRoute().go(context);
         }
       },
       child: AppDashboardScaffold(

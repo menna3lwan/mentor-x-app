@@ -460,20 +460,16 @@ mixin $AnalyticsMonitorRoute on GoRouteData {
 }
 
 RouteBase get $notificationsRoute => GoRouteData.$route(
-  path: '/notifications/:childId',
+  path: '/notifications',
   factory: $NotificationsRoute._fromState,
 );
 
 mixin $NotificationsRoute on GoRouteData {
   static NotificationsRoute _fromState(GoRouterState state) =>
-      NotificationsRoute(childId: state.pathParameters['childId']!);
-
-  NotificationsRoute get _self => this as NotificationsRoute;
+      const NotificationsRoute();
 
   @override
-  String get location => GoRouteData.$location(
-    '/notifications/${Uri.encodeComponent(_self.childId)}',
-  );
+  String get location => GoRouteData.$location('/notifications');
 
   @override
   void go(BuildContext context) => context.go(location);

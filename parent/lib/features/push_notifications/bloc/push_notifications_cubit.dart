@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 import 'package:push_notification_service/push_notification_service.dart';
@@ -102,8 +103,9 @@ final class PushNotificationsCubit extends Cubit<PushNotificationsState> {
   }
 
   /// Exposed for tests / dev menus — injects a fake message into the
-  /// stream. Production callers ignore this.
+  /// stream. No-op in release builds.
   void debugSimulateIncoming(PushNotificationMessage message) {
+    if (!kDebugMode) return;
     _messagesController.add(message);
   }
 

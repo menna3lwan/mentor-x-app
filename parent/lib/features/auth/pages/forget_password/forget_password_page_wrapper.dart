@@ -189,7 +189,7 @@ class _ForgetPasswordPageWrapperState extends State<ForgetPasswordPageWrapper> {
                                 Navigator.pop(sheetContext, true);
                               } catch (e) {
                                 MentorXUI.showToast(
-                                  message: e.toString(),
+                                  message: e.describeError(),
                                   isError: true,
                                 );
                               } finally {

@@ -100,13 +100,18 @@ final class ChildrenBloc extends Bloc<ChildrenEvent, ChildrenState>
         ),
       );
     } catch (e) {
+      final message = _describe(e);
       emit(
         state.copyWith(
-          childrenSection: ChildrenAsyncSection.failure(e.toString()),
+          childrenSection: ChildrenAsyncSection.failure(message),
         ),
       );
+      _maybeEmitUnauthorized(e);
       emitPresentation(
-        ChildrenFailurePresentationEvent(message: e.toString()),
+        ChildrenFailurePresentationEvent(
+          message: message,
+          kind: _classifyFailure(e),
+        ),
       );
     }
   }

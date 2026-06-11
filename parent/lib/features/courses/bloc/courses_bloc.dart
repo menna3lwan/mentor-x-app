@@ -2,6 +2,8 @@ import 'package:bloc/bloc.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:mentorx_core/mentorx_core.dart';
 
+import '../../../core/blocs/bloc_error_helpers.dart';
+
 part 'courses_event.dart';
 part 'courses_state.dart';
 
@@ -12,6 +14,11 @@ sealed class CoursesPresentationEvent {
 final class CoursesFailurePresentationEvent extends CoursesPresentationEvent {
   final String message;
   const CoursesFailurePresentationEvent({required this.message});
+}
+
+final class CoursesUnauthorizedPresentationEvent
+    extends CoursesPresentationEvent {
+  const CoursesUnauthorizedPresentationEvent();
 }
 
 /// Drives the parent academic-monitor screen.
@@ -48,8 +55,11 @@ final class CoursesBloc extends Bloc<CoursesEvent, CoursesState>
     Emitter<CoursesState> emit,
   ) async {
     emit(state.copyWith(isRefreshing: true, childId: event.childId));
-    await _loadAll(emit, event.childId);
-    emit(state.copyWith(isRefreshing: false));
+    try {
+      await _loadAll(emit, event.childId);
+    } finally {
+      if (!emit.isDone) emit(state.copyWith(isRefreshing: false));
+    }
   }
 
   Future<void> _onRetrySection(
@@ -94,18 +104,14 @@ final class CoursesBloc extends Bloc<CoursesEvent, CoursesState>
   ) async {
     try {
       final courses = await _courseRepository.getCourses(childId);
-      emit(
-        state.copyWith(
-          coursesSection: CoursesAsyncSection.loaded(courses),
-        ),
-      );
+      if (emit.isDone) return;
+      emit(state.copyWith(coursesSection: CoursesAsyncSection.loaded(courses)));
     } catch (e) {
-      emit(
-        state.copyWith(
-          coursesSection: CoursesAsyncSection.failure(e.toString()),
-        ),
-      );
-      emitPresentation(CoursesFailurePresentationEvent(message: e.toString()));
+      if (emit.isDone) return;
+      final message = e.describeError();
+      emit(state.copyWith(coursesSection: CoursesAsyncSection.failure(message)));
+      _maybeEmitUnauthorized(e);
+      emitPresentation(CoursesFailurePresentationEvent(message: message));
     }
   }
 
@@ -115,18 +121,14 @@ final class CoursesBloc extends Bloc<CoursesEvent, CoursesState>
   ) async {
     try {
       final summary = await _gradeRepository.getGradeSummary(childId);
-      emit(
-        state.copyWith(
-          summarySection: CoursesAsyncSection.loaded(summary),
-        ),
-      );
+      if (emit.isDone) return;
+      emit(state.copyWith(summarySection: CoursesAsyncSection.loaded(summary)));
     } catch (e) {
-      emit(
-        state.copyWith(
-          summarySection: CoursesAsyncSection.failure(e.toString()),
-        ),
-      );
-      emitPresentation(CoursesFailurePresentationEvent(message: e.toString()));
+      if (emit.isDone) return;
+      final message = e.describeError();
+      emit(state.copyWith(summarySection: CoursesAsyncSection.failure(message)));
+      _maybeEmitUnauthorized(e);
+      emitPresentation(CoursesFailurePresentationEvent(message: message));
     }
   }
 
@@ -136,18 +138,22 @@ final class CoursesBloc extends Bloc<CoursesEvent, CoursesState>
   ) async {
     try {
       final trend = await _gradeRepository.getGradeTrend(childId);
-      emit(
-        state.copyWith(
-          trendSection: CoursesAsyncSection.loaded(trend),
-        ),
-      );
+      if (emit.isDone) return;
+      emit(state.copyWith(trendSection: CoursesAsyncSection.loaded(trend)));
     } catch (e) {
+      if (emit.isDone) return;
       emit(
         state.copyWith(
-          trendSection: CoursesAsyncSection.failure(e.toString()),
+          trendSection: CoursesAsyncSection.failure(e.describeError()),
         ),
       );
       // Trend is non-blocking; don't toast.
+    }
+  }
+
+  void _maybeEmitUnauthorized(Object error) {
+    if (isUnauthorizedError(error)) {
+      emitPresentation(const CoursesUnauthorizedPresentationEvent());
     }
   }
 }

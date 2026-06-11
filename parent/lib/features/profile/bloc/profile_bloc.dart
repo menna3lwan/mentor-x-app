@@ -188,11 +188,26 @@ final class ProfileBloc extends Bloc<ProfileEvent, ProfileState>
     }
   }
 
+  static const _allowedExtensions = {'.jpg', '.jpeg', '.png', '.gif', '.webp', '.heic', '.heif'};
+
   Future<void> _onAvatarSelected(
     ProfileAvatarSelected event,
     Emitter<ProfileState> emit,
   ) async {
-    if (event.imagePath.trim().isEmpty) {
+    final path = event.imagePath.trim();
+    if (path.isEmpty) {
+      emitPresentation(
+        const ProfileFailurePresentationEvent(
+          kind: ProfileFailureKind.invalidImage,
+        ),
+      );
+      return;
+    }
+    final ext = path.contains('.')
+        ? '.${path.split('.').last.toLowerCase()}'
+        : '';
+    if (!_allowedExtensions.contains(ext)) {
+      _logger.warning('Rejected avatar with unsupported extension: $ext');
       emitPresentation(
         const ProfileFailurePresentationEvent(
           kind: ProfileFailureKind.invalidImage,

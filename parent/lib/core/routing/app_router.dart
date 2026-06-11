@@ -111,7 +111,9 @@ final class AppRouter {
     if (isAuthenticated &&
         (location == '/login' ||
             location == '/onboarding' ||
-            location == '/register')) {
+            location == '/register' ||
+            location == '/forgot-password' ||
+            location.startsWith('/otp'))) {
       final redirect = isPending ? '/pending-account' : '/home';
       _routerLogger.info(
         '🟢 [ROUTER_REDIRECT] Blocking authenticated user from auth screen, redirecting to $redirect',
