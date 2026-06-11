@@ -24,7 +24,7 @@ final class AppAuthenticationCubit extends Cubit<AppAuthenticationState> {
     _logger.info('🟢 [AUTH_CUBIT] Firing AppRefreshEvent...');
     appEventBus.fire(const AppRefreshEvent());
     _logger.info(
-      '🟢 [AUTH_CUBIT] login() completed. State is now: user=${state.user?.fullName}, authenticated=${isAuthenticated}',
+      '🟢 [AUTH_CUBIT] login() completed. State is now: user=${state.user?.fullName}, authenticated=$isAuthenticated',
     );
   }
 
