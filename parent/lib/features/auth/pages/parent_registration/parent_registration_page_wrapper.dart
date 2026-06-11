@@ -125,7 +125,7 @@ class __ParentRegistrationPageContentState
               isError: true,
             );
           case ParentRegistrationSuccessPresentationEvent(:final phone):
-            OtpPageRoute(phoneNumber: phone).go(context);
+            OtpPageRoute(phoneNumber: phone).push(context);
         }
       },
       child: Builder(

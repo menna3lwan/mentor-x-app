@@ -25,7 +25,7 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  void _onLoginSubmitted() async {
+  void _onLoginSubmitted() {
     if (_formKey.currentState?.validate() ?? false) {
       context.read<LoginBloc>().add(
         LoginSubmittedEvent(
@@ -220,11 +220,14 @@ class _LoginPageState extends State<LoginPage> {
                                 delay: const Duration(milliseconds: 500),
                                 child: BlocBuilder<LoginBloc, LoginState>(
                                   builder: (context, state) {
+                                    final isLoading =
+                                        state.loadingState ==
+                                        LoginLoadingState.loading;
                                     return MentorXButton(
-                                      onPressed: _onLoginSubmitted,
-                                      loading:
-                                          state.loadingState ==
-                                          LoginLoadingState.loading,
+                                      onPressed: isLoading
+                                          ? null
+                                          : _onLoginSubmitted,
+                                      loading: isLoading,
                                       label: t.auth.signInToDashboard,
                                     );
                                   },

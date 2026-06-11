@@ -46,9 +46,9 @@ class _LoginPageView extends StatelessWidget {
             const HomePageRoute().go(context);
           case LoginOtpRequiredPresentationEvent(:final phoneNumber):
             logger.info(
-              '🟡 [LOGIN_PAGE_WRAPPER] OTP required for $phoneNumber; navigating to OtpPageRoute',
+              '🟡 [LOGIN_PAGE_WRAPPER] OTP required for $phoneNumber; pushing OtpPageRoute',
             );
-            OtpPageRoute(phoneNumber: phoneNumber).go(context);
+            OtpPageRoute(phoneNumber: phoneNumber).push(context);
           case LoginFailurePresentationEvent(:final exception):
             logger.error(
               '🔴 [LOGIN_PAGE_WRAPPER] LoginFailurePresentationEvent received: ${exception.code} ${exception.message}',

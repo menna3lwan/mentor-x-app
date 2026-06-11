@@ -54,7 +54,7 @@ final class OtpBloc extends Bloc<OtpEvent, OtpState>
     _logger.info(
       '🔵 [OTP_BLOC] _onOtpSubmitted START: phone=${event.phone}, code=${event.code}',
     );
-    emit(state.copyWith(loadingState: OtpLoadingState.loading));
+    emit(state.copyWith(loadingState: OtpLoadingState.loading, exception: null));
     try {
       _logger.info('🔵 [OTP_BLOC] Calling verifyOtp on repository...');
       final user = await _authenticationRepository.verifyOtp(

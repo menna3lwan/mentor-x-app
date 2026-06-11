@@ -37,15 +37,21 @@ final class OtpState extends Equatable {
     return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
   }
 
+  // Sentinel used by [copyWith] to distinguish "caller passed null to clear
+  // the exception" from "caller didn't mention exception at all".
+  static const _absent = Object();
+
   OtpState copyWith({
     OtpLoadingState? loadingState,
-    MentorXException? exception,
+    Object? exception = _absent,
     int? resendCountdown,
     bool? isResending,
   }) {
     return OtpState(
       loadingState: loadingState ?? this.loadingState,
-      exception: exception ?? this.exception,
+      exception: identical(exception, _absent)
+          ? this.exception
+          : exception as MentorXException?,
       resendCountdown: resendCountdown ?? this.resendCountdown,
       isResending: isResending ?? this.isResending,
     );
