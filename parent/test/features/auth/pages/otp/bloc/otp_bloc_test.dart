@@ -29,6 +29,7 @@ void main() {
   );
 
   setUp(() {
+    print('DEBUG: ParentStatus.active.name is: ${ParentStatus.active.name}');
     authRepository = MockAuthRepository();
   });
 

@@ -61,6 +61,7 @@ final class OtpBloc extends Bloc<OtpEvent, OtpState>
         event.phone,
         event.code,
       );
+      print('DEBUG: user=$user, status=${user.status}, runtimeType=${user.status.runtimeType}');
       _logger.info(
         '🟢 [OTP_BLOC] OTP Verification SUCCESS: user=${user.fullName}, id=${user.id}, status=${user.status.name}',
       );
@@ -78,7 +79,8 @@ final class OtpBloc extends Bloc<OtpEvent, OtpState>
         ),
       );
       emitPresentation(OtpFailurePresentationEvent(exception: e));
-    } catch (e) {
+    } catch (e, s) {
+      print('🔴 [OTP_BLOC] Unexpected OTP error: $e\n$s');
       _logger.error('🔴 [OTP_BLOC] Unexpected OTP error: $e');
       const exception = AuthenticationException(
         code: AuthenticationExceptionCode.unknown,
