@@ -229,9 +229,12 @@ final class DioAuthenticationRepository
 
   @override
   Future<void> forceLogoutAll() async {
+    // Backend contract: POST /api/auth/force-logout-all revokes all sessions
+    // except the caller's. /api/parent/logout-all does NOT exist on the backend.
     try {
-      await httpClient.post('/api/parent/logout-all');
+      await httpClient.post('/api/auth/force-logout-all');
     } catch (_) {
+      // Network or 4xx error — still clear local session below.
     } finally {
       await _deleteCachedUser();
       await httpClient.clearTokens();
@@ -240,8 +243,11 @@ final class DioAuthenticationRepository
 
   @override
   Future<ParentEntity> getMe() async {
+    // Backend contract: GET /api/parent/profile exists and returns
+    // { id, phone, name, profileImageUrl, students[], createdAt }.
+    // GET /api/parent/me does NOT exist — using the profile endpoint instead.
     try {
-      final response = await httpClient.get('/api/parent/me');
+      final response = await httpClient.get('/api/parent/profile');
       final data = _extractDataMap(response.data);
       final user = ParentModel.fromJson(data);
       await _cacheUser(user);
@@ -602,22 +608,37 @@ final class DioAuthenticationRepository
         );
       }
 
-      _logger.info('[verifyOtp] parsing ParentModel from data...');
-      final ParentEntity user;
+      // POST /api/parent/complete-login only returns { message, token } —
+      // the response carries NO user data. Fetch the full profile immediately
+      // after setting the token so the rest of the app has correct data.
+      _logger.info('[verifyOtp] fetching full profile via getMe()...');
+      ParentEntity user;
       try {
-        user = ParentModel.fromJson(data);
-      } catch (parseError, parseStack) {
-        _logger.error(
-          '[verifyOtp] PARSE FAILURE — ParentModel.fromJson threw: $parseError\ndata keys: ${data.keys.toList()}\ndata: $data',
-          parseError,
-          parseStack,
+        user = await getMe(); // GET /api/parent/profile
+        _logger.info(
+          '[verifyOtp] profile loaded: id=${user.id} firstName=${user.firstName} status=${user.status.name}',
         );
-        rethrow;
+      } catch (profileError) {
+        // getMe() failed (e.g. network hiccup right after login) — fall back
+        // to a minimal model built from whatever the login response contained
+        // so the session is not lost.
+        _logger.warning(
+          '[verifyOtp] getMe() failed ($profileError) — using minimal model from login response',
+        );
+        try {
+          user = ParentModel.fromJson(data);
+        } catch (parseError, parseStack) {
+          _logger.error(
+            '[verifyOtp] PARSE FAILURE — ParentModel.fromJson threw: $parseError\ndata keys: ${data.keys.toList()}\ndata: $data',
+            parseError,
+            parseStack,
+          );
+          rethrow;
+        }
       }
-      _logger.info(
-        '[verifyOtp] user parsed: id=${user.id} firstName=${user.firstName} status=${user.status.name}',
-      );
 
+      // getMe() already caches the user; the second call is a no-op for the
+      // fall-back path where fromJson was used instead.
       await _cacheUser(user);
       return user;
     } on HttpClientResponse catch (e) {
