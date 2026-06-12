@@ -455,20 +455,24 @@ final class DioAuthenticationRepository
       );
     }
 
-    // Backend contract (Swagger): POST /api/auth/resend-otp body { phone }.
-    // Fallback: POST /api/parent/start-login body { parentPhone }.
+    // Backend contract: the parent OTP resend path is
+    //   POST /api/parent/start-login  body: { parentPhone }
+    // The generic student endpoint /api/auth/resend-otp calls resendStudentOtp()
+    // which throws AuthenticationException("المستخدم غير موجود") → HTTP 401 for
+    // any phone that doesn't belong to a student, so it must NOT be tried first
+    // for the parent app — a 401 is not 404/405 and would block the fallback.
     try {
       HttpClientResponse response;
       try {
         response = await httpClient.post(
-          '/api/auth/resend-otp',
-          data: {'phone': phone},
+          '/api/parent/start-login',
+          data: {'parentPhone': phone},
         );
       } on HttpClientResponse catch (e) {
         if (e.statusCode != 404 && e.statusCode != 405) rethrow;
         response = await httpClient.post(
-          '/api/parent/start-login',
-          data: {'parentPhone': phone},
+          '/api/auth/resend-otp',
+          data: {'phone': phone},
         );
       }
 
